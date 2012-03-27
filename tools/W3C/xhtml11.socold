@@ -1,0 +1,7 @@
+OVERRIDE	YES
+        -- Oasis entity catalog for Extensible HTML 1.0 --
+
+PUBLIC "-//W3C//DTD XHTML 1.1//EN"                "xhtml11.dtd"
+PUBLIC "-//W3C//ENTITIES XHTML 1.1 Document Model 1.0//EN"        "xhtml11-model-1.mod"
+SGMLDECL "xml1.dcl"
+

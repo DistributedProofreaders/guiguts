@@ -1,0 +1,98 @@
+/U21Encoding [
+
+% 2100
+/uni2100 /uni2101 /uni2102 /centigrade 
+/uni2104 /careof /uni2106 /uni2107 
+/uni2108 /fahrenheit /uni210a /uni210b 
+/uni210c /uni210d /uni210e /uni210f 
+
+% 2110
+/uni2110 /Ifraktur /uni2112 /lsquare 
+/uni2114 /uni2115 /numero /uni2117 
+/weierstrass /uni2119 /uni211a /uni211b 
+/Rfraktur /uni211d /prescription /uni211f 
+
+% 2120
+/uni2120 /telephone /trademark /uni2123 
+/uni2124 /uni2125 /Omega /uni2127 
+/uni2128 /uni2129 /uni212a /angstrom 
+/uni212c /uni212d /estimated /uni212f 
+
+% 2130
+/uni2130 /uni2131 /uni2132 /uni2133 
+/uni2134 /aleph /uni2136 /uni2137 
+/uni2138 /uni2139 /uni213a /uni213b 
+/uni213c /uni213d /uni213e /uni213f 
+
+% 2140
+/uni2140 /uni2141 /uni2142 /uni2143 
+/uni2144 /uni2145 /uni2146 /uni2147 
+/uni2148 /uni2149 /uni214a /uni214b 
+/uni214c /uni214d /uni214e /uni214f 
+
+% 2150
+/uni2150 /uni2151 /uni2152 /onethird 
+/twothirds /uni2155 /uni2156 /uni2157 
+/uni2158 /uni2159 /uni215a /oneeighth 
+/threeeighths /fiveeighths /seveneighths /uni215f 
+
+% 2160
+/Oneroman /Tworoman /Threeroman /Fourroman 
+/Fiveroman /Sixroman /Sevenroman /Eightroman 
+/Nineroman /Tenroman /Elevenroman /Twelveroman 
+/uni216c /uni216d /uni216e /uni216f 
+
+% 2170
+/oneroman /tworoman /threeroman /fourroman 
+/fiveroman /sixroman /sevenroman /eightroman 
+/nineroman /tenroman /elevenroman /twelveroman 
+/uni217c /uni217d /uni217e /uni217f 
+
+% 2180
+/uni2180 /uni2181 /uni2182 /uni2183 
+/uni2184 /uni2185 /uni2186 /uni2187 
+/uni2188 /uni2189 /uni218a /uni218b 
+/uni218c /uni218d /uni218e /uni218f 
+
+% 2190
+/arrowleft /arrowup /arrowright /arrowdown 
+/arrowboth /arrowupdn /arrowupleft /arrowupright 
+/arrowdownright /arrowdownleft /uni219a /uni219b 
+/uni219c /uni219d /uni219e /uni219f 
+
+% 21a0
+/uni21a0 /uni21a1 /uni21a2 /uni21a3 
+/uni21a4 /uni21a5 /uni21a6 /uni21a7 
+/arrowupdownbase /uni21a9 /uni21aa /uni21ab 
+/uni21ac /uni21ad /uni21ae /uni21af 
+
+% 21b0
+/uni21b0 /uni21b1 /uni21b2 /uni21b3 
+/uni21b4 /carriagereturn /uni21b6 /uni21b7 
+/uni21b8 /uni21b9 /uni21ba /uni21bb 
+/harpoonleftbarbup /uni21bd /uni21be /uni21bf 
+
+% 21c0
+/harpoonrightbarbup /uni21c1 /uni21c2 /uni21c3 
+/arrowrightoverleft /arrowupleftofdown /arrowleftoverright /uni21c7 
+/uni21c8 /uni21c9 /uni21ca /uni21cb 
+/uni21cc /arrowleftdblstroke /uni21ce /arrowrightdblstroke 
+
+% 21d0
+/arrowleftdbl /arrowdblup /dblarrowright /arrowdbldown 
+/dblarrowleft /uni21d5 /uni21d6 /uni21d7 
+/uni21d8 /uni21d9 /uni21da /uni21db 
+/uni21dc /uni21dd /pageup /pagedown 
+
+% 21e0
+/arrowdashleft /arrowdashup /arrowdashright /arrowdashdown 
+/arrowtableft /arrowtabright /arrowleftwhite /arrowupwhite 
+/arrowrightwhite /arrowdownwhite /capslock /uni21eb 
+/uni21ec /uni21ed /uni21ee /uni21ef 
+
+% 21f0
+/uni21f0 /uni21f1 /uni21f2 /uni21f3 
+/uni21f4 /uni21f5 /uni21f6 /uni21f7 
+/uni21f8 /uni21f9 /uni21fa /uni21fb 
+/uni21fc /uni21fd /uni21fe /uni21ff 
+] def

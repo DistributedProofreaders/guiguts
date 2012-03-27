@@ -1,0 +1,98 @@
+/U20Encoding [
+
+% 2000
+/uni2000 /uni2001 /enspace /uni2003 
+/uni2004 /uni2005 /uni2006 /uni2007 
+/uni2008 /uni2009 /uni200a /zerowidthspace 
+/zerowidthnonjoiner /afii301 /afii299 /afii300 
+
+% 2010
+/hyphentwo /uni2011 /figuredash /endash 
+/emdash /horizontalbar /dblverticalbar /underscoredbl 
+/quoteleft /quoteright /quotesinglbase /quotereversed 
+/quotedblleft /quotedblright /quotedblbase /uni201f 
+
+% 2020
+/dagger /daggerdbl /bullet /uni2023 
+/onedotenleader /twodotleader /ellipsis /uni2027 
+/uni2028 /uni2029 /uni202a /uni202b 
+/afii61573 /afii61574 /afii61575 /uni202f 
+
+% 2030
+/perthousand /uni2031 /minute /second 
+/uni2034 /primereversed /uni2036 /uni2037 
+/uni2038 /guilsinglleft /guilsinglright /referencemark 
+/exclamdbl /uni203d /overline /uni203f 
+
+% 2040
+/uni2040 /uni2041 /asterism /uni2043 
+/fraction /uni2045 /uni2046 /uni2047 
+/uni2048 /uni2049 /uni204a /uni204b 
+/uni204c /uni204d /uni204e /uni204f 
+
+% 2050
+/uni2050 /uni2051 /uni2052 /uni2053 
+/uni2054 /uni2055 /uni2056 /uni2057 
+/uni2058 /uni2059 /uni205a /uni205b 
+/uni205c /uni205d /uni205e /uni205f 
+
+% 2060
+/uni2060 /uni2061 /uni2062 /uni2063 
+/uni2064 /uni2065 /uni2066 /uni2067 
+/uni2068 /uni2069 /uni206a /uni206b 
+/uni206c /uni206d /uni206e /uni206f 
+
+% 2070
+/zerosuperior /uni2071 /uni2072 /uni2073 
+/foursuperior /fivesuperior /sixsuperior /sevensuperior 
+/eightsuperior /ninesuperior /plussuperior /uni207b 
+/equalsuperior /parenleftsuperior /parenrightsuperior /nsuperior 
+
+% 2080
+/zeroinferior /oneinferior /twoinferior /threeinferior 
+/fourinferior /fiveinferior /sixinferior /seveninferior 
+/eightinferior /nineinferior /uni208a /uni208b 
+/uni208c /parenleftinferior /parenrightinferior /uni208f 
+
+% 2090
+/uni2090 /uni2091 /uni2092 /uni2093 
+/uni2094 /uni2095 /uni2096 /uni2097 
+/uni2098 /uni2099 /uni209a /uni209b 
+/uni209c /uni209d /uni209e /uni209f 
+
+% 20a0
+/uni20a0 /colonsign /cruzeiro /franc 
+/lira /uni20a5 /uni20a6 /peseta 
+/uni20a8 /won /sheqelhebrew /dong 
+/euro /uni20ad /uni20ae /uni20af 
+
+% 20b0
+/uni20b0 /uni20b1 /uni20b2 /uni20b3 
+/uni20b4 /uni20b5 /uni20b6 /uni20b7 
+/uni20b8 /uni20b9 /uni20ba /uni20bb 
+/uni20bc /uni20bd /uni20be /uni20bf 
+
+% 20c0
+/uni20c0 /uni20c1 /uni20c2 /uni20c3 
+/uni20c4 /uni20c5 /uni20c6 /uni20c7 
+/uni20c8 /uni20c9 /uni20ca /uni20cb 
+/uni20cc /uni20cd /uni20ce /uni20cf 
+
+% 20d0
+/uni20d0 /uni20d1 /uni20d2 /uni20d3 
+/uni20d4 /uni20d5 /uni20d6 /uni20d7 
+/uni20d8 /uni20d9 /uni20da /uni20db 
+/uni20dc /uni20dd /uni20de /uni20df 
+
+% 20e0
+/uni20e0 /uni20e1 /uni20e2 /uni20e3 
+/uni20e4 /uni20e5 /uni20e6 /uni20e7 
+/uni20e8 /uni20e9 /uni20ea /uni20eb 
+/uni20ec /uni20ed /uni20ee /uni20ef 
+
+% 20f0
+/uni20f0 /uni20f1 /uni20f2 /uni20f3 
+/uni20f4 /uni20f5 /uni20f6 /uni20f7 
+/uni20f8 /uni20f9 /uni20fa /uni20fb 
+/uni20fc /uni20fd /uni20fe /uni20ff 
+] def

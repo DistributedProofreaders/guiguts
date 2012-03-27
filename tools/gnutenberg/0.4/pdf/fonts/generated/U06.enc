@@ -1,0 +1,98 @@
+/U06Encoding [
+
+% 0600
+/uni0600 /uni0601 /uni0602 /uni0603 
+/uni0604 /uni0605 /uni0606 /uni0607 
+/uni0608 /uni0609 /uni060a /uni060b 
+/commaarabic /uni060d /uni060e /uni060f 
+
+% 0610
+/uni0610 /uni0611 /uni0612 /uni0613 
+/uni0614 /uni0615 /uni0616 /uni0617 
+/uni0618 /uni0619 /uni061a /semicolonarabic 
+/uni061c /uni061d /uni061e /questionarabic 
+
+% 0620
+/uni0620 /hamzalowarabic /alefmaddaabovearabic /alefhamzaabovearabic 
+/wawhamzaabovearabic /alefhamzabelowarabic /yehhamzaabovearabic /alefarabic 
+/beharabic /tehmarbutaarabic /teharabic /theharabic 
+/jeemarabic /haharabic /khaharabic /dalarabic 
+
+% 0630
+/thalarabic /reharabic /zainarabic /seenarabic 
+/sheenarabic /sadarabic /dadarabic /taharabic 
+/zaharabic /ainarabic /ghainarabic /uni063b 
+/uni063c /uni063d /uni063e /uni063f 
+
+% 0640
+/tatweelarabic /feharabic /qafarabic /kafarabic 
+/lamarabic /meemarabic /noonarabic /heharabic 
+/wawarabic /alefmaksuraarabic /yeharabic /fathatanarabic 
+/dammatanarabic /kasratanarabic /fathalowarabic /dammalowarabic 
+
+% 0650
+/kasraarabic /shaddaarabic /sukunarabic /uni0653 
+/uni0654 /uni0655 /uni0656 /uni0657 
+/uni0658 /uni0659 /uni065a /uni065b 
+/uni065c /uni065d /uni065e /uni065f 
+
+% 0660
+/zerohackarabic /onehackarabic /twohackarabic /threehackarabic 
+/fourhackarabic /fivehackarabic /sixhackarabic /sevenhackarabic 
+/eighthackarabic /ninehackarabic /percentarabic /decimalseparatorpersian 
+/thousandsseparatorpersian /asteriskarabic /uni066e /uni066f 
+
+% 0670
+/uni0670 /uni0671 /uni0672 /uni0673 
+/uni0674 /uni0675 /uni0676 /uni0677 
+/uni0678 /tteharabic /uni067a /uni067b 
+/uni067c /uni067d /peharabic /uni067f 
+
+% 0680
+/uni0680 /uni0681 /uni0682 /uni0683 
+/uni0684 /uni0685 /tcheharabic /uni0687 
+/ddalarabic /uni0689 /uni068a /uni068b 
+/uni068c /uni068d /uni068e /uni068f 
+
+% 0690
+/uni0690 /rreharabic /uni0692 /uni0693 
+/uni0694 /uni0695 /uni0696 /uni0697 
+/jeharabic /uni0699 /uni069a /uni069b 
+/uni069c /uni069d /uni069e /uni069f 
+
+% 06a0
+/uni06a0 /uni06a1 /uni06a2 /uni06a3 
+/veharabic /uni06a5 /uni06a6 /uni06a7 
+/uni06a8 /uni06a9 /uni06aa /uni06ab 
+/uni06ac /uni06ad /uni06ae /gafarabic 
+
+% 06b0
+/uni06b0 /uni06b1 /uni06b2 /uni06b3 
+/uni06b4 /uni06b5 /uni06b6 /uni06b7 
+/uni06b8 /uni06b9 /noonghunnaarabic /uni06bb 
+/uni06bc /uni06bd /uni06be /uni06bf 
+
+% 06c0
+/uni06c0 /hehaltonearabic /uni06c2 /uni06c3 
+/uni06c4 /uni06c5 /uni06c6 /uni06c7 
+/uni06c8 /uni06c9 /uni06ca /uni06cb 
+/uni06cc /uni06cd /uni06ce /uni06cf 
+
+% 06d0
+/uni06d0 /yehthreedotsbelowarabic /yehbarreearabic /uni06d3 
+/uni06d4 /afii57534 /uni06d6 /uni06d7 
+/uni06d8 /uni06d9 /uni06da /uni06db 
+/uni06dc /uni06dd /uni06de /uni06df 
+
+% 06e0
+/uni06e0 /uni06e1 /uni06e2 /uni06e3 
+/uni06e4 /uni06e5 /uni06e6 /uni06e7 
+/uni06e8 /uni06e9 /uni06ea /uni06eb 
+/uni06ec /uni06ed /uni06ee /uni06ef 
+
+% 06f0
+/zeropersian /onepersian /twopersian /threepersian 
+/fourpersian /fivepersian /sixpersian /sevenpersian 
+/eightpersian /ninepersian /uni06fa /uni06fb 
+/uni06fc /uni06fd /uni06fe /uni06ff 
+] def

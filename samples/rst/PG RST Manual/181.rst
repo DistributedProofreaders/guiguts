@@ -1,0 +1,1381 @@
+.. -*- encoding: utf-8 -*-
+
+.. meta::
+   :PG.Id: 181
+   :PG.Title: PG-RST Manual
+   :PG.Released: 2010-11-25
+   :PG.Rights: Public Domain
+   :DC.Creator: Marcello Perathoner
+   :DC.Title: The Project Gutenberg RST Manual
+   :DC.Language: en
+   :DC.Created: 2010
+
+.. style:: document
+   :class: language-de text-transform-smartquotes
+
+.. style:: .dropspan
+   :class: small-caps
+
+.. role:: directive
+
+.. role:: option
+
+.. role:: css
+
+.. role:: code
+
+.. role:: file
+
+.. role:: lb
+   :class: white-space-pre-line
+
+.. style:: .directive
+   :class: monospaced red
+
+.. style:: .option
+   :class: monospaced green
+
+.. style:: .css
+   :class: monospaced blue
+
+.. style:: .code
+   :class: monospaced
+
+.. style:: .file
+   :class: monospaced
+
+
+========================================================================
+                  The Project Gutenberg RST Manual
+========================================================================
+
+.. pgheader::
+
+[pg!i]
+
+.. container:: titlepage
+
+   .. vfill:: 
+
+   .. class:: center x-large
+
+   | The
+   |
+   | Project Gutenberg
+   |
+   | RST Manual
+
+   .. vfill:: 
+
+   .. vfill:: 
+
+[pg!iii]
+
+.. contents:: Contents
+   :depth: 2
+
+
+[pg!v]
+
+.. lot:: List of Tables
+
+
+[pg!vii]
+
+.. lof:: List of Figures
+
+
+.. mainmatter::
+
+[pg!1]
+
+Installing EpubMaker
+====================
+
+EpubMaker is Project Gutenberg's file converter. It can convert from
+PG-RST to HTML, EPUB, PDF and plain text.
+
+
+Windows
+-------
+
+Prerequisites
+`````````````
+
+1. Install Python.
+
+   Assuming you don't have python yet. If you have either version 2.6
+   or 2.7 already installed, skip this.
+
+   From http://www.python.org/download/releases/2.7/ download
+   the :file:`Windows x86 MSI Installer (2.7)` and run it.
+
+   Select all the default options and install.
+
+2. Install Python Setuptools.
+
+   From http://pypi.python.org/pypi/setuptools download
+   :file:`setuptools-0.6c11.win32-py2.7.exe` (or any newer version)
+   and run it.
+
+   If you are using python 2.6 get the setuptools for 2.6.
+
+3. Install Groff. (You can skip this step if you don't want to
+   generate plain text files.)
+
+   From http://gnuwin32.sourceforge.net/packages/groff.htm
+   download `Complete package, except sources - Setup`
+   (:file:`groff-1.20.1-setup.exe`) and run it.
+
+   Select all the default options and install.
+
+4. Install TexLive. (You can skip this step if you don't want to
+   generate PDF files.)
+   
+   Go to http://mirror.ctan.org/systems/texlive/tlnet and download the
+   file :file:`install-tl.zip`. Then say::
+
+     > unzip install-tl.zip
+     > cd install-tl*
+     > install-tl
+
+   This will open the TeX Live installation wizard. Follow the
+   instructions. When in doubt use the defaults.
+
+   This will take quite a while. (3 hours on an old Dell Vostro 1000
+   laptop. It installs about 2.5 GB in 93,000 files.) If you
+   experience download problems, restart the wizard: it will resume
+   the download where it left off.
+
+   Long installation instructions can be found at
+   http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003
+
+5. Install HTML Tidy. (You can skip this step if you only want to
+   process RST files and don't want to build EPUBs from HTML input.)
+
+   If you are a post-processor you already have this.
+
+   http://tidy.sourceforge.net/
+
+6. Update your PATH.
+
+   Start | Control Panel | System | Advanced | Environment Variables.
+   Click "Path" in the User variables at the top.
+   Click "Edit"
+
+   If the field is empty just enter (all in one line)::
+
+      C:\Python27;
+      C:\Python27\Scripts;
+      C:\Program Files\GnuWin32\bin;
+
+   If the field contains data, go to the end of that data and add a
+   semicolon if there isn't one already and then add the string above.
+
+   Click Ok three times. 
+
+
+EpubMaker
+`````````
+
+1. At the command prompt run::
+
+   > easy_install epubmaker
+
+2. Test your installation::
+
+   > epubmaker --help
+   > epubmaker http://www.gutenberg.org/masters/rst/181/181.rst
+
+
+
+Debian
+------
+
+Prerequisites
+`````````````
+
+(Does not work with python 3 yet. If your distribution uses python 3 as
+default (not likely!), you'll have to parallel install python 2.6 or 2.7.)
+
+::
+
+  # apt-get install python python-setuptools python-lxml
+  # apt-get install groff tidy
+  # apt-get install libpng-dev libjpeg-dev libfreetype6-dev
+
+Note: To get PDF generation to work, you have to use TeX Live version
+2009-11 or newer. You can get those from debian testing or
+unstable. If don't want to switch from debian stable, you have to
+install TeX Live manually.
+
+If you are on testing or unstable::
+
+  # apt-get install texlive texlive-latex-extra texlive-xetex
+  # apt-get install ttf-linux-libertine ttf-dejavu
+
+Else, to install TeX Live manually, go to
+http://mirror.ctan.org/systems/texlive/tlnet and download the file
+:file:`install-tl-unx.tar.gz`. Unpack it. Then::
+
+  # cd /path/where/unpacked
+  # perl install-tl -gui
+
+Long installation instructions can be found at
+http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003
+
+
+EpubMaker
+`````````
+
+::
+
+  # easy_install epubmaker
+
+
+Kindlegen
+`````````
+
+(Optional: Used only to make Kindle files):
+
+::
+
+  $ wget http://s3.amazonaws.com/kindlegen/kindlegen_linux_2.6_i386_v1.2.tar.gz
+  $ tar -xzf kindlegen_linux_2.6_i386_v1.2.tar.gz
+
+
+PG-RST Classes
+==============
+
+A list of classes you can use in PG-RST.
+
+Classes For Inline Text
+-----------------------
+
+These classes have an effect on inline text. If you put them on a block, all
+inline contents of the block will be rendered accordingly.
+
+.. table:: Classes For Inline Text I
+   :width: 75%
+   :widths: 1 3
+   :class: norules
+
+   ==================== ========================================================
+   Class		Explanation
+   ====================	========================================================
+   :css:`italics`	Switch to italic font.
+   :css:`bold`		Switch to boldface.
+   :css:`small-caps`	Switch to small capitals.
+   :css:`gesperrt`	Switch to gesperrt (extended letter spacing).
+   :css:`antiqua`	Switch to antiqua.
+   :css:`monospaced`	Switch to monospaced font.
+   ====================	========================================================
+
+.. table:: Classes For Inline Text II
+   :width: 75%
+   :widths: 1 3
+   :class: norules
+
+   ==================== ========================================================
+   Class		Explanation
+   ==================== ========================================================
+   :css:`smaller`	Switch to smaller font.
+   :css:`larger`	Switch to larger font.
+   :css:`xx-small`	Switch to smallest font.
+   :css:`x-small`	Switch to very small font.
+   :css:`small`		Switch to small font.
+   :css:`medium`	Switch to normal font size.
+   :css:`large`		Switch to large font.
+   :css:`x-large`	Switch to very large font.
+   :css:`xx-large`	Switch to largest font.
+   ==================== ========================================================
+
+.. table:: Classes For Inline Text III
+   :width: 75%
+   :widths: 1 3
+   :class: norules
+
+   ==================== ========================================================
+   Class		Explanation
+   ==================== ========================================================
+   :css:`red`		Switch to red font.
+   :css:`green`		Switch to green font.
+   :css:`blue`		Switch to blue font.
+   :css:`yellow`	Switch to yellow font.
+   :css:`white`		Switch to white font.
+   :css:`gray`		Switch to gray font.
+   :css:`black`		Switch to black font.
+   ==================== ========================================================
+
+
+Classes For Block Text
+----------------------
+
+These classes have an effect on block text. Please do not confuse the
+alignment of the block with the alignment of the text in the
+block. Eg. a table can be centered, while the text inside the table
+is left-aligned. The alignment of the block is set with the :option:`align`
+option. 
+
+.. table:: Classes For Block Text
+   :width: 75%
+   :widths: 1 3
+   :class: norules
+
+   =========================== =================================================
+   Class		       Explanation
+   =========================== =================================================
+   :css:`left`		       Left-aligns the text in the block.
+   :css:`center`	       Centers the text in the block.
+   :css:`right`		       Right-aligns the text in the block.
+   :css:`justify`	       Justifies the text in the block.
+   :css:`white-space-pre-line` Preserves newlines.
+   =========================== =================================================
+
+
+
+Classes For Front Matter Markup
+-------------------------------
+
+EpubMaker includes a few classes to markup front matter. While it is
+not necessary to do this, it adds value. In future the PG catalog
+might automatically extract not only the cover page but also the title
+page, verso, etc.
+
+.. table:: Classes For Front Matter Markup
+   :width: 75%
+   :widths: 1 3
+   :class: norules
+
+   ==================== ========================================================
+   Class		Explanation
+   ==================== ========================================================
+   :css:`coverpage`	The cover page.
+   :css:`frontispiece`  The frontispiece.
+   :css:`titlepage`     The title page.
+   :css:`verso`         The title page verso.
+   :css:`dedication`    The dedication page.
+   :css:`plainpage`     A general class for page.
+   ==================== ========================================================
+
+Use these classes on a :directive:`container`. These classes already
+insert page breaks before the container so you need not insert page
+breaks on your own.
+
+.. example::
+   :norender:
+
+   .. container:: titlepage
+
+      | Pride and Prejudice
+      |
+      | Written by Jane Austen.
+
+
+
+PG-RST Extensions
+=================
+
+You can create custom roles based on the existing ones. This is how
+you create and then use custom roles.
+
+.. example::
+
+   .. role:: small-caps
+      :class: small-caps
+
+   This text is in :small-caps:`Small Caps`.
+
+You can attach more than one class to a role:
+
+.. example::
+
+   .. role:: big-and-bold
+      :class: x-large bold
+
+   This text is :big-and-bold:`big and bold`.
+
+
+
+Styles
+------
+
+You can redefine the rendering of elements: 
+
+.. example::
+
+    .. style:: emphasis
+       :class: gesperrt
+
+    Now *emphasis* will be rendered as gesperrt.
+
+.. example::
+
+   .. style:: strong
+      :class: small-caps
+
+   And **Strong Emphasis** will be rendered as small-caps.
+
+.. example::
+ 
+   .. style:: strong
+      :class: small-caps x-large bold
+
+   And **Strong Emphasis** will be rendered as big bold small-caps.
+
+.. example::
+
+   .. style:: literal
+      :class: red
+
+   ``literally red``
+
+   .. style:: superscript
+      :class: green
+
+   :superscript:`sup`\ er
+
+   .. style:: title_reference
+      :class: blue
+
+   :title-reference:`Hamlet` and `Othello`.
+
+You can semantically markup foreign text:
+
+.. example::
+
+    .. role:: french
+       :class: language-fr italics
+
+    :french:`Pas de double` is the French for "father of twins".
+
+
+Pagination
+----------
+
+Pagination is important if you generate PDFs. See the Directives For
+Pagination Table.
+
+.. table:: Directives For Pagination
+   :width: 100%
+   :widths: 1 3
+   :vertical-aligns: top top
+
+   ============================ ================================================
+   Directive			Explanation
+   ============================ ================================================
+   :directive:`clearpage`    	This directive inserts a page break.
+
+   :directive:`cleardoublepage` This directive inserts page breaks so 
+   				that the next item starts on
+				a right-hand page.
+
+   :directive:`vfill` 		(PDF only.)
+
+   				This directive generates \`elastic´
+				vertical space. This space expands to
+				all of the free space on one page. If
+				you use this more than once on a page,
+				the free space is equally divided
+				among all invocations.
+
+				To vertically align an item to the
+   				bottom, use :directive:`vfill` before
+   				that item.
+
+   				To vertically align an item about 1/3
+   				of the page use :directive:`vfill`
+   				once before the item and twice after
+   				the item.
+
+    :directive:`frontmatter` 	(PDF only.)
+
+    				Put this directive at the start of your book.
+
+    				The :directive:`pgheader` directive
+    				uses this directive internally, so you
+    				can omit :directive:`frontmatter`
+    				whenever you use
+    				:directive:`pgheader`.
+
+    				This directive turns on roman page
+    				numbers.
+
+    :directive:`mainmatter` 	(PDF only.)
+
+    				Put this directive after the table of
+    				contents and before the first chapter.
+
+				This directive switches from roman
+    				page numbering to arabic page
+    				numbering and resets the page counter.
+
+    :directive:`backmatter`     (PDF only.)
+
+       			        Put this directive before appendices or indices.
+   ============================ ================================================
+
+
+Table of Contents
+-----------------
+
+Use the RST :directive:`contents` directive to automatically generate
+a table of contents.
+
+N.B. You may also provide a table of contents manually.
+
+In PG-RST the :directive:`contents` directive requires you to specify
+an argument or the :option:`local` option.
+
+The :option:`local` option displays a local table of contents, containing 
+only the sub-sections of the section in which it is declared.
+
+The :option:`page-numbers` option displays the original page number in
+the TOC.
+
+.. example::
+   :norender:
+
+   .. contents:: A TOC With Page Numbers
+      :depth: 2
+      :page-numbers:
+
+.. contents:: A TOC With Page Numbers
+   :depth: 2
+   :page-numbers:
+   :backlinks: none
+
+
+List of Figures
+---------------
+
+Use the :directive:`lof` directive to generate a list of figures
+automatically.
+
+N.B. You may also provide a list of figures manually.
+
+.. example::
+
+   .. lof:: A List of Figures
+      :page-numbers:
+      :backlinks: none
+
+
+List of Tables
+--------------
+
+Use the :directive:`lot` directive to generate a list of tables.
+
+N.B. You may also provide a list of tables manually.
+
+.. example::
+
+   .. lot:: A List of Tables
+      :page-numbers:
+      :backlinks: none
+
+
+Toc-Entry
+---------
+
+Use the :directive:`toc-entry` directive to:
+
+- provide an alternate toc entry
+- suppress a toc entry, or
+- switch toc gathering on or off.
+
+A :directive:`toc-entry` with argument sets the argument as toc entry
+for the next section, figure or table.
+
+A :directive:`toc-entry` without argument suppresses the toc entry for
+the next section, figure or table.
+
+Use the :option:`depth` option to set the depth up to which section
+titles are gathered for the toc. A depth of 0 switches toc gathering
+off.
+
+.. example::
+   :norender:
+
+   .. toc-entry:: An Alternative Caption
+
+
+Footnotes
+---------
+
+Always define footnotes right after the paragraph they are referenced.
+
+.. toc-entry:: Footnote Positions
+
+.. table:: Positioning of footnotes
+   :class: norules
+   :width: 75%
+   :align: center
+   :widths: 2 8
+   :summary: Explains where footnotes end up
+
+   ====== ========================================
+   Format Position
+   ====== ========================================
+   HTML   Collected under the footnotes directive.
+   EPUB   Idem.
+   TXT    Where they are defined.
+   PDF    At the bottom of the current page.
+   ====== ========================================
+
+To collect the footnotes use the :directive:`footnotes`
+directive. This directive will output a section with title and all
+footnotes in the document will be moved inside the section.
+
+In PDF and TXT formats the :directive:`footnotes` directive will do
+nothing. [#]_
+
+Test [#]_ [#]_ .
+
+.. [#] Not even print the section title.
+
+.. example::
+   :norender:
+
+   .. footnotes:: Footnotes
+      :class: smaller
+
+.. [#] Another footnote, to test how multiple footnotes [#]_ stack on
+       one page.
+
+.. [#] Later editions continued as follows:
+
+       | When the sands are all dry, he is gay as a lark,
+       | And will talk in contemptuous tones of the Shark,
+       | But, when the tide rises and sharks are around,
+       | His voice has a timid and tremulous sound.
+
+.. [#] Gibbon test. A footnote inside a footnote.
+
+
+
+Page Numbers
+------------
+
+
+The sequence :code:`[pg n]` will convert into a page number marker of
+n. n can be any arabic or roman numeral. The sequence itself will be
+removed from the text flow leaving a page anchor. There *must* be
+spaces around the sequence. If the page break is in the middle of a
+word, join the word and put the sequence at the end of the word.
+
+.. example::
+
+   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt [pg 42] ut labore et dolore magna
+   aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+   duo dolores [pg xviii] et ea rebum. 
+
+A reference to a page number can be inserted with the sequence
+:code:`[pg n]_`. This will generate a link to the page anchor.
+
+.. example::
+
+   See page [pg 42]_.
+
+An invisible page number can be inserted with the sequence
+:code:`[pg!n]`.
+
+.. example::
+
+   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt [pg!43] ut labore et dolore magna
+   aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+   duo dolores et ea rebum. See page [pg 43]_.
+
+See page [pg iii]_.
+
+
+
+Dropcaps
+--------
+
+You can insert dropcaps with the :directive:`dropcap` directive. You
+can use either an enlarged character or an image as dropcap. You can
+also specify a span of character that should be set in small-caps
+after the dropcap initial.
+
+.. table:: Support for dropcaps in output formats
+   :class: norules
+   :width: 80%
+   :align: center
+   :widths: 2 5 5
+
+   ====== ========================== =========================
+   Format Letter                     Image
+   ====== ========================== =========================
+   HTML   enlarged and dropped       resized and dropped
+   EPUB   enlarged on baseline       resized on baseline
+   TXT    normal size                alt text
+   PDF    enlarged and dropped [#a]_ resized and dropped [#a]_
+   ====== ========================== =========================
+
+.. [#a] *Warning:* If a paragraph with a dropcap gets page-broken the
+        dropcap may stick into the page bottom. Avoid dropcaps unless
+        you are sure that you are at the top of a page, like at a
+        chapter start.
+
+The first argument (mandatory) states the character(s) to replace with
+caps. It must match the beginning of the next paragraph.
+
+The second (optional) argument states the characters to replace with
+small-caps. It must also match the beginning of the next paragraph.
+
+.. example::
+
+   .. clearpage::
+
+   .. dropcap:: L Lorem ipsum
+      :lines: 4
+      :indents: -1.25em 0.5em
+
+   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+   erat, sed diam voluptua. At vero eos et accusam et justo duo
+   dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+   sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+   consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+   ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+The :option:`lines` option (PDF only) specifies how many lines the
+dropcap should span. Default is 2.
+
+The :option:`indents` option (PDF only) can specifiy up to 2 length
+values. The first one is the indent of the first line, the second one
+the indent of the following lines. The indent is calculated from the
+right border of the dropcap letter. Defaults are 0em and 0.5em.
+
+The :option:`image` option specifies the image url. In plain text and
+EPUB the image will not be used.
+
+.. example::
+
+   .. clearpage::
+
+   .. dropcap:: G
+      :image: images/G.png
+      :lines: 4
+
+   Gorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+   erat, sed diam voluptua. At vero eos et accusam et justo duo
+   dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+   sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+   consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+   ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+
+Tables
+------
+
+Be careful with tables because the table support of many ereaders is
+weak or nil.
+
+Tables also support these options:
+
+:option:`width`
+    Makes the table that wide.
+
+:option:`widths`
+    A space-separated list of unitless values, each specifying the
+    relative width of one table column.
+
+    If you don't use the option :option:`widths`, the column widths
+    are calculated from the layout of the table in your source file.
+
+:option:`aligns`
+    Horizontally align the columns.
+
+    A space-separated list of alignments, each specifying the
+    alignment of one column.
+
+    Valid alignments values are: left, center, right and justify.
+
+:option:`vertical-aligns`
+    Vertically align the columns.
+
+    A space-separated list of vertical alignments, each specifying the
+    alignment of one column.
+
+    Valid alignments values are: top, middle, and bottom.
+
+    Note: vertical alignment is fully supported in HTML only. Other
+    formats may support it in varying degrees.
+
+:option:`summary` (HTML only.)
+    Puts a summary attribute on the table element. 
+
+These are the extra classes supported by PG-RST:
+
+:css:`norules`
+    Omits the rules between table rows. (Not the rule between header
+    and body nor the rules at the top and bottom of the table.)
+
+    Use this class when the eye can follow the table rows without the
+    aid of rules.
+    
+
+.. example::
+
+   .. table:: Demo Table
+      :width: 100%
+      :align: center
+      :widths: 3 1 1 1
+      :aligns: justify justify center right
+      :vertical-aligns: top middle bottom top
+      :summary: This table contains valuable data.
+
+      +------------------------+-----------+----------+-----------+
+      | Header row, column 1   | Justified | Centered | Price ($) |
+      | (header rows optional) |           |          |           |
+      +========================+===========+==========+===========+
+      | row 1                  | column    |  column  |      1.23 |
+      +------------------------+-----------+----------+-----------+
+      | row 2                  | col col   |   col    |     45.67 |
+      |                        | col col   |          |           |
+      |                        | col col   |          |           |
+      |                        | col       |          |           |
+      +------------------------+-----------+----------+-----------+
+      | row 3                  | Cells may span columns.          |
+      |                        | Lorem ipsum dolor sit amet,      |
+      |                        | consetetur sadipscing elitr, sed |
+      |                        | nonumy eirmod tempor invidunt ut |
+      |                        | labore et dolore magna aliquyam  |
+      |                        | sed diam voluptua. At vero eos   |
+      |                        | accusam et justo duo dolores et  |
+      |                        | rebum.                           |
+      +------------------------+-----------+----------+-----------+  
+      | Cells may span rows and            | Cells    | row 4     |
+      | columns. Lorem ipsum dolor sit     | may span +-----------+
+      | amet, consetetur adipiscing.       | rows.    | row 5     |
+      +------------------------------------+----------+-----------+
+
+.. example::
+
+    .. table:: Truth table for “and”
+       :class: norules
+       :align: center
+       :width: 50%
+
+       ===== ===== =========
+	 A     B    A and B
+       ===== ===== =========
+       False False False
+       True  False False
+       False True  False
+       True  True  True
+       ===== ===== =========
+
+
+PG Metadata
+===========
+
+Top Boilerplate
+---------------
+
+This section explains the PG boilerplate that you must put at the top
+of your PG-RST file.
+
+It looks like this:
+
+.. example::
+   :norender:
+
+    .. -*- encoding: utf-8 -*-      (1)
+
+    .. meta::                       (2)
+       :PG.Id: 181
+       :PG.Title: Very Short Title
+       :PG.Released: 2010-11-25
+       :PG.Rights: Public Domain
+       :PG.Producer: Woody Guthrie
+       :PG.Producer: Pete Seeger
+       :PG.Producer: The Almanac Singers
+       :PG.Credits: This file was produced from images stolen from the Louvre.
+       :DC.Creator: Jane Austen
+       :MARCREL.edt: Mark Twain
+       :MARCREL.ill: Édouard Manet
+       :DC.Title: Full Title Statement
+       :DC.Language: en
+       :DC.Language: fr
+       :DC.Language: de
+       :DC.Created: 1900
+       :coverpage: images/cover.jpg
+
+
+    ===========
+    Short Title                     (3)
+    ===========
+
+    .. pgheader::                   (4)
+
+
+(1) Insert this line verbatim. It must be the first line in the
+    text. [#]_ This tells the converter to use UTF-8 encoding and is
+    also recognized by many editors.
+
+(2) The metadata directive: see section below.
+
+(3) This will be the first line of the generated files. It should
+    say: “The Project Gutenberg Ebook of Title” or just “Title”. Use
+    '=' above and below the title.
+
+(4) This directive inserts the PG header as generated from the metadata.
+
+.. [#] A unicode BOM is allowed before this. 
+       In fact most Windows editors will add a BOM without asking you.
+
+
+Metadata Directive
+------------------
+
+The metadata directive contains all data that is used to generate the
+PG header and the PG catalog entry.
+
+The scheme is the part before the dot.
+
+
+PG Scheme
+`````````
+
+The PG scheme holds data that is relevant to Project Gutenberg only. 
+
+.. table:: Fields In the PG Scheme
+   :width: 75%
+   :widths: 1 3
+
+   ============= ==============================================================
+   Name		 Contents
+   ============= ==============================================================
+   PG.Id	 The ebook number.
+   PG.Released	 The PG release date in YYYY-MM-DD format.
+   PG.Rights	 Either 'Public Domain' or 'Copyrighted'.
+   PG.Title	 A much shortened form of the title. Used in the PG boilerplate 
+   		 in the lines that say: “Start of this PG ebook …” and “End of 
+		 this PG ebook …”.
+   PG.Producer	 A personal name or organization that helped produce this text. 
+		 This field may appear more than once. 
+		 Don't put more than one name into one field. 
+		 Repeat the field if necessary.
+   PG.Credits	 A line acknowledging the source of the images or other stuff.
+   ============= ==============================================================
+
+
+DC Scheme
+`````````
+
+This scheme holds standard Dublincore stuff and is used by many search
+engines and the PG cataloguing software.
+
+.. table:: Fields In the DC Scheme
+   :width: 75%
+   :widths: 1 3
+
+   ============== ==============================================================
+   Name		  Contents
+   ============== ==============================================================
+   DC.Creator	  Author. A personal name or organization that created the text. 
+		  May appear more than once. 
+		  Don't put more than one name into one field. 
+		  Repeat the field if necessary.
+   DC.Title	  The full title statement as found on the book's title page.
+   DC.Language	  The 2 or 3 letter code for all languages used for substantial 
+		  portions of the text. 
+		  May appear more than once. 
+		  Don't put more than one code into one field. 
+		  Repeat the field if necessary.
+		  The languages listed here are indicative for the catalog and 
+		  do not set the text language and hyphenation rules. Use the
+		  option :option:`class` language-<language-code> for that.
+   DC.Created	  The year of original publication if known.
+   ============== ==============================================================
+
+
+MARCREL Scheme
+``````````````
+
+This is used to record contributors to the text. All these fields may
+appear more than once. Don't put more than one name into one
+field. Repeat the field if necessary.
+
+.. table:: Fields In the MARCREL Scheme
+   :width: 75%
+   :widths: 1 3
+
+   ============== ==============================================================
+   Name		  Contents
+   ============== ==============================================================
+   MARCREL.edt	  Editor
+   MARCREL.ill	  Illustrator
+   MARCREL.trl	  Translator
+   MARCREL.*	  See the `full list of MARC relator codes 
+		  <http://www.loc.gov/marc/relators/relacode.html>`_.
+   ============== ==============================================================
+
+
+No Scheme
+`````````
+
+Some fields are associated with none of the above schemes.
+
+.. table:: Fields Without Scheme
+   :width: 75%
+   :widths: 1 3
+
+   ============== ==============================================================
+   Name		  Contents
+   ============== ==============================================================
+   coverpage	  A coverpage for those formats (eg. Kindle) that support 
+		  a cover page. 
+		  This image must be included in the upload but must not 
+		  necessarily be put in the text flow.
+   ============== ==============================================================
+
+
+Bottom Boilerplate
+------------------
+
+You must put this at the very bottom of your PG-RST file.
+
+.. example::
+   :norender:
+
+    .. pgfooter::     (1)
+
+(1) This directive inserts the PG footer and license.
+
+
+	 
+PG-RST Best Practices
+=====================
+
+Images
+------
+
+Specify a :option:`width` option in images and a :option:`figwidth`
+option in figures and express it in percent.
+
+If you don't specify a width, the converter will calculate the width
+percentile for you, using the formula::
+
+  image_width / (980px * 0.8) * 100
+
+(980px is the approx. wide of a browser window with scrollbar on a
+1024px wide screen, 0.8 are 10% margins left and right.)
+
+Expressing the image size relative to the screen width is the best way
+to get images right on a wide variety of devices form iPhones to
+print.
+
+.. example::
+
+   .. toc-entry:: Richard and Drucilla Martin
+
+   .. figure:: images/cover.jpg
+      :align: center
+      :alt: Richard and Drucilla Martin
+
+      :lb:`Richard Martin was a slave in Memphis, Tennessee.
+      Drucilla Martin was a slave in Giles County, Tennessee.`
+
+      The legend consists of all elements after the caption.  Lorem
+      ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+      erat, sed diam voluptua. At vero eos et accusam et justo duo
+      dolores et ea rebum.
+
+
+
+
+[pg!2]
+
+.. toc-entry:: Examples and Tests
+
+Tests and Examples
+==================
+
+.. topic:: Notice
+
+   The rest of this file contains tests. You may look at the RST
+   source to learn how things are done.
+
+A generated local table of contents:
+
+.. contents::
+   :local:
+
+A local table of contents as highlights:
+
+.. highlights:: 
+
+   Kingston — Instructive remarks on early English history —
+   Instructive observations on carved oak and life in general — Sad
+   case of Stivvings, junior — Musings on antiquity — I forget that I
+   am steering — Interesting result — Hampton Court Maze — Harris as a
+   guide.
+
+ÄÖÜ äöüß Æsop Œdipus cœr. Đ. †‡ ｳ. §2.1
+
+‘’ ‚‛ “” ‹› em — en –.
+
+“‘Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.’”
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. [pg 3] At vero eos et accusam et justo duo dolores
+et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.
+
+----
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.
+
+[pg 4]
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.
+
+.. container:: shrinkwrap align-center
+
+   |   ‘Speak roughly to your little boy,
+   |     And beat him when he sneezes:
+   |   He only does it to annoy,
+   |     Because he knows it teases.’
+   |
+   |         CHORUS.
+   |
+   | (In which the cook and the baby joined):—
+   |
+   |       ‘Wow! wow! wow!’
+
+   | Summer wanes, the children are grown;
+   |   Fun and frolic no more he knows;
+   | Robert of Lincoln’s a humdrum crone;
+   |   Off he flies and we sing as he goes:
+   |     Bob-o’link, bob-o’-link,
+   |     Spink, spank, spink;
+   | When you can pipe that merry old strain,
+   | Robert of Lincoln, come back again.
+   |           Chee, chee, chee.
+
+
+And now a quote by Lorem Ipsum:
+
+  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+  nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+  erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+  et ea rebum. Stet clita [pg 5] kasd gubergren, no sea takimata
+  sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+  consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+  ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
+  eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+  gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+  -- Lorem Ipsum
+
+
+[pg 7]
+
+Section 3.1
+-----------
+
+.. epigraph:: 
+
+   I pity the man who can travel from Dan to Beersheba, and say “'Tis
+   all barren;” and so is all the world to him who will not cultivate
+   the fruits it offers.
+
+   -- Sterne: Sentimental Journey.
+
+Simple List with hyphens
+
+- Wash left ear.
+- Wash right ear.
+- Brush teeth.
+
+Simple List with bullets
+
+* Wash left ear.
+* Wash right ear.
+* Brush teeth.
+
+Nested List
+
+1. Item 1.
+
+   a) Item 1a.
+   b) Item 1b.
+
+      I) Item 1.a.I
+      #) Item 1.a.II
+      #) Item 1.a.III
+      #) Item 1.a.IV
+
+2. A) i) Item 2.A.i [pg 8]
+      #) Item 2.A.ii
+   #) i) Item 2.B.i
+      #) Item 2.B.ii
+      #) Item 2.B.iii
+   #) Item 2.C
+
+3. Item 3.
+
+Definition List
+
+term
+    Definition.
+
+term 2
+    Definition 2
+    
+    Definition 2 paragraph 2.
+
+long term 3
+    Definition 3
+
+Option List (not used by PG)
+
+-a            command-line option "a"
+-1 file, --one=file, --two file
+              Multiple options with arguments.
+
+[pg 123]
+
+Section 3.2 [#]_
+----------------
+
+.. [#] This title contains a footnote reference. The footnote reference 
+       will not show up in the TOC.
+
+Some text so this section isn't empty.
+
+
+Section 3.3
+-----------
+
+THE MAN WHO PLEASES.
+````````````````````
+
+.. container::
+
+   .. style:: line
+      :class: italics
+
+   .. style:: attribution
+      :class: small-caps
+
+   .. epigraph::
+
+      | The dearest friend to me, the kindest man,
+      | The best-conditioned and unwearied spirit
+      | In doing courtesies.
+
+      -- Merchant of Venice.
+
+   .. epigraph::
+
+      | He hath a daily beauty in his life.
+
+      -- Othello.
+
+   .. epigraph::
+
+      | Such a man would win any woman in the world
+      | if a' could get her good will.
+
+      -- Much Ado About Nothing.
+
+There are few subjects of deeper interest to
+men and women than that of personal fascination,
+
+.. epigraph::
+ 
+   «Ora si comincia per quelli di
+   fuori e per quelli di dentro a far
+   grandissima e crudel guerra.»
+ 
+   .. class:: right
+   
+      `Istorie pistolesi.`
+
+.. table:: `TABLE 8` Types of Computers Used in the Systems Reported
+   :width: 50%
+   :widths: 3 1 1
+   :aligns: left right right
+   :vertical-aligns: top top middle
+   :summary: TABLE 8 Types of Computers Used in the Systems Reported
+   :class: norules
+
+   +--------------+--------+-----------+
+   | Type         | Number |           |
+   +==============+========+===========+
+   | ASI 210      | 1      | \(3)      |
+   +--------------+--------+           |
+   | ASI 2100     | 2      |           |
+   +--------------+--------+-----------+
+   | CDC 160A     | 2      | \(3)      |
+   +--------------+--------+           |
+   | CDC 3100     | 1      |           |
+   +--------------+--------+-----------+
+
+.. class:: small
+
+::
+
+   total computer cost                   0.22 ± 0.06 by averaging
+   ------------------------  =  0.23 ->  separate ratios for each
+   cost of bare accelerator              system 
+
+
+.. backmatter::
+
+.. toc-entry::
+   :depth: 0
+
+[pg!10]
+
+.. footnotes:: Footnotes
+   :class: smaller
+
+[pg 99]
+
+.. topic:: Transcriber's Note
+
+   Minor spelling errors have been silently corrected.
+
+   Hyphenation has been made consistent.
+
+
+.. pgfooter::

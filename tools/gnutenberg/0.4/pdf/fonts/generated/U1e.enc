@@ -1,0 +1,98 @@
+/U1eEncoding [
+
+% 1e00
+/Aringbelow /aringbelow /Bdotaccent /bdotaccent 
+/Bdotbelow /bdotbelow /Blinebelow /blinebelow 
+/Ccedillaacute /ccedillaacute /Ddotaccent /ddotaccent 
+/Ddotbelow /ddotbelow /Dlinebelow /dlinebelow 
+
+% 1e10
+/Dcedilla /dcedilla /Dcircumflexbelow /dcircumflexbelow 
+/Emacrongrave /emacrongrave /Emacronacute /emacronacute 
+/Ecircumflexbelow /ecircumflexbelow /Etildebelow /etildebelow 
+/Ecedillabreve /ecedillabreve /Fdotaccent /fdotaccent 
+
+% 1e20
+/Gmacron /gmacron /Hdotaccent /hdotaccent 
+/Hdotbelow /hdotbelow /Hdieresis /hdieresis 
+/Hcedilla /hcedilla /Hbrevebelow /hbrevebelow 
+/Itildebelow /itildebelow /Idieresisacute /idieresisacute 
+
+% 1e30
+/Kacute /kacute /Kdotbelow /kdotbelow 
+/Klinebelow /klinebelow /Ldotbelow /ldotbelow 
+/Ldotbelowmacron /ldotbelowmacron /Llinebelow /llinebelow 
+/Lcircumflexbelow /lcircumflexbelow /Macute /macute 
+
+% 1e40
+/Mdotaccent /mdotaccent /Mdotbelow /mdotbelow 
+/Ndotaccent /ndotaccent /Ndotbelow /ndotbelow 
+/Nlinebelow /nlinebelow /Ncircumflexbelow /ncircumflexbelow 
+/Otildeacute /otildeacute /Otildedieresis /otildedieresis 
+
+% 1e50
+/Omacrongrave /omacrongrave /Omacronacute /omacronacute 
+/Pacute /pacute /Pdotaccent /pdotaccent 
+/Rdotaccent /rdotaccent /Rdotbelow /rdotbelow 
+/Rdotbelowmacron /rdotbelowmacron /Rlinebelow /rlinebelow 
+
+% 1e60
+/Sdotaccent /sdotaccent /Sdotbelow /sdotbelow 
+/Sacutedotaccent /sacutedotaccent /Scarondotaccent /scarondotaccent 
+/Sdotbelowdotaccent /sdotbelowdotaccent /Tdotaccent /tdotaccent 
+/Tdotbelow /tdotbelow /Tlinebelow /tlinebelow 
+
+% 1e70
+/Tcircumflexbelow /tcircumflexbelow /Udieresisbelow /udieresisbelow 
+/Utildebelow /utildebelow /Ucircumflexbelow /ucircumflexbelow 
+/Utildeacute /utildeacute /Umacrondieresis /umacrondieresis 
+/Vtilde /vtilde /Vdotbelow /vdotbelow 
+
+% 1e80
+/Wgrave /wgrave /Wacute /wacute 
+/Wdieresis /wdieresis /Wdotaccent /wdotaccent 
+/Wdotbelow /wdotbelow /Xdotaccent /xdotaccent 
+/Xdieresis /xdieresis /Ydotaccent /ydotaccent 
+
+% 1e90
+/Zcircumflex /zcircumflex /Zdotbelow /zdotbelow 
+/Zlinebelow /zlinebelow /hlinebelow /tdieresis 
+/wring /yring /arighthalfring /slongdotaccent 
+/uni1e9c /uni1e9d /uni1e9e /uni1e9f 
+
+% 1ea0
+/Adotbelow /adotbelow /Ahookabove /ahookabove 
+/Acircumflexacute /acircumflexacute /Acircumflexgrave /acircumflexgrave 
+/Acircumflexhookabove /acircumflexhookabove /Acircumflextilde /acircumflextilde 
+/Acircumflexdotbelow /acircumflexdotbelow /Abreveacute /abreveacute 
+
+% 1eb0
+/Abrevegrave /abrevegrave /Abrevehookabove /abrevehookabove 
+/Abrevetilde /abrevetilde /Abrevedotbelow /abrevedotbelow 
+/Edotbelow /edotbelow /Ehookabove /ehookabove 
+/Etilde /etilde /Ecircumflexacute /ecircumflexacute 
+
+% 1ec0
+/Ecircumflexgrave /ecircumflexgrave /Ecircumflexhookabove /ecircumflexhookabove 
+/Ecircumflextilde /ecircumflextilde /Ecircumflexdotbelow /ecircumflexdotbelow 
+/Ihookabove /ihookabove /Idotbelow /idotbelow 
+/Odotbelow /odotbelow /Ohookabove /ohookabove 
+
+% 1ed0
+/Ocircumflexacute /ocircumflexacute /Ocircumflexgrave /ocircumflexgrave 
+/Ocircumflexhookabove /ocircumflexhookabove /Ocircumflextilde /ocircumflextilde 
+/Ocircumflexdotbelow /ocircumflexdotbelow /Ohornacute /ohornacute 
+/Ohorngrave /ohorngrave /Ohornhookabove /ohornhookabove 
+
+% 1ee0
+/Ohorntilde /ohorntilde /Ohorndotbelow /ohorndotbelow 
+/Udotbelow /udotbelow /Uhookabove /uhookabove 
+/Uhornacute /uhornacute /Uhorngrave /uhorngrave 
+/Uhornhookabove /uhornhookabove /Uhorntilde /uhorntilde 
+
+% 1ef0
+/Uhorndotbelow /uhorndotbelow /Ygrave /ygrave 
+/Ydotbelow /ydotbelow /Yhookabove /yhookabove 
+/Ytilde /ytilde /uni1efa /uni1efb 
+/uni1efc /uni1efd /uni1efe /uni1eff 
+] def

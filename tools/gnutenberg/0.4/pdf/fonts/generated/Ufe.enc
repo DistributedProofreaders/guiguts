@@ -1,0 +1,98 @@
+/UfeEncoding [
+
+% fe00
+/unife00 /unife01 /unife02 /unife03 
+/unife04 /unife05 /unife06 /unife07 
+/unife08 /unife09 /unife0a /unife0b 
+/unife0c /unife0d /unife0e /unife0f 
+
+% fe10
+/unife10 /unife11 /unife12 /unife13 
+/unife14 /unife15 /unife16 /unife17 
+/unife18 /unife19 /unife1a /unife1b 
+/unife1c /unife1d /unife1e /unife1f 
+
+% fe20
+/unife20 /unife21 /unife22 /unife23 
+/unife24 /unife25 /unife26 /unife27 
+/unife28 /unife29 /unife2a /unife2b 
+/unife2c /unife2d /unife2e /unife2f 
+
+% fe30
+/twodotleadervertical /emdashvertical /endashvertical /underscorevertical 
+/wavyunderscorevertical /parenleftvertical /parenrightvertical /braceleftvertical 
+/bracerightvertical /tortoiseshellbracketleftvertical /tortoiseshellbracketrightvertical /blacklenticularbracketleftvertical 
+/blacklenticularbracketrightvertical /dblanglebracketleftvertical /dblanglebracketrightvertical /anglebracketleftvertical 
+
+% fe40
+/anglebracketrightvertical /cornerbracketleftvertical /cornerbracketrightvertical /whitecornerbracketleftvertical 
+/whitecornerbracketrightvertical /unife45 /unife46 /unife47 
+/unife48 /overlinedashed /overlinecenterline /overlinewavy 
+/overlinedblwavy /lowlinedashed /lowlinecenterline /underscorewavy 
+
+% fe50
+/commasmall /unife51 /periodsmall /unife53 
+/semicolonsmall /colonsmall /unife56 /unife57 
+/unife58 /parenleftsmall /parenrightsmall /braceleftsmall 
+/bracerightsmall /tortoiseshellbracketleftsmall /tortoiseshellbracketrightsmall /numbersignsmall 
+
+% fe60
+/unife60 /asterisksmall /plussmall /hyphensmall 
+/lesssmall /greatersmall /equalsmall /unife67 
+/unife68 /dollarsmall /percentsmall /atsmall 
+/unife6c /unife6d /unife6e /unife6f 
+
+% fe70
+/unife70 /unife71 /unife72 /unife73 
+/unife74 /unife75 /unife76 /unife77 
+/unife78 /unife79 /unife7a /unife7b 
+/unife7c /unife7d /unife7e /unife7f 
+
+% fe80
+/unife80 /unife81 /alefmaddaabovefinalarabic /unife83 
+/alefhamzaabovefinalarabic /unife85 /wawhamzaabovefinalarabic /unife87 
+/alefhamzabelowfinalarabic /unife89 /yehhamzaabovefinalarabic /yehhamzaaboveinitialarabic 
+/yehhamzaabovemedialarabic /unife8d /aleffinalarabic /unife8f 
+
+% fe90
+/behfinalarabic /behinitialarabic /behmedialarabic /unife93 
+/tehmarbutafinalarabic /unife95 /tehfinalarabic /tehinitialarabic 
+/tehmedialarabic /unife99 /thehfinalarabic /thehinitialarabic 
+/thehmedialarabic /unife9d /jeemfinalarabic /jeeminitialarabic 
+
+% fea0
+/jeemmedialarabic /unifea1 /hahfinalarabic /hahinitialarabic 
+/hahmedialarabic /unifea5 /khahfinalarabic /khahinitialarabic 
+/khahmedialarabic /unifea9 /dalfinalarabic /unifeab 
+/thalfinalarabic /unifead /rehfinalarabic /unifeaf 
+
+% feb0
+/zainfinalarabic /unifeb1 /seenfinalarabic /seeninitialarabic 
+/seenmedialarabic /unifeb5 /sheenfinalarabic /sheeninitialarabic 
+/sheenmedialarabic /unifeb9 /sadfinalarabic /sadinitialarabic 
+/sadmedialarabic /unifebd /dadfinalarabic /dadinitialarabic 
+
+% fec0
+/dadmedialarabic /unifec1 /tahfinalarabic /tahinitialarabic 
+/tahmedialarabic /unifec5 /zahfinalarabic /zahinitialarabic 
+/zahmedialarabic /unifec9 /ainfinalarabic /aininitialarabic 
+/ainmedialarabic /unifecd /ghainfinalarabic /ghaininitialarabic 
+
+% fed0
+/ghainmedialarabic /unifed1 /fehfinalarabic /fehinitialarabic 
+/fehmedialarabic /unifed5 /qaffinalarabic /qafinitialarabic 
+/qafmedialarabic /unifed9 /kaffinalarabic /kafinitialarabic 
+/kafmedialarabic /unifedd /lamfinalarabic /laminitialarabic 
+
+% fee0
+/lammedialarabic /unifee1 /meemfinalarabic /meeminitialarabic 
+/meemmedialarabic /unifee5 /noonfinalarabic /nooninitialarabic 
+/noonmedialarabic /unifee9 /hehfinalarabic /hehinitialarabic 
+/hehmedialarabic /unifeed /wawfinalarabic /unifeef 
+
+% fef0
+/alefmaksurafinalarabic /unifef1 /yehfinalarabic /yehinitialarabic 
+/yehmedialarabic /lamalefmaddaaboveisolatedarabic /lamalefmaddaabovefinalarabic /lamalefhamzaaboveisolatedarabic 
+/lamalefhamzaabovefinalarabic /lamalefhamzabelowisolatedarabic /lamalefhamzabelowfinalarabic /lamalefisolatedarabic 
+/lamaleffinalarabic /unifefd /unifefe /zerowidthjoiner 
+] def

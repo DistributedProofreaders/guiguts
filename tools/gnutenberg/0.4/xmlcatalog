@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.0//EN"
+          "file:///usr/share/xml/schema/xml-core/catalog.dtd">
+
+<!-- You can substantially speed up things if you keep local
+     copies of the files mentioned below. This file tells
+     the converter where your local copies are located. 
+     If you don't keep local copies or the converter cannot
+     find them, everything still works, just much slower than
+     it could go. -->
+
+<!-- see: http://www.oasis-open.org/committees/entity/spec.html -->
+
+<!-- change xml:base to the gnutenberg installation directory -->
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+         xml:base="file:///c:/guiguts/tools/gnutenberg/">
+
+  <!-- if you have a local copy of the tei p4x dtd enter the path here -->
+  <!-- the path is relative to xml:base above -->
+
+  <rewriteSystem systemIdStartString="http://www.tei-c.org/P4X/DTD/"
+                 rewritePrefix="0.4/dtd/tei2/"/>
+
+  <!-- if you have a local copy of the xhtml 1.0 dtd enter the path here -->
+  <!-- the path is relative to xml:base above -->
+
+  <rewriteSystem systemIdStartString="http://www.w3.org/TR/xhtml1/DTD/"
+                 rewritePrefix="0.4/dtd/xhtml1/"/>
+
+  <!-- if you have a local copy of the pgtei support files enter the path here -->
+  <!-- the path is relative to xml:base above -->
+
+  <rewriteSystem systemIdStartString="http://www.gutenberg.org/tei/marcello/0.4/"
+                 rewritePrefix="0.4/" />
+
+</catalog>
+

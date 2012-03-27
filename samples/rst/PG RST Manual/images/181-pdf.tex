@@ -1,0 +1,3599 @@
+% -*- mode: tex -*- coding: utf-8 -*-
+% Converted from RST master
+%
+\documentclass[a5paper]{book}
+
+\usepackage{polyglossia}
+\setotherlanguages{german,french,english}
+
+\usepackage{xltxtra}
+
+\defaultfontfeatures{Scale=MatchLowercase}
+\setmainfont[Numbers=OldStyle]{Linux Libertine O}
+\setsansfont{Linux Biolinum O}
+\setmonofont[HyphenChar=None]{DejaVu Sans Mono}
+
+\usepackage{calc}
+\usepackage{graphicx}
+\usepackage{alltt}
+
+\usepackage{array} % longtable uses array if loaded
+\usepackage{longtable}
+
+\usepackage{booktabs}
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+
+\usepackage{lettrine} % dropcaps
+\usepackage[implicit=false,colorlinks=true,linkcolor=blue]{hyperref}
+\hypersetup{pdfcreator={Project Gutenberg EpubMaker 0.3.18}}
+\hypersetup{pdfauthor={Marcello Perathoner}}
+\hypersetup{pdftitle={The Project Gutenberg RST Manual}}
+\usepackage[open,openlevel=1]{bookmark}
+
+\tolerance 10000  % dont make overfull boxes
+\hbadness 1000    % warn if badness exceeds 1000
+
+\catcode`@=11     % make 'private' LaTeX variables public
+\catcode`\^^J=10  % don't let empty lines end paragraphs
+\catcode`\^^M=10
+\catcode`\"=12    % no electric quotes
+
+\setlength{\textwidth} {\paperwidth  * 7 / 9}
+\setlength{\textheight}{\paperheight * 7 / 9}
+
+\setlength{\topmargin}     {\paperheight / 9 - \topskip - \headsep - \headheight - 1in}
+
+\setlength{\evensidemargin}{\paperwidth / 9 - 1in}
+\setlength{\oddsidemargin} {\paperwidth / 9 - 1in}
+
+% \setlength{\fboxsep}{0pt} % fbox used for debugging
+
+\begin{document}
+
+\setlength{\parindent}{24pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\topsep}{0pt plus6pt}
+\setlength{\footnotesep}{0pt}
+
+% relax float restrictions
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{20}
+\setcounter{dbltopnumber}{9}
+
+\setcounter{LTchunksize}{10000} % process tables in one chunk
+
+% pagination
+\renewcommand*{\ps@plain}{
+ \renewcommand*{\@evenhead}{}
+ \renewcommand*{\@oddhead}{}
+ \renewcommand*{\@oddfoot}{}
+ \renewcommand*{\@evenfoot}{}
+}
+
+\newcommand*{\docutilstitle}{}
+
+\newcommand*{\ps@docutils}{
+ \renewcommand*{\@evenhead}{\thepage\hfil\docutilstitle}
+ \renewcommand*{\@oddhead}{\firstmark\hfil\thepage}
+ \renewcommand*{\@oddfoot}{}
+ \renewcommand*{\@evenfoot}{}
+}
+
+% redefine cleardoublepage to output a completely blank page
+\let\cdpage\cleardoublepage
+\renewcommand*{\cleardoublepage}{
+ \clearpage
+ {\pagestyle{plain}\cdpage}
+}
+
+% headers
+
+% HACK! to avoid a page break between labels and section title
+% standard secpenalty is -300
+\@secpenalty = 0
+
+\setcounter{secnumdepth}{-1} % no automatic section numbering
+% \setcounter{tocdepth}{1} we don't use auto toc at present
+
+\def\pgpageno#1{\marginpar[\hfill\fbox{#1}]{\fbox{#1}}}
+
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#2}%
+  \ifdim \wd\@tempboxa >\hsize
+    #2\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+  
+\setlength{\belowcaptionskip}{\smallskipamount}
+
+% a quotation environment that does not indent the very first line
+
+\renewenvironment{quotation}
+  {\list{}{\listparindent\parindent
+    % \itemindent    \listparindent
+    \rightmargin   \leftmargin
+    \parsep        \z@ \@plus\p@}%
+    \item\relax}
+  {\endlist}
+
+% use the lineblock environment for titlepages etc.
+% the indentation specified in the latex verse environment
+% gets in the way if we try to center.
+
+\newenvironment{lineblock}
+  {%
+    \let\\\@centercr
+    \trivlist{}{}%
+    \item\relax
+  }%
+  {%
+    \endtrivlist
+  }
+
+% define environments for most of the
+% standard building blocks of a book
+
+\def\startenv{%
+  \if@twocolumn
+    \@restonecoltrue\onecolumn
+  \else
+    \@restonecolfalse\newpage
+  \fi
+  \thispagestyle{empty}%
+}
+\def\endenv{%
+  \if@restonecol\twocolumn \else \newpage \fi     
+}
+
+\newenvironment{container}{}{}
+
+\newenvironment{pgheader_env}
+  {%
+    \thispagestyle{empty}%
+  }{%
+    \endenv
+  }
+
+\newenvironment{titlepage_env}
+  {%
+    \cleardoublepage
+    \startenv
+    \setcounter{page}\@ne
+  }{%
+    \endenv
+    \if@twoside\else
+      \setcounter{page}\@ne
+    \fi
+  }
+
+\newenvironment{coverpage_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{contents_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{foreword_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{preface_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{introduction_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{dedication_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{prologue_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{epilogue_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{glossary_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{bibliography_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{index_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{colophon_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{pgfooter_env}{\cleardoublepage\startenv}{\endenv}
+\newenvironment{frontispiece_env}{\clearpage\startenv}{\endenv}
+\newenvironment{verso_env}{\clearpage\startenv}{\endenv}
+\newenvironment{plainpage_env}{\clearpage\startenv}{\endenv}
+
+\newdimen{\tablewidth} % helper
+
+% \tracingpages=1
+
+% \frontmatter
+\thispagestyle{plain}
+
+\begin{german}
+\begin{center}
+{\noindent}The Project Gutenberg RST Manual
+\end{center}
+
+% -*- encoding: utf-8 -*-
+\label{pg-header}%
+\hypertarget{pg-header}{}%
+{}
+
+\vspace{2em}
+\begin{english}
+\begin{pgheader_env}
+\begin{container}
+\noindent
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever. You may copy it, give it away or
+re-use it under the terms of the \hyperlink{project-gutenberg-license}{Project Gutenberg License}
+included with this eBook or online at
+{http://www.gutenberg.org/license}.\par
+
+\vspace{1em}
+\label{pg-machine-header}%
+\hypertarget{pg-machine-header}{}%
+{}
+
+\begin{container}
+\noindent
+Title: The Project Gutenberg RST Manual\par
+
+\noindent
+Author: Marcello Perathoner\par
+
+\noindent
+Release Date: November 25, 2010 {[}EBook \#181{]}\par
+
+\noindent
+Language: English\par
+
+\noindent
+Character set encoding: UTF-8\par
+
+\vspace{1em}
+\label{pg-start-line}%
+\hypertarget{pg-start-line}{}%
+{}
+
+\noindent
+*** START OF THIS PROJECT GUTENBERG EBOOK PG-RST MANUAL ***\par
+\end{container}
+
+\vspace{4em}
+\label{pg-produced-by}%
+\hypertarget{pg-produced-by}{}%
+{}
+
+\begin{container}
+\vspace{1em}
+\end{container}
+\end{container}
+\end{pgheader_env}
+\end{english}
+
+\begin{titlepage_env}
+\begin{container}
+\vspace*{\fill}
+
+\begin{lineblock}
+\begin{center}
+{\LARGE\strut{
+\raisebox{1em}{\label{page-i}%
+\hypertarget{page-i}{}%
+{}}{\noindent}The \\
+\vspace*{1em}
+Project Gutenberg \\
+\vspace*{1em}
+RST Manual \\
+}}\end{center}
+\end{lineblock}
+
+\vspace*{\fill}
+
+\vspace*{\fill}
+\end{container}
+\end{titlepage_env}
+
+\begin{contents_env}
+\cleardoublepage
+\label{id1}%
+\hypertarget{id1}{}%
+%
+\chapter*{
+\raisebox{1em}{\label{page-iii}%
+\hypertarget{page-iii}{}%
+{}}{\noindent}Contents}
+
+
+\begin{itemize}
+\item[] \hyperlink{installing-epubmaker}{Installing EpubMaker}
+\begin{itemize}
+\item[] \hyperlink{windows}{Windows}
+
+\item[] \hyperlink{debian}{Debian}
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-classes}{PG-RST Classes}
+\begin{itemize}
+\item[] \hyperlink{classes-for-inline-text}{Classes For Inline Text}
+
+\item[] \hyperlink{classes-for-block-text}{Classes For Block Text}
+
+\item[] \hyperlink{classes-for-front-matter-markup}{Classes For Front Matter Markup}
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-extensions}{PG-RST Extensions}
+\begin{itemize}
+\item[] \hyperlink{styles}{Styles}
+
+\item[] \hyperlink{pagination}{Pagination}
+
+\item[] \hyperlink{table-of-contents}{Table of Contents}
+
+\item[] \hyperlink{list-of-figures}{List of Figures}
+
+\item[] \hyperlink{list-of-tables}{List of Tables}
+
+\item[] \hyperlink{toc-entry}{Toc-Entry}
+
+\item[] \hyperlink{footnotes}{Footnotes}
+
+\item[] \hyperlink{page-numbers}{Page Numbers}
+
+\item[] \hyperlink{dropcaps}{Dropcaps}
+
+\item[] \hyperlink{tables}{Tables}
+\end{itemize}
+
+\item[] \hyperlink{pg-metadata}{PG Metadata}
+\begin{itemize}
+\item[] \hyperlink{top-boilerplate}{Top Boilerplate}
+
+\item[] \hyperlink{metadata-directive}{Metadata Directive}
+
+\item[] \hyperlink{bottom-boilerplate}{Bottom Boilerplate}
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-best-practices}{PG-RST Best Practices}
+
+\item[] \hyperlink{tests-and-examples}{Examples and Tests}
+\begin{itemize}
+\item[] \hyperlink{section-3-1}{Section 3.1}
+
+\item[] \hyperlink{section-3-2}{Section 3.2}
+
+\item[] \hyperlink{section-3-3}{Section 3.3}
+\end{itemize}
+\end{itemize}
+\end{contents_env}
+
+\cleardoublepage
+\label{id2}%
+\hypertarget{id2}{}%
+%
+\chapter*{
+\raisebox{1em}{\label{page-v}%
+\hypertarget{page-v}{}%
+{}}List of Tables}
+
+
+\begin{itemize}
+\item[] \hyperlink{table-46}{Classes For Inline Text I}
+
+\item[] \hyperlink{table-47}{Classes For Inline Text II}
+
+\item[] \hyperlink{table-48}{Classes For Inline Text III}
+
+\item[] \hyperlink{table-49}{Classes For Block Text}
+
+\item[] \hyperlink{table-50}{Classes For Front Matter Markup}
+
+\item[] \hyperlink{table-51}{Directives For Pagination}
+
+\item[] \hyperlink{table-52}{Footnote Positions}
+
+\item[] \hyperlink{table-53}{Support for dropcaps in output formats}
+
+\item[] \hyperlink{table-54}{Demo Table}
+
+\item[] \hyperlink{table-55}{Truth table for “and”}
+
+\item[] \hyperlink{table-56}{Fields In the PG Scheme}
+
+\item[] \hyperlink{table-57}{Fields In the DC Scheme}
+
+\item[] \hyperlink{table-58}{Fields In the MARCREL Scheme}
+
+\item[] \hyperlink{table-59}{Fields Without Scheme}
+
+\item[] \hyperlink{table-60}{{\itshape{TABLE 8}} Types of Computers Used in the Systems Reported}
+\end{itemize}
+
+\cleardoublepage
+\label{id3}%
+\hypertarget{id3}{}%
+%
+\chapter*{
+\raisebox{1em}{\label{page-vii}%
+\hypertarget{page-vii}{}%
+{}}List of Figures}
+
+
+\begin{itemize}
+\item[] \hyperlink{figure-4}{Richard and Drucilla Martin}
+\end{itemize}
+
+%
+\mainmatter
+%
+
+
+\cleardoublepage
+\label{installing-epubmaker}%
+\hypertarget{installing-epubmaker}{}%
+%
+\chapter*{
+\raisebox{1em}{\label{page-1}%
+\hypertarget{page-1}{}%
+{}}Installing EpubMaker}
+
+
+EpubMaker is Project Gutenberg’s file converter. It can convert from
+PG-RST to HTML, EPUB, PDF and plain text.\par
+
+\penalty-300%
+\label{windows}%
+\hypertarget{windows}{}%
+%
+\section*{Windows}
+
+
+\penalty-300%
+\label{prerequisites}%
+\hypertarget{prerequisites}{}%
+%
+\subsection*{Prerequisites}
+
+
+\begin{itemize}
+\item[1.] 
+Install Python.\par
+
+Assuming you don’t have python yet. If you have either version 2.6
+or 2.7 already installed, skip this.\par
+
+From {http://www.python.org/download/releases/2.7/} download
+the {\ttfamily{Windows x86 MSI Installer (2.7)}} and run it.\par
+
+Select all the default options and install.\par
+
+\item[2.] 
+Install Python Setuptools.\par
+
+From {http://pypi.python.org/pypi/setuptools} download
+{\ttfamily{setuptools-0.6c11.win32-py2.7.exe}} (or any newer version)
+and run it.\par
+
+If you are using python 2.6 get the setuptools for 2.6.\par
+
+\item[3.] 
+Install Groff. (You can skip this step if you don’t want to
+generate plain text files.)\par
+
+From {http://gnuwin32.sourceforge.net/packages/groff.htm}
+download {\itshape{Complete package, except sources - Setup}}
+({\ttfamily{groff-1.20.1-setup.exe}}) and run it.\par
+
+Select all the default options and install.\par
+
+\item[4.] 
+Install TexLive. (You can skip this step if you don’t want to
+generate PDF files.)\par
+
+Go to {http://mirror.ctan.org/systems/texlive/tlnet} and download the
+file {\ttfamily{install-tl.zip}}. Then say:\par
+
+\begin{quote}
+\begin{alltt}
+> unzip install-tl.zip
+> cd install-tl*
+> install-tl
+\end{alltt}
+\end{quote}
+
+This will open the TeX Live installation wizard. Follow the
+instructions. When in doubt use the defaults.\par
+
+This will take quite a while. (3 hours on an old Dell Vostro 1000
+laptop. It installs about 2.5 GB in 93,000 files.) If you
+experience download problems, restart the wizard: it will resume
+the download where it left off.\par
+
+Long installation instructions can be found at
+{http://www.tug.org/texlive/doc/texlive-en/texlive-en.html\#x1-150003}\par
+
+\item[5.] 
+Install HTML Tidy. (You can skip this step if you only want to
+process RST files and don’t want to build EPUBs from HTML input.)\par
+
+If you are a post-processor you already have this.\par
+
+{http://tidy.sourceforge.net/}\par
+
+\item[6.] 
+Update your PATH.\par
+
+Start | Control Panel | System | Advanced | Environment Variables.
+Click "Path" in the User variables at the top.
+Click "Edit"\par
+
+If the field is empty just enter (all in one line):\par
+
+\begin{quote}
+\begin{alltt}
+C:\textbackslash{}Python27;
+C:\textbackslash{}Python27\textbackslash{}Scripts;
+C:\textbackslash{}Program Files\textbackslash{}GnuWin32\textbackslash{}bin;
+\end{alltt}
+\end{quote}
+
+If the field contains data, go to the end of that data and add a
+semicolon if there isn’t one already and then add the string above.\par
+
+Click Ok three times.\par
+\end{itemize}
+
+\penalty-300%
+\label{epubmaker}%
+\hypertarget{epubmaker}{}%
+%
+\subsection*{EpubMaker}
+
+
+\begin{itemize}
+\item[1.] 
+At the command prompt run:\par
+
+\begin{quote}
+\begin{alltt}
+> easy\_install epubmaker
+\end{alltt}
+\end{quote}
+
+\item[2.] 
+Test your installation:\par
+
+\begin{quote}
+\begin{alltt}
+> epubmaker --help
+> epubmaker http://www.gutenberg.org/masters/rst/181/181.rst
+\end{alltt}
+\end{quote}
+\end{itemize}
+
+\penalty-300%
+\label{debian}%
+\hypertarget{debian}{}%
+%
+\section*{Debian}
+
+
+\penalty-300%
+\label{id4}%
+\hypertarget{id4}{}%
+%
+\subsection*{Prerequisites}
+
+
+(Does not work with python 3 yet. If your distribution uses python 3 as
+default (not likely!), you’ll have to parallel install python 2.6 or 2.7.)\par
+
+\begin{quote}
+\begin{alltt}
+\# apt-get install python python-setuptools python-lxml
+\# apt-get install groff tidy
+\# apt-get install libpng-dev libjpeg-dev libfreetype6-dev
+\end{alltt}
+\end{quote}
+
+Note: To get PDF generation to work, you have to use TeX Live version
+2009-11 or newer. You can get those from debian testing or
+unstable. If don’t want to switch from debian stable, you have to
+install TeX Live manually.\par
+
+If you are on testing or unstable:\par
+
+\begin{quote}
+\begin{alltt}
+\# apt-get install texlive texlive-latex-extra texlive-xetex
+\# apt-get install ttf-linux-libertine ttf-dejavu
+\end{alltt}
+\end{quote}
+
+Else, to install TeX Live manually, go to
+{http://mirror.ctan.org/systems/texlive/tlnet} and download the file
+{\ttfamily{install-tl-unx.tar.gz}}. Unpack it. Then:\par
+
+\begin{quote}
+\begin{alltt}
+\# cd /path/where/unpacked
+\# perl install-tl -gui
+\end{alltt}
+\end{quote}
+
+Long installation instructions can be found at
+{http://www.tug.org/texlive/doc/texlive-en/texlive-en.html\#x1-150003}\par
+
+\penalty-300%
+\label{id5}%
+\hypertarget{id5}{}%
+%
+\subsection*{EpubMaker}
+
+
+\begin{quote}
+\begin{alltt}
+\# easy\_install epubmaker
+\end{alltt}
+\end{quote}
+
+\penalty-300%
+\label{kindlegen}%
+\hypertarget{kindlegen}{}%
+%
+\subsection*{Kindlegen}
+
+
+(Optional: Used only to make Kindle files):\par
+
+\begin{quote}
+\begin{alltt}
+\$ wget http://s3.amazonaws.com/kindlegen/kindlegen\_linux\_2.6\_i386\_v1.2.tar.gz
+\$ tar -xzf kindlegen\_linux\_2.6\_i386\_v1.2.tar.gz
+\end{alltt}
+\end{quote}
+
+\cleardoublepage
+\label{pg-rst-classes}%
+\hypertarget{pg-rst-classes}{}%
+%
+\chapter*{PG-RST Classes}
+
+
+A list of classes you can use in PG-RST.\par
+
+\penalty-300%
+\label{classes-for-inline-text}%
+\hypertarget{classes-for-inline-text}{}%
+%
+\section*{Classes For Inline Text}
+
+
+These classes have an effect on inline text. If you put them on a block, all
+inline contents of the block will be rendered accordingly.\par
+
+\begin{table}[htbp]
+\label{table-46}%
+\hypertarget{table-46}{}%
+\footnotesize
+\begin{center}
+\caption{Classes For Inline Text I}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Class\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{italics}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to italic font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{bold}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to boldface.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{small-caps}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to small capitals.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{gesperrt}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to gesperrt (extended letter spacing).\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{antiqua}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to antiqua.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{monospaced}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to monospaced font.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\label{table-47}%
+\hypertarget{table-47}{}%
+\footnotesize
+\begin{center}
+\caption{Classes For Inline Text II}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Class\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{smaller}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to smaller font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{larger}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to larger font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{xx-small}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to smallest font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{x-small}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to very small font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{small}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to small font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{medium}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to normal font size.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{large}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to large font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{x-large}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to very large font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{xx-large}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to largest font.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\label{table-48}%
+\hypertarget{table-48}{}%
+\footnotesize
+\begin{center}
+\caption{Classes For Inline Text III}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Class\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{red}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to red font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{green}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to green font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{blue}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to blue font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{yellow}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to yellow font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{white}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to white font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{gray}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to gray font.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{black}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Switch to black font.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{classes-for-block-text}%
+\hypertarget{classes-for-block-text}{}%
+%
+\section*{Classes For Block Text}
+
+
+These classes have an effect on block text. Please do not confuse the
+alignment of the block with the alignment of the text in the
+block. Eg. a table can be centered, while the text inside the table
+is left-aligned. The alignment of the block is set with the {\ttfamily{{\addfontfeature{Color=00FF00}{align}}}}
+option.\par
+
+\begin{table}[htbp]
+\label{table-49}%
+\hypertarget{table-49}{}%
+\footnotesize
+\begin{center}
+\caption{Classes For Block Text}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Class\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{left}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Left-aligns the text in the block.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{center}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Centers the text in the block.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{right}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Right-aligns the text in the block.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{justify}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Justifies the text in the block.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{white-space-pre-line}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Preserves newlines.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{classes-for-front-matter-markup}%
+\hypertarget{classes-for-front-matter-markup}{}%
+%
+\section*{Classes For Front Matter Markup}
+
+
+EpubMaker includes a few classes to markup front matter. While it is
+not necessary to do this, it adds value. In future the PG catalog
+might automatically extract not only the cover page but also the title
+page, verso, etc.\par
+
+\begin{table}[htbp]
+\label{table-50}%
+\hypertarget{table-50}{}%
+\footnotesize
+\begin{center}
+\caption{Classes For Front Matter Markup}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Class\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{coverpage}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The cover page.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{frontispiece}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The frontispiece.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{titlepage}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The title page.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{verso}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The title page verso.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{dedication}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The dedication page.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=0000FF}{plainpage}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+A general class for page.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+Use these classes on a {\ttfamily{{\addfontfeature{Color=FF0000}{container}}}}. These classes already
+insert page breaks before the container so you need not insert page
+breaks on your own.\par
+
+\begin{quote}
+\begin{alltt}
+.. container:: titlepage
+
+   | Pride and Prejudice
+   |
+   | Written by Jane Austen.
+\end{alltt}
+\end{quote}
+
+\cleardoublepage
+\label{pg-rst-extensions}%
+\hypertarget{pg-rst-extensions}{}%
+%
+\chapter*{PG-RST Extensions}
+
+
+You can create custom roles based on the existing ones. This is how
+you create and then use custom roles.\par
+
+\begin{quote}
+\begin{alltt}
+.. role:: small-caps
+   :class: small-caps
+
+This text is in :small-caps:`Small Caps`.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+This text is in {\scshape{Small Caps}}.\par
+\end{container}
+\end{quotation}
+
+{\noindent}You can attach more than one class to a role:\par
+
+\begin{quote}
+\begin{alltt}
+.. role:: big-and-bold
+   :class: x-large bold
+
+This text is :big-and-bold:`big and bold`.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+This text is {\bfseries{{\LARGE\strut{big and bold}}}}.\par
+\end{container}
+\end{quotation}
+
+\penalty-300%
+\label{styles}%
+\hypertarget{styles}{}%
+%
+\section*{{\noindent}Styles}
+
+
+You can redefine the rendering of elements:\par
+
+\begin{quote}
+\begin{alltt}
+.. style:: emphasis
+   :class: gesperrt
+
+Now *emphasis* will be rendered as gesperrt.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+Now {\addfontfeature{LetterSpace=20.0}{emphasis}} will be rendered as gesperrt.\par
+\end{container}
+\end{quotation}
+
+\begin{quote}
+\begin{alltt}
+{\noindent}.. style:: strong
+   :class: small-caps
+
+And **Strong Emphasis** will be rendered as small-caps.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+And {\scshape{Strong Emphasis}} will be rendered as small-caps.\par
+\end{container}
+\end{quotation}
+
+\begin{quote}
+\begin{alltt}
+{\noindent}.. style:: strong
+   :class: small-caps x-large bold
+
+And **Strong Emphasis** will be rendered as big bold small-caps.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+And {\bfseries{{\scshape{{\LARGE\strut{Strong Emphasis}}}}}} will be rendered as big bold small-caps.\par
+\end{container}
+\end{quotation}
+
+\begin{quote}
+\begin{alltt}
+{\noindent}.. style:: literal
+   :class: red
+
+``literally red``
+
+.. style:: superscript
+   :class: green
+
+:superscript:`sup`\textbackslash{} er
+
+.. style:: title\_reference
+   :class: blue
+
+:title-reference:`Hamlet` and `Othello`.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+{\addfontfeature{Color=FF0000}{literally red}}\par
+
+\textsuperscript{{\addfontfeature{Color=00FF00}{sup}}}er\par
+
+{\addfontfeature{Color=0000FF}{Hamlet}} and {\addfontfeature{Color=0000FF}{Othello}}.\par
+\end{container}
+\end{quotation}
+
+{\noindent}You can semantically markup foreign text:\par
+
+\begin{quote}
+\begin{alltt}
+.. role:: french
+   :class: language-fr italics
+
+:french:`Pas de double` is the French for "father of twins".
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\textfrench{{\itshape{Pas de double}}} is the French for "father of twins".\par
+\end{container}
+\end{quotation}
+
+\penalty-300%
+\label{pagination}%
+\hypertarget{pagination}{}%
+%
+\section*{{\noindent}Pagination}
+
+
+Pagination is important if you generate PDFs. See the Directives For
+Pagination Table.\par
+
+\begin{table}[htbp]
+\label{table-51}%
+\hypertarget{table-51}{}%
+\footnotesize
+\begin{center}
+\caption{Directives For Pagination}
+
+
+
+\setlength{\tablewidth}{1.000\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Directive\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Explanation\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{clearpage}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+This directive inserts a page break.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{cleardoublepage}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+This directive inserts page breaks so
+that the next item starts on
+a right-hand page.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{vfill}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+(PDF only.)\par
+
+This directive generates `elastic´
+vertical space. This space expands to
+all of the free space on one page. If
+you use this more than once on a page,
+the free space is equally divided
+among all invocations.\par
+
+To vertically align an item to the
+bottom, use {\ttfamily{{\addfontfeature{Color=FF0000}{vfill}}}} before
+that item.\par
+
+To vertically align an item about 1/3
+of the page use {\ttfamily{{\addfontfeature{Color=FF0000}{vfill}}}}
+once before the item and twice after
+the item.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{frontmatter}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+(PDF only.)\par
+
+Put this directive at the start of your book.\par
+
+The {\ttfamily{{\addfontfeature{Color=FF0000}{pgheader}}}} directive
+uses this directive internally, so you
+can omit {\ttfamily{{\addfontfeature{Color=FF0000}{frontmatter}}}}
+whenever you use
+{\ttfamily{{\addfontfeature{Color=FF0000}{pgheader}}}}.\par
+
+This directive turns on roman page
+numbers.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{mainmatter}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+(PDF only.)\par
+
+Put this directive after the table of
+contents and before the first chapter.\par
+
+This directive switches from roman
+page numbering to arabic page
+numbering and resets the page counter.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+{\ttfamily{{\addfontfeature{Color=FF0000}{backmatter}}}}\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+(PDF only.)\par
+
+Put this directive before appendices or indices.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{table-of-contents}%
+\hypertarget{table-of-contents}{}%
+%
+\section*{Table of Contents}
+
+
+Use the RST {\ttfamily{{\addfontfeature{Color=FF0000}{contents}}}} directive to automatically generate
+a table of contents.\par
+
+N.B. You may also provide a table of contents manually.\par
+
+In PG-RST the {\ttfamily{{\addfontfeature{Color=FF0000}{contents}}}} directive requires you to specify
+an argument or the {\ttfamily{{\addfontfeature{Color=00FF00}{local}}}} option.\par
+
+The {\ttfamily{{\addfontfeature{Color=00FF00}{local}}}} option displays a local table of contents, containing
+only the sub-sections of the section in which it is declared.\par
+
+The {\ttfamily{{\addfontfeature{Color=00FF00}{page-numbers}}}} option displays the original page number in
+the TOC.\par
+
+\begin{quote}
+\begin{alltt}
+.. contents:: A TOC With Page Numbers
+   :depth: 2
+   :page-numbers:
+\end{alltt}
+\end{quote}
+
+\begin{contents_env}
+\penalty-300%
+\label{id6}%
+\hypertarget{id6}{}%
+%
+\subsection*{A TOC With Page Numbers}
+
+
+\begin{itemize}
+\item[] \hyperlink{installing-epubmaker}{Installing EpubMaker}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+\begin{itemize}
+\item[] \hyperlink{windows}{Windows}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{debian}{Debian}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-classes}{PG-RST Classes}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+\begin{itemize}
+\item[] \hyperlink{classes-for-inline-text}{Classes For Inline Text}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{classes-for-block-text}{Classes For Block Text}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{classes-for-front-matter-markup}{Classes For Front Matter Markup}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-extensions}{PG-RST Extensions}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+\begin{itemize}
+\item[] \hyperlink{styles}{Styles}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{pagination}{Pagination}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-of-contents}{Table of Contents}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{list-of-figures}{List of Figures}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{list-of-tables}{List of Tables}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{toc-entry}{Toc-Entry}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{footnotes}{Footnotes}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{page-numbers}{Page Numbers}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{dropcaps}{Dropcaps}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{tables}{Tables}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+\end{itemize}
+
+\item[] \hyperlink{pg-metadata}{PG Metadata}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+\begin{itemize}
+\item[] \hyperlink{top-boilerplate}{Top Boilerplate}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{metadata-directive}{Metadata Directive}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{bottom-boilerplate}{Bottom Boilerplate}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+\end{itemize}
+
+\item[] \hyperlink{pg-rst-best-practices}{PG-RST Best Practices}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{tests-and-examples}{Examples and Tests}\leaders\hbox to 1em{\hss.\hss}\hfill{} 2
+\begin{itemize}
+\item[] \hyperlink{section-3-1}{Section 3.1}\leaders\hbox to 1em{\hss.\hss}\hfill{} 7
+
+\item[] \hyperlink{section-3-2}{Section 3.2}\leaders\hbox to 1em{\hss.\hss}\hfill{} 123
+
+\item[] \hyperlink{section-3-3}{Section 3.3}\leaders\hbox to 1em{\hss.\hss}\hfill{} 123
+\end{itemize}
+\end{itemize}
+\end{contents_env}
+
+\penalty-300%
+\label{list-of-figures}%
+\hypertarget{list-of-figures}{}%
+%
+\section*{List of Figures}
+
+
+Use the {\ttfamily{{\addfontfeature{Color=FF0000}{lof}}}} directive to generate a list of figures
+automatically.\par
+
+N.B. You may also provide a list of figures manually.\par
+
+\begin{quote}
+\begin{alltt}
+.. lof:: A List of Figures
+   :page-numbers:
+   :backlinks: none
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\penalty-300%
+\label{id7}%
+\hypertarget{id7}{}%
+%
+\subsection*{A List of Figures}
+
+
+\begin{itemize}
+\item[] \hyperlink{figure-4}{Richard and Drucilla Martin}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+\end{itemize}
+\end{container}
+\end{quotation}
+
+\penalty-300%
+\label{list-of-tables}%
+\hypertarget{list-of-tables}{}%
+%
+\section*{{\noindent}List of Tables}
+
+
+Use the {\ttfamily{{\addfontfeature{Color=FF0000}{lot}}}} directive to generate a list of tables.\par
+
+N.B. You may also provide a list of tables manually.\par
+
+\begin{quote}
+\begin{alltt}
+.. lot:: A List of Tables
+   :page-numbers:
+   :backlinks: none
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\penalty-300%
+\label{id8}%
+\hypertarget{id8}{}%
+%
+\subsection*{A List of Tables}
+
+
+\begin{itemize}
+\item[] \hyperlink{table-46}{Classes For Inline Text I}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-47}{Classes For Inline Text II}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-48}{Classes For Inline Text III}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-49}{Classes For Block Text}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-50}{Classes For Front Matter Markup}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-51}{Directives For Pagination}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-52}{Footnote Positions}\leaders\hbox to 1em{\hss.\hss}\hfill{} 1
+
+\item[] \hyperlink{table-53}{Support for dropcaps in output formats}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-54}{Demo Table}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-55}{Truth table for “and”}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-56}{Fields In the PG Scheme}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-57}{Fields In the DC Scheme}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-58}{Fields In the MARCREL Scheme}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-59}{Fields Without Scheme}\leaders\hbox to 1em{\hss.\hss}\hfill{} 43
+
+\item[] \hyperlink{table-60}{{\itshape{TABLE 8}} Types of Computers Used in the Systems Reported}\leaders\hbox to 1em{\hss.\hss}\hfill{} 123
+\end{itemize}
+\end{container}
+\end{quotation}
+
+\penalty-300%
+\label{toc-entry}%
+\hypertarget{toc-entry}{}%
+%
+\section*{{\noindent}Toc-Entry}
+
+
+Use the {\ttfamily{{\addfontfeature{Color=FF0000}{toc-entry}}}} directive to:\par
+
+\begin{itemize}
+\item[-] 
+provide an alternate toc entry\par
+
+\item[-] 
+suppress a toc entry, or\par
+
+\item[-] 
+switch toc gathering on or off.\par
+\end{itemize}
+
+A {\ttfamily{{\addfontfeature{Color=FF0000}{toc-entry}}}} with argument sets the argument as toc entry
+for the next section, figure or table.\par
+
+A {\ttfamily{{\addfontfeature{Color=FF0000}{toc-entry}}}} without argument suppresses the toc entry for
+the next section, figure or table.\par
+
+Use the {\ttfamily{{\addfontfeature{Color=00FF00}{depth}}}} option to set the depth up to which section
+titles are gathered for the toc. A depth of 0 switches toc gathering
+off.\par
+
+\begin{quote}
+\begin{alltt}
+.. toc-entry:: An Alternative Caption
+\end{alltt}
+\end{quote}
+
+\penalty-300%
+\label{footnotes}%
+\hypertarget{footnotes}{}%
+%
+\section*{Footnotes}
+
+
+Always define footnotes right after the paragraph they are referenced.\par
+
+\begin{table}[htbp]
+\label{table-52}%
+\hypertarget{table-52}{}%
+\footnotesize
+\begin{center}
+\caption{Positioning of footnotes}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Format\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.800\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Position\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+HTML\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.800\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Collected under the footnotes directive.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+EPUB\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.800\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Idem.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+TXT\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.800\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Where they are defined.\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PDF\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.800\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+At the bottom of the current page.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+To collect the footnotes use the {\ttfamily{{\addfontfeature{Color=FF0000}{footnotes}}}}
+directive. This directive will output a section with title and all
+footnotes in the document will be moved inside the section.\par
+
+In PDF and TXT formats the {\ttfamily{{\addfontfeature{Color=FF0000}{footnotes}}}} directive will do
+nothing.\footnotemark[1]
+\footnotetext[1]
+{
+Not even print the section title.}\par
+
+Test\footnotemark[2]
+\footnotetext[2]
+{
+Another footnote, to test how multiple footnotes\footnotemark[4] stack on
+one page.}\footnotemark[3]
+
+\footnotetext[3]
+{
+Later editions continued as follows:\par
+
+\begin{verse}
+When the sands are all dry, he is gay as a lark, \\
+And will talk in contemptuous tones of the Shark, \\
+But, when the tide rises and sharks are around, \\
+His voice has a timid and tremulous sound. \\
+\end{verse}
+} .\par
+
+\begin{quote}
+\begin{alltt}
+.. footnotes:: Footnotes
+   :class: smaller
+\end{alltt}
+\end{quote}
+
+\footnotetext[4]
+{
+Gibbon test. A footnote inside a footnote.}
+
+\penalty-300%
+\label{page-numbers}%
+\hypertarget{page-numbers}{}%
+%
+\section*{Page Numbers}
+
+
+The sequence {\ttfamily{{[}pg n{]}}} will convert into a page number marker of
+n. n can be any arabic or roman numeral. The sequence itself will be
+removed from the text flow leaving a page anchor. There {\itshape{must}} be
+spaces around the sequence. If the page break is in the middle of a
+word, join the word and put the sequence at the end of the word.\par
+
+\begin{quote}
+\begin{alltt}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt {[}pg 42{]} ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores {[}pg xviii{]} et ea rebum.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt \pgpageno{42}
+\raisebox{1em}{\label{page-42}%
+\hypertarget{page-42}{}%
+{}}ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores \pgpageno{xviii}
+\raisebox{1em}{\label{page-xviii}%
+\hypertarget{page-xviii}{}%
+{}}et ea rebum.\par
+\end{container}
+\end{quotation}
+
+{\noindent}A reference to a page number can be inserted with the sequence
+{\ttfamily{{[}pg n{]}\_}}. This will generate a link to the page anchor.\par
+
+\begin{quote}
+\begin{alltt}
+See page {[}pg 42{]}\_.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+See page \hyperlink{page-42}{42}.\par
+\end{container}
+\end{quotation}
+
+{\noindent}An invisible page number can be inserted with the sequence
+{\ttfamily{{[}pg!n{]}}}.\par
+
+\begin{quote}
+\begin{alltt}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt {[}pg!43{]} ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores et ea rebum. See page {[}pg 43{]}\_.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt 
+\raisebox{1em}{\label{page-43}%
+\hypertarget{page-43}{}%
+{}}ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores et ea rebum. See page \hyperlink{page-43}{43}.\par
+\end{container}
+\end{quotation}
+
+{\noindent}See page \hyperlink{page-iii}{iii}.\par
+
+\penalty-300%
+\label{dropcaps}%
+\hypertarget{dropcaps}{}%
+%
+\section*{Dropcaps}
+
+
+You can insert dropcaps with the {\ttfamily{{\addfontfeature{Color=FF0000}{dropcap}}}} directive. You
+can use either an enlarged character or an image as dropcap. You can
+also specify a span of character that should be set in small-caps
+after the dropcap initial.\par
+
+\begin{table}[htbp]
+\label{table-53}%
+\hypertarget{table-53}{}%
+\footnotesize
+\begin{center}
+\caption{Support for dropcaps in output formats}
+
+
+
+
+\setlength{\tablewidth}{0.800\linewidth - \tabcolsep * 2 * 3}
+\begin{longtable}{lll}
+\toprule
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Format\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Letter\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Image\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+HTML\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+enlarged and dropped\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+resized and dropped\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+EPUB\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+enlarged on baseline\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+resized on baseline\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+TXT\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+normal size\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+alt text\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PDF\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+enlarged and dropped\footnotemark[5]\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.417\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+resized and dropped\footnotemark[5]\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\footnotetext[5]
+{
+{\itshape{Warning:}} If a paragraph with a dropcap gets page-broken the
+dropcap may stick into the page bottom. Avoid dropcaps unless
+you are sure that you are at the top of a page, like at a
+chapter start.}
+
+The first argument (mandatory) states the character(s) to replace with
+caps. It must match the beginning of the next paragraph.\par
+
+The second (optional) argument states the characters to replace with
+small-caps. It must also match the beginning of the next paragraph.\par
+
+\begin{quote}
+\begin{alltt}
+.. clearpage::
+
+.. dropcap:: L Lorem ipsum
+   :lines: 4
+   :indents: -1.25em 0.5em
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\clearpage
+
+\dimen0=-1.25em\dimen1=0.5em\advance\dimen1-\dimen0\clubpenalty\@M\lettrine[lines=4,findent=\dimen0,nindent=\dimen1]{L}{\scshape{orem ipsum}} dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.\par
+\end{container}
+\end{quotation}
+
+{\noindent}The {\ttfamily{{\addfontfeature{Color=00FF00}{lines}}}} option (PDF only) specifies how many lines the
+dropcap should span. Default is 2.\par
+
+The {\ttfamily{{\addfontfeature{Color=00FF00}{indents}}}} option (PDF only) can specifiy up to 2 length
+values. The first one is the indent of the first line, the second one
+the indent of the following lines. The indent is calculated from the
+right border of the dropcap letter. Defaults are 0em and 0.5em.\par
+
+The {\ttfamily{{\addfontfeature{Color=00FF00}{image}}}} option specifies the image url. In plain text and
+EPUB the image will not be used.\par
+
+\begin{quote}
+\begin{alltt}
+.. clearpage::
+
+.. dropcap:: G
+   :image: images/G.png
+   :lines: 4
+
+Gorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\clearpage
+
+\clubpenalty\@M\lettrine[lines=4,image]{images/G.png}orem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.\par
+\end{container}
+\end{quotation}
+
+\penalty-300%
+\label{tables}%
+\hypertarget{tables}{}%
+%
+\section*{{\noindent}Tables}
+
+
+Be careful with tables because the table support of many ereaders is
+weak or nil.\par
+
+Tables also support these options:\par
+
+\begin{description}
+\item[{\ttfamily{{\addfontfeature{Color=00FF00}{width}}}}] 
+
+Makes the table that wide.\par
+
+\item[{\ttfamily{{\addfontfeature{Color=00FF00}{widths}}}}] 
+
+A space-separated list of unitless values, each specifying the
+relative width of one table column.\par
+
+If you don’t use the option {\ttfamily{{\addfontfeature{Color=00FF00}{widths}}}}, the column widths
+are calculated from the layout of the table in your source file.\par
+
+\item[{\ttfamily{{\addfontfeature{Color=00FF00}{aligns}}}}] 
+
+Horizontally align the columns.\par
+
+A space-separated list of alignments, each specifying the
+alignment of one column.\par
+
+Valid alignments values are: left, center, right and justify.\par
+
+\item[{\ttfamily{{\addfontfeature{Color=00FF00}{vertical-aligns}}}}] 
+
+Vertically align the columns.\par
+
+A space-separated list of vertical alignments, each specifying the
+alignment of one column.\par
+
+Valid alignments values are: top, middle, and bottom.\par
+
+Note: vertical alignment is fully supported in HTML only. Other
+formats may support it in varying degrees.\par
+
+\item[{\ttfamily{{\addfontfeature{Color=00FF00}{summary}}}} (HTML only.)] 
+
+Puts a summary attribute on the table element.\par
+\end{description}
+
+These are the extra classes supported by PG-RST:\par
+
+\begin{description}
+\item[{\ttfamily{{\addfontfeature{Color=0000FF}{norules}}}}] 
+
+Omits the rules between table rows. (Not the rule between header
+and body nor the rules at the top and bottom of the table.)\par
+
+Use this class when the eye can follow the table rows without the
+aid of rules.\par
+\end{description}
+
+\begin{quote}
+\begin{alltt}
+.. table:: Demo Table
+   :width: 100\%
+   :align: center
+   :widths: 3 1 1 1
+   :aligns: justify justify center right
+   :vertical-aligns: top middle bottom top
+   :summary: This table contains valuable data.
+
+   +------------------------+-----------+----------+-----------+
+   | Header row, column 1   | Justified | Centered | Price (\$) |
+   | (header rows optional) |           |          |           |
+   +========================+===========+==========+===========+
+   | row 1                  | column    |  column  |      1.23 |
+   +------------------------+-----------+----------+-----------+
+   | row 2                  | col col   |   col    |     45.67 |
+   |                        | col col   |          |           |
+   |                        | col col   |          |           |
+   |                        | col       |          |           |
+   +------------------------+-----------+----------+-----------+
+   | row 3                  | Cells may span columns.          |
+   |                        | Lorem ipsum dolor sit amet,      |
+   |                        | consetetur sadipscing elitr, sed |
+   |                        | nonumy eirmod tempor invidunt ut |
+   |                        | labore et dolore magna aliquyam  |
+   |                        | sed diam voluptua. At vero eos   |
+   |                        | accusam et justo duo dolores et  |
+   |                        | rebum.                           |
+   +------------------------+-----------+----------+-----------+
+   | Cells may span rows and            | Cells    | row 4     |
+   | columns. Lorem ipsum dolor sit     | may span +-----------+
+   | amet, consetetur adipiscing.       | rows.    | row 5     |
+   +------------------------------------+----------+-----------+
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\begin{table}[htbp]
+\label{table-54}%
+\hypertarget{table-54}{}%
+\footnotesize
+\begin{center}
+\caption{Demo Table}
+
+
+
+
+
+\setlength{\tablewidth}{1.000\linewidth - \tabcolsep * 2 * 4}
+\begin{longtable}{llll}
+\toprule
+\setlength{\dimen0}{0.500\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Header row, column 1
+(header rows optional)\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Justified\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[b]{\dimen0}{\centering\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Centered\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Price (\$)\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.500\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+row 1\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+column\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[b]{\dimen0}{\centering\setlength{\parskip}{1em}\noindent\@arstrut
+column\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+1.23\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}\cmidrule{3-3}\cmidrule{4-4}
+\setlength{\dimen0}{0.500\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+row 2\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+col col
+col col
+col col
+col\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[b]{\dimen0}{\centering\setlength{\parskip}{1em}\noindent\@arstrut
+col\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+45.67\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-4}
+\setlength{\dimen0}{0.500\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+row 3\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.500\tablewidth + \tabcolsep * 2 * 2}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Cells may span columns.
+Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed
+nonumy eirmod tempor invidunt ut
+labore et dolore magna aliquyam
+sed diam voluptua. At vero eos
+accusam et justo duo dolores et
+rebum.\@arstrut}}\setlength{\dimen0}{0.167\tablewidth}\wd0\dimen0\box0 & &\tabularnewline
+
+\cmidrule{1-2}\cmidrule{3-3}\cmidrule{4-4}
+\setlength{\dimen0}{0.667\tablewidth + \tabcolsep * 1 * 2}\setlength{\dimen1}{\ht\@arstrutbox * 2}\addtolength{\dimen1}{\dp\@arstrutbox * 1}\addtolength{\dimen1}{(\aboverulesep + \belowrulesep) * 1}\setbox0\vbox{\hsize\dimen0\parbox[t][\dimen1][t]{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Cells may span rows and
+columns. Lorem ipsum dolor sit
+amet, consetetur adipiscing.\@arstrut}}\setlength{\dimen0}{0.500\tablewidth}\wd0\dimen0\ht0\ht\@arstrutbox\dp0 0pt\box0 & & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setlength{\dimen1}{\ht\@arstrutbox * 2}\addtolength{\dimen1}{\dp\@arstrutbox * 1}\addtolength{\dimen1}{(\aboverulesep + \belowrulesep) * 1}\setbox0\vbox{\hsize\dimen0\parbox[b][\dimen1][b]{\dimen0}{\centering\setlength{\parskip}{1em}\noindent\@arstrut
+Cells
+may span
+rows.\@arstrut}}\ht0\ht\@arstrutbox\dp0 0pt\box0 & 
+
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+row 4\@arstrut}}\box0\tabularnewline
+
+\cmidrule{4-4}
+ & 
+ & 
+ & 
+\setlength{\dimen0}{0.167\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+row 5\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+\end{container}
+\end{quotation}
+
+\begin{quote}
+\begin{alltt}
+{\noindent}.. table:: Truth table for “and”
+   :class: norules
+   :align: center
+   :width: 50\%
+
+   ===== ===== =========
+     A     B    A and B
+   ===== ===== =========
+   False False False
+   True  False False
+   False True  False
+   True  True  True
+   ===== ===== =========
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\begin{table}[htbp]
+\label{table-55}%
+\hypertarget{table-55}{}%
+\footnotesize
+\begin{center}
+\caption{Truth table for “and”}
+
+
+
+
+\setlength{\tablewidth}{0.500\linewidth - \tabcolsep * 2 * 3}
+\begin{longtable}{lll}
+\toprule
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+A\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+B\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.474\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+A and B\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.474\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+True\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.474\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+True\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.474\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+False\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+True\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.263\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+True\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.474\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+True\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+\end{container}
+\end{quotation}
+
+\cleardoublepage
+\label{pg-metadata}%
+\hypertarget{pg-metadata}{}%
+%
+\chapter*{{\noindent}PG Metadata}
+
+
+\penalty-300%
+\label{top-boilerplate}%
+\hypertarget{top-boilerplate}{}%
+%
+\section*{Top Boilerplate}
+
+
+This section explains the PG boilerplate that you must put at the top
+of your PG-RST file.\par
+
+It looks like this:\par
+
+\begin{quote}
+\begin{alltt}
+ .. -*- encoding: utf-8 -*-      (1)
+
+ .. meta::                       (2)
+    :PG.Id: 181
+    :PG.Title: Very Short Title
+    :PG.Released: 2010-11-25
+    :PG.Rights: Public Domain
+    :PG.Producer: Woody Guthrie
+    :PG.Producer: Pete Seeger
+    :PG.Producer: The Almanac Singers
+    :PG.Credits: This file was produced from images stolen from the Louvre.
+    :DC.Creator: Jane Austen
+    :MARCREL.edt: Mark Twain
+    :MARCREL.ill: Édouard Manet
+    :DC.Title: Full Title Statement
+    :DC.Language: en
+    :DC.Language: fr
+    :DC.Language: de
+    :DC.Created: 1900
+    :coverpage: images/cover.jpg
+
+
+ ===========
+ Short Title                     (3)
+ ===========
+
+ .. pgheader::                   (4)
+\end{alltt}
+\end{quote}
+
+\begin{itemize}
+\item[(1)] 
+Insert this line verbatim. It must be the first line in the
+text.\footnotemark[6]
+\footnotetext[6]
+{
+A unicode BOM is allowed before this.
+In fact most Windows editors will add a BOM without asking you.} This tells the converter to use UTF-8 encoding and is
+also recognized by many editors.\par
+
+\item[(2)] 
+The metadata directive: see section below.\par
+
+\item[(3)] 
+This will be the first line of the generated files. It should
+say: “The Project Gutenberg Ebook of Title” or just “Title”. Use
+’=’ above and below the title.\par
+
+\item[(4)] 
+This directive inserts the PG header as generated from the metadata.\par
+\end{itemize}
+
+\penalty-300%
+\label{metadata-directive}%
+\hypertarget{metadata-directive}{}%
+%
+\section*{Metadata Directive}
+
+
+The metadata directive contains all data that is used to generate the
+PG header and the PG catalog entry.\par
+
+The scheme is the part before the dot.\par
+
+\penalty-300%
+\label{pg-scheme}%
+\hypertarget{pg-scheme}{}%
+%
+\subsection*{PG Scheme}
+
+
+The PG scheme holds data that is relevant to Project Gutenberg only.\par
+
+\begin{table}[htbp]
+\label{table-56}%
+\hypertarget{table-56}{}%
+\footnotesize
+\begin{center}
+\caption{Fields In the PG Scheme}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Name\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Contents\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Id\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The ebook number.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Released\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The PG release date in YYYY-MM-DD format.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Rights\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Either ’Public Domain’ or ’Copyrighted’.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Title\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+A much shortened form of the title. Used in the PG boilerplate
+in the lines that say: “Start of this PG ebook …” and “End of
+this PG ebook …”.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Producer\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+A personal name or organization that helped produce this text.
+This field may appear more than once.
+Don’t put more than one name into one field.
+Repeat the field if necessary.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+PG.Credits\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+A line acknowledging the source of the images or other stuff.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{dc-scheme}%
+\hypertarget{dc-scheme}{}%
+%
+\subsection*{DC Scheme}
+
+
+This scheme holds standard Dublincore stuff and is used by many search
+engines and the PG cataloguing software.\par
+
+\begin{table}[htbp]
+\label{table-57}%
+\hypertarget{table-57}{}%
+\footnotesize
+\begin{center}
+\caption{Fields In the DC Scheme}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Name\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Contents\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+DC.Creator\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Author. A personal name or organization that created the text.
+May appear more than once.
+Don’t put more than one name into one field.
+Repeat the field if necessary.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+DC.Title\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The full title statement as found on the book’s title page.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+DC.Language\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The 2 or 3 letter code for all languages used for substantial
+portions of the text.
+May appear more than once.
+Don’t put more than one code into one field.
+Repeat the field if necessary.
+The languages listed here are indicative for the catalog and
+do not set the text language and hyphenation rules. Use the
+option {\ttfamily{{\addfontfeature{Color=00FF00}{class}}}} language-<language-code> for that.\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+DC.Created\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+The year of original publication if known.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{marcrel-scheme}%
+\hypertarget{marcrel-scheme}{}%
+%
+\subsection*{MARCREL Scheme}
+
+
+This is used to record contributors to the text. All these fields may
+appear more than once. Don’t put more than one name into one
+field. Repeat the field if necessary.\par
+
+\begin{table}[htbp]
+\label{table-58}%
+\hypertarget{table-58}{}%
+\footnotesize
+\begin{center}
+\caption{Fields In the MARCREL Scheme}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Name\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Contents\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+MARCREL.edt\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Editor\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+MARCREL.ill\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Illustrator\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+MARCREL.trl\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+Translator\@arstrut}}\box0\tabularnewline
+
+\cmidrule{1-1}\cmidrule{2-2}
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+MARCREL.*\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+See the {full list of MARC relator codes}\label{full-list-of-marc-relator-codes}%
+\hypertarget{full-list-of-marc-relator-codes}{}%
+{}.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{no-scheme}%
+\hypertarget{no-scheme}{}%
+%
+\subsection*{No Scheme}
+
+
+Some fields are associated with none of the above schemes.\par
+
+\begin{table}[htbp]
+\label{table-59}%
+\hypertarget{table-59}{}%
+\footnotesize
+\begin{center}
+\caption{Fields Without Scheme}
+
+
+
+\setlength{\tablewidth}{0.750\linewidth - \tabcolsep * 2 * 2}
+\begin{longtable}{ll}
+\toprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Name\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Contents\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.250\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+coverpage\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.750\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\setlength{\parskip}{1em}\noindent\@arstrut
+A coverpage for those formats (eg. Kindle) that support
+a cover page.
+This image must be included in the upload but must not
+necessarily be put in the text flow.\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\penalty-300%
+\label{bottom-boilerplate}%
+\hypertarget{bottom-boilerplate}{}%
+%
+\section*{Bottom Boilerplate}
+
+
+You must put this at the very bottom of your PG-RST file.\par
+
+\begin{quote}
+\begin{alltt}
+ .. pgfooter::     (1)
+\end{alltt}
+\end{quote}
+
+\begin{itemize}
+\item[(1)] 
+This directive inserts the PG footer and license.\par
+\end{itemize}
+
+\cleardoublepage
+\label{pg-rst-best-practices}%
+\hypertarget{pg-rst-best-practices}{}%
+%
+\chapter*{PG-RST Best Practices}
+
+
+\vspace{1em}
+\begin{center}
+Images
+\end{center}
+
+\vspace{2em}
+Specify a {\ttfamily{{\addfontfeature{Color=00FF00}{width}}}} option in images and a {\ttfamily{{\addfontfeature{Color=00FF00}{figwidth}}}}
+option in figures and express it in percent.\par
+
+If you don’t specify a width, the converter will calculate the width
+percentile for you, using the formula:\par
+
+\begin{quote}
+\begin{alltt}
+image\_width / (980px * 0.8) * 100
+\end{alltt}
+\end{quote}
+
+(980px is the approx. wide of a browser window with scrollbar on a
+1024px wide screen, 0.8 are 10\% margins left and right.)\par
+
+Expressing the image size relative to the screen width is the best way
+to get images right on a wide variety of devices form iPhones to
+print.\par
+
+\begin{quote}
+\begin{alltt}
+.. toc-entry:: Richard and Drucilla Martin
+
+.. figure:: images/cover.jpg
+   :align: center
+   :alt: Richard and Drucilla Martin
+
+   :lb:`Richard Martin was a slave in Memphis, Tennessee.
+   Drucilla Martin was a slave in Giles County, Tennessee.`
+
+   The legend consists of all elements after the caption.  Lorem
+   ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+   erat, sed diam voluptua. At vero eos et accusam et justo duo
+   dolores et ea rebum.
+\end{alltt}
+\end{quote}
+
+\begin{quotation}\noindent
+\begin{container}
+\begin{figure}[h!]
+\label{figure-4}%
+\hypertarget{figure-4}{}%
+\begin{center}
+\begin{center}
+\includegraphics{http://www.gutenberg.org/masters/rst/181\images/cover.jpg}
+\end{center}
+\begin{center}
+{\itshape{Richard Martin was a slave in Memphis, Tennessee. \\
+Drucilla Martin was a slave in Giles County, Tennessee.
+}}
+\end{center}
+
+\vspace{1em}
+The legend consists of all elements after the caption.  Lorem
+ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum.\par
+\end{center}
+\end{figure}
+\end{container}
+\end{quotation}
+
+\cleardoublepage
+\label{tests-and-examples}%
+\hypertarget{tests-and-examples}{}%
+%
+\chapter*{
+\vspace{1em}
+\raisebox{1em}{\label{page-2}%
+\hypertarget{page-2}{}%
+{}}{\noindent}Tests and Examples}
+
+
+\begin{quotation}
+\textbf{{\noindent}Notice}\par
+
+\vspace{1em}
+
+
+The rest of this file contains tests. You may look at the RST
+source to learn how things are done.\par
+\end{quotation}
+
+A generated local table of contents:\par
+
+\begin{container}
+\begin{itemize}
+\item[] \hyperlink{section-3-1}{Section 3.1}
+
+\item[] \hyperlink{section-3-2}{Section 3.2}
+
+\item[] \hyperlink{section-3-3}{Section 3.3}
+\end{itemize}
+\end{container}
+
+{\noindent}A local table of contents as highlights:\par
+
+\begin{quotation}
+{\noindent}Kingston — Instructive remarks on early English history —
+Instructive observations on carved oak and life in general — Sad
+case of Stivvings, junior — Musings on antiquity — I forget that I
+am steering — Interesting result — Hampton Court Maze — Harris as a
+guide.\par
+\end{quotation}
+
+ÄÖÜ äöüß Æsop Œdipus cœr. Đ. †‡ ｳ. §2.1\par
+
+‘’ ‚‛ “ ” ‹› em — en –.\par
+
+“ ‘Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.’ ”\par
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. \pgpageno{3}
+\raisebox{1em}{\label{page-3}%
+\hypertarget{page-3}{}%
+{}}At vero eos et accusam et justo duo dolores
+et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.\par
+
+\medskip\noindent\hspace*{\fill}\hrulefill\hspace*{\fill}\par\medskip\noindent
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.\par
+
+\pgpageno{4}
+\raisebox{1em}{\label{page-4}%
+\hypertarget{page-4}{}%
+{}}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.\par
+
+\begin{container}
+\begin{center}
+\begin{verse}
+{\advance\leftskip2em{}
+‘Speak roughly to your little boy, \\
+{\advance\leftskip2em{}
+And beat him when he sneezes: \\}
+
+He only does it to annoy, \\
+{\advance\leftskip2em{}
+Because he knows it teases.’ \\
+\vspace*{1em}
+{\advance\leftskip2em{}
+{\advance\leftskip2em{}
+CHORUS. \\
+\vspace*{1em}}}}}
+
+(In which the cook and the baby joined):— \\
+\vspace*{1em}
+{\advance\leftskip2em{}
+{\advance\leftskip2em{}
+{\advance\leftskip2em{}
+‘Wow! wow! wow!’ \\}}}
+\end{verse}
+
+\begin{verse}
+Summer wanes, the children are grown; \\
+{\advance\leftskip2em{}
+Fun and frolic no more he knows; \\}
+
+Robert of Lincoln’s a humdrum crone; \\
+{\advance\leftskip2em{}
+Off he flies and we sing as he goes: \\
+{\advance\leftskip2em{}
+Bob-o’link, bob-o’-link, \\
+Spink, spank, spink; \\}}
+
+When you can pipe that merry old strain, \\
+Robert of Lincoln, come back again. \\
+{\advance\leftskip2em{}
+{\advance\leftskip2em{}
+{\advance\leftskip2em{}
+Chee, chee, chee. \\}}}
+\end{verse}
+\end{center}
+\end{container}
+
+{\noindent}And now a quote by Lorem Ipsum:\par
+
+\begin{quotation}
+{\noindent}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+et ea rebum. Stet clita \pgpageno{5}
+\raisebox{1em}{\label{page-5}%
+\hypertarget{page-5}{}%
+{}}kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
+eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\par
+
+\nopagebreak
+
+\raggedleft ― Lorem Ipsum\\
+\end{quotation}
+
+\penalty-300%
+\label{section-3-1}%
+\hypertarget{section-3-1}{}%
+%
+\section*{\pgpageno{7}
+\raisebox{1em}{\label{page-7}%
+\hypertarget{page-7}{}%
+{}}Section 3.1}
+
+
+\begin{quotation}
+{\noindent}I pity the man who can travel from Dan to Beersheba, and say “’Tis
+all barren;” and so is all the world to him who will not cultivate
+the fruits it offers.\par
+
+\nopagebreak
+
+\raggedleft ― Sterne: Sentimental Journey.\\
+\end{quotation}
+
+Simple List with hyphens\par
+
+\begin{itemize}
+\item[-] 
+Wash left ear.\par
+
+\item[-] 
+Wash right ear.\par
+
+\item[-] 
+Brush teeth.\par
+\end{itemize}
+
+Simple List with bullets\par
+
+\begin{itemize}
+\item[•] 
+Wash left ear.\par
+
+\item[•] 
+Wash right ear.\par
+
+\item[•] 
+Brush teeth.\par
+\end{itemize}
+
+Nested List\par
+
+\begin{itemize}
+\item[1.] 
+Item 1.\par
+
+\begin{itemize}
+\item[a)] 
+Item 1a.\par
+
+\item[b)] 
+Item 1b.\par
+
+\begin{itemize}
+\item[I)] 
+Item 1.a.I\par
+
+\item[II)] 
+Item 1.a.II\par
+
+\item[III)] 
+Item 1.a.III\par
+
+\item[IV)] 
+Item 1.a.IV\par
+\end{itemize}
+\end{itemize}
+
+\item[2.] 
+\begin{itemize}
+\item[A)] 
+\begin{itemize}
+\item[i)] 
+Item 2.A.i \pgpageno{8}
+\raisebox{1em}{\label{page-8}%
+\hypertarget{page-8}{}%
+{}}\par
+
+\item[ii)] 
+Item 2.A.ii\par
+\end{itemize}
+
+\item[B)] 
+\begin{itemize}
+\item[i)] 
+Item 2.B.i\par
+
+\item[ii)] 
+Item 2.B.ii\par
+
+\item[iii)] 
+Item 2.B.iii\par
+\end{itemize}
+
+\item[C)] 
+Item 2.C\par
+\end{itemize}
+
+\item[3.] 
+Item 3.\par
+\end{itemize}
+
+Definition List\par
+
+\begin{description}
+\item[term] 
+
+Definition.\par
+
+\item[term 2] 
+
+Definition 2\par
+
+Definition 2 paragraph 2.\par
+
+\item[long term 3] 
+
+Definition 3\par
+\end{description}
+
+Option List (not used by PG)\par
+
+-a, 
+
+command-line option "a"\par
+
+-1
+
+ {\itshape{
+{\itshape{file
+}}}}, 
+
+--one
+
+={\itshape{
+{\itshape{file
+}}}}, 
+
+--two
+
+ {\itshape{
+{\itshape{file
+}}}}, 
+
+Multiple options with arguments.\par
+
+\penalty-300%
+\label{section-3-2}%
+\hypertarget{section-3-2}{}%
+%
+\section*{\pgpageno{123}
+\raisebox{1em}{\label{page-123}%
+\hypertarget{page-123}{}%
+{}}Section 3.2\footnotemark[7]}
+
+
+\footnotetext[7]
+{
+This title contains a footnote reference. The footnote reference
+will not show up in the TOC.}
+
+Some text so this section isn’t empty.\par
+
+\penalty-300%
+\label{section-3-3}%
+\hypertarget{section-3-3}{}%
+%
+\section*{Section 3.3}
+
+
+\vspace{1em}
+\begin{center}
+THE MAN WHO PLEASES.
+\end{center}
+
+\vspace{2em}
+\begin{container}
+\begin{quotation}
+\begin{verse}
+{\itshape{The dearest friend to me, the kindest man,
+}} \\
+{\itshape{The best-conditioned and unwearied spirit
+}} \\
+{\itshape{In doing courtesies.
+}} \\
+\end{verse}
+
+\nopagebreak
+
+\raggedleft ― 
+{\scshape{Merchant of Venice.
+}}\\
+\end{quotation}
+
+\begin{quotation}
+\begin{verse}
+{\itshape{He hath a daily beauty in his life.
+}} \\
+\end{verse}
+
+\nopagebreak
+
+\raggedleft ― 
+{\scshape{Othello.
+}}\\
+\end{quotation}
+
+\begin{quotation}
+\begin{verse}
+{\itshape{Such a man would win any woman in the world
+}} \\
+{\itshape{if a’ could get her good will.
+}} \\
+\end{verse}
+
+\nopagebreak
+
+\raggedleft ― 
+{\scshape{Much Ado About Nothing.
+}}\\
+\end{quotation}
+\end{container}
+
+{\noindent}There are few subjects of deeper interest to
+men and women than that of personal fascination,\par
+
+\begin{quotation}
+{\noindent}«Ora si comincia per quelli di
+fuori e per quelli di dentro a far
+grandissima e crudel guerra.»\par
+
+\begin{flushright}
+{\itshape{Istorie pistolesi.}}
+\end{flushright}
+\par
+\end{quotation}
+
+\begin{table}[htbp]
+\label{table-60}%
+\hypertarget{table-60}{}%
+\footnotesize
+\begin{center}
+\caption{{\itshape{TABLE 8}} Types of Computers Used in the Systems Reported}
+
+
+
+
+\setlength{\tablewidth}{0.500\linewidth - \tabcolsep * 2 * 3}
+\begin{longtable}{lll}
+\toprule
+\setlength{\dimen0}{0.600\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedright\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Type\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\bfseries\setlength{\parskip}{1em}\noindent\@arstrut
+Number\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox{\dimen0}{\raggedleft\bfseries\setlength{\parskip}{1em}\noindent\@arstrut\@arstrut}}\box0\tabularnewline
+
+\otoprule
+\setlength{\dimen0}{0.600\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedright\setlength{\parskip}{1em}\noindent\@arstrut
+ASI 210\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+1\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setlength{\dimen1}{\ht\@arstrutbox * 2}\addtolength{\dimen1}{\dp\@arstrutbox * 1}\addtolength{\dimen1}{(\aboverulesep + \belowrulesep) * 1}\setbox0\vbox{\hsize\dimen0\parbox[c][\dimen1][c]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+(3)\@arstrut}}\ht0\ht\@arstrutbox\dp0 0pt\box0\tabularnewline
+
+\setlength{\dimen0}{0.600\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedright\setlength{\parskip}{1em}\noindent\@arstrut
+ASI 2100\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+2\@arstrut}}\box0\tabularnewline
+
+\setlength{\dimen0}{0.600\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedright\setlength{\parskip}{1em}\noindent\@arstrut
+CDC 160A\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+2\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setlength{\dimen1}{\ht\@arstrutbox * 2}\addtolength{\dimen1}{\dp\@arstrutbox * 1}\addtolength{\dimen1}{(\aboverulesep + \belowrulesep) * 1}\setbox0\vbox{\hsize\dimen0\parbox[c][\dimen1][c]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+(3)\@arstrut}}\ht0\ht\@arstrutbox\dp0 0pt\box0\tabularnewline
+
+\setlength{\dimen0}{0.600\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedright\setlength{\parskip}{1em}\noindent\@arstrut
+CDC 3100\@arstrut}}\box0 & 
+
+\setlength{\dimen0}{0.200\tablewidth}\setbox0\vbox{\hsize\dimen0\parbox[t]{\dimen0}{\raggedleft\setlength{\parskip}{1em}\noindent\@arstrut
+1\@arstrut}}\box0\tabularnewline
+\bottomrule
+\end{longtable}
+\end{center}
+\end{table}
+
+\begin{quote}
+\begin{alltt}
+{\footnotesize{total computer cost                   0.22 ± 0.06 by averaging
+------------------------  =  0.23 ->  separate ratios for each
+cost of bare accelerator              system
+}}
+\end{alltt}
+\end{quote}
+
+%
+\backmatter
+%
+
+
+\raisebox{1em}{\label{page-10}%
+\hypertarget{page-10}{}%
+{}}\pgpageno{99}
+\raisebox{1em}{\label{page-99}%
+\hypertarget{page-99}{}%
+{}}\par
+
+\begin{quotation}
+\textbf{{\noindent}Transcriber’s Note}\par
+
+\vspace{1em}
+
+
+Minor spelling errors have been silently corrected.\par
+
+Hyphenation has been made consistent.\par
+\end{quotation}
+
+\vspace{5em}
+\label{pg-end-line}%
+\hypertarget{pg-end-line}{}%
+{}
+
+*** END OF THIS PROJECT GUTENBERG EBOOK PG-RST MANUAL ***\par
+
+%
+\backmatter
+%
+
+{}
+
+\begin{english}
+\begin{pgfooter_env}
+\cleardoublepage
+\label{a-word-from-project-gutenberg}%
+\hypertarget{a-word-from-project-gutenberg}{}%
+\label{pg-footer}%
+\hypertarget{pg-footer}{}%
+%
+\chapter*{A Word from Project Gutenberg}
+
+
+We will update this book if we find any errors.\par
+
+This book can be found under: {http://www.gutenberg.org/ebooks/181}\par
+
+Creating the works from public domain print editions means that no one
+owns a United States copyright in these works, so the Foundation (and
+you!) can copy and distribute it in the United States without
+permission and without paying copyright royalties.  Special rules, set
+forth in the General Terms of Use part of this license, apply to
+copying and distributing Project Gutenberg™ electronic works to
+protect the Project Gutenberg™ concept and trademark. Project
+Gutenberg is a registered trademark, and may not be used if you charge
+for the eBooks, unless you receive specific permission. If you do not
+charge anything for copies of this eBook, complying with the rules is
+very easy. You may use this eBook for nearly any purpose such as
+creation of derivative works, reports, performances and research.
+They may be modified and printed and given away – you may do
+practically {\itshape{anything}} with public domain eBooks.  Redistribution is
+subject to the trademark license, especially commercial
+redistribution.\par{}
+
+\penalty-300%
+\label{the-full-project-gutenberg-license}%
+\hypertarget{the-full-project-gutenberg-license}{}%
+\label{project-gutenberg-license}%
+\hypertarget{project-gutenberg-license}{}%
+%
+\section*{The Full Project Gutenberg License}
+
+
+{\itshape{Please read this before you distribute or use this work.}}\par
+
+To protect the Project Gutenberg™ mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase “Project
+Gutenberg”), you agree to comply with all the terms of the Full
+Project Gutenberg™ License available with this file or online at
+{http://www.gutenberg.org/license}.\par
+
+\penalty-300%
+\label{section-1-general-terms-of-use-redistributing-project-gutenberg-electronic-works}%
+\hypertarget{section-1-general-terms-of-use-redistributing-project-gutenberg-electronic-works}{}%
+%
+\subsection*{Section 1. General Terms of Use \& Redistributing Project Gutenberg™ electronic works}
+
+
+{\bfseries{1.A.}} By reading or using any part of this Project Gutenberg™
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement. If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or
+destroy all copies of Project Gutenberg™ electronic works in your
+possession. If you paid a fee for obtaining a copy of or access to a
+Project Gutenberg™ electronic work and you do not agree to be bound by
+the terms of this agreement, you may obtain a refund from the person
+or entity to whom you paid the fee as set forth in paragraph 1.E.8.\par
+
+{\bfseries{1.B.}} “Project Gutenberg” is a registered trademark. It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement. There are a few
+things that you can do with most Project Gutenberg™ electronic works
+even without complying with the full terms of this agreement. See
+paragraph 1.C below. There are a lot of things you can do with Project
+Gutenberg™ electronic works if you follow the terms of this agreement
+and help preserve free future access to Project Gutenberg™ electronic
+works. See paragraph 1.E below.\par
+
+{\bfseries{1.C.}} The Project Gutenberg Literary Archive Foundation (“the
+Foundation” or PGLAF), owns a compilation copyright in the collection
+of Project Gutenberg™ electronic works. Nearly all the individual
+works in the collection are in the public domain in the United
+States. If an individual work is in the public domain in the United
+States and you are located in the United States, we do not claim a
+right to prevent you from copying, distributing, performing,
+displaying or creating derivative works based on the work as long as
+all references to Project Gutenberg are removed. Of course, we hope
+that you will support the Project Gutenberg™ mission of promoting free
+access to electronic works by freely sharing Project Gutenberg™ works
+in compliance with the terms of this agreement for keeping the Project
+Gutenberg™ name associated with the work. You can easily comply with
+the terms of this agreement by keeping this work in the same format
+with its attached full Project Gutenberg™ License when you share it
+without charge with others.\par
+
+{\bfseries{1.D.}} The copyright laws of the place where you are located also
+govern what you can do with this work. Copyright laws in most
+countries are in a constant state of change. If you are outside the
+United States, check the laws of your country in addition to the terms
+of this agreement before downloading, copying, displaying, performing,
+distributing or creating derivative works based on this work or any
+other Project Gutenberg™ work.  The Foundation makes no
+representations concerning the copyright status of any work in any
+country outside the United States.\par
+
+{\bfseries{1.E.}} Unless you have removed all references to Project Gutenberg:\par
+
+{\bfseries{1.E.1.}} The following sentence, with active links to, or other
+immediate access to, the full Project Gutenberg™ License must appear
+prominently whenever any copy of a Project Gutenberg™ work (any work
+on which the phrase “Project Gutenberg” appears, or with which the
+phrase “Project Gutenberg” is associated) is accessed, displayed,
+performed, viewed, copied or distributed:\par
+
+\begin{quotation}
+{\noindent}This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever. You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at {http://www.gutenberg.org}\par
+\end{quotation}
+
+{\bfseries{1.E.2.}} If an individual Project Gutenberg™ electronic work is
+derived from the public domain (does not contain a notice indicating
+that it is posted with permission of the copyright holder), the work
+can be copied and distributed to anyone in the United States without
+paying any fees or charges. If you are redistributing or providing
+access to a work with the phrase “Project Gutenberg” associated with
+or appearing on the work, you must comply either with the requirements
+of paragraphs 1.E.1 through 1.E.7 or obtain permission for the use of
+the work and the Project Gutenberg™ trademark as set forth in
+paragraphs 1.E.8 or 1.E.9.\par
+
+{\bfseries{1.E.3.}} If an individual Project Gutenberg™ electronic work is
+posted with the permission of the copyright holder, your use and
+distribution must comply with both paragraphs 1.E.1 through 1.E.7 and
+any additional terms imposed by the copyright holder. Additional terms
+will be linked to the Project Gutenberg™ License for all works posted
+with the permission of the copyright holder found at the beginning of
+this work.\par
+
+{\bfseries{1.E.4.}} Do not unlink or detach or remove the full Project
+Gutenberg™ License terms from this work, or any files containing a
+part of this work or any other work associated with Project
+Gutenberg™.\par
+
+{\bfseries{1.E.5.}} Do not copy, display, perform, distribute or redistribute
+this electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg™ License.\par
+
+{\bfseries{1.E.6.}} You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including
+any word processing or hypertext form. However, if you provide access
+to or distribute copies of a Project Gutenberg™ work in a format other
+than “Plain Vanilla ASCII” or other format used in the official
+version posted on the official Project Gutenberg™ web site
+({http://www.gutenberg.org}), you must, at no additional cost, fee or
+expense to the user, provide a copy, a means of exporting a copy, or a
+means of obtaining a copy upon request, of the work in its original
+“Plain Vanilla ASCII” or other form. Any alternate format must include
+the full Project Gutenberg™ License as specified in paragraph 1.E.1.\par
+
+{\bfseries{1.E.7.}} Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg™ works
+unless you comply with paragraph 1.E.8 or 1.E.9.\par
+
+{\bfseries{1.E.8.}} You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg™ electronic works provided
+that\par
+
+\begin{itemize}
+\item[-] 
+You pay a royalty fee of 20\% of the gross profits you derive from
+the use of Project Gutenberg™ works calculated using the method you
+already use to calculate your applicable taxes. The fee is owed to
+the owner of the Project Gutenberg™ trademark, but he has agreed to
+donate royalties under this paragraph to the Project Gutenberg
+Literary Archive Foundation. Royalty payments must be paid within 60
+days following each date on which you prepare (or are legally
+required to prepare) your periodic tax returns. Royalty payments
+should be clearly marked as such and sent to the Project Gutenberg
+Literary Archive Foundation at the address specified in Section 4,
+“Information about donations to the Project Gutenberg Literary
+Archive Foundation.”\par
+
+\item[-] 
+You provide a full refund of any money paid by a user who notifies
+you in writing (or by e-mail) within 30 days of receipt that s/he
+does not agree to the terms of the full Project Gutenberg™
+License. You must require such a user to return or destroy all
+copies of the works possessed in a physical medium and discontinue
+all use of and all access to other copies of Project Gutenberg™
+works.\par
+
+\item[-] 
+You provide, in accordance with paragraph 1.F.3, a full refund of
+any money paid for a work or a replacement copy, if a defect in the
+electronic work is discovered and reported to you within 90 days of
+receipt of the work.\par
+
+\item[-] 
+You comply with all other terms of this agreement for free
+distribution of Project Gutenberg™ works.\par
+\end{itemize}
+
+{\bfseries{1.E.9.}} If you wish to charge a fee or distribute a Project
+Gutenberg™ electronic work or group of works on different terms than
+are set forth in this agreement, you must obtain permission in writing
+from both the Project Gutenberg Literary Archive Foundation and
+Michael Hart, the owner of the Project Gutenberg™ trademark. Contact
+the Foundation as set forth in Section 3. below.\par
+
+{\bfseries{1.F.}}\par
+
+{\bfseries{1.F.1.}} Project Gutenberg volunteers and employees expend
+considerable effort to identify, do copyright research on, transcribe
+and proofread public domain works in creating the Project Gutenberg™
+collection. Despite these efforts, Project Gutenberg™ electronic
+works, and the medium on which they may be stored, may contain
+“Defects,” such as, but not limited to, incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other intellectual
+property infringement, a defective or damaged disk or other medium, a
+computer virus, or computer codes that damage or cannot be read by
+your equipment.\par
+
+{\bfseries{1.F.2.}} LIMITED WARRANTY, DISCLAIMER OF DAMAGES – Except for the
+“Right of Replacement or Refund” described in paragraph 1.F.3, the
+Project Gutenberg Literary Archive Foundation, the owner of the
+Project Gutenberg™ trademark, and any other party distributing a
+Project Gutenberg™ electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH 1.F.3. YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.\par
+
+{\bfseries{1.F.3.}} LIMITED RIGHT OF REPLACEMENT OR REFUND – If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from. If you
+received the work on a physical medium, you must return the medium
+with your written explanation. The person or entity that provided you
+with the defective work may elect to provide a replacement copy in
+lieu of a refund. If you received the work electronically, the person
+or entity providing it to you may choose to give you a second
+opportunity to receive the work electronically in lieu of a refund. If
+the second copy is also defective, you may demand a refund in writing
+without further opportunities to fix the problem.\par
+
+{\bfseries{1.F.4.}} Except for the limited right of replacement or refund set
+forth in paragraph 1.F.3, this work is provided to you ‘AS-IS,’ WITH
+NO OTHER WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTIBILITY OR FITNESS FOR ANY PURPOSE.\par
+
+{\bfseries{1.F.5.}} Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of
+damages. If any disclaimer or limitation set forth in this agreement
+violates the law of the state applicable to this agreement, the
+agreement shall be interpreted to make the maximum disclaimer or
+limitation permitted by the applicable state law. The invalidity or
+unenforceability of any provision of this agreement shall not void the
+remaining provisions.\par
+
+{\bfseries{1.F.6.}} INDEMNITY – You agree to indemnify and hold the Foundation,
+the trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg™ electronic works in accordance
+with this agreement, and any volunteers associated with the
+production, promotion and distribution of Project Gutenberg™
+electronic works, harmless from all liability, costs and expenses,
+including legal fees, that arise directly or indirectly from any of
+the following which you do or cause to occur: (a) distribution of this
+or any Project Gutenberg™ work, (b) alteration, modification, or
+additions or deletions to any Project Gutenberg™ work, and (c) any
+Defect you cause.\par
+
+\penalty-300%
+\label{section-2-information-about-the-mission-of-project-gutenberg}%
+\hypertarget{section-2-information-about-the-mission-of-project-gutenberg}{}%
+%
+\subsection*{Section 2. Information about the Mission of Project Gutenberg™}
+
+
+Project Gutenberg™ is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of
+computers including obsolete, old, middle-aged and new computers. It
+exists because of the efforts of hundreds of volunteers and donations
+from people in all walks of life.\par
+
+Volunteers and financial support to provide volunteers with the
+assistance they need, is critical to reaching Project Gutenberg™’s
+goals and ensuring that the Project Gutenberg™ collection will remain
+freely available for generations to come. In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg™ and future generations. To
+learn more about the Project Gutenberg Literary Archive Foundation and
+how your efforts and donations can help, see Sections 3 and 4 and the
+Foundation web page at {http://www.pglaf.org} .\par
+
+\penalty-300%
+\label{section-3-information-about-the-project-gutenberg-literary-archive-foundation}%
+\hypertarget{section-3-information-about-the-project-gutenberg-literary-archive-foundation}{}%
+%
+\subsection*{Section 3. Information about the Project Gutenberg Literary Archive Foundation}
+
+
+The Project Gutenberg Literary Archive Foundation is a non profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service. The Foundation’s EIN or federal tax identification
+number is 64-6221541. Its 501(c)(3) letter is posted at
+{http://www.gutenberg.org/fundraising/pglaf} . Contributions to the
+Project Gutenberg Literary Archive Foundation are tax deductible to
+the full extent permitted by U.S.  federal laws and your state’s laws.\par
+
+The Foundation’s principal office is located at 4557 Melan Dr.
+S. Fairbanks, AK, 99712., but its volunteers and employees are
+scattered throughout numerous locations. Its business office is
+located at 809 North 1500 West, Salt Lake City, UT 84116, (801)
+596-1887, email {business@pglaf.org}. Email contact links and up to date
+contact information can be found at the Foundation’s web site and
+official page at {http://www.pglaf.org}\par
+
+For additional contact information:\par
+
+\begin{quotation}
+\begin{verse}
+Dr. Gregory B. Newby \\
+Chief Executive and Director \\
+{gbnewby@pglaf.org} \\
+\end{verse}
+\end{quotation}
+
+\penalty-300%
+\label{section-4-information-about-donations-to-the-project-gutenberg-literary-archive-foundation}%
+\hypertarget{section-4-information-about-donations-to-the-project-gutenberg-literary-archive-foundation}{}%
+%
+\subsection*{Section 4. Information about Donations to the Project Gutenberg Literary Archive Foundation}
+
+
+Project Gutenberg™ depends upon and cannot survive without wide spread
+public support and donations to carry out its mission of increasing
+the number of public domain and licensed works that can be freely
+distributed in machine readable form accessible by the widest array of
+equipment including outdated equipment. Many small donations (\$1 to
+\$5,000) are particularly important to maintaining tax exempt status
+with the IRS.\par
+
+The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States. Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements. We do not solicit donations in locations
+where we have not received written confirmation of compliance. To SEND
+DONATIONS or determine the status of compliance for any particular
+state visit {http://www.gutenberg.org/fundraising/donate}\par
+
+While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.\par
+
+International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States. U.S. laws alone swamp our small staff.\par
+
+Please check the Project Gutenberg Web pages for current donation
+methods and addresses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: {http://www.gutenberg.org/fundraising/donate}\par
+
+\penalty-300%
+\label{section-5-general-information-about-project-gutenberg-electronic-works}%
+\hypertarget{section-5-general-information-about-project-gutenberg-electronic-works}{}%
+%
+\subsection*{Section 5. General Information About Project Gutenberg™ electronic works.}
+
+
+Professor Michael S. Hart is the originator of the Project Gutenberg™
+concept of a library of electronic works that could be freely shared
+with anyone. For thirty years, he produced and distributed Project
+Gutenberg™ eBooks with only a loose network of volunteer support.\par
+
+Project Gutenberg™ eBooks are often created from several printed
+editions, all of which are confirmed as Public Domain in the
+U.S. unless a copyright notice is included. Thus, we do not
+necessarily keep eBooks in compliance with any particular paper
+edition.\par
+
+Each eBook is in a subdirectory of the same number as the eBook’s
+eBook number, often in several formats including plain vanilla ASCII,
+compressed (zipped), HTML and others.\par
+
+Corrected {\itshape{editions}} of our eBooks replace the old file and take over
+the old filename and etext number. The replaced older file is
+renamed. {\itshape{Versions}} based on separate sources are treated as new
+eBooks receiving new filenames and etext numbers.\par
+
+Most people start at our Web site which has the main PG search
+facility:\par
+
+\begin{quotation}
+{{\noindent}http://www.gutenberg.org}\par
+\end{quotation}
+
+This Web site includes information about Project Gutenberg™, including
+how to make donations to the Project Gutenberg Literary Archive
+Foundation, how to help produce our new eBooks, and how to subscribe
+to our email newsletter to hear about new eBooks.\par
+\end{pgfooter_env}
+\end{english}
+\bookmark[level=1,dest=id1]{Contents}
+\bookmark[level=2,dest=installing-epubmaker]{Installing EpubMaker}
+\bookmark[level=3,dest=windows]{Windows}
+\bookmark[level=3,dest=debian]{Debian}
+\bookmark[level=2,dest=pg-rst-classes]{PG-RST Classes}
+\bookmark[level=3,dest=classes-for-inline-text]{Classes For Inline Text}
+\bookmark[level=3,dest=classes-for-block-text]{Classes For Block Text}
+\bookmark[level=3,dest=classes-for-front-matter-markup]{Classes For Front Matter Markup}
+\bookmark[level=2,dest=pg-rst-extensions]{PG-RST Extensions}
+\bookmark[level=3,dest=styles]{Styles}
+\bookmark[level=3,dest=pagination]{Pagination}
+\bookmark[level=3,dest=table-of-contents]{Table of Contents}
+\bookmark[level=3,dest=list-of-figures]{List of Figures}
+\bookmark[level=3,dest=list-of-tables]{List of Tables}
+\bookmark[level=3,dest=toc-entry]{Toc-Entry}
+\bookmark[level=3,dest=footnotes]{Footnotes}
+\bookmark[level=3,dest=page-numbers]{Page Numbers}
+\bookmark[level=3,dest=dropcaps]{Dropcaps}
+\bookmark[level=3,dest=tables]{Tables}
+\bookmark[level=2,dest=pg-metadata]{PG Metadata}
+\bookmark[level=3,dest=top-boilerplate]{Top Boilerplate}
+\bookmark[level=3,dest=metadata-directive]{Metadata Directive}
+\bookmark[level=3,dest=bottom-boilerplate]{Bottom Boilerplate}
+\bookmark[level=2,dest=pg-rst-best-practices]{PG-RST Best Practices}
+\bookmark[level=2,dest=tests-and-examples]{Examples and Tests}
+\bookmark[level=3,dest=section-3-1]{Section 3.1}
+\bookmark[level=3,dest=section-3-2]{Section 3.2}
+\bookmark[level=3,dest=section-3-3]{Section 3.3}
+\bookmark[level=1,dest=id2]{List of Tables}
+\bookmark[level=2,dest=table-46]{Classes For Inline Text I}
+\bookmark[level=2,dest=table-47]{Classes For Inline Text II}
+\bookmark[level=2,dest=table-48]{Classes For Inline Text III}
+\bookmark[level=2,dest=table-49]{Classes For Block Text}
+\bookmark[level=2,dest=table-50]{Classes For Front Matter Markup}
+\bookmark[level=2,dest=table-51]{Directives For Pagination}
+\bookmark[level=2,dest=table-52]{Footnote Positions}
+\bookmark[level=2,dest=table-53]{Support for dropcaps in output formats}
+\bookmark[level=2,dest=table-54]{Demo Table}
+\bookmark[level=2,dest=table-55]{Truth table for “and”}
+\bookmark[level=2,dest=table-56]{Fields In the PG Scheme}
+\bookmark[level=2,dest=table-57]{Fields In the DC Scheme}
+\bookmark[level=2,dest=table-58]{Fields In the MARCREL Scheme}
+\bookmark[level=2,dest=table-59]{Fields Without Scheme}
+\bookmark[level=2,dest=table-60]{TABLE 8 Types of Computers Used in the Systems Reported}
+\bookmark[level=1,dest=id3]{List of Figures}
+\bookmark[level=2,dest=figure-4]{Richard and Drucilla Martin}
+\bookmark[level=1,dest=id6]{A TOC With Page Numbers}
+\bookmark[level=2,dest=installing-epubmaker]{Installing EpubMaker}
+\bookmark[level=3,dest=windows]{Windows}
+\bookmark[level=3,dest=debian]{Debian}
+\bookmark[level=2,dest=pg-rst-classes]{PG-RST Classes}
+\bookmark[level=3,dest=classes-for-inline-text]{Classes For Inline Text}
+\bookmark[level=3,dest=classes-for-block-text]{Classes For Block Text}
+\bookmark[level=3,dest=classes-for-front-matter-markup]{Classes For Front Matter Markup}
+\bookmark[level=2,dest=pg-rst-extensions]{PG-RST Extensions}
+\bookmark[level=3,dest=styles]{Styles}
+\bookmark[level=3,dest=pagination]{Pagination}
+\bookmark[level=3,dest=table-of-contents]{Table of Contents}
+\bookmark[level=3,dest=list-of-figures]{List of Figures}
+\bookmark[level=3,dest=list-of-tables]{List of Tables}
+\bookmark[level=3,dest=toc-entry]{Toc-Entry}
+\bookmark[level=3,dest=footnotes]{Footnotes}
+\bookmark[level=3,dest=page-numbers]{Page Numbers}
+\bookmark[level=3,dest=dropcaps]{Dropcaps}
+\bookmark[level=3,dest=tables]{Tables}
+\bookmark[level=2,dest=pg-metadata]{PG Metadata}
+\bookmark[level=3,dest=top-boilerplate]{Top Boilerplate}
+\bookmark[level=3,dest=metadata-directive]{Metadata Directive}
+\bookmark[level=3,dest=bottom-boilerplate]{Bottom Boilerplate}
+\bookmark[level=2,dest=pg-rst-best-practices]{PG-RST Best Practices}
+\bookmark[level=2,dest=tests-and-examples]{Examples and Tests}
+\bookmark[level=3,dest=section-3-1]{Section 3.1}
+\bookmark[level=3,dest=section-3-2]{Section 3.2}
+\bookmark[level=3,dest=section-3-3]{Section 3.3}
+\bookmark[level=1,dest=id7]{A List of Figures}
+\bookmark[level=2,dest=figure-4]{Richard and Drucilla Martin}
+\bookmark[level=1,dest=id8]{A List of Tables}
+\bookmark[level=2,dest=table-46]{Classes For Inline Text I}
+\bookmark[level=2,dest=table-47]{Classes For Inline Text II}
+\bookmark[level=2,dest=table-48]{Classes For Inline Text III}
+\bookmark[level=2,dest=table-49]{Classes For Block Text}
+\bookmark[level=2,dest=table-50]{Classes For Front Matter Markup}
+\bookmark[level=2,dest=table-51]{Directives For Pagination}
+\bookmark[level=2,dest=table-52]{Footnote Positions}
+\bookmark[level=2,dest=table-53]{Support for dropcaps in output formats}
+\bookmark[level=2,dest=table-54]{Demo Table}
+\bookmark[level=2,dest=table-55]{Truth table for “and”}
+\bookmark[level=2,dest=table-56]{Fields In the PG Scheme}
+\bookmark[level=2,dest=table-57]{Fields In the DC Scheme}
+\bookmark[level=2,dest=table-58]{Fields In the MARCREL Scheme}
+\bookmark[level=2,dest=table-59]{Fields Without Scheme}
+\bookmark[level=2,dest=table-60]{TABLE 8 Types of Computers Used in the Systems Reported}
+\bookmark[level=1,page=1]{Pages In the Original}
+\bookmark[level=2,dest=page-i]{i}
+\bookmark[level=2,dest=page-iii]{iii}
+\bookmark[level=2,dest=page-v]{v}
+\bookmark[level=2,dest=page-vii]{vii}
+\bookmark[level=2,dest=page-1]{1}
+\bookmark[level=2,dest=page-42]{42}
+\bookmark[level=2,dest=page-xviii]{xviii}
+\bookmark[level=2,dest=page-43]{43}
+\bookmark[level=2,dest=page-2]{2}
+\bookmark[level=2,dest=page-3]{3}
+\bookmark[level=2,dest=page-4]{4}
+\bookmark[level=2,dest=page-5]{5}
+\bookmark[level=2,dest=page-7]{7}
+\bookmark[level=2,dest=page-8]{8}
+\bookmark[level=2,dest=page-123]{123}
+\bookmark[level=2,dest=page-10]{10}
+\bookmark[level=2,dest=page-99]{99}
+\end{german}
+
+\end{document}
+
+% Local Variables:
+% mode: tex
+% encoding: utf-8
+% End:

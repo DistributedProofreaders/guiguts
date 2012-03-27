@@ -1,0 +1,50 @@
+0.
+
+Get a linux box.
+
+1.
+
+Install prerequisite libraries: 
+
+On debian: (some of these packages may also install dependent packages)
+
+# apt-get install libxml-libxslt-perl libarchive-zip-perl libtext-wrapi18n-perl 
+# apt-get install imagemagick
+# apt-get install tetex-bin tetex-extra tetex-doc freetype1-tools
+# apt-get install ttf-gentium ttf-arphic-bkai00mp
+
+2.
+
+Unpack tar
+
+$ mkdir ~/tei
+$ cd ~/tei
+$ tar -xzf /path/to/gnutenberg-press-0.4.tgz
+$ cd 0.4
+
+3.
+
+Copy xmlcatalog.dist to xmlcatalog
+
+Edit xmlcatalog
+
+
+4.
+
+Copy config.pl.dist to config.pl
+
+Edit config.pl
+
+
+4.
+
+Try the converter:
+
+$ ./transform.pl --help
+
+$ mkdir input
+$ mkdir output
+$ ./transform.pl -f html input/inputfile.tei output/
+$ ./transform.pl -f txt input/inputfile.tei output/
+$ ./transform.pl -f pdf input/inputfile.tei output/
+

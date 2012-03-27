@@ -1,0 +1,16 @@
+#Generated from axe2gui 0.2
+#GutAxe accent and ae ligature patterns
+#21 March 2006 JTN
+#Word matches
+%scannoslist = (
+'Minie' => 'Minié',
+'Surete' => 'Sûreté',
+'Osterreich' => 'Österreich',
+);
+
+%reghints = (
+'Minie' => 'acute accent on "e"',
+'Surete' => 'accents',
+'Osterreich' => 'diaeresis on "O"',
+);
+

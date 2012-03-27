@@ -1,0 +1,36 @@
+<!--
+
+The Gnutenberg Press - main dtd file
+Copyright (C) 2003-2004  Marcello Perathoner
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+-->
+
+<!ENTITY % TEI.XML		        "INCLUDE">
+<!ENTITY % TEI.drama                    "INCLUDE">
+<!ENTITY % TEI.figures                  "INCLUDE">
+<!ENTITY % TEI.linking                  "INCLUDE">
+<!ENTITY % TEI.extensions.ent	SYSTEM	"pgtei-extensions.ent" >
+<!ENTITY % TEI.extensions.dtd	SYSTEM	"pgtei-extensions.dtd" >
+<!ENTITY % PGTei		SYSTEM	"pgtei.ent">  %PGTei;
+<!ENTITY % PGTeiLatin1		SYSTEM	"pgtei-latin1.ent"> %PGTeiLatin1;
+
+<!NOTATION jpeg PUBLIC "ISO DIS 10918//NOTATION JPEG Graphics Format//EN">
+<!NOTATION png  PUBLIC "-//TEI//NOTATION IETF RFC2083 Portable Network Graphics//EN">
+<!NOTATION svg  PUBLIC "-//TEI//NOTATION W3C Scalable Vector Graphics Format//EN" >
+<!NOTATION tex  PUBLIC "-//Donald E. Knuth 1983//NOTATION TeX Mathematical Markup//EN">
+
+<!ENTITY % TEI			SYSTEM	"http://www.tei-c.org/P4X/DTD/tei2.dtd"> %TEI;

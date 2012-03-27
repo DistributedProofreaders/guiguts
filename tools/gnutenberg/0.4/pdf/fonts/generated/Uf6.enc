@@ -1,0 +1,98 @@
+/Uf6Encoding [
+
+% f600
+/unif600 /unif601 /unif602 /unif603 
+/unif604 /unif605 /unif606 /unif607 
+/unif608 /unif609 /unif60a /unif60b 
+/unif60c /unif60d /unif60e /unif60f 
+
+% f610
+/unif610 /unif611 /unif612 /unif613 
+/unif614 /unif615 /unif616 /unif617 
+/unif618 /unif619 /unif61a /unif61b 
+/unif61c /unif61d /unif61e /unif61f 
+
+% f620
+/unif620 /unif621 /unif622 /unif623 
+/unif624 /unif625 /unif626 /unif627 
+/unif628 /unif629 /unif62a /unif62b 
+/unif62c /unif62d /unif62e /unif62f 
+
+% f630
+/unif630 /unif631 /unif632 /unif633 
+/unif634 /unif635 /unif636 /unif637 
+/unif638 /unif639 /unif63a /unif63b 
+/unif63c /unif63d /unif63e /unif63f 
+
+% f640
+/unif640 /unif641 /unif642 /unif643 
+/unif644 /unif645 /unif646 /unif647 
+/unif648 /unif649 /unif64a /unif64b 
+/unif64c /unif64d /unif64e /unif64f 
+
+% f650
+/unif650 /unif651 /unif652 /unif653 
+/unif654 /unif655 /unif656 /unif657 
+/unif658 /unif659 /unif65a /unif65b 
+/unif65c /unif65d /unif65e /unif65f 
+
+% f660
+/unif660 /unif661 /unif662 /unif663 
+/unif664 /unif665 /unif666 /unif667 
+/unif668 /unif669 /unif66a /unif66b 
+/unif66c /unif66d /unif66e /unif66f 
+
+% f670
+/unif670 /unif671 /unif672 /unif673 
+/unif674 /unif675 /unif676 /unif677 
+/unif678 /unif679 /unif67a /unif67b 
+/unif67c /unif67d /unif67e /unif67f 
+
+% f680
+/unif680 /unif681 /unif682 /unif683 
+/unif684 /unif685 /unif686 /unif687 
+/unif688 /unif689 /unif68a /unif68b 
+/unif68c /unif68d /unif68e /unif68f 
+
+% f690
+/unif690 /unif691 /unif692 /unif693 
+/unif694 /unif695 /unif696 /unif697 
+/unif698 /unif699 /unif69a /unif69b 
+/unif69c /unif69d /unif69e /unif69f 
+
+% f6a0
+/unif6a0 /unif6a1 /unif6a2 /unif6a3 
+/unif6a4 /unif6a5 /unif6a6 /unif6a7 
+/unif6a8 /unif6a9 /unif6aa /unif6ab 
+/unif6ac /unif6ad /unif6ae /unif6af 
+
+% f6b0
+/unif6b0 /unif6b1 /unif6b2 /unif6b3 
+/unif6b4 /unif6b5 /unif6b6 /unif6b7 
+/unif6b8 /unif6b9 /unif6ba /unif6bb 
+/unif6bc /unif6bd /dotlessj /LL 
+
+% f6c0
+/ll /unif6c1 /unif6c2 /commaaccent 
+/afii10063 /afii10064 /afii10192 /afii10831 
+/afii10832 /Acute /Caron /Dieresis 
+/DieresisAcute /DieresisGrave /Grave /Hungarumlaut 
+
+% f6d0
+/Macron /cyrBreve /cyrFlex /dblGrave 
+/cyrbreve /cyrflex /dblgrave /dieresisacute 
+/dieresisgrave /copyrightserif /registerserif /trademarkserif 
+/onefitted /rupiah /threequartersemdash /centinferior 
+
+% f6e0
+/centsuperior /commainferior /commasuperior /dollarinferior 
+/dollarsuperior /hypheninferior /hyphensuperior /periodinferior 
+/periodsuperior /asuperior /bsuperior /dsuperior 
+/esuperior /isuperior /lsuperior /msuperior 
+
+% f6f0
+/osuperior /rsuperior /ssuperior /tsuperior 
+/Brevesmall /Caronsmall /Circumflexsmall /Dotaccentsmall 
+/Hungarumlautsmall /Lslashsmall /OEsmall /Ogoneksmall 
+/Ringsmall /Scaronsmall /Tildesmall /Zcaronsmall 
+] def

@@ -1,0 +1,98 @@
+/UfcEncoding [
+
+% fc00
+/unifc00 /unifc01 /unifc02 /unifc03 
+/unifc04 /unifc05 /unifc06 /unifc07 
+/behmeemisolatedarabic /unifc09 /unifc0a /tehjeemisolatedarabic 
+/tehhahisolatedarabic /unifc0d /tehmeemisolatedarabic /unifc0f 
+
+% fc10
+/unifc10 /unifc11 /unifc12 /unifc13 
+/unifc14 /unifc15 /unifc16 /unifc17 
+/unifc18 /unifc19 /unifc1a /unifc1b 
+/unifc1c /unifc1d /unifc1e /unifc1f 
+
+% fc20
+/unifc20 /unifc21 /unifc22 /unifc23 
+/unifc24 /unifc25 /unifc26 /unifc27 
+/unifc28 /unifc29 /unifc2a /unifc2b 
+/unifc2c /unifc2d /unifc2e /unifc2f 
+
+% fc30
+/unifc30 /unifc31 /unifc32 /unifc33 
+/unifc34 /unifc35 /unifc36 /unifc37 
+/unifc38 /unifc39 /unifc3a /unifc3b 
+/unifc3c /unifc3d /unifc3e /unifc3f 
+
+% fc40
+/unifc40 /unifc41 /unifc42 /unifc43 
+/unifc44 /unifc45 /unifc46 /unifc47 
+/meemmeemisolatedarabic /unifc49 /unifc4a /noonjeemisolatedarabic 
+/unifc4c /unifc4d /noonmeemisolatedarabic /unifc4f 
+
+% fc50
+/unifc50 /unifc51 /unifc52 /unifc53 
+/unifc54 /unifc55 /unifc56 /unifc57 
+/yehmeemisolatedarabic /unifc59 /unifc5a /unifc5b 
+/unifc5c /unifc5d /shaddadammatanarabic /shaddakasratanarabic 
+
+% fc60
+/shaddafathaarabic /shaddadammaarabic /shaddakasraarabic /unifc63 
+/unifc64 /unifc65 /unifc66 /unifc67 
+/unifc68 /unifc69 /unifc6a /unifc6b 
+/unifc6c /behnoonfinalarabic /unifc6e /unifc6f 
+
+% fc70
+/unifc70 /unifc71 /unifc72 /tehnoonfinalarabic 
+/unifc74 /unifc75 /unifc76 /unifc77 
+/unifc78 /unifc79 /unifc7a /unifc7b 
+/unifc7c /unifc7d /unifc7e /unifc7f 
+
+% fc80
+/unifc80 /unifc81 /unifc82 /unifc83 
+/unifc84 /unifc85 /unifc86 /unifc87 
+/unifc88 /unifc89 /unifc8a /unifc8b 
+/unifc8c /noonnoonfinalarabic /unifc8e /unifc8f 
+
+% fc90
+/unifc90 /unifc91 /unifc92 /unifc93 
+/yehnoonfinalarabic /unifc95 /unifc96 /unifc97 
+/unifc98 /unifc99 /unifc9a /unifc9b 
+/unifc9c /unifc9d /unifc9e /behmeeminitialarabic 
+
+% fca0
+/unifca0 /tehjeeminitialarabic /tehhahinitialarabic /unifca3 
+/tehmeeminitialarabic /unifca5 /unifca6 /unifca7 
+/unifca8 /unifca9 /unifcaa /unifcab 
+/unifcac /unifcad /unifcae /unifcaf 
+
+% fcb0
+/unifcb0 /unifcb1 /unifcb2 /unifcb3 
+/unifcb4 /unifcb5 /unifcb6 /unifcb7 
+/unifcb8 /unifcb9 /unifcba /unifcbb 
+/unifcbc /unifcbd /unifcbe /unifcbf 
+
+% fcc0
+/unifcc0 /unifcc1 /unifcc2 /unifcc3 
+/unifcc4 /unifcc5 /unifcc6 /unifcc7 
+/unifcc8 /lamjeeminitialarabic /lamhahinitialarabic /lamkhahinitialarabic 
+/lammeeminitialarabic /unifccd /unifcce /unifccf 
+
+% fcd0
+/unifcd0 /meemmeeminitialarabic /noonjeeminitialarabic /unifcd3 
+/unifcd4 /noonmeeminitialarabic /unifcd6 /unifcd7 
+/unifcd8 /unifcd9 /unifcda /unifcdb 
+/unifcdc /yehmeeminitialarabic /unifcde /unifcdf 
+
+% fce0
+/unifce0 /unifce1 /unifce2 /unifce3 
+/unifce4 /unifce5 /unifce6 /unifce7 
+/unifce8 /unifce9 /unifcea /unifceb 
+/unifcec /unifced /unifcee /unifcef 
+
+% fcf0
+/unifcf0 /unifcf1 /unifcf2 /unifcf3 
+/unifcf4 /unifcf5 /unifcf6 /unifcf7 
+/unifcf8 /unifcf9 /unifcfa /unifcfb 
+/unifcfc /unifcfd /unifcfe /unifcff 
+] def

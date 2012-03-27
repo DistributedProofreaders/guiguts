@@ -1,0 +1,37 @@
+#!/bin/bash
+
+./transform.pl -f html examples/alice/alice.tei tmp
+./transform.pl -f pdf  examples/alice/alice.tei tmp
+./transform.pl -f txt  examples/alice/alice.tei tmp
+./transform.pl -f txt  -m charmaps/utf2iso.charmap examples/alice/alice.tei tmp
+
+./transform.pl -f html examples/lmiss/lmiss.tei tmp
+./transform.pl -f pdf  examples/lmiss/lmiss.tei tmp
+./transform.pl -f txt  examples/lmiss/lmiss.tei tmp
+./transform.pl -f txt  -m charmaps/utf2iso.charmap examples/lmiss/lmiss.tei tmp
+
+./transform.pl -f html examples/pgtei-guide/pgtei-guide.tei tmp
+./transform.pl -f pdf  examples/pgtei-guide/pgtei-guide.tei tmp
+./transform.pl -f txt  examples/pgtei-guide/pgtei-guide.tei tmp
+
+mkdir -p tmp
+cd tmp
+cp 11-h.zip 11-pdf.zip 11-0.zip 11-8.zip     ../examples/alice/
+cp 245-h.zip 245-pdf.zip 245-0.zip 245-8.zip ../examples/lmiss/
+cp 20000-h.zip 20000-pdf.zip 20000-0.zip     ../examples/pgtei-guide/
+cd ..
+
+cd examples
+
+cd alice
+unzip "*.zip"
+cd ..
+
+cd lmiss
+unzip "*.zip"
+cd ..
+
+cd pgtei-guide
+unzip "*.zip"
+cd ..
+

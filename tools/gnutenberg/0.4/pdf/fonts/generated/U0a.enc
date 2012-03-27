@@ -1,0 +1,98 @@
+/U0aEncoding [
+
+% 0a00
+/uni0a00 /uni0a01 /bindigurmukhi /uni0a03 
+/uni0a04 /agurmukhi /aagurmukhi /igurmukhi 
+/iigurmukhi /ugurmukhi /uugurmukhi /uni0a0b 
+/uni0a0c /uni0a0d /uni0a0e /eegurmukhi 
+
+% 0a10
+/aigurmukhi /uni0a11 /uni0a12 /oogurmukhi 
+/augurmukhi /kagurmukhi /khagurmukhi /gagurmukhi 
+/ghagurmukhi /ngagurmukhi /cagurmukhi /chagurmukhi 
+/jagurmukhi /jhagurmukhi /nyagurmukhi /ttagurmukhi 
+
+% 0a20
+/tthagurmukhi /ddagurmukhi /ddhagurmukhi /nnagurmukhi 
+/tagurmukhi /thagurmukhi /dagurmukhi /dhagurmukhi 
+/nagurmukhi /uni0a29 /pagurmukhi /phagurmukhi 
+/bagurmukhi /bhagurmukhi /magurmukhi /yagurmukhi 
+
+% 0a30
+/ragurmukhi /uni0a31 /lagurmukhi /uni0a33 
+/uni0a34 /vagurmukhi /shagurmukhi /uni0a37 
+/sagurmukhi /hagurmukhi /uni0a3a /uni0a3b 
+/nuktagurmukhi /uni0a3d /aamatragurmukhi /imatragurmukhi 
+
+% 0a40
+/iimatragurmukhi /umatragurmukhi /uumatragurmukhi /uni0a43 
+/uni0a44 /uni0a45 /uni0a46 /eematragurmukhi 
+/aimatragurmukhi /uni0a49 /uni0a4a /oomatragurmukhi 
+/aumatragurmukhi /halantgurmukhi /uni0a4e /uni0a4f 
+
+% 0a50
+/uni0a50 /uni0a51 /uni0a52 /uni0a53 
+/uni0a54 /uni0a55 /uni0a56 /uni0a57 
+/uni0a58 /khhagurmukhi /ghhagurmukhi /zagurmukhi 
+/rragurmukhi /uni0a5d /fagurmukhi /uni0a5f 
+
+% 0a60
+/uni0a60 /uni0a61 /uni0a62 /uni0a63 
+/uni0a64 /uni0a65 /zerogurmukhi /onegurmukhi 
+/twogurmukhi /threegurmukhi /fourgurmukhi /fivegurmukhi 
+/sixgurmukhi /sevengurmukhi /eightgurmukhi /ninegurmukhi 
+
+% 0a70
+/tippigurmukhi /addakgurmukhi /irigurmukhi /uragurmukhi 
+/ekonkargurmukhi /uni0a75 /uni0a76 /uni0a77 
+/uni0a78 /uni0a79 /uni0a7a /uni0a7b 
+/uni0a7c /uni0a7d /uni0a7e /uni0a7f 
+
+% 0a80
+/uni0a80 /candrabindugujarati /anusvaragujarati /visargagujarati 
+/uni0a84 /agujarati /aagujarati /igujarati 
+/iigujarati /ugujarati /uugujarati /rvocalicgujarati 
+/uni0a8c /ecandragujarati /uni0a8e /egujarati 
+
+% 0a90
+/aigujarati /ocandragujarati /uni0a92 /ogujarati 
+/augujarati /kagujarati /khagujarati /gagujarati 
+/ghagujarati /ngagujarati /cagujarati /chagujarati 
+/jagujarati /jhagujarati /nyagujarati /ttagujarati 
+
+% 0aa0
+/tthagujarati /ddagujarati /ddhagujarati /nnagujarati 
+/tagujarati /thagujarati /dagujarati /dhagujarati 
+/nagujarati /uni0aa9 /pagujarati /phagujarati 
+/bagujarati /bhagujarati /magujarati /yagujarati 
+
+% 0ab0
+/ragujarati /uni0ab1 /lagujarati /llagujarati 
+/uni0ab4 /vagujarati /shagujarati /ssagujarati 
+/sagujarati /hagujarati /uni0aba /uni0abb 
+/nuktagujarati /uni0abd /aavowelsigngujarati /ivowelsigngujarati 
+
+% 0ac0
+/iivowelsigngujarati /uvowelsigngujarati /uuvowelsigngujarati /rvocalicvowelsigngujarati 
+/rrvocalicvowelsigngujarati /ecandravowelsigngujarati /uni0ac6 /evowelsigngujarati 
+/aivowelsigngujarati /ocandravowelsigngujarati /uni0aca /ovowelsigngujarati 
+/auvowelsigngujarati /viramagujarati /uni0ace /uni0acf 
+
+% 0ad0
+/omgujarati /uni0ad1 /uni0ad2 /uni0ad3 
+/uni0ad4 /uni0ad5 /uni0ad6 /uni0ad7 
+/uni0ad8 /uni0ad9 /uni0ada /uni0adb 
+/uni0adc /uni0add /uni0ade /uni0adf 
+
+% 0ae0
+/rrvocalicgujarati /uni0ae1 /uni0ae2 /uni0ae3 
+/uni0ae4 /uni0ae5 /zerogujarati /onegujarati 
+/twogujarati /threegujarati /fourgujarati /fivegujarati 
+/sixgujarati /sevengujarati /eightgujarati /ninegujarati 
+
+% 0af0
+/uni0af0 /uni0af1 /uni0af2 /uni0af3 
+/uni0af4 /uni0af5 /uni0af6 /uni0af7 
+/uni0af8 /uni0af9 /uni0afa /uni0afb 
+/uni0afc /uni0afd /uni0afe /uni0aff 
+] def

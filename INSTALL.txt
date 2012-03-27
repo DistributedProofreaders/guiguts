@@ -1,0 +1,27 @@
+Upgrading requires a complete reinstall (save header.txt and setting.rc although in
+theory these should not be be overwritten).
+
+On Windows, unzip the the file guiguts-win-nn.nn.nn.zip into a directory and run 
+guiguts.bat. You will also need to install helper applications to view images 
+and to spell check. If you already have another version of Perl installed, see below. 
+
+On Mac, an executable is provided in guiguts-mac-nn.nn.nn.zip.
+
+For other platforms, you will need to install Perl. 
+See: http://www.pgdp.net/wiki/PPTools/Guiguts/Install
+
+If you need help:
+Please direct any help requests to the GuiGuts DP forum thread:
+http://www.pgdp.net/phpBB2/viewtopic.php?t=3075
+
+The easiest way to get guiguts up and running on a Windows system is to
+download guiguts-win-n.n.n.zip and run guiguts.bat. This calls an old
+version of perl with Tk.pm, 5.8, in a subdirectory by adding that
+subdirectory to your path. This will not work if you have
+other versons of perl without Tk.pm earlier on your path. Type "perl -v"
+to find out which version you are using. If you want to use an existing
+version of Perl, you can use Strawberry perl 5.12 or earlier or
+ActiveState perl 5.10 or earlier, if you install Tk.pm from cpan. No one
+has been able to install Tk.pm with ActiveState perl
+5.12 or 5.14--but it would help if people file bug reports say this at
+cpan because there are semi-active maintainers of Tk.pm. 

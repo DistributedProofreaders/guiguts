@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title>
+      The Project Gutenberg eBook of TITLE, by AUTHOR.
+    </title>
+    <style type="text/css">
+
+body {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+    h1,h2,h3,h4,h5,h6 {
+    text-align: center; /* all headings centered */
+    clear: both;
+}
+
+p {
+    margin-top: .51em;
+    text-align: justify;
+    margin-bottom: .49em;
+}
+
+.p2       {margin-top: 2em;}
+.p4       {margin-top: 4em;}
+.p6       {margin-top: 6em;}
+
+hr {
+    width: 33%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+}
+
+hr.tb   {width: 45%;}
+hr.chap {width: 65%}
+hr.full {width: 95%;}
+
+hr.r5  {width: 5%; margin-top: 1em; margin-bottom: 1em;}
+hr.r65 {width: 65%; margin-top: 3em; margin-bottom: 3em;}
+
+ul.index { list-style-type: none; }
+li.ifrst { margin-top: 1em; }
+li.indx { margin-top: .5em; }
+li.isub1 {text-indent: 1em;}
+li.isub2 {text-indent: 2em;}
+li.isub3 {text-indent: 3em;}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .tdl      {text-align: left;}
+    .tdr      {text-align: right;}
+    .tdc      {text-align: center;}
+
+.pagenum { /* uncomment the next line for invisible page numbers */
+    /*  visibility: hidden;  */
+    position: absolute;
+    left: 92%;
+    font-size: smaller;
+    text-align: right;
+} /* page numbers */
+
+.linenum {
+    position: absolute;
+    top: auto;
+    left: 4%;
+} /* poetry number */
+
+.blockquot {
+    margin-left: 5%;
+    margin-right: 10%;
+}
+
+.sidenote {
+    width: 20%;
+    padding-bottom: .5em;
+    padding-top: .5em;
+    padding-left: .5em;
+    padding-right: .5em;
+    margin-left: 1em;
+    float: right;
+    clear: right;
+    margin-top: 1em;
+    font-size: smaller;
+    color: black;
+    background: #eeeeee;
+    border: dashed 1px;
+}
+
+.bb       {border-bottom: solid 2px;}
+
+.bl       {border-left: solid 2px;}
+
+.bt       {border-top: solid 2px;}
+
+.br       {border-right: solid 2px;}
+
+.bbox     {border: solid 2px;}
+
+.center   {text-align: center;}
+
+.right   {text-align: right;}
+
+.smcap    {font-variant: small-caps;}
+
+.u        {text-decoration: underline;}
+
+.gesperrt 
+{ 
+    letter-spacing: 0.2em; 
+    margin-right: -0.2em; 
+} 
+
+em.gesperrt 
+{ 
+    font-style: normal; 
+}
+
+.caption  {font-weight: bold;}
+
+/* Images */
+.figcenter   {
+    margin: auto;
+    text-align: center;
+}
+
+.figleft {
+    float: left;
+    clear: left;
+    margin-left: 0;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    margin-right: 1em;
+    padding: 0;
+    text-align: center;
+}
+
+.figright {
+    float: right;
+    clear: right;
+    margin-left: 1em;
+    margin-bottom:
+    1em;
+    margin-top: 1em;
+    margin-right: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Footnotes */
+.footnotes        {border: dashed 1px;}
+
+.footnote         {margin-left: 10%; margin-right: 10%; font-size: 0.9em;}
+
+.footnote .label  {position: absolute; right: 84%; text-align: right;}
+
+.fnanchor {
+    vertical-align: super;
+    font-size: .8em;
+    text-decoration:
+    none;
+}
+
+/* Poetry */
+.poem {
+    margin-left:10%;
+    margin-right:10%;
+    text-align: left;
+}
+
+.poem br {display: none;}
+
+.poem .stanza {margin: 1em 0em 1em 0em;}
+
+/* Transcriber's notes */
+.transnote {background-color: #E6E6FA;
+    color: black;
+     font-size:smaller;
+     padding:0.5em;
+     margin-bottom:5em;
+     font-family:sans-serif, serif; }
+    </style>
+  </head>
+<body>

@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!DOCTYPE TEI.2 SYSTEM "http://www.gutenberg.org/tei/marcello/0.4/dtd/pgtei.dtd" [
+
+<!ENTITY pg		"Project Gutenberg">
+<!ENTITY pgtm		"Project Gutenberg&trade;">
+<!ENTITY pgurl		"http://www.gutenberg.org">
+<!ENTITY pglaf		"Project Gutenberg Literary Archive Foundation">
+<!ENTITY pglafurl       "http://www.pglaf.org">
+
+]>
+
+<TEI.2>
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>The Project Gutenberg Header, Footer and License</title>
+        <author>Project Gutenberg</author>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>Project Gutenberg</publisher>
+      </publicationStmt>
+      <sourceDesc>
+        <bibl>Created electronically.</bibl>
+      </sourceDesc>
+    </fileDesc>
+    <profileDesc>
+      <langUsage>
+        <language id="en">English</language>
+      </langUsage>
+    </profileDesc>
+    <revisionDesc>
+      <change>
+        <date value="2003-10">October 2003</date>
+        <respStmt>
+          <name>Marcello Perathoner</name>
+        </respStmt>
+        <item>TEI markup</item>
+      </change>
+    </revisionDesc>
+  </teiHeader>
+
+  <text>
+    <body>
+
+      <div id="pgheader">
+        <div>
+          <p rend="margin-bottom: 2"><pgVar name="formatted-title" /></p>
+        </div>
+
+        <div>
+          <p>This eBook is for the use of anyone anywhere at no cost
+          and with almost no restrictions whatsoever. You may copy it,
+          give it away or re-use it under the terms of the Project
+          Gutenberg License <ref target="pglicense">included with this
+          eBook</ref> or online at <xptr url="&pgurl;/license" /></p>
+
+          <pgIf test="copyrighted">
+            <then>
+              <p rend="text-indent: 2">This is a
+              <emph>copyrighted</emph> &pg; eBook, details below. Please
+              follow the copyright guidelines in this file.</p>
+            </then>
+          </pgIf>
+        </div>
+
+        <div rend="white-space: pre; margin-top: 4; margin-bottom: 4"
+             ><pgVar name="formatted-header" /></div>
+
+      </div>
+
+      <!-- ebook goes here -->
+
+      <div id="pgfooter">
+        <div rend="white-space: pre; margin-top: 4; margin-bottom: 4"
+             ><pgVar name="formatted-footer" /></div>
+
+        <div rend="page-break-before: right">
+          <index index="toc" />
+          <index index="pdf" />
+          <index index="pdb" />
+          <head>Credits</head>
+          <divGen type="colophon" />
+        </div>
+
+        <div rend="page-break-before: right">
+          <index index="toc" />
+          <index index="pdf" />
+          <index index="pdb" level1="A Word from PG" />
+          <head>A Word from Project Gutenberg</head>
+
+          <p>This file should be named 
+          <pgVar name="filename"/><pgVar name="fileext"/> or 
+          <pgVar name="filename"/><pgVar name="zipext"/>.</p>
+
+          <p>This and all associated files of various formats will be found
+          in: 
+
+            <xref rend="display">&pgurl;<pgVar name="filedir" /></xref>
+          
+          </p>
+
+          <p>Updated editions will replace the previous one &mdash; the old
+          editions will be renamed.</p>
+
+          <p>Creating the works from public domain print editions means that
+          no one owns a United States copyright in these works, so the
+          Foundation (and you!) can copy and distribute it in the United
+          States without permission and without paying copyright royalties.
+          Special rules, set forth in the General Terms of Use part of this
+          license, apply to copying and distributing &pgtm; electronic works
+          to protect the &pgtm; concept and trademark. &pg; is a registered
+          trademark, and may not be used if you charge for the eBooks,
+          unless you receive specific permission. If you do not charge
+          anything for copies of this eBook, complying with the rules is
+          very easy. You may use this eBook for nearly any purpose such as
+          creation of derivative works, reports, performances and research.
+          They may be modified and printed and given away &mdash; you may do
+          practically <emph>anything</emph> with public domain eBooks.
+          Redistribution is subject to the trademark license, especially
+          commercial redistribution.</p>
+        </div>
+
+        <div id="pglicense" rend="page-break-before: always">
+
+          <index index="toc" />
+          <index index="pdf" />
+          <index index="pdb" level1="Full PG License" />
+          <head>The Full &pg; License</head>
+
+          <p><emph>Please read this before you distribute or use this
+          work.</emph></p>
+
+          <p>To protect the &pgtm; mission of promoting the free
+          distribution of electronic works, by using or distributing
+          this work (or any other work associated in any way with the
+          phrase <q>&pg;</q>), you agree to comply with all the terms
+          of the Full &pgtm; License (<ref
+          target="pglicense">available with this file</ref> or online
+          at <xptr url="&pgurl;/license"/>).</p>
+
+          <div id="pglicense1">
+            <head>Section 1.</head>
+            <head type="sub">General Terms of Use &amp; Redistributing &pgtm;
+            electronic works</head>
+
+            <div id="pglicense1A">
+              <head>1.A.</head>
+
+              <p>By reading or using any part of this &pgtm; electronic
+              work, you indicate that you have read, understand, agree to
+              and accept all the terms of this license and intellectual
+              property (trademark/copyright) agreement. If you do not agree
+              to abide by all the terms of this agreement, you must cease
+              using and return or destroy all copies of &pgtm; electronic
+              works in your possession. If you paid a fee for obtaining a
+              copy of or access to a &pgtm; electronic work and you do not
+              agree to be bound by the terms of this agreement, you may
+              obtain a refund from the person or entity to whom you paid the
+              fee as set forth in paragraph <ref
+              target="pglicense1E8">1.E.8.</ref></p>
+
+            </div>
+
+            <div id="pglicense1B">
+              <head>1.B.</head>
+
+              <p><q>&pg;</q> is a registered trademark. It may only be used on or
+              associated in any way with an electronic work by people who agree to be
+              bound by the terms of this agreement. There are a few things that you
+              can do with most &pgtm; electronic works even without complying with the
+              full terms of this agreement. See paragraph <ref
+              target="pglicense1C">1.C</ref> below. There are a lot of things you can
+              do with &pgtm; electronic works if you follow the terms of this
+              agreement and help preserve free future access to &pgtm; electronic
+              works. See paragraph <ref target="pglicense1E">1.E</ref> below.</p>
+
+            </div>
+
+            <div id="pglicense1C">
+              <head>1.C.</head>
+
+              <p>The &pglaf; (<q>the Foundation</q> or PGLAF), owns a compilation
+              copyright in the collection of &pgtm; electronic works. Nearly all the
+              individual works in the collection are in the public domain in the
+              United States. If an individual work is in the public domain in the
+              United States and you are located in the United States, we do not claim
+              a right to prevent you from copying, distributing, performing,
+              displaying or creating derivative works based on the work as long as all
+              references to &pg; are removed. Of course, we hope that you will support
+              the &pgtm; mission of promoting free access to electronic works by
+              freely sharing &pgtm; works in compliance with the terms of this
+              agreement for keeping the &pgtm; name associated with the work. You can
+              easily comply with the terms of this agreement by keeping this work in
+              the same format with its attached full &pgtm; License when you share it
+              without charge with others.</p>
+
+              <pgIf test="copyrighted">
+                <then>
+
+                  <p rend="text-indent: 2">This particular work is one
+                  of the few copyrighted individual works included
+                  with the permission of the copyright holder.
+                  Information on the copyright owner for this
+                  particular work and the terms of use imposed by the
+                  copyright holder on this work are set forth at the
+                  beginning of this work.</p>
+
+                </then>
+              </pgIf>
+
+            </div>
+
+            <div id="pglicense1D">
+              <head>1.D.</head>
+
+              <p>The copyright laws of the place where you are located also govern
+              what you can do with this work. Copyright laws in most countries are in
+              a constant state of change. If you are outside the United States, check
+              the laws of your country in addition to the terms of this agreement
+              before downloading, copying, displaying, performing, distributing or
+              creating derivative works based on this work or any other &pgtm; work.
+              The Foundation makes no representations concerning the copyright status
+              of any work in any country outside the United States.</p>
+
+            </div>
+
+            <div id="pglicense1E">
+              <head>1.E.</head>
+
+              <p>Unless you have removed all references to &pg;:</p>
+
+              <div id="pglicense1E1">
+                <head>1.E.1.</head>
+
+                <p>The following sentence, with active links to, or other immediate
+                access to, the full &pgtm; License must appear prominently whenever any
+                copy of a &pgtm; work (any work on which the phrase <q>&pg;</q>
+                appears, or with which the phrase <q>&pg;</q> is associated) is
+                accessed, displayed, performed, viewed, copied or distributed:
+
+                    <q rend="display"><p>This eBook is for the use of
+                    anyone anywhere at no cost and with almost no
+                    restrictions whatsoever. You may copy it, give it
+                    away or re-use it under the terms of the Project
+                    Gutenberg License included with this eBook or
+                    online at <xptr url="&pgurl;"/></p></q>
+
+                </p>
+
+              </div>
+
+              <div id="pglicense1E2">
+                <head>1.E.2.</head>
+
+                <p>If an individual &pgtm; electronic work is derived from the public
+                domain (does not contain a notice indicating that it is posted with
+                permission of the copyright holder), the work can be copied and
+                distributed to anyone in the United States without paying any fees or
+                charges. If you are redistributing or providing access to a work with
+                the phrase <q>&pg;</q> associated with or appearing on the work, you
+                must comply either with the requirements of paragraphs <ref
+                target="pglicense1E1">1.E.1</ref> through 1.E.7 or obtain permission for
+                the use of the work and the &pgtm; trademark as set forth in paragraphs
+                <ref target="pglicense1E8">1.E.8</ref> or 1.E.9.</p>
+
+              </div>
+
+              <div id="pglicense1E3">
+                <head>1.E.3.</head>
+
+                <p>If an individual &pgtm; electronic work is posted with the permission
+                of the copyright holder, your use and distribution must comply with both
+                paragraphs <ref target="pglicense1E1">1.E.1</ref> through 1.E.7 and any
+                additional terms imposed by the copyright holder. Additional terms will
+                be linked to the &pgtm; License for all works posted with the permission
+                of the copyright holder found at the beginning of this work.</p>
+
+              </div>
+
+              <div id="pglicense1E4">
+                <head>1.E.4.</head>
+
+                <p>Do not unlink or detach or remove the full &pgtm; License terms from
+                this work, or any files containing a part of this work or any other work
+                associated with &pgtm;.</p>
+
+              </div>
+
+              <div id="pglicense1E5">
+                <head>1.E.5.</head>
+
+                <p>Do not copy, display, perform, distribute or redistribute this
+                electronic work, or any part of this electronic work, without
+                prominently displaying the sentence set forth in paragraph <ref
+                target="pglicense1E1">1.E.1</ref> with active links or immediate access
+                to the full terms of the &pgtm; License.</p>
+
+              </div>
+
+              <div id="pglicense1E6">
+                <head>1.E.6.</head>
+
+                <p>You may convert to and distribute this work in any binary,
+                compressed, marked up, nonproprietary or proprietary form, including
+                any word processing or hypertext form. However, if you provide access
+                to or distribute copies of a &pgtm; work in a format other than
+                <q>Plain Vanilla ASCII</q> or other format used in the official
+                version posted on the official &pgtm; web site (&pgurl;), you must, at
+                no additional cost, fee or expense to the user, provide a copy, a
+                means of exporting a copy, or a means of obtaining a copy upon
+                request, of the work in its original <q>Plain Vanilla ASCII</q> or
+                other form. Any alternate format must include the full &pgtm; License
+                as specified in paragraph <ref target="pglicense1E1">1.E.1.</ref></p>
+
+              </div>
+
+              <div id="pglicense1E7">
+                <head>1.E.7.</head>
+
+                <p>Do not charge a fee for access to, viewing, displaying, performing,
+                copying or distributing any &pgtm; works unless you comply with
+                paragraph <ref target="pglicense1E8">1.E.8</ref> or 1.E.9.</p>
+
+              </div>
+
+              <div id="pglicense1E8">
+                <head>1.E.8.</head>
+
+                <p>You may charge a reasonable fee for copies of or providing access to
+                or distributing &pgtm; electronic works provided that</p>
+
+                <list type="bulleted">
+
+                  <item><p>You pay a royalty fee of 20% of the gross profits you derive from
+                  the use of &pgtm; works calculated using the method you already use to
+                  calculate your applicable taxes. The fee is owed to the owner of the
+                  &pgtm; trademark, but he has agreed to donate royalties under this
+                  paragraph to the &pglaf;. Royalty payments must be paid within 60 days
+                  following each date on which you prepare (or are legally required to
+                  prepare) your periodic tax returns. Royalty payments should be clearly
+                  marked as such and sent to the &pglaf; at the address specified in <ref
+                  target="pglicense4">Section 4, <q>Information about donations to the
+                  &pglaf;.</q></ref></p></item>
+
+                  <item><p>You provide a full refund of any money paid by a user who notifies
+                  you in writing (or by e-mail) within 30 days of receipt that s/he does
+                  not agree to the terms of the full &pgtm; License. You must require such
+                  a user to return or destroy all copies of the works possessed in a
+                  physical medium and discontinue all use of and all access to other
+                  copies of &pgtm; works.</p></item>
+
+                  <item><p>You provide, in accordance with paragraph <ref
+                  target="pglicense1F3">1.F.3</ref>, a full refund of any money paid for a
+                  work or a replacement copy, if a defect in the electronic work is
+                  discovered and reported to you within 90 days of receipt of the
+                  work.</p></item>
+
+                  <item><p>You comply with all other terms of this agreement for free
+                  distribution of &pgtm; works.</p></item>
+
+                </list>
+
+              </div>
+
+              <div id="pglicense1E9">
+                <head>1.E.9.</head>
+
+                <p>If you wish to charge a fee or distribute a &pgtm; electronic work or
+                group of works on different terms than are set forth in this agreement,
+                you must obtain permission in writing from both the &pglaf; and Michael
+                Hart, the owner of the &pgtm; trademark. Contact the Foundation as set
+                forth in <ref target="pglicense3">Section 3</ref> below.</p>
+
+              </div>
+
+            </div>
+
+            <div id="pglicense1F">
+              <head>1.F.</head>
+
+              <div id="pglicense1F1">
+                <head>1.F.1.</head>
+
+                <p>&pg; volunteers and employees expend considerable effort to identify,
+                do copyright research on, transcribe and proofread public domain works
+                in creating the &pgtm; collection. Despite these efforts, &pgtm;
+                electronic works, and the medium on which they may be stored, may
+                contain <q>Defects,</q> such as, but not limited to, incomplete,
+                inaccurate or corrupt data, transcription errors, a copyright or other
+                intellectual property infringement, a defective or damaged disk or other
+                medium, a computer virus, or computer codes that damage or cannot be
+                read by your equipment.</p>
+
+              </div>
+
+              <div id="pglicense1F2">
+                <head>1.F.2.</head>
+
+                <p>LIMITED WARRANTY, DISCLAIMER OF DAMAGES &mdash; Except for the <q>Right of
+                Replacement or Refund</q> described in <ref target="pglicense1F3">paragraph
+                1.F.3</ref>, the &pglaf;, the owner of the &pgtm; trademark, and any
+                other party distributing a &pgtm; electronic work under this agreement,
+                disclaim all liability to you for damages, costs and expenses, including
+                legal fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+                LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+                PROVIDED IN PARAGRAPH F3. YOU AGREE THAT THE FOUNDATION, THE TRADEMARK
+                OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE LIABLE TO
+                YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR INCIDENTAL
+                DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+
+              </div>
+
+              <div id="pglicense1F3">
+                <head>1.F.3.</head>
+
+                <p>LIMITED RIGHT OF REPLACEMENT OR REFUND &mdash; If you discover a defect in
+                this electronic work within 90 days of receiving it, you can receive a
+                refund of the money (if any) you paid for it by sending a written
+                explanation to the person you received the work from. If you received
+                the work on a physical medium, you must return the medium with your
+                written explanation. The person or entity that provided you with the
+                defective work may elect to provide a replacement copy in lieu of a
+                refund. If you received the work electronically, the person or entity
+                providing it to you may choose to give you a second opportunity to
+                receive the work electronically in lieu of a refund. If the second copy
+                is also defective, you may demand a refund in writing without further
+                opportunities to fix the problem.</p>
+
+              </div>
+
+              <div id="pglicense1F4">
+                <head>1.F.4.</head>
+
+                <p>Except for the limited right of replacement or refund set forth in
+                <ref target="pglicense1F3">paragraph 1.F.3</ref>, this work is provided
+                to you 'AS-IS,' WITH NO OTHER WARRANTIES OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTIBILITY OR
+                FITNESS FOR ANY PURPOSE.</p>
+
+              </div>
+
+              <div id="pglicense1F5">
+                <head>1.F.5.</head>
+
+                <p>Some states do not allow disclaimers of certain implied warranties or
+                the exclusion or limitation of certain types of damages. If any
+                disclaimer or limitation set forth in this agreement violates the law of
+                the state applicable to this agreement, the agreement shall be
+                interpreted to make the maximum disclaimer or limitation permitted by
+                the applicable state law. The invalidity or unenforceability of any
+                provision of this agreement shall not void the remaining provisions.</p>
+
+              </div>
+
+              <div id="pglicense1F6">
+                <head>1.F.6.</head>
+
+                <p>INDEMNITY &mdash; You agree to indemnify and hold the Foundation, the
+                trademark owner, any agent or employee of the Foundation, anyone
+                providing copies of &pgtm; electronic works in accordance with this
+                agreement, and any volunteers associated with the production, promotion
+                and distribution of &pgtm; electronic works, harmless from all
+                liability, costs and expenses, including legal fees, that arise directly
+                or indirectly from any of the following which you do or cause to occur:
+                (a) distribution of this or any &pgtm; work, (b) alteration,
+                modification, or additions or deletions to any &pgtm; work, and (c) any
+                Defect you cause.</p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div id="pglicense2">
+            <head>Section  2.</head>
+
+            <head type="sub">Information about the Mission of &pgtm;</head>
+
+            <p>&pgtm; is synonymous with the free distribution of electronic works
+            in formats readable by the widest variety of computers including
+            obsolete, old, middle-aged and new computers. It exists because of the
+            efforts of hundreds of volunteers and donations from people in all walks
+            of life.</p>
+
+            <p>Volunteers and financial support to provide volunteers with the
+            assistance they need, is critical to reaching &pgtm;'s goals and
+            ensuring that the &pgtm; collection will remain freely available for
+            generations to come. In 2001, the &pglaf; was created to provide a
+            secure and permanent future for &pgtm; and future generations. To learn
+            more about the &pglaf; and how your efforts and donations can help, see
+            Sections <ref target="pglicense3">3</ref> and <ref
+            target="pglicense4">4</ref> and the Foundation web page at <xptr
+            url="&pglafurl;"/>.</p>
+
+          </div>
+
+          <div id="pglicense3">
+            <head>Section 3.</head>
+
+            <head type="sub">Information about the &pglaf;</head>
+
+            <p>The &pglaf; is a non profit 501(c)(3) educational corporation
+            organized under the laws of the state of Mississippi and granted tax
+            exempt status by the Internal Revenue Service. The Foundation's EIN or
+            federal tax identification number is 64-6221541. Its 501(c)(3) letter
+            is posted at <xptr url="&pgurl;/fundraising/pglaf"/>. Contributions
+            to the &pglaf; are tax deductible to the full extent permitted by U.S.
+            federal laws and your state's laws.</p>
+
+            <p>The Foundation's principal office is located at 4557 Melan&nbsp;Dr.
+            S.&nbsp;Fairbanks, AK, 99712., but its volunteers and employees are
+            scattered throughout numerous locations. Its business office is
+            located at 809 North 1500 West, Salt Lake City, UT 84116, (801)
+            596-1887, email business@pglaf.org. Email contact links and up to date
+            contact information can be found at the Foundation's web site and
+            official page at <xptr url="&pglafurl;"/></p>
+
+            <p>For additional contact information:
+
+              <address rend="display">
+                <addrLine>Dr.&nbsp;Gregory B.&nbsp;Newby</addrLine>
+                <addrLine>Chief Executive and Director</addrLine>
+                <addrLine>gbnewby@pglaf.org</addrLine>
+              </address>
+
+            </p>
+
+          </div>
+
+          <div id="pglicense4">
+            <head>Section 4.</head>
+
+            <head type="sub">Information about Donations to the &pglaf;</head>
+
+            <p>&pgtm; depends upon and cannot survive without wide spread public
+            support and donations to carry out its mission of increasing the number
+            of public domain and licensed works that can be freely distributed in
+            machine readable form accessible by the widest array of equipment
+            including outdated equipment. Many small donations ($1 to $5,000) are
+            particularly important to maintaining tax exempt status with the
+            IRS.</p>
+
+            <p>The Foundation is committed to complying with the laws regulating
+            charities and charitable donations in all 50 states of the United
+            States. Compliance requirements are not uniform and it takes a
+            considerable effort, much paperwork and many fees to meet and keep up
+            with these requirements. We do not solicit donations in locations where
+            we have not received written confirmation of compliance. To SEND
+            DONATIONS or determine the status of compliance for any particular state
+            visit <xptr url="&pgurl;/fundraising/donate"/></p>
+
+            <p>While we cannot and do not solicit contributions from states where we
+            have not met the solicitation requirements, we know of no prohibition
+            against accepting unsolicited donations from donors in such states who
+            approach us with offers to donate.</p>
+
+            <p>International donations are gratefully accepted, but we cannot make
+            any statements concerning tax treatment of donations received from
+            outside the United States. U.S. laws alone swamp our small staff.</p>
+
+            <p>Please check the &pg; Web pages for current donation methods and
+            addresses. Donations are accepted in a number of other ways including
+            checks, online payments and credit card donations. To donate, please
+            visit: <xptr url="&pgurl;/fundraising/donate"/></p>
+
+          </div>
+
+          <div id="pglicense5">
+            <head>Section 5.</head>
+
+            <head type="sub">General Information About &pgtm; electronic
+            works.</head>
+
+            <p><name type="person">Professor Michael S. Hart</name> is the
+            originator of the &pgtm; concept of a library of electronic works that
+            could be freely shared with anyone. For thirty years, he produced and
+            distributed &pgtm; eBooks with only a loose network of volunteer
+            support.</p>
+
+            <p>&pgtm; eBooks are often created from several printed editions, all of
+            which are confirmed as Public Domain in the U.S. unless a copyright
+            notice is included. Thus, we do not necessarily keep eBooks in
+            compliance with any particular paper edition.</p>
+
+            <p>Each eBook is in a subdirectory of the same number as the eBook's
+            eBook number, often in several formats including plain vanilla ASCII,
+            compressed (zipped), HTML and others.</p>
+
+            <p>Corrected <emph>editions</emph> of our eBooks replace the old file
+            and take over the old filename and etext number. The replaced older file
+            is renamed. <emph>Versions</emph> based on separate sources are treated
+            as new eBooks receiving new filenames and etext numbers.</p>
+
+            <p>Most people start at our Web site which has the main PG search
+            facility: 
+            
+              <xptr rend="display" url="&pgurl;" />
+            
+            </p>
+
+            <p>This Web site includes information about &pgtm;, including how to
+            make donations to the &pglaf;, how to help produce our new eBooks, and
+            how to subscribe to our email newsletter to hear about new eBooks.</p>
+
+          </div>
+        </div>
+      </div>
+    </body>
+  </text>
+</TEI.2>
+
+<!-- Local Variables: -->
+<!-- mode:nxml -->
+<!-- coding:iso-8859-1-unix -->
+<!-- fill-column: 70 -->
+<!-- End: -->

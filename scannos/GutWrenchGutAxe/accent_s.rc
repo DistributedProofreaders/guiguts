@@ -1,0 +1,38 @@
+#Generated from axe2gui 0.2
+#GutAxe accent and ae ligature patterns
+#21 March 2006 JTN
+#String matches
+%scannoslist = (
+'ric-a-brac' => 'ric-à-brac',
+'ooperat' => 'oöperat',
+'oordinat' => 'oördinat',
+'himærae' => 'himæræ',
+'raeter' => 'ræter',
+'himaer' => 'himær',
+'ntipodaean' => 'ntipodæan',
+'yclopaed' => 'yclopæd',
+'ediaeval' => 'ediæval',
+'Glebae' => 'Glebæ',
+'CAESAR' => 'CÆSAR',
+'RCHAEO' => 'RCHÆO',
+'raetor' => 'rætor',
+'rchaeo' => 'rchæo',
+);
+
+%reghints = (
+'ric-a-brac' => 'grave accent',
+'ooperat' => 'diaeresis on 2nd "o"',
+'oordinat' => 'diaeresis on 2nd "o"',
+'himærae' => 'ae ligature',
+'raeter' => 'ae ligature',
+'himaer' => 'ae ligature',
+'ntipodaean' => 'ae ligature',
+'yclopaed' => 'ae ligature',
+'ediaeval' => 'ae ligature',
+'Glebae' => 'ae ligature',
+'CAESAR' => 'AE ligature',
+'RCHAEO' => 'AE ligature',
+'raetor' => 'ae ligature',
+'rchaeo' => 'ae ligature',
+);
+

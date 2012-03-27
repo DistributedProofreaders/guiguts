@@ -1,0 +1,19 @@
+%::pagenumbers = (
+);
+
+$::bookmarks[0] = '1.0';
+
+
+$::operationshash{'$errorchecktype'}='2012- 2-25  0:52:31';
+$::operationshash{'Begin HTML Markup'}='2012- 2-26 23:31:53';
+
+
+$::spellindexbkmrk = '';
+
+$::projectid = '';
+
+$booklang = 'en';
+
+$scannoslistpath = 'wordlist';
+
+1;

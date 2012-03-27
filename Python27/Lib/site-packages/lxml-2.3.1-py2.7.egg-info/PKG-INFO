@@ -1,0 +1,122 @@
+Metadata-Version: 1.0
+Name: lxml
+Version: 2.3.1
+Summary: Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+Home-page: http://lxml.de/
+Author: lxml dev team
+Author-email: lxml-dev@lxml.de
+License: UNKNOWN
+Download-URL: http://pypi.python.org/packages/source/l/lxml/lxml-2.3.1.tar.gz
+Description: lxml is a Pythonic, mature binding for the libxml2 and libxslt libraries.  It
+        provides safe and convenient access to these libraries using the ElementTree
+        API.
+        
+        It extends the ElementTree API significantly to offer support for XPath,
+        RelaxNG, XML Schema, XSLT, C14N and much more.
+        
+        To contact the project, go to the `project home page
+        <http://lxml.de/>`_ or see our bug tracker at
+        https://launchpad.net/lxml
+        
+        In case you want to use the current in-development version of lxml,
+        you can get it from the github repository at
+        https://github.com/lxml/lxml .  Note that this requires Cython to
+        build the sources, see the build instructions on the project home
+        page.  To the same end, running ``easy_install lxml==dev`` will
+        install lxml from
+        https://github.com/lxml/lxml/tarball/master#egg=lxml-dev if you have
+        an appropriate version of Cython installed.
+        
+        
+        After an official release of a new stable series, bug fixes may become
+        available at
+        https://github.com/lxml/lxml/tree/lxml-2.3 .
+        Running ``easy_install lxml==2.3bugfix`` will install
+        the unreleased branch state from
+        https://github.com/lxml/lxml/tarball/lxml-2.3#egg=lxml-2.3bugfix
+        as soon as a maintenance branch has been established.  Note that this
+        requires Cython to be installed at an appropriate version for the build.
+        2.3.1 (2011-09-25)
+        ==================
+        
+        Features added
+        --------------
+        
+        * New option ``kill_tags`` in ``lxml.html.clean`` to remove specific
+          tags and their content (i.e. their whole subtree).
+        
+        * ``pi.get()`` and ``pi.attrib`` on processing instructions to parse
+          pseudo-attributes from the text content of processing instructions.
+        
+        * ``lxml.get_include()`` returns a list of include paths that can be
+          used to compile external C code against lxml.etree.  This is
+          specifically required for statically linked lxml builds when code
+          needs to compile against the exact same header file versions as lxml
+          itself.
+        
+        * ``Resolver.resolve_file()`` takes an additional option
+          ``close_file`` that configures if the file(-like) object will be
+          closed after reading or not.  By default, the file will be closed,
+          as the user is not expected to keep a reference to it.
+        
+        Bugs fixed
+        ----------
+        
+        * HTML cleaning didn't remove 'data:' links.
+        
+        * The html5lib parser integration now uses the 'official'
+          implementation in html5lib itself, which makes it work with newer
+          releases of the library.
+        
+        * In ``lxml.sax``, ``endElementNS()`` could incorrectly reject a plain
+          tag name when the corresponding start event inferred the same plain
+          tag name to be in the default namespace.
+        
+        * When an open file-like object is passed into ``parse()`` or
+          ``iterparse()``, the parser will no longer close it after use.  This
+          reverts a change in lxml 2.3 where all files would be closed.  It is
+          the users responsibility to properly close the file(-like) object,
+          also in error cases.
+        
+        * Assertion error in lxml.html.cleaner when discarding top-level elements.
+        
+        * In lxml.cssselect, use the xpath 'A//B' (short for
+          'A/descendant-or-self::node()/B') instead of 'A/descendant::B' for the css
+          descendant selector ('A B'). This makes a few edge cases to be consistent
+          with the selector behavior in WebKit and Firefox, and makes more css
+          expressions valid location paths (for use in xsl:template match).
+        
+        * In lxml.html, non-selected ``<option>`` tags no longer show up in the
+          collected form values.
+        
+        * Adding/removing ``<option>`` values to/from a multiple select form
+          field properly selects them and unselects them.
+        
+        Other changes
+        --------------
+        
+        * Static builds can specify the download directory with the
+          ``--download-dir`` option.
+        
+        
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Cython
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.4
+Classifier: Programming Language :: Python :: 2.5
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.0
+Classifier: Programming Language :: Python :: 3.1
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: C
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Text Processing :: Markup :: HTML
+Classifier: Topic :: Text Processing :: Markup :: XML
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

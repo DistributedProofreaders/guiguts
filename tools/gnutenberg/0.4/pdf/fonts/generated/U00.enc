@@ -1,0 +1,98 @@
+/U00Encoding [
+
+% 0000
+/uni0000 /controlSTX /controlSOT /controlETX 
+/controlEOT /controlENQ /controlACK /controlBEL 
+/controlBS /controlHT /controlLF /controlVT 
+/controlFF /controlCR /controlSO /controlSI 
+
+% 0010
+/controlDLE /controlDC1 /controlDC2 /controlDC3 
+/controlDC4 /controlNAK /controlSYN /controlETB 
+/controlCAN /controlEM /controlSUB /controlESC 
+/controlFS /controlGS /controlRS /controlUS 
+
+% 0020
+/spacehackarabic /exclam /quotedbl /numbersign 
+/dollar /percent /ampersand /quotesingle 
+/parenleft /parenright /asterisk /plus 
+/comma /hyphen /period /slash 
+
+% 0030
+/zero /one /two /three 
+/four /five /six /seven 
+/eight /nine /colon /semicolon 
+/less /equal /greater /question 
+
+% 0040
+/at /A /B /C 
+/D /E /F /G 
+/H /I /J /K 
+/L /M /N /O 
+
+% 0050
+/P /Q /R /S 
+/T /U /V /W 
+/X /Y /Z /bracketleft 
+/backslash /bracketright /asciicircum /underscore 
+
+% 0060
+/grave /a /b /c 
+/d /e /f /g 
+/h /i /j /k 
+/l /m /n /o 
+
+% 0070
+/p /q /r /s 
+/t /u /v /w 
+/x /y /z /braceleft 
+/verticalbar /braceright /asciitilde /controlDEL 
+
+% 0080
+/uni0080 /uni0081 /uni0082 /uni0083 
+/uni0084 /uni0085 /uni0086 /uni0087 
+/uni0088 /uni0089 /uni008a /uni008b 
+/uni008c /uni008d /uni008e /uni008f 
+
+% 0090
+/uni0090 /uni0091 /uni0092 /uni0093 
+/uni0094 /uni0095 /uni0096 /uni0097 
+/uni0098 /uni0099 /uni009a /uni009b 
+/uni009c /uni009d /uni009e /uni009f 
+
+% 00a0
+/nonbreakingspace /exclamdown /cent /sterling 
+/currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft 
+/logicalnot /softhyphen /registered /overscore 
+
+% 00b0
+/degree /plusminus /twosuperior /threesuperior 
+/acute /mu1 /paragraph /periodcentered 
+/cedilla /onesuperior /ordmasculine /guillemotright 
+/onequarter /onehalf /threequarters /questiondown 
+
+% 00c0
+/Agrave /Aacute /Acircumflex /Atilde 
+/Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis 
+/Igrave /Iacute /Icircumflex /Idieresis 
+
+% 00d0
+/Eth /Ntilde /Ograve /Oacute 
+/Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex 
+/Udieresis /Yacute /Thorn /germandbls 
+
+% 00e0
+/agrave /aacute /acircumflex /atilde 
+/adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis 
+/igrave /iacute /icircumflex /idieresis 
+
+% 00f0
+/eth /ntilde /ograve /oacute 
+/ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex 
+/udieresis /yacute /thorn /ydieresis 
+] def

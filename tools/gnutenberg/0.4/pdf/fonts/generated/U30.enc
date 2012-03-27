@@ -1,0 +1,98 @@
+/U30Encoding [
+
+% 3000
+/ideographicspace /ideographiccomma /ideographicperiod /dittomark 
+/jis /ideographiciterationmark /ideographicclose /ideographiczero 
+/anglebracketleft /anglebracketright /dblanglebracketleft /dblanglebracketright 
+/cornerbracketleft /cornerbracketright /whitecornerbracketleft /whitecornerbracketright 
+
+% 3010
+/blacklenticularbracketleft /blacklenticularbracketright /postalmark /getamark 
+/tortoiseshellbracketleft /tortoiseshellbracketright /whitelenticularbracketleft /whitelenticularbracketright 
+/whitetortoiseshellbracketleft /whitetortoiseshellbracketright /uni301a /uni301b 
+/wavedash /quotedblprimereversed /quotedblprime /uni301f 
+
+% 3020
+/postalmarkface /onehangzhou /twohangzhou /threehangzhou 
+/fourhangzhou /fivehangzhou /sixhangzhou /sevenhangzhou 
+/eighthangzhou /ninehangzhou /uni302a /uni302b 
+/uni302c /uni302d /uni302e /uni302f 
+
+% 3030
+/uni3030 /uni3031 /uni3032 /uni3033 
+/uni3034 /uni3035 /circlepostalmark /uni3037 
+/uni3038 /uni3039 /uni303a /uni303b 
+/uni303c /uni303d /uni303e /uni303f 
+
+% 3040
+/uni3040 /asmallhiragana /ahiragana /ismallhiragana 
+/ihiragana /usmallhiragana /uhiragana /esmallhiragana 
+/ehiragana /osmallhiragana /ohiragana /kahiragana 
+/gahiragana /kihiragana /gihiragana /kuhiragana 
+
+% 3050
+/guhiragana /kehiragana /gehiragana /kohiragana 
+/gohiragana /sahiragana /zahiragana /sihiragana 
+/zihiragana /suhiragana /zuhiragana /sehiragana 
+/zehiragana /sohiragana /zohiragana /tahiragana 
+
+% 3060
+/dahiragana /tihiragana /dihiragana /tusmallhiragana 
+/tuhiragana /duhiragana /tehiragana /dehiragana 
+/tohiragana /dohiragana /nahiragana /nihiragana 
+/nuhiragana /nehiragana /nohiragana /hahiragana 
+
+% 3070
+/bahiragana /pahiragana /hihiragana /bihiragana 
+/pihiragana /huhiragana /buhiragana /puhiragana 
+/hehiragana /behiragana /pehiragana /hohiragana 
+/bohiragana /pohiragana /mahiragana /mihiragana 
+
+% 3080
+/muhiragana /mehiragana /mohiragana /yasmallhiragana 
+/yahiragana /yusmallhiragana /yuhiragana /yosmallhiragana 
+/yohiragana /rahiragana /rihiragana /ruhiragana 
+/rehiragana /rohiragana /wasmallhiragana /wahiragana 
+
+% 3090
+/wihiragana /wehiragana /wohiragana /nhiragana 
+/vuhiragana /uni3095 /uni3096 /uni3097 
+/uni3098 /uni3099 /uni309a /voicedmarkkana 
+/semivoicedmarkkana /iterationhiragana /voicediterationhiragana /uni309f 
+
+% 30a0
+/uni30a0 /asmallkatakana /akatakana /ismallkatakana 
+/ikatakana /usmallkatakana /ukatakana /esmallkatakana 
+/ekatakana /osmallkatakana /okatakana /kakatakana 
+/gakatakana /kikatakana /gikatakana /kukatakana 
+
+% 30b0
+/gukatakana /kekatakana /gekatakana /kokatakana 
+/gokatakana /sakatakana /zakatakana /sikatakana 
+/zikatakana /sukatakana /zukatakana /sekatakana 
+/zekatakana /sokatakana /zokatakana /takatakana 
+
+% 30c0
+/dakatakana /tikatakana /dikatakana /tusmallkatakana 
+/tukatakana /dukatakana /tekatakana /dekatakana 
+/tokatakana /dokatakana /nakatakana /nikatakana 
+/nukatakana /nekatakana /nokatakana /hakatakana 
+
+% 30d0
+/bakatakana /pakatakana /hikatakana /bikatakana 
+/pikatakana /hukatakana /bukatakana /pukatakana 
+/hekatakana /bekatakana /pekatakana /hokatakana 
+/bokatakana /pokatakana /makatakana /mikatakana 
+
+% 30e0
+/mukatakana /mekatakana /mokatakana /yasmallkatakana 
+/yakatakana /yusmallkatakana /yukatakana /yosmallkatakana 
+/yokatakana /rakatakana /rikatakana /rukatakana 
+/rekatakana /rokatakana /wasmallkatakana /wakatakana 
+
+% 30f0
+/wikatakana /wekatakana /wokatakana /nkatakana 
+/vukatakana /kasmallkatakana /kesmallkatakana /vakatakana 
+/vikatakana /vekatakana /vokatakana /dotkatakana 
+/prolongedkana /iterationkatakana /voicediterationkatakana /uni30ff 
+] def

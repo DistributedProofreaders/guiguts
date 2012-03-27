@@ -1,0 +1,99 @@
+/* 
+The Gnutenberg Press - default CSS2 stylesheet
+
+Any generated element will have a class "tei" and a class "tei-elem"
+where elem is the element name in TEI. 
+The order of statements is important !!! 
+*/
+
+.tei                            { margin: 0; padding: 0; 
+                                  font-size: 100%; font-weight: normal; font-style: normal }
+
+.block                          { display: block; }
+.inline                         { display: inline; }
+.floatleft                      { float: left;  margin: 1em 2em 1em 0; }
+.floatright                     { float: right; margin: 1em 0 1em 2em; }
+.shaded                         { margin-top: 1em; margin-bottom: 1em; 
+                                  padding: 1em; background-color: #eee; }
+.boxed                          { margin-top: 1em; margin-bottom: 1em; 
+                                  padding: 1em; border: 1px solid black; }
+
+body.tei		        { margin: 4ex 10%; text-align: justify }
+div.tei              	        { margin: 2em 0em }
+p.tei              	        { margin: 0em 0em 1em 0em; text-indent: 0em; }
+blockquote.tei	     	        { margin: 2em 4em }
+
+div.tei-lg                      { margin: 1em 0em; }
+div.tei-l		        { margin: 0em; text-align: left; }
+div.tei-tb                      { text-align: center; }
+div.tei-epigraph     	        { margin: 0em 0em 1em 10em; }
+div.tei-dateline	        { margin: 1ex 0em; text-align: right }
+div.tei-salute                  { margin: 1ex 0em; }
+div.tei-signed                  { margin: 1ex 0em; text-align: right }
+div.tei-byline                  { margin: 1ex 0em; }
+
+                                /* calculate from size of body = 80% */
+div.tei-marginnote		{ margin: 0em 0em 0em -12%; width: 11%; float: left; }
+
+div.tei-sp                      { margin: 1em 0em 1em  2em }
+div.tei-speaker	                { margin: 0em 0em 1em -2em;
+                        	  font-weight: bold; text-indent: 0em }
+div.tei-stage                   { margin: 1em 0em; font-weight: normal; font-style: italic }
+span.tei-stage	     	        { font-weight: normal; font-style: italic }
+
+div.tei-eg             	        { padding: 1em; 
+                     	          color: black; background-color: #eee }
+
+hr.doublepage	     	        { margin: 4em 0em; height: 5px; }
+hr.page            	        { margin: 4em 0em; height: 2px; }
+
+ul.tei-index                    { list-style-type: none }
+
+dl.tei                          { margin: 1em 0em }
+
+dt.tei-notelabel                { font-weight: normal; text-align: right; 
+                     	          float: left; width: 3em }
+dd.tei-notetext                 { margin: 0em 0em 1ex 4em }
+
+span.tei-pb                     { position: absolute; left: 1%; width: 8%;
+                                  font-style: normal; }
+
+span.code          	        { font-family: monospace; font-size: 110%; }
+
+ul.tei-castlist 		{ margin: 0em; list-style-type: none }
+li.tei-castitem		        { margin: 0em; }
+table.tei-castgroup     	{ margin: 0em; }
+ul.tei-castgroup		{ margin: 0em; list-style-type: none; 
+				  padding-right: 2em; border-right: solid black 2px; }
+caption.tei-castgroup-head	{ caption-side: right; width: 50%; text-align: left; 
+				  vertical-align: middle; padding-left: 2em; }
+*.tei-roledesc  		{ font-style: italic }
+*.tei-set			{ font-style: italic }
+
+table.rules                     { border-collapse: collapse; }
+table.rules caption,
+table.rules th,
+table.rules td                  { border: 1px solid black; }
+
+table.tei                       { border-collapse: collapse; }
+table.tei-list                  { width: 100% }
+
+th.tei-head-table	        { padding: 0.5ex 1em }
+
+th.tei-cell		        { padding: 0em 1em }
+td.tei-cell		        { padding: 0em 1em }
+
+td.tei-item		        { padding: 0; font-weight: normal; 
+                                  vertical-align: top; text-align: left; }
+th.tei-label,
+td.tei-label                    { width: 3em; padding: 0; font-weight: normal; 
+                                  vertical-align: top; text-align: right; }
+
+th.tei-label-gloss,
+td.tei-label-gloss              { text-align: left }
+
+td.tei-item-gloss,
+th.tei-headItem-gloss           { padding-left: 4em; }       
+
+img.tei-formula                 { vertical-align: middle; }
+

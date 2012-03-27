@@ -1,0 +1,23 @@
+%pagenumbers = (
+ 'Pg001' => {'offset' => '', 'label' => '', 'style' => '', 'action' => '', 'base' => ''},
+);
+
+$bookmarks[0] = '1.0';
+
+
+@operations = (
+'Tue Dec 21 14:02:01 2010 - Open C:\dp\lepage\projectID4b8169124c624-markedup.txt',
+'Tue Dec 21 14:02:25 2010 - File Saved',
+'Sun Sep  4 23:23:20 2011 - Open C:\dpold\pp\lepage\projectID4b8169124c624-markedup.txt',
+'Sun Sep  4 23:23:32 2011 - File Saved',
+'Sun Sep  4 23:24:07 2011 - Search & Replace',
+'Sun Sep  4 23:24:14 2011 - Search & Replace',
+'Sun Sep  4 23:24:23 2011 - File Saved',
+'Mon Sep  5 20:40:31 2011 - File Saved',
+);
+
+$spellindexbkmrk = '';
+
+$scannoslistpath = '';
+
+1;

@@ -1,0 +1,2706 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.1//EN' 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd'>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/"/>
+<title>The Project Gutenberg RST Manual</title>
+<meta content="181" name="PG.Id"/>
+<meta content="PG-RST Manual" name="PG.Title"/>
+<meta content="2010-11-25" name="PG.Released"/>
+<meta content="Public Domain" name="PG.Rights"/>
+<meta content="Marcello Perathoner" name="DC.Creator"/>
+<meta content="The Project Gutenberg RST Manual" name="DC.Title"/>
+<meta content="en" name="DC.Language"/>
+<meta content="2010" name="DC.Created"/>
+
+<link href="http://purl.org/dc/terms/" rel="schema.DCTERMS"/>
+<link href="http://id.loc.gov/vocabulary/relators" rel="schema.MARCREL"/>
+<meta content="The Project Gutenberg RST Manual" name="DCTERMS.title"/>
+<meta content="http://www.gutenberg.org/masters/rst/181/181.rst" name="DCTERMS.source"/>
+<meta content="en" scheme="DCTERMS.RFC4646" name="DCTERMS.language"/>
+<meta content="2011-10-29T03:24:33.187000+00:00" scheme="DCTERMS.W3CDTF" name="DCTERMS.modified"/>
+<meta content="Project Gutenberg" name="DCTERMS.publisher"/>
+<meta content="Public Domain in the USA." name="DCTERMS.rights"/>
+<link href="http://www.gutenberg.org/ebooks/181" rel="DCTERMS.isFormatOf"/>
+<meta content="Marcello Perathoner" name="DCTERMS.creator"/>
+<meta content="2010-11-25" scheme="DCTERMS.W3CDTF" name="DCTERMS.created"/>
+<meta content="width=device-width" name="viewport"/>
+<meta content="EpubMaker 0.3 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;" name="generator"/>
+<style type="text/css">
+/* 
+Project Gutenberg common docutils stylesheet.
+
+This stylesheet contains styles common to HTML and EPUB.  Put styles
+that are specific to HTML and EPUB into their relative stylesheets.
+
+:Author: Marcello Perathoner (webmaster@gutenberg.org)
+:Copyright: This stylesheet has been placed in the public domain.
+
+This stylesheet is based on:
+
+  :Author: David Goodger (goodger@python.org)
+  :Copyright: This stylesheet has been placed in the public domain.
+
+  Default cascading style sheet for the HTML output of Docutils.
+
+*/
+
+/* ADE 1.7.2 chokes on !important and throws all css out. */
+
+/* FONTS */
+
+.italics    { font-style: italic }
+.bold       { font-weight: bold }
+.small-caps { }
+.gesperrt   { }
+.antiqua    { font-style: italic } /* what else can we do ? */
+.monospaced { font-family: monospace }
+
+.smaller    { font-size: smaller }
+.larger     { font-size: larger }
+
+.xx-small   { font-size: xx-small }
+.x-small    { font-size: x-small }
+.small      { font-size: small }
+.medium     { font-size: medium }
+.large      { font-size: large }
+.x-large    { font-size: x-large }
+.xx-large   { font-size: xx-large }
+
+.text-transform-uppercase { text-transform: uppercase }
+.text-transform-lowercase { text-transform: lowercase }
+.text-transform-none      { text-transform: none }
+
+.red        { color: red }
+.green      { color: green }
+.blue       { color: blue }
+.yellow     { color: yellow }
+.white      { color: white }
+.gray       { color: gray }
+.black      { color: black }
+
+/* ALIGN */
+
+.left       { text-align: left }
+.center     { text-align: center }
+.right      { text-align: right }
+.justify    { text-align: justify }
+
+/* LINE HEIGHT */
+
+body        { line-height: 1.5 }
+p           { margin: 1.5em 0 }
+
+/* PAGINATION */
+
+.title, .subtitle     { page-break-inside: avoid;
+			page-break-after:  avoid }
+.titlepage, 
+#pg-header            { page-break-inside: avoid }
+
+/* SECTIONS */
+
+body         { text-align: justify }
+
+p.noindent   { text-indent: 0 }
+
+.boxed       { border: 1px solid black; padding: 1em }
+.topic       { margin: 5% 0; border: 1px solid black; padding: 1em }
+div.section  { clear: both }
+
+div.line-block       { margin: 1.5em 0 }  /* same leading as p */
+div.line-block.inner { margin: 0 0 0 10% }
+div.line             { margin-left: 20%; text-indent: -20%; }
+.line-block.noindent div.line { margin-left: 0; text-indent: 0; }
+
+hr.docutils  { margin: 1.5em 40%; border: none; border-bottom: 1px solid black; }
+
+.clearpage,
+.cleardoublepage,
+.vfill,
+.vspace      { border: 0px solid white }
+
+.title               { margin: 1.5em 0 }
+.title.with-subtitle { margin-bottom: 0 }
+.subtitle            { margin: 1.5em 0 }
+
+/* ugly hack to give more specifity. 
+   because ADE chokes on !important */
+.first.first { margin-top: 0 } 
+.last.last   { margin-bottom: 0 }
+
+/* header font style */
+/* http://dev.w3.org/csswg/css3-fonts/#propdef-font-size */
+
+h1.title                     { font-size: 200%; }  /* for book title only */
+h2.title, p.subtitle.level-1 { font-size: 150%; margin-top: 4.5em;  margin-bottom: 2em }
+h3.title, p.subtitle.level-2 { font-size: 120%; margin-top: 2.25em; margin-bottom: 1.25em }
+h4.title, p.subtitle.level-3 { font-size: 100%; margin-top: 1.5em;  margin-bottom: 1.5em;  font-weight: bold; }
+h5.title, p.subtitle.level-4 { font-size:  89%; margin-top: 1.87em; margin-bottom: 1.69em; font-style: italic; }
+h6.title, p.subtitle.level-5 { font-size:  60%; margin-top: 3.5em;  margin-bottom: 2.5em }
+
+/* title page */
+
+h1.document-title, 
+p.document-subtitle     { text-align: center }
+
+div.titlepage,
+#pg-header,
+h1.document-title       { margin: 10% 0 5% 0 }
+p.document-subtitle     { margin:  0  0 5% 0 }
+
+/* PG header and footer */
+#pg-machine-header { }
+#pg-produced-by { }
+
+li.toc-entry            { list-style-type: none }
+ul.open li, ol.open li  { margin-bottom: 1.5em }
+
+p.attribution           { margin-top: 0; text-align: right }
+
+.example-rendered { 
+    margin: 1em 5%; border: 1px dotted red;  padding: 1em; background-color: #ffd }
+.literal-block.example-source   { 
+    margin: 1em 5%; border: 1px dotted blue; padding: 1em; background-color: #eef }
+
+/* DROPCAPS */
+
+/* BLOCKQUOTES */
+
+blockquote { margin: 1.5em 10% }
+
+blockquote.epigraph { }
+
+blockquote.highlights { }
+
+div.local-contents { margin: 1.5em 10% }
+
+div.abstract { margin: 3em 10% }
+div.caption  { margin: 1.5em 10%; text-align: center; font-style: italic }
+div.legend   { margin: 1.5em 10% }
+
+.hidden { display: none }
+
+.invisible { visibility: hidden; color: white } /* white: mozilla print bug */
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+div.figure { margin: 3em 0 }
+
+img { max-width: 100% }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.topic {
+  margin: 3em 0 }
+
+ol.simple, ul.simple { margin: 1.5em 0 }
+
+ol.toc-list,    ul.toc-list    { padding-left:  0  }
+ol ol.toc-list, ul ul.toc-list { padding-left:  5% }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+.literal-block, .doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em; }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 100% }
+
+table { margin-top: 1.5em; margin-bottom: 1.5em; border-spacing: 0 }
+table.align-left, table.align-right { margin-top: 0 }
+
+table.table                { border-collapse: collapse; }
+table.table thead          { border: 1px solid black; border-width: 2px 0 0 }
+table.table tbody          { border: 1px solid black; border-width: 2px 0 }
+table.table tr             { border: 1px solid black; border-width: 0 0 1px }
+table.table tr.last        { border-width: 0 }
+table.table td, 
+table.table th             { padding: 1ex 1em; vertical-align: middle }
+
+table.table.norules tr             { border-width: 0 }
+table.table.norules td, 
+table.table.norules th             { padding: 0.5ex 1em }
+table.table.norules tr.first td    { padding-top: 1ex }
+table.table.norules tr.last td     { padding-bottom: 1ex }
+table.table.norules tr.first th    { padding-top: 1ex }
+table.table.norules tr.last th     { padding-bottom: 1ex }
+
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 3em 4em }
+
+table.docutils { }
+
+tr.footnote.footnote td, tr.footnote.footnote th { 
+  padding: 0 0.5em 1.5em;
+}
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding: 0 0.5em;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "!important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 } /* FIXME: was !important */
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+</style>
+<style type="text/css">
+/* 
+Project Gutenberg HTML docutils stylesheet.
+
+This stylesheet contains styles specific to HTML.
+*/
+
+/* FONTS */
+
+em                { font-style: normal }
+strong            { font-weight: normal }
+.small-caps       { font-variant: small-caps }
+.gesperrt         { letter-spacing: 0.1em }
+
+/* ALIGN */
+
+.align-left       { clear: left;
+		    float: left;
+		    margin-right: 1em }
+
+.align-right      { clear: right;
+		    float: right;
+		    margin-left: 1em }
+
+.align-center     { margin-left: auto;
+		    margin-right: auto }
+
+div.shrinkwrap    { display: table; }
+
+/* SECTIONS */
+
+body              { margin: 5% 10% 5% 10% }
+
+/* compact list items containing just one p */
+li p.pfirst       { margin-top: 0; margin-bottom: 0 } 
+
+.first            { margin-top: 0 !important } 
+.last             { margin-bottom: 0 !important }
+
+.dropcap          { float: left; }
+span.dropcap      { margin: 0 0.1em 0 0; line-height: 1 }
+img.dropcap       { margin: 0 0.5em 0 0; }
+
+/* PAGINATION */
+
+@media screen {
+   .coverpage, .frontispiece, .titlepage, .verso, 
+   .contents, .foreword, .preface, .introduction, .dedication, .prologue,
+   .epilogue, .appendix, .glossary, .bibliography, .index, .colophon,
+   .footnotes, .plainpage
+                      { margin: 10%  0 }
+   .clearpage         { margin: 10% }
+   .cleardoublepage   { margin: 10% }
+   .vfill             { margin:  5% 10% }
+}
+
+@media print {
+    /* margin-top disappears after a page-break, thus padding */
+   .frontispiece, .verso, .plainpage, .section.level-2,
+   .clearpage         { page-break-before: always; padding-top: 1px }
+
+   .coverpage, .titlepage, 
+   .contents, .foreword, .preface, .introduction, .dedication, .prologue,
+   .epilogue, .appendix, .glossary, .bibliography, .index, .colophon,
+   .footnotes,
+   .cleardoublepage   { page-break-before: right; padding-top: 1px }
+
+   .vfill             { margin-top: 20% }
+   h2.title           { margin-top: 20% }
+}
+</style>
+<style type="text/css">
+.pageno       { position: absolute; right: 95%; font: medium sans-serif; }
+.pageno:after { color: gray; content: '[' attr(title) ']' }
+.toc-pageref  { float: right }
+pre           { font-family: monospace; font-size: 0.9em; white-space: pre-wrap }
+</style>
+</head>
+<body>
+<div class="document language-de text-transform-smartquotes" xml:lang="de" id="the-project-gutenberg-rst-manual">
+<h1 class="document-title level-1 pfirst title">The Project Gutenberg RST Manual</h1>
+
+<!-- -*- encoding: utf-8 -*- -->
+<div class="container language-en pgheader" xml:lang="en" id="pg-header">
+<p class="noindent pfirst">This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever. You may copy it, give it away or
+re-use it under the terms of the <a class="reference internal pginternal" href="#project-gutenberg-license">Project Gutenberg License</a>
+included with this eBook or online at
+<a class="reference external" href="http://www.gutenberg.org/license">http://www.gutenberg.org/license</a>.</p>
+<div class="vspace" style="height: 1em">
+</div>
+<div class="container" id="pg-machine-header">
+<p class="noindent pfirst">Title: The Project Gutenberg RST Manual</p>
+<p class="noindent pnext">Author: Marcello Perathoner</p>
+<p class="noindent pnext">Release Date: November 25, 2010 [EBook #181]</p>
+<p class="noindent pnext">Language: English</p>
+<p class="noindent pnext">Character set encoding: UTF-8</p>
+<div class="vspace" style="height: 1em">
+</div>
+<p class="noindent pnext" id="pg-start-line">*** START OF THIS PROJECT GUTENBERG EBOOK PG-RST MANUAL ***</p>
+</div>
+<div class="vspace" style="height: 4em">
+</div>
+<div class="container" id="pg-produced-by">
+<div class="vspace" style="height: 1em">
+</div>
+</div>
+</div>
+<div class="container titlepage">
+<div class="vfill">
+</div>
+<div class="center line-block noindent outermost x-large">
+<div class="line"><span class="invisible pageno target" title="i" id="page-i"> </span>The</div>
+<div class="line"> </div>
+<div class="line">Project Gutenberg</div>
+<div class="line"> </div>
+<div class="line">RST Manual</div>
+</div>
+<div class="vfill">
+</div>
+<div class="vfill">
+</div>
+</div>
+<div class="contents level-2 section" id="id1">
+<h2 class="level-2 pfirst section-title title"><span class="invisible pageno target" title="iii" id="page-iii"> </span>Contents</h2>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#installing-epubmaker" id="id59">Installing EpubMaker</a></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#windows" id="id57">Windows</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#debian" id="id58">Debian</a></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-classes" id="id63">PG-RST Classes</a></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-inline-text" id="id60">Classes For Inline Text</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-block-text" id="id61">Classes For Block Text</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-front-matter-markup" id="id62">Classes For Front Matter Markup</a></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-extensions" id="id74">PG-RST Extensions</a></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#styles" id="id64">Styles</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pagination" id="id65">Pagination</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-of-contents" id="id66">Table of Contents</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#list-of-figures" id="id67">List of Figures</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#list-of-tables" id="id68">List of Tables</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#toc-entry" id="id69">Toc-Entry</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#footnotes" id="id70">Footnotes</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#page-numbers" id="id71">Page Numbers</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#dropcaps" id="id72">Dropcaps</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#tables" id="id73">Tables</a></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-metadata" id="id78">PG Metadata</a></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#top-boilerplate" id="id75">Top Boilerplate</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#metadata-directive" id="id76">Metadata Directive</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#bottom-boilerplate" id="id77">Bottom Boilerplate</a></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-best-practices" id="id79">PG-RST Best Practices</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#tests-and-examples" id="id83">Examples and Tests</a></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-1" id="id80">Section 3.1</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-2" id="id81">Section 3.2</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-3" id="id82">Section 3.3</a></span></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="level-2 lot section" id="id2">
+<h2 class="level-2 pfirst section-title title"><span class="invisible pageno target" title="v" id="page-v"> </span>List of Tables</h2>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-16" id="id25">Classes For Inline Text I</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-17" id="id26">Classes For Inline Text II</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-18" id="id27">Classes For Inline Text III</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-19" id="id28">Classes For Block Text</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-20" id="id29">Classes For Front Matter Markup</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-21" id="id30">Directives For Pagination</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-22" id="id31">Footnote Positions</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-23" id="id32">Support for dropcaps in output formats</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-24" id="id33">Demo Table</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-25" id="id34">Truth table for “and”</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-26" id="id35">Fields In the PG Scheme</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-27" id="id36">Fields In the DC Scheme</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-28" id="id37">Fields In the MARCREL Scheme</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-29" id="id38">Fields Without Scheme</a></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-30" id="id39"><cite class="italics">TABLE 8</cite> Types of Computers Used in the Systems Reported</a></span></li>
+</ul>
+</div>
+<div class="level-2 lof section" id="id3">
+<h2 class="level-2 pfirst section-title title"><span class="invisible pageno target" title="vii" id="page-vii"> </span>List of Figures</h2>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#figure-2" id="id40">Richard and Drucilla Martin</a></span></li>
+</ul>
+</div>
+<div class="mainmatter">
+</div>
+<div class="level-2 section" id="installing-epubmaker">
+<h2 class="level-2 pfirst section-title title"><a class="toc-backref pginternal" href="#id59"><span class="invisible pageno target" title="1" id="page-1"> </span>Installing EpubMaker</a></h2>
+<p class="pfirst">EpubMaker is Project Gutenberg’s file converter. It can convert from
+PG-RST to HTML, EPUB, PDF and plain text.</p>
+<div class="level-3 section" id="windows">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id57">Windows</a></h3>
+<div class="level-4 section" id="prerequisites">
+<h4 class="level-4 pfirst section-title title">Prerequisites</h4>
+<ol class="arabic">
+<li><p class="first pfirst">Install Python.</p>
+<p class="pnext">Assuming you don’t have python yet. If you have either version 2.6
+or 2.7 already installed, skip this.</p>
+<p class="pnext">From <a class="reference external" href="http://www.python.org/download/releases/2.7/">http://www.python.org/download/releases/2.7/</a> download
+the <span class="file monospaced">Windows x86 MSI Installer (2.7)</span> and run it.</p>
+<p class="pnext">Select all the default options and install.</p>
+</li>
+<li><p class="first pfirst">Install Python Setuptools.</p>
+<p class="pnext">From <a class="reference external" href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a> download
+<span class="file monospaced">setuptools-0.6c11.win32-py2.7.exe</span> (or any newer version)
+and run it.</p>
+<p class="pnext">If you are using python 2.6 get the setuptools for 2.6.</p>
+</li>
+<li><p class="first pfirst">Install Groff. (You can skip this step if you don’t want to
+generate plain text files.)</p>
+<p class="pnext">From <a class="reference external" href="http://gnuwin32.sourceforge.net/packages/groff.htm">http://gnuwin32.sourceforge.net/packages/groff.htm</a>
+download <cite class="italics">Complete package, except sources - Setup</cite>
+(<span class="file monospaced">groff-1.20.1-setup.exe</span>) and run it.</p>
+<p class="pnext">Select all the default options and install.</p>
+</li>
+<li><p class="first pfirst">Install TexLive. (You can skip this step if you don’t want to
+generate PDF files.)</p>
+<p class="pnext">Go to <a class="reference external" href="http://mirror.ctan.org/systems/texlive/tlnet">http://mirror.ctan.org/systems/texlive/tlnet</a> and download the
+file <span class="file monospaced">install-tl.zip</span>. Then say:</p>
+<pre class="literal-block">
+&gt; unzip install-tl.zip
+&gt; cd install-tl*
+&gt; install-tl
+</pre>
+<p class="pfirst">This will open the TeX Live installation wizard. Follow the
+instructions. When in doubt use the defaults.</p>
+<p class="pnext">This will take quite a while. (3 hours on an old Dell Vostro 1000
+laptop. It installs about 2.5 GB in 93,000 files.) If you
+experience download problems, restart the wizard: it will resume
+the download where it left off.</p>
+<p class="pnext">Long installation instructions can be found at
+<a class="reference external pgexternal" href="http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003">http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003</a></p>
+</li>
+<li><p class="first pfirst">Install HTML Tidy. (You can skip this step if you only want to
+process RST files and don’t want to build EPUBs from HTML input.)</p>
+<p class="pnext">If you are a post-processor you already have this.</p>
+<p class="pnext"><a class="reference external" href="http://tidy.sourceforge.net/">http://tidy.sourceforge.net/</a></p>
+</li>
+<li><p class="first pfirst">Update your PATH.</p>
+<p class="pnext">Start | Control Panel | System | Advanced | Environment Variables.
+Click "Path" in the User variables at the top.
+Click "Edit"</p>
+<p class="pnext">If the field is empty just enter (all in one line):</p>
+<pre class="literal-block">
+C:\Python27;
+C:\Python27\Scripts;
+C:\Program Files\GnuWin32\bin;
+</pre>
+<p class="pfirst">If the field contains data, go to the end of that data and add a
+semicolon if there isn’t one already and then add the string above.</p>
+<p class="pnext">Click Ok three times.</p>
+</li>
+</ol>
+</div>
+<div class="level-4 section" id="epubmaker">
+<h4 class="level-4 pfirst section-title title">EpubMaker</h4>
+<ol class="arabic">
+<li><p class="first pfirst">At the command prompt run:</p>
+<pre class="literal-block">
+&gt; easy_install epubmaker
+</pre>
+</li>
+<li><p class="first pfirst">Test your installation:</p>
+<pre class="literal-block">
+&gt; epubmaker --help
+&gt; epubmaker http://www.gutenberg.org/masters/rst/181/181.rst
+</pre>
+</li>
+</ol>
+</div>
+</div>
+<div class="level-3 section" id="debian">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id58">Debian</a></h3>
+<div class="level-4 section" id="id4">
+<h4 class="level-4 pfirst section-title title">Prerequisites</h4>
+<p class="pfirst">(Does not work with python 3 yet. If your distribution uses python 3 as
+default (not likely!), you’ll have to parallel install python 2.6 or 2.7.)</p>
+<pre class="literal-block">
+# apt-get install python python-setuptools python-lxml
+# apt-get install groff tidy
+# apt-get install libpng-dev libjpeg-dev libfreetype6-dev
+</pre>
+<p class="pfirst">Note: To get PDF generation to work, you have to use TeX Live version
+2009-11 or newer. You can get those from debian testing or
+unstable. If don’t want to switch from debian stable, you have to
+install TeX Live manually.</p>
+<p class="pnext">If you are on testing or unstable:</p>
+<pre class="literal-block">
+# apt-get install texlive texlive-latex-extra texlive-xetex
+# apt-get install ttf-linux-libertine ttf-dejavu
+</pre>
+<p class="pfirst">Else, to install TeX Live manually, go to
+<a class="reference external" href="http://mirror.ctan.org/systems/texlive/tlnet">http://mirror.ctan.org/systems/texlive/tlnet</a> and download the file
+<span class="file monospaced">install-tl-unx.tar.gz</span>. Unpack it. Then:</p>
+<pre class="literal-block">
+# cd /path/where/unpacked
+# perl install-tl -gui
+</pre>
+<p class="pfirst">Long installation instructions can be found at
+<a class="reference external pgexternal" href="http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003">http://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-150003</a></p>
+</div>
+<div class="level-4 section" id="id5">
+<h4 class="level-4 pfirst section-title title">EpubMaker</h4>
+<pre class="literal-block">
+# easy_install epubmaker
+</pre>
+</div>
+<div class="level-4 section" id="kindlegen">
+<h4 class="level-4 pfirst section-title title">Kindlegen</h4>
+<p class="pfirst">(Optional: Used only to make Kindle files):</p>
+<pre class="literal-block">
+$ wget http://s3.amazonaws.com/kindlegen/kindlegen_linux_2.6_i386_v1.2.tar.gz
+$ tar -xzf kindlegen_linux_2.6_i386_v1.2.tar.gz
+</pre>
+</div>
+</div>
+</div>
+<div class="level-2 section" id="pg-rst-classes">
+<h2 class="level-2 pfirst section-title title"><a class="toc-backref pginternal" href="#id63">PG-RST Classes</a></h2>
+<p class="pfirst">A list of classes you can use in PG-RST.</p>
+<div class="level-3 section" id="classes-for-inline-text">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id60">Classes For Inline Text</a></h3>
+<p class="pfirst">These classes have an effect on inline text. If you put them on a block, all
+inline contents of the block will be rendered accordingly.</p>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-16">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id25">
+Classes For Inline Text I</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Class</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">italics</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to italic font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">bold</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to boldface.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">small-caps</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to small capitals.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">gesperrt</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to gesperrt (extended letter spacing).</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">antiqua</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to antiqua.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">monospaced</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to monospaced font.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-17">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id26">
+Classes For Inline Text II</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Class</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">smaller</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to smaller font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">larger</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to larger font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">xx-small</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to smallest font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">x-small</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to very small font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">small</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to small font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">medium</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to normal font size.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">large</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to large font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">x-large</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to very large font.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">xx-large</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to largest font.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-18">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id27">
+Classes For Inline Text III</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Class</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">red</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to red font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">green</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to green font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">blue</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to blue font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">yellow</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to yellow font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">white</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to white font.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">gray</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to gray font.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">black</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Switch to black font.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-3 section" id="classes-for-block-text">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id61">Classes For Block Text</a></h3>
+<p class="pfirst">These classes have an effect on block text. Please do not confuse the
+alignment of the block with the alignment of the text in the
+block. Eg. a table can be centered, while the text inside the table
+is left-aligned. The alignment of the block is set with the <span class="green monospaced option">align</span>
+option.</p>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-19">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id28">
+Classes For Block Text</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Class</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">left</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Left-aligns the text in the block.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">center</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Centers the text in the block.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">right</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Right-aligns the text in the block.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">justify</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Justifies the text in the block.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">white-space-pre-line</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Preserves newlines.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-3 section" id="classes-for-front-matter-markup">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id62">Classes For Front Matter Markup</a></h3>
+<p class="pfirst">EpubMaker includes a few classes to markup front matter. While it is
+not necessary to do this, it adds value. In future the PG catalog
+might automatically extract not only the cover page but also the title
+page, verso, etc.</p>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-20">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id29">
+Classes For Front Matter Markup</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Class</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">coverpage</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The cover page.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">frontispiece</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The frontispiece.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">titlepage</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The title page.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">verso</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The title page verso.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">dedication</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The dedication page.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst"><span class="blue css monospaced">plainpage</span></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">A general class for page.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="pfirst">Use these classes on a <span class="directive monospaced red">container</span>. These classes already
+insert page breaks before the container so you need not insert page
+breaks on your own.</p>
+<pre class="example-source literal-block">
+.. container:: titlepage
+
+   | Pride and Prejudice
+   |
+   | Written by Jane Austen.
+</pre>
+</div>
+</div>
+<div class="level-2 section" id="pg-rst-extensions">
+<h2 class="level-2 pfirst section-title title"><a class="toc-backref pginternal" href="#id74">PG-RST Extensions</a></h2>
+<p class="pfirst">You can create custom roles based on the existing ones. This is how
+you create and then use custom roles.</p>
+<pre class="example-source literal-block">
+.. role:: small-caps
+   :class: small-caps
+
+This text is in :small-caps:`Small Caps`.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">This text is in <span class="small-caps">Small Caps</span>.</p>
+</div>
+<p class="pfirst">You can attach more than one class to a role:</p>
+<pre class="example-source literal-block">
+.. role:: big-and-bold
+   :class: x-large bold
+
+This text is :big-and-bold:`big and bold`.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">This text is <span class="bold x-large">big and bold</span>.</p>
+</div>
+<div class="level-3 section" id="styles">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id64">Styles</a></h3>
+<p class="pfirst">You can redefine the rendering of elements:</p>
+<pre class="example-source literal-block">
+.. style:: emphasis
+   :class: gesperrt
+
+Now *emphasis* will be rendered as gesperrt.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">Now <em class="gesperrt">emphasis</em> will be rendered as gesperrt.</p>
+</div>
+<pre class="example-source literal-block">
+.. style:: strong
+   :class: small-caps
+
+And **Strong Emphasis** will be rendered as small-caps.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">And <strong class="small-caps">Strong Emphasis</strong> will be rendered as small-caps.</p>
+</div>
+<pre class="example-source literal-block">
+.. style:: strong
+   :class: small-caps x-large bold
+
+And **Strong Emphasis** will be rendered as big bold small-caps.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">And <strong class="bold small-caps x-large">Strong Emphasis</strong> will be rendered as big bold small-caps.</p>
+</div>
+<pre class="example-source literal-block">
+.. style:: literal
+   :class: red
+
+``literally red``
+
+.. style:: superscript
+   :class: green
+
+:superscript:`sup`\ er
+
+.. style:: title_reference
+   :class: blue
+
+:title-reference:`Hamlet` and `Othello`.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst"><tt class="docutils literal red">literally red</tt></p>
+<p class="pnext"><sup class="green">sup</sup>er</p>
+<p class="pnext"><cite class="blue">Hamlet</cite> and <cite class="blue">Othello</cite>.</p>
+</div>
+<p class="pfirst">You can semantically markup foreign text:</p>
+<pre class="example-source literal-block">
+.. role:: french
+   :class: language-fr italics
+
+:french:`Pas de double` is the French for "father of twins".
+</pre>
+<div class="container example-rendered">
+<p class="pfirst"><span class="italics language-fr" xml:lang="fr">Pas de double</span> is the French for "father of twins".</p>
+</div>
+</div>
+<div class="level-3 section" id="pagination">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id65">Pagination</a></h3>
+<p class="pfirst">Pagination is important if you generate PDFs. See the Directives For
+Pagination Table.</p>
+<table class="align-center table" style="margin-left: 0%; width: 100%" summary="no summary" id="table-21">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id30">
+Directives For Pagination</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify; vertical-align: top"><p class="first last pfirst">Directive</p>
+</th>
+<th class="head" style="text-align: justify; vertical-align: top"><p class="first last pfirst">Explanation</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">clearpage</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first last pfirst">This directive inserts a page break.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">cleardoublepage</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first last pfirst">This directive inserts page breaks so
+that the next item starts on
+a right-hand page.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">vfill</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first pfirst">(PDF only.)</p>
+<p class="pnext">This directive generates `elastic´
+vertical space. This space expands to
+all of the free space on one page. If
+you use this more than once on a page,
+the free space is equally divided
+among all invocations.</p>
+<p class="pnext">To vertically align an item to the
+bottom, use <span class="directive monospaced red">vfill</span> before
+that item.</p>
+<p class="last pnext">To vertically align an item about 1/3
+of the page use <span class="directive monospaced red">vfill</span>
+once before the item and twice after
+the item.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">frontmatter</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first pfirst">(PDF only.)</p>
+<p class="pnext">Put this directive at the start of your book.</p>
+<p class="pnext">The <span class="directive monospaced red">pgheader</span> directive
+uses this directive internally, so you
+can omit <span class="directive monospaced red">frontmatter</span>
+whenever you use
+<span class="directive monospaced red">pgheader</span>.</p>
+<p class="last pnext">This directive turns on roman page
+numbers.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">mainmatter</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first pfirst">(PDF only.)</p>
+<p class="pnext">Put this directive after the table of
+contents and before the first chapter.</p>
+<p class="last pnext">This directive switches from roman
+page numbering to arabic page
+numbering and resets the page counter.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify; vertical-align: top"><p class="first last pfirst"><span class="directive monospaced red">backmatter</span></p>
+</td>
+<td style="text-align: justify; vertical-align: top"><p class="first pfirst">(PDF only.)</p>
+<p class="last pnext">Put this directive before appendices or indices.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-3 section" id="table-of-contents">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id66">Table of Contents</a></h3>
+<p class="pfirst">Use the RST <span class="directive monospaced red">contents</span> directive to automatically generate
+a table of contents.</p>
+<p class="pnext">N.B. You may also provide a table of contents manually.</p>
+<p class="pnext">In PG-RST the <span class="directive monospaced red">contents</span> directive requires you to specify
+an argument or the <span class="green monospaced option">local</span> option.</p>
+<p class="pnext">The <span class="green monospaced option">local</span> option displays a local table of contents, containing
+only the sub-sections of the section in which it is declared.</p>
+<p class="pnext">The <span class="green monospaced option">page-numbers</span> option displays the original page number in
+the TOC.</p>
+<pre class="example-source literal-block">
+.. contents:: A TOC With Page Numbers
+   :depth: 2
+   :page-numbers:
+</pre>
+<div class="contents level-4 section" id="id6">
+<h4 class="level-4 pfirst section-title title">A TOC With Page Numbers</h4>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#installing-epubmaker" id="id86">Installing EpubMaker</a><span class="toc-pageref"> 1</span></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#windows" id="id84">Windows</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#debian" id="id85">Debian</a><span class="toc-pageref"> 1</span></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-classes" id="id90">PG-RST Classes</a><span class="toc-pageref"> 1</span></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-inline-text" id="id87">Classes For Inline Text</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-block-text" id="id88">Classes For Block Text</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#classes-for-front-matter-markup" id="id89">Classes For Front Matter Markup</a><span class="toc-pageref"> 1</span></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-extensions" id="id101">PG-RST Extensions</a><span class="toc-pageref"> 1</span></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#styles" id="id91">Styles</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pagination" id="id92">Pagination</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-of-contents" id="id93">Table of Contents</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#list-of-figures" id="id94">List of Figures</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#list-of-tables" id="id95">List of Tables</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#toc-entry" id="id96">Toc-Entry</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#footnotes" id="id97">Footnotes</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#page-numbers" id="id98">Page Numbers</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#dropcaps" id="id99">Dropcaps</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#tables" id="id100">Tables</a><span class="toc-pageref"> 43</span></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-metadata" id="id105">PG Metadata</a><span class="toc-pageref"> 43</span></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#top-boilerplate" id="id102">Top Boilerplate</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#metadata-directive" id="id103">Metadata Directive</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#bottom-boilerplate" id="id104">Bottom Boilerplate</a><span class="toc-pageref"> 43</span></span></li>
+</ul>
+</li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#pg-rst-best-practices" id="id106">PG-RST Best Practices</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#tests-and-examples" id="id110">Examples and Tests</a><span class="toc-pageref"> 2</span></span><ul class="compact toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-1" id="id107">Section 3.1</a><span class="toc-pageref"> 7</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-2" id="id108">Section 3.2</a><span class="toc-pageref"> 123</span></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-3" id="id109">Section 3.3</a><span class="toc-pageref"> 123</span></span></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="level-3 section" id="list-of-figures">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id67">List of Figures</a></h3>
+<p class="pfirst">Use the <span class="directive monospaced red">lof</span> directive to generate a list of figures
+automatically.</p>
+<p class="pnext">N.B. You may also provide a list of figures manually.</p>
+<pre class="example-source literal-block">
+.. lof:: A List of Figures
+   :page-numbers:
+   :backlinks: none
+</pre>
+<div class="container example-rendered">
+<div class="level-4 lof section" id="id7">
+<h4 class="level-4 pfirst section-title title">A List of Figures</h4>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#figure-2" id="id41">Richard and Drucilla Martin</a><span class="toc-pageref"> 43</span></span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="level-3 section" id="list-of-tables">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id68">List of Tables</a></h3>
+<p class="pfirst">Use the <span class="directive monospaced red">lot</span> directive to generate a list of tables.</p>
+<p class="pnext">N.B. You may also provide a list of tables manually.</p>
+<pre class="example-source literal-block">
+.. lot:: A List of Tables
+   :page-numbers:
+   :backlinks: none
+</pre>
+<div class="container example-rendered">
+<div class="level-4 lot section" id="id8">
+<h4 class="level-4 pfirst section-title title">A List of Tables</h4>
+<ul class="compact simple toc-list">
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-16" id="id42">Classes For Inline Text I</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-17" id="id43">Classes For Inline Text II</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-18" id="id44">Classes For Inline Text III</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-19" id="id45">Classes For Block Text</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-20" id="id46">Classes For Front Matter Markup</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-21" id="id47">Directives For Pagination</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-22" id="id48">Footnote Positions</a><span class="toc-pageref"> 1</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-23" id="id49">Support for dropcaps in output formats</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-24" id="id50">Demo Table</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-25" id="id51">Truth table for “and”</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-26" id="id52">Fields In the PG Scheme</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-27" id="id53">Fields In the DC Scheme</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-28" id="id54">Fields In the MARCREL Scheme</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-29" id="id55">Fields Without Scheme</a><span class="toc-pageref"> 43</span></span></li>
+<li class="level-2 toc-entry"><span class="first"><a class="reference internal pginternal" href="#table-30" id="id56"><cite class="italics">TABLE 8</cite> Types of Computers Used in the Systems Reported</a><span class="toc-pageref"> 123</span></span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="level-3 section" id="toc-entry">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id69">Toc-Entry</a></h3>
+<p class="pfirst">Use the <span class="directive monospaced red">toc-entry</span> directive to:</p>
+<ul class="simple">
+<li><p class="first pfirst">provide an alternate toc entry</p>
+</li>
+<li><p class="first pfirst">suppress a toc entry, or</p>
+</li>
+<li><p class="first pfirst">switch toc gathering on or off.</p>
+</li>
+</ul>
+<p class="pfirst">A <span class="directive monospaced red">toc-entry</span> with argument sets the argument as toc entry
+for the next section, figure or table.</p>
+<p class="pnext">A <span class="directive monospaced red">toc-entry</span> without argument suppresses the toc entry for
+the next section, figure or table.</p>
+<p class="pnext">Use the <span class="green monospaced option">depth</span> option to set the depth up to which section
+titles are gathered for the toc. A depth of 0 switches toc gathering
+off.</p>
+<pre class="example-source literal-block">
+.. toc-entry:: An Alternative Caption
+</pre>
+</div>
+<div class="level-3 section" id="footnotes">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id70">Footnotes</a></h3>
+<p class="pfirst">Always define footnotes right after the paragraph they are referenced.</p>
+<table class="align-center norules table" style="margin-left: 12%; width: 75%" summary="Explains where footnotes end up" id="table-22">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id31">
+Positioning of footnotes</a></caption>
+<colgroup>
+<col width="20%"/>
+<col width="80%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Format</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Position</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst">HTML</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Collected under the footnotes directive.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">EPUB</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Idem.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">TXT</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Where they are defined.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst">PDF</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">At the bottom of the current page.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="pfirst">To collect the footnotes use the <span class="directive monospaced red">footnotes</span>
+directive. This directive will output a section with title and all
+footnotes in the document will be moved inside the section.</p>
+<p class="pnext">In PDF and TXT formats the <span class="directive monospaced red">footnotes</span> directive will do
+nothing.<a class="footnote-reference pginternal" href="#id12" id="id9"><sup>1</sup></a></p>
+<p class="pnext">Test<a class="footnote-reference pginternal" href="#id13" id="id10"><sup>2</sup></a><a class="footnote-reference pginternal" href="#id15" id="id11"><sup>3</sup></a> .</p>
+<pre class="example-source literal-block">
+.. footnotes:: Footnotes
+   :class: smaller
+</pre>
+</div>
+<div class="level-3 section" id="page-numbers">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id71">Page Numbers</a></h3>
+<p class="pfirst">The sequence <span class="code monospaced">[pg n]</span> will convert into a page number marker of
+n. n can be any arabic or roman numeral. The sequence itself will be
+removed from the text flow leaving a page anchor. There <em class="italics">must</em> be
+spaces around the sequence. If the page break is in the middle of a
+word, join the word and put the sequence at the end of the word.</p>
+<pre class="example-source literal-block">
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt [pg 42] ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores [pg xviii] et ea rebum.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt <span class="pageno target" title="42" id="page-42"> </span>ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores <span class="pageno target" title="xviii" id="page-xviii"> </span>et ea rebum.</p>
+</div>
+<p class="pfirst">A reference to a page number can be inserted with the sequence
+<span class="code monospaced">[pg n]_</span>. This will generate a link to the page anchor.</p>
+<pre class="example-source literal-block">
+See page [pg 42]_.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">See page <a class="reference internal pginternal" href="#page-42">42</a>.</p>
+</div>
+<p class="pfirst">An invisible page number can be inserted with the sequence
+<span class="code monospaced">[pg!n]</span>.</p>
+<pre class="example-source literal-block">
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt [pg!43] ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores et ea rebum. See page [pg 43]_.
+</pre>
+<div class="container example-rendered">
+<p class="pfirst">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt <span class="invisible pageno target" title="43" id="page-43"> </span>ut labore et dolore magna
+aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+duo dolores et ea rebum. See page <a class="reference internal pginternal" href="#page-43">43</a>.</p>
+</div>
+<p class="pfirst">See page <a class="reference internal pginternal" href="#page-iii">iii</a>.</p>
+</div>
+<div class="level-3 section" id="dropcaps">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id72">Dropcaps</a></h3>
+<p class="pfirst">You can insert dropcaps with the <span class="directive monospaced red">dropcap</span> directive. You
+can use either an enlarged character or an image as dropcap. You can
+also specify a span of character that should be set in small-caps
+after the dropcap initial.</p>
+<table class="align-center norules table" style="margin-left: 10%; width: 80%" summary="no summary" id="table-23">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id32">
+Support for dropcaps in output formats</a></caption>
+<colgroup>
+<col width="17%"/>
+<col width="42%"/>
+<col width="42%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Format</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Letter</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Image</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst">HTML</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">enlarged and dropped</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">resized and dropped</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">EPUB</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">enlarged on baseline</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">resized on baseline</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">TXT</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">normal size</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">alt text</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst">PDF</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">enlarged and dropped<a class="footnote-reference pginternal" href="#a" id="id17"><sup>5</sup></a></p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">resized and dropped<a class="footnote-reference pginternal" href="#a" id="id18"><sup>5</sup></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="pfirst">The first argument (mandatory) states the character(s) to replace with
+caps. It must match the beginning of the next paragraph.</p>
+<p class="pnext">The second (optional) argument states the characters to replace with
+small-caps. It must also match the beginning of the next paragraph.</p>
+<pre class="example-source literal-block">
+.. clearpage::
+
+.. dropcap:: L Lorem ipsum
+   :lines: 4
+   :indents: -1.25em 0.5em
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+</pre>
+<div class="container example-rendered">
+<div class="clearpage">
+</div>
+<p class="pfirst"><span class="dropcap" style="font-size: 6.00em">L</span><span class="dropspan small-caps">orem ipsum</span> dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+</div>
+<p class="pfirst">The <span class="green monospaced option">lines</span> option (PDF only) specifies how many lines the
+dropcap should span. Default is 2.</p>
+<p class="pnext">The <span class="green monospaced option">indents</span> option (PDF only) can specifiy up to 2 length
+values. The first one is the indent of the first line, the second one
+the indent of the following lines. The indent is calculated from the
+right border of the dropcap letter. Defaults are 0em and 0.5em.</p>
+<p class="pnext">The <span class="green monospaced option">image</span> option specifies the image url. In plain text and
+EPUB the image will not be used.</p>
+<pre class="example-source literal-block">
+.. clearpage::
+
+.. dropcap:: G
+   :image: images/G.png
+   :lines: 4
+
+Gorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+</pre>
+<div class="container example-rendered">
+<div class="clearpage">
+</div>
+<p class="pfirst"><img class="dropcap" style="height: 4.80em" alt="G" src="images/G.png"/>orem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+</div>
+</div>
+<div class="level-3 section" id="tables">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id73">Tables</a></h3>
+<p class="pfirst">Be careful with tables because the table support of many ereaders is
+weak or nil.</p>
+<p class="pnext">Tables also support these options:</p>
+<dl class="docutils">
+<dt><span class="green monospaced option">width</span></dt>
+<dd><p class="first last pfirst">Makes the table that wide.</p>
+</dd>
+<dt><span class="green monospaced option">widths</span></dt>
+<dd><p class="first pfirst">A space-separated list of unitless values, each specifying the
+relative width of one table column.</p>
+<p class="last pnext">If you don’t use the option <span class="green monospaced option">widths</span>, the column widths
+are calculated from the layout of the table in your source file.</p>
+</dd>
+<dt><span class="green monospaced option">aligns</span></dt>
+<dd><p class="first pfirst">Horizontally align the columns.</p>
+<p class="pnext">A space-separated list of alignments, each specifying the
+alignment of one column.</p>
+<p class="last pnext">Valid alignments values are: left, center, right and justify.</p>
+</dd>
+<dt><span class="green monospaced option">vertical-aligns</span></dt>
+<dd><p class="first pfirst">Vertically align the columns.</p>
+<p class="pnext">A space-separated list of vertical alignments, each specifying the
+alignment of one column.</p>
+<p class="pnext">Valid alignments values are: top, middle, and bottom.</p>
+<p class="last pnext">Note: vertical alignment is fully supported in HTML only. Other
+formats may support it in varying degrees.</p>
+</dd>
+<dt><span class="green monospaced option">summary</span> (HTML only.)</dt>
+<dd><p class="first last pfirst">Puts a summary attribute on the table element.</p>
+</dd>
+</dl>
+<p class="pfirst">These are the extra classes supported by PG-RST:</p>
+<dl class="docutils">
+<dt><span class="blue css monospaced">norules</span></dt>
+<dd><p class="first pfirst">Omits the rules between table rows. (Not the rule between header
+and body nor the rules at the top and bottom of the table.)</p>
+<p class="last pnext">Use this class when the eye can follow the table rows without the
+aid of rules.</p>
+</dd>
+</dl>
+<pre class="example-source literal-block">
+.. table:: Demo Table
+   :width: 100%
+   :align: center
+   :widths: 3 1 1 1
+   :aligns: justify justify center right
+   :vertical-aligns: top middle bottom top
+   :summary: This table contains valuable data.
+
+   +------------------------+-----------+----------+-----------+
+   | Header row, column 1   | Justified | Centered | Price ($) |
+   | (header rows optional) |           |          |           |
+   +========================+===========+==========+===========+
+   | row 1                  | column    |  column  |      1.23 |
+   +------------------------+-----------+----------+-----------+
+   | row 2                  | col col   |   col    |     45.67 |
+   |                        | col col   |          |           |
+   |                        | col col   |          |           |
+   |                        | col       |          |           |
+   +------------------------+-----------+----------+-----------+
+   | row 3                  | Cells may span columns.          |
+   |                        | Lorem ipsum dolor sit amet,      |
+   |                        | consetetur sadipscing elitr, sed |
+   |                        | nonumy eirmod tempor invidunt ut |
+   |                        | labore et dolore magna aliquyam  |
+   |                        | sed diam voluptua. At vero eos   |
+   |                        | accusam et justo duo dolores et  |
+   |                        | rebum.                           |
+   +------------------------+-----------+----------+-----------+
+   | Cells may span rows and            | Cells    | row 4     |
+   | columns. Lorem ipsum dolor sit     | may span +-----------+
+   | amet, consetetur adipiscing.       | rows.    | row 5     |
+   +------------------------------------+----------+-----------+
+</pre>
+<div class="container example-rendered">
+<table class="align-center table" style="margin-left: 0%; width: 100%" summary="This table contains valuable data." id="table-24">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id33">
+Demo Table</a></caption>
+<colgroup>
+<col width="50%"/>
+<col width="17%"/>
+<col width="17%"/>
+<col width="17%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify; vertical-align: top"><p class="first last pfirst">Header row, column 1
+(header rows optional)</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Justified</p>
+</th>
+<th class="head" style="text-align: center; vertical-align: bottom"><p class="first last pfirst">Centered</p>
+</th>
+<th class="head" style="text-align: right; vertical-align: top"><p class="first last pfirst">Price ($)</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify; vertical-align: top"><p class="first last pfirst">row 1</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">column</p>
+</td>
+<td style="text-align: center; vertical-align: bottom"><p class="first last pfirst">column</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">1.23</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst">row 2</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">col col
+col col
+col col
+col</p>
+</td>
+<td style="text-align: center; vertical-align: bottom"><p class="first last pfirst">col</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">45.67</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top"><p class="first last pfirst">row 3</p>
+</td>
+<td style="text-align: justify" colspan="3"><p class="first last pfirst">Cells may span columns.
+Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed
+nonumy eirmod tempor invidunt ut
+labore et dolore magna aliquyam
+sed diam voluptua. At vero eos
+accusam et justo duo dolores et
+rebum.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify; vertical-align: top" colspan="2" rowspan="2"><p class="first last pfirst">Cells may span rows and
+columns. Lorem ipsum dolor sit
+amet, consetetur adipiscing.</p>
+</td>
+<td style="text-align: center; vertical-align: bottom" rowspan="2"><p class="first last pfirst">Cells
+may span
+rows.</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">row 4</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: right; vertical-align: top"><p class="first last pfirst">row 5</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="example-source literal-block">
+.. table:: Truth table for “and”
+   :class: norules
+   :align: center
+   :width: 50%
+
+   ===== ===== =========
+     A     B    A and B
+   ===== ===== =========
+   False False False
+   True  False False
+   False True  False
+   True  True  True
+   ===== ===== =========
+</pre>
+<div class="container example-rendered">
+<table class="align-center norules table" style="margin-left: 25%; width: 50%" summary="no summary" id="table-25">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id34">
+Truth table for “and”</a></caption>
+<colgroup>
+<col width="26%"/>
+<col width="26%"/>
+<col width="47%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head"><p class="first last pfirst">A</p>
+</th>
+<th class="head"><p class="first last pfirst">B</p>
+</th>
+<th class="head"><p class="first last pfirst">A and B</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td><p class="first last pfirst">False</p>
+</td>
+<td><p class="first last pfirst">False</p>
+</td>
+<td><p class="first last pfirst">False</p>
+</td>
+</tr>
+<tr><td><p class="first last pfirst">True</p>
+</td>
+<td><p class="first last pfirst">False</p>
+</td>
+<td><p class="first last pfirst">False</p>
+</td>
+</tr>
+<tr><td><p class="first last pfirst">False</p>
+</td>
+<td><p class="first last pfirst">True</p>
+</td>
+<td><p class="first last pfirst">False</p>
+</td>
+</tr>
+<tr class="last"><td><p class="first last pfirst">True</p>
+</td>
+<td><p class="first last pfirst">True</p>
+</td>
+<td><p class="first last pfirst">True</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="level-2 section" id="pg-metadata">
+<h2 class="level-2 pfirst section-title title"><a class="toc-backref pginternal" href="#id78">PG Metadata</a></h2>
+<div class="level-3 section" id="top-boilerplate">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id75">Top Boilerplate</a></h3>
+<p class="pfirst">This section explains the PG boilerplate that you must put at the top
+of your PG-RST file.</p>
+<p class="pnext">It looks like this:</p>
+<pre class="example-source literal-block">
+ .. -*- encoding: utf-8 -*-      (1)
+
+ .. meta::                       (2)
+    :PG.Id: 181
+    :PG.Title: Very Short Title
+    :PG.Released: 2010-11-25
+    :PG.Rights: Public Domain
+    :PG.Producer: Woody Guthrie
+    :PG.Producer: Pete Seeger
+    :PG.Producer: The Almanac Singers
+    :PG.Credits: This file was produced from images stolen from the Louvre.
+    :DC.Creator: Jane Austen
+    :MARCREL.edt: Mark Twain
+    :MARCREL.ill: Édouard Manet
+    :DC.Title: Full Title Statement
+    :DC.Language: en
+    :DC.Language: fr
+    :DC.Language: de
+    :DC.Created: 1900
+    :coverpage: images/cover.jpg
+
+
+ ===========
+ Short Title                     (3)
+ ===========
+
+ .. pgheader::                   (4)
+</pre>
+<ol class="arabic simple">
+<li><p class="first pfirst">Insert this line verbatim. It must be the first line in the
+text.<a class="footnote-reference pginternal" href="#id20" id="id19"><sup>6</sup></a> This tells the converter to use UTF-8 encoding and is
+also recognized by many editors.</p>
+</li>
+<li><p class="first pfirst">The metadata directive: see section below.</p>
+</li>
+<li><p class="first pfirst">This will be the first line of the generated files. It should
+say: “The Project Gutenberg Ebook of Title” or just “Title”. Use
+’=’ above and below the title.</p>
+</li>
+<li><p class="first pfirst">This directive inserts the PG header as generated from the metadata.</p>
+</li>
+</ol>
+</div>
+<div class="level-3 section" id="metadata-directive">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id76">Metadata Directive</a></h3>
+<p class="pfirst">The metadata directive contains all data that is used to generate the
+PG header and the PG catalog entry.</p>
+<p class="pnext">The scheme is the part before the dot.</p>
+<div class="level-4 section" id="pg-scheme">
+<h4 class="level-4 pfirst section-title title">PG Scheme</h4>
+<p class="pfirst">The PG scheme holds data that is relevant to Project Gutenberg only.</p>
+<table class="align-center table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-26">
+<caption class="level-4 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id35">
+Fields In the PG Scheme</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Name</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Contents</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst">PG.Id</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The ebook number.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">PG.Released</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The PG release date in YYYY-MM-DD format.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">PG.Rights</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Either ’Public Domain’ or ’Copyrighted’.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">PG.Title</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">A much shortened form of the title. Used in the PG boilerplate
+in the lines that say: “Start of this PG ebook …” and “End of
+this PG ebook …”.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">PG.Producer</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">A personal name or organization that helped produce this text.
+This field may appear more than once.
+Don’t put more than one name into one field.
+Repeat the field if necessary.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst">PG.Credits</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">A line acknowledging the source of the images or other stuff.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-4 section" id="dc-scheme">
+<h4 class="level-4 pfirst section-title title">DC Scheme</h4>
+<p class="pfirst">This scheme holds standard Dublincore stuff and is used by many search
+engines and the PG cataloguing software.</p>
+<table class="align-center table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-27">
+<caption class="level-4 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id36">
+Fields In the DC Scheme</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Name</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Contents</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst">DC.Creator</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Author. A personal name or organization that created the text.
+May appear more than once.
+Don’t put more than one name into one field.
+Repeat the field if necessary.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">DC.Title</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The full title statement as found on the book’s title page.</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">DC.Language</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The 2 or 3 letter code for all languages used for substantial
+portions of the text.
+May appear more than once.
+Don’t put more than one code into one field.
+Repeat the field if necessary.
+The languages listed here are indicative for the catalog and
+do not set the text language and hyphenation rules. Use the
+option <span class="green monospaced option">class</span> language-&lt;language-code&gt; for that.</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst">DC.Created</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">The year of original publication if known.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-4 section" id="marcrel-scheme">
+<h4 class="level-4 pfirst section-title title">MARCREL Scheme</h4>
+<p class="pfirst">This is used to record contributors to the text. All these fields may
+appear more than once. Don’t put more than one name into one
+field. Repeat the field if necessary.</p>
+<table class="align-center table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-28">
+<caption class="level-4 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id37">
+Fields In the MARCREL Scheme</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Name</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Contents</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="text-align: justify"><p class="first last pfirst">MARCREL.edt</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Editor</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">MARCREL.ill</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Illustrator</p>
+</td>
+</tr>
+<tr><td style="text-align: justify"><p class="first last pfirst">MARCREL.trl</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">Translator</p>
+</td>
+</tr>
+<tr class="last"><td style="text-align: justify"><p class="first last pfirst">MARCREL.*</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">See the <a class="reference external" href="http://www.loc.gov/marc/relators/relacode.html">full list of MARC relator codes</a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="level-4 section" id="no-scheme">
+<h4 class="level-4 pfirst section-title title">No Scheme</h4>
+<p class="pfirst">Some fields are associated with none of the above schemes.</p>
+<table class="align-center table" style="margin-left: 12%; width: 75%" summary="no summary" id="table-29">
+<caption class="level-4 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id38">
+Fields Without Scheme</a></caption>
+<colgroup>
+<col width="25%"/>
+<col width="75%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="text-align: justify"><p class="first last pfirst">Name</p>
+</th>
+<th class="head" style="text-align: justify"><p class="first last pfirst">Contents</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first last"><td style="text-align: justify"><p class="first last pfirst">coverpage</p>
+</td>
+<td style="text-align: justify"><p class="first last pfirst">A coverpage for those formats (eg. Kindle) that support
+a cover page.
+This image must be included in the upload but must not
+necessarily be put in the text flow.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="level-3 section" id="bottom-boilerplate">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id77">Bottom Boilerplate</a></h3>
+<p class="pfirst">You must put this at the very bottom of your PG-RST file.</p>
+<pre class="example-source literal-block">
+ .. pgfooter::     (1)
+</pre>
+<ol class="arabic simple">
+<li><p class="first pfirst">This directive inserts the PG footer and license.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="level-2 section" id="pg-rst-best-practices">
+<h2 class="level-2 pfirst section-title title with-subtitle"><a class="toc-backref pginternal" href="#id79">PG-RST Best Practices</a></h2>
+<p class="level-2 pfirst section-subtitle subtitle" id="images">
+Images</p>
+<p class="pfirst">Specify a <span class="green monospaced option">width</span> option in images and a <span class="green monospaced option">figwidth</span>
+option in figures and express it in percent.</p>
+<p class="pnext">If you don’t specify a width, the converter will calculate the width
+percentile for you, using the formula:</p>
+<pre class="literal-block">
+image_width / (980px * 0.8) * 100
+</pre>
+<p class="pfirst">(980px is the approx. wide of a browser window with scrollbar on a
+1024px wide screen, 0.8 are 10% margins left and right.)</p>
+<p class="pnext">Expressing the image size relative to the screen width is the best way
+to get images right on a wide variety of devices form iPhones to
+print.</p>
+<pre class="example-source literal-block">
+.. toc-entry:: Richard and Drucilla Martin
+
+.. figure:: images/cover.jpg
+   :align: center
+   :alt: Richard and Drucilla Martin
+
+   :lb:`Richard Martin was a slave in Memphis, Tennessee.
+   Drucilla Martin was a slave in Giles County, Tennessee.`
+
+   The legend consists of all elements after the caption.  Lorem
+   ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+   nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+   erat, sed diam voluptua. At vero eos et accusam et justo duo
+   dolores et ea rebum.
+</pre>
+<div class="container example-rendered">
+<div class="align-center figure" id="figure-2">
+<img style="display: block; width: 100%" alt="Richard and Drucilla Martin" src="images/cover.jpg" width="100%"/>
+<div class="caption italics">
+<a class="toc-backref pginternal" href="#id40">
+<span class="white-space-pre-line">Richard Martin was a slave in Memphis, Tennessee.<br/>
+Drucilla Martin was a slave in Giles County, Tennessee.</span></a></div>
+<div class="legend">
+<p class="pfirst">The legend consists of all elements after the caption.  Lorem
+ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo
+dolores et ea rebum.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="level-2 section" id="tests-and-examples">
+<h2 class="level-2 pfirst section-title title"><a class="toc-backref pginternal" href="#id83"><span class="invisible pageno target" title="2" id="page-2"> </span>Tests and Examples</a></h2>
+<div class="topic">
+<p class="level-2 pfirst title topic-title topic-title first">Notice</p>
+<p class="pfirst">The rest of this file contains tests. You may look at the RST
+source to learn how things are done.</p>
+</div>
+<p class="pfirst">A generated local table of contents:</p>
+<div class="container local local-contents" id="id21">
+<ul class="compact simple toc-list">
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-1" id="id111">Section 3.1</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-2" id="id112">Section 3.2</a></span></li>
+<li class="level-3 toc-entry"><span class="first"><a class="reference internal pginternal" href="#section-3-3" id="id113">Section 3.3</a></span></li>
+</ul>
+</div>
+<p class="pfirst">A local table of contents as highlights:</p>
+<blockquote class="highlights"><div>
+<p class="pfirst">Kingston — Instructive remarks on early English history —
+Instructive observations on carved oak and life in general — Sad
+case of Stivvings, junior — Musings on antiquity — I forget that I
+am steering — Interesting result — Hampton Court Maze — Harris as a
+guide.</p>
+</div></blockquote>
+<p class="pfirst">ÄÖÜ äöüß Æsop Œdipus cœr. Đ. †‡ ｳ. §2.1</p>
+<p class="pnext">‘’ ‚‛ “ ” ‹› em — en –.</p>
+<p class="pnext">“ ‘Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.’ ”</p>
+<p class="pnext">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. <span class="pageno target" title="3" id="page-3"> </span>At vero eos et accusam et justo duo dolores
+et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<hr class="docutils"/>
+<p class="pfirst">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<p class="pnext"><span class="pageno target" title="4" id="page-4"> </span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<div class="align-center container shrinkwrap">
+<div class="line-block outermost">
+<div class="inner line-block">
+<div class="line">‘Speak roughly to your little boy,</div>
+<div class="inner line-block">
+<div class="line">And beat him when he sneezes:</div>
+</div>
+<div class="line">He only does it to annoy,</div>
+<div class="inner line-block">
+<div class="line">Because he knows it teases.’</div>
+<div class="line"> </div>
+<div class="inner line-block">
+<div class="inner line-block">
+<div class="line">CHORUS.</div>
+<div class="line"> </div>
+</div>
+</div>
+</div>
+</div>
+<div class="line">(In which the cook and the baby joined):—</div>
+<div class="line"> </div>
+<div class="inner line-block">
+<div class="inner line-block">
+<div class="inner line-block">
+<div class="line">‘Wow! wow! wow!’</div>
+</div>
+</div>
+</div>
+</div>
+<div class="line-block outermost">
+<div class="line">Summer wanes, the children are grown;</div>
+<div class="inner line-block">
+<div class="line">Fun and frolic no more he knows;</div>
+</div>
+<div class="line">Robert of Lincoln’s a humdrum crone;</div>
+<div class="inner line-block">
+<div class="line">Off he flies and we sing as he goes:</div>
+<div class="inner line-block">
+<div class="line">Bob-o’link, bob-o’-link,</div>
+<div class="line">Spink, spank, spink;</div>
+</div>
+</div>
+<div class="line">When you can pipe that merry old strain,</div>
+<div class="line">Robert of Lincoln, come back again.</div>
+<div class="inner line-block">
+<div class="inner line-block">
+<div class="inner line-block">
+<div class="line">Chee, chee, chee.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="pfirst">And now a quote by Lorem Ipsum:</p>
+<blockquote><div>
+<p class="pfirst">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+et ea rebum. Stet clita <span class="pageno target" title="5" id="page-5"> </span>kasd gubergren, no sea takimata
+sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
+eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<p class="attribution">—— Lorem Ipsum</p>
+</div></blockquote>
+<div class="level-3 section" id="section-3-1">
+<h3 class="level-3 pfirst section-title title"><a class="toc-backref pginternal" href="#id111"><span class="pageno target" title="7" id="page-7"> </span>Section 3.1</a></h3>
+<blockquote class="epigraph"><div>
+<p class="pfirst">I pity the man who can travel from Dan to Beersheba, and say “’Tis
+all barren;” and so is all the world to him who will not cultivate
+the fruits it offers.</p>
+<p class="attribution">—— Sterne: Sentimental Journey.</p>
+</div></blockquote>
+<p class="pfirst">Simple List with hyphens</p>
+<ul class="simple">
+<li><p class="first pfirst">Wash left ear.</p>
+</li>
+<li><p class="first pfirst">Wash right ear.</p>
+</li>
+<li><p class="first pfirst">Brush teeth.</p>
+</li>
+</ul>
+<p class="pfirst">Simple List with bullets</p>
+<ul class="simple">
+<li><p class="first pfirst">Wash left ear.</p>
+</li>
+<li><p class="first pfirst">Wash right ear.</p>
+</li>
+<li><p class="first pfirst">Brush teeth.</p>
+</li>
+</ul>
+<p class="pfirst">Nested List</p>
+<ol class="arabic simple">
+<li><p class="first pfirst">Item 1.</p>
+<ol class="loweralpha">
+<li><p class="first pfirst">Item 1a.</p>
+</li>
+<li><p class="first pfirst">Item 1b.</p>
+<ol class="upperroman">
+<li><p class="first pfirst">Item 1.a.I</p>
+</li>
+<li><p class="first pfirst">Item 1.a.II</p>
+</li>
+<li><p class="first pfirst">Item 1.a.III</p>
+</li>
+<li><p class="first pfirst">Item 1.a.IV</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><ol class="first upperalpha">
+<li><ol class="first lowerroman">
+<li><p class="first pfirst">Item 2.A.i <span class="pageno target" title="8" id="page-8"> </span></p>
+</li>
+<li><p class="first pfirst">Item 2.A.ii</p>
+</li>
+</ol>
+</li>
+<li><ol class="first lowerroman">
+<li><p class="first pfirst">Item 2.B.i</p>
+</li>
+<li><p class="first pfirst">Item 2.B.ii</p>
+</li>
+<li><p class="first pfirst">Item 2.B.iii</p>
+</li>
+</ol>
+</li>
+<li><p class="first pfirst">Item 2.C</p>
+</li>
+</ol>
+</li>
+<li><p class="first pfirst">Item 3.</p>
+</li>
+</ol>
+<p class="pfirst">Definition List</p>
+<dl class="docutils">
+<dt>term</dt>
+<dd><p class="first last pfirst">Definition.</p>
+</dd>
+<dt>term 2</dt>
+<dd><p class="first pfirst">Definition 2</p>
+<p class="last pnext">Definition 2 paragraph 2.</p>
+</dd>
+<dt>long term 3</dt>
+<dd><p class="first last pfirst">Definition 3</p>
+</dd>
+</dl>
+<p class="pfirst">Option List (not used by PG)</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option"/>
+<col class="description"/>
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-a</span></kbd></td>
+<td><p class="first last pfirst">command-line option "a"</p>
+</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-1 <var>file</var></span>, <span class="option">--one=<var>file</var></span>, <span class="option">--two <var>file</var></span></kbd></td>
+</tr>
+<tr><td> </td><td><p class="first last pfirst">Multiple options with arguments.</p>
+</td></tr>
+</tbody>
+</table>
+</div>
+<div class="level-3 section" id="section-3-2">
+<h3 class="level-3 pfirst section-title title"><span class="pageno target" title="123" id="page-123"> </span>Section 3.2<a class="footnote-reference pginternal" href="#id23" id="id22"><sup>7</sup></a></h3>
+<p class="pfirst">Some text so this section isn’t empty.</p>
+</div>
+<div class="level-3 section" id="section-3-3">
+<h3 class="level-3 pfirst section-title title with-subtitle"><a class="toc-backref pginternal" href="#id113">Section 3.3</a></h3>
+<p class="level-3 pfirst section-subtitle subtitle" id="the-man-who-pleases">
+THE MAN WHO PLEASES.</p>
+<div class="container">
+<blockquote class="epigraph"><div>
+<div class="line-block outermost">
+<div class="italics line">The dearest friend to me, the kindest man,</div>
+<div class="italics line">The best-conditioned and unwearied spirit</div>
+<div class="italics line">In doing courtesies.</div>
+</div>
+<p class="attribution small-caps">—— Merchant of Venice.</p>
+</div></blockquote>
+<blockquote class="epigraph"><div>
+<div class="line-block outermost">
+<div class="italics line">He hath a daily beauty in his life.</div>
+</div>
+<p class="attribution small-caps">—— Othello.</p>
+</div></blockquote>
+<blockquote class="epigraph"><div>
+<div class="line-block outermost">
+<div class="italics line">Such a man would win any woman in the world</div>
+<div class="italics line">if a’ could get her good will.</div>
+</div>
+<p class="attribution small-caps">—— Much Ado About Nothing.</p>
+</div></blockquote>
+</div>
+<p class="pfirst">There are few subjects of deeper interest to
+men and women than that of personal fascination,</p>
+<blockquote class="epigraph"><div>
+<p class="pfirst">«Ora si comincia per quelli di
+fuori e per quelli di dentro a far
+grandissima e crudel guerra.»</p>
+<p class="pnext right"><cite class="italics">Istorie pistolesi.</cite></p>
+</div></blockquote>
+<table class="align-center norules table" style="margin-left: 25%; width: 50%" summary="TABLE 8 Types of Computers Used in the Systems Reported" id="table-30">
+<caption class="level-3 pfirst table-title title">
+<a class="toc-backref pginternal" href="#id39">
+<cite class="italics">TABLE 8</cite> Types of Computers Used in the Systems Reported</a></caption>
+<colgroup>
+<col width="60%"/>
+<col width="20%"/>
+<col width="20%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="first last"><th class="head" style="vertical-align: top"><p class="first last pfirst">Type</p>
+</th>
+<th class="head" style="text-align: right; vertical-align: top"><p class="first last pfirst">Number</p>
+</th>
+<th class="head" style="text-align: right"> </th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="first"><td style="vertical-align: top"><p class="first last pfirst">ASI 210</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">1</p>
+</td>
+<td style="text-align: right" rowspan="2"><p class="first last pfirst">(3)</p>
+</td>
+</tr>
+<tr><td style="vertical-align: top"><p class="first last pfirst">ASI 2100</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">2</p>
+</td>
+</tr>
+<tr><td style="vertical-align: top"><p class="first last pfirst">CDC 160A</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">2</p>
+</td>
+<td style="text-align: right" rowspan="2"><p class="first last pfirst">(3)</p>
+</td>
+</tr>
+<tr class="last"><td style="vertical-align: top"><p class="first last pfirst">CDC 3100</p>
+</td>
+<td style="text-align: right; vertical-align: top"><p class="first last pfirst">1</p>
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="literal-block small">
+total computer cost                   0.22 ± 0.06 by averaging
+------------------------  =  0.23 -&gt;  separate ratios for each
+cost of bare accelerator              system
+</pre>
+<div class="backmatter">
+</div>
+<div class="footnotes level-4 section smaller" id="id24">
+<h4 class="level-4 pfirst section-title title"><span class="invisible pageno target" title="10" id="page-10"> </span>Footnotes</h4>
+<table class="docutils footnote-group" frame="void" rules="none">
+<colgroup><col class="label"/><col/></colgroup>
+<tbody valign="top">
+<tr class="footnote" id="id12">
+<td class="label"><a class="fn-backref pginternal" href="#id9">[1]</a></td><td><p class="first last pfirst">Not even print the section title.</p>
+</td></tr>
+<tr class="footnote" id="id13">
+<td class="label"><a class="fn-backref pginternal" href="#id10">[2]</a></td><td><p class="first last pfirst">Another footnote, to test how multiple footnotes<a class="footnote-reference pginternal" href="#id16" id="id14"><sup>4</sup></a> stack on
+one page.</p>
+</td></tr>
+<tr class="footnote" id="id15">
+<td class="label"><a class="fn-backref pginternal" href="#id11">[3]</a></td><td><p class="first pfirst">Later editions continued as follows:</p>
+<div class="last line-block outermost">
+<div class="line">When the sands are all dry, he is gay as a lark,</div>
+<div class="line">And will talk in contemptuous tones of the Shark,</div>
+<div class="line">But, when the tide rises and sharks are around,</div>
+<div class="line">His voice has a timid and tremulous sound.</div>
+</div>
+</td></tr>
+<tr class="footnote" id="id16">
+<td class="label"><a class="fn-backref pginternal" href="#id14">[4]</a></td><td><p class="first last pfirst">Gibbon test. A footnote inside a footnote.</p>
+</td></tr>
+<tr class="footnote" id="a">
+<td class="label">[5]</td><td><em>(<a class="fn-backref pginternal" href="#id17">1</a>, <a class="fn-backref pginternal" href="#id18">2</a>)</em> <p class="last pfirst"><em class="italics">Warning:</em> If a paragraph with a dropcap gets page-broken the
+dropcap may stick into the page bottom. Avoid dropcaps unless
+you are sure that you are at the top of a page, like at a
+chapter start.</p>
+</td></tr>
+<tr class="footnote" id="id20">
+<td class="label"><a class="fn-backref pginternal" href="#id19">[6]</a></td><td><p class="first last pfirst">A unicode BOM is allowed before this.
+In fact most Windows editors will add a BOM without asking you.</p>
+</td></tr>
+<tr class="footnote" id="id23">
+<td class="label"><a class="fn-backref pginternal" href="#id22">[7]</a></td><td><p class="first last pfirst">This title contains a footnote reference. The footnote reference
+will not show up in the TOC.</p>
+</td></tr>
+</tbody>
+</table>
+</div>
+<div class="topic">
+<p class="level-3 pfirst title topic-title topic-title first"><span class="pageno target" title="99" id="page-99"> </span>Transcriber’s Note</p>
+<p class="pfirst">Minor spelling errors have been silently corrected.</p>
+<p class="pnext">Hyphenation has been made consistent.</p>
+</div>
+<div class="vspace" style="height: 5em">
+</div>
+<p class="pfirst" id="pg-end-line">*** END OF THIS PROJECT GUTENBERG EBOOK PG-RST MANUAL ***</p>
+<div class="backmatter">
+</div>
+</div>
+</div>
+<div class="language-en level-2 pgfooter section" xml:lang="en" id="a-word-from-project-gutenberg">
+<span id="pg-footer"/><h2 class="level-2 pfirst section-title title">A Word from Project Gutenberg</h2>
+<p class="pfirst">We will update this book if we find any errors.</p>
+<p class="pnext">This book can be found under: <a class="reference external" href="http://www.gutenberg.org/ebooks/181">http://www.gutenberg.org/ebooks/181</a></p>
+<p class="pnext">Creating the works from public domain print editions means that no one
+owns a United States copyright in these works, so the Foundation (and
+you!) can copy and distribute it in the United States without
+permission and without paying copyright royalties.  Special rules, set
+forth in the General Terms of Use part of this license, apply to
+copying and distributing Project Gutenberg™ electronic works to
+protect the Project Gutenberg™ concept and trademark. Project
+Gutenberg is a registered trademark, and may not be used if you charge
+for the eBooks, unless you receive specific permission. If you do not
+charge anything for copies of this eBook, complying with the rules is
+very easy. You may use this eBook for nearly any purpose such as
+creation of derivative works, reports, performances and research.
+They may be modified and printed and given away – you may do
+practically <em class="italics">anything</em> with public domain eBooks.  Redistribution is
+subject to the trademark license, especially commercial
+redistribution.</p>
+<div class="level-3 section" id="the-full-project-gutenberg-license">
+<span id="project-gutenberg-license"/><h3 class="level-3 pfirst section-title title">The Full Project Gutenberg License</h3>
+<p class="pfirst"><em class="italics">Please read this before you distribute or use this work.</em></p>
+<p class="pnext">To protect the Project Gutenberg™ mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase “Project
+Gutenberg”), you agree to comply with all the terms of the Full
+Project Gutenberg™ License available with this file or online at
+<a class="reference external" href="http://www.gutenberg.org/license">http://www.gutenberg.org/license</a>.</p>
+<div class="level-4 section" id="section-1-general-terms-of-use-redistributing-project-gutenberg-electronic-works">
+<h4 class="level-4 pfirst section-title title">Section 1. General Terms of Use &amp; Redistributing Project Gutenberg™ electronic works</h4>
+<p class="pfirst"><strong class="bold">1.A.</strong> By reading or using any part of this Project Gutenberg™
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement. If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or
+destroy all copies of Project Gutenberg™ electronic works in your
+possession. If you paid a fee for obtaining a copy of or access to a
+Project Gutenberg™ electronic work and you do not agree to be bound by
+the terms of this agreement, you may obtain a refund from the person
+or entity to whom you paid the fee as set forth in paragraph 1.E.8.</p>
+<p class="pnext"><strong class="bold">1.B.</strong> “Project Gutenberg” is a registered trademark. It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement. There are a few
+things that you can do with most Project Gutenberg™ electronic works
+even without complying with the full terms of this agreement. See
+paragraph 1.C below. There are a lot of things you can do with Project
+Gutenberg™ electronic works if you follow the terms of this agreement
+and help preserve free future access to Project Gutenberg™ electronic
+works. See paragraph 1.E below.</p>
+<p class="pnext"><strong class="bold">1.C.</strong> The Project Gutenberg Literary Archive Foundation (“the
+Foundation” or PGLAF), owns a compilation copyright in the collection
+of Project Gutenberg™ electronic works. Nearly all the individual
+works in the collection are in the public domain in the United
+States. If an individual work is in the public domain in the United
+States and you are located in the United States, we do not claim a
+right to prevent you from copying, distributing, performing,
+displaying or creating derivative works based on the work as long as
+all references to Project Gutenberg are removed. Of course, we hope
+that you will support the Project Gutenberg™ mission of promoting free
+access to electronic works by freely sharing Project Gutenberg™ works
+in compliance with the terms of this agreement for keeping the Project
+Gutenberg™ name associated with the work. You can easily comply with
+the terms of this agreement by keeping this work in the same format
+with its attached full Project Gutenberg™ License when you share it
+without charge with others.</p>
+<p class="pnext"><strong class="bold">1.D.</strong> The copyright laws of the place where you are located also
+govern what you can do with this work. Copyright laws in most
+countries are in a constant state of change. If you are outside the
+United States, check the laws of your country in addition to the terms
+of this agreement before downloading, copying, displaying, performing,
+distributing or creating derivative works based on this work or any
+other Project Gutenberg™ work.  The Foundation makes no
+representations concerning the copyright status of any work in any
+country outside the United States.</p>
+<p class="pnext"><strong class="bold">1.E.</strong> Unless you have removed all references to Project Gutenberg:</p>
+<p class="pnext"><strong class="bold">1.E.1.</strong> The following sentence, with active links to, or other
+immediate access to, the full Project Gutenberg™ License must appear
+prominently whenever any copy of a Project Gutenberg™ work (any work
+on which the phrase “Project Gutenberg” appears, or with which the
+phrase “Project Gutenberg” is associated) is accessed, displayed,
+performed, viewed, copied or distributed:</p>
+<blockquote><div>
+<p class="pfirst">This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever. You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at <a class="reference external" href="http://www.gutenberg.org">http://www.gutenberg.org</a></p>
+</div></blockquote>
+<p class="pfirst"><strong class="bold">1.E.2.</strong> If an individual Project Gutenberg™ electronic work is
+derived from the public domain (does not contain a notice indicating
+that it is posted with permission of the copyright holder), the work
+can be copied and distributed to anyone in the United States without
+paying any fees or charges. If you are redistributing or providing
+access to a work with the phrase “Project Gutenberg” associated with
+or appearing on the work, you must comply either with the requirements
+of paragraphs 1.E.1 through 1.E.7 or obtain permission for the use of
+the work and the Project Gutenberg™ trademark as set forth in
+paragraphs 1.E.8 or 1.E.9.</p>
+<p class="pnext"><strong class="bold">1.E.3.</strong> If an individual Project Gutenberg™ electronic work is
+posted with the permission of the copyright holder, your use and
+distribution must comply with both paragraphs 1.E.1 through 1.E.7 and
+any additional terms imposed by the copyright holder. Additional terms
+will be linked to the Project Gutenberg™ License for all works posted
+with the permission of the copyright holder found at the beginning of
+this work.</p>
+<p class="pnext"><strong class="bold">1.E.4.</strong> Do not unlink or detach or remove the full Project
+Gutenberg™ License terms from this work, or any files containing a
+part of this work or any other work associated with Project
+Gutenberg™.</p>
+<p class="pnext"><strong class="bold">1.E.5.</strong> Do not copy, display, perform, distribute or redistribute
+this electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg™ License.</p>
+<p class="pnext"><strong class="bold">1.E.6.</strong> You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including
+any word processing or hypertext form. However, if you provide access
+to or distribute copies of a Project Gutenberg™ work in a format other
+than “Plain Vanilla ASCII” or other format used in the official
+version posted on the official Project Gutenberg™ web site
+(<a class="reference external" href="http://www.gutenberg.org">http://www.gutenberg.org</a>), you must, at no additional cost, fee or
+expense to the user, provide a copy, a means of exporting a copy, or a
+means of obtaining a copy upon request, of the work in its original
+“Plain Vanilla ASCII” or other form. Any alternate format must include
+the full Project Gutenberg™ License as specified in paragraph 1.E.1.</p>
+<p class="pnext"><strong class="bold">1.E.7.</strong> Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg™ works
+unless you comply with paragraph 1.E.8 or 1.E.9.</p>
+<p class="pnext"><strong class="bold">1.E.8.</strong> You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg™ electronic works provided
+that</p>
+<ul class="open">
+<li><p class="first pfirst">You pay a royalty fee of 20% of the gross profits you derive from
+the use of Project Gutenberg™ works calculated using the method you
+already use to calculate your applicable taxes. The fee is owed to
+the owner of the Project Gutenberg™ trademark, but he has agreed to
+donate royalties under this paragraph to the Project Gutenberg
+Literary Archive Foundation. Royalty payments must be paid within 60
+days following each date on which you prepare (or are legally
+required to prepare) your periodic tax returns. Royalty payments
+should be clearly marked as such and sent to the Project Gutenberg
+Literary Archive Foundation at the address specified in Section 4,
+“Information about donations to the Project Gutenberg Literary
+Archive Foundation.”</p>
+</li>
+<li><p class="first pfirst">You provide a full refund of any money paid by a user who notifies
+you in writing (or by e-mail) within 30 days of receipt that s/he
+does not agree to the terms of the full Project Gutenberg™
+License. You must require such a user to return or destroy all
+copies of the works possessed in a physical medium and discontinue
+all use of and all access to other copies of Project Gutenberg™
+works.</p>
+</li>
+<li><p class="first pfirst">You provide, in accordance with paragraph 1.F.3, a full refund of
+any money paid for a work or a replacement copy, if a defect in the
+electronic work is discovered and reported to you within 90 days of
+receipt of the work.</p>
+</li>
+<li><p class="first pfirst">You comply with all other terms of this agreement for free
+distribution of Project Gutenberg™ works.</p>
+</li>
+</ul>
+<p class="pfirst"><strong class="bold">1.E.9.</strong> If you wish to charge a fee or distribute a Project
+Gutenberg™ electronic work or group of works on different terms than
+are set forth in this agreement, you must obtain permission in writing
+from both the Project Gutenberg Literary Archive Foundation and
+Michael Hart, the owner of the Project Gutenberg™ trademark. Contact
+the Foundation as set forth in Section 3. below.</p>
+<p class="pnext"><strong class="bold">1.F.</strong></p>
+<p class="pnext"><strong class="bold">1.F.1.</strong> Project Gutenberg volunteers and employees expend
+considerable effort to identify, do copyright research on, transcribe
+and proofread public domain works in creating the Project Gutenberg™
+collection. Despite these efforts, Project Gutenberg™ electronic
+works, and the medium on which they may be stored, may contain
+“Defects,” such as, but not limited to, incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other intellectual
+property infringement, a defective or damaged disk or other medium, a
+computer virus, or computer codes that damage or cannot be read by
+your equipment.</p>
+<p class="pnext"><strong class="bold">1.F.2.</strong> LIMITED WARRANTY, DISCLAIMER OF DAMAGES – Except for the
+“Right of Replacement or Refund” described in paragraph 1.F.3, the
+Project Gutenberg Literary Archive Foundation, the owner of the
+Project Gutenberg™ trademark, and any other party distributing a
+Project Gutenberg™ electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees. YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH 1.F.3. YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.</p>
+<p class="pnext"><strong class="bold">1.F.3.</strong> LIMITED RIGHT OF REPLACEMENT OR REFUND – If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from. If you
+received the work on a physical medium, you must return the medium
+with your written explanation. The person or entity that provided you
+with the defective work may elect to provide a replacement copy in
+lieu of a refund. If you received the work electronically, the person
+or entity providing it to you may choose to give you a second
+opportunity to receive the work electronically in lieu of a refund. If
+the second copy is also defective, you may demand a refund in writing
+without further opportunities to fix the problem.</p>
+<p class="pnext"><strong class="bold">1.F.4.</strong> Except for the limited right of replacement or refund set
+forth in paragraph 1.F.3, this work is provided to you ‘AS-IS,’ WITH
+NO OTHER WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTIBILITY OR FITNESS FOR ANY PURPOSE.</p>
+<p class="pnext"><strong class="bold">1.F.5.</strong> Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of
+damages. If any disclaimer or limitation set forth in this agreement
+violates the law of the state applicable to this agreement, the
+agreement shall be interpreted to make the maximum disclaimer or
+limitation permitted by the applicable state law. The invalidity or
+unenforceability of any provision of this agreement shall not void the
+remaining provisions.</p>
+<p class="pnext"><strong class="bold">1.F.6.</strong> INDEMNITY – You agree to indemnify and hold the Foundation,
+the trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg™ electronic works in accordance
+with this agreement, and any volunteers associated with the
+production, promotion and distribution of Project Gutenberg™
+electronic works, harmless from all liability, costs and expenses,
+including legal fees, that arise directly or indirectly from any of
+the following which you do or cause to occur: (a) distribution of this
+or any Project Gutenberg™ work, (b) alteration, modification, or
+additions or deletions to any Project Gutenberg™ work, and (c) any
+Defect you cause.</p>
+</div>
+<div class="level-4 section" id="section-2-information-about-the-mission-of-project-gutenberg">
+<h4 class="level-4 pfirst section-title title">Section 2. Information about the Mission of Project Gutenberg™</h4>
+<p class="pfirst">Project Gutenberg™ is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of
+computers including obsolete, old, middle-aged and new computers. It
+exists because of the efforts of hundreds of volunteers and donations
+from people in all walks of life.</p>
+<p class="pnext">Volunteers and financial support to provide volunteers with the
+assistance they need, is critical to reaching Project Gutenberg™’s
+goals and ensuring that the Project Gutenberg™ collection will remain
+freely available for generations to come. In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg™ and future generations. To
+learn more about the Project Gutenberg Literary Archive Foundation and
+how your efforts and donations can help, see Sections 3 and 4 and the
+Foundation web page at <a class="reference external" href="http://www.pglaf.org">http://www.pglaf.org</a> .</p>
+</div>
+<div class="level-4 section" id="section-3-information-about-the-project-gutenberg-literary-archive-foundation">
+<h4 class="level-4 pfirst section-title title">Section 3. Information about the Project Gutenberg Literary Archive Foundation</h4>
+<p class="pfirst">The Project Gutenberg Literary Archive Foundation is a non profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service. The Foundation’s EIN or federal tax identification
+number is 64-6221541. Its 501(c)(3) letter is posted at
+<a class="reference external" href="http://www.gutenberg.org/fundraising/pglaf">http://www.gutenberg.org/fundraising/pglaf</a> . Contributions to the
+Project Gutenberg Literary Archive Foundation are tax deductible to
+the full extent permitted by U.S.  federal laws and your state’s laws.</p>
+<p class="pnext">The Foundation’s principal office is located at 4557 Melan Dr.
+S. Fairbanks, AK, 99712., but its volunteers and employees are
+scattered throughout numerous locations. Its business office is
+located at 809 North 1500 West, Salt Lake City, UT 84116, (801)
+596-1887, email <a class="reference external" href="mailto:business@pglaf.org">business@pglaf.org</a>. Email contact links and up to date
+contact information can be found at the Foundation’s web site and
+official page at <a class="reference external" href="http://www.pglaf.org">http://www.pglaf.org</a></p>
+<p class="pnext">For additional contact information:</p>
+<blockquote><div>
+<div class="line-block outermost">
+<div class="line">Dr. Gregory B. Newby</div>
+<div class="line">Chief Executive and Director</div>
+<div class="line"><a class="reference external" href="mailto:gbnewby@pglaf.org">gbnewby@pglaf.org</a></div>
+</div>
+</div></blockquote>
+</div>
+<div class="level-4 section" id="section-4-information-about-donations-to-the-project-gutenberg-literary-archive-foundation">
+<h4 class="level-4 pfirst section-title title">Section 4. Information about Donations to the Project Gutenberg Literary Archive Foundation</h4>
+<p class="pfirst">Project Gutenberg™ depends upon and cannot survive without wide spread
+public support and donations to carry out its mission of increasing
+the number of public domain and licensed works that can be freely
+distributed in machine readable form accessible by the widest array of
+equipment including outdated equipment. Many small donations ($1 to
+$5,000) are particularly important to maintaining tax exempt status
+with the IRS.</p>
+<p class="pnext">The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States. Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements. We do not solicit donations in locations
+where we have not received written confirmation of compliance. To SEND
+DONATIONS or determine the status of compliance for any particular
+state visit <a class="reference external" href="http://www.gutenberg.org/fundraising/donate">http://www.gutenberg.org/fundraising/donate</a></p>
+<p class="pnext">While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.</p>
+<p class="pnext">International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States. U.S. laws alone swamp our small staff.</p>
+<p class="pnext">Please check the Project Gutenberg Web pages for current donation
+methods and addresses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: <a class="reference external" href="http://www.gutenberg.org/fundraising/donate">http://www.gutenberg.org/fundraising/donate</a></p>
+</div>
+<div class="level-4 section" id="section-5-general-information-about-project-gutenberg-electronic-works">
+<h4 class="level-4 pfirst section-title title">Section 5. General Information About Project Gutenberg™ electronic works.</h4>
+<p class="pfirst">Professor Michael S. Hart is the originator of the Project Gutenberg™
+concept of a library of electronic works that could be freely shared
+with anyone. For thirty years, he produced and distributed Project
+Gutenberg™ eBooks with only a loose network of volunteer support.</p>
+<p class="pnext">Project Gutenberg™ eBooks are often created from several printed
+editions, all of which are confirmed as Public Domain in the
+U.S. unless a copyright notice is included. Thus, we do not
+necessarily keep eBooks in compliance with any particular paper
+edition.</p>
+<p class="pnext">Each eBook is in a subdirectory of the same number as the eBook’s
+eBook number, often in several formats including plain vanilla ASCII,
+compressed (zipped), HTML and others.</p>
+<p class="pnext">Corrected <em class="italics">editions</em> of our eBooks replace the old file and take over
+the old filename and etext number. The replaced older file is
+renamed. <em class="italics">Versions</em> based on separate sources are treated as new
+eBooks receiving new filenames and etext numbers.</p>
+<p class="pnext">Most people start at our Web site which has the main PG search
+facility:</p>
+<blockquote><div>
+<p class="pfirst"><a class="reference external" href="http://www.gutenberg.org">http://www.gutenberg.org</a></p>
+</div></blockquote>
+<p class="pfirst">This Web site includes information about Project Gutenberg™, including
+how to make donations to the Project Gutenberg Literary Archive
+Foundation, how to help produce our new eBooks, and how to subscribe
+to our email newsletter to hear about new eBooks.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

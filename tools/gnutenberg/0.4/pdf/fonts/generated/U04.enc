@@ -1,0 +1,98 @@
+/U04Encoding [
+
+% 0400
+/uni0400 /afii10023 /afii10051 /afii10052 
+/afii10053 /afii10054 /afii10055 /afii10056 
+/afii10057 /afii10058 /afii10059 /afii10060 
+/afii10061 /uni040d /afii10062 /afii10145 
+
+% 0410
+/afii10017 /afii10018 /afii10019 /afii10020 
+/afii10021 /afii10022 /afii10024 /afii10025 
+/afii10026 /afii10027 /afii10028 /afii10029 
+/afii10030 /afii10031 /afii10032 /afii10033 
+
+% 0420
+/afii10034 /afii10035 /afii10036 /afii10037 
+/afii10038 /afii10039 /afii10040 /afii10041 
+/afii10042 /afii10043 /afii10044 /afii10045 
+/afii10046 /afii10047 /afii10048 /afii10049 
+
+% 0430
+/afii10065 /becyrillic /vecyrillic /gecyrillic 
+/decyrillic /iecyrillic /zhecyrillic /zecyrillic 
+/iicyrillic /iishortcyrillic /kacyrillic /elcyrillic 
+/emcyrillic /encyrillic /ocyrillic /pecyrillic 
+
+% 0440
+/ercyrillic /escyrillic /tecyrillic /ucyrillic 
+/efcyrillic /khacyrillic /tsecyrillic /checyrillic 
+/shacyrillic /shchacyrillic /hardsigncyrillic /yericyrillic 
+/softsigncyrillic /ereversedcyrillic /iucyrillic /iacyrillic 
+
+% 0450
+/uni0450 /iocyrillic /djecyrillic /gjecyrillic 
+/ecyrillic /dzecyrillic /icyrillic /yicyrillic 
+/jecyrillic /ljecyrillic /njecyrillic /tshecyrillic 
+/kjecyrillic /uni045d /ushortcyrillic /dzhecyrillic 
+
+% 0460
+/Omegacyrillic /omegacyrillic /afii10146 /yatcyrillic 
+/Eiotifiedcyrillic /eiotifiedcyrillic /Yuslittlecyrillic /yuslittlecyrillic 
+/Yuslittleiotifiedcyrillic /yuslittleiotifiedcyrillic /Yusbigcyrillic /yusbigcyrillic 
+/Yusbigiotifiedcyrillic /yusbigiotifiedcyrillic /Ksicyrillic /ksicyrillic 
+
+% 0470
+/Psicyrillic /psicyrillic /afii10147 /fitacyrillic 
+/afii10148 /izhitsacyrillic /Izhitsadblgravecyrillic /izhitsadblgravecyrillic 
+/Ukcyrillic /ukcyrillic /Omegaroundcyrillic /omegaroundcyrillic 
+/Omegatitlocyrillic /omegatitlocyrillic /Otcyrillic /otcyrillic 
+
+% 0480
+/Koppacyrillic /koppacyrillic /thousandcyrillic /titlocyrilliccmb 
+/palatalizationcyrilliccmb /dasiapneumatacyrilliccmb /psilipneumatacyrilliccmb /uni0487 
+/uni0488 /uni0489 /uni048a /uni048b 
+/uni048c /uni048d /uni048e /uni048f 
+
+% 0490
+/afii10050 /gheupturncyrillic /Ghestrokecyrillic /ghestrokecyrillic 
+/Ghemiddlehookcyrillic /ghemiddlehookcyrillic /Zhedescendercyrillic /zhedescendercyrillic 
+/Zedescendercyrillic /zedescendercyrillic /Kadescendercyrillic /kadescendercyrillic 
+/Kaverticalstrokecyrillic /kaverticalstrokecyrillic /Kastrokecyrillic /kastrokecyrillic 
+
+% 04a0
+/Kabashkircyrillic /kabashkircyrillic /Endescendercyrillic /endescendercyrillic 
+/Enghecyrillic /enghecyrillic /Pemiddlehookcyrillic /pemiddlehookcyrillic 
+/Haabkhasiancyrillic /haabkhasiancyrillic /Esdescendercyrillic /esdescendercyrillic 
+/Tedescendercyrillic /tedescendercyrillic /Ustraightcyrillic /ustraightcyrillic 
+
+% 04b0
+/Ustraightstrokecyrillic /ustraightstrokecyrillic /Hadescendercyrillic /hadescendercyrillic 
+/Tetsecyrillic /tetsecyrillic /Chedescendercyrillic /chedescendercyrillic 
+/Cheverticalstrokecyrillic /cheverticalstrokecyrillic /Shhacyrillic /shhacyrillic 
+/Cheabkhasiancyrillic /cheabkhasiancyrillic /Chedescenderabkhasiancyrillic /chedescenderabkhasiancyrillic 
+
+% 04c0
+/palochkacyrillic /Zhebrevecyrillic /zhebrevecyrillic /Kahookcyrillic 
+/kahookcyrillic /uni04c5 /uni04c6 /Enhookcyrillic 
+/enhookcyrillic /uni04c9 /uni04ca /Chekhakassiancyrillic 
+/chekhakassiancyrillic /uni04cd /uni04ce /uni04cf 
+
+% 04d0
+/Abrevecyrillic /abrevecyrillic /Adieresiscyrillic /adieresiscyrillic 
+/Aiecyrillic /aiecyrillic /Iebrevecyrillic /iebrevecyrillic 
+/Schwacyrillic /schwacyrillic /Schwadieresiscyrillic /schwadieresiscyrillic 
+/Zhedieresiscyrillic /zhedieresiscyrillic /Zedieresiscyrillic /zedieresiscyrillic 
+
+% 04e0
+/Dzeabkhasiancyrillic /dzeabkhasiancyrillic /Imacroncyrillic /imacroncyrillic 
+/Idieresiscyrillic /idieresiscyrillic /Odieresiscyrillic /odieresiscyrillic 
+/Obarredcyrillic /obarredcyrillic /Obarreddieresiscyrillic /obarreddieresiscyrillic 
+/uni04ec /uni04ed /Umacroncyrillic /umacroncyrillic 
+
+% 04f0
+/Udieresiscyrillic /udieresiscyrillic /Uhungarumlautcyrillic /uhungarumlautcyrillic 
+/Chedieresiscyrillic /chedieresiscyrillic /uni04f6 /uni04f7 
+/Yerudieresiscyrillic /yerudieresiscyrillic /uni04fa /uni04fb 
+/uni04fc /uni04fd /uni04fe /uni04ff 
+] def

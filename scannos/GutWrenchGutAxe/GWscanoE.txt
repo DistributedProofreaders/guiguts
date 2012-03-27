@@ -1,0 +1,112 @@
+\Possible English stealth scannos
+\modified 15 March 2004
+\This is a comment line (with backslash)
+\ b/h confusion:
+\ (Enable "he" and "be" for a LOT of messages!)
+\he
+\be
+\this has a blank after it (for where it should really be "to be")
+to he 
+bail
+hail
+bale
+hale
+bales
+hales
+ball
+hall
+balls
+halls
+bard
+hard
+bare
+bares
+hare
+hares
+bark
+hark
+barks
+harks
+bate
+hate
+bated
+hated
+bates
+hates
+bead
+head
+beads
+heads
+beard
+heard
+bear
+hear
+bears
+hears
+beat
+heat
+beats
+heats
+hoar
+board
+hoard
+bob
+hob
+bobs
+hobs
+hook
+book
+hooks
+books
+hoot
+hoots
+born
+horn
+bow
+how
+bowl
+howl
+hut
+buts
+huts
+bock
+hock
+bocks
+hocks
+\words of 5 or more letters are searched for as strings
+\see GWreadme.txt for details
+hitch
+hatch
+hutch
+\for iii, which is usually followed by punct.:
+in.
+in,
+\Famous stealth scannos! (See big_bill's list for more.)
+borne
+check
+cheek
+\for day, days:
+u
+m
+ease
+tie
+eye
+eating
+\Highly unlikely before 1923!:
+Spam
+\Sometimes OCRed for "his" but could be abbrev. for "manuscript"
+Ms
+\standalone odd characters
+&
+$
+^
+=
+/
+@
+~
+`
+#
+%
+=
++
+|

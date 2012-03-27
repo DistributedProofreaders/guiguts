@@ -1,0 +1,36 @@
+\Possible stealth scannos in languages other than English and French
+\modified 15 July 2003
+\This is a comment line (with backslash)
+\German
+ab
+als
+andern
+bat
+hat
+dein
+dem
+eben
+oben
+heim
+beim
+sieh
+sich
+zugeben
+zugehen
+\missing accents
+fraulein
+Fraulein
+\standalone odd characters
+&
+$
+^
+=
+/
+@
+~
+`
+#
+%
+=
++
+|

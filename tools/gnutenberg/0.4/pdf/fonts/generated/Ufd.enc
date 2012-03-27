@@ -1,0 +1,98 @@
+/UfdEncoding [
+
+% fd00
+/unifd00 /unifd01 /unifd02 /unifd03 
+/unifd04 /unifd05 /unifd06 /unifd07 
+/unifd08 /unifd09 /unifd0a /unifd0b 
+/unifd0c /unifd0d /unifd0e /unifd0f 
+
+% fd10
+/unifd10 /unifd11 /unifd12 /unifd13 
+/unifd14 /unifd15 /unifd16 /unifd17 
+/unifd18 /unifd19 /unifd1a /unifd1b 
+/unifd1c /unifd1d /unifd1e /unifd1f 
+
+% fd20
+/unifd20 /unifd21 /unifd22 /unifd23 
+/unifd24 /unifd25 /unifd26 /unifd27 
+/unifd28 /unifd29 /unifd2a /unifd2b 
+/unifd2c /unifd2d /unifd2e /unifd2f 
+
+% fd30
+/unifd30 /unifd31 /unifd32 /unifd33 
+/unifd34 /unifd35 /unifd36 /unifd37 
+/unifd38 /unifd39 /unifd3a /unifd3b 
+/unifd3c /unifd3d /parenleftaltonearabic /parenrightaltonearabic 
+
+% fd40
+/unifd40 /unifd41 /unifd42 /unifd43 
+/unifd44 /unifd45 /unifd46 /unifd47 
+/unifd48 /unifd49 /unifd4a /unifd4b 
+/unifd4c /unifd4d /unifd4e /unifd4f 
+
+% fd50
+/unifd50 /unifd51 /unifd52 /unifd53 
+/unifd54 /unifd55 /unifd56 /unifd57 
+/unifd58 /unifd59 /unifd5a /unifd5b 
+/unifd5c /unifd5d /unifd5e /unifd5f 
+
+% fd60
+/unifd60 /unifd61 /unifd62 /unifd63 
+/unifd64 /unifd65 /unifd66 /unifd67 
+/unifd68 /unifd69 /unifd6a /unifd6b 
+/unifd6c /unifd6d /unifd6e /unifd6f 
+
+% fd70
+/unifd70 /unifd71 /unifd72 /unifd73 
+/unifd74 /unifd75 /unifd76 /unifd77 
+/unifd78 /unifd79 /unifd7a /unifd7b 
+/unifd7c /unifd7d /unifd7e /unifd7f 
+
+% fd80
+/unifd80 /unifd81 /unifd82 /unifd83 
+/unifd84 /unifd85 /unifd86 /unifd87 
+/lammeemhahinitialarabic /unifd89 /unifd8a /unifd8b 
+/unifd8c /unifd8d /unifd8e /unifd8f 
+
+% fd90
+/unifd90 /unifd91 /unifd92 /unifd93 
+/unifd94 /unifd95 /unifd96 /unifd97 
+/unifd98 /unifd99 /unifd9a /unifd9b 
+/unifd9c /unifd9d /unifd9e /unifd9f 
+
+% fda0
+/unifda0 /unifda1 /unifda2 /unifda3 
+/unifda4 /unifda5 /unifda6 /unifda7 
+/unifda8 /unifda9 /unifdaa /unifdab 
+/unifdac /unifdad /unifdae /unifdaf 
+
+% fdb0
+/unifdb0 /unifdb1 /unifdb2 /unifdb3 
+/unifdb4 /unifdb5 /unifdb6 /unifdb7 
+/unifdb8 /unifdb9 /unifdba /unifdbb 
+/unifdbc /unifdbd /unifdbe /unifdbf 
+
+% fdc0
+/unifdc0 /unifdc1 /unifdc2 /unifdc3 
+/unifdc4 /unifdc5 /unifdc6 /unifdc7 
+/unifdc8 /unifdc9 /unifdca /unifdcb 
+/unifdcc /unifdcd /unifdce /unifdcf 
+
+% fdd0
+/unifdd0 /unifdd1 /unifdd2 /unifdd3 
+/unifdd4 /unifdd5 /unifdd6 /unifdd7 
+/unifdd8 /unifdd9 /unifdda /unifddb 
+/unifddc /unifddd /unifdde /unifddf 
+
+% fde0
+/unifde0 /unifde1 /unifde2 /unifde3 
+/unifde4 /unifde5 /unifde6 /unifde7 
+/unifde8 /unifde9 /unifdea /unifdeb 
+/unifdec /unifded /unifdee /unifdef 
+
+% fdf0
+/unifdf0 /unifdf1 /lamlamhehisolatedarabic /unifdf3 
+/unifdf4 /unifdf5 /unifdf6 /unifdf7 
+/unifdf8 /unifdf9 /sallallahoualayhewasallamarabic /unifdfb 
+/unifdfc /unifdfd /unifdfe /unifdff 
+] def

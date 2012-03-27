@@ -1,0 +1,72 @@
+\Improbable sequences of characters, mostly punctuation
+\16 March 2004
+.,
+.;
+\This is a comment line (starts with a backslash)
+!.
+!,
+.!
+?,
+.?
+?.
+\comma followed by space followed by an uppercase letter
+, A
+, B
+, C
+, D
+, E
+, F
+, G
+, H
+\add another letter after "I" to prevent too many false positives with pronoun
+, If
+, Ill
+, Im
+, In
+, Ir
+, Is
+, It
+, J
+, K
+, L
+, M
+, N
+, O
+, P
+, Q
+, R
+, S
+, T
+, U
+, V
+, W
+, X
+, Y
+, Z
+\period followed by space and a lowercase letter
+. a
+. b
+. c
+. d
+. e
+. f
+. g
+. h
+. i
+. j
+. k
+. l
+. m
+. n
+. o
+. p
+. q
+. r
+. s
+. t
+. u
+. v
+. w
+. x
+. y
+. z

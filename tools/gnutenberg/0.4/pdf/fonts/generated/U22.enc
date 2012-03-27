@@ -1,0 +1,98 @@
+/U22Encoding [
+
+% 2200
+/universal /uni2201 /partialdiff /thereexists 
+/uni2204 /emptyset /increment /nabla 
+/element /notelementof /uni220a /suchthat 
+/notcontains /uni220d /uni220e /product 
+
+% 2210
+/uni2210 /summation /minus /minusplus 
+/uni2214 /divisionslash /uni2216 /asteriskmath 
+/uni2218 /bulletoperator /radical /uni221b 
+/uni221c /proportional /infinity /rightangle 
+
+% 2220
+/angle /uni2221 /uni2222 /divides 
+/uni2224 /parallel /notparallel /logicaland 
+/logicalor /intersection /union /integral 
+/dblintegral /uni222d /contourintegral /uni222f 
+
+% 2230
+/uni2230 /uni2231 /uni2232 /uni2233 
+/therefore /because /ratio /proportion 
+/uni2238 /uni2239 /uni223a /uni223b 
+/tildeoperator /reversedtilde /uni223e /uni223f 
+
+% 2240
+/uni2240 /uni2241 /uni2242 /asymptoticallyequal 
+/uni2244 /congruent /uni2246 /uni2247 
+/approxequal /uni2249 /uni224a /uni224b 
+/allequal /uni224d /uni224e /uni224f 
+
+% 2250
+/approaches /geometricallyequal /approxequalorimage /imageorapproximatelyequal 
+/uni2254 /uni2255 /uni2256 /uni2257 
+/uni2258 /uni2259 /uni225a /uni225b 
+/uni225c /uni225d /uni225e /uni225f 
+
+% 2260
+/notequal /equivalence /notidentical /uni2263 
+/lessequal /greaterequal /lessoverequal /greateroverequal 
+/uni2268 /uni2269 /muchless /muchgreater 
+/uni226c /uni226d /notless /notgreater 
+
+% 2270
+/notlessnorequal /notgreaternorequal /lessorequivalent /greaterorequivalent 
+/uni2274 /uni2275 /lessorgreater /greaterorless 
+/uni2278 /notgreaternorless /precedes /succeeds 
+/uni227c /uni227d /uni227e /uni227f 
+
+% 2280
+/notprecedes /notsucceeds /subset /superset 
+/notsubset /notsuperset /subsetorequal /supersetorequal 
+/uni2288 /uni2289 /subsetnotequal /supersetnotequal 
+/uni228c /uni228d /uni228e /uni228f 
+
+% 2290
+/uni2290 /uni2291 /uni2292 /uni2293 
+/uni2294 /pluscircle /minuscircle /timescircle 
+/uni2298 /circleot /uni229a /uni229b 
+/uni229c /uni229d /uni229e /uni229f 
+
+% 22a0
+/uni22a0 /uni22a1 /uni22a2 /tackleft 
+/tackdown /perpendicular /uni22a6 /uni22a7 
+/uni22a8 /uni22a9 /uni22aa /uni22ab 
+/uni22ac /uni22ad /uni22ae /uni22af 
+
+% 22b0
+/uni22b0 /uni22b1 /uni22b2 /uni22b3 
+/uni22b4 /uni22b5 /uni22b6 /uni22b7 
+/uni22b8 /uni22b9 /uni22ba /uni22bb 
+/uni22bc /uni22bd /uni22be /righttriangle 
+
+% 22c0
+/uni22c0 /uni22c1 /uni22c2 /uni22c3 
+/uni22c4 /dotmath /uni22c6 /uni22c7 
+/uni22c8 /uni22c9 /uni22ca /uni22cb 
+/uni22cc /uni22cd /curlyor /curlyand 
+
+% 22d0
+/uni22d0 /uni22d1 /uni22d2 /uni22d3 
+/uni22d4 /uni22d5 /uni22d6 /uni22d7 
+/uni22d8 /uni22d9 /lessequalorgreater /greaterequalorless 
+/uni22dc /uni22dd /uni22de /uni22df 
+
+% 22e0
+/uni22e0 /uni22e1 /uni22e2 /uni22e3 
+/uni22e4 /uni22e5 /uni22e6 /uni22e7 
+/uni22e8 /uni22e9 /uni22ea /uni22eb 
+/uni22ec /uni22ed /ellipsisvertical /uni22ef 
+
+% 22f0
+/uni22f0 /uni22f1 /uni22f2 /uni22f3 
+/uni22f4 /uni22f5 /uni22f6 /uni22f7 
+/uni22f8 /uni22f9 /uni22fa /uni22fb 
+/uni22fc /uni22fd /uni22fe /uni22ff 
+] def

@@ -1,0 +1,464 @@
+%pagenumbers = (
+ 'Pg001' => {'offset' => '1.0', 'label' => 'Pg i', 'style' => 'Roman', 'action' => 'Start @', 'base' => '001'},
+ 'Pg002' => {'offset' => '15.0', 'label' => 'Pg ii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg003' => {'offset' => '53.0', 'label' => 'Pg iii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg004' => {'offset' => '53.0', 'label' => 'Pg iv', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg005' => {'offset' => '56.0', 'label' => 'Pg v', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg006' => {'offset' => '78.0', 'label' => 'Pg vi', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg007' => {'offset' => '78.0', 'label' => 'Pg vii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg008' => {'offset' => '117.0', 'label' => 'Pg viii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg009' => {'offset' => '153.0', 'label' => 'Pg ix', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg010' => {'offset' => '174.0', 'label' => 'Pg x', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg011' => {'offset' => '174.0', 'label' => 'Pg xi', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg012' => {'offset' => '221.0', 'label' => 'Pg xii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg013' => {'offset' => '238.0', 'label' => 'Pg xiii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg014' => {'offset' => '246.0', 'label' => 'Pg xiv', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg015' => {'offset' => '246.0', 'label' => 'Pg 3', 'style' => 'Arabic', 'action' => 'Start @', 'base' => '3'},
+ 'Pg016' => {'offset' => '287.65', 'label' => 'Pg 4', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg017' => {'offset' => '330.62', 'label' => 'Pg 5', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg018' => {'offset' => '330.62', 'label' => 'Pg 6', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg019' => {'offset' => '381.0', 'label' => 'Pg 7', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg020' => {'offset' => '426.0', 'label' => 'Pg 8', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg021' => {'offset' => '470.57', 'label' => 'Pg 9', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg022' => {'offset' => '470.57', 'label' => 'Pg 10', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg023' => {'offset' => '520.59', 'label' => 'Pg 11', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg024' => {'offset' => '535.0', 'label' => 'Pg 12', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg025' => {'offset' => '539.0', 'label' => 'Pg 13', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg026' => {'offset' => '571.0', 'label' => 'Pg 14', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg027' => {'offset' => '573.0', 'label' => 'Pg 15', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg028' => {'offset' => '619.0', 'label' => 'Pg 16', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg029' => {'offset' => '635.0', 'label' => 'Pg 17', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg030' => {'offset' => '635.0', 'label' => 'Pg 18', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg031' => {'offset' => '637.0', 'label' => 'Pg 19', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg032' => {'offset' => '686.63', 'label' => 'Pg 20', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg033' => {'offset' => '686.63', 'label' => 'Pg 21', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg034' => {'offset' => '745.61', 'label' => 'Pg 22', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg035' => {'offset' => '788.64', 'label' => 'Pg 23', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg036' => {'offset' => '788.64', 'label' => 'Pg 24', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg037' => {'offset' => '832.61', 'label' => 'Pg 25', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg038' => {'offset' => '832.61', 'label' => 'Pg 26', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg039' => {'offset' => '860.0', 'label' => 'Pg 27', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg040' => {'offset' => '910.0', 'label' => 'Pg 28', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg041' => {'offset' => '959.58', 'label' => 'Pg 29', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg042' => {'offset' => '1006.0', 'label' => 'Pg 30', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg043' => {'offset' => '1048.0', 'label' => 'Pg 31', 'style' => '"', 'action' => '+1', 'base' => ''},
+);
+
+$main::bookmarks[0] = '1069.2';
+
+$main::pngspath = 'C:\dpold\pp\instruments\pngs\\';
+
+$main::proofers{'001'}[1] = 'jokata';
+$main::proofers{'001'}[2] = 'becky1166';
+$main::proofers{'002'}[1] = 'jokata';
+$main::proofers{'002'}[2] = 'becky1166';
+$main::proofers{'003'}[1] = 'jokata';
+$main::proofers{'003'}[2] = 'becky1166';
+$main::proofers{'004'}[1] = 'jokata';
+$main::proofers{'004'}[2] = 'becky1166';
+$main::proofers{'005'}[1] = 'jokata';
+$main::proofers{'005'}[2] = 'becky1166';
+$main::proofers{'006'}[1] = 'jokata';
+$main::proofers{'006'}[2] = 'becky1166';
+$main::proofers{'008'}[1] = 'rcfinn';
+$main::proofers{'008'}[2] = 'Joe Cooper';
+$main::proofers{'009'}[1] = 'rcfinn';
+$main::proofers{'009'}[2] = 'Joe Cooper';
+$main::proofers{'010'}[1] = 'dorts';
+$main::proofers{'010'}[2] = 'fiddlesalt';
+$main::proofers{'011'}[1] = 'Monicagd';
+$main::proofers{'011'}[2] = 'fiddlesalt';
+$main::proofers{'012'}[1] = 'Monicagd';
+$main::proofers{'012'}[2] = 'fiddlesalt';
+$main::proofers{'013'}[1] = 'Monicagd';
+$main::proofers{'013'}[2] = 'fiddlesalt';
+$main::proofers{'014'}[1] = 'Monicagd';
+$main::proofers{'014'}[2] = 'fiddlesalt';
+$main::proofers{'015'}[1] = 'Monicagd';
+$main::proofers{'015'}[2] = 'fiddlesalt';
+$main::proofers{'016'}[1] = 'Monicagd';
+$main::proofers{'016'}[2] = 'carlyon';
+$main::proofers{'017'}[1] = 'Monicagd';
+$main::proofers{'017'}[2] = 'carlyon';
+$main::proofers{'018'}[1] = 'Monicagd';
+$main::proofers{'018'}[2] = 'carlyon';
+$main::proofers{'019'}[1] = 'vood';
+$main::proofers{'019'}[2] = 'carlyon';
+$main::proofers{'020'}[1] = 'Monicagd';
+$main::proofers{'020'}[2] = 'carlyon';
+$main::proofers{'021'}[1] = 'Monicagd';
+$main::proofers{'021'}[2] = 'carlyon';
+$main::proofers{'022'}[1] = 'Monicagd';
+$main::proofers{'022'}[2] = 'carlyon';
+$main::proofers{'023'}[1] = 'Monicagd';
+$main::proofers{'023'}[2] = 'carlyon';
+$main::proofers{'024'}[1] = 'Monicagd';
+$main::proofers{'024'}[2] = 'dmc1423';
+$main::proofers{'025'}[1] = 'Monicagd';
+$main::proofers{'025'}[2] = 'becky1166';
+$main::proofers{'026'}[1] = 'Monicagd';
+$main::proofers{'026'}[2] = 'becky1166';
+$main::proofers{'027'}[1] = 'Monicagd';
+$main::proofers{'027'}[2] = 'becky1166';
+$main::proofers{'028'}[1] = 'Monicagd';
+$main::proofers{'028'}[2] = 'becky1166';
+$main::proofers{'029'}[1] = 'Monicagd';
+$main::proofers{'029'}[2] = 'becky1166';
+$main::proofers{'030'}[1] = 'Monicagd';
+$main::proofers{'030'}[2] = 'becky1166';
+$main::proofers{'031'}[1] = 'Monicagd';
+$main::proofers{'031'}[2] = 'Mawaki';
+$main::proofers{'032'}[1] = 'Monicagd';
+$main::proofers{'032'}[2] = 'madyh';
+$main::proofers{'033'}[1] = 'Monicagd';
+$main::proofers{'033'}[2] = 'madyh';
+$main::proofers{'034'}[1] = 'Monicagd';
+$main::proofers{'034'}[2] = 'madyh';
+$main::proofers{'035'}[1] = 'Monicagd';
+$main::proofers{'035'}[2] = 'madyh';
+$main::proofers{'036'}[1] = 'Monicagd';
+$main::proofers{'036'}[2] = 'madyh';
+$main::proofers{'037'}[1] = 'Monicagd';
+$main::proofers{'037'}[2] = 'madyh';
+$main::proofers{'038'}[1] = 'Monicagd';
+$main::proofers{'038'}[2] = 'Blue Berry';
+$main::proofers{'039'}[1] = 'LMQ1963';
+$main::proofers{'039'}[2] = 'Blue Berry';
+$main::proofers{'040'}[1] = 'coaster';
+$main::proofers{'040'}[2] = 'Blue Berry';
+$main::proofers{'041'}[1] = 'LMQ1963';
+$main::proofers{'041'}[2] = 'Blue Berry';
+$main::proofers{'042'}[1] = 'LMQ1963';
+$main::proofers{'042'}[2] = 'Blue Berry';
+$main::proofers{'043'}[1] = 'LMQ1963';
+$main::proofers{'043'}[2] = 'Blue Berry';
+$main::proofers{'044'}[1] = 'LMQ1963';
+$main::proofers{'044'}[2] = 'Blue Berry';
+
+
+@operations = (
+'Fri Apr 29 22:46:39 2011 - Open C:\dpold\pp\instruments\projectID46192d3ecef2d.txt',
+'Fri Apr 29 22:46:53 2011 - File Saved',
+'Fri Apr 29 22:55:13 2011 - Search & Replace',
+'Fri Apr 29 22:55:19 2011 - Search & Replace',
+'Fri Apr 29 22:55:30 2011 - Search & Replace',
+'Fri Apr 29 22:55:49 2011 - Search & Replace',
+'Fri Apr 29 22:57:17 2011 - File Saved',
+'Fri Apr 29 23:00:38 2011 - File Saved',
+'Fri Apr 29 23:05:30 2011 - File Saved',
+'Fri Apr 29 23:09:43 2011 - File Saved',
+'Fri Apr 29 23:12:42 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Fri Apr 29 23:14:31 2011 - File Saved',
+'Sun Aug 21 13:00:04 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 13:03:23 2011 - File Saved',
+'Sun Aug 21 14:02:30 2011 - File Saved',
+'Sun Aug 21 14:03:01 2011 - Search & Replace',
+'Sun Aug 21 14:03:10 2011 - Search & Replace',
+'Sun Aug 21 14:03:57 2011 - Search & Replace',
+'Sun Aug 21 14:04:25 2011 - Search & Replace',
+'Sun Aug 21 14:05:08 2011 - Search & Replace',
+'Sun Aug 21 14:05:18 2011 - Search & Replace',
+'Sun Aug 21 14:07:10 2011 - Search & Replace',
+'Sun Aug 21 14:07:24 2011 - Search & Replace',
+'Sun Aug 21 14:07:33 2011 - Search & Replace',
+'Sun Aug 21 14:07:44 2011 - Search & Replace',
+'Sun Aug 21 14:13:52 2011 - File Saved',
+'Sun Aug 21 14:13:55 2011 - Search & Replace',
+'Sun Aug 21 14:14:31 2011 - Search & Replace',
+'Sun Aug 21 14:14:54 2011 - Search & Replace',
+'Sun Aug 21 14:15:41 2011 - Search & Replace',
+'Sun Aug 21 14:16:59 2011 - Search & Replace',
+'Sun Aug 21 14:19:20 2011 - Search & Replace',
+'Sun Aug 21 14:21:02 2011 - File Saved',
+'Sun Aug 21 14:21:08 2011 - Search & Replace',
+'Sun Aug 21 14:21:50 2011 - File Saved',
+'Sun Aug 21 14:21:51 2011 - Search & Replace',
+'Sun Aug 21 14:22:24 2011 - Search & Replace',
+'Sun Aug 21 14:22:46 2011 - Search & Replace',
+'Sun Aug 21 14:23:24 2011 - Search & Replace',
+'Sun Aug 21 14:23:31 2011 - Search & Replace',
+'Sun Aug 21 14:23:35 2011 - Search & Replace',
+'Sun Aug 21 14:23:39 2011 - Search & Replace',
+'Sun Aug 21 14:23:43 2011 - Search & Replace',
+'Sun Aug 21 14:24:13 2011 - Search & Replace',
+'Sun Aug 21 14:24:16 2011 - Search & Replace',
+'Sun Aug 21 14:24:18 2011 - Search & Replace',
+'Sun Aug 21 14:24:30 2011 - Search & Replace',
+'Sun Aug 21 14:24:32 2011 - Search & Replace',
+'Sun Aug 21 14:24:34 2011 - Search & Replace',
+'Sun Aug 21 14:24:43 2011 - Search & Replace',
+'Sun Aug 21 14:24:45 2011 - Search & Replace',
+'Sun Aug 21 14:24:49 2011 - Search & Replace',
+'Sun Aug 21 14:24:54 2011 - File Saved',
+'Sun Aug 21 15:53:54 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 15:56:56 2011 - File Saved',
+'Sun Aug 21 15:58:58 2011 - File Saved',
+'Sun Aug 21 16:27:21 2011 - File Saved',
+'Sun Aug 21 16:32:23 2011 - File Saved',
+'Sun Aug 21 16:33:20 2011 - File Saved',
+'Sun Aug 21 16:33:33 2011 - File Saved',
+'Sun Aug 21 16:33:52 2011 - File Saved',
+'Sun Aug 21 16:34:11 2011 - File Saved',
+'Sun Aug 21 16:35:50 2011 - File Saved',
+'Sun Aug 21 16:37:23 2011 - File Saved',
+'Sun Aug 21 16:38:04 2011 - File Saved',
+'Sun Aug 21 16:43:04 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 16:44:29 2011 - File Saved',
+'Sun Aug 21 16:45:05 2011 - File Saved',
+'Sun Aug 21 16:45:15 2011 - File Saved',
+'Sun Aug 21 16:46:47 2011 - File Saved',
+'Sun Aug 21 16:47:08 2011 - File Saved',
+'Sun Aug 21 16:47:29 2011 - File Saved',
+'Sun Aug 21 16:47:43 2011 - File Saved',
+'Sun Aug 21 16:48:03 2011 - File Saved',
+'Sun Aug 21 16:48:20 2011 - File Saved',
+'Sun Aug 21 16:48:31 2011 - File Saved',
+'Sun Aug 21 17:59:33 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 18:00:00 2011 - Search & Replace',
+'Sun Aug 21 18:00:36 2011 - Search & Replace',
+'Sun Aug 21 18:40:32 2011 - File Saved',
+'Sun Aug 21 18:41:17 2011 - File Saved',
+'Sun Aug 21 18:42:21 2011 - File Saved',
+'Sun Aug 21 18:45:10 2011 - File Saved',
+'Sun Aug 21 21:56:22 2011 - Search & Replace',
+'Sun Aug 21 21:56:30 2011 - Search & Replace',
+'Sun Aug 21 21:56:34 2011 - Search & Replace',
+'Sun Aug 21 22:00:31 2011 - File Saved',
+'Sun Aug 21 22:02:55 2011 - Search & Replace',
+'Sun Aug 21 22:06:48 2011 - File Saved',
+'Sun Aug 21 22:06:58 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 22:16:20 2011 - Search & Replace',
+'Sun Aug 21 22:18:06 2011 - File Saved',
+'Sun Aug 21 22:25:06 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 22:26:48 2011 - File Saved',
+'Sun Aug 21 22:27:02 2011 - File Saved',
+'Sun Aug 21 22:27:55 2011 - File Saved',
+'Sun Aug 21 22:28:50 2011 - File Saved',
+'Sun Aug 21 22:29:24 2011 - File Saved',
+'Sun Aug 21 22:33:21 2011 - File Saved',
+'Sun Aug 21 22:34:30 2011 - File Saved',
+'Sun Aug 21 22:35:01 2011 - File Saved',
+'Sun Aug 21 22:37:23 2011 - File Saved',
+'Sun Aug 21 22:37:27 2011 - Search & Replace',
+'Sun Aug 21 22:40:05 2011 - Search & Replace',
+'Sun Aug 21 22:40:48 2011 - Search & Replace',
+'Sun Aug 21 22:41:35 2011 - Search & Replace',
+'Sun Aug 21 22:42:22 2011 - File Saved',
+'Sun Aug 21 22:43:28 2011 - File Saved',
+'Sun Aug 21 22:43:30 2011 - Search & Replace',
+'Sun Aug 21 22:43:37 2011 - Search & Replace',
+'Sun Aug 21 22:43:47 2011 - Search & Replace',
+'Sun Aug 21 22:44:35 2011 - Word Frequency',
+'Sun Aug 21 22:44:35 2011 - File Saved',
+'Sun Aug 21 22:49:42 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 22:49:44 2011 - Word Frequency',
+'Sun Aug 21 22:50:52 2011 - Word Frequency',
+'Sun Aug 21 22:51:58 2011 - Search & Replace',
+'Sun Aug 21 22:52:08 2011 - File Saved',
+'Sun Aug 21 22:59:27 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 22:59:34 2011 - Search & Replace',
+'Sun Aug 21 22:59:48 2011 - Word Frequency',
+'Sun Aug 21 22:59:52 2011 - Word Frequency',
+'Sun Aug 21 23:00:10 2011 - File Saved',
+'Sun Aug 21 23:00:25 2011 - File Saved',
+'Sun Aug 21 23:00:26 2011 - Search & Replace',
+'Sun Aug 21 23:01:22 2011 - File Saved',
+'Sun Aug 21 23:01:23 2011 - Search & Replace',
+'Sun Aug 21 23:01:27 2011 - Search & Replace',
+'Sun Aug 21 23:01:49 2011 - Search & Replace',
+'Sun Aug 21 23:01:58 2011 - Search & Replace',
+'Sun Aug 21 23:02:03 2011 - Search & Replace',
+'Sun Aug 21 23:02:06 2011 - Search & Replace',
+'Sun Aug 21 23:02:24 2011 - Search & Replace',
+'Sun Aug 21 23:02:30 2011 - Search & Replace',
+'Sun Aug 21 23:02:35 2011 - Search & Replace',
+'Sun Aug 21 23:02:43 2011 - Search & Replace',
+'Sun Aug 21 23:03:04 2011 - Search & Replace',
+'Sun Aug 21 23:03:12 2011 - Search & Replace',
+'Sun Aug 21 23:04:46 2011 - Search & Replace',
+'Sun Aug 21 23:04:50 2011 - Search & Replace',
+'Sun Aug 21 23:04:52 2011 - Search & Replace',
+'Sun Aug 21 23:05:02 2011 - File Saved',
+'Sun Aug 21 23:06:35 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 23:06:52 2011 - Fixup Routine',
+'Sun Aug 21 23:07:14 2011 - Word Frequency',
+'Sun Aug 21 23:07:15 2011 - File Saved',
+'Sun Aug 21 23:09:47 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Sun Aug 21 23:09:50 2011 - End-of-line Spaces',
+'Sun Aug 21 23:11:36 2011 - File Saved',
+'Sun Aug 21 23:12:52 2011 - File Saved',
+'Sun Aug 21 23:13:29 2011 - File Saved',
+'Sun Aug 21 23:13:51 2011 - File Saved',
+'Tue Aug 23 21:45:20 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Tue Aug 23 21:45:32 2011 - File Saved',
+'Tue Aug 23 21:45:50 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Tue Aug 23 21:45:53 2011 - Page Separators Fixup',
+'Tue Aug 23 21:47:54 2011 - Search & Replace',
+'Tue Aug 23 21:48:05 2011 - Page Separators Fixup',
+'Tue Aug 23 21:50:18 2011 - File Saved',
+'Tue Aug 23 21:53:37 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Tue Aug 23 21:53:43 2011 - Page Separators Fixup',
+'Tue Aug 23 21:55:53 2011 - File Saved',
+'Tue Aug 23 21:56:43 2011 - Page Separators Fixup',
+'Tue Aug 23 22:01:00 2011 - File Saved',
+'Tue Aug 23 22:01:06 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Tue Aug 23 22:01:12 2011 - Page Separators Fixup',
+'Tue Aug 23 22:02:40 2011 - Page Separators Fixup',
+'Tue Aug 23 22:04:49 2011 - File Saved',
+'Tue Aug 23 22:05:30 2011 - File Saved',
+'Tue Aug 23 22:10:08 2011 - Word Frequency',
+'Tue Aug 23 22:14:54 2011 - File Saved',
+'Tue Aug 23 22:24:08 2011 - File Saved',
+'Tue Aug 23 22:26:48 2011 - File Saved',
+'Tue Aug 23 22:31:55 2011 - File Saved',
+'Tue Aug 23 22:42:39 2011 - File Saved',
+'Tue Aug 23 22:45:03 2011 - Search & Replace',
+'Tue Aug 23 22:46:36 2011 - Search & Replace',
+'Tue Aug 23 22:46:50 2011 - Search & Replace',
+'Tue Aug 23 22:46:53 2011 - Search & Replace',
+'Tue Aug 23 22:46:55 2011 - Search & Replace',
+'Tue Aug 23 22:47:57 2011 - Search & Replace',
+'Tue Aug 23 22:48:18 2011 - File Saved',
+'Tue Aug 23 22:48:19 2011 - Word Frequency',
+'Tue Aug 23 22:48:30 2011 - Search & Replace',
+'Tue Aug 23 22:48:55 2011 - Search & Replace',
+'Tue Aug 23 22:49:36 2011 - Search & Replace',
+'Tue Aug 23 22:49:45 2011 - Search & Replace',
+'Tue Aug 23 22:50:02 2011 - Search & Replace',
+'Tue Aug 23 22:50:09 2011 - Search & Replace',
+'Tue Aug 23 22:50:50 2011 - Search & Replace',
+'Tue Aug 23 22:50:58 2011 - Search & Replace',
+'Tue Aug 23 22:51:05 2011 - Search & Replace',
+'Tue Aug 23 22:51:14 2011 - Search & Replace',
+'Tue Aug 23 22:53:02 2011 - Search & Replace',
+'Tue Aug 23 22:53:31 2011 - Search & Replace',
+'Tue Aug 23 22:53:45 2011 - File Saved',
+'Tue Aug 23 22:53:50 2011 - Word Frequency',
+'Tue Aug 23 22:54:08 2011 - Search & Replace',
+'Tue Aug 23 22:54:19 2011 - Search & Replace',
+'Tue Aug 23 22:54:25 2011 - Search & Replace',
+'Tue Aug 23 22:54:28 2011 - Search & Replace',
+'Tue Aug 23 22:54:30 2011 - Search & Replace',
+'Tue Aug 23 22:54:35 2011 - File Saved',
+'Tue Aug 23 22:54:39 2011 - Word Frequency',
+'Tue Aug 23 22:55:06 2011 - Search & Replace',
+'Tue Aug 23 22:55:11 2011 - Search & Replace',
+'Tue Aug 23 22:55:22 2011 - Search & Replace',
+'Tue Aug 23 22:56:03 2011 - Search & Replace',
+'Tue Aug 23 22:56:24 2011 - Search & Replace',
+'Tue Aug 23 22:56:36 2011 - Search & Replace',
+'Tue Aug 23 22:56:40 2011 - File Saved',
+'Tue Aug 23 22:57:38 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Tue Aug 23 22:57:38 2011 - Search & Replace',
+'Tue Aug 23 22:57:52 2011 - File Saved',
+'Tue Aug 23 22:57:57 2011 - Word Frequency',
+'Tue Aug 23 22:58:20 2011 - Search & Replace',
+'Tue Aug 23 22:59:11 2011 - File Saved',
+'Tue Aug 23 22:59:21 2011 - File Saved',
+'Tue Aug 23 22:59:43 2011 - Word Frequency',
+'Tue Aug 23 23:00:10 2011 - Word Frequency',
+'Tue Aug 23 23:00:23 2011 - Word Frequency',
+'Tue Aug 23 23:02:44 2011 - File Saved',
+'Tue Aug 23 23:04:32 2011 - Word Frequency',
+'Tue Aug 23 23:10:44 2011 - Search & Replace',
+'Tue Aug 23 23:15:39 2011 - Stealth Scannos',
+'Tue Aug 23 23:15:55 2011 - Stealth Scannos',
+'Tue Aug 23 23:19:03 2011 - Stealth Scannos',
+'Tue Aug 23 23:20:35 2011 - Stealth Scannos',
+'Tue Aug 23 23:21:43 2011 - Search & Replace',
+'Tue Aug 23 23:21:49 2011 - Search & Replace',
+'Tue Aug 23 23:22:08 2011 - Stealth Scannos',
+'Tue Aug 23 23:23:53 2011 - File Saved',
+'Tue Aug 23 23:24:04 2011 - File Saved',
+'Tue Aug 23 23:24:12 2011 - File Saved',
+'Tue Aug 23 23:26:13 2011 - File Saved',
+'Tue Aug 23 23:26:29 2011 - Search & Replace',
+'Tue Aug 23 23:27:13 2011 - File Saved',
+'Tue Aug 23 23:27:28 2011 - Gutcheck',
+'Tue Aug 23 23:30:32 2011 - Search & Replace',
+'Tue Aug 23 23:30:43 2011 - Search & Replace',
+'Tue Aug 23 23:30:45 2011 - Search & Replace',
+'Tue Aug 23 23:31:39 2011 - File Saved',
+'Tue Aug 23 23:31:43 2011 - File Saved',
+'Tue Aug 23 23:32:19 2011 - File Saved',
+'Tue Aug 23 23:33:16 2011 - File Saved',
+'Tue Aug 23 23:33:55 2011 - File Saved',
+'Tue Aug 23 23:35:17 2011 - File Saved',
+'Tue Aug 23 23:36:57 2011 - File Saved',
+'Tue Aug 23 23:38:01 2011 - File Saved',
+'Tue Aug 23 23:38:27 2011 - File Saved',
+'Tue Aug 23 23:39:02 2011 - File Saved',
+'Tue Aug 23 23:39:11 2011 - File Saved',
+'Tue Aug 23 23:39:19 2011 - File Saved',
+'Tue Aug 23 23:39:28 2011 - File Saved',
+'Tue Aug 23 23:42:07 2011 - File Saved',
+'Tue Aug 23 23:42:48 2011 - File Saved',
+'Tue Aug 23 23:43:09 2011 - File Saved',
+'Tue Aug 23 23:43:27 2011 - File Saved',
+'Tue Aug 23 23:44:27 2011 - File Saved',
+'Tue Aug 23 23:45:07 2011 - File Saved',
+'Tue Aug 23 23:45:29 2011 - File Saved',
+'Tue Aug 23 23:46:05 2011 - File Saved',
+'Tue Aug 23 23:46:35 2011 - File Saved',
+'Thu Aug 25 23:54:48 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Thu Aug 25 23:54:53 2011 - Spellcheck',
+'Thu Aug 25 23:59:15 2011 - File Saved',
+'Fri Aug 26 00:02:18 2011 - Search & Replace',
+'Fri Aug 26 00:02:46 2011 - Footnote Fixup',
+'Fri Aug 26 00:06:36 2011 - File Saved',
+'Fri Aug 26 00:13:23 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Fri Aug 26 00:13:25 2011 - Search & Replace',
+'Fri Aug 26 00:13:31 2011 - File Saved',
+'Fri Aug 26 00:13:33 2011 - Search & Replace',
+'Fri Aug 26 00:13:40 2011 - Search & Replace',
+'Fri Aug 26 00:13:49 2011 - Search & Replace',
+'Fri Aug 26 00:13:57 2011 - File Saved',
+'Fri Aug 26 00:16:29 2011 - File Saved',
+'Fri Aug 26 13:07:11 2011 - Open C:\dpold\pp\instruments\instruments-asc.txt',
+'Fri Aug 26 13:07:23 2011 - File Saved',
+'Fri Sep  2 20:56:53 2011 - Open C:\dpold\pp\instruments\markedup.txt',
+'Fri Sep  2 20:57:01 2011 - File Saved',
+'Fri Sep  2 20:58:32 2011 - File Saved',
+'Fri Sep  2 21:33:14 2011 - Open C:\dpold\pp\instruments\temp.txt',
+'Fri Sep  2 21:33:37 2011 - Footnote Fixup',
+'Fri Sep  2 21:34:04 2011 - File Saved',
+'Fri Sep  2 23:17:08 2011 - Open C:\dpold\pp\instruments\temp.txt',
+'Fri Sep  2 23:17:26 2011 - File Saved',
+'Mon Sep  5 20:50:39 2011 - Open C:\dp\dp\tests\testhtml2.txt',
+'Mon Sep  5 20:50:40 2011 - Search & Replace',
+'Mon Sep  5 20:50:53 2011 - File Saved',
+'Mon Sep  5 20:52:23 2011 - File Saved',
+'Mon Sep  5 20:56:50 2011 - Open C:\dp\dp\tests\testhtml2.txt',
+'Mon Sep  5 20:56:51 2011 - Search & Replace',
+'Mon Sep  5 20:57:01 2011 - File Saved',
+'Mon Sep  5 20:58:06 2011 - Open C:\dp\dp\tests\testhtml2.txt',
+'Mon Sep  5 20:58:07 2011 - Search & Replace',
+'Mon Sep  5 20:58:17 2011 - File Saved',
+'Mon Sep  5 20:58:53 2011 - Open C:\dp\dp\tests\testhtml2.txt',
+'Mon Sep  5 20:58:53 2011 - Search & Replace',
+'Mon Sep  5 20:59:12 2011 - File Saved',
+'Sun Feb 12 15:18:52 2012 - Open tests\testhtml2.txt',
+'Sun Feb 12 15:18:54 2012 - Search & Replace',
+'Sun Feb 12 15:19:22 2012 - File Saved',
+'Sun Feb 12 15:19:45 2012 - Open tests\testhtml2.txt',
+'Sun Feb 12 15:19:47 2012 - File Saved',
+'Sun Feb 12 15:24:48 2012 - Open tests\testhtml2.txt',
+'Sun Feb 12 15:25:07 2012 - File Saved',
+'Sun Feb 12 15:25:09 2012 - File Saved',
+'Sun Feb 12 21:33:49 2012 - Open tests\testhtml2.txt',
+'Sun Feb 12 21:33:56 2012 - File Saved',
+'Sun Feb 12 21:35:08 2012 - Open tests\testhtml2.txt',
+'Sun Feb 12 21:35:37 2012 - File Saved',
+'Mon Feb 13 22:44:25 2012 - Open tests\testhtml2.txt',
+'Mon Feb 13 22:44:45 2012 - File Saved',
+);
+
+$main::spellindexbkmrk = '';
+
+$projectid = '';
+
+$booklang = 'en';
+
+$scannoslistpath = '';
+
+1;

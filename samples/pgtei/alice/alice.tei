@@ -1,0 +1,4458 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!DOCTYPE TEI.2 SYSTEM "http://www.gutenberg.org/tei/marcello/0.4/dtd/pgtei.dtd" [
+
+<!ENTITY telescope 
+'<p rend="margin-top: 2; margin-bottom: 2; page-break-inside: avoid; text-align: center; text-indent: 0">
+* * * * * * *<lb/>
+* * * * * *<lb/>
+* * * * * * *<lb/>
+</p>'>
+
+]>
+
+<TEI.2 lang="en">
+<teiHeader>
+  <fileDesc>
+    <titleStmt>
+      <title>Alice's Adventures in Wonderland</title>
+      <respStmt><resp>Illustrated by</resp> <name>John Tenniel</name></respStmt>
+      <author><name reg="Carroll, Lewis">Lewis Carroll</name></author>
+      <editor role="illustrator"><name reg="Tenniel, John">John Tenniel</name></editor>
+    </titleStmt>
+    <editionStmt>
+      <edition n="30">Edition 30</edition>
+    </editionStmt>
+    <publicationStmt>
+      <publisher>Project Gutenberg</publisher>
+      <date value="1991-01">January, 1991</date>
+      <idno type="etext-no">11</idno>
+      <availability>
+        <p>This eBook is for the use of anyone anywhere at no cost and
+        with almost no restrictions whatsoever. You may copy it, give it
+        away or re-use it under the terms of the Project Gutenberg
+        License online at www.gutenberg.org/license</p>
+      </availability>
+    </publicationStmt>
+    <seriesStmt>
+      <title level="s">#1 in our series by Lewis Carroll</title>
+      <idno type="vol">1</idno>
+    </seriesStmt>
+    <sourceDesc>
+      <bibl>
+        Unknown
+      </bibl>
+    </sourceDesc>
+  </fileDesc>
+  <encodingDesc>
+    <classDecl>
+      <taxonomy id="lc">
+        <bibl>
+          <title>Library of Congress Classification</title>
+        </bibl>
+      </taxonomy>
+    </classDecl>
+  </encodingDesc>
+  <profileDesc>
+    <langUsage>
+      <language id="en">English</language>
+      <language id="fr">French</language>
+    </langUsage>
+    <textClass>
+      <classCode scheme="lc">PR</classCode>
+      <classCode scheme="lc">PZ</classCode>
+      <keywords>
+        <list>
+          <item>Children's Literature</item>
+        </list>
+      </keywords>
+    </textClass>
+  </profileDesc>
+  <revisionDesc>
+    <change>
+      <date value="1991-01">January 1991</date>
+      <respStmt><name>Anonymous</name></respStmt>
+      <item>Project Gutenberg edition 10</item>
+    </change>
+    <change>
+      <date value="1994-03">March 1994</date>
+      <respStmt><name>Anonymous</name></respStmt>
+      <item>Project Gutenberg edition 30</item>
+    </change>
+    <change>
+      <date value="2003-03">March 2003</date>
+      <respStmt><name>Marcello Perathoner</name>
+        <!-- marcello@perathoner.de -->
+      </respStmt>
+      <item>TEI Markup</item>
+    </change>
+  </revisionDesc>
+</teiHeader>
+
+<pgExtensions>
+  <pgExcludeFormats formats="txt.utf8" />
+  <pgStyleSheet>
+    figure           { text-align: center; page-float: 'htb' }
+    .floatleft       { float: left;  margin-right: 2em }
+    .floatright      { float: right; margin-left:  2em }
+    /* make the html and txt converters happy */
+    .w100            { }
+    .w75             { }
+    .w66             { }
+    .w50             { }
+    .w25             { }
+    @media pdf {
+      .w100            { width: 100% }
+      .w75             { width: 75% }
+      .w66             { width: 66% }
+      .w50             { width: 50% }
+      .w25             { width: 25% }
+    }
+  </pgStyleSheet>
+  <pgCharMap formats="txt.iso-8859-1">
+    <char id="U0x2014">
+      <charName>mdash</charName>
+      <desc>EM DASH</desc>
+      <mapping>--</mapping>
+    </char>
+    <char id="U0x2003">
+      <charName>emsp</charName>
+      <desc>EM SPACE</desc>
+      <mapping>&nbsp;&nbsp;</mapping>
+    </char>
+    <char id="U0x2026">
+      <charName>hellip</charName>
+      <desc>HORIZONTAL ELLIPSIS</desc>
+      <mapping>...</mapping>
+    </char>
+  </pgCharMap>
+</pgExtensions>
+
+<text>
+  <front>
+    <div>
+      <divGen type="pgheader" />
+    </div>
+
+    <div>
+      <divGen type="encodingDesc" />
+    </div>
+
+    <div rend="page-break-before: right">
+      <divGen type="titlepage" />
+    </div>
+
+    <div rend="page-break-before: right">
+      <p rend="font-size: large; text-align: center">THE MILLENNIUM FULCRUM EDITION 3.0</p>
+    </div>
+
+    <div rend="page-break-before: right">
+      <index index="pdf" />
+      <head>Contents</head>
+      <divGen type="toc" />
+    </div>
+
+    <div rend="page-break-before: right">
+      <index index="pdf" />
+      <head>List of Illustrations</head>
+      <divGen type="fig" />
+    </div>
+  </front>
+
+  <body rend="page-break-before: right">
+
+<!-- make more room for images on the page (pdf) -->
+<?tex 
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}
+?>
+
+<div>
+<head type="sub">Chapter I</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>Down the Rabbit-Hole</head>
+
+
+<p> Alice was beginning to get very tired of sitting by her
+sister on the bank, and of having nothing to do: once or twice
+she had peeped into the book her sister was reading, but it had
+no pictures or conversations in it, <q>and what is the use of a
+book,</q> thought Alice <q>without pictures or conversation?</q>
+</p>
+
+<p> So she was considering in her own mind (as well as she could,
+for the hot day made her feel very sleepy and stupid), whether
+the pleasure of making a daisy-chain would be worth the trouble
+of getting up and picking the daisies, when suddenly a White
+Rabbit with pink eyes ran close by her. </p>
+
+<p> There was nothing so <emph>very</emph> remarkable in that;
+nor did Alice think it so <emph>very</emph> much out of the way
+to hear the Rabbit say to itself, <q>Oh dear! Oh dear! I shall be
+late!</q> (when she thought it over afterwards, it occurred to
+her that she ought to have wondered at this, but at the time it
+all seemed quite natural); but when the Rabbit actually
+<emph>took a watch out of its waistcoat-pocket,</emph> and looked
+at it, and then hurried on, Alice started to her feet, for it
+flashed across her mind that she had never before seen a rabbit
+with either a waistcoat-pocket, or a watch to take out of it, and
+burning with curiosity, she ran across the field after it, and
+fortunately was just in time to see it pop down a large
+rabbit-hole under the hedge. </p>
+
+
+<figure url="images/alice02.png" rend="w50">
+  <index index="fig" />
+  <figDesc>White Rabbit checking watch.</figDesc>
+</figure>
+
+
+<p> In another moment down went Alice after it, never once
+considering how in the world she was to get out again. </p>
+
+<p> The rabbit-hole went straight on like a tunnel for some way,
+and then dipped suddenly down, so suddenly that Alice had not a
+moment to think about stopping herself before she found herself
+falling down a very deep well. </p>
+
+<p> Either the well was very deep, or she fell very slowly, for she
+had plenty of time as she went down to look about her and to wonder
+what was going to happen next. First, she tried to look down and make
+out what she was coming to, but it was too dark to see anything; then
+she looked at the sides of the well, and noticed that they were filled
+with cupboards and book-shelves; here and there she saw maps and
+pictures hung upon pegs. She took down a jar from one of the shelves
+as she passed; it was labelled <q><hi rend="font-variant:
+small-caps">Orange Marmalade</hi></q>, but to her great disappointment
+it was empty: she did not like to drop the jar for fear of killing
+somebody, so managed to put it into one of the cupboards as she fell
+past it. </p>
+
+<p> <q>Well!</q> thought Alice to herself, <q>after such a fall
+as this, I shall think nothing of tumbling down stairs! How brave
+they'll all think me at home! Why, I wouldn't say anything about
+it, even if I fell off the top of the house!</q> (Which was very
+likely true.) </p>
+
+<p> Down, down, down. Would the fall <emph>never</emph> come to
+an end! <q>I wonder how many miles I've fallen by this time?</q>
+she said aloud. <q>I must be getting somewhere near the centre of
+the earth. Let me see: that would be four thousand miles down, I
+think&nbsp;&mdash;</q> (for, you see, Alice had learnt several things
+of this sort in her lessons in the schoolroom, and though this
+was not a <emph>very</emph> good opportunity for showing off her
+knowledge, as there was no one to listen to her, still it was
+good practice to say it over) <q>&mdash; yes, that's about the
+right distance&nbsp;&mdash; but then I wonder what Latitude or
+Longitude I've got to?</q> (Alice had no idea what Latitude was,
+or Longitude either, but thought they were nice grand words to
+say.) </p>
+
+<p> Presently she began again. <q>I wonder if I shall fall right
+<emph>through</emph> the earth! How funny it'll seem to come out
+among the people that walk with their heads downward! The
+Antipathies, I think&nbsp;&mdash;</q> (she was rather glad there
+<emph>was</emph> no one listening, this time, as it didn't sound
+at all the right word) <q>&mdash; but I shall have to ask them
+what the name of the country is, you know. Please, Ma'am, is this
+New Zealand or Australia?</q> (and she tried to curtsey as she
+spoke&nbsp;&mdash; fancy <emph>curtseying</emph> as you're falling
+through the air! Do you think you could manage it?) <q>And what
+an ignorant little girl she'll think me for asking! No, it'll
+never do to ask: perhaps I shall see it written up somewhere.</q>
+</p>
+
+<p> Down, down, down. There was nothing else to do, so Alice soon
+began talking again. <q>Dinah'll miss me very much to-night, I
+should think!</q> (Dinah was the cat.) <q>I hope they'll remember
+her saucer of milk at tea-time. Dinah my dear! I wish you were
+down here with me! There are no mice in the air, I'm afraid, but
+you might catch a bat, and that's very like a mouse, you know.
+But do cats eat bats, I wonder?</q> And here Alice began to get
+rather sleepy, and went on saying to herself, in a dreamy sort of
+way, <q>Do cats eat bats? Do cats eat bats?</q> and sometimes,
+<q>Do bats eat cats?</q> for, you see, as she couldn't answer
+either question, it didn't much matter which way she put it. She
+felt that she was dozing off, and had just begun to dream that
+she was walking hand in hand with Dinah, and saying to her very
+earnestly, <q>Now, Dinah, tell me the truth: did you ever eat a
+bat?</q> when suddenly, thump! thump! down she came upon a heap
+of sticks and dry leaves, and the fall was over. </p>
+
+<p> Alice was not a bit hurt, and she jumped up on to her feet in
+a moment: she looked up, but it was all dark overhead; before her
+was another long passage, and the White Rabbit was still in
+sight, hurrying down it. There was not a moment to be lost: away
+went Alice like the wind, and was just in time to hear it say, as
+it turned a corner, <q>Oh my ears and whiskers, how late it's
+getting!</q> She was close behind it when she turned the corner,
+but the Rabbit was no longer to be seen: she found herself in a
+long, low hall, which was lit up by a row of lamps hanging from
+the roof. </p>
+
+<p> There were doors all round the hall, but they were all
+locked; and when Alice had been all the way down one side and up
+the other, trying every door, she walked sadly down the middle,
+wondering how she was ever to get out again. </p>
+
+<p> Suddenly she came upon a little three-legged table, all made
+of solid glass; there was nothing on it except a tiny golden key,
+and Alice's first thought was that it might belong to one of the
+doors of the hall; but, alas! either the locks were too large, or
+the key was too small, but at any rate it would not open any of
+them. However, on the second time round, she came upon a low
+curtain she had not noticed before, and behind it was a little
+door about fifteen inches high: she tried the little golden key
+in the lock, and to her great delight it fitted! </p>
+
+
+<figure url="images/alice03.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Alice finding tiny door behind curtain.</figDesc>
+</figure>
+
+
+<p> Alice opened the door and found that it led into a small
+passage, not much larger than a rat-hole: she knelt down and
+looked along the passage into the loveliest garden you ever saw.
+How she longed to get out of that dark hall, and wander about
+among those beds of bright flowers and those cool fountains, but
+she could not even get her head though the doorway; <q>and even
+if my head would go through,</q> thought poor Alice, <q>it would
+be of very little use without my shoulders. Oh, how I wish I
+could shut up like a telescope! I think I could, if I only know
+how to begin.</q> For, you see, so many out-of-the-way things had
+happened lately, that Alice had begun to think that very few
+things indeed were really impossible. </p>
+
+<p> There seemed to be no use in waiting by the little door, so she
+went back to the table, half hoping she might find another key on it,
+or at any rate a book of rules for shutting people up like telescopes:
+this time she found a little bottle on it, (<q>which certainly was not
+here before,</q> said Alice,) and round the neck of the bottle was a
+paper label, with the words <q><hi rend="font-variant:
+small-caps">Drink me</hi></q> beautifully printed on it in large
+letters. </p>
+
+
+<figure url="images/alice04.png" rend="w50">
+  <index index="fig" />
+  <figDesc>Alice taking <q>Drink me</q> bottle.</figDesc>
+</figure>
+
+
+<p> It was all very well to say <q>Drink me,</q> but the wise
+little Alice was not going to do <emph>that</emph> in a hurry.
+<q>No, I'll look first,</q> she said, <q>and see whether it's
+marked <q><hi>poison</hi></q> or not</q>; for she had read
+several nice little histories about children who had got burnt,
+and eaten up by wild beasts and other unpleasant things, all
+because they <emph>would</emph> not remember the simple rules
+their friends had taught them: such as, that a red-hot poker will
+burn you if you hold it too long; and that if you cut your finger
+<emph>very</emph> deeply with a knife, it usually bleeds; and she
+had never forgotten that, if you drink much from a bottle marked
+<q>poison,</q> it is almost certain to disagree with you, sooner or
+later. </p>
+
+<p> However, this bottle was <emph>not</emph> marked
+<q>poison,</q> so Alice ventured to taste it, and finding it very
+nice, (it had, in fact, a sort of mixed flavour of cherry-tart,
+custard, pine-apple, roast turkey, toffee, and hot buttered
+toast,) she very soon finished it off. </p>
+
+&telescope;
+
+<p> <q>What a curious feeling!</q> said Alice; <q>I must be
+shutting up like a telescope.</q> </p>
+
+<p> And so it was indeed: she was now only ten inches high, and
+her face brightened up at the thought that she was now the right
+size for going through the little door into that lovely garden.
+First, however, she waited for a few minutes to see if she was
+going to shrink any further: she felt a little nervous about
+this; <q>for it might end, you know,</q> said Alice to herself,
+<q>in my going out altogether, like a candle. I wonder what I
+should be like then?</q> And she tried to fancy what the flame of
+a candle is like after the candle is blown out, for she could not
+remember ever having seen such a thing. </p>
+
+<p> After a while, finding that nothing more happened, she
+decided on going into the garden at once; but, alas for poor
+Alice! when she got to the door, she found she had forgotten the
+little golden key, and when she went back to the table for it,
+she found she could not possibly reach it: she could see it quite
+plainly through the glass, and she tried her best to climb up one
+of the legs of the table, but it was too slippery; and when she
+had tired herself out with trying, the poor little thing sat down
+and cried. </p>
+
+<p> <q>Come, there's no use in crying like that!</q> said Alice
+to herself, rather sharply; <q>I advise you to leave off this
+minute!</q> She generally gave herself very good advice, (though
+she very seldom followed it), and sometimes she scolded herself
+so severely as to bring tears into her eyes; and once she
+remembered trying to box her own ears for having cheated herself
+in a game of croquet she was playing against herself, for this
+curious child was very fond of pretending to be two people.
+<q>But it's no use now,</q> thought poor Alice, <q>to pretend to
+be two people! Why, there's hardly enough of me left to make
+<emph>one</emph> respectable person!</q> </p>
+
+<p> Soon her eye fell on a little glass box that was lying under
+the table: she opened it, and found in it a very small cake, on
+which the words <q>Eat me</q> were beautifully marked in
+currants. <q>Well, I'll eat it,</q> said Alice, <q>and if it
+makes me grow larger, I can reach the key; and if it makes me
+grow smaller, I can creep under the door; so either way I'll get
+into the garden, and I don't care which happens!</q> </p>
+
+<p> She ate a little bit, and said anxiously to herself, <q>Which
+way? Which way?</q>, holding her hand on the top of her head to
+feel which way it was growing, and she was quite surprised to
+find that she remained the same size: to be sure, this generally
+happens when one eats cake, but Alice had got so much into the
+way of expecting nothing but out-of-the-way things to happen,
+that it seemed quite dull and stupid for life to go on in the
+common way. </p>
+
+<p> So she set to work, and very soon finished off the cake. </p>
+
+&telescope;
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter II</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>The Pool of Tears</head>
+
+
+<p> <q>Curiouser and curiouser!</q> cried Alice (she was so much
+surprised, that for the moment she quite forgot how to speak good
+English); <q>now I'm opening out like the largest telescope that
+ever was! Good-bye, feet!</q> (for when she looked down at her
+feet, they seemed to be almost out of sight, they were getting so
+far off). <q>Oh, my poor little feet, I wonder who will put on
+your shoes and stockings for you now, dears? I'm sure
+<emph>I</emph> shan't be able! I shall be a great deal too far
+off to trouble myself about you: you must manage the best way you
+can;&nbsp;&mdash; but I must be kind to them,</q> thought Alice, <q>or
+perhaps they won't walk the way I want to go! Let me see: I'll
+give them a new pair of boots every Christmas.</q> </p>
+
+
+<figure url="images/alice05.png" rend="w25; floatright">
+  <index index="fig" />
+  <figDesc>Alice stretched tall.</figDesc>
+</figure>
+
+
+<p> And she went on planning to herself how she would manage it.
+<q>They must go by the carrier,</q> she thought; <q
+rend="pre">and how funny it'll seem, sending presents to one's
+own feet! And how odd the directions will look!</q> </p>
+
+<lg rend="display">
+<l> Alice's Right Foot, Esq. </l>
+<l rend="margin-left: 2"> Hearthrug, </l>
+<l rend="margin-left: 4"> Near the Fender, </l>
+<l rend="margin-left: 6"> (With Alice's Love). </l>
+</lg>
+
+<p> <q rend="post">Oh dear, what nonsense I'm talking!</q> </p>
+
+<p> Just then her head struck against the roof of the hall: in
+fact she was now more than nine feet high, and she at once took
+up the little golden key and hurried off to the garden door. </p>
+
+<p> Poor Alice! It was as much as she could do, lying down on one
+side, to look through into the garden with one eye; but to get
+through was more hopeless than ever: she sat down and began to
+cry again. </p>
+
+<p> <q>You ought to be ashamed of yourself,</q> said Alice, <q>a
+great girl like you,</q> (she might well say this), <q>to go on
+crying in this way! Stop this moment, I tell you!</q> But she
+went on all the same, shedding gallons of tears, until there was
+a large pool all round her, about four inches deep and reaching
+half down the hall. </p>
+
+<p> After a time she heard a little pattering of feet in the
+distance, and she hastily dried her eyes to see what was coming.
+It was the White Rabbit returning, splendidly dressed, with a
+pair of white kid gloves in one hand and a large fan in the
+other: he came trotting along in a great hurry, muttering to
+himself as he came, <q>Oh! the Duchess, the Duchess! Oh! won't
+she be savage if I've kept her waiting!</q> Alice felt so
+desperate that she was ready to ask help of any one; so, when the
+Rabbit came near her, she began, in a low, timid voice, <q>If you
+please, sir&nbsp;&mdash;</q> The Rabbit started violently, dropped the
+white kid gloves and the fan, and skurried away into the darkness
+as hard as he could go. </p>
+
+
+<figure url="images/alice06.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Giant Alice watching Rabbit run away.</figDesc>
+</figure>
+
+
+<p> Alice took up the fan and gloves, and, as the hall was very
+hot, she kept fanning herself all the time she went on talking:
+<q>Dear, dear! How queer everything is to-day! And yesterday
+things went on just as usual. I wonder if I've been changed in
+the night? Let me think: was I the same when I got up this
+morning? I almost think I can remember feeling a little
+different. But if I'm not the same, the next question is, Who in
+the world am I? Ah, <emph>that's</emph> the great puzzle!</q> And
+she began thinking over all the children she knew that were of
+the same age as herself, to see if she could have been changed
+for any of them. </p>
+
+<p> <q>I'm sure I'm not Ada,</q> she said, <q>for her hair goes
+in such long ringlets, and mine doesn't go in ringlets at all;
+and I'm sure I can't be Mabel, for I know all sorts of things,
+and she, oh! she knows such a very little! Besides,
+<emph>she's</emph> she, and I'm I, and&nbsp;&mdash; oh dear, how
+puzzling it all is! I'll try if I know all the things I used to
+know. Let me see: four times five is twelve, and four times six
+is thirteen, and four times seven is&nbsp;&mdash; oh dear! I
+shall never get to twenty at that rate! However, the
+Multiplication Table doesn't signify: let's try Geography. London
+is the capital of Paris, and Paris is the capital of Rome, and
+Rome&nbsp;&mdash; no, <emph>that's</emph> all wrong, I'm certain!
+I must have been changed for Mabel! I'll try and say <q><title>How
+doth the little&nbsp;&mdash;</title></q></q> and she crossed her
+hands on her lap as if she were saying lessons, and began to
+repeat it, but her voice sounded hoarse and strange, and the
+words did not come the same as they used to do:&nbsp;&mdash;
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">How doth the little crocodile</q> </l>
+<l> &emsp;Improve his shining tail, </l>
+<l> And pour the waters of the Nile </l>
+<l> &emsp;On every golden scale! </l>
+</lg>
+
+<lg>
+<l> <q rend="pre">How cheerfully he seems to grin,</q> </l>
+<l> &emsp;How neatly spread his claws, </l>
+<l> And welcome little fishes in </l>
+<l> <q rend="post">&emsp;With gently smiling jaws!</q> </l>
+</lg>
+</q>
+
+</p>
+
+<p> <q>I'm sure those are not the right words,</q> said poor
+Alice, and her eyes filled with tears again as she went on, <q>I
+must be Mabel after all, and I shall have to go and live in that
+poky little house, and have next to no toys to play with, and oh!
+ever so many lessons to learn! No, I've made up my mind about it;
+if I'm Mabel, I'll stay down here! It'll be no use their putting
+their heads down and saying <q>Come up again, dear!</q> I shall
+only look up and say <q>Who am I then? Tell me that first, and
+then, if I like being that person, I'll come up: if not, I'll
+stay down here till I'm somebody else</q>&nbsp;&mdash; but, oh
+dear!</q> cried Alice, with a sudden burst of tears, <q>I do wish
+they <emph>would</emph> put their heads down! I am so
+<emph>very</emph> tired of being all alone here!</q> </p>
+
+<p> As she said this she looked down at her hands, and was
+surprised to see that she had put on one of the Rabbit's little
+white kid gloves while she was talking. <q>How <emph>can</emph> I
+have done that?</q> she thought. <q>I must be growing small
+again.</q> She got up and went to the table to measure herself by
+it, and found that, as nearly as she could guess, she was now
+about two feet high, and was going on shrinking rapidly: she soon
+found out that the cause of this was the fan she was holding, and
+she dropped it hastily, just in time to avoid shrinking away
+altogether. </p>
+
+<p> <q>That <emph>was</emph> a narrow escape!</q> said Alice, a
+good deal frightened at the sudden change, but very glad to find
+herself still in existence; <q>and now for the garden!</q> and
+she ran with all speed back to the little door: but, alas! the
+little door was shut again, and the little golden key was lying
+on the glass table as before, <q>and things are worse than
+ever,</q> thought the poor child, <q>for I never was so small as
+this before, never! And I declare it's too bad, that it is!</q>
+</p>
+
+<p> As she said these words her foot slipped, and in another
+moment, splash! she was up to her chin in salt water. Her first
+idea was that she had somehow fallen into the sea, <q>and in that
+case I can go back by railway,</q> she said to herself. (Alice
+had been to the seaside once in her life, and had come to the
+general conclusion, that wherever you go to on the English coast
+you find a number of bathing machines in the sea, some children
+digging in the sand with wooden spades, then a row of lodging
+houses, and behind them a railway station.) However, she soon
+made out that she was in the pool of tears which she had wept
+when she was nine feet high. </p>
+
+
+<figure url="images/alice07.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Alice swimming in the pool of tears.</figDesc>
+</figure>
+
+
+<p> <q>I wish I hadn't cried so much!</q> said Alice, as she swam
+about, trying to find her way out. <q>I shall be punished for it
+now, I suppose, by being drowned in my own tears! That
+<emph>will</emph> be a queer thing, to be sure! However,
+everything is queer to-day.</q> </p>
+
+<p> Just then she heard something splashing about in the pool a
+little way off, and she swam nearer to make out what it was: at
+first she thought it must be a walrus or hippopotamus, but then
+she remembered how small she was now, and she soon made out that
+it was only a mouse that had slipped in like herself. </p>
+
+<p> <q>Would it be of any use, now,</q> thought Alice, <q>to
+speak to this mouse? Everything is so out-of-the-way down here,
+that I should think very likely it can talk: at any rate, there's
+no harm in trying.</q> So she began: <q>O Mouse, do you know the
+way out of this pool? I am very tired of swimming about here, O
+Mouse!</q> (Alice thought this must be the right way of speaking
+to a mouse: she had never done such a thing before, but she
+remembered having seen in her brother's Latin Grammar, <q>A
+mouse&nbsp;&mdash; of a mouse&nbsp;&mdash; to a
+mouse&nbsp;&mdash; a mouse&nbsp;&mdash; O mouse!</q>) The Mouse
+looked at her rather inquisitively, and seemed to her to wink
+with one of its little eyes, but it said nothing. </p>
+
+<p> <q>Perhaps it doesn't understand English,</q> thought Alice;
+<q>I daresay it's a French mouse, come over with William the
+Conqueror.</q> (For, with all her knowledge of history, Alice had
+no very clear notion how long ago anything had happened.) So she
+began again: <q lang="fr">Ou est ma chatte?</q> which was the first
+sentence in her French lesson-book. The Mouse gave a sudden leap
+out of the water, and seemed to quiver all over with fright.
+<q>Oh, I beg your pardon!</q> cried Alice hastily, afraid that
+she had hurt the poor animal's feelings. <q>I quite forgot you
+didn't like cats.</q> </p>
+
+<p> <q>Not like cats!</q> cried the Mouse, in a shrill,
+passionate voice. <q>Would <emph>you</emph> like cats if you were
+me?</q> </p>
+
+<p> <q>Well, perhaps not,</q> said Alice in a soothing tone:
+<q>don't be angry about it. And yet I wish I could show you our
+cat Dinah: I think you'd take a fancy to cats if you could only
+see her. She is such a dear quiet thing,</q> Alice went on, half
+to herself, as she swam lazily about in the pool, <q>and she sits
+purring so nicely by the fire, licking her paws and washing her
+face&nbsp;&mdash; and she is such a nice soft thing to nurse&nbsp;&mdash;
+and she's such a capital one for catching mice&nbsp;&mdash; oh, I beg
+your pardon!</q> cried Alice again, for this time the Mouse was
+bristling all over, and she felt certain it must be really
+offended. <q>We won't talk about her any more if you'd rather
+not.</q> </p>
+
+<p> <q>We indeed!</q> cried the Mouse, who was trembling down to
+the end of his tail. <q>As if I would talk on such a subject! Our
+family always <emph>hated</emph> cats: nasty, low, vulgar things!
+Don't let me hear the name again!</q> </p>
+
+<p> <q>I won't indeed!</q> said Alice, in a great hurry to change
+the subject of conversation. <q>Are you&nbsp;&mdash; are you
+fond&nbsp;&mdash; of&nbsp;&mdash; of dogs?</q> The Mouse did not
+answer, so Alice went on eagerly: <q>There is such a nice little
+dog near our house I should like to show you! A little
+bright-eyed terrier, you know, with oh, such long curly brown
+hair! And it'll fetch things when you throw them, and it'll sit
+up and beg for its dinner, and all sorts of things&nbsp;&mdash; I
+can't remember half of them&nbsp;&mdash; and it belongs to a
+farmer, you know, and he says it's so useful, it's worth a
+hundred pounds! He says it kills all the rats and&nbsp;&mdash; oh
+dear!</q> cried Alice in a sorrowful tone, <q>I'm afraid I've
+offended it again!</q> For the Mouse was swimming away from her
+as hard as it could go, and making quite a commotion in the pool
+as it went. </p>
+
+
+<figure url="images/alice08.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Alice and the Mouse swimming in the pool of tears.</figDesc>
+</figure>
+
+
+<p> So she called softly after it, <q>Mouse dear! Do come back
+again, and we won't talk about cats or dogs either, if you don't
+like them!</q> When the Mouse heard this, it turned round and
+swam slowly back to her: its face was quite pale (with passion,
+Alice thought), and it said in a low trembling voice, <q>Let us
+get to the shore, and then I'll tell you my history, and you'll
+understand why it is I hate cats and dogs.</q> </p>
+
+<p> It was high time to go, for the pool was getting quite
+crowded with the birds and animals that had fallen into it: there
+were a Duck and a Dodo, a Lory and an Eaglet, and several other
+curious creatures. Alice led the way, and the whole party swam to
+the shore. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter III</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>A Caucus-Race and a Long Tale</head>
+
+
+<p> They were indeed a queer-looking party that assembled on the
+bank&nbsp;&mdash; the birds with draggled feathers, the animals with
+their fur clinging close to them, and all dripping wet, cross,
+and uncomfortable. </p>
+
+<p> The first question of course was, how to get dry again: they
+had a consultation about this, and after a few minutes it seemed
+quite natural to Alice to find herself talking familiarly with
+them, as if she had known them all her life. Indeed, she had
+quite a long argument with the Lory, who at last turned sulky,
+and would only say, <q>I am older than you, and must know
+better</q>; and this Alice would not allow without knowing how old
+it was, and, as the Lory positively refused to tell its age,
+there was no more to be said. </p>
+
+<p> At last the Mouse, who seemed to be a person of authority
+among them, called out, <q>Sit down, all of you, and listen to
+me! <emph>I'll</emph> soon make you dry enough!</q> They all sat
+down at once, in a large ring, with the Mouse in the middle.
+Alice kept her eyes anxiously fixed on it, for she felt sure she
+would catch a bad cold if she did not get dry very soon. </p>
+
+<p> <q>Ahem!</q> said the Mouse with an important air, <q>are you
+all ready? This is the driest thing I know. Silence all round, if
+you please! <q>William the Conqueror, whose cause was favoured by
+the pope, was soon submitted to by the English, who wanted
+leaders, and had been of late much accustomed to usurpation and
+conquest. Edwin and Morcar, the earls of Mercia and
+Northumbria&nbsp;&mdash;</q></q> </p>
+
+<p> <q>Ugh!</q> said the Lory, with a shiver. </p>
+
+<p> <q>I beg your pardon!</q> said the Mouse, frowning, but very
+politely: <q>Did you speak?</q> </p>
+
+<p> <q>Not I!</q> said the Lory hastily. </p>
+
+<p> <q>I thought you did,</q> said the Mouse. <q>&mdash; I
+proceed. <q>Edwin and Morcar, the earls of Mercia and
+Northumbria, declared for him: and even Stigand, the patriotic
+archbishop of Canterbury, found it advisable&nbsp;&mdash;</q></q> </p>
+
+<p> <q>Found <emph>what</emph>?</q> said the Duck. </p>
+
+<p> <q>Found <emph>it,</emph></q> the Mouse replied rather
+crossly: <q>of course you know what <q>it</q> means.</q> </p>
+
+<p> <q>I know what <q>it</q> means well enough, when I find a
+thing,</q> said the Duck: <q>it's generally a frog or a worm. The
+question is, what did the archbishop find?</q> </p>
+
+<p> The Mouse did not notice this question, but hurriedly went
+on, <q><q>&mdash; found it advisable to go with Edgar Atheling to
+meet William and offer him the crown. William's conduct at first
+was moderate. But the insolence of his Normans&nbsp;&mdash;</q> How
+are you getting on now, my dear?</q> it continued, turning to
+Alice as it spoke. </p>
+
+<p> <q>As wet as ever,</q> said Alice in a melancholy tone: <q>it
+doesn't seem to dry me at all.</q> </p>
+
+<p> <q>In that case,</q> said the Dodo solemnly, rising to its
+feet, <q>I move that the meeting adjourn, for the immediate
+adoption of more energetic remedies&nbsp;&mdash;</q> </p>
+
+<p> <q>Speak English!</q> said the Eaglet. <q>I don't know the
+meaning of half those long words, and, what's more, I don't
+believe you do either!</q> And the Eaglet bent down its head to
+hide a smile: some of the other birds tittered audibly. </p>
+
+<p> <q>What I was going to say,</q> said the Dodo in an offended
+tone, <q>was, that the best thing to get us dry would be a
+Caucus-race.</q> </p>
+
+<p> <q>What <emph>is</emph> a Caucus-race?</q> said Alice; not
+that she wanted much to know, but the Dodo had paused as if it
+thought that <emph>somebody</emph> ought to speak, and no one
+else seemed inclined to say anything. </p>
+
+<p> <q>Why,</q> said the Dodo, <q>the best way to explain it is
+to do it.</q> (And, as you might like to try the thing yourself,
+some winter day, I will tell you how the Dodo managed it.) </p>
+
+<p> First it marked out a race-course, in a sort of circle,
+(<q>the exact shape doesn't matter,</q> it said,) and then all
+the party were placed along the course, here and there. There was
+no <q>One, two, three, and away,</q> but they began running when
+they liked, and left off when they liked, so that it was not easy
+to know when the race was over. However, when they had been
+running half an hour or so, and were quite dry again, the Dodo
+suddenly called out <q>The race is over!</q> and they all crowded
+round it, panting, and asking, <q>But who has won?</q> </p>
+
+<p> This question the Dodo could not answer without a great deal
+of thought, and it sat for a long time with one finger pressed
+upon its forehead (the position in which you usually see
+Shakespeare, in the pictures of him), while the rest waited in
+silence. At last the Dodo said, <q><emph>Everybody</emph> has
+won, and all must have prizes.</q> </p>
+
+<p> <q>But who is to give the prizes?</q> quite a chorus of
+voices asked. </p>
+
+<p> <q>Why, <emph>she,</emph> of course,</q> said the Dodo,
+pointing to Alice with one finger; and the whole party at once
+crowded round her, calling out in a confused way, <q>Prizes!
+Prizes!</q> </p>
+
+<p> Alice had no idea what to do, and in despair she put her hand
+in her pocket, and pulled out a box of comfits, (luckily the salt
+water had not got into it), and handed them round as prizes.
+There was exactly one a-piece all round. </p>
+
+<p> <q>But she must have a prize herself, you know,</q> said the
+Mouse. </p>
+
+<p> <q>Of course,</q> the Dodo replied very gravely. <q>What else
+have you got in your pocket?</q> he went on, turning to Alice.
+</p>
+
+<p> <q>Only a thimble,</q> said Alice sadly. </p>
+
+<p> <q>Hand it over here,</q> said the Dodo. </p>
+
+<p> Then they all crowded round her once more, while the Dodo
+solemnly presented the thimble, saying <q>We beg your acceptance
+of this elegant thimble</q>; and, when it had finished this short
+speech, they all cheered. </p>
+
+
+<figure url="images/alice09.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Dodo presenting thimble to Alice.</figDesc>
+</figure>
+
+
+<p> Alice thought the whole thing very absurd, but they all
+looked so grave that she did not dare to laugh; and, as she could
+not think of anything to say, she simply bowed, and took the
+thimble, looking as solemn as she could. </p>
+
+<p> The next thing was to eat the comfits: this caused some noise
+and confusion, as the large birds complained that they could not
+taste theirs, and the small ones choked and had to be patted on
+the back. However, it was over at last, and they sat down again
+in a ring, and begged the Mouse to tell them something more. </p>
+
+<p> <q>You promised to tell me your history, you know,</q> said
+Alice, <q>and why it is you hate&nbsp;&mdash; C and D,</q> she added
+in a whisper, half afraid that it would be offended again. </p>
+
+<p> <q>Mine is a long and a sad tale!</q> said the Mouse, turning
+to Alice, and sighing. </p>
+
+
+<figure url="images/alice10.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Mouse telling story to birds and Alice.</figDesc>
+</figure>
+
+
+<p> <q>It <emph>is</emph> a long tail, certainly,</q> said Alice,
+looking down with wonder at the Mouse's tail; <q>but why do you
+call it sad?</q> And she kept on puzzling about it while the
+Mouse was speaking, so that her idea of the tale was something
+like this:&nbsp;&mdash; </p>
+
+<lg rend="display; page-break-before: auto; page-break-after: auto; font-size: small"> 
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;<q rend="pre">Fury said to a</q> </l>
+<l> &emsp;&emsp;&emsp;&emsp;mouse, That he </l>
+<l> &emsp;&emsp;&emsp;met in the </l>
+<l> &emsp;&emsp;house, </l>
+<l> &emsp;<q rend="none"><q rend="pre">Let us</q></q> </l>
+<l> &emsp;&emsp;both go to </l>
+<l> &emsp;&emsp;&emsp;law: <emph>I</emph> will </l>
+<l> &emsp;&emsp;&emsp;&emsp;prosecute </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;<emph>you.</emph>&nbsp;&mdash; Come, </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;I'll take no </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;denial; We </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;must have a </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;trial: For </l>
+<l> &emsp;&emsp;&emsp;&emsp;really this </l>
+<l> &emsp;&emsp;&emsp;morning I've </l>
+<l> &emsp;&emsp;nothing </l>
+<l> &emsp;&emsp;<q rend="none"><q rend="post">to do.</q></q> </l>
+<l> &emsp;&emsp;Said the </l>
+<l> &emsp;&emsp;&emsp;mouse to the </l>
+<l> &emsp;&emsp;&emsp;&emsp;cur, <q rend="none"><q rend="pre">Such</q></q> </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;a trial, </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;dear Sir, </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;With </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;no jury </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;or judge, </l>
+<l> &emsp;&emsp;&emsp;&emsp;would be </l>
+<l> &emsp;&emsp;&emsp;wasting </l>
+<l> &emsp;&emsp;&emsp;our </l>
+<l> &emsp;&emsp;&emsp;<q rend="none"><q rend="post">breath.</q></q> </l>
+<l> &emsp;&emsp;&emsp;<q rend="none"><q rend="pre">I'll be</q></q> </l>
+<l> &emsp;&emsp;&emsp;&emsp;judge, I'll </l>
+<l> &emsp;&emsp;&emsp;&emsp;<q rend="none"><q rend="post">be jury,</q></q> </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;Said </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;cunning </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;old Fury: </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<q rend="none"><q rend="pre">I'll</q></q> </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;try the </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;whole </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;cause, </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;and </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;condemn </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;you </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;to </l>
+<l> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<q rend="post"><q rend="post">death.</q></q> </l>
+</lg>
+
+<p> <q>You are not attending!</q> said the Mouse to Alice
+severely. <q>What are you thinking of?</q> </p>
+
+<p> <q>I beg your pardon,</q> said Alice very humbly: <q>you had
+got to the fifth bend, I think?</q> </p>
+
+<p> <q>I had <emph>not</emph>!</q> cried the Mouse, sharply and
+very angrily. </p>
+
+<p> <q>A knot!</q> said Alice, always ready to make herself
+useful, and looking anxiously about her. <q>Oh, do let me help to
+undo it!</q> </p>
+
+<p> <q>I shall do nothing of the sort,</q> said the Mouse,
+getting up and walking away. <q>You insult me by talking such
+nonsense!</q> </p>
+
+<p> <q>I didn't mean it!</q> pleaded poor Alice. <q>But you're so
+easily offended, you know!</q> </p>
+
+<p> The Mouse only growled in reply. </p>
+
+<p> <q>Please come back and finish your story!</q> Alice called
+after it; and the others all joined in chorus, <q>Yes, please
+do!</q> but the Mouse only shook its head impatiently, and walked
+a little quicker. </p>
+
+<p> <q>What a pity it wouldn't stay!</q> sighed the Lory, as soon
+as it was quite out of sight; and an old Crab took the
+opportunity of saying to her daughter <q>Ah, my dear! Let this be
+a lesson to you never to lose <emph>your</emph> temper!</q>
+<q>Hold your tongue, Ma!</q> said the young Crab, a little
+snappishly. <q>You're enough to try the patience of an
+oyster!</q> </p>
+
+<p> <q>I wish I had our Dinah here, I know I do!</q> said Alice
+aloud, addressing nobody in particular. <q>She'd soon fetch it
+back!</q> </p>
+
+<p> <q>And who is Dinah, if I might venture to ask the
+question?</q> said the Lory. </p>
+
+<p> Alice replied eagerly, for she was always ready to talk about
+her pet: <q>Dinah's our cat. And she's such a capital one for
+catching mice you can't think! And oh, I wish you could see her
+after the birds! Why, she'll eat a little bird as soon as look at
+it!</q> </p>
+
+<p> This speech caused a remarkable sensation among the party.
+Some of the birds hurried off at once: one old Magpie began
+wrapping itself up very carefully, remarking, <q>I really must be
+getting home; the night-air doesn't suit my throat!</q> and a
+Canary called out in a trembling voice to its children, <q>Come
+away, my dears! It's high time you were all in bed!</q> On
+various pretexts they all moved off, and Alice was soon left
+alone. </p>
+
+<p> <q>I wish I hadn't mentioned Dinah!</q> she said to herself
+in a melancholy tone. <q>Nobody seems to like her, down here, and
+I'm sure she's the best cat in the world! Oh, my dear Dinah! I
+wonder if I shall ever see you any more!</q> And here poor Alice
+began to cry again, for she felt very lonely and low-spirited. In
+a little while, however, she again heard a little pattering of
+footsteps in the distance, and she looked up eagerly, half hoping
+that the Mouse had changed his mind, and was coming back to
+finish his story. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter IV</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>The Rabbit Sends in a Little Bill</head>
+
+
+<p> It was the White Rabbit, trotting slowly back again, and
+looking anxiously about as it went, as if it had lost something;
+and she heard it muttering to itself <q>The Duchess! The Duchess!
+Oh my dear paws! Oh my fur and whiskers! She'll get me executed,
+as sure as ferrets are ferrets! Where <emph>can</emph> I have
+dropped them, I wonder?</q> Alice guessed in a moment that it was
+looking for the fan and the pair of white kid gloves, and she
+very good-naturedly began hunting about for them, but they were
+nowhere to be seen&nbsp;&mdash; everything seemed to have changed
+since her swim in the pool, and the great hall, with the glass
+table and the little door, had vanished completely. </p>
+
+<p> Very soon the Rabbit noticed Alice, as she went hunting
+about, and called out to her in an angry tone, <q>Why, Mary Ann,
+what <emph>are</emph> you doing out here? Run home this moment,
+and fetch me a pair of gloves and a fan! Quick, now!</q> And
+Alice was so much frightened that she ran off at once in the
+direction it pointed to, without trying to explain the mistake it
+had made. </p>
+
+<p> <q>He took me for his housemaid,</q> she said to herself as
+she ran. <q>How surprised he'll be when he finds out who I am!
+But I'd better take him his fan and gloves&nbsp;&mdash; that is, if I
+can find them.</q> As she said this, she came upon a neat little
+house, on the door of which was a bright brass plate with the
+name <q>W. Rabbit</q> engraved upon it. She went in without
+knocking, and hurried upstairs, in great fear lest she should
+meet the real Mary Ann, and be turned out of the house before she
+had found the fan and gloves. </p>
+
+<p> <q>How queer it seems,</q> Alice said to herself, <q>to be
+going messages for a rabbit! I suppose Dinah'll be sending me on
+messages next!</q> And she began fancying the sort of thing that
+would happen: <q><q>Miss Alice! Come here directly, and get ready
+for your walk!</q> <q>Coming in a minute, nurse! But I've got to
+see that the mouse doesn't get out.</q> Only I don't think,</q>
+Alice went on, <q>that they'd let Dinah stop in the house if it
+began ordering people about like that!</q> </p>
+
+<p> By this time she had found her way into a tidy little room
+with a table in the window, and on it (as she had hoped) a fan
+and two or three pairs of tiny white kid gloves: she took up the
+fan and a pair of the gloves, and was just going to leave the
+room, when her eye fell upon a little bottle that stood near the
+looking-glass. There was no label this time with the words
+<q>Drink me,</q> but nevertheless she uncorked it and put it to
+her lips. <q>I know <emph>something</emph> interesting is sure to
+happen,</q> she said to herself, <q>whenever I eat or drink
+anything; so I'll just see what this bottle does. I do hope it'll
+make me grow large again, for really I'm quite tired of being
+such a tiny little thing!</q> </p>
+
+<p> It did so indeed, and much sooner than she had expected:
+before she had drunk half the bottle, she found her head pressing
+against the ceiling, and had to stoop to save her neck from being
+broken. She hastily put down the bottle, saying to herself
+<q>That's quite enough&nbsp;&mdash; I hope I shan't grow any
+more&nbsp;&mdash; As it is, I can't get out at the
+door&nbsp;&mdash; I do wish I hadn't drunk quite so much!</q>
+</p>
+
+<p> Alas! it was too late to wish that! She went on growing, and
+growing, and very soon had to kneel down on the floor: in another
+minute there was not even room for this, and she tried the effect
+of lying down with one elbow against the door, and the other arm
+curled round her head. Still she went on growing, and, as a last
+resource, she put one arm out of the window, and one foot up the
+chimney, and said to herself <q>Now I can do no more, whatever
+happens. What <emph>will</emph> become of me?</q> </p>
+
+<p> Luckily for Alice, the little magic bottle had now had its
+full effect, and she grew no larger: still it was very
+uncomfortable, and, as there seemed to be no sort of chance of
+her ever getting out of the room again, no wonder she felt
+unhappy. </p>
+
+
+<figure url="images/alice11.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Alice cramped in Rabbit's house.</figDesc>
+</figure>
+
+
+<p> <q>It was much pleasanter at home,</q> thought poor Alice,
+<q>when one wasn't always growing larger and smaller, and being
+ordered about by mice and rabbits. I almost wish I hadn't gone
+down that rabbit-hole&nbsp;&mdash; and yet&nbsp;&mdash; and
+yet&nbsp;&mdash; it's rather curious, you know, this sort of
+life! I do wonder what <emph>can</emph> have happened to me! When
+I used to read fairy-tales, I fancied that kind of thing never
+happened, and now here I am in the middle of one! There ought to
+be a book written about me, that there ought! And when I grow up,
+I'll write one&nbsp;&mdash; but I'm grown up now,</q> she added
+in a sorrowful tone; <q>at least there's no room to grow up any
+more <emph>here.</emph></q> </p>
+
+<p> <q>But then,</q> thought Alice, <q>shall I <emph>never</emph>
+get any older than I am now? That'll be a comfort, one
+way&nbsp;&mdash; never to be an old woman&nbsp;&mdash; but
+then&nbsp;&mdash; always to have lessons to learn! Oh, I
+shouldn't like <emph>that</emph>!</q> </p>
+
+<p> <q>Oh, you foolish Alice!</q> she answered herself. <q>How
+can you learn lessons in here? Why, there's hardly room for
+<emph>you,</emph> and no room at all for any lesson-books!</q>
+</p>
+
+<p> And so she went on, taking first one side and then the other,
+and making quite a conversation of it altogether; but after a few
+minutes she heard a voice outside, and stopped to listen. </p>
+
+<p> <q>Mary Ann! Mary Ann!</q> said the voice. <q>Fetch me my
+gloves this moment!</q> Then came a little pattering of feet on
+the stairs. Alice knew it was the Rabbit coming to look for her,
+and she trembled till she shook the house, quite forgetting that
+she was now about a thousand times as large as the Rabbit, and
+had no reason to be afraid of it. </p>
+
+<p> Presently the Rabbit came up to the door, and tried to open
+it; but, as the door opened inwards, and Alice's elbow was
+pressed hard against it, that attempt proved a failure. Alice
+heard it say to itself <q>Then I'll go round and get in at the
+window.</q> </p>
+
+<p> <q><emph>That</emph> you won't</q> thought Alice, and, after
+waiting till she fancied she heard the Rabbit just under the
+window, she suddenly spread out her hand, and made a snatch in
+the air. She did not get hold of anything, but she heard a little
+shriek and a fall, and a crash of broken glass, from which she
+concluded that it was just possible it had fallen into a
+cucumber-frame, or something of the sort. </p>
+
+
+<figure url="images/alice12.png" rend="w50">
+  <index index="fig" />
+  <figDesc>Alice's hand grabbing at Rabbit.</figDesc>
+</figure>
+
+
+<p> Next came an angry voice&nbsp;&mdash; the Rabbit's&nbsp;&mdash; <q>Pat!
+Pat! Where are you?</q> And then a voice she had never heard
+before, <q>Sure then I'm here! Digging for apples, yer
+honour!</q> </p>
+
+<p> <q>Digging for apples, indeed!</q> said the Rabbit angrily.
+<q>Here! Come and help me out of <emph>this</emph>!</q> (Sounds
+of more broken glass.) </p>
+
+<p> <q>Now tell me, Pat, what's that in the window?</q> </p>
+
+<p> <q>Sure, it's an arm, yer honour!</q> (He pronounced it
+<q>arrum.</q>) </p>
+
+<p> <q>An arm, you goose! Who ever saw one that size? Why, it
+fills the whole window!</q> </p>
+
+<p> <q>Sure, it does, yer honour: but it's an arm for all
+that.</q> </p>
+
+<p> <q>Well, it's got no business there, at any rate: go and take
+it away!</q> </p>
+
+<p> There was a long silence after this, and Alice could only
+hear whispers now and then; such as, <q>Sure, I don't like it,
+yer honour, at all, at all!</q> <q>Do as I tell you, you
+coward!</q> and at last she spread out her hand again, and made
+another snatch in the air. This time there were <emph>two</emph>
+little shrieks, and more sounds of broken glass. <q>What a number
+of cucumber-frames there must be!</q> thought Alice. <q>I wonder
+what they'll do next! As for pulling me out of the window, I only
+wish they <emph>could</emph>! I'm sure I don't want to stay in
+here any longer!</q> </p>
+
+<p> She waited for some time without hearing anything more: at
+last came a rumbling of little cartwheels, and the sound of a
+good many voices all talking together: she made out the words:
+<q>Where's the other ladder?&nbsp;&mdash; Why, I hadn't to bring
+but one; Bill's got the other&nbsp;&mdash; Bill! fetch it here,
+lad!&nbsp;&mdash; Here, put 'em up at this corner&nbsp;&mdash;
+No, tie 'em together first&nbsp;&mdash; they don't reach half
+high enough yet&nbsp;&mdash; Oh! they'll do well enough; don't be
+particular&nbsp;&mdash; Here, Bill! catch hold of this
+rope&nbsp;&mdash; Will the roof bear?&nbsp;&mdash; Mind that
+loose slate&nbsp;&mdash; Oh, it's coming down! Heads below!</q>
+(a loud crash)&nbsp;&mdash; <q>Now, who did that?&nbsp;&mdash; It
+was Bill, I fancy&nbsp;&mdash; Who's to go down the
+chimney?&nbsp;&mdash; Nay, I shan't! <emph>You</emph> do
+it!&nbsp;&mdash; That I won't, then!&nbsp;&mdash; Bill's to go
+down&nbsp;&mdash; Here, Bill! the master says you're to go down
+the chimney!</q> </p>
+
+<p> <q>Oh! So Bill's got to come down the chimney, has he?</q>
+said Alice to herself. <q>Shy, they seem to put everything upon
+Bill! I wouldn't be in Bill's place for a good deal: this
+fireplace is narrow, to be sure; but I <emph>think</emph> I can
+kick a little!</q> </p>
+
+<p> She drew her foot as far down the chimney as she could, and
+waited till she heard a little animal (she couldn't guess of what
+sort it was) scratching and scrambling about in the chimney close
+above her: then, saying to herself <q>This is Bill,</q> she gave
+one sharp kick, and waited to see what would happen next. </p>
+
+
+<figure url="images/alice13.png" rend="w25; floatleft">
+  <index index="fig" />
+  <figDesc>Bill flying out of the chimney.</figDesc>
+</figure>
+
+
+<p> The first thing she heard was a general chorus of <q>There
+goes Bill!</q> then the Rabbit's voice along&nbsp;&mdash; <q>Catch
+him, you by the hedge!</q> then silence, and then another
+confusion of voices&nbsp;&mdash; <q>Hold up his head&nbsp;&mdash; Brandy
+now&nbsp;&mdash; Don't choke him&nbsp;&mdash; How was it, old fellow? What
+happened to you? Tell us all about it!</q> </p>
+
+<p> Last came a little feeble, squeaking voice, (<q>That's
+Bill,</q> thought Alice,) <q>Well, I hardly know&nbsp;&mdash; No more,
+thank ye; I'm better now&nbsp;&mdash; but I'm a deal too flustered to
+tell you&nbsp;&mdash; all I know is, something comes at me like a
+Jack-in-the-box, and up I goes like a sky-rocket!</q> </p>
+
+<p> <q>So you did, old fellow!</q> said the others. </p>
+
+<p> <q>We must burn the house down!</q> said the Rabbit's voice;
+and Alice called out as loud as she could, <q>If you do. I'll set
+Dinah at you!</q> </p>
+
+<p> There was a dead silence instantly, and Alice thought to
+herself, <q>I wonder what they <emph>will</emph> do next! If they
+had any sense, they'd take the roof off.</q> After a minute or
+two, they began moving about again, and Alice heard the Rabbit
+say, <q>A barrowful will do, to begin with.</q> </p>
+
+<p> <q>A barrowful of <emph>what</emph>?</q> thought Alice; but
+she had not long to doubt, for the next moment a shower of little
+pebbles came rattling in at the window, and some of them hit her
+in the face. <q>I'll put a stop to this,</q> she said to herself,
+and shouted out, <q>You'd better not do that again!</q> which
+produced another dead silence. </p>
+
+<p> Alice noticed with some surprise that the pebbles were all
+turning into little cakes as they lay on the floor, and a bright
+idea came into her head. <q>If I eat one of these cakes,</q> she
+thought, <q>it's sure to make <emph>some</emph> change in my
+size; and as it can't possibly make me larger, it must make me
+smaller, I suppose.</q> </p>
+
+<p> So she swallowed one of the cakes, and was delighted to find
+that she began shrinking directly. As soon as she was small
+enough to get through the door, she ran out of the house, and
+found quite a crowd of little animals and birds waiting outside.
+The poor little Lizard, Bill, was in the middle, being held up by
+two guinea-pigs, who were giving it something out of a bottle.
+They all made a rush at Alice the moment she appeared; but she
+ran off as hard as she could, and soon found herself safe in a
+thick wood. </p>
+
+<p> <q>The first thing I've got to do,</q> said Alice to herself,
+as she wandered about in the wood, <q>is to grow to my right size
+again; and the second thing is to find my way into that lovely
+garden. I think that will be the best plan.</q> </p>
+
+<p> It sounded an excellent plan, no doubt, and very neatly and
+simply arranged; the only difficulty was, that she had not the
+smallest idea how to set about it; and while she was peering
+about anxiously among the trees, a little sharp bark just over
+her head made her look up in a great hurry. </p>
+
+
+<figure url="images/alice14.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Dog looking at tiny Alice.</figDesc>
+</figure>
+
+
+<p> An enormous puppy was looking down at her with large round
+eyes, and feebly stretching out one paw, trying to touch her.
+<q>Poor little thing!</q> said Alice, in a coaxing tone, and she
+tried hard to whistle to it; but she was terribly frightened all
+the time at the thought that it might be hungry, in which case it
+would be very likely to eat her up in spite of all her coaxing.
+</p>
+
+<p> Hardly knowing what she did, she picked up a little bit of
+stick, and held it out to the puppy; whereupon the puppy jumped
+into the air off all its feet at once, with a yelp of delight,
+and rushed at the stick, and made believe to worry it; then Alice
+dodged behind a great thistle, to keep herself from being run
+over; and the moment she appeared on the other side, the puppy
+made another rush at the stick, and tumbled head over heels in
+its hurry to get hold of it; then Alice, thinking it was very
+like having a game of play with a cart-horse, and expecting every
+moment to be trampled under its feet, ran round the thistle
+again; then the puppy began a series of short charges at the
+stick, running a very little way forwards each time and a long
+way back, and barking hoarsely all the while, till at last it sat
+down a good way off, panting, with its tongue hanging out of its
+mouth, and its great eyes half shut. </p>
+
+<p> This seemed to Alice a good opportunity for making her
+escape; so she set off at once, and ran till she was quite tired
+and out of breath, and till the puppy's bark sounded quite faint
+in the distance. </p>
+
+<p> <q>And yet what a dear little puppy it was!</q> said Alice,
+as she leant against a buttercup to rest herself, and fanned
+herself with one of the leaves: <q>I should have liked teaching
+it tricks very much, if&nbsp;&mdash; if I'd only been the right size
+to do it! Oh dear! I'd nearly forgotten that I've got to grow up
+again! Let me see&nbsp;&mdash; how <emph>is</emph> it to be managed? I
+suppose I ought to eat or drink something or other; but the great
+question is, what?</q> </p>
+
+<p> The great question certainly was, what? Alice looked all
+round her at the flowers and the blades of grass, but she did not
+see anything that looked like the right thing to eat or drink
+under the circumstances. There was a large mushroom growing near
+her, about the same height as herself; and when she had looked
+under it, and on both sides of it, and behind it, it occurred to
+her that she might as well look and see what was on the top of
+it. </p>
+
+<p> She stretched herself up on tiptoe, and peeped over the edge
+of the mushroom, and her eyes immediately met those of a large
+caterpillar, that was sitting on the top with its arms folded,
+quietly smoking a long hookah, and taking not the smallest notice
+of her or of anything else. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter V</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>Advice from a Caterpillar</head>
+
+
+<p> The Caterpillar and Alice looked at each other for some time
+in silence: at last the Caterpillar took the hookah out of its
+mouth, and addressed her in a languid, sleepy voice. </p>
+
+<p> <q>Who are <emph>you</emph>?</q> said the Caterpillar. </p>
+
+
+<figure url="images/alice15.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Alice meets the Caterpillar.</figDesc>
+</figure>
+
+
+<p> This was not an encouraging opening for a conversation. Alice
+replied, rather shyly, <q>I&nbsp;&mdash; I hardly know, sir, just at
+present&nbsp;&mdash; at least I know who I <emph>was</emph> when I got
+up this morning, but I think I must have been changed several
+times since then.</q> </p>
+
+<p> <q>What do you mean by that?</q> said the Caterpillar
+sternly. <q>Explain yourself!</q> </p>
+
+<p> <q>I can't explain <emph>myself,</emph> I'm afraid, sir</q>
+said Alice, <q>because I'm not myself, you see.</q> </p>
+
+<p> <q>I don't see,</q> said the Caterpillar. </p>
+
+<p> <q>I'm afraid I can't put it more clearly,</q> Alice replied
+very politely, <q>for I can't understand it myself to begin with;
+and being so many different sizes in a day is very confusing.</q>
+</p>
+
+<p> <q>It isn't,</q> said the Caterpillar. </p>
+
+<p> <q>Well, perhaps you haven't found it so yet,</q> said Alice;
+<q>but when you have to turn into a chrysalis&nbsp;&mdash; you will
+some day, you know&nbsp;&mdash; and then after that into a butterfly,
+I should think you'll feel it a little queer, won't you?</q> </p>
+
+<p> <q>Not a bit,</q> said the Caterpillar. </p>
+
+<p> <q>Well, perhaps your feelings may be different,</q> said
+Alice; <q>all I know is, it would feel very queer to
+<emph>me.</emph></q> </p>
+
+<p> <q>You!</q> said the Caterpillar contemptuously. <q>Who are
+<emph>you</emph>?</q> </p>
+
+<p> Which brought them back again to the beginning of the
+conversation. Alice felt a little irritated at the Caterpillar's
+making such <emph>very</emph> short remarks, and she drew herself
+up and said, very gravely, <q>I think, you ought to tell me who
+<emph>you</emph> are, first.</q> </p>
+
+<p> <q>Why?</q> said the Caterpillar. </p>
+
+<p> Here was another puzzling question; and as Alice could not
+think of any good reason, and as the Caterpillar seemed to be in
+a <emph>very</emph> unpleasant state of mind, she turned away.
+</p>
+
+<p> <q>Come back!</q> the Caterpillar called after her. <q>I've
+something important to say!</q> </p>
+
+<p> This sounded promising, certainly: Alice turned and came back
+again. </p>
+
+<p> <q>Keep your temper,</q> said the Caterpillar. </p>
+
+<p> <q>Is that all?</q> said Alice, swallowing down her anger as
+well as she could. </p>
+
+<p> <q>No,</q> said the Caterpillar. </p>
+
+<p> Alice thought she might as well wait, as she had nothing else
+to do, and perhaps after all it might tell her something worth
+hearing. For some minutes it puffed away without speaking, but at
+last it unfolded its arms, took the hookah out of its mouth
+again, and said, <q>So you think you're changed, do you?</q> </p>
+
+<p> <q>I'm afraid I am, sir,</q> said Alice; <q>I can't remember
+things as I used&nbsp;&mdash; and I don't keep the same size for ten
+minutes together!</q> </p>
+
+<p> <q>Can't remember <emph>what</emph> things?</q> said the
+Caterpillar. </p>
+
+<p> <q>Well, I've tried to say <q><title>How Doth the Little Busy
+Bee,</title></q> but it all came different!</q> Alice replied in a
+very melancholy voice. </p>
+
+<p> <q>Repeat, <q><title>You are Old, Father William,</title></q></q>
+said the Caterpillar. </p>
+
+<p> Alice folded her hands, and began:&nbsp;&mdash; </p>
+
+<q rend="display">
+
+<lg>
+<l> <q>You are old, Father William,</q> the young man said, </l>
+<l> &emsp;<q rend="pre">And your hair has become very white;</q> </l>
+<l> <q rend="none">And yet you incessantly stand on your head&nbsp;&mdash;</q> </l>
+<l> &emsp;<q rend="post">Do you think, at your age, it is right?</q> </l>
+</lg>
+
+
+<figure url="images/alice16.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Father William standing on head.</figDesc>
+</figure>
+
+
+<lg>
+<l> <q>In my youth,</q> Father William replied to his son, </l>
+<l> &emsp;<q rend="pre">I feared it might injure the brain;</q> </l>
+<l> <q rend="none">But, now that I'm perfectly sure I have none,</q> </l>
+<l> &emsp;<q rend="post"> Why, I do it again and again.</q> </l>
+</lg>
+
+<lg>
+<l> <q>You are old,</q> said the youth, <q rend="pre">as I mentioned before,</q> </l>
+<l> &emsp;<q rend="none">And have grown most uncommonly fat;</q> </l>
+<l> <q rend="none">Yet you turned a back-somersault in at the door&nbsp;&mdash;</q> </l>
+<l> &emsp;<q rend="post">Pray, what is the reason of that?</q> </l>
+</lg>
+
+
+<figure url="images/alice17.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Father William somersaulting in the door.</figDesc>
+</figure>
+
+
+<lg>
+<l> <q>In my youth,</q> said the sage, as he shook his grey locks, </l>
+<l> &emsp;<q rend="pre">I kept all my limbs very supple</q> </l>
+<l> <q rend="none">By the use of this ointment&nbsp;&mdash; one shilling the box&nbsp;&mdash;</q> </l>
+<l> &emsp;<q rend="post">Allow me to sell you a couple?</q> </l>
+</lg>
+
+<lg>
+<l> <q>You are old,</q> said the youth, <q rend="pre">and your jaws are too weak</q> </l>
+<l> &emsp;<q rend="none">For anything tougher than suet;</q> </l>
+<l> <q rend="none">Yet you finished the goose, with the bones and the beak&nbsp;&mdash;</q> </l>
+<l> &emsp;<q rend="post">Pray how did you manage to do it?</q> </l>
+</lg>
+
+
+<figure url="images/alice18.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Father William having eaten the goose.</figDesc>
+</figure>
+
+
+<lg>
+<l> <q>In my youth,</q> said his father, <q rend="pre">I took to the law,</q> </l>
+<l> &emsp;<q rend="none">And argued each case with my wife;</q> </l>
+<l> <q rend="none">And the muscular strength, which it gave to my jaw,</q> </l>
+<l> &emsp;<q rend="post">Has lasted the rest of my life.</q> </l>
+</lg>
+
+<lg>
+<l> <q>You are old,</q> said the youth, <q rend="pre">one would hardly suppose</q> </l>
+<l> &emsp;<q rend="none">That your eye was as steady as ever;</q> </l>
+<l> <q rend="none">Yet you balanced an eel on the end of your nose&nbsp;&mdash;</q> </l>
+<l> &emsp;<q rend="post">What made you so awfully clever?</q> </l>
+</lg>
+
+
+<figure url="images/alice19.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Father William balancing eel on nose.</figDesc>
+</figure>
+
+
+<lg>
+<l> <q>I have answered three questions, and that is enough,</q> </l>
+<l> &emsp;Said his father; <q rend="pre">don't give yourself airs!</q> </l>
+<l> <q rend="none">Do you think I can listen all day to such stuff?</q> </l>
+<l> &emsp;<q rend="post">Be off, or I'll kick you down stairs!</q> </l>
+</lg>
+
+</q>
+
+<p> <q>That is not said right,</q> said the Caterpillar. </p>
+
+<p> <q>Not <emph>quite</emph> right, I'm afraid,</q> said Alice,
+timidly; <q>some of the words have got altered.</q> </p>
+
+<p> <q>It is wrong from beginning to end,</q> said the
+Caterpillar decidedly, and there was silence for some minutes.
+</p>
+
+<p> The Caterpillar was the first to speak. </p>
+
+<p> <q>What size do you want to be?</q> it asked. </p>
+
+<p> <q>Oh, I'm not particular as to size,</q> Alice hastily
+replied; <q>only one doesn't like changing so often, you
+know.</q> </p>
+
+<p> <q>I <emph>don't</emph> know,</q> said the Caterpillar. </p>
+
+<p> Alice said nothing: she had never been so much contradicted
+in her life before, and she felt that she was losing her temper.
+</p>
+
+<p> <q>Are you content now?</q> said the Caterpillar. </p>
+
+<p> <q>Well, I should like to be a <emph>little</emph> larger,
+sir, if you wouldn't mind,</q> said Alice: <q>three inches is
+such a wretched height to be.</q> </p>
+
+<p> <q>It is a very good height indeed!</q> said the Caterpillar
+angrily, rearing itself upright as it spoke (it was exactly three
+inches high). </p>
+
+<p> <q>But I'm not used to it!</q> pleaded poor Alice in a
+piteous tone. And she thought of herself, <q>I wish the creatures
+wouldn't be so easily offended!</q> </p>
+
+<p> <q>You'll get used to it in time,</q> said the Caterpillar;
+and it put the hookah into its mouth and began smoking again.
+</p>
+
+<p> This time Alice waited patiently until it chose to speak
+again. In a minute or two the Caterpillar took the hookah out of
+its mouth and yawned once or twice, and shook itself. Then it got
+down off the mushroom, and crawled away in the grass, merely
+remarking as it went, <q>One side will make you grow taller, and
+the other side will make you grow shorter.</q> </p>
+
+<p> <q>One side of <emph>what</emph>? The other side of
+<emph>what</emph>?</q> thought Alice to herself. </p>
+
+<p> <q>Of the mushroom,</q> said the Caterpillar, just as if she
+had asked it aloud; and in another moment it was out of sight.
+</p>
+
+<p> Alice remained looking thoughtfully at the mushroom for a
+minute, trying to make out which were the two sides of it; and as
+it was perfectly round, she found this a very difficult question.
+However, at last she stretched her arms round it as far as they
+would go, and broke off a bit of the edge with each hand. </p>
+
+<p> <q>And now which is which?</q> she said to herself, and
+nibbled a little of the right-hand bit to try the effect: the
+next moment she felt a violent blow underneath her chin: it had
+struck her foot! </p>
+
+<p> She was a good deal frightened by this very sudden change,
+but she felt that there was no time to be lost, as she was
+shrinking rapidly; so she set to work at once to eat some of the
+other bit. Her chin was pressed so closely against her foot, that
+there was hardly room to open her mouth; but she did it at last,
+and managed to swallow a morsel of the lefthand bit. </p>
+
+&telescope;
+
+<p> <q>Come, my head's free at last!</q> said Alice in a tone of
+delight, which changed into alarm in another moment, when she
+found that her shoulders were nowhere to be found: all she could
+see, when she looked down, was an immense length of neck, which
+seemed to rise like a stalk out of a sea of green leaves that lay
+far below her. </p>
+
+<p> <q>What <emph>can</emph> all that green stuff be?</q> said
+Alice. <q>And where <emph>have</emph> my shoulders got to? And
+oh, my poor hands, how is it I can't see you?</q> She was moving
+them about as she spoke, but no result seemed to follow, except a
+little shaking among the distant green leaves. </p>
+
+<p> As there seemed to be no chance of getting her hands up to
+her head, she tried to get her head down to them, and was
+delighted to find that her neck would bend about easily in any
+direction, like a serpent. She had just succeeded in curving it
+down into a graceful zigzag, and was going to dive in among the
+leaves, which she found to be nothing but the tops of the trees
+under which she had been wandering, when a sharp hiss made her
+draw back in a hurry: a large pigeon had flown into her face, and
+was beating her violently with its wings. </p>
+
+<p> <q>Serpent!</q> screamed the Pigeon. </p>
+
+<p> <q>I'm <emph>not</emph> a serpent!</q> said Alice
+indignantly. <q>Let me alone!</q> </p>
+
+<p> <q>Serpent, I say again!</q> repeated the Pigeon, but in a
+more subdued tone, and added with a kind of sob, <q>I've tried
+every way, and nothing seems to suit them!</q> </p>
+
+<p> <q>I haven't the least idea what you're talking about,</q>
+said Alice. </p>
+
+<p> <q>I've tried the roots of trees, and I've tried banks, and
+I've tried hedges,</q> the Pigeon went on, without attending to
+her; <q>but those serpents! There's no pleasing them!</q> </p>
+
+<p> Alice was more and more puzzled, but she thought there was no
+use in saying anything more till the Pigeon had finished. </p>
+
+<p> <q>As if it wasn't trouble enough hatching the eggs,</q> said
+the Pigeon; <q>but I must be on the look-out for serpents night
+and day! Why, I haven't had a wink of sleep these three
+weeks!</q> </p>
+
+<p> <q>I'm very sorry you've been annoyed,</q> said Alice, who
+was beginning to see its meaning. </p>
+
+<p> <q>And just as I'd taken the highest tree in the wood,</q>
+continued the Pigeon, raising its voice to a shriek, <q>and just
+as I was thinking I should be free of them at last, they must
+needs come wriggling down from the sky! Ugh, Serpent!</q> </p>
+
+<p> <q>But I'm <emph>not</emph> a serpent, I tell you!</q> said
+Alice. <q>I'm a&nbsp;&mdash; I'm a&nbsp;&mdash;</q> </p>
+
+<p> <q>Well! <emph>What</emph> are you?</q> said the Pigeon. <q>I
+can see you're trying to invent something!</q> </p>
+
+<p> <q>I&nbsp;&mdash; I'm a little girl,</q> said Alice, rather
+doubtfully, as she remembered the number of changes she had gone
+through that day. </p>
+
+<p> <q>A likely story indeed!</q> said the Pigeon in a tone of
+the deepest contempt. <q>I've seen a good many little girls in my
+time, but never <emph>one</emph> with such a neck as that! No,
+no! You're a serpent; and there's no use denying it. I suppose
+you'll be telling me next that you never tasted an egg!</q> </p>
+
+<p> <q>I <emph>have</emph> tasted eggs, certainly,</q> said
+Alice, who was a very truthful child; <q>but little girls eat
+eggs quite as much as serpents do, you know.</q> </p>
+
+<p> <q>I don't believe it,</q> said the Pigeon; <q>but if they
+do, why then they're a kind of serpent, that's all I can say.</q>
+</p>
+
+<p> This was such a new idea to Alice, that she was quite silent
+for a minute or two, which gave the Pigeon the opportunity of
+adding, <q>You're looking for eggs, I know <emph>that</emph> well
+enough; and what does it matter to me whether you're a little
+girl or a serpent?</q> </p>
+
+<p> <q>It matters a good deal to <emph>me,</emph></q> said Alice
+hastily; <q>but I'm not looking for eggs, as it happens; and if I
+was, I shouldn't want <emph>yours:</emph> I don't like them
+raw.</q> </p>
+
+<p> <q>Well, be off, then!</q> said the Pigeon in a sulky tone,
+as it settled down again into its nest. Alice crouched down among
+the trees as well as she could, for her neck kept getting
+entangled among the branches, and every now and then she had to
+stop and untwist it. After a while she remembered that she still
+held the pieces of mushroom in her hands, and she set to work
+very carefully, nibbling first at one and then at the other, and
+growing sometimes taller and sometimes shorter, until she had
+succeeded in bringing herself down to her usual height. </p>
+
+<p> It was so long since she had been anything near the right
+size, that it felt quite strange at first; but she got used to it
+in a few minutes, and began talking to herself, as usual.
+<q>Come, there's half my plan done now! How puzzling all these
+changes are! I'm never sure what I'm going to be, from one minute
+to another! However, I've got back to my right size: the next
+thing is, to get into that beautiful garden&nbsp;&mdash; how
+<emph>is</emph> that to be done, I wonder?</q> As she said this,
+she came suddenly upon an open place, with a little house in it
+about four feet high. <q>Whoever lives there,</q> thought Alice,
+<q>it'll never do to come upon them <emph>this</emph> size: why,
+I should frighten them out of their wits!</q> So she began
+nibbling at the righthand bit again, and did not venture to go
+near the house till she had brought herself down to nine inches
+high. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter VI</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>Pig and Pepper</head>
+
+
+<p> For a minute or two she stood looking at the house, and
+wondering what to do next, when suddenly a footman in livery came
+running out of the wood&nbsp;&mdash; (she considered him to be a
+footman because he was in livery: otherwise, judging by his face
+only, she would have called him a fish)&nbsp;&mdash; and rapped loudly
+at the door with his knuckles. It was opened by another footman
+in livery, with a round face, and large eyes like a frog; and
+both footmen, Alice noticed, had powdered hair that curled all
+over their heads. She felt very curious to know what it was all
+about, and crept a little way out of the wood to listen. </p>
+
+
+<figure url="images/alice20.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Fish and Frog servants.</figDesc>
+</figure>
+
+
+<p> The Fish-Footman began by producing from under his arm a
+great letter, nearly as large as himself, and this he handed over
+to the other, saying, in a solemn tone, <q>For the Duchess. An
+invitation from the Queen to play croquet.</q> The Frog-Footman
+repeated, in the same solemn tone, only changing the order of the
+words a little, <q>From the Queen. An invitation for the Duchess
+to play croquet.</q> </p>
+
+<p> Then they both bowed low, and their curls got entangled
+together. </p>
+
+<p> Alice laughed so much at this, that she had to run back into
+the wood for fear of their hearing her; and when she next peeped
+out the Fish-Footman was gone, and the other was sitting on the
+ground near the door, staring stupidly up into the sky. </p>
+
+<p> Alice went timidly up to the door, and knocked. </p>
+
+<p> <q>There's no sort of use in knocking,</q> said the Footman,
+<q>and that for two reasons. First, because I'm on the same side
+of the door as you are; secondly, because they're making such a
+noise inside, no one could possibly hear you.</q> And certainly
+there was a most extraordinary noise going on within&nbsp;&mdash; a
+constant howling and sneezing, and every now and then a great
+crash, as if a dish or kettle had been broken to pieces. </p>
+
+<p> <q>Please, then,</q> said Alice, <q>how am I to get in?</q>
+</p>
+
+<p> <q>There might be some sense in your knocking,</q> the
+Footman went on without attending to her, <q>if we had the door
+between us. For instance, if you were <emph>inside,</emph> you
+might knock, and I could let you out, you know.</q> He was
+looking up into the sky all the time he was speaking, and this
+Alice thought decidedly uncivil. <q>But perhaps he can't help
+it,</q> she said to herself; <q>his eyes are so <emph>very</emph>
+nearly at the top of his head. But at any rate he might answer
+questions.&nbsp;&mdash; How am I to get in?</q> she repeated, aloud.
+</p>
+
+<p> <q>I shall sit here,</q> the Footman remarked, <q>till
+tomorrow&nbsp;&mdash;</q> </p>
+
+<p> At this moment the door of the house opened, and a large
+plate came skimming out, straight at the Footman's head: it just
+grazed his nose, and broke to pieces against one of the trees
+behind him. </p>
+
+<p> <q>&mdash; or next day, maybe,</q> the Footman continued in
+the same tone, exactly as if nothing had happened. </p>
+
+<p> <q>How am I to get in?</q> asked Alice again, in a louder
+tone. </p>
+
+<p> <q><emph>Are</emph> you to get in at all?</q> said the
+Footman. <q>That's the first question, you know.</q> </p>
+
+<p> It was, no doubt: only Alice did not like to be told so.
+<q>It's really dreadful,</q> she muttered to herself, <q>the way
+all the creatures argue. It's enough to drive one crazy!</q> </p>
+
+<p> The Footman seemed to think this a good opportunity for
+repeating his remark, with variations. <q>I shall sit here,</q>
+he said, <q>on and off, for days and days.</q> </p>
+
+<p> <q>But what am I to do?</q> said Alice. </p>
+
+<p> <q>Anything you like,</q> said the Footman, and began
+whistling. </p>
+
+<p> <q>Oh, there's no use in talking to him,</q> said Alice
+desperately: <q>he's perfectly idiotic!</q> And she opened the
+door and went in. </p>
+
+<p> The door led right into a large kitchen, which was full of
+smoke from one end to the other: the Duchess was sitting on a
+three-legged stool in the middle, nursing a baby; the cook was
+leaning over the fire, stirring a large cauldron which seemed to
+be full of soup. </p>
+
+<p> <q>There's certainly too much pepper in that soup!</q> Alice
+said to herself, as well as she could for sneezing. </p>
+
+<p> There was certainly too much of it in the air. Even the
+Duchess sneezed occasionally; and as for the baby, it was
+sneezing and howling alternately without a moment's pause. The
+only things in the kitchen that did not sneeze, were the cook,
+and a large cat which was sitting on the hearth and grinning from
+ear to ear. </p>
+
+
+<figure url="images/alice21.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Cook, Duchess, Cheshire Cat, Baby, and Alice.</figDesc>
+</figure>
+
+
+<p> <q>Please would you tell me,</q> said Alice, a little
+timidly, for she was not quite sure whether it was good manners
+for her to speak first, <q>why your cat grins like that?</q> </p>
+
+<p> <q>It's a Cheshire cat,</q> said the Duchess, <q>and that's
+why. Pig!</q> </p>
+
+<p> She said the last word with such sudden violence that Alice
+quite jumped; but she saw in another moment that it was addressed
+to the baby, and not to her, so she took courage, and went on
+again:&nbsp;&mdash; </p>
+
+<p> <q>I didn't know that Cheshire cats always grinned; in fact,
+I didn't know that cats <emph>could</emph> grin.</q> </p>
+
+<p> <q>They all can,</q> said the Duchess; <q>and most of 'em
+do.</q> </p>
+
+<p> <q>I don't know of any that do,</q> Alice said very politely,
+feeling quite pleased to have got into a conversation. </p>
+
+<p> <q>You don't know much,</q> said the Duchess; <q>and that's a
+fact.</q> </p>
+
+<p> Alice did not at all like the tone of this remark, and
+thought it would be as well to introduce some other subject of
+conversation. While she was trying to fix on one, the cook took
+the cauldron of soup off the fire, and at once set to work
+throwing everything within her reach at the Duchess and the
+baby&nbsp;&mdash; the fire-irons came first; then followed a
+shower of saucepans, plates, and dishes. The Duchess took no
+notice of them even when they hit her; and the baby was howling
+so much already, that it was quite impossible to say whether the
+blows hurt it or not. </p>
+
+<p> <q>Oh, <emph>please</emph> mind what you're doing!</q> cried
+Alice, jumping up and down in an agony of terror. <q>Oh, there
+goes his <emph>precious</emph> nose</q>; as an unusually large
+saucepan flew close by it, and very nearly carried it off. </p>
+
+<p> <q>If everybody minded their own business,</q> the Duchess
+said in a hoarse growl, <q>the world would go round a deal faster
+than it does.</q> </p>
+
+<p> <q>Which would <emph>not</emph> be an advantage,</q> said
+Alice, who felt very glad to get an opportunity of showing off a
+little of her knowledge. <q>Just think of what work it would make
+with the day and night! You see the earth takes twenty-four hours
+to turn round on its axis&nbsp;&mdash;</q> </p>
+
+<p> <q>Talking of axes,</q> said the Duchess, <q>chop off her
+head!</q> </p>
+
+<p> Alice glanced rather anxiously at the cook, to see if she
+meant to take the hint; but the cook was busily stirring the
+soup, and seemed not to be listening, so she went on again:
+<q>Twenty-four hours, I <emph>think;</emph> or is it twelve?
+I&nbsp;&mdash;</q> </p>
+
+<p> <q>Oh, don't bother <emph>me,</emph></q> said the Duchess;
+<q>I never could abide figures!</q> And with that she began
+nursing her child again, singing a sort of lullaby to it as she
+did so, and giving it a violent shake at the end of every line:
+</p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">Speak roughly to your little boy,</q> </l>
+<l> &emsp;And beat him when he sneezes: </l>
+<l> He only does it to annoy, </l>
+<l> &emsp;<q rend="post">Because he knows it teases.</q> </l>
+</lg>
+
+<p> Chorus. </p>
+
+<p> (In which the cook and the baby joined):&nbsp;&mdash; </p>
+
+<lg>
+<l> <q>Wow! wow! wow!</q> </l>
+</lg>
+</q>
+
+<p> While the Duchess sang the second verse of the song, she kept
+tossing the baby violently up and down, and the poor little thing
+howled so, that Alice could hardly hear the words:&nbsp;&mdash; </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">I speak severely to my boy,</q> </l>
+<l> &emsp;I beat him when he sneezes; </l>
+<l> For he can thoroughly enjoy </l>
+<l> &emsp;<q rend="post">The pepper when he pleases!</q> </l>
+</lg>
+
+<p> Chorus. </p>
+
+<lg>
+<l> <q>Wow! wow! wow!</q> </l>
+</lg>
+</q>
+
+<p> <q>Here! you may nurse it a bit, if you like!</q> the Duchess
+said to Alice, flinging the baby at her as she spoke. <q>I must
+go and get ready to play croquet with the Queen,</q> and she
+hurried out of the room. The cook threw a frying-pan after her as
+she went out, but it just missed her. </p>
+
+<p> Alice caught the baby with some difficulty, as it was a
+queer-shaped little creature, and held out its arms and legs in
+all directions, <q>just like a star-fish,</q> thought Alice. The
+poor little thing was snorting like a steam-engine when she
+caught it, and kept doubling itself up and straightening itself
+out again, so that altogether, for the first minute or two, it
+was as much as she could do to hold it. </p>
+
+<p> As soon as she had made out the proper way of nursing it,
+(which was to twist it up into a sort of knot, and then keep
+tight hold of its right ear and left foot, so as to prevent its
+undoing itself,) she carried it out into the open air.
+<q><emph>If</emph> I don't take this child away with me,</q>
+thought Alice, <q>they're sure to kill it in a day or two:
+wouldn't it be murder to leave it behind?</q> She said the last
+words out loud, and the little thing grunted in reply (it had
+left off sneezing by this time). <q>Don't grunt,</q> said Alice;
+<q>that's not at all a proper way of expressing yourself.</q>
+</p>
+
+<p> The baby grunted again, and Alice looked very anxiously into
+its face to see what was the matter with it. There could be no
+doubt that it had a <emph>very</emph> turn-up nose, much more
+like a snout than a real nose; also its eyes were getting
+extremely small for a baby: altogether Alice did not like the
+look of the thing at all. <q>But perhaps it was only sobbing,</q>
+she thought, and looked into its eyes again, to see if there were
+any tears. </p>
+
+
+<figure url="images/alice22.png" rend="w50">
+  <index index="fig" />
+  <figDesc>Alice holding the pig baby.</figDesc>
+</figure>
+
+
+<p> No, there were no tears. <q>If you're going to turn into a
+pig, my dear,</q> said Alice, seriously, <q>I'll have nothing
+more to do with you. Mind now!</q> The poor little thing sobbed
+again (or grunted, it was impossible to say which), and they went
+on for some while in silence. </p>
+
+<p> Alice was just beginning to think to herself, <q>Now, what am
+I to do with this creature when I get it home?</q> when it
+grunted again, so violently, that she looked down into its face
+in some alarm. This time there could be <emph>no</emph> mistake
+about it: it was neither more nor less than a pig, and she felt
+that it would be quite absurd for her to carry it further. </p>
+
+<p> So she set the little creature down, and felt quite relieved
+to see it trot away quietly into the wood. <q>If it had grown
+up,</q> she said to herself, <q>it would have made a dreadfully
+ugly child: but it makes rather a handsome pig, I think.</q> And
+she began thinking over other children she knew, who might do
+very well as pigs, and was just saying to herself, <q>if one only
+knew the right way to change them&nbsp;&mdash;</q> when she was a
+little startled by seeing the Cheshire Cat sitting on a bough of
+a tree a few yards off. </p>
+
+<p> The Cat only grinned when it saw Alice. It looked
+good-natured, she thought: still it had <emph>very</emph> long
+claws and a great many teeth, so she felt that it ought to be
+treated with respect. </p>
+
+<p> <q>Cheshire Puss,</q> she began, rather timidly, as she did
+not at all know whether it would like the name: however, it only
+grinned a little wider. <q>Come, it's pleased so far,</q> thought
+Alice, and she went on. <q>Would you tell me, please, which way I
+ought to go from here?</q> </p>
+
+
+<figure url="images/alice23.png" rend="w75; floatright">
+  <index index="fig" />
+  <figDesc>Alice speaks to the Cheshire Cat.</figDesc>
+</figure>
+
+
+<p> <q>That depends a good deal on where you want to get to,</q>
+said the Cat. </p>
+
+<p> <q>I don't much care where&nbsp;&mdash;</q> said Alice. </p>
+
+<p> <q>Then it doesn't matter which way you go,</q> said the Cat.
+</p>
+
+<p> <q>&mdash; so long as I get <emph>somewhere,</emph></q> Alice
+added as an explanation. </p>
+
+<p> <q>Oh, you're sure to do that,</q> said the Cat, <q>if you
+only walk long enough.</q> </p>
+
+<p> Alice felt that this could not be denied, so she tried
+another question. <q>What sort of people live about here?</q>
+</p>
+
+<p> <q>In <emph>that</emph> direction,</q> the Cat said, waving
+its right paw round, <q>lives a Hatter: and in <emph>that</emph>
+direction,</q> waving the other paw, <q>lives a March Hare. Visit
+either you like: they're both mad.</q> </p>
+
+<p> <q>But I don't want to go among mad people,</q> Alice
+remarked. </p>
+
+<p> <q>Oh, you can't help that,</q> said the Cat: <q>we're all
+mad here. I'm mad. You're mad.</q> </p>
+
+<p> <q>How do you know I'm mad?</q> said Alice. </p>
+
+<p> <q>You must be,</q> said the Cat, <q>or you wouldn't have
+come here.</q> </p>
+
+<p> Alice didn't think that proved it at all; however, she went
+on <q>And how do you know that you're mad?</q> </p>
+
+<p> <q>To begin with,</q> said the Cat, <q>a dog's not mad. You
+grant that?</q> </p>
+
+<p> <q>I suppose so,</q> said Alice. </p>
+
+<p> <q>Well, then,</q> the Cat went on, <q>you see, a dog growls
+when it's angry, and wags its tail when it's pleased. Now I growl
+when I'm pleased, and wag my tail when I'm angry. Therefore I'm
+mad.</q> </p>
+
+<p> <q>I call it purring, not growling,</q> said Alice. </p>
+
+<p> <q>Call it what you like,</q> said the Cat. <q>Do you play
+croquet with the Queen to-day?</q> </p>
+
+<p> <q>I should like it very much,</q> said Alice, <q>but I
+haven't been invited yet.</q> </p>
+
+<p> <q>You'll see me there,</q> said the Cat, and vanished. </p>
+
+<p> Alice was not much surprised at this, she was getting so used
+to queer things happening. While she was looking at the place
+where it had been, it suddenly appeared again. </p>
+
+<p> <q>By-the-bye, what became of the baby?</q> said the Cat.
+<q>I'd nearly forgotten to ask.</q> </p>
+
+<p> <q>It turned into a pig,</q> Alice quietly said, just as if
+it had come back in a natural way. </p>
+
+<p> <q>I thought it would,</q> said the Cat, and vanished again.
+</p>
+
+<p> Alice waited a little, half expecting to see it again, but it
+did not appear, and after a minute or two she walked on in the
+direction in which the March Hare was said to live. <q>I've seen
+hatters before,</q> she said to herself; <q>the March Hare will
+be much the most interesting, and perhaps as this is May it won't
+be raving mad&nbsp;&mdash; at least not so mad as it was in March.</q>
+As she said this, she looked up, and there was the Cat again,
+sitting on a branch of a tree. </p>
+
+<p> <q>Did you say pig, or fig?</q> said the Cat. </p>
+
+<p> <q>I said pig,</q> replied Alice; <q>and I wish you wouldn't
+keep appearing and vanishing so suddenly: you make one quite
+giddy.</q> </p>
+
+<p> <q>All right,</q> said the Cat; and this time it vanished
+quite slowly, beginning with the end of the tail, and ending with
+the grin, which remained some time after the rest of it had gone.
+</p>
+
+
+<figure url="images/alice24.png" rend="w100">
+  <index index="fig" />
+  <figDesc>The Cheshire Cat fades to a smile.</figDesc>
+</figure>
+
+
+<p> <q>Well! I've often seen a cat without a grin,</q> thought
+Alice; <q>but a grin without a cat! It's the most curious thing I
+ever saw in my life!</q> </p>
+
+<p> She had not gone much farther before she came in sight of the
+house of the March Hare: she thought it must be the right house,
+because the chimneys were shaped like ears and the roof was
+thatched with fur. It was so large a house, that she did not like
+to go nearer till she had nibbled some more of the lefthand bit
+of mushroom, and raised herself to about two feet high: even then
+she walked up towards it rather timidly, saying to herself
+<q>Suppose it should be raving mad after all! I almost wish I'd
+gone to see the Hatter instead!</q> </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter VII</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>A Mad Tea-Party</head>
+
+
+<p> There was a table set out under a tree in front of the house,
+and the March Hare and the Hatter were having tea at it: a
+Dormouse was sitting between them, fast asleep, and the other two
+were using it as a cushion, resting their elbows on it, and
+talking over its head. <q>Very uncomfortable for the
+Dormouse,</q> thought Alice; <q>only, as it's asleep, I suppose
+it doesn't mind.</q> </p>
+
+
+<figure url="images/alice25.png" rend="w100">
+  <index index="fig" />
+  <figDesc>The Mad Tea Party.</figDesc>
+</figure>
+
+
+<p> The table was a large one, but the three were all crowded
+together at one corner of it: <q>No room! No room!</q> they cried
+out when they saw Alice coming. <q>There's <emph>plenty</emph> of
+room!</q> said Alice indignantly, and she sat down in a large
+arm-chair at one end of the table. </p>
+
+<p> <q>Have some wine,</q> the March Hare said in an encouraging
+tone. </p>
+
+<p> Alice looked all round the table, but there was nothing on it
+but tea. <q>I don't see any wine,</q> she remarked. </p>
+
+<p> <q>There isn't any,</q> said the March Hare. </p>
+
+<p> <q>Then it wasn't very civil of you to offer it,</q> said
+Alice angrily. </p>
+
+<p> <q>It wasn't very civil of you to sit down without being
+invited,</q> said the March Hare. </p>
+
+<p> <q>I didn't know it was <emph>your</emph> table,</q> said
+Alice; <q>it's laid for a great many more than three.</q> </p>
+
+<p> <q>Your hair wants cutting,</q> said the Hatter. He had been
+looking at Alice for some time with great curiosity, and this was
+his first speech. </p>
+
+<p> <q>You should learn not to make personal remarks,</q> Alice
+said with some severity; <q>it's very rude.</q> </p>
+
+<p> The Hatter opened his eyes very wide on hearing this; but all
+he <emph>said</emph> was, <q>Why is a raven like a
+writing-desk?</q> </p>
+
+<p> <q>Come, we shall have some fun now!</q> thought Alice.
+<q>I'm glad they've begun asking riddles.&nbsp;&mdash; I believe I can
+guess that,</q> she added aloud. </p>
+
+<p> <q>Do you mean that you think you can find out the answer to
+it?</q> said the March Hare. </p>
+
+<p> <q>Exactly so,</q> said Alice. </p>
+
+<p> <q>Then you should say what you mean,</q> the March Hare went
+on. </p>
+
+<p> <q>I do,</q> Alice hastily replied; <q>at least&nbsp;&mdash; at
+least I mean what I say&nbsp;&mdash; that's the same thing, you
+know.</q> </p>
+
+<p> <q>Not the same thing a bit!</q> said the Hatter. <q>You
+might just as well say that <q>I see what I eat</q> is the same
+thing as <q>I eat what I see</q>!</q> </p>
+
+
+<figure url="images/alice26.png" rend="w50">
+  <index index="fig" />
+  <figDesc>The Hatter engaging in rhetoric.</figDesc>
+</figure>
+
+
+<p> <q>You might just as well say,</q> added the March Hare,
+<q>that <q>I like what I get</q> is the same thing as <q>I get
+what I like</q>!</q> </p>
+
+<p> <q>You might just as well say,</q> added the Dormouse, who
+seemed to be talking in his sleep, <q>that <q>I breathe when I
+sleep</q> is the same thing as <q>I sleep when I breathe</q>!</q>
+</p>
+
+<p> <q>It <emph>is</emph> the same thing with you,</q> said the
+Hatter, and here the conversation dropped, and the party sat
+silent for a minute, while Alice thought over all she could
+remember about ravens and writing-desks, which wasn't much. </p>
+
+<p> The Hatter was the first to break the silence. <q>What day of
+the month is it?</q> he said, turning to Alice: he had taken his
+watch out of his pocket, and was looking at it uneasily, shaking
+it every now and then, and holding it to his ear. </p>
+
+<p> Alice considered a little, and then said <q>The fourth.</q>
+</p>
+
+<p> <q>Two days wrong!</q> sighed the Hatter. <q>I told you
+butter wouldn't suit the works!</q> he added looking angrily at
+the March Hare. </p>
+
+<p> <q>It was the <emph>best</emph> butter,</q> the March Hare
+meekly replied. </p>
+
+<p> <q>Yes, but some crumbs must have got in as well,</q> the
+Hatter grumbled: <q>you shouldn't have put it in with the
+bread-knife.</q> </p>
+
+<p> The March Hare took the watch and looked at it gloomily: then
+he dipped it into his cup of tea, and looked at it again: but he
+could think of nothing better to say than his first remark, <q>It
+was the <emph>best</emph> butter, you know.</q> </p>
+
+<p> Alice had been looking over his shoulder with some curiosity.
+<q>What a funny watch!</q> she remarked. <q>It tells the day of the
+month, and doesn't tell what o'clock it is!</q> </p>
+
+<p> <q>Why should it?</q> muttered the Hatter. <q>Does
+<emph>your</emph> watch tell you what year it is?</q> </p>
+
+<p> <q>Of course not,</q> Alice replied very readily: <q>but
+that's because it stays the same year for such a long time
+together.</q> </p>
+
+<p> <q>Which is just the case with <emph>mine,</emph></q> said
+the Hatter. </p>
+
+<p> Alice felt dreadfully puzzled. The Hatter's remark seemed to
+have no sort of meaning in it, and yet it was certainly English.
+<q>I don't quite understand you,</q> she said, as politely as she
+could. </p>
+
+<p> <q>The Dormouse is asleep again,</q> said the Hatter, and he
+poured a little hot tea upon its nose. </p>
+
+<p> The Dormouse shook its head impatiently, and said, without
+opening its eyes, <q>Of course, of course; just what I was going
+to remark myself.</q> </p>
+
+<p> <q>Have you guessed the riddle yet?</q> the Hatter said,
+turning to Alice again. </p>
+
+<p> <q>No, I give it up,</q> Alice replied: <q>what's the
+answer?</q> </p>
+
+<p> <q>I haven't the slightest idea,</q> said the Hatter. </p>
+
+<p> <q>Nor I,</q> said the March Hare. </p>
+
+<p> Alice sighed wearily. <q>I think you might do something
+better with the time,</q> she said, <q>than waste it in asking
+riddles that have no answers.</q> </p>
+
+<p> <q>If you knew Time as well as I do,</q> said the Hatter,
+<q>you wouldn't talk about wasting <emph>it.</emph> It's
+<emph>him.</emph></q> </p>
+
+<p> <q>I don't know what you mean,</q> said Alice. </p>
+
+<p> <q>Of course you don't!</q> the Hatter said, tossing his head
+contemptuously. <q>I dare say you never even spoke to Time!</q>
+</p>
+
+<p> <q>Perhaps not,</q> Alice cautiously replied: <q>but I know I
+have to beat time when I learn music.</q> </p>
+
+<p> <q>Ah! that accounts for it,</q> said the Hatter. <q>He won't
+stand beating. Now, if you only kept on good terms with him, he'd
+do almost anything you liked with the clock. For instance,
+suppose it were nine o'clock in the morning, just time to begin
+lessons: you'd only have to whisper a hint to Time, and round
+goes the clock in a twinkling! Half-past one, time for
+dinner!</q> </p>
+
+<p> (<q>I only wish it was,</q> the March Hare said to itself in
+a whisper.) </p>
+
+<p> <q>That would be grand, certainly,</q> said Alice
+thoughtfully: <q>but then&nbsp;&mdash; I shouldn't be hungry for it,
+you know.</q> </p>
+
+<p> <q>Not at first, perhaps,</q> said the Hatter: <q>but you
+could keep it to half-past one as long as you liked.</q> </p>
+
+<p> <q>Is that the way <emph>you</emph> manage?</q> Alice asked.
+</p>
+
+<p> The Hatter shook his head mournfully. <q>Not I!</q> he
+replied. <q>We quarrelled last March&nbsp;&mdash; just before
+<emph>he</emph> went mad, you know&nbsp;&mdash;</q> (pointing with his
+tea spoon at the March Hare,) <q rend="pre">&mdash; it was at the
+great concert given by the Queen of Hearts, and I had to sing</q>
+</p>
+
+<q rend="display">
+<lg>
+<l> <q rend="none"><q rend="pre">Twinkle, twinkle, little bat!</q></q> </l>
+<l> <q rend="none"><q rend="post">How I wonder what you're at!</q></q> </l>
+</lg>
+</q>
+
+<p> <q rend="post">You know the song, perhaps?</q> </p>
+
+<p> <q>I've heard something like it,</q> said Alice. </p>
+
+<p> <q>It goes on, you know,</q> the Hatter continued, <q
+rend="pre">in this way:&nbsp;&mdash;</q> </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="none"><q rend="pre">Up above the world you fly,</q></q> </l>
+<l> <q rend="none">Like a tea-tray in the sky.</q> </l>
+<l> <q rend="post"><q rend="post">&emsp;&emsp;Twinkle, twinkle&nbsp;&mdash;</q></q> </l>
+</lg>
+</q>
+
+<p> Here the Dormouse shook itself, and began singing in its
+sleep <q>Twinkle, twinkle, twinkle, twinkle&nbsp;&mdash;</q> and went
+on so long that they had to pinch it to make it stop. </p>
+
+<p> <q>Well, I'd hardly finished the first verse,</q> said the
+Hatter, <q>when the Queen jumped up and bawled out, <q>He's
+murdering the time! Off with his head!</q></q> </p>
+
+<p> <q>How dreadfully savage!</q> exclaimed Alice. </p>
+
+<p> <q>And ever since that,</q> the Hatter went on in a mournful
+tone, <q>he won't do a thing I ask! It's always six o'clock
+now.</q> </p>
+
+<p> A bright idea came into Alice's head. <q>Is that the reason
+so many tea-things are put out here?</q> she asked. </p>
+
+<p> <q>Yes, that's it,</q> said the Hatter with a sigh: <q>it's
+always tea-time, and we've no time to wash the things between
+whiles.</q> </p>
+
+<p> <q>Then you keep moving round, I suppose?</q> said Alice.
+</p>
+
+<p> <q>Exactly so,</q> said the Hatter: <q>as the things get used
+up.</q> </p>
+
+<p> <q>But what happens when you come to the beginning again?</q>
+Alice ventured to ask. </p>
+
+<p> <q>Suppose we change the subject,</q> the March Hare
+interrupted, yawning. <q>I'm getting tired of this. I vote the
+young lady tells us a story.</q> </p>
+
+<p> <q>I'm afraid I don't know one,</q> said Alice, rather
+alarmed at the proposal. </p>
+
+<p> <q>Then the Dormouse shall!</q> they both cried. <q>Wake up,
+Dormouse!</q> And they pinched it on both sides at once. </p>
+
+<p> The Dormouse slowly opened his eyes. <q>I wasn't asleep,</q>
+he said in a hoarse, feeble voice: <q>I heard every word you
+fellows were saying.</q> </p>
+
+<p> <q>Tell us a story!</q> said the March Hare. </p>
+
+<p> <q>Yes, please do!</q> pleaded Alice. </p>
+
+<p> <q>And be quick about it,</q> added the Hatter, <q>or you'll
+be asleep again before it's done.</q> </p>
+
+<p> <q>Once upon a time there were three little sisters,</q> the
+Dormouse began in a great hurry; <q>and their names were Elsie,
+Lacie, and Tillie; and they lived at the bottom of a
+well&nbsp;&mdash;</q> </p>
+
+<p> <q>What did they live on?</q> said Alice, who always took a
+great interest in questions of eating and drinking. </p>
+
+<p> <q>They lived on treacle,</q> said the Dormouse, after
+thinking a minute or two. </p>
+
+<p> <q>They couldn't have done that, you know,</q> Alice gently
+remarked; <q>they'd have been ill.</q> </p>
+
+<p> <q>So they were,</q> said the Dormouse; <q><emph>very</emph>
+ill.</q> </p>
+
+<p> Alice tried to fancy to herself what such an extraordinary
+ways of living would be like, but it puzzled her too much, so she
+went on: <q>But why did they live at the bottom of a well?</q>
+</p>
+
+<p> <q>Take some more tea,</q> the March Hare said to Alice, very
+earnestly. </p>
+
+<p> <q>I've had nothing yet,</q> Alice replied in an offended
+tone, <q>so I can't take more.</q> </p>
+
+<p> <q>You mean you can't take <emph>less,</emph></q> said the
+Hatter: <q>it's very easy to take <emph>more</emph> than
+nothing.</q> </p>
+
+<p> <q>Nobody asked <emph>your</emph> opinion,</q> said Alice.
+</p>
+
+<p> <q>Who's making personal remarks now?</q> the Hatter asked
+triumphantly. </p>
+
+<p> Alice did not quite know what to say to this: so she helped
+herself to some tea and bread-and-butter, and then turned to the
+Dormouse, and repeated her question. <q>Why did they live at the
+bottom of a well?</q> </p>
+
+<p> The Dormouse again took a minute or two to think about it,
+and then said, <q>It was a treacle-well.</q> </p>
+
+<p> <q>There's no such thing!</q> Alice was beginning very
+angrily, but the Hatter and the March Hare went <q>Sh! sh!</q>
+and the Dormouse sulkily remarked, <q>If you can't be civil,
+you'd better finish the story for yourself.</q> </p>
+
+<p> <q>No, please go on!</q> Alice said very humbly; <q>I won't
+interrupt again. I dare say there may be <emph>one.</emph></q>
+</p>
+
+<p> <q>One, indeed!</q> said the Dormouse indignantly. However,
+he consented to go on. <q>And so these three little
+sisters&nbsp;&mdash; they were learning to draw, you
+know&nbsp;&mdash;</q> </p>
+
+<p> <q>What did they draw?</q> said Alice, quite forgetting her
+promise. </p>
+
+<p> <q>Treacle,</q> said the Dormouse, without considering at all
+this time. </p>
+
+<p> <q>I want a clean cup,</q> interrupted the Hatter: <q>let's
+all move one place on.</q> </p>
+
+<p> He moved on as he spoke, and the Dormouse followed him: the
+March Hare moved into the Dormouse's place, and Alice rather
+unwillingly took the place of the March Hare. The Hatter was the
+only one who got any advantage from the change: and Alice was a
+good deal worse off than before, as the March Hare had just upset
+the milk-jug into his plate. </p>
+
+<p> Alice did not wish to offend the Dormouse again, so she began
+very cautiously: <q>But I don't understand. Where did they draw
+the treacle from?</q> </p>
+
+<p> <q>You can draw water out of a water-well,</q> said the
+Hatter; <q>so I should think you could draw treacle out of a
+treacle-well&nbsp;&mdash; eh, stupid?</q> </p>
+
+<p> <q>But they were <emph>in</emph> the well,</q> Alice said to
+the Dormouse, not choosing to notice this last remark. </p>
+
+<p> <q>Of course they were</q>, said the Dormouse; <q>&mdash;
+well in.</q> </p>
+
+<p> This answer so confused poor Alice, that she let the Dormouse
+go on for some time without interrupting it. </p>
+
+<p> <q>They were learning to draw,</q> the Dormouse went on,
+yawning and rubbing its eyes, for it was getting very sleepy;
+<q>and they drew all manner of things&nbsp;&mdash; everything that
+begins with an M&nbsp;&mdash;</q> </p>
+
+<p> <q>Why with an M?</q> said Alice. </p>
+
+<p> <q>Why not?</q> said the March Hare. </p>
+
+<p> Alice was silent. </p>
+
+<p> The Dormouse had closed its eyes by this time, and was going
+off into a doze; but, on being pinched by the Hatter, it woke up
+again with a little shriek, and went on: <q>&mdash; that begins
+with an M, such as mouse-traps, and the moon, and memory, and
+muchness&nbsp;&mdash; you know you say things are <q>much of a
+muchness</q>&nbsp;&mdash; did you ever see such a thing as a drawing
+of a muchness?</q> </p>
+
+<p> <q>Really, now you ask me,</q> said Alice, very much
+confused, <q>I don't think&nbsp;&mdash;</q> </p>
+
+<p> <q>Then you shouldn't talk,</q> said the Hatter. </p>
+
+<p> This piece of rudeness was more than Alice could bear: she
+got up in great disgust, and walked off; the Dormouse fell asleep
+instantly, and neither of the others took the least notice of her
+going, though she looked back once or twice, half hoping that
+they would call after her: the last time she saw them, they were
+trying to put the Dormouse into the teapot. </p>
+
+
+<figure url="images/alice27.png" rend="w75">
+  <index index="fig" />
+  <figDesc>The Hatter and the Hare dunk the Dormouse.</figDesc>
+</figure>
+
+
+<p> <q>At any rate I'll never go <emph>there</emph> again!</q>
+said Alice as she picked her way through the wood. <q>It's the
+stupidest tea-party I ever was at in all my life!</q> </p>
+
+<p> Just as she said this, she noticed that one of the trees had
+a door leading right into it. <q>That's very curious!</q> she
+thought. <q>But everything's curious today. I think I may as well
+go in at once.</q> And in she went. </p>
+
+<p> Once more she found herself in the long hall, and close to
+the little glass table. <q>Now, I'll manage better this time,</q>
+she said to herself, and began by taking the little golden key,
+and unlocking the door that led into the garden. Then she went to
+work nibbling at the mushroom (she had kept a piece of it in her
+pocket) till she was about a foot high: then she walked down the
+little passage: and <emph>then</emph>&nbsp;&mdash; she found herself
+at last in the beautiful garden, among the bright flower-beds and
+the cool fountains. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter VIII</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>The Queen's Croquet-Ground</head>
+
+
+<p> A large rose-tree stood near the entrance of the garden: the
+roses growing on it were white, but there were three gardeners at
+it, busily painting them red. Alice thought this a very curious
+thing, and she went nearer to watch them, and just as she came up
+to them she heard one of them say, <q>Look out now, Five! Don't
+go splashing paint over me like that!</q> </p>
+
+
+<figure url="images/alice28.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Two, Five, and Seven painting the rosebush.</figDesc>
+</figure>
+
+
+<p> <q>I couldn't help it,</q> said Five, in a sulky tone;
+<q>Seven jogged my elbow.</q> </p>
+
+<p> On which Seven looked up and said, <q>That's right, Five!
+Always lay the blame on others!</q> </p>
+
+<p> <q><emph>You'd</emph> better not talk!</q> said Five. <q>I
+heard the Queen say only yesterday you deserved to be
+beheaded!</q> </p>
+
+<p> <q>What for?</q> said the one who had spoken first. </p>
+
+<p> <q>That's none of <emph>your</emph> business, Two!</q> said
+Seven. </p>
+
+<p> <q>Yes, it <emph>is</emph> his business!</q> said Five,
+<q>and I'll tell him&nbsp;&mdash; it was for bringing the cook
+tulip-roots instead of onions.</q> </p>
+
+<p> Seven flung down his brush, and had just begun <q>Well, of
+all the unjust things&nbsp;&mdash;</q> when his eye chanced to fall
+upon Alice, as she stood watching them, and he checked himself
+suddenly: the others looked round also, and all of them bowed
+low. </p>
+
+<p> <q>Would you tell me,</q> said Alice, a little timidly,
+<q>why you are painting those roses?</q> </p>
+
+<p> Five and Seven said nothing, but looked at Two. Two began in
+a low voice, <q>Why the fact is, you see, Miss, this here ought
+to have been a <emph>red</emph> rose-tree, and we put a white one
+in by mistake; and if the Queen was to find it out, we should all
+have our heads cut off, you know. So you see, Miss, we're doing
+our best, afore she comes, to&nbsp;&mdash;</q> At this moment Five,
+who had been anxiously looking across the garden, called out
+<q>The Queen! The Queen!</q> and the three gardeners instantly
+threw themselves flat upon their faces. There was a sound of many
+footsteps, and Alice looked round, eager to see the Queen. </p>
+
+<p> First came ten soldiers carrying clubs; these were all shaped
+like the three gardeners, oblong and flat, with their hands and
+feet at the corners: next the ten courtiers; these were
+ornamented all over with diamonds, and walked two and two, as the
+soldiers did. After these came the royal children; there were ten
+of them, and the little dears came jumping merrily along hand in
+hand, in couples: they were all ornamented with hearts. Next came
+the guests, mostly Kings and Queens, and among them Alice
+recognised the White Rabbit: it was talking in a hurried nervous
+manner, smiling at everything that was said, and went by without
+noticing her. Then followed the Knave of Hearts, carrying the
+King's crown on a crimson velvet cushion; and, last of all this
+grand procession, came <emph>the King and Queen of Hearts.</emph>
+</p>
+
+<p> Alice was rather doubtful whether she ought not to lie down
+on her face like the three gardeners, but she could not remember
+ever having heard of such a rule at processions; <q>and besides,
+what would be the use of a procession,</q> thought she, <q>if
+people had all to lie down upon their faces, so that they
+couldn't see it?</q> So she stood still where she was, and
+waited. </p>
+
+<p> When the procession came opposite to Alice, they all stopped
+and looked at her, and the Queen said severely <q>Who is
+this?</q> She said it to the Knave of Hearts, who only bowed and
+smiled in reply. </p>
+
+<p> <q>Idiot!</q> said the Queen, tossing her head impatiently;
+and, turning to Alice, she went on, <q>What's your name,
+child?</q> </p>
+
+<p> <q>My name is Alice, so please your Majesty,</q> said Alice very
+politely; but she added, to herself, <q>Why, they're only a pack of
+cards, after all. I needn't be afraid of them!</q> </p>
+
+<p> <q>And who are <emph>these</emph>?</q> said the Queen,
+pointing to the three gardeners who were lying round the
+rosetree; for, you see, as they were lying on their faces, and
+the pattern on their backs was the same as the rest of the pack,
+she could not tell whether they were gardeners, or soldiers, or
+courtiers, or three of her own children. </p>
+
+<p> <q>How should I know?</q> said Alice, surprised at her own
+courage. <q>It's no business of <emph>mine.</emph></q> </p>
+
+<p> The Queen turned crimson with fury, and, after glaring at her
+for a moment like a wild beast, screamed <q>Off with her head!
+Off&nbsp;&mdash;</q> </p>
+
+
+<figure url="images/alice29.png" rend="w75">
+  <index index="fig" />
+  <figDesc>The Queen pointing to Alice and crying: <q>Off with her head!</q></figDesc>
+</figure>
+
+
+<p> <q>Nonsense!</q> said Alice, very loudly and decidedly, and
+the Queen was silent. </p>
+
+<p> The King laid his hand upon her arm, and timidly said
+<q>Consider, my dear: she is only a child!</q> </p>
+
+<p> The Queen turned angrily away from him, and said to the Knave
+<q>Turn them over!</q> </p>
+
+<p> The Knave did so, very carefully, with one foot. </p>
+
+<p> <q>Get up!</q> said the Queen, in a shrill, loud voice, and
+the three gardeners instantly jumped up, and began bowing to the
+King, the Queen, the royal children, and everybody else. </p>
+
+<p> <q>Leave off that!</q> screamed the Queen. <q>You make me
+giddy.</q> And then, turning to the rose-tree, she went on,
+<q>What <emph>have</emph> you been doing here?</q> </p>
+
+<p> <q>May it please your Majesty,</q> said Two, in a very humble
+tone, going down on one knee as he spoke, <q>we were
+trying&nbsp;&mdash;</q> </p>
+
+<p> <q>I see!</q> said the Queen, who had meanwhile been
+examining the roses. <q>Off with their heads!</q> and the
+procession moved on, three of the soldiers remaining behind to
+execute the unfortunate gardeners, who ran to Alice for
+protection. </p>
+
+<p> <q>You shan't be beheaded!</q> said Alice, and she put them
+into a large flower-pot that stood near. The three soldiers
+wandered about for a minute or two, looking for them, and then
+quietly marched off after the others. </p>
+
+<p> <q>Are their heads off?</q> shouted the Queen. </p>
+
+<p> <q>Their heads are gone, if it please your Majesty!</q> the
+soldiers shouted in reply. </p>
+
+<p> <q>That's right!</q> shouted the Queen. <q>Can you play
+croquet?</q> </p>
+
+<p> The soldiers were silent, and looked at Alice, as the
+question was evidently meant for her. </p>
+
+<p> <q>Yes!</q> shouted Alice. </p>
+
+<p> <q>Come on, then!</q> roared the Queen, and Alice joined the
+procession, wondering very much what would happen next. </p>
+
+<p> <q>It's&nbsp;&mdash; it's a very fine day!</q> said a timid voice
+at her side. She was walking by the White Rabbit, who was peeping
+anxiously into her face. </p>
+
+<p> <q>Very,</q> said Alice: <q>&mdash; where's the Duchess?</q>
+</p>
+
+<p> <q>Hush! Hush!</q> said the Rabbit in a low, hurried tone. He
+looked anxiously over his shoulder as he spoke, and then raised
+himself upon tiptoe, put his mouth close to her ear, and
+whispered <q>She's under sentence of execution.</q> </p>
+
+<p> <q>What for?</q> said Alice. </p>
+
+<p> <q>Did you say <q>What a pity!</q>?</q> the Rabbit asked.
+</p>
+
+<p> <q>No, I didn't,</q> said Alice: <q>I don't think it's at all
+a pity. I said <q>What for?</q></q> </p>
+
+<p> <q>She boxed the Queen's ears&nbsp;&mdash;</q> the Rabbit
+began. Alice gave a little scream of laughter. <q>Oh, hush!</q>
+the Rabbit whispered in a frightened tone. <q>The Queen will hear
+you! You see, she came rather late, and the Queen
+said&nbsp;&mdash;</q> </p>
+
+<p> <q>Get to your places!</q> shouted the Queen in a voice of
+thunder, and people began running about in all directions,
+tumbling up against each other; however, they got settled down in
+a minute or two, and the game began. Alice thought she had never
+seen such a curious croquet-ground in her life; it was all ridges
+and furrows; the balls were live hedgehogs, the mallets live
+flamingoes, and the soldiers had to double themselves up and to
+stand on their hands and feet, to make the arches. </p>
+
+<p> The chief difficulty Alice found at first was in managing her
+flamingo: she succeeded in getting its body tucked away,
+comfortably enough, under her arm, with its legs hanging down,
+but generally, just as she had got its neck nicely straightened
+out, and was going to give the hedgehog a blow with its head, it
+<emph>would</emph> twist itself round and look up in her face,
+with such a puzzled expression that she could not help bursting
+out laughing: and when she had got its head down, and was going
+to begin again, it was very provoking to find that the hedgehog
+had unrolled itself, and was in the act of crawling away: besides
+all this, there was generally a ridge or furrow in the way
+wherever she wanted to send the hedgehog to, and, as the
+doubled-up soldiers were always getting up and walking off to
+other parts of the ground, Alice soon came to the conclusion that
+it was a very difficult game indeed. </p>
+
+
+<figure url="images/alice30.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Alice trying to play croquet with flamingo and hedgehog.</figDesc>
+</figure>
+
+
+<p> The players all played at once without waiting for turns,
+quarrelling all the while, and fighting for the hedgehogs; and in
+a very short time the Queen was in a furious passion, and went
+stamping about, and shouting <q>Off with his head!</q> or <q>Off
+with her head!</q> about once in a minute. </p>
+
+<p> Alice began to feel very uneasy: to be sure, she had not as
+yet had any dispute with the Queen, but she knew that it might
+happen any minute, <q>and then,</q> thought she, <q>what would
+become of me? They're dreadfully fond of beheading people here;
+the great wonder is, that there's any one left alive!</q> </p>
+
+<p> She was looking about for some way of escape, and wondering
+whether she could get away without being seen, when she noticed a
+curious appearance in the air: it puzzled her very much at first,
+but, after watching it a minute or two, she made it out to be a
+grin, and she said to herself <q>It's the Cheshire Cat: now I
+shall have somebody to talk to.</q> </p>
+
+<p> <q>How are you getting on?</q> said the Cat, as soon as there
+was mouth enough for it to speak with. </p>
+
+<p> Alice waited till the eyes appeared, and then nodded. <q>It's
+no use speaking to it,</q> she thought, <q>till its ears have
+come, or at least one of them.</q> In another minute the whole
+head appeared, and then Alice put down her flamingo, and began an
+account of the game, feeling very glad she had someone to listen
+to her. The Cat seemed to think that there was enough of it now
+in sight, and no more of it appeared. </p>
+
+<p> <q>I don't think they play at all fairly,</q> Alice began, in
+rather a complaining tone, <q>and they all quarrel so dreadfully
+one can't hear oneself speak&nbsp;&mdash; and they don't seem to have
+any rules in particular; at least, if there are, nobody attends
+to them&nbsp;&mdash; and you've no idea how confusing it is all the
+things being alive; for instance, there's the arch I've got to go
+through next walking about at the other end of the ground&nbsp;&mdash;
+and I should have croqueted the Queen's hedgehog just now, only
+it ran away when it saw mine coming!</q> </p>
+
+<p> <q>How do you like the Queen?</q> said the Cat in a low
+voice. </p>
+
+<p> <q>Not at all,</q> said Alice: <q>she's so
+extremely&nbsp;&mdash;</q> Just then she noticed that the Queen
+was close behind her, listening: so she went on, <q>&mdash;
+likely to win, that it's hardly worth while finishing the
+game.</q> </p>
+
+<p> The Queen smiled and passed on. </p>
+
+<p> <q>Who <emph>are</emph> you talking to?</q> said the King,
+going up to Alice, and looking at the Cat's head with great
+curiosity. </p>
+
+<p> <q>It's a friend of mine&nbsp;&mdash; a Cheshire Cat,</q> said
+Alice: <q>allow me to introduce it.</q> </p>
+
+<p> <q>I don't like the look of it at all,</q> said the King:
+<q>however, it may kiss my hand if it likes.</q> </p>
+
+<p> <q>I'd rather not,</q> the Cat remarked. </p>
+
+<p> <q>Don't be impertinent,</q> said the King, <q>and don't look
+at me like that!</q> He got behind Alice as he spoke. </p>
+
+<p> <q>A cat may look at a king,</q> said Alice. <q>I've read
+that in some book, but I don't remember where.</q> </p>
+
+<p> <q>Well, it must be removed,</q> said the King very
+decidedly, and he called the Queen, who was passing at the
+moment, <q>My dear! I wish you would have this cat removed!</q>
+</p>
+
+<p> The Queen had only one way of settling all difficulties,
+great or small. <q>Off with his head!</q> she said, without even
+looking round. </p>
+
+<p> <q>I'll fetch the executioner myself,</q> said the King
+eagerly, and he hurried off. </p>
+
+<p> Alice thought she might as well go back, and see how the game
+was going on, as she heard the Queen's voice in the distance,
+screaming with passion. She had already heard her sentence three
+of the players to be executed for having missed their turns, and
+she did not like the look of things at all, as the game was in
+such confusion that she never knew whether it was her turn or
+not. So she went in search of her hedgehog. </p>
+
+<p> The hedgehog was engaged in a fight with another hedgehog,
+which seemed to Alice an excellent opportunity for croqueting one
+of them with the other: the only difficulty was, that her
+flamingo was gone across to the other side of the garden, where
+Alice could see it trying in a helpless sort of way to fly up
+into a tree. </p>
+
+<p> By the time she had caught the flamingo and brought it back,
+the fight was over, and both the hedgehogs were out of sight:
+<q>but it doesn't matter much,</q> thought Alice, <q>as all the
+arches are gone from this side of the ground.</q> So she tucked
+it away under her arm, that it might not escape again, and went
+back for a little more conversation with her friend. </p>
+
+<p> When she got back to the Cheshire Cat, she was surprised to
+find quite a large crowd collected round it: there was a dispute
+going on between the executioner, the King, and the Queen, who
+were all talking at once, while all the rest were quite silent,
+and looked very uncomfortable. </p>
+
+<p> The moment Alice appeared, she was appealed to by all three
+to settle the question, and they repeated their arguments to her,
+though, as they all spoke at once, she found it very hard indeed
+to make out exactly what they said. </p>
+
+<p> The executioner's argument was, that you couldn't cut off a
+head unless there was a body to cut it off from: that he had
+never had to do such a thing before, and he wasn't going to begin
+at <emph>his</emph> time of life. </p>
+
+<p> The King's argument was, that anything that had a head could
+be beheaded, and that you weren't to talk nonsense. </p>
+
+
+<figure url="images/alice31.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Executioner argues with King about cutting off Cheshire Cat's head.</figDesc>
+</figure>
+
+
+<p> The Queen's argument was, that if something wasn't done about
+it in less than no time she'd have everybody executed, all round.
+(It was this last remark that had made the whole party look so
+grave and anxious.) </p>
+
+<p> Alice could think of nothing else to say but <q>It belongs to
+the Duchess: you'd better ask <emph>her</emph> about it.</q> </p>
+
+<p> <q>She's in prison,</q> the Queen said to the executioner:
+<q>fetch her here.</q> And the executioner went off like an
+arrow. </p>
+
+<p> The Cat's head began fading away the moment he was gone, and,
+by the time he had come back with the Duchess, it had
+entirely disappeared; so the King and the executioner ran wildly
+up and down looking for it, while the rest of the party went back
+to the game. </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter IX</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>The Mock Turtle's Story</head>
+
+
+<p> <q>You can't think how glad I am to see you again, you dear
+old thing!</q> said the Duchess, as she tucked her arm
+affectionately into Alice's, and they walked off together. </p>
+
+<p> Alice was very glad to find her in such a pleasant temper,
+and thought to herself that perhaps it was only the pepper that
+had made her so savage when they met in the kitchen. </p>
+
+<p> <q>When <emph>I'm</emph> a Duchess,</q> she said to herself,
+(not in a very hopeful tone though), <q>I won't have any pepper
+in my kitchen <emph>at all.</emph> Soup does very well
+without&nbsp;&mdash; Maybe it's always pepper that makes people
+hot-tempered,</q> she went on, very much pleased at having found
+out a new kind of rule, <q>and vinegar that makes them
+sour&nbsp;&mdash; and camomile that makes them
+bitter&nbsp;&mdash; and&nbsp;&mdash; and barley-sugar and such
+things that make children sweet-tempered. I only wish people knew
+that: then they wouldn't be so stingy about it, you
+know&nbsp;&mdash;</q> </p>
+
+<p> She had quite forgotten the Duchess by this time, and was a
+little startled when she heard her voice close to her ear.
+<q>You're thinking about something, my dear, and that makes you
+forget to talk. I can't tell you just now what the moral of that
+is, but I shall remember it in a bit.</q> </p>
+
+<p> <q>Perhaps it hasn't one,</q> Alice ventured to remark. </p>
+
+<p> <q>Tut, tut, child!</q> said the Duchess. <q>Everything's got
+a moral, if only you can find it.</q> And she squeezed herself up
+closer to Alice's side as she spoke. </p>
+
+<p> Alice did not much like keeping so close to her: first,
+because the Duchess was <emph>very</emph> ugly; and secondly,
+because she was exactly the right height to rest her chin upon
+Alice's shoulder, and it was an uncomfortably sharp chin.
+However, she did not like to be rude, so she bore it as well as
+she could. </p>
+
+<p> <q>The game's going on rather better now,</q> she said, by
+way of keeping up the conversation a little. </p>
+
+<p> <q>'Tis so,</q> said the Duchess: <q>and the moral of that
+is&nbsp;&mdash; <q>Oh, 'tis love, 'tis love, that makes the world
+go round!</q></q> </p>
+
+<p> <q>Somebody said,</q> Alice whispered, <q>that it's done by
+everybody minding their own business!</q> </p>
+
+<p> <q>Ah, well! It means much the same thing,</q> said the
+Duchess, digging her sharp little chin into Alice's shoulder as
+she added, <q>and the moral of <emph>that</emph> is&nbsp;&mdash;
+<q>Take care of the sense, and the sounds will take care of
+themselves.</q></q> </p>
+
+<p> <q>How fond she is of finding morals in things!</q> Alice
+thought to herself. </p>
+
+<p> <q>I dare say you're wondering why I don't put my arm round
+your waist,</q> the Duchess said after a pause: <q>the reason is,
+that I'm doubtful about the temper of your flamingo. Shall I try
+the experiment?</q> </p>
+
+
+<figure url="images/alice32.png" rend="w66">
+  <index index="fig" />
+  <figDesc>Alice (with flamingo) chats with the Duchess.</figDesc>
+</figure>
+
+
+<p> <q><emph>He</emph> might bite,</q> Alice cautiously replied,
+not feeling at all anxious to have the experiment tried. </p>
+
+<p> <q>Very true,</q> said the Duchess: <q>flamingoes and mustard
+both bite. And the moral of that is&nbsp;&mdash; <q>Birds of a feather
+flock together.</q></q> </p>
+
+<p> <q>Only mustard isn't a bird,</q> Alice remarked. </p>
+
+<p> <q>Right, as usual,</q> said the Duchess: <q>what a clear way
+you have of putting things!</q> </p>
+
+<p> <q>It's a mineral, I <emph>think,</emph></q> said Alice. </p>
+
+<p> <q>Of course it is,</q> said the Duchess, who seemed ready to
+agree to everything that Alice said; <q>there's a large
+mustard-mine near here. And the moral of that is&nbsp;&mdash; <q>The
+more there is of mine, the less there is of yours.</q></q> </p>
+
+<p> <q>Oh, I know!</q> exclaimed Alice, who had not attended to
+this last remark, <q>it's a vegetable. It doesn't look like one,
+but it is.</q> </p>
+
+<p> <q>I quite agree with you,</q> said the Duchess; <q>and the
+moral of that is&nbsp;&mdash; <q>Be what you would seem to
+be</q>&nbsp;&mdash; or if you'd like it put more
+simply&nbsp;&mdash; <q>Never imagine yourself not to be otherwise
+than what it might appear to others that what you were or might
+have been was not otherwise than what you had been would have
+appeared to them to be otherwise.</q></q> </p>
+
+<p> <q>I think I should understand that better,</q> Alice said
+very politely, <q>if I had it written down: but I can't quite
+follow it as you say it.</q> </p>
+
+<p> <q>That's nothing to what I could say if I chose,</q> the
+Duchess replied, in a pleased tone. </p>
+
+<p> <q>Pray don't trouble yourself to say it any longer than
+that,</q> said Alice. </p>
+
+<p> <q>Oh, don't talk about trouble!</q> said the Duchess. <q>I
+make you a present of everything I've said as yet.</q> </p>
+
+<p> <q>A cheap sort of present!</q> thought Alice. <q>I'm glad
+they don't give birthday presents like that!</q> But she did not
+venture to say it out loud. </p>
+
+<p> <q>Thinking again?</q> the Duchess asked, with another dig of
+her sharp little chin. </p>
+
+<p> <q>I've a right to think,</q> said Alice sharply, for she was
+beginning to feel a little worried. </p>
+
+<p> <q>Just about as much right,</q> said the Duchess, <q>as pigs
+have to fly; and the m&mdash;</q> </p>
+
+<p> But here, to Alice's great surprise, the Duchess's voice died
+away, even in the middle of her favourite word <q>moral,</q> and
+the arm that was linked into hers began to tremble. Alice looked
+up, and there stood the Queen in front of them, with her arms
+folded, frowning like a thunderstorm. </p>
+
+<p> <q>A fine day, your Majesty!</q> the Duchess began in a low,
+weak voice. </p>
+
+<p> <q>Now, I give you fair warning,</q> shouted the Queen,
+stamping on the ground as she spoke; <q>either you or your head
+must be off, and that in about half no time! Take your
+choice!</q> </p>
+
+<p> The Duchess took her choice, and was gone in a moment. </p>
+
+<p> <q>Let's go on with the game,</q> the Queen said to Alice;
+and Alice was too much frightened to say a word, but slowly
+followed her back to the croquet-ground. </p>
+
+<p> The other guests had taken advantage of the Queen's absence,
+and were resting in the shade: however, the moment they saw her,
+they hurried back to the game, the Queen merely remarking that a
+moment's delay would cost them their lives. </p>
+
+<p> All the time they were playing the Queen never left off
+quarrelling with the other players, and shouting <q>Off with his
+head!</q> or <q>Off with her head!</q> Those whom she sentenced
+were taken into custody by the soldiers, who of course had to
+leave off being arches to do this, so that by the end of half an
+hour or so there were no arches left, and all the players, except
+the King, the Queen, and Alice, were in custody and under
+sentence of execution. </p>
+
+<p> Then the Queen left off, quite out of breath, and said to
+Alice, <q>Have you seen the Mock Turtle yet?</q> </p>
+
+<p> <q>No,</q> said Alice. <q>I don't even know what a Mock
+Turtle is.</q> </p>
+
+<p> <q>It's the thing Mock Turtle Soup is made from,</q> said the
+Queen. </p>
+
+<p> <q>I never saw one, or heard of one,</q> said Alice. </p>
+
+<p> <q>Come on, then,</q> said the Queen, <q>and he shall tell
+you his history,</q> </p>
+
+<p> As they walked off together, Alice heard the King say in a
+low voice, to the company generally, <q>You are all pardoned.</q>
+<q>Come, <emph>that's</emph> a good thing!</q> she said to
+herself, for she had felt quite unhappy at the number of
+executions the Queen had ordered. </p>
+
+
+<figure url="images/alice33.png" rend="w100">
+  <index index="fig" />
+  <figDesc>Gryphon asleep.</figDesc>
+</figure>
+
+
+<p> They very soon came upon a Gryphon, lying fast asleep in the
+sun. (<emph>If</emph> you don't know what a Gryphon is, look at
+the picture.) <q>Up, lazy thing!</q> said the Queen, <q>and take
+this young lady to see the Mock Turtle, and to hear his history.
+I must go back and see after some executions I have ordered</q>;
+and she walked off, leaving Alice alone with the Gryphon. Alice
+did not quite like the look of the creature, but on the whole she
+thought it would be quite as safe to stay with it as to go after
+that savage Queen: so she waited. </p>
+
+<p> The Gryphon sat up and rubbed its eyes: then it watched the
+Queen till she was out of sight: then it chuckled. <q>What
+fun!</q> said the Gryphon, half to itself, half to Alice. </p>
+
+<p> <q>What <emph>is</emph> the fun?</q> said Alice. </p>
+
+<p> <q>Why, <emph>she,</emph></q> said the Gryphon. <q>It's all
+her fancy, that: they never executes nobody, you know.
+Come on!</q> </p>
+
+<p> <q>Everybody says <q>come on!</q> here,</q> thought Alice, as
+she went slowly after it: <q>I never was so ordered about in all
+my life, never!</q> </p>
+
+<p> They had not gone far before they saw the Mock Turtle in the
+distance, sitting sad and lonely on a little ledge of rock, and,
+as they came nearer, Alice could hear him sighing as if his heart
+would break. She pitied him deeply. <q>What is his sorrow?</q>
+she asked the Gryphon, and the Gryphon answered, very nearly in
+the same words as before, <q>It's all his fancy, that: he hasn't
+got no sorrow, you know. Come on!</q> </p>
+
+<p> So they went up to the Mock Turtle, who looked at them with
+large eyes full of tears, but said nothing. </p>
+
+<p> <q>This here young lady,</q> said the Gryphon, <q>she wants
+for to know your history, she do.</q> </p>
+
+<p> <q>I'll tell it her,</q> said the Mock Turtle in a deep,
+hollow tone: <q>sit down, both of you, and don't speak a word
+till I've finished.</q> </p>
+
+<p> So they sat down, and nobody spoke for some minutes. Alice
+thought to herself, <q>I don't see how he can <emph>even</emph>
+finish, if he doesn't begin.</q> But she waited patiently. </p>
+
+<p> <q>Once,</q> said the Mock Turtle at last, with a deep sigh,
+<q>I was a real Turtle.</q> </p>
+
+<p> These words were followed by a very long silence, broken only
+by an occasional exclamation of <q>Hjckrrh!</q> from the Gryphon,
+and the constant heavy sobbing of the Mock Turtle. Alice was very
+nearly getting up and saying, <q>Thank you, sir, for your
+interesting story,</q> but she could not help thinking there
+<emph>must</emph> be more to come, so she sat still and said
+nothing. </p>
+
+<p> <q>When we were little,</q> the Mock Turtle went on at last,
+more calmly, though still sobbing a little now and then, <q>we
+went to school in the sea. The master was an old Turtle&nbsp;&mdash;
+we used to call him Tortoise&nbsp;&mdash;</q> </p>
+
+<p> <q>Why did you call him Tortoise, if he wasn't one?</q> Alice
+asked. </p>
+
+<p> <q>We called him Tortoise because he taught us,</q> said the
+Mock Turtle angrily: <q>really you are very dull!</q> </p>
+
+<p> <q>You ought to be ashamed of yourself for asking such a
+simple question,</q> added the Gryphon; and then they both sat
+silent and looked at poor Alice, who felt ready to sink into the
+earth. At last the Gryphon said to the Mock Turtle, <q>Drive on,
+old fellow! Don't be all day about it!</q> and he went on in
+these words: </p>
+
+<p> <q>Yes, we went to school in the sea, though you mayn't
+believe it&nbsp;&mdash;</q> </p>
+
+<p> <q>I never said I didn't!</q> interrupted Alice. </p>
+
+<p> <q>You did,</q> said the Mock Turtle. </p>
+
+<p> <q>Hold your tongue!</q> added the Gryphon, before Alice
+could speak again. The Mock Turtle went on. </p>
+
+<p> <q>We had the best of educations&nbsp;&mdash; in fact, we went to
+school every day&nbsp;&mdash;</q> </p>
+
+<p> <q><emph>I've</emph> been to a day-school, too,</q> said
+Alice; <q>you needn't be so proud as all that.</q> </p>
+
+<p> <q>With extras?</q> asked the Mock Turtle a little anxiously. </p>
+
+<p> <q>Yes,</q> said Alice, <q>we learned French and music.</q>
+</p>
+
+<p> <q>And washing?</q> said the Mock Turtle. </p>
+
+<p> <q>Certainly not!</q> said Alice indignantly. </p>
+
+<p> <q>Ah! then yours wasn't a really good school,</q> said the
+Mock Turtle in a tone of great relief. <q>Now at
+<emph>ours</emph> they had at the end of the bill, <q>French,
+music, <emph>and washing</emph>&nbsp;&mdash; extra.</q></q> </p>
+
+<p> <q>You couldn't have wanted it much,</q> said Alice;
+<q>living at the bottom of the sea.</q> </p>
+
+<p> <q>I couldn't afford to learn it.</q> said the Mock Turtle
+with a sigh. <q>I only took the regular course.</q> </p>
+
+<p> <q>What was that?</q> inquired Alice. </p>
+
+<p> <q>Reeling and Writhing, of course, to begin with,</q> the
+Mock Turtle replied; <q>and then the different branches of
+Arithmetic&nbsp;&mdash; Ambition, Distraction, Uglification, and
+Derision.</q> </p>
+
+<p> <q>I never heard of <q>Uglification,</q></q> Alice ventured to
+say. <q>What is it?</q> </p>
+
+<p> The Gryphon lifted up both its paws in surprise. <q>What!
+Never heard of uglifying!</q> it exclaimed. <q>You know what to
+beautify is, I suppose?</q> </p>
+
+<p> <q>Yes,</q> said Alice doubtfully: <q>it means&nbsp;&mdash;
+to&nbsp;&mdash; make&nbsp;&mdash; anything&nbsp;&mdash;
+prettier.</q> </p>
+
+<p> <q>Well, then,</q> the Gryphon went on, <q>if you don't know
+what to uglify is, you <emph>are</emph> a simpleton.</q> </p>
+
+<p> Alice did not feel encouraged to ask any more questions about
+it, so she turned to the Mock Turtle, and said <q>What else had
+you to learn?</q> </p>
+
+<p> <q>Well, there was Mystery,</q> the Mock Turtle replied,
+counting off the subjects on his flappers, <q>&mdash; Mystery,
+ancient and modern, with Seaography: then Drawling&nbsp;&mdash; the
+Drawling-master was an old conger-eel, that used to come once a
+week: <emph>he</emph> taught us Drawling, Stretching, and
+Fainting in Coils.</q> </p>
+
+<p> <q>What was <emph>that</emph> like?</q> said Alice. </p>
+
+<p> <q>Well, I can't show it you myself,</q> the Mock Turtle
+said: <q>I'm too stiff. And the Gryphon never learnt it.</q> </p>
+
+<p> <q>Hadn't time,</q> said the Gryphon: <q>I went to the
+Classics master, though. He was an old crab, <emph>he</emph>
+was.</q> </p>
+
+<p> <q>I never went to him,</q> the Mock Turtle said with a sigh:
+<q>he taught Laughing and Grief, they used to say.</q> </p>
+
+<p> <q>So he did, so he did,</q> said the Gryphon, sighing in his
+turn; and both creatures hid their faces in their paws. </p>
+
+<p> <q>And how many hours a day did you do lessons?</q> said
+Alice, in a hurry to change the subject. </p>
+
+<p> <q>Ten hours the first day,</q> said the Mock Turtle: <q>nine
+the next, and so on.</q> </p>
+
+<p> <q>What a curious plan!</q> exclaimed Alice. </p>
+
+<p> <q>That's the reason they're called lessons,</q> the Gryphon
+remarked: <q>because they lessen from day to day.</q> </p>
+
+<p> This was quite a new idea to Alice, and she thought it over a
+little before she made her next remark. <q>Then the eleventh day
+must have been a holiday?</q> </p>
+
+<p> <q>Of course it was,</q> said the Mock Turtle. </p>
+
+<p> <q>And how did you manage on the twelfth?</q> Alice went on
+eagerly. </p>
+
+<p> <q>That's enough about lessons,</q> the Gryphon interrupted
+in a very decided tone: <q>tell her something about the games
+now.</q> </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter X</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>The Lobster Quadrille</head>
+
+
+<p> The Mock Turtle sighed deeply, and drew the back of one
+flapper across his eyes. He looked at Alice, and tried to speak,
+but for a minute or two sobs choked his voice. <q>Same as if he
+had a bone in his throat,</q> said the Gryphon: and it set to
+work shaking him and punching him in the back. At last the Mock
+Turtle recovered his voice, and, with tears running down his
+cheeks, he went on again:&nbsp;&mdash; </p>
+
+<p> <q>You may not have lived much under the sea&nbsp;&mdash;</q>
+(<q>I haven't,</q> said Alice)&nbsp;&mdash; <q>and perhaps you were
+never even introduced to a lobster&nbsp;&mdash;</q> (Alice began to
+say <q>I once tasted&nbsp;&mdash;</q> but checked herself hastily, and
+said <q>No, never</q>) <q>&mdash; so you can have no idea what a
+delightful thing a Lobster Quadrille is!</q> </p>
+
+<p> <q>No, indeed,</q> said Alice. <q>What sort of a dance is
+it?</q> </p>
+
+<p> <q>Why,</q> said the Gryphon, <q>you first form into a line
+along the sea-shore&nbsp;&mdash;</q> </p>
+
+<p> <q>Two lines!</q> cried the Mock Turtle. <q>Seals, turtles,
+salmon, and so on; then, when you've cleared all the jelly-fish
+out of the way&nbsp;&mdash;</q> </p>
+
+<p> <q><emph>That</emph> generally takes some time,</q>
+interrupted the Gryphon. </p>
+
+<p> <q>&mdash; you advance twice&nbsp;&mdash;</q> </p>
+
+<p> <q>Each with a lobster as a partner!</q> cried the Gryphon.
+</p>
+
+<p> <q>Of course,</q> the Mock Turtle said: <q>advance twice, set
+to partners&nbsp;&mdash;</q> </p>
+
+<p> <q>&mdash; change lobsters, and retire in same order,</q>
+continued the Gryphon. </p>
+
+<p> <q>Then, you know,</q> the Mock Turtle went on, <q>you throw
+the&nbsp;&mdash;</q> </p>
+
+<p> <q>The lobsters!</q> shouted the Gryphon, with a bound into
+the air. </p>
+
+<p> <q>&mdash; as far out to sea as you can&nbsp;&mdash;</q> </p>
+
+<p> <q>Swim after them!</q> screamed the Gryphon. </p>
+
+<p> <q>Turn a somersault in the sea!</q> cried the Mock Turtle,
+capering wildly about. </p>
+
+<p> <q>Change lobsters again!</q> yelled the Gryphon at the top
+of its voice. </p>
+
+<p> <q>Back to land again, and that's all the first figure,</q>
+said the Mock Turtle, suddenly dropping his voice; and the two
+creatures, who had been jumping about like mad things all this
+time, sat down again very sadly and quietly, and looked at Alice.
+</p>
+
+<p> <q>It must be a very pretty dance,</q> said Alice timidly.
+</p>
+
+<p> <q>Would you like to see a little of it?</q> said the Mock
+Turtle. </p>
+
+<p> <q>Very much indeed,</q> said Alice. </p>
+
+<p> <q>Come, let's try the first figure!</q> said the Mock Turtle
+to the Gryphon. <q>We can do without lobsters, you know. Which
+shall sing?</q> </p>
+
+<p> <q>Oh, <emph>you</emph> sing,</q> said the Gryphon. <q>I've
+forgotten the words.</q> </p>
+
+
+<figure url="images/alice34.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Mock Turtle and Gryphon singing to Alice.</figDesc>
+</figure>
+
+
+<p> So they began solemnly dancing round and round Alice, every
+now and then treading on her toes when they passed too close, and
+waving their forepaws to mark the time, while the Mock Turtle
+sang this, very slowly and sadly:&nbsp;&mdash; </p>
+
+<q rend="display; margin-right: 0;">
+<lg>
+<l> <q rend="pre"><q>Will you walk a little faster?</q> said a whiting to a snail.</q> </l>
+<l> <q rend="none"><q rend="pre">There's a porpoise close behind us, and he's treading on my tail.</q></q> </l>
+<l> <q rend="none">See how eagerly the lobsters and the turtles all advance!</q> </l>
+<l> <q rend="none">They are waiting on the shingle&nbsp;&mdash; will you come and join the dance?</q> </l>
+</lg>
+<lg>
+<l> &emsp;&emsp;<q rend="none">Will you, won't you, will you, won't you, will you join the dance?</q> </l>
+<l> &emsp;&emsp;<q rend="none">Will you, won't you, will you, won't you, won't you join the dance?</q> </l>
+</lg>
+<lg>
+<l> <q rend="pre"><q rend="pre">You can really have no notion how delightful it will be</q></q> </l>
+<l> <q rend="none"><q rend="post">When they take us up and throw us, with the lobsters, out to  sea!</q></q> </l>
+<l> <q rend="none">But the snail replied <q>Too far, too far!</q> and gave a look  askance&nbsp;&mdash;</q> </l>
+<l> Said he thanked the whiting kindly, but he would not join the  dance. </l>
+</lg>
+<lg>
+<l> &emsp;&emsp;Would not, could not, would not, could not, would not join the dance. </l>
+<l> &emsp;&emsp;Would not, could not, would not, could not, could not join the dance. </l>
+</lg>
+<lg>
+<l> <q rend="pre"><q>What matters it how far we go?</q> his scaly friend replied.</q> </l>
+<l> <q rend="none"><q rend="pre">There is another shore, you know, upon the other side.</q></q> </l>
+<l> <q rend="none">The further off from England the nearer is to France&nbsp;&mdash;</q> </l>
+<l> <q rend="none">Then turn not pale, beloved snail, but come and join the dance.</q> </l>
+</lg>
+<lg>
+<l> &emsp;&emsp;<q rend="none">Will you, won't you, will you, won't you, will you join the dance?</q> </l>
+<l> &emsp;&emsp;<q rend="post"><q rend="post">Will you, won't you, will you, won't you, won't you join the dance?</q></q> </l>
+</lg>
+</q>
+
+
+<figure url="images/alice35.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Mock Turtle and Gryphon demonstrating the Lobster Quadrille to Alice.</figDesc>
+</figure>
+
+
+<p> <q>Thank you, it's a very interesting dance to watch,</q>
+said Alice, feeling very glad that it was over at last: <q>and I
+do so like that curious song about the whiting!</q> </p>
+
+<p> <q>Oh, as to the whiting,</q> said the Mock Turtle,
+<q>they&nbsp;&mdash; you've seen them, of course?</q> </p>
+
+<p> <q>Yes,</q> said Alice, <q>I've often seen them at
+dinn&mdash;</q> she checked herself hastily. </p>
+
+<p> <q>I don't know where Dinn may be,</q> said the Mock Turtle,
+<q>but if you've seen them so often, of course you know what
+they're like.</q> </p>
+
+<p> <q>I believe so,</q> Alice replied thoughtfully. <q>They have
+their tails in their mouths&nbsp;&mdash; and they're all over
+crumbs.</q> </p>
+
+<p> <q>You're wrong about the crumbs,</q> said the Mock Turtle:
+<q>crumbs would all wash off in the sea. But they
+<emph>have</emph> their tails in their mouths; and the reason
+is&nbsp;&mdash;</q> here the Mock Turtle yawned and shut his
+eyes.&nbsp;&mdash; <q>Tell her about the reason and all that,</q>
+he said to the Gryphon. </p>
+
+<p> <q>The reason is,</q> said the Gryphon, <q>that they
+<emph>would</emph> go with the lobsters to the dance. So they got
+thrown out to sea. So they had to fall a long way. So they got
+their tails fast in their mouths. So they couldn't get them out
+again. That's all.</q> </p>
+
+<p> <q>Thank you,</q> said Alice, <q>it's very interesting. I
+never knew so much about a whiting before.</q> </p>
+
+<p> <q>I can tell you more than that, if you like,</q> said the
+Gryphon. <q>Do you know why it's called a whiting?</q> </p>
+
+<p> <q>I never thought about it,</q> said Alice. <q>Why?</q> </p>
+
+<p> <q><emph>It does the boots and shoes.</emph></q> the Gryphon
+replied very solemnly. </p>
+
+<p> Alice was thoroughly puzzled. <q>Does the boots and
+shoes!</q> she repeated in a wondering tone. </p>
+
+<p> <q>Why, what are <emph>your</emph> shoes done with?</q> said
+the Gryphon. <q>I mean, what makes them so shiny?</q> </p>
+
+<p> Alice looked down at them, and considered a little before she
+gave her answer. <q>They're done with blacking, I believe.</q>
+</p>
+
+<p> <q>Boots and shoes under the sea,</q> the Gryphon went on in
+a deep voice, <q>are done with a whiting. Now you know.</q> </p>
+
+<p> <q>And what are they made of?</q> Alice asked in a tone of
+great curiosity. </p>
+
+<p> <q>Soles and eels, of course,</q> the Gryphon replied rather
+impatiently: <q>any shrimp could have told you that.</q> </p>
+
+<p> <q>If I'd been the whiting,</q> said Alice, whose thoughts
+were still running on the song, <q>I'd have said to the porpoise,
+<q>Keep back, please: we don't want <emph>you</emph> with
+us!</q></q> </p>
+
+<p> <q>They were obliged to have him with them,</q> the Mock
+Turtle said: <q>no wise fish would go anywhere without a
+porpoise.</q> </p>
+
+<p> <q>Wouldn't it really?</q> said Alice in a tone of great
+surprise. </p>
+
+<p> <q>Of course not,</q> said the Mock Turtle: <q>why, if a fish
+came to <emph>me</emph>, and told me he was going a journey, I
+should say <q>With what porpoise?</q></q> </p>
+
+<p> <q>Don't you mean <q>purpose</q>?</q> said Alice. </p>
+
+<p> <q>I mean what I say,</q> the Mock Turtle replied in an
+offended tone. And the Gryphon added <q>Come, let's hear some of
+<emph>your</emph> adventures.</q> </p>
+
+<p> <q>I could tell you my adventures&nbsp;&mdash; beginning from this
+morning,</q> said Alice a little timidly: <q>but it's no use
+going back to yesterday, because I was a different person
+then.</q> </p>
+
+<p> <q>Explain all that,</q> said the Mock Turtle. </p>
+
+<p> <q>No, no! The adventures first,</q> said the Gryphon in an
+impatient tone: <q>explanations take such a dreadful time.</q>
+</p>
+
+<p> So Alice began telling them her adventures from the time when
+she first saw the White Rabbit. She was a little nervous about it
+just at first, the two creatures got so close to her, one on each
+side, and opened their eyes and mouths so <emph>very</emph> wide,
+but she gained courage as she went on. Her listeners were
+perfectly quiet till she got to the part about her repeating
+<q><title>You are Old, Father William,</title></q> to the Caterpillar,
+and the words all coming different, and then the Mock Turtle drew
+a long breath, and said <q>That's very curious.</q> </p>
+
+<p> <q>It's all about as curious as it can be,</q> said the
+Gryphon. </p>
+
+<p> <q>It all came different!</q> the Mock Turtle repeated
+thoughtfully. <q>I should like to hear her try and repeat
+something now. Tell her to begin.</q> He looked at the Gryphon as
+if he thought it had some kind of authority over Alice. </p>
+
+<p> <q>Stand up and repeat <q><title>'Tis the Voice of the
+Sluggard,</title></q></q> said the Gryphon. </p>
+
+<p> <q>How the creatures order one about, and make one repeat
+lessons!</q> thought Alice; <q>I might as well be at school at
+once.</q> However, she got up, and began to repeat it, but her
+head was so full of the Lobster Quadrille, that she hardly knew
+what she was saying, and the words came very queer
+indeed:&nbsp;&mdash; </p>
+
+
+<figure url="images/alice36.png" rend="w50">
+  <index index="fig" />
+  <figDesc>Lobster primping before a mirror.</figDesc>
+</figure>
+
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">'Tis the voice of the Lobster; I heard him declare,</q> </l>
+<l> <q rend="none"><q>You have baked me too brown, I must sugar my hair.</q></q> </l>
+<l> <q rend="none">As a duck with its eyelids, so he with his nose</q> </l>
+<l> <q rend="post">Trims his belt and his buttons, and turns out his toes.</q><note place="foot">
+<p>Later editions continued as follows:</p>
+
+<lg rend="margin-left: 4">
+<l> <q rend="pre">When the sands are all dry, he is gay as a lark,</q> </l>
+<l> <q rend="none">And will talk in contemptuous tones of the Shark,</q> </l>
+<l> <q rend="none">But, when the tide rises and sharks are around,</q> </l>
+<l> <q rend="post">His voice has a timid and tremulous sound.</q> </l>
+</lg>
+
+</note> </l>
+</lg>
+
+</q>
+
+<p> <q>That's different from what I used to say when I was a
+child,</q> said the Gryphon. </p>
+
+<p> <q>Well, I never heard it before,</q> said the Mock Turtle;
+<q>but it sounds uncommon nonsense.</q> </p>
+
+<p> Alice said nothing; she had sat down with her face in her
+hands, wondering if anything would <emph>ever</emph> happen in a
+natural way again. </p>
+
+<p> <q>I should like to have it explained,</q> said the Mock
+Turtle. </p>
+
+<p> <q>She can't explain it,</q> said the Gryphon hastily. <q>Go
+on with the next verse.</q> </p>
+
+<p> <q>But about his toes?</q> the Mock Turtle persisted. <q>How
+<emph>could</emph> he turn them out with his nose, you know?</q>
+</p>
+
+<p> <q>It's the first position in dancing.</q> Alice said; but
+was dreadfully puzzled by the whole thing, and longed to change
+the subject. </p>
+
+<p> <q>Go on with the next verse,</q> the Gryphon repeated
+impatiently: <q>it begins <q>I passed by his garden.</q></q> </p>
+
+<p> Alice did not dare to disobey, though she felt sure it would
+all come wrong, and she went on in a trembling voice:&nbsp;&mdash;
+</p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">I passed by his garden, and marked, with one eye,</q> </l>
+<l> <q rend="post">How the Owl and the Panther were sharing a pie&nbsp;&mdash;</q><note place="foot">
+<p>Later editions continued as follows:</p>
+
+<lg rend="margin-left: 4">
+<l> <q rend="pre">The Panther took pie-crust, and gravy, and meat,</q> </l>
+<l> <q rend="none">While the Owl had the dish as its share of the treat.</q> </l>
+<l> <q rend="none">When the pie was all finished, the Owl, as a boon,</q> </l>
+<l> <q rend="none">Was kindly permitted to pocket the spoon:</q> </l>
+<l> <q rend="none">While the Panther received knife and fork with a growl,</q> </l>
+<l> <q rend="post">And concluded the banquet &mdash;</q> </l>
+</lg>
+
+</note> </l>
+</lg>
+</q>
+
+<p> <q>What <emph>is</emph> the use of repeating all that
+stuff,</q> the Mock Turtle interrupted, <q>if you don't explain
+it as you go on? It's by far the most confusing thing I ever
+heard!</q> </p>
+
+<p> <q>Yes, I think you'd better leave off,</q> said the Gryphon:
+and Alice was only too glad to do so. </p>
+
+<p> <q>Shall we try another figure of the Lobster Quadrille?</q>
+the Gryphon went on. <q>Or would you like the Mock Turtle to sing
+you a song?</q> </p>
+
+<p> <q>Oh, a song, please, if the Mock Turtle would be so
+kind,</q> Alice replied, so eagerly that the Gryphon said, in a
+rather offended tone, <q>Hm! No accounting for tastes! Sing her
+<q>Turtle Soup,</q> will you, old fellow?</q> </p>
+
+<p> The Mock Turtle sighed deeply, and began, in a voice
+sometimes choked with sobs, to sing this:&nbsp;&mdash; </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">Beautiful Soup, so rich and green,</q> </l>
+<l> Waiting in a hot tureen! </l>
+<l> Who for such dainties would not stoop? </l>
+<l> Soup of the evening, beautiful Soup! </l>
+<l> Soup of the evening, beautiful Soup! </l>
+<l> &emsp;&emsp;Beau&mdash;ootiful Soo&mdash;oop! </l>
+<l> &emsp;&emsp;Beau&mdash;ootiful Soo&mdash;oop! </l>
+<l> Soo&mdash;oop of the e&mdash;e&mdash;evening, </l>
+<l> &emsp;&emsp;Beautiful, beautiful Soup! </l>
+</lg>
+<lg>
+<l> <q rend="pre">Beautiful Soup! Who cares for fish,</q> </l>
+<l> Game, or any other dish? </l>
+<l> Who would not give all else for two </l>
+<l> Pennyworth only of beautiful Soup? </l>
+<l> Pennyworth only of beautiful Soup? </l>
+<l> &emsp;&emsp;Beau&mdash;ootiful Soo&mdash;oop! </l>
+<l> &emsp;&emsp;Beau&mdash;ootiful Soo&mdash;oop! </l>
+<l> Soo&mdash;oop of the e&mdash;e&mdash;evening, </l>
+<l> &emsp;&emsp;<q rend="post">Beautiful, beauti&mdash;FUL SOUP!</q> </l>
+</lg>
+</q>
+
+<p> <q>Chorus again!</q> cried the Gryphon, and the Mock Turtle
+had just begun to repeat it, when a cry of <q>The trial's
+beginning!</q> was heard in the distance. </p>
+
+<p> <q>Come on!</q> cried the Gryphon, and, taking Alice by the
+hand, it hurried off, without waiting for the end of the song.
+</p>
+
+<p> <q>What trial is it?</q> Alice panted as she ran; but the
+Gryphon only answered <q>Come on!</q> and ran the faster, while
+more and more faintly came, carried on the breeze that followed
+them, the melancholy words:&nbsp;&mdash; </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">Soo&mdash;oop of the e&mdash;e&mdash;evening,</q> </l>
+<l> &emsp;&emsp;<q rend="post">Beautiful, beautiful Soup!</q> </l>
+</lg>
+</q>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter XI</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>Who Stole the Tarts?</head>
+
+
+<p> The King and Queen of Hearts were seated on their throne when
+they arrived, with a great crowd assembled about them&nbsp;&mdash; all
+sorts of little birds and beasts, as well as the whole pack of
+cards: the Knave was standing before them, in chains, with a
+soldier on each side to guard him; and near the King was the
+White Rabbit, with a trumpet in one hand, and a scroll of
+parchment in the other. In the very middle of the court was a
+table, with a large dish of tarts upon it: they looked so good,
+that it made Alice quite hungry to look at them&nbsp;&mdash; <q>I wish
+they'd get the trial done,</q> she thought, <q>and hand round the
+refreshments!</q> But there seemed to be no chance of this, so
+she began looking at everything about her, to pass away the time.
+</p>
+
+
+<figure url="images/alice37.png" rend="w66">
+  <index index="fig" />
+  <figDesc>White Rabbit, dressed as herald, blowing trumpet.</figDesc>
+</figure>
+
+
+<p> Alice had never been in a court of justice before, but she
+had read about them in books, and she was quite pleased to find
+that she knew the name of nearly everything there. <q>That's the
+judge,</q> she said to herself, <q>because of his great wig.</q>
+</p>
+
+<p> The judge, by the way, was the King; and as he wore his crown
+over the wig, (look at the frontispiece if you want to see how he
+did it,) he did not look at all comfortable, and it was certainly
+not becoming. </p>
+
+<p> <q>And that's the jury-box,</q> thought Alice, <q>and those
+twelve creatures,</q> (she was obliged to say <q>creatures,</q>
+you see, because some of them were animals, and some were birds,)
+<q>I suppose they are the jurors.</q> She said this last word two
+or three times over to herself, being rather proud of it: for she
+thought, and rightly too, that very few little girls of her age
+knew the meaning of it at all. However, <q>jury-men</q> would
+have done just as well. </p>
+
+<p> The twelve jurors were all writing very busily on slates.
+<q>What are they doing?</q> Alice whispered to the Gryphon.
+<q>They can't have anything to put down yet, before the trial's
+begun.</q> </p>
+
+<p> <q>They're putting down their names,</q> the Gryphon
+whispered in reply, <q>for fear they should forget them before
+the end of the trial.</q> </p>
+
+<p> <q>Stupid things!</q> Alice began in a loud, indignant voice,
+but she stopped hastily, for the White Rabbit cried out,
+<q>Silence in the court!</q> and the King put on his spectacles
+and looked anxiously round, to make out who was talking. </p>
+
+<p> Alice could see, as well as if she were looking over their
+shoulders, that all the jurors were writing down <q>stupid
+things!</q> on their slates, and she could even make out that one
+of them didn't know how to spell <q>stupid,</q> and that he had
+to ask his neighbour to tell him. <q>A nice muddle their
+slates'll be in before the trial's over!</q> thought Alice. </p>
+
+<p> One of the jurors had a pencil that squeaked. This of course,
+Alice could not stand, and she went round the court and got
+behind him, and very soon found an opportunity of taking it away.
+She did it so quickly that the poor little juror (it was Bill,
+the Lizard) could not make out at all what had become of it; so,
+after hunting all about for it, he was obliged to write with one
+finger for the rest of the day; and this was of very little use,
+as it left no mark on the slate. </p>
+
+<p> <q>Herald, read the accusation!</q> said the King. </p>
+
+<p> On this the White Rabbit blew three blasts on the trumpet,
+and then unrolled the parchment scroll, and read as
+follows:&nbsp;&mdash; </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">The Queen of Hearts, she made some tarts,</q> </l>
+<l> &emsp;&emsp;All on a summer day: </l>
+<l> The Knave of Hearts, he stole those tarts, </l>
+<l> &emsp;&emsp;<q rend="post">And took them quite away!</q> </l>
+</lg>
+</q>
+
+<p> <q>Consider your verdict,</q> the King said to the jury. </p>
+
+<p> <q>Not yet, not yet!</q> the Rabbit hastily interrupted.
+<q>There's a great deal to come before that!</q> </p>
+
+<p> <q>Call the first witness,</q> said the King; and the White
+Rabbit blew three blasts on the trumpet, and called out, <q>First
+witness!</q> </p>
+
+<p> The first witness was the Hatter. He came in with a teacup in
+one hand and a piece of bread-and-butter in the other. <q>I beg
+pardon, your Majesty,</q> he began, <q>for bringing these in: but
+I hadn't quite finished my tea when I was sent for.</q> </p>
+
+
+<figure url="images/alice38.png" rend="w50">
+  <index index="fig" />
+  <figDesc>Mad Hatter arrives hastily in court to testify.</figDesc>
+</figure>
+
+
+<p> <q>You ought to have finished,</q> said the King. <q>When did
+you begin?</q> </p>
+
+<p> The Hatter looked at the March Hare, who had followed him
+into the court, arm-in-arm with the Dormouse. <q>Fourteenth of
+March, I think it was,</q> he said. </p>
+
+<p> <q>Fifteenth,</q> said the March Hare. </p>
+
+<p> <q>Sixteenth,</q> added the Dormouse. </p>
+
+<p> <q>Write that down,</q> the King said to the jury, and the
+jury eagerly wrote down all three dates on their slates, and then
+added them up, and reduced the answer to shillings and pence.
+</p>
+
+<p> <q>Take off your hat,</q> the King said to the Hatter. </p>
+
+<p> <q>It isn't mine,</q> said the Hatter. </p>
+
+<p> <q>Stolen!</q> the King exclaimed, turning to the jury, who
+instantly made a memorandum of the fact. </p>
+
+<p> <q>I keep them to sell,</q> the Hatter added as an
+explanation; <q>I've none of my own. I'm a hatter.</q> </p>
+
+<p> Here the Queen put on her spectacles, and began staring at
+the Hatter, who turned pale and fidgeted. </p>
+
+<p> <q>Give your evidence,</q> said the King; <q>and don't be
+nervous, or I'll have you executed on the spot.</q> </p>
+
+<p> This did not seem to encourage the witness at all: he kept
+shifting from one foot to the other, looking uneasily at the
+Queen, and in his confusion he bit a large piece out of his
+teacup instead of the bread-and-butter. </p>
+
+<p> Just at this moment Alice felt a very curious sensation,
+which puzzled her a good deal until she made out what it was: she
+was beginning to grow larger again, and she thought at first she
+would get up and leave the court; but on second thoughts she
+decided to remain where she was as long as there was room for
+her. </p>
+
+<p> <q>I wish you wouldn't squeeze so.</q> said the Dormouse, who
+was sitting next to her. <q>I can hardly breathe.</q> </p>
+
+<p> <q>I can't help it,</q> said Alice very meekly: <q>I'm
+growing.</q> </p>
+
+<p> <q>You've no right to grow here,</q> said the Dormouse. </p>
+
+<p> <q>Don't talk nonsense,</q> said Alice more boldly: <q>you
+know you're growing too.</q> </p>
+
+<p> <q>Yes, but I grow at a reasonable pace,</q> said the
+Dormouse: <q>not in that ridiculous fashion.</q> And he got up
+very sulkily and crossed over to the other side of the court.
+</p>
+
+<p> All this time the Queen had never left off staring at the
+Hatter, and, just as the Dormouse crossed the court, she said to
+one of the officers of the court, <q>Bring me the list of the
+singers in the last concert!</q> on which the wretched Hatter
+trembled so, that he shook both his shoes off. </p>
+
+<p> <q>Give your evidence,</q> the King repeated angrily, <q>or
+I'll have you executed, whether you're nervous or not.</q> </p>
+
+<p> <q>I'm a poor man, your Majesty,</q> the Hatter began, in a
+trembling voice, <q>&mdash; and I hadn't begun my tea&nbsp;&mdash; not
+above a week or so&nbsp;&mdash; and what with the bread-and-butter
+getting so thin&nbsp;&mdash; and the twinkling of the tea&nbsp;&mdash;</q>
+</p>
+
+<p> <q>The twinkling of the what?</q> said the King. </p>
+
+<p> <q>It began with the tea,</q> the Hatter replied. </p>
+
+<p> <q>Of course twinkling begins with a <hi>T</hi>!</q> said the King
+sharply. <q>Do you take me for a dunce? Go on!</q> </p>
+
+<p> <q>I'm a poor man,</q> the Hatter went on, <q>and most things
+twinkled after that&nbsp;&mdash; only the March Hare said&nbsp;&mdash;</q>
+</p>
+
+<p> <q>I didn't!</q> the March Hare interrupted in a great hurry.
+</p>
+
+<p> <q>You did!</q> said the Hatter. </p>
+
+<p> <q>I deny it!</q> said the March Hare. </p>
+
+<p> <q>He denies it,</q> said the King: <q>leave out that
+part.</q> </p>
+
+<p> <q>Well, at any rate, the Dormouse said&nbsp;&mdash;</q> the
+Hatter went on, looking anxiously round to see if he would deny
+it too: but the Dormouse denied nothing, being fast asleep. </p>
+
+<p> <q>After that,</q> continued the Hatter, <q>I cut some more
+bread-and-butter&nbsp;&mdash;</q> </p>
+
+<p> <q>But what did the Dormouse say?</q> one of the jury asked.
+</p>
+
+<p> <q>That I can't remember,</q> said the Hatter. </p>
+
+<p> <q>You <emph>must</emph> remember,</q> remarked the King,
+<q>or I'll have you executed.</q> </p>
+
+<p> The miserable Hatter dropped his teacup and bread-and-butter,
+and went down on one knee. <q>I'm a poor man, your Majesty,</q>
+he began. </p>
+
+<p> <q>You're a very poor speaker,</q> said the King. </p>
+
+<p> Here one of the guinea-pigs cheered, and was immediately
+suppressed by the officers of the court. (As that is rather a
+hard word, I will just explain to you how it was done. They had a
+large canvas bag, which tied up at the mouth with strings: into
+this they slipped the guinea-pig, head first, and then sat upon
+it.) </p>
+
+<p> <q>I'm glad I've seen that done,</q> thought Alice. <q>I've
+so often read in the newspapers, at the end of trials, <q>There
+was some attempts at applause, which was immediately suppressed
+by the officers of the court,</q> and I never understood what it
+meant till now.</q> </p>
+
+<p> <q>If that's all you know about it, you may stand down,</q>
+continued the King. </p>
+
+<p> <q>I can't go no lower,</q> said the Hatter: <q>I'm on the
+floor, as it is.</q> </p>
+
+<p> <q>Then you may <emph>sit</emph> down,</q> the King replied.
+</p>
+
+<p> Here the other guinea-pig cheered, and was suppressed. </p>
+
+<p> <q>Come, that finished the guinea-pigs!</q> thought Alice.
+<q>Now we shall get on better.</q> </p>
+
+<p> <q>I'd rather finish my tea,</q> said the Hatter, with an
+anxious look at the Queen, who was reading the list of singers.
+</p>
+
+<p> <q>You may go,</q> said the King, and the Hatter hurriedly
+left the court, without even waiting to put his shoes on. </p>
+
+
+<figure url="images/alice39.png" rend="w66">
+  <index index="fig" />
+  <figDesc>&hellip; and just as hastily leaves.</figDesc>
+</figure>
+
+
+<p> <q>&mdash; and just take his head off outside,</q> the Queen
+added to one of the officers: but the Hatter was out of sight
+before the officer could get to the door. </p>
+
+<p> <q>Call the next witness!</q> said the King. </p>
+
+<p> The next witness was the Duchess's cook. She carried the
+pepper-box in her hand, and Alice guessed who it was, even before
+she got into the court, by the way the people near the door began
+sneezing all at once. </p>
+
+<p> <q>Give your evidence,</q> said the King. </p>
+
+<p> <q>Shan't,</q> said the cook. </p>
+
+<p> The King looked anxiously at the White Rabbit, who said in a
+low voice, <q>Your Majesty must cross-examine <emph>this</emph>
+witness.</q> </p>
+
+<p> <q>Well, if I must, I must,</q> the King said, with a
+melancholy air, and, after folding his arms and frowning at the
+cook till his eyes were nearly out of sight, he said in a deep
+voice, <q>What are tarts made of?</q> </p>
+
+<p> <q>Pepper, mostly,</q> said the cook. </p>
+
+<p> <q>Treacle,</q> said a sleepy voice behind her. </p>
+
+<p> <q>Collar that Dormouse,</q> the Queen shrieked out.
+<q>Behead that Dormouse! Turn that Dormouse out of court!
+Suppress him! Pinch him! Off with his whiskers!</q> </p>
+
+<p> For some minutes the whole court was in confusion, getting
+the Dormouse turned out, and, by the time they had settled down
+again, the cook had disappeared. </p>
+
+<p> <q>Never mind!</q> said the King, with an air of great
+relief. <q>Call the next witness.</q> And he added in an
+undertone to the Queen, <q>Really, my dear, <emph>you</emph> must
+cross-examine the next witness. It quite makes my forehead
+ache!</q> </p>
+
+<p> Alice watched the White Rabbit as he fumbled over the list,
+feeling very curious to see what the next witness would be like,
+<q>&mdash; for they haven't got much evidence
+<emph>yet,</emph></q> she said to herself. Imagine her surprise,
+when the White Rabbit read out, at the top of his shrill little
+voice, the name <q>Alice!</q> </p>
+
+</div>
+
+<div rend="page-break-before: always">
+
+<head type="sub">Chapter XII</head>
+
+<index index="toc" />
+<index index="pdf" />
+<head>Alice's Evidence</head>
+
+
+<p> <q>Here!</q> cried Alice, quite forgetting in the flurry of
+the moment how large she had grown in the last few minutes, and
+she jumped up in such a hurry that she tipped over the jury-box
+with the edge of her skirt, upsetting all the jurymen on to the
+heads of the crowd below, and there they lay sprawling about,
+reminding her very much of a globe of goldfish she had
+accidentally upset the week before. </p>
+
+
+<figure url="images/alice40.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Giant Alice upsets the jury (literally).</figDesc>
+</figure>
+
+
+<p> <q>Oh, I <emph>beg</emph> your pardon!</q> she exclaimed in a
+tone of great dismay, and began picking them up again as quickly
+as she could, for the accident of the goldfish kept running in
+her head, and she had a vague sort of idea that they must be
+collected at once and put back into the jury-box, or they would
+die. </p>
+
+<p> <q>The trial cannot proceed,</q> said the King in a very
+grave voice, <q>until all the jurymen are back in their proper
+places&nbsp;&mdash; <emph>all,</emph></q> he repeated with great
+emphasis, looking hard at Alice as he said do. </p>
+
+<p> Alice looked at the jury-box, and saw that, in her haste, she
+had put the Lizard in head downwards, and the poor little thing
+was waving its tail about in a melancholy way, being quite unable
+to move. She soon got it out again, and put it right; <q>not that
+it signifies much,</q> she said to herself; <q>I should think it
+would be <emph>quite</emph> as much use in the trial one way up
+as the other.</q> </p>
+
+<p> As soon as the jury had a little recovered from the shock of
+being upset, and their slates and pencils had been found and
+handed back to them, they set to work very diligently to write
+out a history of the accident, all except the Lizard, who seemed
+too much overcome to do anything but sit with its mouth open,
+gazing up into the roof of the court. </p>
+
+<p> <q>What do you know about this business?</q> the King said to
+Alice. </p>
+
+<p> <q>Nothing,</q> said Alice. </p>
+
+<p> <q>Nothing <emph>whatever</emph>?</q> persisted the King.
+</p>
+
+<p> <q>Nothing whatever,</q> said Alice. </p>
+
+<p> <q>That's very important,</q> the King said, turning to the
+jury. They were just beginning to write this down on their
+slates, when the White Rabbit interrupted:
+<q><emph>un</emph>important, your Majesty means, of course,</q>
+he said in a very respectful tone, but frowning and making faces
+at him as he spoke. </p>
+
+<p> <q><emph>Un</emph>important, of course, I meant,</q> the King
+hastily said, and went on to himself in an undertone,
+<q>important&nbsp;&mdash; unimportant&nbsp;&mdash; unimportant&nbsp;&mdash;
+important&nbsp;&mdash;</q> as if he were trying which word sounded
+best. </p>
+
+<p> Some of the jury wrote it down <q>important,</q> and some
+<q>unimportant.</q> Alice could see this, as she was near enough to
+look over their slates; <q>but it doesn't matter a bit,</q> she
+thought to herself. </p>
+
+
+<figure url="images/alice41.png" rend="w75">
+  <index index="fig" />
+  <figDesc>King reflecting in court.</figDesc>
+</figure>
+
+
+<p> At this moment the King, who had been for some time busily
+writing in his note-book, cackled out <q>Silence!</q> and read
+out from his book, <q>Rule Forty-two. <emph>All persons more than
+a mile high to leave the court.</emph></q> </p>
+
+<p> Everybody looked at Alice. </p>
+
+<p> <q><emph>I'm</emph> not a mile high,</q> said Alice. </p>
+
+<p> <q>You are,</q> said the King. </p>
+
+<p> <q>Nearly two miles high,</q> added the Queen. </p>
+
+<p> <q>Well, I shan't go, at any rate,</q> said Alice:
+<q>besides, that's not a regular rule: you invented it just
+now.</q> </p>
+
+<p> <q>It's the oldest rule in the book,</q> said the King. </p>
+
+<p> <q>Then it ought to be Number One,</q> said Alice. </p>
+
+<p> The King turned pale, and shut his note-book hastily.
+<q>Consider your verdict,</q> he said to the jury, in a low,
+trembling voice. </p>
+
+<p> <q>There's more evidence to come yet, please your
+Majesty,</q> said the White Rabbit, jumping up in a great hurry;
+<q>this paper has just been picked up.</q> </p>
+
+<p> <q>What's in it?</q> said the Queen. </p>
+
+<p> <q>I haven't opened it yet,</q> said the White Rabbit, <q>but
+it seems to be a letter, written by the prisoner to&nbsp;&mdash; to
+somebody.</q> </p>
+
+<p> <q>It must have been that,</q> said the King, <q>unless it
+was written to nobody, which isn't usual, you know.</q> </p>
+
+<p> <q>Who is it directed to?</q> said one of the jurymen. </p>
+
+<p> <q>It isn't directed at all,</q> said the White Rabbit; <q>in
+fact, there's nothing written on the <emph>outside.</emph></q> He
+unfolded the paper as he spoke, and added <q>It isn't a letter,
+after all: it's a set of verses.</q> </p>
+
+<p> <q>Are they in the prisoner's handwriting?</q> asked another
+of the jurymen. </p>
+
+<p> <q>No, they're not,</q> said the White Rabbit, <q>and that's
+the queerest thing about it.</q> (The jury all looked puzzled.)
+</p>
+
+<p> <q>He must have imitated somebody else's hand,</q> said the
+King. (The jury all brightened up again.) </p>
+
+<p> <q>Please your Majesty,</q> said the Knave, <q>I didn't write
+it, and they can't prove I did: there's no name signed at the
+end.</q> </p>
+
+<p> <q>If you didn't sign it,</q> said the King, <q>that only
+makes the matter worse. You <emph>must</emph> have meant some
+mischief, or else you'd have signed your name like an honest
+man.</q> </p>
+
+<p> There was a general clapping of hands at this: it was the
+first really clever thing the King had said that day. </p>
+
+<p> <q>That <emph>proves</emph> his guilt,</q> said the Queen.
+</p>
+
+<p> <q>It proves nothing of the sort!</q> said Alice. <q>Why, you
+don't even know what they're about!</q> </p>
+
+<p> <q>Read them,</q> said the King. </p>
+
+<p> The White Rabbit put on his spectacles. <q>Where shall I
+begin, please your Majesty?</q> he asked. </p>
+
+<p> <q>Begin at the beginning,</q> the King said gravely, <q>and
+go on till you come to the end: then stop.</q> </p>
+
+<p> These were the verses the White Rabbit read:&nbsp;&mdash; </p>
+
+<q rend="display">
+<lg>
+<l> <q rend="pre">They told me you had been to her,</q> </l>
+<l> &emsp;&emsp;And mentioned me to him: </l>
+<l> She gave me a good character, </l>
+<l> &emsp;&emsp;But said I could not swim. </l>
+</lg>
+<lg>
+<l> He sent them word I had not gone </l>
+<l> &emsp;&emsp;(We know it to be true): </l>
+<l> If she should push the matter on, </l>
+<l> &emsp;&emsp;What would become of you? </l>
+</lg>
+<lg>
+<l> I gave her one, they gave him two, </l>
+<l> &emsp;&emsp;You gave us three or more; </l>
+<l> They all returned from him to you, </l>
+<l> &emsp;&emsp;Though they were mine before. </l>
+</lg>
+<lg>
+<l> If I or she should chance to be </l>
+<l> &emsp;&emsp;Involved in this affair, </l>
+<l> He trusts to you to set them free, </l>
+<l> &emsp;&emsp;Exactly as we were. </l>
+</lg>
+<lg>
+<l> My notion was that you had been </l>
+<l> &emsp;&emsp;(Before she had this fit) </l>
+<l> An obstacle that came between </l>
+<l> &emsp;&emsp;Him, and ourselves, and it. </l>
+</lg>
+<lg>
+<l> Don't let him know she liked them best, </l>
+<l> &emsp;&emsp;For this must ever be </l>
+<l> A secret, kept from all the rest, </l>
+<l> &emsp;&emsp;<q rend="post">Between yourself and me.</q> </l>
+</lg>
+</q>
+
+<p> <q>That's the most important piece of evidence we've heard
+yet,</q> said the King, rubbing his hands; <q>so now let the
+jury&nbsp;&mdash;</q> </p>
+
+<p> <q>If any one of them can explain it,</q> said Alice, (she
+had grown so large in the last few minutes that she wasn't a bit
+afraid of interrupting him,) <q>I'll give him sixpence.
+<emph>I</emph> don't believe there's an atom of meaning in
+it.</q> </p>
+
+<p> The jury all wrote down on their slates, <q><emph>She</emph>
+doesn't believe there's an atom of meaning in it,</q> but none of
+them attempted to explain the paper. </p>
+
+<p> <q>If there's no meaning in it,</q> said the King, <q>that
+saves a world of trouble, you know, as we needn't try to find
+any. And yet I don't know,</q> he went on, spreading out the
+verses on his knee, and looking at them with one eye; <q>I seem
+to see some meaning in them, after all. <q>&mdash; <emph>Said I
+could not swim</emph>&nbsp;&mdash;</q> you can't swim, can you?</q> he
+added, turning to the Knave. </p>
+
+<p> The Knave shook his head sadly. <q>Do I look like it?</q> he
+said. (Which he certainly did <emph>not</emph>, being made
+entirely of cardboard.) </p>
+
+<p> <q>All right, so far,</q> said the King, and he went on
+muttering over the verses to himself: <q><q><emph>We know it to
+be true&nbsp;&mdash;</emph></q> that's the jury, of course&nbsp;&mdash;
+<q><emph>I gave her one, they gave him
+two&nbsp;&mdash;</emph></q> why, that must be what he did with
+the tarts, you know&nbsp;&mdash;</q> </p>
+
+<p> <q>But, it goes on <q><emph>They all returned from him to
+you,</emph></q></q> said Alice. </p>
+
+<p> <q>Why, there they are!</q> said the King triumphantly,
+pointing to the tarts on the table. <q>Nothing can be clearer
+than <emph>that</emph>. Then again&nbsp;&mdash; <q><emph>Before she
+had this fit&nbsp;&mdash;</emph></q> you never had fits, my dear, I
+think?</q> he said to the Queen. </p>
+
+
+<figure url="images/alice01.png" rend="w75">
+  <index index="fig" />
+  <figDesc>King and Queen inspecting tart in courtroom.</figDesc>
+</figure>
+
+
+<p> <q>Never!</q> said the Queen furiously, throwing an inkstand
+at the Lizard as she spoke. (The unfortunate little Bill had left
+off writing on his slate with one finger, as he found it made no
+mark; but he now hastily began again, using the ink, that was
+trickling down his face, as long as it lasted.) </p>
+
+<p> <q>Then the words don't <emph>fit</emph> you,</q> said the
+King, looking round the court with a smile. There was a dead
+silence. </p>
+
+<p> <q>It's a pun!</q> the King added in an offended tone, and
+everybody laughed, <q>Let the jury consider their verdict,</q>
+the King said, for about the twentieth time that day. </p>
+
+<p> <q>No, no!</q> said the Queen. <q>Sentence first&nbsp;&mdash;
+verdict afterwards.</q> </p>
+
+<p> <q>Stuff and nonsense!</q> said Alice loudly. <q>The idea of
+having the sentence first!</q> </p>
+
+<p> <q>Hold your tongue!</q> said the Queen, turning purple. </p>
+
+<p> <q>I won't!</q> said Alice. </p>
+
+<p> <q>Off with her head!</q> the Queen shouted at the top of her
+voice. Nobody moved. </p>
+
+<p> <q>Who cares for you?</q> said Alice, (she had grown to her
+full size by this time.) <q>You're nothing but a pack of
+cards!</q> </p>
+
+
+<figure url="images/alice42.png" rend="w75">
+  <index index="fig" />
+  <figDesc>Alice saying: <q>You're nothing but a pack of cards!</q></figDesc>
+</figure>
+
+
+<p> At this the whole pack rose up into the air, and came flying
+down upon her: she gave a little scream, half of fright and half
+of anger, and tried to beat them off, and found herself lying on
+the bank, with her head in the lap of her sister, who was gently
+brushing away some dead leaves that had fluttered down from the
+trees upon her face. </p>
+
+<p> <q>Wake up, Alice dear!</q> said her sister; <q>Why, what a
+long sleep you've had!</q> </p>
+
+<p> <q>Oh, I've had such a curious dream!</q> said Alice, and she
+told her sister, as well as she could remember them, all these
+strange Adventures of hers that you have just been reading about;
+and when she had finished, her sister kissed her, and said, <q>It
+<emph>was</emph> a curious dream, dear, certainly: but now run in
+to your tea; it's getting late.</q> So Alice got up and ran off,
+thinking while she ran, as well she might, what a wonderful dream
+it had been. </p>
+
+<p> But her sister sat still just as she left her, leaning her
+head on her hand, watching the setting sun, and thinking of
+little Alice and all her wonderful Adventures, till she too began
+dreaming after a fashion, and this was her dream:&nbsp;&mdash; </p>
+
+<p> First, she dreamed of little Alice herself, and once again
+the tiny hands were clasped upon her knee, and the bright eager
+eyes were looking up into hers&nbsp;&mdash; she could hear the very
+tones of her voice, and see that queer little toss of her head to
+keep back the wandering hair that <emph>would</emph> always get
+into her eyes&nbsp;&mdash; and still as she listened, or seemed to
+listen, the whole place around her became alive the strange
+creatures of her little sister's dream. </p>
+
+<p> The long grass rustled at her feet as the White Rabbit
+hurried by&nbsp;&mdash; the frightened Mouse splashed his way through
+the neighbouring pool&nbsp;&mdash; she could hear the rattle of the
+teacups as the March Hare and his friends shared their
+never-ending meal, and the shrill voice of the Queen ordering off
+her unfortunate guests to execution&nbsp;&mdash; once more the
+pig-baby was sneezing on the Duchess's knee, while plates and
+dishes crashed around it&nbsp;&mdash; once more the shriek of the
+Gryphon, the squeaking of the Lizard's slate-pencil, and the
+choking of the suppressed guinea-pigs, filled the air, mixed up
+with the distant sobs of the miserable Mock Turtle. </p>
+
+<p> So she sat on, with closed eyes, and half believed herself in
+Wonderland, though she knew she had but to open them again, and
+all would change to dull reality&nbsp;&mdash; the grass would be
+only rustling in the wind, and the pool rippling to the waving of
+the reeds&nbsp;&mdash; the rattling teacups would change to
+tinkling sheep-bells, and the Queen's shrill cries to the voice
+of the shepherd boy&nbsp;&mdash; and the sneeze of the baby, the
+shriek of the Gryphon, and all the other queer noises, would
+change (she knew) to the confused clamour of the busy
+farm-yard&nbsp;&mdash; while the lowing of the cattle in the
+distance would take the place of the Mock Turtle's heavy sobs.
+</p>
+
+<p> Lastly, she pictured to herself how this same little sister
+of hers would, in the after-time, be herself a grown woman; and
+how she would keep, through all her riper years, the simple and
+loving heart of her childhood: and how she would gather about her
+other little children, and make <emph>their</emph> eyes bright
+and eager with many a strange tale, perhaps even with the dream
+of Wonderland of long ago: and how she would feel with all their
+simple sorrows, and find a pleasure in all their simple joys,
+remembering her own child-life, and the happy summer days. </p>
+
+</div>
+
+<div rend="text-align: center">
+
+<p> THE END </p>
+
+</div>
+
+</body>
+
+  <back rend="page-break-before: right">
+    <div id="footnotes">
+      <index index="toc" />
+      <index index="pdf" />
+      <head>Footnotes</head>
+      <divGen type="footnotes"/>
+    </div>
+
+    <div rend="page-break-before: right">
+      <divGen type="pgfooter" />
+    </div>
+
+  </back>
+</text>
+
+</TEI.2>
+
+<!-- Parameters for the Emacs editor -->
+<!-- Local Variables: -->
+<!-- mode:nxml -->
+<!-- coding:iso-8859-1-unix -->
+<!-- End: -->
+
+<!-- Parameters for the Ispell spell-checker -->
+<!-- Local IspellDict: *** -->
+<!-- Local IspellPersDict: *** -->

@@ -1,0 +1,9 @@
+res 240
+hor 24
+vert 40
+unitwidth 10
+sizes 10 0
+fonts 1 R
+fontset - R 0100..FFFF
+tcommand
+postpro grotty

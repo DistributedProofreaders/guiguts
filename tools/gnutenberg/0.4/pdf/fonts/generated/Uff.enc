@@ -1,0 +1,98 @@
+/UffEncoding [
+
+% ff00
+/uniff00 /exclammonospace /quotedblmonospace /numbersignmonospace 
+/dollarmonospace /percentmonospace /ampersandmonospace /quotesinglemonospace 
+/parenleftmonospace /parenrightmonospace /asteriskmonospace /plusmonospace 
+/commamonospace /hyphenmonospace /periodmonospace /slashmonospace 
+
+% ff10
+/zeromonospace /onemonospace /twomonospace /threemonospace 
+/fourmonospace /fivemonospace /sixmonospace /sevenmonospace 
+/eightmonospace /ninemonospace /colonmonospace /semicolonmonospace 
+/lessmonospace /equalmonospace /greatermonospace /questionmonospace 
+
+% ff20
+/atmonospace /Amonospace /Bmonospace /Cmonospace 
+/Dmonospace /Emonospace /Fmonospace /Gmonospace 
+/Hmonospace /Imonospace /Jmonospace /Kmonospace 
+/Lmonospace /Mmonospace /Nmonospace /Omonospace 
+
+% ff30
+/Pmonospace /Qmonospace /Rmonospace /Smonospace 
+/Tmonospace /Umonospace /Vmonospace /Wmonospace 
+/Xmonospace /Ymonospace /Zmonospace /bracketleftmonospace 
+/backslashmonospace /bracketrightmonospace /asciicircummonospace /underscoremonospace 
+
+% ff40
+/gravemonospace /amonospace /bmonospace /cmonospace 
+/dmonospace /emonospace /fmonospace /gmonospace 
+/hmonospace /imonospace /jmonospace /kmonospace 
+/lmonospace /mmonospace /nmonospace /omonospace 
+
+% ff50
+/pmonospace /qmonospace /rmonospace /smonospace 
+/tmonospace /umonospace /vmonospace /wmonospace 
+/xmonospace /ymonospace /zmonospace /braceleftmonospace 
+/barmonospace /bracerightmonospace /asciitildemonospace /uniff5f 
+
+% ff60
+/uniff60 /periodhalfwidth /cornerbracketlefthalfwidth /cornerbracketrighthalfwidth 
+/ideographiccommaleft /middledotkatakanahalfwidth /wokatakanahalfwidth /asmallkatakanahalfwidth 
+/ismallkatakanahalfwidth /usmallkatakanahalfwidth /esmallkatakanahalfwidth /osmallkatakanahalfwidth 
+/yasmallkatakanahalfwidth /yusmallkatakanahalfwidth /yosmallkatakanahalfwidth /tusmallkatakanahalfwidth 
+
+% ff70
+/katahiraprolongmarkhalfwidth /akatakanahalfwidth /ikatakanahalfwidth /ukatakanahalfwidth 
+/ekatakanahalfwidth /okatakanahalfwidth /kakatakanahalfwidth /kikatakanahalfwidth 
+/kukatakanahalfwidth /kekatakanahalfwidth /kokatakanahalfwidth /sakatakanahalfwidth 
+/sikatakanahalfwidth /sukatakanahalfwidth /sekatakanahalfwidth /sokatakanahalfwidth 
+
+% ff80
+/takatakanahalfwidth /tikatakanahalfwidth /tukatakanahalfwidth /tekatakanahalfwidth 
+/tokatakanahalfwidth /nakatakanahalfwidth /nikatakanahalfwidth /nukatakanahalfwidth 
+/nekatakanahalfwidth /nokatakanahalfwidth /hakatakanahalfwidth /hikatakanahalfwidth 
+/hukatakanahalfwidth /hekatakanahalfwidth /hokatakanahalfwidth /makatakanahalfwidth 
+
+% ff90
+/mikatakanahalfwidth /mukatakanahalfwidth /mekatakanahalfwidth /mokatakanahalfwidth 
+/yakatakanahalfwidth /yukatakanahalfwidth /yokatakanahalfwidth /rakatakanahalfwidth 
+/rikatakanahalfwidth /rukatakanahalfwidth /rekatakanahalfwidth /rokatakanahalfwidth 
+/wakatakanahalfwidth /nkatakanahalfwidth /voicedmarkkanahalfwidth /semivoicedmarkkanahalfwidth 
+
+% ffa0
+/uniffa0 /uniffa1 /uniffa2 /uniffa3 
+/uniffa4 /uniffa5 /uniffa6 /uniffa7 
+/uniffa8 /uniffa9 /uniffaa /uniffab 
+/uniffac /uniffad /uniffae /uniffaf 
+
+% ffb0
+/uniffb0 /uniffb1 /uniffb2 /uniffb3 
+/uniffb4 /uniffb5 /uniffb6 /uniffb7 
+/uniffb8 /uniffb9 /uniffba /uniffbb 
+/uniffbc /uniffbd /uniffbe /uniffbf 
+
+% ffc0
+/uniffc0 /uniffc1 /uniffc2 /uniffc3 
+/uniffc4 /uniffc5 /uniffc6 /uniffc7 
+/uniffc8 /uniffc9 /uniffca /uniffcb 
+/uniffcc /uniffcd /uniffce /uniffcf 
+
+% ffd0
+/uniffd0 /uniffd1 /uniffd2 /uniffd3 
+/uniffd4 /uniffd5 /uniffd6 /uniffd7 
+/uniffd8 /uniffd9 /uniffda /uniffdb 
+/uniffdc /uniffdd /uniffde /uniffdf 
+
+% ffe0
+/centmonospace /sterlingmonospace /uniffe2 /macronmonospace 
+/uniffe4 /yenmonospace /wonmonospace /uniffe7 
+/uniffe8 /uniffe9 /uniffea /uniffeb 
+/uniffec /uniffed /uniffee /uniffef 
+
+% fff0
+/unifff0 /unifff1 /unifff2 /unifff3 
+/unifff4 /unifff5 /unifff6 /unifff7 
+/unifff8 /unifff9 /unifffa /unifffb 
+/unifffc /unifffd /unifffe /uniffff 
+] def

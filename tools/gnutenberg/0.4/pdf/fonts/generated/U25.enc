@@ -1,0 +1,98 @@
+/U25Encoding [
+
+% 2500
+/SF100000 /uni2501 /SF110000 /uni2503 
+/uni2504 /uni2505 /uni2506 /uni2507 
+/uni2508 /uni2509 /uni250a /uni250b 
+/SF010000 /uni250d /uni250e /uni250f 
+
+% 2510
+/SF030000 /uni2511 /uni2512 /uni2513 
+/SF020000 /uni2515 /uni2516 /uni2517 
+/SF040000 /uni2519 /uni251a /uni251b 
+/SF080000 /uni251d /uni251e /uni251f 
+
+% 2520
+/uni2520 /uni2521 /uni2522 /uni2523 
+/SF090000 /uni2525 /uni2526 /uni2527 
+/uni2528 /uni2529 /uni252a /uni252b 
+/SF060000 /uni252d /uni252e /uni252f 
+
+% 2530
+/uni2530 /uni2531 /uni2532 /uni2533 
+/SF070000 /uni2535 /uni2536 /uni2537 
+/uni2538 /uni2539 /uni253a /uni253b 
+/SF050000 /uni253d /uni253e /uni253f 
+
+% 2540
+/uni2540 /uni2541 /uni2542 /uni2543 
+/uni2544 /uni2545 /uni2546 /uni2547 
+/uni2548 /uni2549 /uni254a /uni254b 
+/uni254c /uni254d /uni254e /uni254f 
+
+% 2550
+/SF430000 /SF240000 /SF510000 /SF520000 
+/SF390000 /SF220000 /SF210000 /SF250000 
+/SF500000 /SF490000 /SF380000 /SF280000 
+/SF270000 /SF260000 /SF360000 /SF370000 
+
+% 2560
+/SF420000 /SF190000 /SF200000 /SF230000 
+/SF470000 /SF480000 /SF410000 /SF450000 
+/SF460000 /SF400000 /SF540000 /SF530000 
+/SF440000 /uni256d /uni256e /uni256f 
+
+% 2570
+/uni2570 /uni2571 /uni2572 /uni2573 
+/uni2574 /uni2575 /uni2576 /uni2577 
+/uni2578 /uni2579 /uni257a /uni257b 
+/uni257c /uni257d /uni257e /uni257f 
+
+% 2580
+/upblock /uni2581 /uni2582 /uni2583 
+/dnblock /uni2585 /uni2586 /uni2587 
+/block /uni2589 /uni258a /uni258b 
+/lfblock /uni258d /uni258e /uni258f 
+
+% 2590
+/rtblock /shadelight /shademedium /shadedark 
+/uni2594 /uni2595 /uni2596 /uni2597 
+/uni2598 /uni2599 /uni259a /uni259b 
+/uni259c /uni259d /uni259e /uni259f 
+
+% 25a0
+/filledbox /whitesquare /uni25a2 /squarewhitewithsmallblack 
+/squarehorizontalfill /squareverticalfill /squareorthogonalcrosshatchfill /squareupperlefttolowerrightfill 
+/squareupperrighttolowerleftfill /squarediagonalcrosshatchfill /blacksmallsquare /whitesmallsquare 
+/filledrect /uni25ad /uni25ae /uni25af 
+
+% 25b0
+/uni25b0 /uni25b1 /triagup /whiteuppointingtriangle 
+/blackuppointingsmalltriangle /whiteuppointingsmalltriangle /blackrightpointingtriangle /whiterightpointingtriangle 
+/uni25b8 /whiterightpointingsmalltriangle /triagrt /uni25bb 
+/triagdn /whitedownpointingtriangle /uni25be /whitedownpointingsmalltriangle 
+
+% 25c0
+/blackleftpointingtriangle /whiteleftpointingtriangle /uni25c2 /whiteleftpointingsmalltriangle 
+/triaglf /uni25c5 /blackdiamond /whitediamond 
+/whitediamondcontainingblacksmalldiamond /fisheye /lozenge /whitecircle 
+/dottedcircle /uni25cd /bullseye /blackcircle 
+
+% 25d0
+/circlewithlefthalfblack /circlewithrighthalfblack /uni25d2 /uni25d3 
+/uni25d4 /uni25d5 /uni25d6 /uni25d7 
+/invbullet /whitecircleinverse /uni25da /uni25db 
+/uni25dc /uni25dd /uni25de /uni25df 
+
+% 25e0
+/uni25e0 /uni25e1 /blacklowerrighttriangle /blacklowerlefttriangle 
+/blackupperlefttriangle /blackupperrighttriangle /whitebullet /uni25e7 
+/uni25e8 /uni25e9 /uni25ea /uni25eb 
+/uni25ec /uni25ed /uni25ee /largecircle 
+
+% 25f0
+/uni25f0 /uni25f1 /uni25f2 /uni25f3 
+/uni25f4 /uni25f5 /uni25f6 /uni25f7 
+/uni25f8 /uni25f9 /uni25fa /uni25fb 
+/uni25fc /uni25fd /uni25fe /uni25ff 
+] def

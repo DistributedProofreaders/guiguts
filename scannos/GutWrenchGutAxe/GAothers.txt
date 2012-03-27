@@ -1,0 +1,159 @@
+\Auxiliary file GAothers.txt for GutAxe 0.5
+\modified 2 January 2006
+\This is a comment line (starts with a character other than r, s, or w).
+\The 2nd character of each rule is the delimiter between type\error\correction\description,
+\  where type = S for string, R for regular expression, or W for word
+\The description MUST be included.
+
+   SPECIALS FOR PUNCH MAGAZINE
+s_POBD_PODB_Correct spelling
+s_CULCB_CULCH_Correct spelling
+s_PODB</i>._PODB.</i>_Move period inside italics markup (abbr.)
+s_Podb</i>._Podb.</i>_Move period inside italics markup (abbr.)
+s_CULCH</i>._CULCH.</i>_Move period inside italics markup (abbr.)
+s_Culch</i>._Culch.</i>_Move period inside italics markup (abbr.)
+s_HYP</i>._HYP.</i>_Move period inside italics markup (abbr.)
+s_Hyp</i>._Hyp.</i>_Move period inside italics markup (abbr.)
+
+   ASTERISK BETWEEN SPACE AND DASH (two hyphens)
+s_ *--_--_remove * and space
+s_--* _--_remove * and space
+
+   ASTERISK AND HYPHEN
+s_*-_--_remove *
+s_-*_--_remove *
+
+   CLOSE UP SPACE BETWEEN INITIALS
+r_\b([A-Z])\.\s+([A-Z])\._$1.$2._close up space between initials
+
+   MIDDLE DOT IN TIME OF DAY
+r_(\d{1,2})'(\d{1,2})_$1·$2_Middle dot in time of day
+
+\These include southeast, south-eastern, etc.
+r_(o[ru]th)(ea|we)st_$1-$2st_add hyphen
+  \s\thwest\th-west\hyphen
+  \s\theast\th-east\hyphen
+\Includes housekeeper, housekeeping, etc.
+r_\b([hH]ouse)(keep|work)_$1-$2_hyphen
+  \s\ousekeep\ouse-keep\hyphen
+  \s\ousework\ouse-work\hyphen
+r_ee(lect|nter|ntr)_e-e$1_add hyphen
+  \s\eelect\e-elect\hyphen
+  \s\eenter\e-enter\hyphen
+  \s\eentr\e-entr\hyphen
+s\einstate\e-instate\hyphen
+s\imonthly\i-monthly\hyphen
+r_ood(by|night)_ood-$1_add hyphen
+  \s\oodby\ood-by\hyphen
+  \s\oodnight\ood-night\hyphen
+
+    Unusual but correct spelling (used in Punch)
+s\Shakespe\Shakspe\alternate spelling
+s\SHAKESPE\SHAKSPE\alternate spelling
+
+   Four dashes for missing name
+r_(Dr|Fr|Mr|Mrs|Miss|Mlle|Mme|Prof|M|Mons|Sr)\.-{4,}_$1. ----_insert missing space (possibly too many hyphens)
+  \s\Mr.----\Mr. ----\insert missing space
+  \s\Mrs.----\Mrs. ----\insert missing space
+  \s\Miss----\Miss ----\insert missing space
+  \s\Mlle.----\Mlle. ----\insert missing space
+r_(Sir|Lord|Baron|Count|Countess|Prince|Princess|King|Queen)\-{4,}_$1 ----_insert missing space (possibly too many hyphens)
+  \s\Sir----\Sir ----\insert missing space
+  \s\Lord----\Lord ----\insert missing space
+r_\b([A-Z])\-{2,3}([^\-])_$1----$2_four hyphens for missing rest of name
+r_\b([A-Z])\-{5,}_$1----_four hyphens for missing rest of name
+
+    INDENTS FOR POETRY, ETC.
+r_^\s{1,1}([^\s])_  $1_Change a single-space indent into a double
+r_^\s{1,1}([^\s])_$1_Remove a single-space indent
+r_^\s{3,3}([^\s])_  $1_Change a three-space indent into two
+r_^\s{3,3}([^\s])_    $1_Change a three-space indent into four
+r_^\s{5,5}([^\s])_    $1_Change a five-space indent into four
+r_^\s{5,5}([^\s])_      $1_Change a five-space indent into six
+r_^\s{7,7}([^\*\s])_      $1_Change a seven-space indent into six
+r_^\s{7,7}([^\*\s])_        $1_Change a seven-space indent into eight
+r_^\s{9,9}([^\s])_        $1_Change a nine-space indent into eight
+r_^\s{9,9}([^\s])_          $1_Change a nine-space indent into ten
+r_^\s{11,}_          _Reduce a too-long indent into ten spaces
+
+\Three hyphens for dash
+r_([a-zA-Z>\)\.,])---([\(<a-zA-Z])_$1--$2_three hyphens for dash
+r_([^-])---([^-])_$1--$2_three hyphens for dash
+\dash for hyphen
+r_\b([tT]o)--(day|morrow|night)_$1-$2_dash for hyphen
+  \s\to--night\to-night\dash for hyphen
+  \s\to--day\to-day\dash for hyphen
+  \s\to--morrow\to-morrow\dash for hyphen
+r_\b([hH]alf|[dfDF]ull|[aiAI]ll|[aoAO]x|[bB]y|[cC]lose|[cC]ross|[eoEO]ver|[fF]ai{0,1}r|[hH]igh|[lL]ong|[wW]ell|[nsNS]o|[sS]elf|[sS]ingle|[tT]wice|[gG]reat|[aoAO]ft)--([a-zA-Z])_$1-$2_dash for hyphen
+  \s\half--\half-\dash for hyphen
+  \s\full--\full-\dash for hyphen
+r_\b([aA]|[nN]eo|[nN]on|[rR]e|[pP]re|[dhsDHS]emi|[eE]x|[uU]ltra)--([a-zA-Z])_$1-$2_dash for hyphen
+  \s\ re--\ re-\dash for hyphen
+r_\b([dD]ou|[tT]re)ble--([a-zA-Z])_$1ble-$2_dash for hyphen
+r_\B(ly)--([a-zA-Z])_$1-$2_dash for hyphen
+r_([a-z])--(ward|like|side|white|red|blue|green|black|yellow|brown|shop|store|factory)_$1-$2_dash for hyphen
+r_([a-z])-(a|as|for|if|that|the|who)\b_$1--$2_hyphen for dash
+  \r_([a-z])-(a|as|at|by|for|if|in|the|who)\b_$1--$2_hyphen for dash  TOO MANY FALSE POSITIVES!
+s\--eye\-eye\dash for hyphen
+s\--centur\-centur\dash for hyphen
+
+r_([vw]en|[io][rx]|if|ine)ty--(one|two|three|four|five|six|seven|eight|nine)_$1ty-$2_dash for hyphen in number
+ \s\wenty--one\wenty-one\dash for hyphen
+    etc.
+  \s\rty--one\rty-one\dash for hyphen
+    etc.
+
+  Words that used to take hyphens:
+r_\b([tT]o)(day|morrow|night)_$1-$2_hyphen
+  \w\today\to-day\hyphen
+  \w\Today\To-day\hyphen
+  \s\omorrow\o-morrow\hyphen
+  \w\tonight\to-night\hyphen
+  \w\Tonight\To-night\hyphen
+w\midday\mid-day\hyphen
+r_\b([dD]own|[uU]p)(stairs{0,1})\b_$1-$2_hyphen
+  \s\ownstairs\own-stairs\hyphen
+  \w\upstairs\up-stairs\hyphen
+
+  Words that sometimes take hyphens:
+r_\b([bB]all)(rooms{0,1})\b_$1-$2_hyphen
+  \w\ballroom\ball-room\hyphen
+w\bittersweet\bitter-sweet\hyphen
+w\carefree\care-free\hyphen
+w\cheekbone\cheek-bone\hyphen
+s\ommonplace\ommon-place\hyphen
+w\coop\co-op\hyphen
+w\coops\co-ops\hyphen
+s\ountryside\ountry-side\hyphen
+w\daredevil\dare-devil\hyphen
+s\yewitness\ye-witness\hyphen
+w\fireplace\fire-place\hyphen
+w\foxtrot\fox-trot\hyphen
+w\grownup\grown-up\hyphen
+w\halfway\half-way\hyphen
+r_\b([hH]ead)(masters{0,1}|quarters{0,1})\b_$1-$2_hyphen
+  \s\eadmaster\ead-master\hyphen
+  \s\eadquarters\ead-quarters\hyphen
+w\hillside\hill-side\hyphen
+w\hothouse\hot-house\hyphen
+w\keyhole\key-hole\hyphen
+w\latecomer\late-comer\hyphen
+w\marketplace\market-place\hyphen
+r_\b([nN]ew)(borne{0,1}s{0,1}|comers{0,1})\b_$1-$2_hyphen
+  \w\newcomer\new-comer\hyphen
+w\nightgown\night-gown\hyphen
+r_\b([oO]ut)door_$1-door_hyphen
+  \w\outdoor\out-door\hyphen
+  \w\outdoors\out-doors\hyphen
+w\overhand\over-hand\hyphen
+w\sawbones\saw-bones\hyphen
+w\skyline\sky-line\hyphen
+w\tockholder\tock-holder\hyphen
+s\traightforward\traight-forward\hyphen
+w\twopenny\two-penny\hyphen
+w\weekend\week-end\hyphen
+w\wildflower\wild-flower\hyphen
+
+  Possessive of proper name in ALL CAPS: Put "S" after apostrophe in lower-case if not title
+r_([A-Z])'S([^A-Z].*[ac-gj-z])_$1's$2_Set "'S" as lower-case
+r_([ac-gj-z].*[A-Z])'S\b_$1's_Set "'S" as lower-case

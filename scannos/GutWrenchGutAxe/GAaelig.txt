@@ -1,0 +1,103 @@
+\Auxiliary file GAaelig.txt for GutAxe 0.5
+\modified 7 January 2006
+\This is a comment line (starts with a character other than r, s, or w).
+\The 2nd character of each rule is the delimiter between type\error\correction\description,
+\  where type = S for string, R for regular expression, or W for word
+\The description MUST be included.
+\Note that leaving off first & last letters and checking as String
+\  captures capitals, plurals, & variant forms
+
+s\ntipodaean\ntipodæan\ae ligature
+  archaeology, etc.
+s\RCHAEO\RCHÆO\AE ligature
+s\rchaeo\rchæo\ae ligature
+  caesar, caesarean, Caesar, Caesarea, etc.:
+s\CAESAR\CÆSAR\AE ligature
+r_ae(sar|ter)_æ$1_ae ligature
+  \s\aesar\æsar\ae ligature
+    aeternam, caetera, etc.:
+  \s\aeter\æter\ae ligature
+s\yclopaed\yclopæd\ae ligature
+s\ediaeval\ediæval\ae ligature
+r_([cC]uri|ebul|erson|ingu|inuti|[nN]atur|ntenn|ormul)ae_$1æ_ae ligature
+  \r_([cC]uri)ae_$1æ_ae ligature
+    \w\curiae\curiæ\ae ligature
+    \w\Curiae\Curiæ\ae ligature
+  \s\ebulae\ebulæ\ae ligature
+  \s\ersonae\ersonæ\ae ligature
+  \s\inutiae\inutiæ\ae ligature
+  \s\naturae\naturæ\ae ligature
+  \s\ntennae\ntennæ\ae ligature
+  \s\inguae\inguæ\ae ligature
+  \s\ormulae\ormulæ\ae ligature
+s\Glebae\Glebæ\ae ligature
+s\himaer\himær\ae ligature
+s\himærae\himæræ\ae ligature
+r_\b([hH]y)aena_$1æna_ae ligature
+s\raetor\rætor\ae ligature
+s\raeter\ræter\ae ligature
+\
+  Words that often have ligatures:
+r_\bA[eE](gean|GEAN|neid|NEID|neas|NEAS|on|ON|ol|OL|schyl|SCHYL|scula|SCULA|sop|SOP|ter|TER)_Æ$1_AE ligature
+  w\AEgean\Ægean\AE ligature
+  w\Aegean\Ægean\AE ligature
+  r_\bA[eE](ne[ai][ds])_Æ$1_AE ligature
+    \w\AEneid\Æneid\AE ligature
+    \w\Aeneid\Æneid\AE ligature
+    \w\AEneas\Æneas\AE ligature
+    \w\Aeneas\Æneas\AE ligature
+  w\AENEAS\ÆNEAS\AE ligature
+  r_\bA[eE]([oO][nN])_Æ$1_AE ligature
+  r_\bA[eE]([oO][lL])_Æ$1_AE ligature
+    w\Aeolian\Æolian\AE ligature
+    w\AEolian\Æolian\AE ligature
+  r_\bA[eE](schyl|SCHYL)_Æ$1_AE ligature
+    \w\AEschylean\Æschylean\AE ligature
+    \w\Aeschylean\Æschylean\AE ligature
+    \w\AEschylus\Æschylus\AE ligature
+    \w\Aeschylus\Æschylus\AE ligature
+    \w\AESCHYLUS\ÆSCHYLUS\AE ligature
+  r_\bA[eE](scula|SCULA)_Æ$1_AE ligature
+    \w\AEsculapian\Æsculapian\AE ligature
+    \w\Aesculapian\Æsculapian\AE ligature
+    \w\AEsculapius\Æsculapius\AE ligature
+    \w\Aesculapius\Æsculapius\AE ligature
+    \w\AESCULAPIUS\ÆSCULAPIUS\AE ligature
+  r_\bA[eE](sop|SOP)_Æ$1_AE ligature
+    w\AEsop\Æsop\AE ligature
+    w\Aesop\Æsop\AE ligature
+    w\AESOP\ÆSOP\AE ligature
+    w\AEsopian\Æsopian\AE ligature
+    w\Aesopian\Æsopian\AE ligature
+r_\bae(o[nl])_æ$1_ae ligature
+  \w\aeon\æon\ae ligature
+  \w\aeonian\æonian\ae ligature
+  \w\aeons\æons\ae ligature
+  \w\aeolian\æolian\ae ligature
+r_ae(sthe[st]|stiv|ther)_æ$1_ae ligature
+  \s\aesthes\æsthes\ae ligature
+  \s\aesthet\æsthet\ae ligature
+  \r_\baestiv_æstiv_ae ligature
+    \w\aestival\æstival\ae ligature
+  r_\baether_æther_ae ligature
+r_\bA[eE](sthe[st]|STHE[ST]|ther|THER)_Æ$1_AE ligature
+  \s\Aesthet\Æsthet\AE ligature
+  \s\AESTHET\ÆSTHET\AE ligature
+  \r_\bA[eE]ther_Æther_AE ligature
+r_\b([aA]n)aemi_$1æmi_ae ligature
+  w\anaemic\anæmic\ae ligature
+  w\anaemia\anæmia\ae ligature
+r_\b([aA]then|[aA]mphor)ae_$1æ_ae ligature
+  \w\amphorae\amphoræ\ae ligature
+  \w\Amphorae\Amphoræ\ae ligature
+r_\b(ATHE|PERSO)NAE_$1NÆ_AE ligature
+  \s\PERSONAE\PERSONÆ\AE ligature
+r_\b([eE]cclesi)ae_$1æ_ae ligature
+r_([hH]y)aena_$1æna_ae ligature
+r_\bSphaero_Sphæro_ae ligature
+r_\bTaeni_Tæni_ae ligature
+r_\b([tT]enebr)ae_$1æ_ae ligature
+
+   OE Ligatures
+r_poeia\b_p[oe]ia_oe ligature
+r_rhoea\b_rh[oe]a_oe ligature

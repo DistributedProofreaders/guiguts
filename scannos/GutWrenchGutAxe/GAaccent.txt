@@ -1,0 +1,292 @@
+\Auxiliary file GAaccent.txt for GutAxe 0.5
+\modified 7 January 2006
+\This is a comment line (starts with a character other than r, s, or w).
+\The 2nd character of each rule is the delimiter between type\error\correction\description,
+\  where type = S for string, R for regular expression, or W for word
+\The description MUST be included. 
+\words and phrases that often take diacritical marks
+
+r_\b([aA]bb)[eèê]s{0,1}\b_$1é_acute accent on "e"
+r_\b([aA][bg]r)[eèêë]g[eèêë]_$1égé_acute accents on "e"s
+r_\b[aâá]\s+Becket_à Becket_grave accent on "a"
+r_\b([aA])er(o[bdnp]|ial)_$1ër$2_diaeresis on "e"
+  \w\aeroplane\aëroplane\diaeresis on "e"
+  \w\aerial\aërial\diaeresis on "e"
+r_([aA]ga)[cg]ant_$1çant_cedilla on "c"
+r_([aA]gr)[eèêë]men_$1émen_acute accent on "e"
+r_\bA[iî]da\b_Aïda_diaeresis on "i"
+r_\b[aâá]\s+la\b_à la_accent grave in "à la"
+r_\b[aâá]\s+l'_à l'_accent grave in "à l'"
+r_([aA])[l1I]cazar_$1lcázar_acute accent on "a"
+r_([aA]ll)[eèêë][eéèêë]_$1ée_acute accent on "e"
+r_([aA]ng)[eèêë][lI1]ique_$1élique_acute accent on "e"
+r_([aA]per)[cg]u_$1çu_cedilla on "c"
+r_([aA]pp)[eèêë]tit\b_$1étit_acute accent on "e"
+r_([aA]ppliqu)[eèêë]_$1é_acute accent on "e"
+r_([aA]pr)[eéêë]s\b_$1ès_grave accent on "e"
+r_\b[aâá]\s+propos\b_à propos_accent grave on "a"
+r_\b(ar{1,2})et_$1êt_circumflex on "e"
+r_([aA]ttach)[eèêë]\b_$1é_acute accent on "e"
+r_([aA]usl)ander_$1änder_acute accent on "e"
+
+r_\b([bB])[eèêë](arnaise|casse|nitier|ret|ton)_$1é$2_accute accent on "e"
+r_\b([bB]las)[eèêë]_$1é_acute accent on "e"
+r_\b([bB])[eéèë](ch|tis)e_$1ê$2e_circumflex on "e"
+r_([bB]ient)[o6]t_$1ôt_circumflex on "o"
+r_Boh[eéêë]me_Bohème_accent grave on "e"
+r_([bB]o)[iï]te_$1îte_circumflex on "i"
+r_B[oôö][oô]tes_Boötes_diaeresis on "o"
+r_([bBtT])ou(c[lI1]|rr)[eèêë]_$1ou$2é_acute accent on "e"
+r_([bBtT])ou(ch)[eèêë]\b_$1ou$2é_acute accent on "e"
+s\ric-a-brac\ric-à-brac\grave accent
+r_\b([bB]r)(is|och)[eèêë]_$1$2é_acute accent on "e"
+r_([bB]r)u(ck|nnhild)_$1ü$2_umlaut on "u"
+
+r_\bca\b_ça_cedilla on "c"
+r_\b([cC]a)(br|f|nap)[eèëê]_$1$2é_acute accent on "e"
+  \r_([cC]anap)e_$1é_acute accent on "e"
+r_\b([cC])[eèëê][lI1][eéêë]bre_$1élèbre_accents on "e"s
+r_\b([cC])[eèëê]rise_$1érise_acute accent on "e"s
+r_\b([cC]ha)(mbr|mplev|ss)[eèëê]_$1$2é_acute accent on "e"
+r_\b([cC]har\-)a(\-banc)_$1à$2_grave accent on "a"
+r_([cC]h|[gG])[aàá]teau_$1âteau_circumflex on "a"
+r_\b([cC]i[nr])e_$1é_acute accent on "e"
+r_\b([cC]l[ei]ch)[eèëê]_$1é_acute accent on "e"
+r_([cC])lient[eéêë]le_$1lientèle_grave accent on "e"
+r_([cC]ommuniqu)[eèêë]_$1é_acute accent on "e"
+r_([cC]onsomm)[eèêë]_$1é_acute accent on "e"
+s\ooperat\oöperat\diaeresis on 2nd "o"
+r_([cC]om)[eèëê]die_$1édie_acute accent on "e"
+ \cooperate, cooperating, cooperative, etc.
+s\oordinat\oördinat\diaeresis on 2nd "o"
+ \coordinate, coordinating, etc.
+r_([cC]ong)[eèêë]\b_$1é_accent grave on "e"
+r_([cC]ong)[eèêë]([ds])\b_$1é$2_accent grave on "e"
+r_([cC]ornets*)-a-piston_$1-à-piston_accent grave on "a"
+r_([cC])ort[eéêë]ge_$1ortège_accent grave on "e"
+r_([cC])[oö6]te\b_$1ôte_circumflex on "o"
+r_([cC])[oö6]tes\b_$1ôtes_circumflex on "o"
+r_([cC])orvee_$1orvée_acute accent on "e"
+r_([cC]ou[dlp])[eèêë]_$1é_acute accent on "e"
+r_Cou[eèêë]_Coué_acute accent on "e"
+r_\b([cC]r)[eéêë]([mv]|ch)e_$1è$2e_accent grave on "e"
+r_\b([cC]r)[eéèë]pe_$1êpe_circumflex on "e"
+r_\b([cC])rout_$1roût_circumflex on "u"
+r_\b([cC]ura)[cg]([ao][ao])_$1ç$2_cedilla on "c"
+r_\b([cC]uv)[eèëê]_$1é_acute accent on "e"
+
+r_\b([dD]a)[iî]s\b_$1ïs_diaeresis on "i"
+r_\b([dD])[eèêë]b(onn|ouch|ris|ut)_$1éb$2_acute accent on "e"
+r_\b([dD])[eèêë]c(ime|lass|ollet|or)_$1éc$2_acute accent on "e"
+r_\b([dD][eéèêë]c)(lass|ollet)[eèêë]_$1$2é_acute accent on "e"
+r_\b([dD])[eèêë](gag|gring|jeun|marche|noue|shab|ten[tu]|tour|traq)_$1é$2_acute accent on "e"
+r_\bd[eéèê] gr[aàá]ce_de grâce_circumflex on "a"
+r_\b([dD])[eèêë]j[aàá]_$1éjà_accents on "déjà"
+r_\b([dD])[eèêë]jeune_$1éjeune_acute accent on "e"
+r_\b([dD])[eèêë]nouement_$1énouement_acute accent on "e"
+r_\b([dD]istingu)e_$1é_acute accent on "e"
+r_\b([dD]ivorc)[eèêë][eéèêë]_$1ée_acute accent on "e"
+r_Dohn[aàâ]nyi_Dohnányi_acute accent on "a"
+r_\b([dD]onn)[eèêë]_$1é_acute accent on "e"
+r_Dor[aàâ]ti_Doráti_acute accent on "a"
+r_Dor[eèêë]\b_Doré_acute acent on "e"
+r_\bDu(rer|sseldorf)_Dü$1_umlaut on "u"
+  \w\Durer\Dürer\umlaut on "u"
+  \w\Dusseldorf\Düsseldorf\umlaut on "u"
+r_Dvor[aàâ]k_Dvorák_acute accent on "a"
+
+r_\b[eèêë]b(auch|oul|rill)_éb$1_acute accent on "e"
+r_\b[eèêë]c(art|lair|lat|ole|oss|out|ras|uell|uri)_éc$1_acute accent on "e"
+r_\bEc(art|lair|lat|ole|oss|out|ras|uell|uri)_Éc$1_acute accent on "e"
+r_\b[eéèêë]c(art|out)[eèêë]_éc$1é_acute accents on "e"
+r_\b[eèêë]g(al)_ég$1_acute accent on "e"
+r_\bEg(al|yptien)_Ég$1_acute accent on "e"
+r_\b[eèêë][lI1](an|ite|oge)_él$1_acute accent on "e"
+r_\bEl(an|ite|oge)_Él$1_acute accent on "e"
+r_\b[eèêë]p(erdu|icie|ata|ée|rouv)_ép$1_acute accent on "e"
+r_[EÉ]lys[eèêë][eèéêë]_Elysée_acute accent on "e"
+r_\b[eèêë](chapp|corch|migr|p)[eèéêë]_é$1é_acute accents on "e"s
+r_\b[eèéêë](chapp|corch|migr|p)[eèêë]_é$1é_acute accents on "e"s
+r_\b([eE]mploy)[eêèë]\b_$1é_acute accent on "e"
+r_\b([eE]mploy)[eêèë]s_$1és_acute accent on "e"
+  \w\employe\employé\acute accent on "e"
+  \w\employes\employés\acute accent on "e"
+  \w\Employe\employé\acute accent on "e"
+  \w\Employes\employés\acute accent on "e"
+r_(en-sc)[eéêë]ne_$1ène_grave accent on "e"
+r_\b[eêéèë]ntr[eêèë][eêéèë]_entrée_acute accent on "e"
+r_[EÉ]ntr[eêèë][eêéèë]_Entrée_acute accent on "e"
+r_\b[eèêë]t(ag|ap|at|oile|ourd|rang|renn|rier|ud|ui)_ét$1_acute accent on "e"
+r_\bEt(ag|ap|at|ienne|oile|ourd|rang|renn|rier|ud|ui)_Ét$1_acute accent on "E"
+r_étrang[eéêë]_étrangè_grave accent on 2nd "e"
+r_Espana_España_tilde on "n"
+r_\b[eéèë]tre_être_circumflex on "e"
+
+r_([fF]a)[cg](ade|on)_$1ç$2_cedilla on "c"
+r_Fa(berg|ur)[eêèë]_Fa$1é_acute accent on "e"
+  \r_Faur[eêèë]_Fauré_acute accent on "e"
+r_\b([fF]a)ience_$1ïence_diaeresis on "i"
+r_\b([fF]ain)[eèêë]an([ct])_$1éan$2_acute accent on "e"
+r_\bfe\b_fé_acute accent on "e"
+r_\b([bftBFT])[eéèë]te_$1ête_circumflex on "e"
+  \r_\b([tT])[eéèë]t[eéèêë]_$1ête_circumflex on "e"
+r_F[eêèë][lI1](ibr)_Fél$1_acute accent on "e"
+r_\b([fF])ianc[eèêë]_$1iancé_acute accent on "e"
+r_\b([fF][ir])an[cg]([ao]i)_$1anç$2_scanno: "c" or "g" for "c" w/cedilla
+r_\b([fF])(lamb|rapp)[eèêë]_$1$2é_acute accent on "e"
+r_([fF]l)ane_$1âne_circumflex on "a"
+r_([fF]l)[eéêë]che_$1èche_accent grave on "e"
+r_([fF]or)[cg]at_$1çat_cedilla on "c"
+r_\b([fF]ra)[iï]ch_$1îch_acute accent on "e"
+r_\b([fF]rat)[eéèêë]rnit[eèêë]_$1ernité_acute accent on "e"
+r_([fF])raulein_$1räulein_umlaut on "a"
+r_([fF]r)[eéêë]r[eéèêë]_$1ère_accent grave on "e"
+r_([fF])uhrer_$1ührer_umlaut on "u"
+
+r_\b([gG]al)[eéêë]r[eéèêë]_$1ère_accent grave on "e"
+r_\b([gG]ar|[sS]oup|[lL]ima)[cg]on_$1çon_cedilla
+  \s\garcon\garçon\cedilla
+  \s\soupcon\soupçon\cedilla
+  \s\limacon\limaçon\cedilla
+r_\b([gG]em)utlich_$1ütlich_umlaut on "u"
+r_\b([gG])(lac|ratin)e_$1$2é_acute accent on "e"
+r_G[oô]teborg_Göteborg$1_umlaut on "o"
+r_G[oô]tt(erdämmerung|ingen)_Gött$1_umlaut on "o"
+r_\bgr[eèêë]\b_gré_acute accent on "e"
+r_gu[eèêë]r[iíï](don|te)_guéri$1_acute accent on "e"
+r_Gunz_Günz_umlaut on "u"
+
+r_\b([hH]ab[iíï]tu)[eèêë]_$1é_acute accent on "e"
+r_\b([hH])[oö6]te_$1ôte_circumflex on "o"
+
+r_\b([iI])d[eèêë][eèéêë]_$1dée_acute accent on "e"
+r_Ile-de-France_Île-de-France_circumflex on "I"
+r_\b([iI]ng)[eèêë]nu\b_$1énu_acute accent on "e"
+
+r_\b([jJ])ager_$1äger_umlaut on "a"
+r_([jJ])alapeno_$1alapeño_tilde on "n"
+r_\b([jJ])[eéèêë]t[eèêë]_$1eté_acute accent on "e"
+
+r_Ko(chel|ln)_Kö$1_umlaut on "o"
+r_([kK])ummel_$1ümmel_umlaut on "o"
+
+r_\b([lL])[eéêë]s[eéèêë]\b_$1èse_grave accent on "e"
+r_([lL]ibert)[eèêë]_$1é_acute accent on "e"
+r_([lL]yc)[eèêë][eèéêë]_$1ée_acute accent on "e"
+
+r_\b([mM]a)[iíï]tre_$1ître_circumflex on "i"
+r_\b([mM]a)(cram|jest|lgr|nqu)[eèêë]_$1$2é_acute accent on "e"
+r_\b([mM]an)[eéêë]g([ei])_$1èg$2_accent grave on "e"
+r_\b([mM]ar)[eèêë]chal_$1échal_acute accent on "e"
+r_\b([mM]atin)[eèêë][eéèêë]_$1ée_acute accent on "e"
+r_M[eèêë]doc_Médoc_acute accent on "e"
+r_\b([mM])[eêèë](lan|na)ge_$1é$2ge_acute accent on "e"
+r_\b([mM])[eéè][lI1][eéèêë][eéèêë]_$1êlée_circumflex and acute accent
+r_\b([mM])[eéè]m[eéèêë]_$1ême_circumflex
+r_([mM])[eêèë](moire|salliance)_$1é$2_acute accent on "e"
+r_\b([mpMP])[eéêë]r[eéèêë]\b_$1ère_grave accent on "e"
+  \r_\b([pP])[eéê]r[eéèêë]\b_$1ère_grave accent on "e"
+r_([mM])[eêèë]ta(irie|yage|yer)_$1éta$2_acute accent on "e"
+r_([mM])[eêèë]t[iíï](er|sse)_$1éti$2_acute accent on "e"
+w_Minie_Minié_acute accent on "e"
+r_M[oô]b[iíï]us_Möbius_diaeresis on "o"
+r_([mM]is|Moli)[eéêë]r[eéèêë]_$1ère_accent grave on "e"
+  \w\Moliere\Molière\grave accent on "e"
+r_Munch_Münch_umlaut on "u"
+r_\b([mM]us)[eèêë][eéèêë]_$1ée_acute accent on "e"
+
+r_\b([nN]a)[iîí](f|ve)_$1ï$2_diaeresis
+r_\b([nN]aïvet)[eêèë]_$1é_acute accent on "e"
+r_\b([nN])[eèêë][eéèêë]\b_$1ée_acute accent on "e"
+r_\b([nN])[eèêë]g(lig|ociant)_$1ég$2_acute accent on "e"
+r_\b([nN]églig)[eéèêë]_$1é_acute accent on "e"
+r_([nN])[iîíï][cg]o[iîíï]s[eéèêë]_$1içoise_cedilla on "c"
+r_\b([nN])[oö][eéèê]l_$1oël_diaeresis on "e"
+r_Nurnberg_Nürnberg_umlaut on "u"
+
+r_\b([oO])(l|utr)[eêèë]\b_$1$2é_acute accent on "e"
+r_Orl[eêèë]ans_Orléans_acute accent on "e"
+w_Osterreich_Österreich_diaeresis on "O"
+r_\bOu\b_Où_acute accent on "e"
+
+r_\b([pP])[aàáâ]t[eèêë]\b_$1âté_accents
+r_\b([pP])[aàá]t[eéèêë]\b_$1âté_accents
+r_\b([pP]a)(ss|tt)[eêèë][eéêèë]_$1$2ée_acute accent on "e"
+r_\b([pP]ass)[eêèë]\b_$1é_acute accent on "e"
+r_\b([pP])ens[eêèë][eéêèë]_$1ensée_acute accent on "e"
+r_P[eêèë]rig_Périg_acute accent on "e"
+r_\b([pP])[eêèë]troleu_$1étroleu_acute accent on "e"
+r_([pP]ieds*)-[aâá]-terre_$1-à-terre_grave accent on "a"
+r_\b([pP]r)[eèêë](cieus|lud)e_$1é$2e_acute accent on "e"
+r_\b([pP]r)[eèêë]cis\b_$1écis_acute accent on "e"
+r_\b([pP]rot)[eèêë]g[eéèêë]_$1égé_acute accents on "e"s
+r_\bProven[cg]al_Provençal_scanno: "c" or "g" for "c" w/cedilla
+r_\b([pP])ur[eêèë][eéêèë]_$1urée_acute accent on "e"
+r_Pyr[eêèë]n[eêèë][eéêèë]s_Pyrénées_acute accents on "e"s
+
+r_\bQu[eèêë]b[eéèêë]c_Québec_acute accent on "e"
+
+r_\b([rR])[eèêë](gim*)[eéèêë]\b_$1é$2e_acute accents on "e"s
+r_\b([rR])[eèêë]gim[eéèêë]s\b_$1égimes_acute accents on "e"s
+r_\b([rR]e)[iî]nstate_$1ïnstate_diaeresis on "i"
+r_\b([rR]e)e(lect|nt[er])_$1ë$2_diaeresis on 2nd "e"
+r_\b([rR]e)o(pen|rder|rgan)_$1ö$2_diaeresis on "o"
+r_\b([rR])[eèêë]sum[eèêë]\b_$1ésumé_acute accents on "e"s
+r_\b([rR])[eéèêë](cherch|pouss|trouv|veill)[eèêë]\b_$1e$2é_acute accents on "e"s
+r_Rh[oö]ne_Rhône_circumflex on "o"
+r_\b([rR]isqu)[eèêë]_$1é_acute accent on "e"
+r_([rR])ontgen_$1öntgen_umlaut on "o"
+r_\b([rR])[oö6]deur_$1ôdeur_circumflex on "o"
+r_\b([rR])[oö6][lI1][eéèêë]_$1ôle_circumflex on "o"
+ r_\b([rR]ou)[eèêë]_$1é_acute accent on "e"
+
+r_\b([sS]a)(lom|nt|cr)[eèêë]\b_$1$2é_acute accent on "e"
+r_\b([sS]aut)[eèêë]_$1é_acute accent on "e"
+r_([sS]ch)[oô]n_$1ön_umlaut on "o"
+r_\b([sS])[eèêë]ance_$1éance_acute accent on "e"
+r_\b([sS])[eéèêë]curit[eèêë]_$1ecurité_tilde on "n"
+r_\b([sS]e)nor_$1ñor_tilde on "n"
+r_S[eéêë]vres_Sèvres_grave accent on "e"
+r_\b([sS]i)[eéêë]cle_$1ècle_grave accent on "e"
+r_\b([sS]oci)[eèêë]t[eéèêë]_$1été_acute accents on "e"s
+r_\b([sS]oci)[eéèêë]t[eèêë]_$1été_acute accents on "e"s
+r_([sS]oi)(gn|r)[eèêë]_$1$2é_acute accent on "e"
+r_([sS]olf)[eéêë]ge_$1ège_accent grave on "e"
+r_([sS]ouffl)[eèêë]_$1é_acute accent on "e"
+r_([sS]p)[eéèêë](cialit)[eèêë]_$1e$2é_acute accent on "e"
+r_\b([sS]ucc)[eéêë]s\b_$1ès_grave accent on "e"
+w_Surete_Sûreté_accents
+
+r_Tannhauser_Tannhäuser_umlaut on "a"
+r_([tT])[eèêë][lI1][eéèêë](f|ph)[eéèêë]_$1élé$2é_acute accents
+r_([tT])[eéèêë][lI1][eèêë](f|ph)[eéèêë]_$1élé$2é_acute accents
+r_([tT])[eéèêë][lI1][eéèêë](f|ph)[eèêë]_$1élé$2é_acute accents
+r_([tT])[eéèêë]te-[aáâ]-t[eéèêë]te_$1ête-à-tête_accents
+r_\b([tT]h)[eèêë]\s+dansant_$1é dansant_acute accent
+r_\b([ptPT]r)[eéêë]s\b_$1ès_grave accent on "e"
+r_\b([tT])(orch|rouv|uy)[eéêë]re_$1$2ère_acute accent on "e"
+
+r_Uber_Über_umlaut on "u"
+r_\buber_über_umlaut on "u"
+
+r_Vel[aà]([sz]quez)_Velá$1_acute accent on "a"
+r_([vV])icuna_$1icuña_tilde on "n"
+r_\b([vV]id)[eèêë]_$1é_acute accent on "e"
+r_\b([vV]is[\-\s])[aâá]([\-\s]vis)_$1à$2_grave accent on "a"
+r_\b([vV]oil)[aâá]\b_$1à_grave accent on "a"
+r_Volk_Völk_umlaut on "o"
+
+r_([wWZ])ur_$1ür_umlaut on "u"
+
+    ENDINGS & COMMON WORD PARTS
+r_\B([iy])[eêéë]([mr])[eéèêë]\b_$1è$2e_accent grave on "e"
+r_\Bi[eêéë]([mr])[eéèêë]s\b_iè$1es_accent grave on "e"
+    bonbonniere, boutonniere, ferronniere, mentonniere
+  \r_onni[eéêë]re_onnière_grave accent on "e"
+r_\Bill[eéêë]re_illère_accent grave on "e"
+r_\B([dg])[eêéë]r[eéèêë]\b_$1ère_accent grave on "e"
+r_\B([dg])[eêéë]r[eéèêë]s\b_$1ères_accent grave on "e"
+r_ch[aàá]tel_châtel_circumflex on "a"
+      Neufchâtel
+r_haus\b_häus_umlaut on "a"
+r_sonn[eèêë]\b_sonné_acute accent on "e"

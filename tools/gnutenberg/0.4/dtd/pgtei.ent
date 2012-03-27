@@ -1,0 +1,67 @@
+<!--
+
+The Gnutenberg Press - more entities
+Copyright (C) 2003-2005  Marcello Perathoner
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+-->
+
+<!-- we support these unicode chars (besides all of latin-1) -->
+
+<!-- ISO Latin Extended-A (partial) -->
+
+<!ENTITY OElig          "&#x152;"> 
+<!ENTITY oelig          "&#x153;">
+<!ENTITY Scaron         "&#x160;">
+<!ENTITY scaron         "&#x161;">
+<!ENTITY Yuml           "&#x178;">
+<!ENTITY fnof           "&#x192;">
+
+<!-- Unicode General Punctuation (partial) -->
+
+<!ENTITY ensp           "&#x2002;">
+<!ENTITY emsp           "&#x2003;">
+<!ENTITY thinsp         "&#x2009;">
+<!ENTITY zwj            "&#x200d;">
+
+<!ENTITY ndash          "&#x2013;">
+<!ENTITY mdash          "&#x2014;">
+<!ENTITY qdash          "&#x2015;">
+<!ENTITY lsquo          "&#x2018;">
+<!ENTITY rsquo          "&#x2019;">
+<!ENTITY sbquo          "&#x201a;">
+<!ENTITY ldquo          "&#x201c;">
+<!ENTITY rdquo          "&#x201d;">
+<!ENTITY bdquo          "&#x201e;">
+<!ENTITY dagger         "&#x2020;">
+<!ENTITY Dagger         "&#x2021;">
+<!ENTITY bull           "&#x2022;">
+<!ENTITY hellip         "&#x2026;">
+<!ENTITY permil         "&#x2030;">
+<!ENTITY prime          "&#x2032;">
+<!ENTITY Prime          "&#x2033;">
+<!ENTITY lsaquo         "&#x2039;">
+<!ENTITY rsaquo         "&#x203a;">
+
+<!ENTITY euro           "&#x20ac;">
+<!ENTITY trade          "&#x2122;">
+
+<!-- Unicode Miscellaneous Symbols (partial) -->
+
+<!ENTITY spades         "&#x2660;">
+<!ENTITY hearts         "&#x2661;">
+<!ENTITY diams          "&#x2662;">
+<!ENTITY clubs          "&#x2663;">

@@ -1,0 +1,98 @@
+/U02Encoding [
+
+% 0200
+/Adblgrave /adblgrave /Ainvertedbreve /ainvertedbreve 
+/Edblgrave /edblgrave /Einvertedbreve /einvertedbreve 
+/Idblgrave /idblgrave /Iinvertedbreve /iinvertedbreve 
+/Odblgrave /odblgrave /Oinvertedbreve /oinvertedbreve 
+
+% 0210
+/Rdblgrave /rdblgrave /Rinvertedbreve /rinvertedbreve 
+/Udblgrave /udblgrave /Uinvertedbreve /uinvertedbreve 
+/Scommaaccent /scommaaccent /uni021a /uni021b 
+/uni021c /uni021d /uni021e /uni021f 
+
+% 0220
+/uni0220 /uni0221 /uni0222 /uni0223 
+/uni0224 /uni0225 /uni0226 /uni0227 
+/uni0228 /uni0229 /uni022a /uni022b 
+/uni022c /uni022d /uni022e /uni022f 
+
+% 0230
+/uni0230 /uni0231 /uni0232 /uni0233 
+/uni0234 /uni0235 /uni0236 /uni0237 
+/uni0238 /uni0239 /uni023a /uni023b 
+/uni023c /uni023d /uni023e /uni023f 
+
+% 0240
+/uni0240 /uni0241 /uni0242 /uni0243 
+/uni0244 /uni0245 /uni0246 /uni0247 
+/uni0248 /uni0249 /uni024a /uni024b 
+/uni024c /uni024d /uni024e /uni024f 
+
+% 0250
+/aturned /ascript /ascriptturned /bhook 
+/oopen /ccurl /dtail /dhook 
+/ereversed /schwa /schwahook /eopen 
+/eopenreversed /eopenreversedhook /eopenreversedclosed /jdotlessstroke 
+
+% 0260
+/ghook /gscript /uni0262 /gammalatinsmall 
+/ramshorn /hturned /hhook /henghook 
+/istroke /iotalatin /uni026a /lmiddletilde 
+/lbelt /lhookretroflex /lezh /mturned 
+
+% 0270
+/mlonglegturned /mhook /nhookleft /nhookretroflex 
+/uni0274 /obarred /uni0276 /omegalatinclosed 
+/philatin /rturned /rlonglegturned /rhookturned 
+/rlongleg /rhook /rfishhook /rfishhookreversed 
+
+% 0280
+/uni0280 /Rsmallinverted /shook /esh 
+/dotlessjstrokehook /eshsquatreversed /eshcurl /tturned 
+/tretroflexhook /ubar /upsilonlatin /vhook 
+/vturned /wturned /yturned /uni028f 
+
+% 0290
+/zretroflexhook /zcurl /ezh /ezhcurl 
+/glottalstop /glottalstopreversed /glottalstopinverted /cstretched 
+/bilabialclick /uni0299 /eopenclosed /Gsmallhook 
+/uni029c /jcrossedtail /kturned /uni029f 
+
+% 02a0
+/qhook /glottalstopstroke /glottalstopstrokereversed /dzaltone 
+/dezh /dzcurl /ts /tesh 
+/tccurl /uni02a9 /uni02aa /uni02ab 
+/uni02ac /uni02ad /uni02ae /uni02af 
+
+% 02b0
+/hsuperior /hhooksuperior /jsuperior /uni02b3 
+/rturnedsuperior /rhookturnedsuperior /Rsmallinvertedsuperior /wsuperior 
+/ysuperior /primemod /dblprimemod /commaturnedmod 
+/apostrophemod /commareversedmod /ringhalfright /ringhalfleft 
+
+% 02c0
+/glottalstopmod /glottalstopreversedmod /arrowheadleftmod /arrowheadrightmod 
+/arrowheadupmod /arrowheaddownmod /circumflex /caron 
+/verticallinemod /firsttonechinese /secondtonechinese /fourthtonechinese 
+/verticallinelowmod /macronlowmod /gravelowmod /acutelowmod 
+
+% 02d0
+/colontriangularmod /colontriangularhalfmod /ringhalfrightcentered /ringhalfleftcentered 
+/uptackmod /downtackmod /plusmod /minusmod 
+/breve /dotaccent /ring /ogonek 
+/tilde /hungarumlaut /rhotichookmod /uni02df 
+
+% 02e0
+/gammasuperior /uni02e1 /uni02e2 /xsuperior 
+/glottalstopreversedsuperior /tonebarextrahighmod /tonebarhighmod /tonebarmidmod 
+/tonebarlowmod /tonebarextralowmod /uni02ea /uni02eb 
+/uni02ec /uni02ed /uni02ee /uni02ef 
+
+% 02f0
+/uni02f0 /uni02f1 /uni02f2 /uni02f3 
+/uni02f4 /uni02f5 /uni02f6 /uni02f7 
+/uni02f8 /uni02f9 /uni02fa /uni02fb 
+/uni02fc /uni02fd /uni02fe /uni02ff 
+] def

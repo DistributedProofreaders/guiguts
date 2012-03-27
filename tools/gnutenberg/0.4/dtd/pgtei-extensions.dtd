@@ -1,0 +1,165 @@
+<!--
+
+The Gnutenberg Press - extensions to the TEI dtd
+Copyright (C) 2003-2005  Marcello Perathoner
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+-->
+
+<!-- changed elements in pgtei -->
+
+<!-- TEI.2 gets new children -->
+<!ELEMENT TEI.2 %om.RR; (teiHeader, pgExtensions?, text)> 
+<!ATTLIST TEI.2 %a.global;
+      TEIform CDATA  'TEI.2'
+>  
+
+<!-- index attribute level1 becomes optional -->
+<!ELEMENT %n.index; %om.RO;  EMPTY> 
+<!ATTLIST %n.index;
+      %a.global;
+      index   CDATA  #IMPLIED
+      level1  CDATA  #IMPLIED
+      level2  CDATA  #IMPLIED
+      level3  CDATA  #IMPLIED
+      level4  CDATA  #IMPLIED
+      TEIform CDATA  'index'  
+>
+
+<!-- new elements in pgtei -->
+
+<!ELEMENT pgExtensions %om.RR; (pgCharMap | pgExcludeFormats | pgHyphenationExceptions | pgStyleSheet)* >
+
+<!ELEMENT pgExcludeFormats %om.RR; EMPTY >
+<!ATTLIST pgExcludeFormats
+      formats NMTOKENS #REQUIRED
+>
+
+<!ELEMENT pgHyphenationExceptions %om.RR; (%n.item;)* >
+
+<!ELEMENT pgStyleSheet %om.RO; (#PCDATA) >
+<!ATTLIST pgStyleSheet
+      %a.global;
+>
+
+<!ELEMENT pgCharMap %om.RR; ((note | char)*) >
+<!ATTLIST pgCharMap
+      formats NMTOKENS #IMPLIED
+      langs   NMTOKENS #IMPLIED
+      href    CDATA    #IMPLIED
+      n       CDATA    #IMPLIED
+>
+
+<!ELEMENT char      %om.RR; (charName, desc*, mapping ) >
+<!ATTLIST char
+      %a.global;
+>
+
+<!ELEMENT charName  %om.RO; (#PCDATA) >
+
+<!ELEMENT desc      %om.RO; %paraContent;> 
+<!ATTLIST desc  
+      %a.global;>
+
+<!ELEMENT mapping   %om.RO; (#PCDATA) >
+
+<!ELEMENT pgVar     %om.RO; EMPTY >
+<!ATTLIST pgVar 
+      name   CDATA    #REQUIRED
+>
+
+<!ELEMENT pgIf      %om.RR; (then?, else?) >
+<!ATTLIST pgIf 
+      output NMTOKENS #IMPLIED
+      test   NMTOKENS #IMPLIED
+      has    CDATA    #IMPLIED
+>
+
+<!ELEMENT then %om.RR; (#PCDATA | front | body | back | %n.div; | %n.divGen; | %m.common;)* >
+
+<!ELEMENT else %om.RR; (#PCDATA | front | body | back | %n.div; | %n.divGen; | %m.common;)* >
+
+
+<!-- added elements from the full TEI -->
+
+<!ELEMENT %n.tag; %om.RR;  (#PCDATA)> 
+<!ATTLIST %n.tag;
+      %a.global;
+      TEI ( yes | no ) "yes"
+      TEIform CDATA 'tag'  >  
+
+<!ELEMENT %n.attName; %om.RO;  (#PCDATA) > 
+<!ATTLIST %n.attName;
+      %a.global;
+      TEIform CDATA 'attName'  >
+
+<!ELEMENT %n.entName; %om.RO;  (#PCDATA)> 
+<!ATTLIST %n.entName;
+      %a.global;
+      TEIform CDATA 'entName'  >
+
+<!ELEMENT %n.val; %om.RO;  (#PCDATA)> 
+<!ATTLIST %n.val;
+      %a.global;
+      TEIform CDATA 'val'  >
+
+
+<!-- added attributes TEI lite -->
+
+<!-- new attribute url -->
+<!ATTLIST %n.xref;
+      url CDATA #IMPLIED
+>
+
+<!-- new attribute url -->
+<!ATTLIST %n.xptr;
+      url CDATA #IMPLIED
+>
+
+<!-- new attribute url -->
+<!ATTLIST %n.figure;
+      url CDATA #IMPLIED
+>
+
+<!-- new attribute url -->
+<!ATTLIST %n.divGen;
+      target IDREFS #IMPLIED
+>
+
+
+<!-- added elements TEI lite -->
+<!-- from: TEILiteX.dtd:  TEI.extensions.dtd file for TEI Lite      --> 
+
+<!ELEMENT %n.gi;        %om.RO;  (#PCDATA)       >
+<!ATTLIST %n.gi;        %a.global;
+          TEI           (yes | no)          "yes"
+          TEIform       CDATA               'gi' >
+
+<!ELEMENT %n.eg;        %om.RR;  (#PCDATA)       >
+<!ATTLIST %n.eg;        %a.global;
+          TEIform       CDATA               'eg' >
+
+<!ELEMENT code          %om.RO;  (#PCDATA)       >
+<!ATTLIST code          %a.global;               >
+
+<!ELEMENT ident         %om.RO;  (#PCDATA)       >
+<!ATTLIST ident         %a.global;               
+          type          CDATA #IMPLIED           >
+
+<!ELEMENT kw            %om.RO;  (#PCDATA)       >
+<!ATTLIST kw            %a.global;               
+          type          CDATA #IMPLIED           >
+

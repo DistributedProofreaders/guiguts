@@ -1,0 +1,380 @@
+\Auxiliary file GAmarkup.txt for GutAxe 0.5
+\modified 14 January 2006
+\This is a comment line (starts with any character except r, s, or w).
+\The second character of each rule is the delimiter between type\error\correction\description
+\where type = S for string, R for RegExp, or W for word
+\The description MUST be included.
+\Mangled DP-style and HTML markups
+
+   CHAPTER HEADINGS
+r_^\s*(Chapter.*)_<b>$1</b>_Chapter heading in bold markups
+r_^\s*(CHAPTER.*)_<b>$1</b>_Chapter heading in bold markups
+r_<sc>CHAPTER\s+(.*)<\/sc>_<sc>Chapter $1</sc>_Chapter heading in small-caps markups
+
+r_([^\-])\-\*(.)_$1$2_Remove asterisked hyphen
+r_([^\-])\-\*(.)_$1-$2_Remove asterisk after hyphen
+  \s\-*\\Remove asterisked hyphen
+
+  Mangled mark-ups
+r_<\s+([bijBIJ]|sc|sp)\s*>_<$1>_faulty markup (remove space)
+r_<\s*([bijBIJ]|sc|sp)\s+>_<$1>_faulty markup (remove space)
+r_<\s*\/\s+([bijBIJ])\s*>_</$1>_faulty markup (remove space)
+r_<\s*\/\s*([bijBIJ]\s+)>_</$1>_faulty markup (remove space)
+r_\/<([bijBIJ])>_</$1>_faulty markup
+r_\/<s([cp])>_</s$1>_faulty markup
+r_<\/(\/[bijBIJ])>_<$1>_faulty markup
+r_<([bijBIJ])/>_</$1>_faulty markup
+r_<\?([bijBIJ])>_</$1>_faulty markup
+s\</>\</i>\faulty markup, taken as italic
+s\</>\</b>\faulty markup, taken as bold
+s\</s>\</sc>\faulty markup, taken as small-caps
+r_<[ijIJ]<_<i>_faulty italic markup
+r_<sc<_<sc>_faulty small caps markup
+r_<[jJ;]>_<i>_faulty italic markup
+r_<\/[jJ;]>_</i>_faulty italic markup
+r_<\/[ijIJ]<_</i>_faulty italic markup
+r_>[ijI]>_<i>_faulty italic markup
+r_>\/[ijI]>_</i>_faulty italic markup
+r_<[jJ;]>_<i>_faulty italic markup
+r_<\/[jJ;]>_</i>_faulty italic markup
+r_<[bB]<_<b>_faulty bold markup
+r_<\/[bB]<_</b>_faulty bold markup
+r_<\/sc<_</sc>_faulty small caps markup
+r_>[bB]>_<b>_faulty bold markup
+r_>\/[bB]>_</b>_faulty bold markup
+r_>\/sc>_</sc>_faulty closing small-caps markup
+r_<[bhBH]/(\d>)_</h$1_faulty header markup
+r_<[bhBH](\d)\/>_</h$1>_faulty header markup
+r_<\?[bhBH](\d>)_</h$1_faulty header markup
+r_\/<[bhBH](\d>)_</h$1_faulty header markup
+
+    TWO OPENING MARKUPS IN SUCCESSION
+r_<[iI]>([^<]+)<[iI]>_<i>$1</i>_Change second opening italics markup to closing
+r_<[bB]>([^<]+)<[bB]>_<b>$1</b>_Change second opening bold markup to closing
+r_<[hH](\d)>([^<]+)<[hH](\d)>_<h$1>$2</h$3>_Change second opening heading markup to closing
+r_<[hH](\d)><[iI]>([^<]+)</[iI]><[hH](\d)>_<h$1><i>$2</i></h$3>_Change second opening heading markup to closing
+r_<sc>([^<]+)<sc>_<sc>$1</sc>_Change second opening small-caps markup to closing
+r_<sp>([^<]+)<sp>_<sp>$1</sp>_Change second opening spaced-print markup to closing
+
+r_<[iI]>([^<]+)<[iI]>_</i>$1<i>_Change first opening italics markup to closing
+r_<[bB]>([^<]+)<[bB]>_</b>$1<b>_Change first opening bold markup to closing
+
+    MISMATCHED MARKUPS
+r_<[hH]1>([^<]+)<\/[hH]([^1])>_<h$2>$1</h$2>_Change first heading markup to match the second
+r_<[hH]2>([^<]+)<\/[hH]([^2])>_<h$2>$1</h$2>_Change first heading markup to match the second
+r_<[hH]3>([^<]+)<\/[hH]([^3])>_<h$2>$1</h$2>_Change first heading markup to match the second
+r_<[hH]4>([^<]+)<\/[hH]([^4])>_<h$2>$1</h$2>_Change first heading markup to match the second
+r_<[hH]5>([^<]+)<\/[hH]([^5])>_<h$2>$1</h$2>_Change first heading markup to match the second
+r_<[hH]6>([^<]+)<\/[hH]([^6])>_<h$2>$1</h$2>_Change first heading markup to match the second
+  The following looks like it should work (to replace the above 6 rules) but doesn't!
+  \r_<[hH](\d)>([^<]+)<\/[hH]([^\1])>_<h$3>$2</h$3>_Change first heading markup to match the second
+r_<[hH]1>([^<]+)<\/[hH][^1]>_<h1>$1</h1>_Change second heading markup to match the first
+r_<[hH]2>([^<]+)<\/[hH][^2]>_<h2>$1</h2>_Change second heading markup to match the first
+r_<[hH]3>([^<]+)<\/[hH][^3]>_<h3>$1</h3>_Change second heading markup to match the first
+r_<[hH]4>([^<]+)<\/[hH][^4]>_<h4>$1</h4>_Change second heading markup to match the first
+r_<[hH]5>([^<]+)<\/[hH][^5]>_<h5>$1</h5>_Change second heading markup to match the first
+r_<[hH]6>([^<]+)<\/[hH][^6]>_<h6>$1</h6>_Change second heading markup to match the first
+
+r_<[bB]>([^<]+)<\/[^bB]>_<b>$1</b>_Change closing markup to bold to match the first
+r_<[^bB]>([^<]+)<\/[bB]>_<b>$1</b>_Change opening markup to bold to match the second
+r_<[^iI]>([^<]+)<\/[iI]>_<i>$1</i>_Change opening markup to italic to match the second
+r_<[iI]>([^<]+)<\/[^iI]>_<i>$1</i>_Change closing markup to italic to match the first
+r_<[^uU]>([^<]+)<\/[uU]>_<u>$1</u>_Change opening markup to underline to match the second
+r_<[uU]>([^<]+)<\/[^uU]>_<u>$1</u>_Change closing markup to underline to match the first
+
+    TAGS OUT OF ORDER
+r_<[bB]><[pP]>_<p><b>_put opening paragraph tag before bold tag
+r_<\/[pP]><\/[bB]>_</b></p>_put closing paragraph tag after bold tag
+r_<[iI]><[pP]>_<p><i>_put opening paragraph tag before italic tag
+r_<\/[pP]><\/[iI]>_</i></p>_put closing paragraph tag after italic tag
+r_<[uU]><[pP]>_<p><>_put opening paragraph tag before underline tag
+r_<\/[pP]><\/[uU]>_</u></p>_put closing paragraph tag after underline tag
+r_<[iI]><[bB]>([^<]+)<\/[iI]><\/[bB]>_<b><i>$1</i></b>_sort out bold and italic markups
+r_<[bB]><[iI]>([^<]+)<\/[bB]><\/[iI]>_<b><i>$1</i></b>_sort out bold and italic markups
+r_<[uU]><[bB]>([^<]+)<\/[uU]><\/[bB]>_<b><u>$1</u></b>_sort out bold and underline markups
+r_<[bB]><[uU]>([^<]+)<\/[bB]><\/[uU]>_<b><u>$1</u></b>_sort out bold and underline markups
+r_<[uU]><[iI]>([^<]+)<\/[uU]><\/[iI]>_<i><u>$1</u></i>_sort out italic and underline markups
+r_<[iI]><[uU]>([^<]+)<\/[iI]><\/[uU]>_<i><u>$1</u></i>_sort out italic and underline markups
+
+    MISSING OPENING TAGS
+r_<[pP]>([^<]+)<\/[bB]><\/[pP]>_<p><b>$1</b></p>_add opening bold tag
+r_<[pP]>([^<]+)<\/[iI]><\/[pP]>_<p><i>$1</i></p>_add opening italic tag
+r_<[pP]>([^<]+)<\/[uU]><\/[pP]>_<p><u>$1</u></p>_add opening underline tag
+
+    MISSING CLOSING TAGS
+r_<[pP]><[bB]>([^<]+)<\/[pP]>_<p><b>$1</b></p>_add closing bold tag
+r_<[pP]><[iI]>([^<]+)<\/[pP]>_<p><i>$1</i></p>_add closing italic tag
+r_<[pP]><[uU]>([^<]+)<\/[pP]>_<p><u>$1</u></p>_add closing underline tag
+
+
+    EXTRANEOUS MARKUPS
+r_<\/*[pP]><[hH](\d)>_<h$1>_Remove paragraph tag before header tag
+r_<\/[hH](\d)><\/*[pP]>_</h$1>_Remove paragraph tag after header tag
+r_<\/*[pP]><\/[hH](\d)>_</h$1>_Remove paragraph tag before header tag
+r_<[hH](\d)><\/*[pP]>_<h$1>_Remove paragraph tag after header tag
+
+
+    COMMON ABBREVIATIONS
+  Improperly applied markups
+r_<[iI]>([a-zA-Z])\.\s*([a-zA-Z])<\/[iI]>\._<i>$1.$2.</i>_period of abbrev on wrong side of markup
+r:_([a-zA-Z])\.\s*([a-zA-Z])_\.:_$1.$2._:period of abbrev on wrong side of markup
+  \s\<i>e.g</i>.\<i>e.g.</i>\period of abbrev. on wrong side of markup
+  \s\<i>i.e</i>.\<i>i.e.</i>\period of abbrev. on wrong side of markup
+  \s\<i>q.v</i>.\<i>q.v.</i>\period of abbrev. on wrong side of markup
+r_<i>([eE]tc|\&[cC]|[vV]iz|[iI]bid|[iI]d|[sS]eq|[pP]rof|[cC]hap)</i>\._<i>$1.</i>_period of abbrev. on wrong side of markup
+r:_([eE]tc|\&[cC]|[vV]iz|[iI]bid|[iI]d|[sS]eq|[pP]rof|[cC]hap)_\.:_$1._:period of abbrev. on wrong side of markup
+  \s\<i>etc</i>.\<i>etc.</i>\period of abbrev. on wrong side of markup
+  \s\<i>&c</i>.\<i>&c.</i>\period of abbrev. on wrong side of markup
+  \s\<i>viz</i>.\<i>viz.</i>\period of abbrev. on wrong side of markup
+  \s\<i>ibid</i>.\<i>ibid.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Ibid</i>.\<i>Ibid.</i>\period of abbrev. on wrong side of markup
+  \s\<i>id</i>.\<i>id.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Id</i>.\<i>Id.</i>\period of abbrev. on wrong side of markup
+  \s\<i>seq</i>.\<i>seq.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Seq</i>.\<i>Seq.</i>\period of abbrev. on wrong side of markup
+
+   2 or more consonants is probably an abbreviation
+r_<i>([b-df-hj-np-tv-xzB-DF-HJ-NP-TV-XZ]{2,})</i>\._<i>$1.</i>_period of abbrev. on wrong side of markup
+r:_([b-df-hj-np-tv-xzB-DF-HJ-NP-TV-XZ]{2,})_\.:_$1._:period of abbrev. on wrong side of markup
+  \s\<i>cf</i>.\<i>cf.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Cf</i>.\<i>Cf.</i>\period of abbrev. on wrong side of markup
+r_([A-Z][a-z])</i>\._$1.</i>_period of abbrev. on wrong side of markup
+r:([A-Z][a-z])_\.:$1._:period of abbrev. on wrong side of markup
+r_<i>([aA]d)\s+(int|loc|lib)</i>\._<i>$1 $2.</i>_period of abbrev. on wrong side of markup
+r:_([aA]d)\s+(int|loc|lib)_\.:_$1 $2._:period of abbrev. on wrong side of markup
+  \s\<i>ad int</i>.\<i>ad int.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Ad int</i>.\<i>Ad int.</i>\period of abbrev. on wrong side of markup
+  \s\<i>ad loc</i>.\<i>ad loc.</i>\period of abbrev. on wrong side of markup
+r_<i>([eE]t)\s+(al|seq|ux)</i>\._<i>$1 $2.</i>_period of abbrev. on wrong side of markup
+r:_([eE]t)\s+(al|seq|ux)_\.:_$1 $2._:period of abbrev. on wrong side of markup
+  \s\<i>et al</i>.\<i>et al.</i>\period of abbrev. on wrong side of markup
+  \s\<i>et ux</i>.\<i>et ux.</i>\period of abbrev. on wrong side of markup
+  \s\<i>et seq</i>.\<i>et seq.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Et seq</i>.\<i>Et seq.</i>\period of abbrev. on wrong side of markup
+r_<i>([oO]p\.)\s+(cit)</i>\._<i>$1 $2.</i>_period of abbrev. on wrong side of markup
+  \s\<i>op. cit</i>.\<i>op. cit.</i>\period of abbrev. on wrong side of markup
+  \s\<i>Op. cit</i>.\<i>Op. cit.</i>\period of abbrev. on wrong side of markup
+s\_op. cit_.\_op. cit._\period of abbrev. on wrong side of markup
+s\_Op. cit_.\_Op. cit._\period of abbrev. on wrong side of markup
+s\<i>qq. v</i>.\<i>qq. v.</i>\period of abbrev. on wrong side of markup
+s\<i>q. pl</i>.\<i>q. pl.</i>\period of abbrev. on wrong side of markup
+s\.,</i>\.</i>,\comma on wrong side of markup
+s\.,_\._,\comma on wrong side of markup
+
+    A.D. and B.C.
+r_<sc>A\.\s*D\.</sc>_<sc>a.d.</sc>_A.D. in small caps, possibly close up space
+r_<sc>B\.\s*C\.</sc>_<sc>b.c.</sc>_b.c. in small caps, possibly close up space
+  r_<sc>A\. D\.</sc>_<sc>a.d.</sc>_A.D. in small caps
+  r_<sc>B\. C\.</sc>_<sc>b.c.</sc>_b.c. in small caps
+r_<sc>A\.\s*D</sc>\._<sc>a.d.</sc>_A.D. in small caps, possibly close up space
+r_<sc>B\.\s*C</sc>\._<sc>b.c.</sc>_b.c. in small caps, possibly close up space
+
+r_<sc>A\.\s*M\.</sc>_<sc>a.m.</sc>_A.M. in small caps, possibly close up space
+r_<sc>P\.\s*M\.</sc>_<sc>p.m.</sc>_P.M. in small caps, possibly close up space
+  r_<sc>A\. M\.</sc>_<sc>a.d.</sc>_A.M. in small caps
+  r_<sc>P\. M\.</sc>_<sc>b.c.</sc>_P.M. in small caps
+r_<sc>A\.\s*M</sc>\._<sc>a.m.</sc>_A.M. in small caps, possibly close up space
+r_<sc>P\.\s*M</sc>\._<sc>p.m.</sc>_P.M. in small caps, possibly close up space
+
+
+  No italics on abbreviations
+r_([^>])(e\.g|i\.e|q\.v|etc|viz|ibid|et\s+al|et\s+seq|[oO]p\.\s*cit)\.([^<])_$1<i>$2.</i>$3_add italics around abbreviations
+
+    ENGLISH MONEY
+r_<[iI]>(\d+)l\. (\d+)s\. (\d+)d\.</[iI]>_$1<i>l.</i> $2<i>s.</i> $3<i>d.</i>_Correct italics markups for old English money 
+r_<[iI]>£(\d+) (\d+)s\. (\d+)d\.</[iI]>_£$1 $2<i>s.</i> $3<i>d.</i>_Correct italics markups for old English money 
+r_<[iI]>(\d+)s\. (\d+)d\.</[iI]>_$1<i>s.</i> $2<i>d.</i>_Correct italics markups for old English money 
+r_(\d)\s*<[iI]>([dls])<\/[iI]>\._$1<i>$2.</i>_Move period inside italics markup for old English money
+r:(\d)\s*_([dls])_\.:$1_$2._:Move period inside italics markup for old English money
+r_(\d)\s*([dls]\.)_$1<i>$2</i>_Add italics markup for old English money
+r_<[iI]>(\d+)([dls]\.)</[iI]>_$1<i>$2</i>_Correct italics markups for old English money
+r_<[iI]>(\d+)([dls])</[iI]>\._$1<i>$2.</i>_Correct italics markups for old English money
+r_(\d+[dl])([^\.])_$1.$2_Insert period after old English money
+r_([2-9]+s)([^\.])_$1.$2_Insert period after old English money
+r_(1+s)([^t\.])_$1.$2_Insert period after old English money
+
+    PAGE NUMBERS ("f." or "ff." abbreviation)
+r_(\d)\s+(f+\.)_$1$2_Close up space before "f." or "ff." abbreviation
+r_(\d)\s*(f+\.)_$1<i>$2</i>_Add italics markup around "f." or "ff." abbreviation
+r_(\d)\s*<[iI]>(f+)<\/[iI]>\._$1<i>$2.</i>_Move period inside italics markup for "f." or "ff." abbreviation
+r_<[iI]>(\d+)\s*(f+)</[iI]>\._$1<i>$2.</i>_Correct italics markups for "f." or "ff." abbreviation
+r_<[iI]>(\d+)\s*(f+\.)</[iI]>_$1<i>$2</i>_Correct italics markups for "f." or "ff." abbreviation
+
+   ITALICS AMIDST PARENS & BRACKETS
+r_<[iI]>\(([^\)]+)\)\s*<\/[iI]>_(<i>$1</i>)_Move italic markups inside parentheses
+r_<[iI]>\(([^\)]+)\)\.\s*<\/[iI]>_(<i>$1</i>)._Move italic markups inside parentheses
+r_<[iI]>\[([^\]]+)\]\s*<\/[iI]>_[<i>$1</i>]_Move italic markups inside brackets
+r_<[iI]>\[([^\]]+)\]\.\s*<\/[iI]>_[<i>$1</i>]._Move italic markups inside brackets
+
+r_<[iI]>(['"\[\(])_$1<i>_Move punctuation before opening italic markup
+  \s\<i>"\"<i>\quote on wrong side of opening markup
+  \s\<i>'\'<i>\single-quote on wrong side of opening markup
+
+r_(["';:,\]\)]|\-\-)</[iI]>_</i>$1_Move punctuation after closing italic markup
+  \s\"</i>\</i>"\quote on wrong side of markup
+    etc.
+
+s\</i>.]\.</i>]\move period inside italic markup
+
+r_\Bin</[iI]>'_in'</i>_Move apostrophe inside closing italic markup
+  \s\in</i>'\in'</i>\apostrophe on wrong side of markup
+
+r_\b([A-Z])(</[biBI]>)\._$1.$2_Move period of abbrev. inside closing markup
+  \s\ A</i>.\ A.</i>\period on wrong side of closing italic markup
+    etc.
+
+    A single word & punct. inside markup:
+r_<[iI]>([a-zA-Z]+)(["',;:?!\(\)\[\]]+)<\/[iI]>_<i>$1</i>$2_Move punct. outside italics markup
+r*_([a-zA-Z]+)(["'\,\;\:\?\!\(\)\[\]]+)_*_$1_$2*Move punct. outside _italics_ markup
+
+  HELP FOR DRAMA
+
+  Speaker, then stage directions
+r_^<[iI]>([^\s]+)\s+\(([^\)]+)\)<\/[iI]>_<i>$1</i> (<i>$2</i>)_Fix up italics markup around parens
+r_^<[iI]>([^\s]+)\s+\(([^\)]+)\)\.<\/[iI]>_<i>$1</i> (<i>$2</i>)._Fix up italics markup around parens
+r_^<[iI]>([^\s]+)\s+\(([^<]+)<\/[iI]>\)_<i>$1</i> (<i>$2</i>)_Fix up italics markup around parens
+
+r_^<[iI]>([A-Z][^\(]*)\(([^\)]+)\)<\/[iI]>_<i>$1</i> (<i>$2</i>)_Fix up italics markup around parens
+r_^<[iI]>([A-Z][^\(]*)\(([^\)]+)\)\.<\/[iI]>_<i>$1</i> (<i>$2</i>)._Fix up italics markup around parens
+r_^<[iI]>([A-Z][^\(]*)\(([^<]+)<\/[iI]>\)_<i>$1</i> (<i>$2</i>)_Fix up italics markup around parens
+
+  Single-word "stage directions" or asides in italics within parentheses & brackets
+r_\(<[iI]>([A-Z][a-zA-Z]*)<\/[iI]>([\.!?])\)_(<i>$1$2</i>)_Move punct. inside italics markup
+r_\[<[iI]>([A-Z][a-zA-Z]*)<\/[iI]>([\.!?])\]_[<i>$1$2</i>]_Move punct. inside italics markup
+
+  Multi-word stage direction all on one line (no closing bracket).
+r_\[<[iI]>([^<]+)<\/[iI]>\.\s*$_[<i>$1.</i>_Move period inside italics markup
+
+r_<i>\s*(Aside|Dies|Exeunt|Exeunt\somnes|Exit)\s*<\/i>\._<i>$1.</i>_Move period inside italics markup
+  \s_<i>Aside</i>._<i>Aside.</i>_Move period inside italics markup
+  \s_<i>Dies</i>._<i>Dies.</i>_Move period inside italics markup
+  \s_<i>Exit</i>._<i>Exit.</i>_Move period inside italics markup
+  \s_<i>Exeunt</i>._<i>Exeunt.</i>_Move period inside italics markup
+  \s_<i>Exeunt omnes</i>._<i>Exeunt omnes.</i>_Move period inside italics markup
+r_<i>\s*Laugh(s|ing|ingly|ter)\s*<\/i>\s*\._<i>Laugh$1.</i>_Move period inside italics markup
+  \s_<i>Laughs</i>._<i>Laughs.</i>_Move period inside italics markup
+  \s_<i>Laughing</i>._<i>Laughing.</i>_Move period inside italics markup
+  \s_<i>Laughter</i>._<i>Laughter.</i>_Move period inside italics markup
+r_<i>\s*(Exit|Frown|Kneel|Read|Stand|Yawn)(s|ing)\s*<\/i>\s*\._<i>$1$2.</i>_Move period inside italics markup
+  \s_<i>Reads</i>._<i>Reads.</i>_Move period inside italics markup
+  \s_<i>Reading</i>._<i>Reading.</i>_Move period inside italics markup
+  \s_<i>Yawns</i>._<i>Yawns.</i>_Move period inside italics markup
+  \s_<i>Yawning</i>._<i>Yawning.</i>_Move period inside italics markup
+  \s_<i>Dies</i>._<i>Dies.</i>_Move period inside italics markup
+  \s_<i>Exit</i>._<i>Exit.</i>_Move period inside italics markup
+
+
+r_['`]<[iI]>([aeiouAEIOU])_<i>'$1_Move apostrophe representing dropped "h" inside opening italics markup
+r_['`]<[bB]>([aeiouAEIOU])_<b>'$1_Move apostrophe representing dropped "h" inside opening bold markup
+
+r_['`]<[iI]>([tT][iI][sS])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+r_['`]<[iI]>([tT][wW][aA][sS])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+r_['`]<[iI]>([tT][aA][iI][nN])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+r_['`]<[iI]>([tT][wW][eE][rR][eE])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+r_['`]<[iI]>([tT][wW][iI][lL][lL])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+r_['`]<[iI]>([tT][wW][oO][uU][lL][dD])_<i>'$1_Move apostrophe representing dropped "i" inside italics markup
+
+r_['`]<[bB]>([tT][iI][sS])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+r_['`]<[bB]>([tT][wW][aA][sS])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+r_['`]<[bB]>([tT][aA][iI][nN])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+r_['`]<[bB]>([tT][wW][eE][rR][eE])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+r_['`]<[bB]>([tT][wW][iI][lL][lL])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+r_['`]<[bB]>([tT][wW][oO][uU][lL][dD])_<b>'$1_Move apostrophe representing dropped "i" inside bold markup
+
+      Special for "Punch" and "Notes & Queries"
+r_(Echo|Express|News|Paper|Post|Press|Times)\s*\.<\/i>_$1</i>._Move period outside italics markup
+  \s\Echo.</i>\Echo</i>.\period on wrong side of markup
+  \s\Express.</i>\Express</i>.\period on wrong side of markup
+  \s\News.</i>\News</i>.\period on wrong side of markup
+  \s\Times.</i>\Times</i>.\period on wrong side of markup
+  \s\Paper.</i>\Paper</i>.\period on wrong side of markup
+  \s\Press.</i>\Press</i>.\period on wrong side of markup
+  \s\Post.</i>\Post</i>.\period on wrong side of markup
+s\Chronicle.</i>\Chronicle</i>.\period on wrong side of markup
+s\Guardian.</i>\Guardian</i>.\period on wrong side of markup
+s\Gazette.</i>\Gazette</i>.\period on wrong side of markup
+s\Herald.</i>\Herald</i>.\period on wrong side of markup
+s\Inquirer.</i>\Inquirer</i>.\period on wrong side of markup
+s\Journal.</i>\Journal</i>.\period on wrong side of markup
+s\Review.</i>\Review</i>.\period on wrong side of markup
+s\Dispatch.</i>\Dispatch</i>.\period on wrong side of markup
+s\Observer.</i>\Observer</i>.\period on wrong side of markup
+s\Spectator.</i>\Spectator</i>.\period on wrong side of markup
+s\Tribune.</i>\Tribune</i>.\period on wrong side of markup
+s\Messenger.</i>\Messenger</i>.\period on wrong side of markup
+s\Magazine.</i>\Magazine</i>.\period on wrong side of markup
+
+s\Mag</i>.\Mag.</i>\Move period inside markup for abbreviation
+
+r_<\/[bB]>([\.\?;:\)!'"]+)_$1</b>_punctuation on wrong side of closing bold markup
+  \s\</b>.\.</b>\period on wrong side of closing bold markup
+  \s\</B>.\.</b>\period on wrong side of closing bold markup
+r_<\/[hH](\d>)([\.\?!'"]+)_$2</h$1_punctuation on wrong side of closing header markup
+
+r_^\s*("')<\/[bB]>_</b>$1_punctuation on wrong side of opening bold markup
+
+r_(<\w>)\s+_$1_close up space after opening markup
+r_\s+(<\/\w>)_$1_close up space before closing markup
+  \r_(<h[\d]>)\s+_$1_close up space
+  \r_ </h([\d])>_</h$1>_close up space
+  \r_ <(/[biBI])>_<$1>_close up space
+  \r_<([biBI])> _<$1>_close up space
+
+r_(</[biBI]>)([a-zA-Z])_$1 $2_leave a space after closing markup
+  \s\</i>a\</i> a\leave a space
+    etc.
+  \s\</b>a\</b> a\leave a space
+    etc.
+
+r_([a-zA-Z])(<[biBI]>)_$1 $2_leave a space before opening markup
+  \s\a<i>\a <i>\leave a space
+    etc.
+  \s\a<b>\a <b>\leave a space
+    etc.
+
+r_([a-zA-Z])<([biBI]>)_$1</$2_change to closing markup
+  \s\a<i>\a</i>\change to closing markup
+    etc.
+  \s\a<b>\a</b>\change to closing markup
+    etc.
+
+r_</([biBI]>)([a-zA-Z])_<$1$2_change to opening markup
+  \s\</i>a\<i>a\change to opening markup
+    etc.
+  \s\</b>a\<b>a\change to opening markup
+    etc.
+
+  Broken Thought Breaks
+  (a line consisting solely of 4 or more *'s and any
+   number of spaces but the proper 7)
+r_^(\s{0,6}|\s{8,})(\*\s*){4,}_       *       *       *       *       *_Correct Thought Break spacing
+r_^\s*\*(\s{0,6}|\s{8,})(\*\s*){3,}_       *       *       *       *       *_Correct Thought Break spacing
+r_^(\s*\*){2,}(\s{0,6}|\s{8,})(\*\s*){2,}_       *       *       *       *       *_Correct Thought Break spacing
+r_^(\s*\*){3,}(\s{0,6}|\s{8,})\*\s*_       *       *       *       *       *_Correct Thought Break spacing
+  \s\*      *\*       *\Correct 6 spaces to 7 in Thought Break
+  \s\*        *\*       *\Correct 8 spaces to 7 in Thought Break
+
+  Capitalized words
+s\[ILLUSTRATION\s*:\[Illustration:\Don't capitalize "Illustration"
+s\[SIDENOTE\s*:\[Sidenote:\Don't capitalize "Sidenote"
+s\[FOOTNOTE\[Footnote\Don't capitalize "Footnote"
+r_\s*\[\s*Illustration\s*:\s*\]_[Illustration]_Take ":" out of captionless illustration tag
+
+r_\[Fotnote_[Footnote_correct spelling of "Footnote"
+r_\[(Foot|Side)not\b_[$1note_correct spelling of "Footnote" or "Sidenote"
+
+  Too much space:
+r_\s+\[(Illustration|Sidenote|Footnote)_[$1_close up leading space
+r_\[(Illustration|Sidenote|Footnote)\s*:\s{2,}_[$1: _close up space
+  \s\[Illustration:  \[Illustration: \close up space
+  \s\[Sidenote:  \[Sidenote: \close up space
+  \s\[Footnote:  \[Footnote: \close up space
+r_\[Footnote\s{2,}_[Footnote _close up space
+  \s\[Footnote  \[Footnote \close up space
+
+r_\*+\[\**(Foot|Side)note:_[$1note:_remove asterisk(s)
+r_\[\*+(Foot|Side)note:_[$1note:_remove asterisk(s)
+r_\[Footnote\s*:\s*(\d+)_[Footnote $1:_move footnote number
+r_\[Footnote\s*(\d+)\._[Footnote $1:_period for colon
+r_\[(Foot|Side)note([^,\]]+),\]_[$1note$2.]_comma for period at end of note
+

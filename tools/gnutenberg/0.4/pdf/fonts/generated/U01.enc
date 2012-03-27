@@ -1,0 +1,98 @@
+/U01Encoding [
+
+% 0100
+/Amacron /amacron /Abreve /abreve 
+/Aogonek /aogonek /Cacute /cacute 
+/Ccircumflex /ccircumflex /Cdotaccent /cdotaccent 
+/Ccaron /ccaron /Dcaron /dcaron 
+
+% 0110
+/Dslash /dmacron /Emacron /emacron 
+/Ebreve /ebreve /Edotaccent /edotaccent 
+/Eogonek /eogonek /Ecaron /ecaron 
+/Gcircumflex /gcircumflex /Gbreve /gbreve 
+
+% 0120
+/Gdotaccent /gdotaccent /Gcommaaccent /gcommaaccent 
+/Hcircumflex /hcircumflex /Hbar /hbar 
+/Itilde /itilde /Imacron /imacron 
+/Ibreve /ibreve /Iogonek /iogonek 
+
+% 0130
+/Idotaccent /dotlessi /IJ /ij 
+/Jcircumflex /jcircumflex /Kcommaaccent /kcommaaccent 
+/kgreenlandic /Lacute /lacute /Lcommaaccent 
+/lcommaaccent /Lcaron /lcaron /Ldotaccent 
+
+% 0140
+/ldotaccent /Lslash /lslash /Nacute 
+/nacute /Ncommaaccent /ncommaaccent /Ncaron 
+/ncaron /quoterightn /Eng /eng 
+/Omacron /omacron /Obreve /obreve 
+
+% 0150
+/Ohungarumlaut /ohungarumlaut /OE /oe 
+/Racute /racute /Rcommaaccent /rcommaaccent 
+/Rcaron /rcaron /Sacute /sacute 
+/Scircumflex /scircumflex /Scedilla /scedilla 
+
+% 0160
+/Scaron /scaron /Tcommaaccent /tcommaaccent 
+/Tcaron /tcaron /Tbar /tbar 
+/Utilde /utilde /Umacron /umacron 
+/Ubreve /ubreve /Uring /uring 
+
+% 0170
+/Uhungarumlaut /uhungarumlaut /Uogonek /uogonek 
+/Wcircumflex /wcircumflex /Ycircumflex /ycircumflex 
+/Ydieresis /Zacute /zacute /Zdotaccent 
+/zdotaccent /Zcaron /zcaron /slong 
+
+% 0180
+/bstroke /Bhook /Btopbar /btopbar 
+/Tonesix /tonesix /Oopen /Chook 
+/chook /Dafrican /Dhook /Dtopbar 
+/dtopbar /deltaturned /Ereversed /Schwa 
+
+% 0190
+/Eopen /Fhook /florin /Ghook 
+/Gammaafrican /hv /Iotaafrican /Istroke 
+/Khook /khook /lbar /lambdastroke 
+/Mturned /Nhookleft /nlegrightlong /Ocenteredtilde 
+
+% 01a0
+/Ohorn /ohorn /Oi /oi 
+/Phook /phook /yr /Tonetwo 
+/tonetwo /Esh /eshreversedloop /tpalatalhook 
+/Thook /thook /Tretroflexhook /Uhorn 
+
+% 01b0
+/uhorn /Upsilonafrican /Vhook /Yhook 
+/yhook /Zstroke /zstroke /Ezh 
+/Ezhreversed /ezhreversed /ezhtail /twostroke 
+/Tonefive /tonefive /glottalinvertedstroke /wynn 
+
+% 01c0
+/clickdental /clicklateral /clickalveolar /clickretroflex 
+/DZcaron /Dzcaron /dzcaron /LJ 
+/Lj /lj /NJ /Nj 
+/nj /Acaron /acaron /Icaron 
+
+% 01d0
+/icaron /Ocaron /ocaron /Ucaron 
+/ucaron /Udieresismacron /udieresismacron /Udieresisacute 
+/udieresisacute /Udieresiscaron /udieresiscaron /Udieresisgrave 
+/udieresisgrave /eturned /Adieresismacron /adieresismacron 
+
+% 01e0
+/Adotmacron /adotmacron /AEmacron /aemacron 
+/Gstroke /gstroke /Gcaron /gcaron 
+/Kcaron /kcaron /Oogonek /oogonek 
+/Oogonekmacron /oogonekmacron /Ezhcaron /ezhcaron 
+
+% 01f0
+/jcaron /DZ /Dz /dz 
+/Gacute /gacute /uni01f6 /uni01f7 
+/uni01f8 /uni01f9 /Aringacute /aringacute 
+/AEacute /aeacute /Ostrokeacute /ostrokeacute 
+] def

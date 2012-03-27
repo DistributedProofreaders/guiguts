@@ -1,0 +1,157 @@
+\Impossible sequences of characters (mostly involving punctuation)
+\Revised 2 September 2004
+\This is a comment line (starts with a backslash)
+\Note that each line in this file is searched for as a string (not as
+\ an entire word); that is, if a line here contains "hotel", then any
+\ occurrence of this pattern of letters will be flagged, as in "hotels"
+\ and "hotelier".
+;.
+;,
+,;
+,,
+. .
+:.
+/<
+,!
+,?
+?,
+\Be careful about spaces! They are taken literally.
+\Also involving spaces
+, A 
+, An 
+, The 
+[Illustration :
+[Illustration A
+[Illustration B
+[Illustration D
+[Illustration E
+[Illustration F
+[Illustration G
+[Illustration H
+[Illustration J
+[Illustration K
+[Illustration M
+[Illustration N
+[Illustration O
+[Illustration P
+[Illustration Q
+[Illustration S
+[Illustration T
+[Illustration U
+[Illustration V
+[Illustration W
+[Illustration X
+[Illustration Y
+[Illustration Z
+[Illustration a
+[Illustration b
+[Illustration c
+[Illustration d
+[Illustration e
+[Illustration f
+[Illustration g
+[Illustration h
+[Illustration i
+[Illustration j
+[Illustration k
+[Illustration l
+[Illustration m
+[Illustration n
+[Illustration o
+[Illustration p
+[Illustration q
+[Illustration r
+[Illustration s
+[Illustration t
+[Illustration u
+[Illustration v
+[Illustration w
+[Illustration x
+[Illustration y
+[Illustration z
+[Illustration 1
+[Illustration 2
+[Illustration 3
+[Illustration 4
+[Illustration 5
+[Illustration 6
+[Illustration 7
+[Illustration 8
+[Illustration 9
+[Illustration 0
+\Period followed by lower-case
+.a
+.b
+.c
+.d
+.f
+.h
+.i
+.j
+.k
+.l
+.m
+.n
+.o
+.p
+.q
+.r
+.s
+.t
+.u
+.v
+.w
+.x
+.y
+.z
+\l instead of 1
+(ll
+[ll
+{ll
+\hut/but confusion:
+. Hut 
+"Hut 
+\HTML markups
+<a>
+<c>
+<d>
+<e>
+<f>
+<g>
+<h>
+<j>
+<k>
+<l>
+<m>
+<n>
+<o>
+<q>
+<r>
+<s>
+<t>
+<v>
+<w>
+<x>
+<y>
+<z>
+</c>
+</d>
+</e>
+</f>
+</g>
+</h>
+</j>
+</k>
+</l>
+</m>
+</n>
+</o>
+</q>
+</r>
+</s>
+</t>
+</v>
+</w>
+</x>
+</y>
+<z>

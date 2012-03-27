@@ -1,0 +1,1771 @@
+\Auxiliary file GAscanno.txt for GutAxe 0.5
+\modified 7 January 2006
+\This line is a comment (starts with anything but s, w, or r or their uppercases).
+\In any rule, the second character is the delimiter between type\error\correction\description
+\where type = S for string, W for word, or R for regular expression
+\The description MUST be included.
+
+r_([abefghjklnopqrstuvwyz])\1{2,}_$1$1_letter repeated more than twice
+
+    Scannos and Stealth Scannos
+
+    =A=
+r_\b([aA])a\b_$1s_stealth scanno
+r_\bAli(ens{0,1})\b_All$1_stealth scanno
+  \w\Aliens\Allens\stealth scanno
+r_\bAgues\b_Agnes_stealth scanno
+r_\b([aA])il\b_$1ll_stealth scanno
+  \w\ail\all\stealth scanno
+  \w\Ail\All\stealth scanno
+r_\b([aA]l)oe\b_$1ee_stealth scanno
+r_\b([aA])lter\b_$1fter_stealth scanno
+w\AMD\AND\scanno
+r_\b(ARB|ABE|AKE)\b_ARE_scanno
+  \w\ARB\ARE\scanno
+  \w\ABE\ARE\scanno
+  \w\AKE\ARE\scanno
+r_\b([vV]ery|[eE]xtremely|[aA]nd|[bB]ut|[aA]n|[tT]he)\s+and\b_$1 arid_stealth scanno: "and" for "arid"
+r_\b([sS]emi)\-and\b_$1-arid_stealth scanno: "and" for "arid"
+r_\b([aA])nd\s+(area|desert|l*and|landscape|climate|environment|zone|region)\b_$1rid $2_stealth scanno: "and" for "arid"
+r_\b([aA])nd\s+(area|desert|land|landscape|climate|environment|zone|region)s\b_$1rid $2s_stealth scanno: "and" for "arid"
+r_\b([aA])([mru]|ri)d\b_$1nd_stealth scanno for "and"
+  \w\amd\and\scanno
+  \w\Amd\And\scanno
+  \w\aud\and\scanno
+  \w\Aud\and\scanno
+  \w\arid\and\stealth scanno
+  \w\Arid\And\stealth scanno
+r_\b([aA])nus\b_$1rms_stealth scanno
+r_\b([aA][glprtvwxy])c\b_$1e_scanno or stealth scanno
+  \w\arc\are\c for e
+  \w\Arc\Are\scanno, c for e
+  \w\alc\ale\c for e
+r_\bd'Are\b_d'Arc_scanno, e for c
+r_\b([aA]n|[cC]ircular|[eE]lliptical|[tT]he)\s+are\b_$1 arc_are for arc
+w\auger\anger\stealth scanno
+w\augered\angered\stealth scanno
+
+    =B=
+    (see also "b/h confusion" below)
+w\Bach\Each\stealth scanno
+r_\b([bfghptwBFHPTW][ae])i(ls{0,1}|ling)\b_$1l$2_stealth scanno
+  \r_\b([bfghptwBFHPTW][ae])i(ling)\b_$1l$2_stealth scanno
+  \w\([bfhptwBFHPTW])ail\$1all\stealth scanno
+    \w\bail\ball\stealth scanno
+    \w\pail\pall\stealth scanno
+  \w\([bfhptwBFHPTW])ails\$1alls\stealth scanno
+  \r_\b([wW][ae])il_$1ll_stealth scanno, -il/-ll
+r_\b([bpBP])at\b_$1ut_stealth scanno
+  \w\bat\but\stealth scanno
+w\Beep\Keep\stealth scanno
+w\boll\boil\stealth scanno
+r_\b([bB]oo)b\b_$1k_stealth scanno
+r_\b([bB]oo)bs\b_$1ks_stealth scanno
+r_\bB[co]ring S[ceo]a_Bering Sea_stealth scanno
+r_Born(eo{0,1})\b_Rom$1_stealth scanno
+  \w\Borne\Rome\stealth scanno
+  \w\Borneo\Romeo\stealth scanno
+w\Beth\Both\stealth scanno
+w\Breams\Dreams\stealth scanno
+
+    =C=
+r_\b([cC]a[fgkmnprsv])o\b_$1e_scanno or stealth scanno
+r_\b([cC]a[fgkmnprsv])o([drs])\b_$1e$2_scanno or stealth scanno
+  \w\capo\cape\stealth scanno
+r_([cC]a)irn_$1lm_stealth scanno
+w\car\ear\stealth scanno
+w\cars\ears\stealth scanno
+r_\b([cC]ar)nage_$1riage_stealth scanno, carnage/carriage
+  \w\carnage\carriage\stealth scanno
+  \w\carnages\carriages\stealth scanno
+r_\b([cC])a(nn|pp|tt)ing_$1u$2ing_stealth scanno
+w\CBAPTER\CHAPTER\scanno
+r_\bC[BH]A[FRT]TE[BR]\b_CHAPTER_scanno
+  \w\CHAFTER\CHAPTER\scanno
+  \w\CHARTER\CHAPTER\scanno
+w\Christinas\Christmas\stealth scanno
+r_\bc(lements*)\b_e$1_stealth scanno
+  \w\clement\element\stealth scanno
+  \w\clements\elements\stealth scanno
+r_\b([cC]o)l(ls*)\b_$1i$2_stealth scanno
+  \w\coll\coil\stealth scanno
+r_\b([cC]oloni)cs_$1es_stealth scanno
+w\curs\ours\stealth scanno
+r_\bC([uU][rR][sS]{0,1})\b_O$1_stealth scanno
+  \w\Cur\Our\stealth scanno
+  \w\Curs\Ours\stealth scanno
+  \w\CUR\OUR\stealth scanno
+  \w\CURS\OURS\stealth scanno
+
+    =D=
+   (see also "cl/d confusion")
+r_\b([dD]en)tal_$1ial_stealth scanno
+w\DC\DO\scanno
+w\DCES\DOES\scanno
+r_\b([dD]o)cs_$1es_stealth scanno
+  \w\docs\does\stealth scanno
+  \w\Docs\Does\stealth scanno
+r_Due ([dD][e'])\b_Duc $1_stealth scanno
+  \s_Due d'_Duc d'_stealth scanno
+
+    =E=
+w\eared\cared\stealth scanno
+r_\b([eE])v(es*)\b_$1y$2_stealth scanno, eve/eye
+  \w\eve\eye\stealth scanno, eve/eye
+  \w\eves\eyes\stealth} scanno, eve/eye
+r_\b([eE])y(e[nrs]{0,1})\b_$1v$2_scanno or stealth scanno
+  \w\eyes\eves\stealth scanno, eves/eyes
+  \w\Eye\Eve\stealth scanno
+w\eveiy\every\scanno
+r_\b([eE]very)\s+(body|one|thing|where)_$1$2_connect words
+
+    =F=
+r_\b([fF]a[cdkmrtz])o\b_$1e_scanno or stealth scanno, "o" for "e"
+  \r_\b([fF]a[rd])o\b_$1e_stealth scanno, "o" for "e"
+    \w\fado\fade\stealth scanno, "o" for "e"
+    \w\faro\fare\stealth scanno, "o" for "e"
+    \w\faros\fares\stealth scanno, "o" for "e"
+r_\bf([aou]ng)\b_r$1_stealth scanno
+r_\b([fhwFHW]a)nn(e[dr])_$1rm$2_stealth scanno
+  \w\fanned\farmed\stealth scanno
+  \w\Fanner\Farmer\stealth scanno
+  \w\Fanners\Farmers\stealth scanno
+  \w\fanner\farmer\stealth scanno
+  \w\wanner\warmer\stealth scanno
+r_\b([fF])ax_$1ar_stealth scanno, fax/far
+  \w\fax\far\stealth scanno
+r_\bfeign_reign_stealth scanno, feign/reign
+r_\b([fF])[ir]at\b_$1lat_stealth scanno
+r_£([a-z])_f$1_scanno (pound for f)
+r_([a-zA-Z])£_$1f_scanno (pound for f)
+  \w\£or\for\scanno (pound for f)
+r_\b([fgFG][lr])oe_$1ee_stealth scanno, o/e
+  \w\floe\flee\stealth scanno
+  \w\froe\free\stealth scanno
+  \w\froes\frees\stealth scanno
+r_\b([fF])olio wed\b_$1ollowed_stealth scanno
+r_\bF[BK][CO0]M\b_FROM_scanno
+  \w\FBOM\FROM\scanno
+  \w\FKOM\FROM\scanno
+r_\bF[O0C][BEKP]\b_FOR_scanno or stealth scanno
+  \w\FOB\FOR\stealth scanno
+  \w\FOE\FOR\stealth scanno
+  \w\FOK\FOR\scanno
+w_Franco_France_stealth scanno
+
+    =G=
+w\gees\goes\stealth scanno
+r_\b([gG]entle)\s+(man|woman|folk)_$1$2_remove space(s)
+r_\b([gG]rand)\s+(father|mother|pa|ma|pop|mom|son|daughter|pere)_$1$2_remove space(s)
+r_\b([gG]r)o(ats{0,1})\b_$1e$2_stealth scanno, o/e
+  \w\groat\great\stealth scanno
+  \w\Groat\Great\stealth scanno
+r_\bgrous(e|ed|ing)\b_$1arous$2_stealth scanno, o/e
+  \w\grouse\arouse\stealth scanno
+  \w\groused\aroused\stealth scanno
+  \w\grousing\arousing\stealth scanno
+w\guru\gun\stealth scanno
+
+    =H=
+    (see also "b/h confusion" below)
+r_\b([hpwHPW]a)re\b_$1ve_stealth scanno
+  \w\hare\have\stealth scanno
+  \w\Hare\Have\stealth scanno
+r_\b([hH]al)t\b_$1f_stealth scanno, "halt" for "half"
+r_\b([hH]a)[rwy]ing\b_$1ving_stealth scanno
+  \w\haring\having\stealth scanno
+  \w\Haring\Having\stealth scanno
+  \w\hawing\having\stealth scanno
+  \w\haying\having\stealth scanno
+  \w\Haying\Having\stealth scanno
+r_\b([hH]er)e-worship_$1o-worship_stealth scanno
+r_\b([oO]ur|[mM]y|[tT]he)\s+here\b_$1 hero_stealth scanno
+w\hitman\human\stealth scanno
+r_\b([hH]un)ched_$1dred_stealth scanno
+
+    =I=
+r_\b([iI])[r£]\b_$1f_scanno
+  \w\i£\if\scanno (pound for f)
+  \w\I£\If\scanno (pound for f)
+w\IP\IF\scanno
+w\Info\Into\scanno
+w\info\into\scanno
+r_"II\b_"Il_II for Italian word Il
+w\INDBX\INDEX\stealth scanno
+w\IMDEX\INDEX\stealth scanno
+w\MDEX\INDEX\stealth scanno
+
+    =L=
+r_\b([lL]ad)les\b_$1ies_stealth scanno
+  \w\ladles\ladies\stealth scanno
+  \w\Ladles\Ladies\stealth scanno
+r_\b1'([aehiouyàáâèéêô])_l'$1_French scanno, one for el
+r_\b([bclBCL]a)ud_$1nd_stealth scanno
+  \w\laud\land\stealth scanno
+  \w\lauds\lands\stealth scanno
+  \w\lauded\landed\stealth scanno
+  \w\lauding\landing\stealth scanno
+  \w\caudle\candle\stealth scanno
+r_\blie\b_he_stealth scanno
+r_\blier\b_her_stealth scanno
+r_\bliers\b_hers_stealth scanno
+r_\blime_time_stealth scanno
+  \w\lime\time\stealth scanno
+  \w\limes\times\stealth scanno
+  \w\limed\timed\stealth scanno
+r_\blimo_lime_stealth scanno
+w\loguitur\loquitur\scanno
+
+    =M=
+w\mall\mail\stealth scanno
+w\malls\mails\stealth scanno
+w\mariner\manner\stealth scanno
+w\mariners\manners\stealth scanno
+w\mast\must\stealth scanno
+r_\b([mM])ew_$1ow_stealth scanno
+w\MEW\NEW\stealth scanno
+w\MEWS\NEWS\stealth scanno
+  Sometimes OCRed for "his" but could be abbrev. for "manuscript":
+r_\b([mM]o)a([st])\b_$1s$2_stealth scanno, moat/most
+w\mow\now\stealth scanno
+w\Ms\his\stealth scanno
+w\musts\masts\stealth scanno
+
+    =N=
+w\nein\rein\stealth scanno
+r_\b([nN])e(ne|on)_$1o$2_stealth scanno
+  \r_\b([nN])ene_$1one_stealth scanno
+    \w\nene\none\stealth scanno
+  \r_\b([nN])eon_$1oon_stealth scanno
+    \w\neon\noon\stealth scanno
+r_\bnite_rite_stealth scanno
+  \w\nite\rite\stealth scanno
+  \w\nites\rites\stealth scanno
+r_\b([nN])itro\b_$1itre_stealth scanno
+r_\b([nN])itros\b_$1itres_stealth scanno
+w\nn\un\French scanno
+r_\bn(agged|avel|eap|egress|isus|ock|oil|uder*)_r$1_stealth scanno
+  \r_\bnock_rock_stealth scanno
+  \r_\bnude_rude_stealth scanno
+
+    =O=
+w\oases\cases\stealth scanno
+w\oases\eases\stealth scanno
+w\oast\east\stealth scanno
+w\OAST\CAST\stealth scanno
+w\Oast\Cast\stealth scanno
+\w\oat\eat\stealth scanno
+r_\bo(at[eis]+)_e$1_stealth scanno
+  \w\oats\eats\stealth scanno
+  \w\oaten\eaten\stealth scanno
+  \w\oating\eating\stealth scanno
+s\o'dock\o'clock\stealth scanno
+r_\b([oO])[t£]\b_$1f_scanno
+  \w\o£\of\scanno (pound for f)
+r_\bO[EP]\b_OF_scanno
+  \w\OE\OF\scanno
+  \w\OP\OF\scanno
+r_\b([oO]f)\s+ten\b_$1ten_split word
+r_\bO[BE]\b_OR_scanno
+  \w\OB\OR\scanno
+  \w\OE\OR\scanno
+w\oven\even\stealth scanno
+r_\b([oO]ve)n\b_$1r_scanno
+  \w\oven\over\stealth scanno
+
+    =P=
+w\Pans\Paris\stealth scanno
+s\Piddl\Fiddl\stealth scanno
+  \w\Piddles\Fiddles\stealth scanno
+r_P([ilI1][gG]\.)_F$1_stealth scanno, Pig/Fig
+  \s\Pig.\Fig.\stealth scanno
+  \s\PIG.\FIG.\stealth scanno
+r_\b([pP]oliti)es_$1cs_stealth scanno
+r_\bP(or|our|rom|OR|OUR|ROM)\b_F$1_stealth scanno
+  \w\POR\FOR\scanno
+  |w\Pour\Four\stealth scanno
+  \w\PROM\FROM\stealth scanno
+r_\bP(ran[ck]|RAN[CK])_F$1_stealth scanno
+  \w\Prance\France\stealth scanno
+  \w\Prank\Frank\stealth scanno
+  \r_\bP(RAN[CK])_F$1_stealth scanno
+r_\b(PEEF|PERF|PREP|FREF|FREP)ACE\b_PREFACE_scanno
+  \s\PEEFACE\PREFACE\scanno
+  \s\PREPACE\PREFACE\stealth scanno
+  \s\FREFACE\PREFACE\stealth scanno
+w\PRICK\PRICE\stealth scanno
+
+    =R=
+r_\b([rR]eal)ty\b_$1ly_stealth scanno
+  \w\realty\really\stealth scanno
+  \w\Realty\Really\stealth scanno
+r_\br(ecks*)\b_n$1_stealth scanno, reck/neck
+r_\br(eed[sy]*)_n$1_stealth scanno, reed/need
+r_\breign_feign_stealth scanno
+  \s\reign\feign\stealth scanno
+r_\br(ets*)\b_n$1_stealth scanno, ret/net
+r_\b([rR])e(ts*)\b_$1o$2_stealth scanno, ret/net
+w_Rico_Rice_stealth scanno
+r_\br(illed|illing|ingers*|oes*)\b_f$1_scanno
+  \w\rilled\filled\stealth scanno
+  \w\ringer\finger\stealth scanno
+  \w\ringers\fingers\stealth scanno
+  \w\roe\foe\stealth scanno
+  \w\roes\foes\stealth scanno
+w\riot\not\stealth scanno
+w\rote\note\stealth scanno
+r_\bri(ot[ei]+)_n$1_stealth scanno, riot-/not-
+  \r_\briot\b_not_stealth scanno
+  \w\rioted\noted\stealth scanno
+r_\b([rR]ive)[nt]_$1r_stealth scanno for "river"
+r_\b([lprtLPRT])oach_$1each_stealth scanno, -oach/-each
+  \w\roach\reach\stealth scanno
+  \w\roaches\reaches\stealth scanno
+
+    =S=
+w\sago\sage\stealth scanno
+w\Sago\Sage\stealth scanno
+w\SBE\SHE\scanno
+r_([sS]to)v(e|e[ds]|ing)\b_$1r$2_stealth scanno
+  \w\stoves\stores\stealth scanno
+  \w\stoving\storing\stealth scanno
+r_([sS]to)n(e[ds]|ing)\b_$1ri$2_stealth scanno
+  \w\stoned\storied\stealth scanno
+  \w\stones\stories\stealth scanno
+  \w\Stones\Stories\stealth scanno
+w\stoiy\story\scanno
+r_([sS])urfe(rs{0,1})_$1uffe$2_stealth scanno, surfer/suffer
+
+    =T=
+r_\b([tT])i[rl](e|ings{0,1})\b_$1h$2_stealth scanno, tile- or tire- for the-
+  \r_\b([tT])il([ei])_$1h$2_stealth scanno, tile-/the-
+    \w\tile\the\stealth scanno
+    \w\Tile\The\stealth scanno
+    \w\tiling\thing\stealth scanno
+  \w\tire\the\stealth scanno
+  \w\Tire\The\stealth scanno
+  \w\tiring\thing\stealth scanno
+r_\b(IHE|TBE|THB)\b_THE_scanno
+  \w\IHE\THE\scanno
+  \w\TBE\THE\scanno
+  \w\THB\THE\scanno
+w\TBIS\THIS\scanno
+r_\b([tT])ins\b_$1his_stealth scanno, tile-/the-
+  \w\tins\this\stealth scanno
+  \w\Tins\This\stealth scanno
+r_\b([tT]hr)oe\b_$1ee_stealth scanno, throe/three
+  \w\throe\three\stealth scanno
+r_\b([tT]hr)ees\b_$1oes_stealth scanno, throe/three
+  \w\threes\throes\stealth scanno
+w\tiro\tire\stealth scanno
+w\tiros\tires\stealth scanno
+r_\b([tT])e(es{0,1})\b_$1o$2_stealth scanno
+w\toe\too\stealth scanno
+w\tor\for\stealth scanno
+
+    =U=
+r_\bus\s+much_as much_us for as
+
+    =V=
+w\vas\was\stealth scanno
+r_\b([vwVW]|[cC]h)ino\b_$1ine_stealth scanno
+r_\b([vwMVW]|[cC]h)inos\b_$1ines_stealth scanno
+  w\vino\vine\stealth scanno
+r_\b([vV])ert(ex|ices)\b_$1ort$2_stealth scanno
+r_\b([vV])ort(ex|ices)\b_$1ert$2_stealth scanno
+  w\vortex\vertex\stealth scanno
+  w\vertex\vortex\stealth scanno
+  w\Vortex\Vertex\stealth scanno
+  w\Vertex\Vortex\stealth scanno
+
+    =W=
+r_([ghpwGHPW]a)a_$1s_scanno, -aa/-as
+r_\b([ghwGHW]a)g\b_$1s_stealth scanno, -ag/-as
+  \w\wag\was\stealth scanno
+  \w\Wag\Was\stealth scanno
+r_\b([cfprwCDFPRW]a)ve\b_$1re_stealth scanno, -ave/-are
+r_\b([wW]ea)ned\b_$1ried_stealth scanno, 
+r_\b([wW]e)n\b_$1ll_stealth scanno, 
+  w\wen\well\stealth scanno
+  w\Wen\Well\stealth scanno
+r_\b([wW]i)f[bhn]\b_$1th_scanno 
+  \w\wifh\with\scanno
+  \w\Wifh\With\scanno
+
+    =Y=
+r_\b([yY]o)n\b_$1u_stealth scanno
+  \w\yon\you\stealth scanno
+  \w\Yon\You\stealth scanno
+
+    =numbers=
+r_\bl([26]mo)\b_1$1_scanno (page size, 12mo, 16mo)
+w\Ato\4to\scanno
+
+
+------------------------------------------------------------------------
+
+\simple scanno sequences
+
+r_\b(\S+)\s\1\b_$1_repeated word
+
+r_([b-df-hj-np-tv-xz])([b-df-hj-np-tv-xz])([b-df-hj-np-tv-xz])([b-df-hj-np-tv-xz])([b-df-hj-np-tv-xz])_$1*$2*$3*$4*$5_flag 5 consecutive consonants
+
+\r_\B([^gGq])uess_$1ness_scanno, -ness
+r_\B([a-z])uess_$1ness_scanno, -ness
+  \s\iuess\iness\scanno
+    etc.
+
+r_[vV][vV]_w_scanno
+  \s\vv\w\scanno
+  \s\Vv\w\scanno
+  \s\vV\w\scanno
+r_[vV][vV]_W_scanno
+  \s\VV\W\scanno
+  \s\Vv\W\scanno
+  \s\vV\W\scanno
+
+r_([cstw])ii_$1h_scanno, "ii" for "h"
+  \s\tii\th\scanno
+
+s\gbt\ght\scanno
+
+-------------------------
+
+        cl/d confusion
+
+r_cl([bcdghjlmnprstw])_d$1_scanno, "cl" for "d" before selected consonants (possibly at start of word)
+
+r_([dglmptw])cl_$1d_scanno, "cl" for "d" after selected consonants
+
+r_cl\b_d_scanno, "cl" at end of word for "d"
+  \s\cl \d \scanno
+    etc.
+
+r_\bcla([my][ps]*|nk|nker|pper|re|rk|sh)\b_da$1_stealth scanno
+  \r_\bcl(a[my][ps]*)\b_d$1_stealth scanno, cla-/da-
+    \r_\bcl(a[my])\b_d$1_stealth scanno
+      \w\clay\day\stealth scanno
+      \w\clays\days\stealth scanno
+  \w\clank\dank\stealth scanno
+  \w\clapper\dapper\stealth scanno
+  \w\clare\dare\stealth scanno
+  \w\clark\dark\stealth scanno
+  \w\clash\dash\stealth scanno
+s\my clear\my dear\stealth scanno
+s\My clear\My dear\stealth scanno
+r_\bcle(arest|ck|w|ft)_de$1_stealth scanno, cle-/de-
+  \w\clew\dew\stealth scanno
+r_\bcl(i[mn]e)_d$1_stealth scanno
+r_\bclo(gs*|gged|ne|t|tted|tting|tty|ughs*|ur|ves*|wns*)\b_do$1_stealth scanno
+  \w\clog\dog\stealth scanno
+  \w\clogged\dogged\stealth scanno
+  \w\clone\done\stealth scanno
+  \w\clot\dot\stealth scanno
+  \w\clotted\dotted\stealth scanno
+  \w\clotting\dotting\stealth scanno
+  \w\clotty\dotty\stealth scanno
+  \w\clough\dough\stealth scanno
+  \w\cloughs\doughs\stealth scanno
+  \w\clour\dour\stealth scanno
+  \w\clove\dove\stealth scanno
+  \w\clown\down\stealth scanno
+  \w\clowns\downs\stealth scanno
+r_\bclu(cks*|cked|cking|nks*|nked|nking|e\s+to)\b_du$1_stealth scanno, clu-/du-
+  \s\cluck\duck\stealth scanno
+  \s\clunk\dunk\stealth scanno
+  \s\clue to\due to\stealth scanno
+
+r_\bd(a[dpw]s*)\b_cl$1_stealth scanno
+  \w\dad\clad\stealth scanno
+r_\bde(ans*|ar\-|ft)\b_cle$1_stealth scanno
+  \w\dean\clean\stealth scanno
+r_\bdemen(t|cy)\b_cle$1_stealth scanno for "clement"
+r_\bd([iu]ck)_cl$1_stealth scanno for "click" or "cluck"
+r_\bd([iu]n[gk]s*)\b_cl$1_stealth scanno, d for cl
+  \w\ding\cling\stealth scanno
+  \w\dung\clung\stealth scanno
+r_\bdo(se[drst]*|sing|th|ut|wned|wning|wns)\b_clo$1_stealth scanno, d for cl
+  \w\dose\close\stealth scanno
+  \w\dosed\closed\stealth scanno
+  \w\doth\cloth\stealth scanno
+  \w\dout\clout\stealth scanno
+  \w\downed\clowned\stealth scanno
+  \w\downing\clowning\stealth scanno
+  \w\downs\clowns\stealth scanno
+r_\bdu(bs*|usters*|tch)\b_clu$1_stealth scanno, d for cl
+  \w\dub\club\stealth scanno
+  \w\dubs\clubs\stealth scanno
+  \s\duster\cluster\stealth scanno
+  \s\dutch\clutch\stealth scanno
+
+---------------------------
+
+        li/h confusion
+
+r_\bli([u])_h$1_scanno, "li" for "h" at start of word
+
+r_\b([dkrwDKRW])li([aeiouy])_$1h$2_scanno, "li" for "h" as 2nd letter
+  \s\ tli\ th\scanno
+r_\b([stST])li([aeioruy])_$1h$2_scanno, "li" for "h" as 2nd letter
+
+r_li([iy])_h$1_scanno, "li" for "h" before selected vowels
+
+\r_\b([csCS])li([aeiouy])_$1h$2_scanno, "li" for "h" as 2nd letter
+r_\b([csCS])li([aiouy])_$1h$2_scanno, "li" for "h" as 2nd letter
+   False positives: client, slier, -est
+
+r_([^aeilou])li\b_$1h_scanno, "li" for "h" at end of word
+
+r_\b([fFI])h([aeioruy])_$1li$2_scanno, "h" for "li" as 2nd letter
+
+w\lien\hen\stealth scanno
+w\lier\her\stealth scanno
+
+w\hon\lion\stealth scanno
+
+----------------------------
+
+          rn/m confusion
+
+r_\brn_m_scanno, "rn" for "m" at start of word
+  \s\ rn\ m\scanno
+
+\r_rn([bmnp])_m$1_scanno, "rn" for "m" before selected consonants
+  False positives: government, internment, discernment, etc.; cornpone, turnpike
+  Most of these involve the "m" followed by "e". Let's break this in two:
+r_rn([bnp])_m$1_scanno, "rn" for "m"
+  \s\rnp\mp\scanno
+  \s\rnb\mb\scanno
+r_rn(m[^e])_m$1_scanno, "rn" for "m"
+  \s\rnma\mma\scanno
+  \s\rnmi\mmi\scanno
+  \s\rnmo\mmo\scanno
+  \s\rnmu\mmu\scanno
+
+r_([b-df-hj-np-tv-xzIS])rn_$1m_scanno, "rn" for "m" after consonant or I or S (possibly at end of word)
+  \s\mrn\mm\scanno
+
+s\rnrn\mm\scanno
+
+r_\b([bwyBWY]a)m\b_$1rn_stealth scanno, "m" for "rn"
+r_\b([btBT]u)m\b_$1rn_stealth scanno, "m" for "rn"
+  \r_\b([bB][au])m_$1rn_stealth scanno, "m" for "rn"
+r_\b([btBT]u)m([^bmpsu])_$1rn$2_stealth scanno, "m" for "rn"
+  \w\bum\burn\stealth scanno
+  \w\bums\burns\stealth scanno
+  \w\bumt\burnt\scanno
+  \w\tum\turn\stealth scanno
+  \w\tums\turns\stealth scanno
+w\carne\came\stealth scanno, "rn" for "m"
+r_\b([cC]hu)m_$1rn_stealth scanno, "m" for "rn"
+  \w\chum\churn\stealth scanno, "m" for "rn"
+r_\b([cC]o)m(e[rt])_$1rn$2_stealth scanno, "m" for "rn"
+  \w\comer\corner\stealth scanno, "m" for "rn"
+  \w\comers\corners\stealth scanno, "m" for "rn"
+  \w\comet\cornet\stealth scanno, "m" for "rn"
+r_\b([cC]o)rning_$1ming_stealth scanno, "rn" for "m"
+  \w\corning\coming\stealth scanno, "rn" for "m"
+r_\b([dD]a)rn_$1m_stealth scanno, "rn" for "m"
+w\fornent\foment\stealth scanno, "rn" for "m"
+r_\b([gG]a)m(e[rt])_$1rn$2_stealth scanno, "m" for "rn"
+  \w\gamer\garner\stealth scanno, "m" for "rn"
+r_\b([hH]e)rn_$1m_stealth scanno, "rn" for "m"
+w\homed\horned\stealth scanno, "m" for "rn"
+w\leam\learn\stealth scanno, "m" for "rn"
+r_\b([lL]ea)m(ed|er|ing|s)\b_$1rn$2_stealth scanno, "m" for "rn"
+  \w\leamed\learned\stealth scanno, "m" for "rn"
+  \w\leamer\learner\stealth scanno, "m" for "rn"
+  \w\leaming\learning\stealth scanno, "m" for "rn"
+r_\b([mM]ode)m_$1rn_stealth scanno, "m" for "rn"
+  \w\modem\modern\stealth scanno, "m" for "rn"
+r_\b([mtMT]o)m\b_$1rn_stealth scanno, "m" for "rn"
+  \w\mom\morn\stealth scanno, "m" for "rn"
+  \w\tom\torn\stealth scanno, "m" for "rn"
+r_\b([tyTY]a)rn_$1m_stealth scanno, "rn" for "m"
+
+-----------------------------
+
+       m/in confusion
+
+r_\b([dgt]ra)m\b_$1in_stealth scanno, "m" for "in"
+  \w\gram\grain\stealth scanno
+  \w\tram\train\stealth scanno
+r_\b([cC])oining\b_$1oming_stealth scanno
+  \w\coining\coming\stealth scanno
+  \w\Coining\Coming\stealth scanno
+r_\b([gG]a)m(ed|ing)\b_$1in$2_stealth scanno
+  \w\gamed\gained\stealth scanno, "m" for "in"
+  \w\gaming\gaining\stealth scanno, "m" for "in"
+r_\b([fglmprvCGLPRV]a)m\b_$1in_stealth scanno, "m" for "in"
+  \w\gam\gain\stealth scanno
+  \w\lam\lain\stealth scanno
+  \w\ram\rain\stealth scanno
+w\Spam\Spain\stealth scanno, "m" for "in"
+w\swain\swam\stealth scanno
+
+  \r_\bm\b_in_scanno
+   False positive: "I'm"
+r_ m\b_ in_scanno
+  \s\ m \ in \scanno
+
+-----------------------------
+
+           c/e/o confusion
+
+s\mcnt\ment\scanno, "c" for "e"
+s\mcnt\mont\scanno, "c" for "o"
+
+r_\b([b-df-hj-np-rtv-z])c_$1e_scanno, "c" for "e"
+r_(b[blt]|c[hkt]|dd|f[ft]|g[gh]|l[dlt]|m[bmnp]|n[cdgknst]|p[pt]|r[bmnprst]|s[hkst]|t[ilt]|[aiolru]th)[co]d\b_$1ed_c/e/o confusion
+
+r_\b([bB]ett|[lL]ess)or_$1er_stealth scanno
+  \r_\b([lL]ess)or_$1er_stealth scanno
+
+w\en\on\stealth scanno
+r_\b([BlmLMT])o(ss)\b_$1e$2_stealth scanno, "o" for "e"
+r_\b([bhlmwBHLMW])o\b_$1e_stealth scanno, o/e
+    \w\bo\be\scanno
+    \w\ho\he\scanno
+  \r_\b([bhlBHL])o\b_$1e_stealth scanno, o/e
+r_\b([bB])eard(ed|ing)\b_$1oar$2_stealth scanno
+  \w\bearded\boarded\stealth scanno, o/e
+  \w\bearding\boarding\stealth scanno, o/e
+r_\b([aA]|[mM]y|[hH]is)\s+been\b_$1 boon_stealth scanno, o/e
+r_\b([bB])een\s+companion_$1oon companion_stealth scanno, o/e
+r_\b([bB])ee(ts{0,1})\b_$1oo$2_stealth scanno, o/e
+r_\b([bB]l)eat(ed|er|ers|ing)\b_$1oat$2_stealth scanno
+  \w\bleated\bloated\stealth scanno
+  \w\bleating\bloating\stealth scanno
+r_\b([bB]l)oat_$1eat_stealth scanno, o/a
+  \w\bloating\bleating\stealth scanno
+r_\b([bB])oar(d|ds|ding|s|ded|ish)\b_$1ear$2_stealth scanno
+  \r_\b([bB])o(ar[ds]{0,1})\b_$1e$2_stealth scanno
+    \w\boar\bear\stealth scanno
+    \w\board\beard\stealth scanno
+    \w\boars\bears\stealth scanno
+  \w\boarded\bearded\stealth scanno
+  \w\boarish\bearish\stealth scanno
+r_\b([bB])oas(t|ts|tly)\b_$1eas$2_stealth scanno
+  \w\boast\beast\stealth scanno
+  \w\boasts\beasts\stealth scanno
+r_\b([bB])oat(er|ing)_$1eat$2_stealth scanno
+  \w\boating\beating\stealth scanno
+r_\b([bchlBCHL])oc(ks{0,1}|ked|king)\b_$1oo$2_stealth scanno
+r_\b([bB])o(d|ing|gged|g|ll|rate|t)\b_$1e$2_stealth scanno
+r_\b([bB])o(d|ing|g|ll|rate|t)s\b_$1e$2s_stealth scanno
+  \w\bogged\begged\stealth scanno
+  \w\boing\being\stealth scanno
+  \r_\b([bB])o(ts{0,1})\b_$1e$2_scanno
+    \w\bot\bet\scanno
+    \w\bots\bets\scanno
+w\boo\bee\stealth scanno
+r_\bboo([fnrs])_bee$1_stealth scanno
+  \w\boon\been\stealth scanno
+  \w\boor\beer\stealth scanno
+  \w\boos\bees\stealth scanno
+r_\b([cC])e(il|llar|lt|ltish|re)\b_$1o$2_stealth scanno
+r_\b([cC])e(il|llar|lt|re)s\b_$1o$2s_stealth scanno
+r_\b([cC]he)ek_$1ck_stealth scanno
+r_\b(\-che)cked_$1eked_stealth scanno
+r_\bc(u[rt])\b_o$1_stealth scanno
+  \w\cur\our\stealth scanno
+r_\b([dD])e(cile|le)\b_$1o$2_stealth scanno
+r_\b([dD])o(cent)\b_$1e$2_stealth scanno
+r_\b([hH])o(ar[ds]{0,1}|lm|re)\b_$1e$2_stealth scanno, "o" for "e"
+  \r_\b([hH])o(ar[ds])_$1e$2_stealth scanno
+  \w\hoar\hear\stealth scanno
+  \w\holm\helm\stealth scanno
+  \w\hore\here\stealth scanno
+  \w\hoard\heard\stealth scanno
+  \w\hoars\hears\stealth scanno
+r_\b([hH])(al|er|om)o\b_$1$2e_stealth scanno, "o" for "e"
+  \w\hero\here\stealth scanno
+  \w\Hero\Here\stealth scanno
+  \w\homo\home\stealth scanno
+r_\b([hH])e(ist|ller|me|p|st|t|w)\b_$1o$2_stealth scanno
+r_\b([hH])e(ist|ller|me|p|st)s\b_$1o$2s_stealth scanno
+  \w\heme\home\stealth scanno
+  \w\hep\hop\stealth scanno
+  \w\het\hot\stealth scanno
+  \w\hest\host\stealth scanno
+r_\b([hwHW])o(re)\b_$1e$2_scanno or stealth scanno
+r_\b([lL])oa([dfn]s{0,1}|[dfn]ing)\b_$1ea$2_stealth scanno
+  \r_\b([lL])o(a[dfn]ing)_$1e$2_stealth scanno
+w\mako\make\stealth scanno
+w\makos\makes\stealth scanno
+r_\b([mM])e(ld|th|wed)\b_$1o$2_stealth scanno
+r_\b([mM])oa([nt]s{0,1}|nings{0,1})\b_$1ea$2_stealth scanno
+  \r_\b([mM])oat\b_$1eat_stealth scanno
+  \r_\b([mM])o(anings{0,1})\b_$1e$2_stealth scanno
+r_\b([mM])o([dnst]|dal|te|ttle)\b_$1e$2_stealth scanno
+  \r_\b([mM])o([dnst])\b_$1e$2_stealth scanno
+  \r_\b([sS])c(a[mrt])_$1e$2_stealth scanno ("c" for "e")
+r_\b(a|A|[lL]ow|[yY]ou)\s+o([au][rt])\b_$1 c$2_stealth scanno
+r_\b([pP]er)\s+so\b_$1 se_stealth scanno
+r_\b([pwPW])o([nr]t)\b_$1e$2_scanno or stealth scanno
+r_\b([pP]r)e(mise[sd]{0,1})\b_$1o$2_stealth scanno
+r_\b([rR])oo(ks{0,1}|king|ke[dr])\b_$1oc$2_scanno or stealth scanno
+r_\b([sS])c(a[mt]s{0,1})\b_$1e$2_stealth scanno ("c" for "e")
+  \w\scat\seat\stealth scanno
+  \w\Scat\Seat\stealth scanno
+r_\b([sS])c(a[lr]ed)_$1e$2_stealth scanno ("c" for "e")
+r_\b([sS])e(a[lr]ed)_$1c$2_stealth scanno ("c" for "e")
+r_\b([sS])e(rer*|wn)\b_$1o$2_stealth scanno ("e" for "o")
+r_\b([sS]c)o(nes{0,1})_$1e$2_stealth scanno ("c" for "e")
+r_\b([sS]t)e([lrv]es{0,1})_$1o$2_stealth scanno ("c" for "e")
+r_\b([tT]al)c\b_$1e_stealth scanno
+r_\b([tT]al)cs\b_$1es_stealth scanno
+r_\b([tT]h)[aocs]\b_$1e_"a", "o", "c", or "s" for "e" in "the"
+  w\tho\the\stealth scanno
+r_([wW]h)ore_$1ere_scanno or stealth scanno, whore/where
+  \w\whore\where\stealth scanno
+  \w\Whore\Where\stealth scanno
+
+----------------------------------------------------------------------------
+
+  \standalone or terminal "j" as semicolon (mind the blanks!)
+r_\s*j\b_;_scanno, "j" for semicolon & possibly close up leading space
+  \s\ j \; \"j" for semicolon & close up leading space
+  \s\j \; \"j" for semicolon
+  \s\j-\;-\"j" for semicolon
+--------------------------
+
+   b/h confusion
+
+     "b" for "h"
+        letter patterns
+r_\b([bcdgkprstwBCDGKPRSTW])b_$1h_scanno, "b" for "h" as 2nd letter
+  \w\tbe\the\scanno
+  \w\Tbe\The\scanno
+  \w\tbere\there\scanno
+  \s\cb\ch\scanno
+r_\b([sS]c)b_$1h_scanno, "b" for "h"
+
+r_([cgpst])b\b_$1h_scanno, "b" for "h" at end of word
+
+r_([cgpst])b(e[drs])_$1h$2_scanno, "b" for "h"
+
+        words
+r_b([ao]cks*)_h$1_stealth scanno, "b" for "h"
+  \s\bock\hock\stealth scanno, "b" for "h"
+r_\bb(a[dgmty]s*)\b_h$1_stealth scanno, "b" for "h"
+  w\bad\had\stealth scanno, "b" for "h"
+  w\bag\hag\stealth scanno, "b" for "h"
+r_\bba([il]ls*|[nr][dkm]s*|ngs*|nger|rrows*|sh|shes|st|te)\b_ha$1_stealth scanno, "b" for "h"
+  \r_\bb(a[il]ls*)\b_h$1_stealth scanno, "b" for "h"
+    \w\bail\hail\stealth scanno
+    \w\bails\hails\stealth scanno
+    \w\ball\hall\stealth scanno
+    \w\balls\halls\stealth scanno
+  \w\bang\hang\stealth scanno
+  \w\bash\hash\stealth scanno, "b" for "h"
+  \w\bashes\hashes\stealth scanno, "b" for "h"
+  \w\bast\hast\stealth scanno, "b" for "h"
+  \w\banger\hanger\stealth scanno
+  \r_\bb(a[nr][dkm]s*)\b_h$1_stealth scanno, "b" for "h"
+    \w\band\hand\stealth scanno
+    \w\bands\hands\stealth scanno
+    \w\bard\hard\stealth scanno
+  \s\barrow\harrow\stealth scanno, "b" for "h"
+  \w\bate\hate\stealth scanno
+r_\bba(il|n[dg]|rrow|sh|t)(ed|ing)_ha$1$2_stealth scanno, "b" for "h"
+  w\bailed\hailed\stealth scanno
+  w\bailing\hailing\stealth scanno
+  \w\banded\handed\stealth scanno
+  w\banged\hanged\stealth scanno
+  w\banging\hanging\stealth scanno
+r_\bb([au]sh)_h$1_stealth scanno, "b" for "h"
+  \w\baste\haste\stealth scanno, "b" for "h"
+w\bead\head\stealth scanno, "b" for "h"
+r_\bbe(ad|ar)(ed|ing)_he$1$2_stealth scanno, "b" for "h"
+r_\bbi(dden|de|ding|nder|nge[ds]*)_hi$1_stealth scanno, "b" for "h"
+  w\bidden\hidden\stealth scanno, "b" for "h"
+  w\bide\hide\stealth scanno, "b" for "h"
+  w\biding\hiding\stealth scanno, "b" for "h"
+  s\binder\hinder\stealth scanno, "b" for "h"
+  s\binge\hinge\stealth scanno, "b" for "h"
+s\bind leg\hind leg\stealth scanno, "b" for "h"
+r_\bbo([dgptw]s{0,1}|les{0,1}|wls{0,1})\b_ho$1_stealth scanno, "b" for "h"
+  \s\bop\hop\stealth scanno, "b" for "h"
+  \w\bot\hot\scanno, "b" for "h"
+  \w\bow\how\stealth scanno, "b" for "h"
+  \w\bole\hole\stealth scanno, "b" for "h"
+  \w\bowl\howl\stealth scanno, "b" for "h"
+r_\bbo(l|n|pp|us|wl)(ed|ing)_ho$1$2_stealth scanno, "b" for "h"
+  r_b(ous[ei])_h$1_stealth scanno, "b" for "h"
+  w\bowled\howled\stealth scanno, "b" for "h"
+  w\bowling\howling\stealth scanno, "b" for "h"
+r_\bbu(ffy|[bgm]s*)\b_hu$1_stealth scanno, "b" for "h"
+  \w\buffy\huffy\stealth scanno, "b" for "h"
+  \r_\bbum\b_hum_stealth scanno, "b" for "h"
+r_\bbumbl_humbl_stealth scanno, "b" for "h"
+  \s\bumble\humble\stealth scanno, "b" for "h"
+    \w\bumbled\humbled\stealth scanno, "b" for "h"
+    \w\bumbler\humbler\stealth scanno, "b" for "h"
+    \w\bumbles\humbles\stealth scanno, "b" for "h"
+r_\bbu(ff|gg|l[kl]|mm|nch|rl|sh)(ed|ing)_hu$1$2_stealth scanno, "b" for "h"
+r_\bb([iu]n[kt])_h$1_stealth scanno, "b" for "h"
+  \w\bint\hint\stealth scanno, "b" for "h"
+  \s\bunt\hunt\stealth scanno
+    \w\bunts\hunts\stealth scanno
+    \w\bunter\hunter\stealth scanno
+    \w\bunted\hunted\stealth scanno
+    \w\bunting\hunting\stealth scanno
+r_\bbu(ffs{0,1}|l[kl]s{0,1}|nche{0,1}[ds]{0,1}|ng|rls{0,1}|sks{0,1}|ts)\b_hu$1_stealth scanno, "b" for "h"
+  \w\busk\husk\stealth scanno
+  \w\bung\hung\stealth scanno, "b" for "h"
+r_\bb([ai]tch)_h$1_stealth scanno, "b" for "h"
+  s\bitch\hitch\stealth scanno
+    \w\bitches\hitches\stealth scanno
+    \w\bitched\hitched\stealth scanno
+    \w\bitching\hitching\stealth scanno
+    \w\batching\hatching\stealth scanno
+w\butch\hutch\stealth scanno, "b" for "h"
+w\witb\with\scanno, "h" for "b"
+
+      "h" for "b"
+         letter patterns
+r_\bh([hlr])_b$1_scanno, "h" for "b" at start of word
+
+r_([bhilmruI])h\b_$1b_scanno, "h" for "b" at end of word
+   False positives: catarrh, myrrh
+
+r_([Aabimoru])hl([eioy])_$1bl$2_scanno, "h" for "b"
+  \s\ahle\able\scanno
+    etc.
+s\hble\bble\scanno
+s\hbli\bbli\scanno
+
+          words
+r_\bh([ae][cnr]k)_b$1_stealth scanno, "h" for "b"
+  \w\hack\back\stealth scanno
+  \w\hacked\backed\stealth scanno
+  \w\hacker\backer\stealth scanno
+  \w\hackers\backers\stealth scanno
+  \w\hacking\backing\stealth scanno
+  \w\hacks\backs\stealth scanno
+  \w\hank\bank\stealth scanno
+  \w\hanks\banks\stealth scanno
+  \w\hanker\banker\stealth scanno
+  \w\hankers\bankers\stealth scanno
+  \w\hark\bark\stealth scanno
+  \w\heck\beck\stealth scanno, "h" for "b"
+r_\bha([kr]e|l[em]|rrier|rrow|th|tte[dr]|y)\b_ba$1_stealth scanno, "h" for "b"
+r_\bha([kr]e|l[em]|rrier|rrow|th|tter|y)s\b_ba$1s_stealth scanno, "h" for "b"
+  \w\hake\bake\stealth scanno, "h" for "b"
+  \w\hakes\bakes\stealth scanno, "h" for "b"
+  \w\halm\balm\stealth scanno, "h" for "b"
+  \w\hay\bay\stealth scanno, "h" for "b"
+  \w\hays\bays\stealth scanno, "h" for "b"
+  \w\harrier\barrier\stealth scanno, "h" for "b"
+  \s\harrow\barrow\stealth scanno, "h" for "b"
+  \w\hath\bath\stealth scanno, "h" for "b"
+  \r_\bhatte([dr])\b_batte$1_stealth scanno, "h" for "b"
+    w\hatter\batter\stealth scanno, "h" for "b"
+r_\bhea(dy|ter)\b_bea$1_stealth scanno, "h" for "b"
+  w\heater\beater\stealth scanno, "h" for "b"
+r_\bhe(lls{0,1}|[ns]*t|rms{0,1})_be$1_stealth scanno, "h" for "b"
+  \w\hell\bell\stealth scanno, "h" for "b"
+  \w\hells\bells\stealth scanno, "h" for "b"
+  \w\het\bet\stealth scanno
+  \w\hets\bets\stealth scanno
+  \w\hest\best\stealth scanno
+  \w\herm\berm\stealth scanno, "h" for "b"
+r_\bhi(des{0,1}|ding|ghts{0,1}|nds{0,1})\b_bi$1_stealth scanno, "h" for "b"
+  \w\hide\bide\stealth scanno, "h" for "b"
+  \w\hiding\biding\stealth scanno, "h" for "b"
+  \w\hight\bight\stealth scanno, "h" for "b"
+  \w\hind\bind\stealth scanno, "h" for "b"
+  \w\hinds\binds\stealth scanno, "h" for "b"
+r_\bhoar_boar_stealth scanno, "h" for "b"
+r_\bho(o[kt]s{0,1}|ughs{0,1})_bo$1_stealth scanno, "h" for "b"
+  \w\hook\book\stealth scanno, "h" for "b"
+  \w\hooks\books\stealth scanno, "h" for "b"
+  \w\hoot\boot\stealth scanno, "h" for "b"
+  \w\hoots\boots\stealth scanno, "h" for "b"
+  \w\hooter\booter\stealth scanno, "h" for "b"
+  \w\hooted\booted\stealth scanno, "h" for "b"
+  \w\hough\bough\stealth scanno, "h" for "b"
+  \w\houghs\boughs\stealth scanno, "h" for "b"
+r_\b([aA]|[hH]is) how\b_$1 bow_stealth scanno, "h" for "b"
+s\how and arro\bow and arro\stealth scanno, "how" for "bow"
+r_\bhu(ff|l[kl]|mp|sh)_bu$1_stealth scanno, "h" for "b"
+  \r_\bhush_bush_stealth scanno, "h" for "b"
+  \r_\bhump\B_bump_stealth scanno, "h" for "b"
+    \r_\bhump(ing|ed|er|y)_bump$1_stealth scanno
+r_\bh(u[bgm]s*)\b_b$1_stealth scanno, "h" for "b"
+r_\bhunch\B_bunch_stealth scanno, "h" for "b"
+  \w\hunch\bunch\stealth scanno
+r_\bhunk(er|s)_bunk$1_stealth scanno, "h" for "b"
+w\hy\by\scanno, "h" for "b"
+
+     HAD FOR BAD   
+r_\bhad\s+(leg|man|side|way)\b_bad $1_had for bad
+r_\bhad\s+(mann|weath)er_bad $1er_had for bad
+r_\b([aA]s|[vV]ery|[tT]oo|[aA]wfully|[eE]xtremely)\s+had\b_$1 bad_had for bad
+
+r_\b([iI]ts|[tT]he|[hH]er)\s+how\b_$1 bow_how for bow
+r_\b(port|starboard|weather|lee)\s+how\b_$1 bow_how for bow
+
+----------------------------------------------------------------------------
+
+  he/be confusion, tests using multiple words or punctuation
+
+r_([:;"])\s+be\b_$1 he_be for he
+  \s\: be \: he \he/be confusion
+  \s\; be \; he \he/be confusion
+
+r_\b([aiAI][fs])\s+be\b_$1 he_be for he
+  \s\if be \if he \he/be confusion
+  \s\ is be \ is he \he/be confusion
+
+  "be" followed by the past tense of synonyms of "said"
+r_\bbe\s+(add|admitt|answer|ask|averr|believ|call|cri|declar|demand|exclaim|murmur|mutter|repli|shout)ed\b_he $1ed_be for he
+r_\bbe\s+([bh]i|sai|tol)d\b_he $1d_be for he
+r_\bbe\s+(swears|swore|spoke|speaks)\b_he $1_be for he
+
+  "be" followed by past tense of an regular verb
+r_\bbe\s+(look|seem|show|wa[in]t)ed\b_he $1ed_be for he
+
+r_\bbe\s+(ate|[bm]ade|began|came|[bh]id|broke|chose|drank|drove|fell|forbade|forgave|foresaw|froze|got|[gh]ave|[lw]ent|ran|ro[ds]e|[rs]ang|saw|shrank|sprang|swam|[tw]ore|trod|woke|wrote)\b_he $1_be for he
+  \s\ be began\ he began\be for he
+  \s\ be have\ he have\he/be confusion
+  \s\ be went\ he went\he/be confusion
+r_\bbe\s+([bfs]l|[dg]r|kn|str|thr|overthr|overdr|withdr)ew\b_he $1ew_be for he (before irr. past participle)
+r_\bbe\s+(be|over|mis|re|par|under|)took\b_he $1took_be for he (before irr. past participle)
+
+  "be" followed by verbs usually used in active voice
+r_\bbe\s+(felt|put|thought)\b_he $1_be for he
+
+  "be" followed by common present-tense third-person verb (ending in "s")
+r_\bbe\s+(feel|hold|know|put|seem|think|want)s\b_he $1s_be for he
+r_\bbe\s+(add|admit|answer|ask|aver|call|demand|exclaim|murmur|mutter|shout)s\b_he $1s_be for he
+r_\bbe\s+(believ|cri|declar|mak|repli)es\b_he $1es_be for he
+
+  "be" followed by "biblical" form of verb (e.g., "be abideth")
+r_\bbe\s+([a-z]{3,}eth)\b_he $1_be for he
+r_\bBe\s+([a-z]{3,}eth)\b_He $1_Be for He
+
+  "be" followed by auxiliary verb
+r_\bbe\s+(be|being|can|cannot|[cw]ould|did|do|does|had|[hw]as|hath|is|may|might|must|ought|shall|were|will)\b_he $1_be for he
+  \s\ be can\ he can\be for he
+  \s\ be did\ he did\be for he
+  \s\ be is \ he is \he/be confusion
+  \s\ be could\ he could\he/be confusion
+  \r_\bbe\s+([hw]as)\b_he $1_he/be confusion
+    \s\ be has\ he has\he/be confusion
+    \s\ be was \ he was \he/be confusion
+  \s\ be might\ he might\he/be confusion
+  \s\ be will\ he will\he/be confusion
+r_\bbe\s+(ai|ca|[cw]ould|did|does|ha[ds]|is|may|might|ought|sha'*|was|were|wo)n't\b_he $1n't_be for he
+  \s\ be isn\ he isn\he/be confusion
+
+  "be" followed by adverb
+r_\bbe\s+(never|only)\b_he $1_be for he
+
+r_\bbe\s+(goes|know|lay|[lt]ook|ma[dk]e|sa[twy])_he $1_be for he
+  \s\ be does\ he does\he/be confusion
+  \s\ be goes\ he goes\he/be confusion
+  \r_\bb(e\s[lms]ay)_h$1_he/be confusion
+    \s\ be may\ he may\he/be confusion
+    \s\ be say\ he say\he/be confusion
+      etc.
+  \r_b(e\s[cw]ould)_h$1_he/be confusion
+    \s\ be would\ he would\he/be confusion
+  \s\ be made\ he made\he/be confusion
+  \s\ be make\ he make\he/be confusion
+
+
+r_\b([dD])(are|id|idn't|oes|oesn't)\s+be\b_$1$2 he_be for he
+r_\b([iI])(f|n|s|t)\s+be\b_$1$2 he_be for he
+r_\b([sS]a)(d|id|ith|[kv]e|w|y|ying|ys)\s+be\b_$1$2 he_be for he
+r_\b([twTW]h[ae][nt])\s+be\b_$1 he_be for he
+r_\b([twTW]here])\s+be\b_$1 he_be for he
+r_([uU]n)(less|til)\s+be\b_$1$2 he_be for he
+r_([wW]h)(atever|atsoever|ence|enever|ether|ich|ile)\s+be\b_$1$2 he_be for he
+r_([wW]here)(a[st]|by|in|o[fn]|soever|ver|upon)\s+be\b_$1$2 he_be for he
+
+r_(ca)(n|nnot|n't)\s+he\b_$1$2 be_he for be
+r_([cw]oul)(d|dn't)\s+he\b_$1$2 be_he for be
+r_\b([dD])(o|on't)\s+he\b_$1$2 be_he for be
+r_\b([fF]ai)(n|r|rly|th)\s+he\b_$1$2 be_he for be
+r_\b([hH]ardly)\s+he\b_$1 be_he for be
+r_\b([hH]e)(art|aven|lp|r)\s+he\b_$1$2 be_he for be
+r_\b([hH]e)\s+he\b_$1 be_he for be
+r_\b([hH]i[ms])\s+he\b_$1 be_he for be
+r_\b(h[ei][mr]|it|my|your)sel(f|ves)\s+he\b_$1sel$2 be_he for be
+r_\b\b(I|we)\s+he\b_$1 be_he for be
+r_\b([lL]e)(t|t's)\s+he\b_$1$2 be_he for be
+r_\b([tT])(he[my]|hou|o|will|would)\s+he\b_$1$2 be_he for be
+  \s\ to he \ to be \he/be confusion
+r_\b([yY])(e|ou)\s+he\b_$1$2 be_he for be
+
+r_'(d|ll)\s+he\b_'$1 be_he for be
+  r_([iI]t')(d|ll)\s+he\b_$1$2 be_he for be
+
+r_(need|ly)\s+he\b_$1 be_he for be
+  \s\need he \need be \he for be
+  \s\ly he \ly be \he for be
+
+r_\bhe\s+(a|an|for|in|the|with)\b_be $1_he for be (before article or prep.)
+  \s\ he for \ be for \he/be confusion
+  \s\ he with \ be with \he/be confusion
+
+   "he" followed by the present participle of a verb
+r_\bhe\s+([a-z]{3,})ing\b_be $1ing_he for be (before a present participle)
+
+   "he" followed by an adjective
+r_\bhe\s+([a-z]{3,})([ae]nt|[aei]te|[ai]ble|ful|ic|ive|ical|ional|[ao]ic|ous|ty)\b_be $1$2_he for be (before an adj.)
+r_\bhe\s+(able|better|bold|brave|certain|easy|glad|good|happy|here|honest|just)\b_be $1_he for be (before an adj.)
+r_\bhe\s+(kind|late|like|more|much|off|o[fn]|quick|qui[et][et]|ready|strong|[ps]ure|[st]o|such|true|well|wise)\b_be $1_he for be (before an adj.)
+
+   "he" followed by a pronoun or possessive
+r_\bhe\s+(he|his|I|its{0,1}|mine|my|one|she|they|that|thine|thou|thy|you|yourself)\b_be $1_he for be (before a pronoun)
+r_\bhe\s+(he|ou|thei|you)(rs{0,1})\b_be $1$2_he for be (before a poss. pronoun)
+
+
+   "he" followed by the past participle of an irregular verb
+   (unlikely, except in a question)
+r_\bhe\s+(beat|behold|chos|eat|fall|forese|froz|ris|se|stol)en\b_be $1en_he for be (before irr. past participle)
+r_\bhe\s+(forbi|[bhr]i|stri|tro)dden\b_be $1dden_he for be (before irr. past participle)
+r_\bhe\s+(bi|forgo|go|smi|wri)tten\b_be $1tten_he for be (before irr. past participle)
+r_\bhe\s+(bro|drun|foresa|mista|overta|parta|sha|spo|stric|ta|underta|a{0,1}wo)ken\b_be $1ken_he for be (before irr. past participle)
+r_\bhe\s+(dri|forgi|gi|pro|sha|wo)ven\b_be $1ven_he for be (before irr. past participle)
+r_\bhe\s+(begun|borne{0,1}|[dg]one|drunk|s{0,1}lain|[rs]ung|shorn|sprung|swum|[tw]orn)\b_be $1_he for be (before irr. past participle)
+r_\bhe\s+([bf]lo|[dms]o|gro|kno|sh[eo]|stre|thro|overthro|dra|withdra|[hs]e)wn\b_be $1wn_he for be (before irr. past participle)
+
+r_\b([wW]ould\-)he\b_$1be_he for be
+
+ ------------------------------------
+
+   hut/but confusion, multi-word regex's
+
+  Trying to do better than this:
+    w\hut\but\stealth scanno
+
+w\Hut\But\stealth scanno, Hut for But
+
+r_\b([aA]|[tT]he|grass|mud|reed|thatch|thatched)\s+b(uts{0,1})\b_$1 h$2_"but" for "hut"
+  \s\ a but \ a hut \h/b confusion
+  \r_\b([tT]he\s)but\b_$1hut_"but" for "hut" after word "the"
+    \s\ the but \ the hut \"but" for "hut" after word "the"
+  \s\hatched but\hatched hut\but for hut
+
+r_\bbut([\.;:\?!\)])_hut$1_but for hut
+  \s\ but.\ hut.\h/b confusion
+    etc.
+    \s\ but,\ hut,\h/b confusion    (not used: too many false positives)
+
+r_([,;])\s+hut\b_$1 but_hut for but
+  \s\, hut \, but \h/b confusion
+  \s\; hut \; but \h/b confusion
+
+r_\bhut\s+(a|an|the|no)\b_but $1_hut for but
+  \s\ hut a \ but a \h/b confusion
+  \s\ hut an \ but an \h/b confusion
+  \s\ hut the \ but the \h/b confusion
+
+
+-----------------------------
+
+   us/as confusion, multi-word regex's
+
+  Trying to do better than this:
+    w\us\as\stealth scanno
+    w\as\us\stealth scanno
+
+r_\b([aA][st]|[tT]o|[fF]or|[fF]rom|[wW]ith|[bB]y|[oO]f)\s+as\b_$1 us_stealth scanno, "as" for "us"
+r_\b([cC]lose|[dD]eep|[eE]arly|[fF]ar|[lL]ong|[hnHN]ot|[sS]hort|[sS]harp|[sS]weet|[wW]ide)\s+us\b_$1 as_stealth scanno, "us" for "as"
+
+-----------------------------
+
+    PUNCTUATION
+
+    Parentheses, etc.
+
+s\}\)\brace for paren
+s\{\(\brace for paren
+s\}\]\brace for bracket
+s\{\[\brace for bracket
+
+    Spacing around punctuation
+
+r_\s+(['"])\s*$_$1_close up dangling apostrophe or quote at end of line
+
+r_^\s*(['"])\s+_$1_close up dangling apostrophe or quote at beginning of line
+
+r_\b([mM])'\s+l(a|or|u)d_$1'l$2d_close up space
+
+r_\.([a-dfh-z])_. $1_leave a space after "."
+  \s\.a\. a\leave a space
+    etc.
+  \s\.e\. e\leave a space    [commented out--too many false positives!]
+  \s\.g\. g\leave a space  [commented out "e.g."]
+
+r_\.([A-Z\(\[][a-zA-Z])_. $1_leave a space after "."
+  \s\.Aa\. Aa\leave a space
+    etc.
+
+r_([,:;\?!\)\]\}])([a-zA-Z\(\[])_$1 $2_leave a space after punctuation
+
+r_([a-zA-Z][,:;\?!\)\]\}])(\d)_$1 $2_leave a space after punctuation before number
+
+r_\s+([,:;\?!\)\]\}])_$1_close up space before punctuation or closing parens
+  \s\ ,\,\close up space before comma
+  \s\ )\)\close up space
+    etc.
+
+r_([\(\{\[])\s+_$1_close up space after opening parens
+  \s\( \(\close up space
+  \s\[ \[\close up space
+    etc.
+
+r_([,:;\?!\)\}\]\.])\s{2,}([a-zA-Z])_$1 $2_close up extra space after punctuation
+  \r_\.\s{2,}([a-zA-Z])_. $1_remove extra space after "."
+    \s\.  a\. a\remove extra space
+      etc.
+
+s\ " \" \close up space before quote
+s\ " \ "\close up space after quote
+
+r_("[a-z]+) "([a-z])_$1" $2_adjust spacing of quotation mark about word
+r_([a-z])" ([a-z]+")_$1 "$2_adjust spacing of quotation mark about word
+
+s\ . \. \close up space before period
+
+r_'"([a-zA-Z])_"'$1_Single- and double-quotes out of order
+r_([a-zA-Z,\.])"'_$1'"_Single- and double-quotes out of order
+
+
+    Periods
+
+r_([a-z])\s+\. _$1. _close up space before period
+  \s\a . \a. \close up space before period
+    etc.
+
+r_\b([vV][oO][lL]\.)([cdilmvxCDILMVX]+)\b_$1 $2_leave a space after "."
+
+r_([a-zA-Z]\.)(\d)_$1 $2_leave a space after "."
+  \s\p.1\p. 1\leave a space
+    etc.
+
+r_([a-df-hj-zA-Z])\.([a-z])_$1 $2_remove extra period
+r_([a-z])\.([A-Z])_$1 $2_remove extra period
+  \s\a.a\a a\remove extra period
+    etc.
+  \e.g\e g\remove extra period       e.g.
+  \i.e\i e\remove extra period-->NO! i.e.
+
+r_\.([a-dfh-z])_. $1_leave a space after "."
+  \s\.a\. a\leave a space
+    etc.
+  \.e\. e\leave a space    [commented out--too many false positives!]
+  \s\.g\. g\leave a space  [commented out "e.g."]
+
+r_\b([tT])he[,\.]_$1he_remove comma or period after "the"
+
+
+    Apostrophes & Contractions
+
+s\`\'\grave accent for apostrophe
+
+s\ ' \' \close up space before apostrophe
+s\ ' \ '\close up space after apostrophe
+s\' ll\'ll\close up space after apostrophe
+s\ 'll\'ll\close up space before apostrophe
+
+\quote for apostrophe
+s\ "ll\'ll\quote for apostrophe & close up space
+s\"ll\'ll\quote for apostrophe
+
+r_([a-z]I)[`"]([dnrstv])_$1'$2_quote or accent for apostrophe
+r_([A-Z])[`"]([DNRSTV])_$1'$2_quote or accent for apostrophe in u.c. text
+  \s\a"s\a's\quote for apostrophe
+    etc.
+  \s\n"t\n't\quote for apostrophe
+  \s\sha"n\sha'n\quote for apostrophe
+r_\s*"([rv]e|d|ll)\b_'$1_quote for apostrophe
+  \s\"ve \'ve \quote for apostrophe
+  \s\"re \'re \quote for apostrophe
+  \s\ "ve \'ve \quote for apostrophe & close up space
+  \s\ "re \'re \quote for apostrophe & close up space
+r_\bI"([dm])\b_I'$1_quote for apostrophe
+r_\bI\s+'([dm])\b_I'$1_close up space
+r_\bI'\s+([dm])\b_I'$1_close up space
+
+r_\b([doDO])['"`]\s+_$1'_close up space
+
+r_[`'"]\s*([tT])\s+is_'$1is_close up contraction, possible " or ` for '
+  \s\'T is\'Tis\close up space in contraction
+  \s\'t is\'tis\close up space
+  \s\"T is\'Tis\quote for apostrophe & close up space
+  \s\"t is\'tis\quote for apostrophe & close up space
+  \s\`T is\'Tis\accent for apostrophe & close up space
+  \s\`t is\'tis\accent for apostrophe & close up space
+  \s\' T is\'Tis\close up space in contraction
+    etc.
+
+r_[`'"]\s*([tT])\s+w(as|ere)_'$1w$2_close up contraction, possible " or ` for '
+  r_[`'"]\s*([tT])\s+was_'$1was_close up contraction, possible " or ` for '
+    \s\"T was\'Twas\quote for apostrophe & close up space
+      etc.
+  r_[`'"]\s*([tT])\s+were_'$1were_close up contraction, possible " or ` for '
+    \s\'T were\'Twere\close up space
+      etc.
+
+r_[`'"]\s*([tT])\s+ain_'$1ain_close up contraction, possible " or ` for '
+  \s\'t ain\'tain\close up space
+    etc.
+
+r_\s+[`'"]\s*([rv]e|d)\b_'$1_close up space(s), possible " or ` for '
+r_\s*[`'"]\s+([rv]e|d)\b_'$1_close up space(s), possible " or ` for '
+  \s\ 've \'ve \close up space
+  \s\ 're \'re \close up space
+  \s\' ve \'ve \close up space
+    etc.
+
+r_([a-z])\s+[`'"]\s*([dms])\b_$1'$2_close up space before "'m" or "'d" or "'s", possible " or ` for '
+r_([a-z])\s*[`'"]\s+([dms])\b_$1'$2_close up space within "'m" or "'d" or "'s", possible " or ` for '
+  r_\bI [`'"]\s*([dms])\b_I'$1_close up space in "I'm" or "I'd" or "I's", possible " or ` for '
+  r_\bI\s*[`'"] ([dms])\b_I'$1_close up space in "I'm" or "I'd" or "I's", possible " or ` for '
+    \s\I 'm\I'm\close up space
+      etc.
+
+r_\b([hwyHWY]e|[iI]t|ou)\s+[`'"]\s*([ds]|ll)\b_$1'$2_close up space, possible " or ` for '
+r_\b([hwyHWY]e)\s*[`'"]\s+([ds]|ll)\b_$1'$2_close up space, possible " or ` for '
+  \s\he 's\he's\close up space
+  \s\He 's\He's\close up space
+    etc.
+  \s\he 'll\he'll\close up space
+    etc.
+  \s\it 's \it's \close up space
+  \s\it 'd \it'd \close up space
+    etc.
+
+r_\s+n\s*'\s*t\b_n't_close up space(s) before (and possibly within) "n't"
+  \s\do n't\don't\close up space
+  \s\does n't\doesn't\close up space
+  \s\Do n't\Don't\close up space
+  \s\Does n't\Doesn't\close up space
+  \s\ n't\n't\close up space
+
+r_\s*n\s+'\s*t\b_n't_close up space(s) within (and possibly before) "n't"
+r_\s*n\s*'\s+t\b_n't_close up space(s) within (and possibly before) "n't"
+  s\n' t\n't\close up space
+  s\n 't\n't\close up space
+
+s_sha"n_sha'n_quote for apostrophe in "sha'n't"
+
+r_([eoEO])\s*'\s+(e[nr])/b_$1'$2_close up space in contraction
+r_([eoEO])\s+'\s*(e[nr])/b_$1'$2_close up space in contraction
+
+
+    Commas
+
+r_([,;:])([a-zA-Z])_$1 $2_leave a space
+  \s\,a\, a\leave a space
+    etc.
+
+r_,([a-zA-Z])_ $1_delete extra comma
+  \s\,a\ a\delete extra comma
+    etc.
+
+r_,"([a-zA-Z])_," $1_leave a space after comma-quote
+  \s\,"a\," a\leave a space
+    etc.
+
+r_^"([^\s])\s+"_"$1" _mis-spaced quote
+
+
+    Ellipsis
+
+r_([a-zI])\.\.\.\s+_$1 ... _leave space before ellipsis, possibly close up excess space after
+  \s\a... \a ... \leave a space before ellipsis
+    etc.
+
+s\ ....\....\close up space
+
+r_([,\.\?!;])\s+\.\.\._$1..._close up space between punct. & ellipsis
+  \s\, ...\,...\close up space
+    etc.
+
+r_\.\.\.\s+([\.\?!;])_...$1_close up space after ellipsis
+  \s\... .\....\close up space
+  \s\... ?\...?\close up space
+  \s\... !\...!\close up space
+
+r_\.{5,}_...._ellipsis too long
+  \s\.....\....\ellipsis too long
+
+
+    Dashes and hyphens
+
+r_([a-zA-Z\s])-{5,}_$1----_long dash too long
+  \s\------\----\long dash too long
+  \s\-----\----\long dash too long
+
+r_([^-])-{3}([^-])_$1--$2_change 3 hyphens to 2
+r_([^-])-{3}\s*$_$1--_change 3 hyphens to 2 at end of line
+r_^-{3}([^-])_$1--$2_change 3 hyphens to 2 at start of line
+r_^\*-{3}([^-])_$1--$2_change 3 hyphens to 2 at start of line
+
+r_\b([a-zA-HJ-Z])-{2,3}([^-])_$1----$2_longer dash for "censored" word
+r_\b([a-zA-HJ-Z])-{2,3}\s*$_$1----_longer dash for "censored" word
+r_\bI-{3}([^-])_I----$1_longer dash for "censored" word (I----)
+r_\bI-{3}\s*$_I----_longer dash for "censored" word (I----)
+  \s\A-- \A---- \longer dash
+    etc.
+
+s\----\--\long dash too long
+r_\s+--\s*_--_close up space(s)
+  \s\ -- \--\close up spaces
+s\ - \-\close up spaces around hyphen
+s\-- .\--.\close up space after dash
+s\-- ,\--,\close up space after dash
+
+
+    Abbreviations
+
+r_\b([BDFJMS][rR]|[chlpqwCFLMPSUV][tT]),\s*_$1. _comma for period in abbreviation
+r_\b([BDFJMS][rR]|[chlpqwCFLMPSUV][tT]),$_$1._comma for period in abbreviation
+  \s\Mr,\Mr.\comma for period
+  \s\Dr,\Dr.\comma for period
+    etc.
+  \s\St,\St.\comma for period
+    etc.
+
+r_\b([np]),\s*(\d)_$1. $2_comma for period in abbreviation
+
+r_\b([BDFJMS][rR]|[chlpqwCFLMPSUV][tT])\s+_$1. _missing period in abbreviation
+  \s\Mr \Mr. \missing period
+  \s\Dr \Dr.\missing period
+  \s\St \St.\missing period
+
+r_\b([BDFJMS][rR]|[chlpqwCFLMPSUV][tT])\.([A-Z])+_$1. $2_space after abbreviation
+
+r_(Mrs|MRS|Prof|Inc|INC|incl|Capt|Cmdr|C[oO]|Col|Ens|[fF]ig|FIG|[eE]tc|ETC|Gen|Maj|Mlle|Mme|et\s+al),\s*_$1. _comma for period, possibly mis-spaced
+  \r_(Mrs|MRS|Prof|Inc|INC|incl|Capt|Cmdr|C[oO]|Col|Ens|[fF}ig|FIG|[eE]tc|ETC|Gen|Maj|Mlle|Mme|et\s+al),$_$1._comma for period
+  \s\Mrs,\Mrs.\comma for period
+  \s\Prof,\Prof.\comma for period
+  \s\Fig,\Fig.\comma for period
+  \s\Inc,\Inc.\comma for period
+  \s\etc,\etc.\comma for period
+  \s\et al,\et al.\comma for period
+r_(Mrs|MRS|Prof|Inc|incl|INC|Capt|Cmdr|C[oO]|Col|Ens|[fF]ig|FIG|[eE]tc|ETC|Gen|Maj|Mlle|Mme|et\s+al)\s+_$1. _missing period
+r_(Mrs|MRS|Prof|Inc|incl|INC|Capt|Cmdr|C[oO]|Col|Ens|[fF]ig|FIG|[eE]tc|ETC|Gen|Maj|Mlle|Mme|et\s+al)\s*$_$1. _missing period
+  s\Mrs \Mrs. \missing period
+  s\Prof \Prof. \missing period
+  s\etc \etc. \missing period
+r_M[il][il][ce],\s*_Mlle. _comma for period in "Mlle." possibly misspelled or mis-spaced
+r_M[il][il][ce]\s+_Mlle. _missing period in "Mlle." possibly misspelled or mis-spaced
+  s\Mlle,\Mlle.\comma for period
+  s\Mlle \Mlle.\missing period
+s\Mile.\Mlle.\scanno
+s\Mlie.\Mlle.\scanno
+s\et. al.\et al.\extra period after "et"
+s\i. e.\i.e.\close up space in i.e.
+s\e. g.\e.g.\close up space in e.g.
+s\a. m.\a.m.\close up space in a.m.
+s\p. m.\p.m.\close up space in p.m.
+
+r_\bNo\s+(\d)_No. $1_period missing in abbrev. for "number"
+r_\bNo,\s+(\d)_No. $1_comma for period in abbrev. for "number"
+r_\bNo\s+([ivxlcdmIVXLCDM]+)\b_No. $1_period missing in abbrev. for "number"
+r_\bNo,\s+([ivxlcdmVXLCDM][ivxlcdmIVXLCDM]*)\b_No. $1_comma for period in abbrev. for "number"
+r_\bNo,\s+II_No. II_comma for period in abbrev. for "number"
+
+r_(XV*I*)L\b_$1I._"L" for "I." in Roman numeral
+  \s\XVL\XVI.\"L" for "I." in Roman numeral
+  \s\XL\XI.\"L" for "I." in Roman numeral
+  \s\XIL\XII.\"L" for "I." in Roman numeral
+  \s\XIIL\XIII.\"L" for "I." in Roman numeral
+
+s\per cent \per cent. \missing period
+r_\b([pP]er\s+[cC]ent),_$1._comma for period
+  s\per cent,\per cent.\comma for period
+  s\Per cent,\Per cent.\comma for period
+  s\Per Cent,\Per Cent.\comma for period
+
+r_\b([aeipA-Z]),\s*([egmA-Z]\.)_$1.$2_comma for period, possibly with space
+  \s\A,D.\A.D.\comma for period
+  \s\B,C.\B.C.\comma for period
+  \s\e,g.\e.g.\comma for period
+  \r_\bi,\s*e\._i.e._comma for period, possibly with space
+    \s\i,e.\i.e.\comma for period
+
+r_\b([eiA-Z]\.)\s*([egA-Z]),_$1$2._comma for period, possibly with space
+  \s\A.D,\A.D.\comma for period
+  \s\B.C,\B.C.\comma for period
+  \s\e.g,\e.g.\comma for period
+  \s\i.e,\i.e.\comma for period
+
+  BOOKS OF THE BIBLE
+r_\b(Co[lr]|Eccl|Eph|Gal|Matt|Phil|Rev|Rom|Thess|Tim),_$1._comma for period
+
+
+\Comma/period confusion, with short capitalized word as a tipoff:
+r_,\s+(A|A[dhmnstuwy]|[BHLMWY]e|[BMO]y|[DGHST]o)\b_. $1_comma for period
+  \s\, At \. At \comma for period
+  \s\, Ah,\. Ah,\comma for period
+  \s\, Ah!\. Ah!\comma for period
+  \s\, As \. As \comma for period
+  \s\, An \. An \comma for period
+s\, All \. All \comma for period
+\r_,\s+(A)\b_. $1_comma for period
+  \s\, A \. A \comma for period
+s\, Also\. Also\comma for period
+r_,\s+(An[dy])\b_. $1_comma for period
+  \s\, And \. And \comma for period
+  \s\, Any\. Any\comma for period
+\r_,\s+([BHMWY]e)\b_. $1_comma for period
+  \s\, Be \. Be \comma for period
+  \s\, He \. He \comma for period
+  \s\, He'\. He'\comma for period
+  \s\, We \. We \comma for period
+s\, But \. But \comma for period
+\r_,\s+([BM]y)\b_. $1_comma for period
+  \s\, My \. My \comma for period
+  \s\, By \. By \comma for period
+s\, Did \. Did \comma for period
+\r_,\s+([DGHST]o)\b_. $1_comma for period
+  \s\, Do \. Do \comma for period
+  \s\, No,\. No,\comma for period
+  \s\, No \. No \comma for period
+  \s\, So \. So \comma for period
+  \s\, To \. To \comma for period
+s\, Every\. Every\comma for period
+s\, For \. For \comma for period
+r_,\s+([BCHLMNRSTVW]ow|I[fnst]|[BGLMNPSY]et|O[fhnorwx]|[STW]h[eoy])\b_. $1_comma for period
+  \s\, How \. How \comma for period
+  \s\, Now \. Now \comma for period
+  \s\, Now,\. Now,\comma for period
+s\, Howev\. Howev\comma for period
+s\, His\. His\comma for period
+s\, Her \. Her \comma for period
+\r_,\s+(I[fnst])\b_. $1_comma for period
+  \s\, If \. If \comma for period
+  \s\, In \. In \comma for period
+  \s\, Is \. Is \comma for period
+  \s\, It \. It \comma for period
+\r_,\s+([BGLMNPSY]et)\b_. $1_comma for period
+  \s\, Let \. Let \comma for period
+  \s\, Yet\. Yet\comma for period
+s\, Many\. Many\comma for period
+\r_,\s+(O[fhnorwx])\b_. $1_comma for period
+  \s\, On \. On \comma for period
+  \s\, Of\. Of\comma for period
+  \s\, Oh,\. Oh,\comma for period
+  \s\, Oh!\. Oh!\comma for period
+r_, O(ne|nly|ur|ver)\b_. O$1_comma for period
+  \s\, Only\. Only\comma for period
+  \s\, Our\. Our\comma for period
+  \s\, Over \. Over \comma for period
+\r_,\s+([STW]h[eoy])\b_. $1_comma for period
+  \s\, She \. She \comma for period
+  \s\, The \. The \comma for period
+  \s\, Tho \. Tho \comma for period
+  \s\, Tho'\. Tho'\comma for period
+  \s\, Thy \. Thy \comma for period
+  \s\, Why \. Why \comma for period
+  \s\, Who \. Who \comma for period
+s\, Some\. Some\comma for period
+\r_,\s+([TW]hat)_. $1_comma for period
+  \s\, That \. That \comma for period
+  \s\, What\. What\comma for period
+r_, Th(eir|is)_. Th$1_comma for period
+  \s\, Their\. Their\comma for period
+  \s\, There\. There\comma for period
+  \s\, Then \. Then \comma for period
+  \s\, This \. This \comma for period
+  \s\, They\. They\comma for period
+s\, 'Tis\. 'Tis\comma for period
+s\, Unti\. Unti\comma for period
+s\, Up \. Up \comma for period
+r_,\s+([TW]h)(at|e[nry])_. $1$2_comma for period
+  \s\, When\. When\comma for period
+  \s\, Where\. Where\comma for period
+s\, With \. With \comma for period
+s\, Yo\. Yo\comma for period
+s\, Yes\. Yes\comma for period
+
+  Similarly, with a " in the way:
+r_,"\s+(A[hmnstwy])\b_." $1_comma for period
+  \s\," At \." At \comma for period
+  \s\," As \." As \comma for period
+  \s\," An \." An \comma for period
+r_,"\s+(A)\b_." $1_comma for period
+  \s\," A \." A \comma for period
+r_,"\s+(An[dy])\b_." $1_comma for period
+  \s\," And \." And \comma for period
+  \s\," Any\." Any\comma for period
+r_,"\s+([BHMWY]e)\b_." $1_comma for period
+  \s\," He \." He \comma for period
+  \s\," He'\." He'\comma for period
+  \s\," We \." We \comma for period
+r_,"\s+([BM]y)\b_." $1_comma for period
+  \s\," By \." By \comma for period
+  \s\," My \." My \comma for period
+r_,"\s+([DGHNSTY]o)\b_." $1_comma for period
+  \s\," Do \." Do \comma for period
+  \s\," No,\." No,\comma for period
+  \s\," No \." No \comma for period
+  \s\," So \." So \comma for period
+  \s\," To \." To \comma for period
+r_,"\s+([BCHLMNRSTVW]ow)\b_." $1_comma for period
+  \s\," How \." How \comma for period
+  \s\," Now \." Now \comma for period
+  \s\," Now,\." Now,\comma for period
+r_,"\s+([BGLMNPSY]et)\b_." $1_comma for period
+r_,"\s+(I[fnst])\b_." $1_comma for period
+  \s\," If \." If \comma for period
+  \s\," In \." In \comma for period
+  \s\," Is \." Is \comma for period
+  \s\," It \." It \comma for period
+r_,"\s+(O[fhnoruwxy])\b_." $1_comma for period
+  \s\," On \." On \comma for period
+  \s\," Of \." Of \comma for period
+r_,"\s+([STW]h[eoy])\b_." $1_comma for period
+  \s\," She \." She \comma for period
+  \s\," The \." The \comma for period
+  \s\," Why \." Why \comma for period
+  \s\," Who \." Who \comma for period
+r_,"\s+([TW]h)(at|e[inry]|i[ns])_." $1$2_comma for period
+  \s\," That \." That \comma for period
+  \s\," There\." There\comma for period
+  \s\," Then \." Then \comma for period
+  \s\," This \." This \comma for period
+  \s\," They\." They\comma for period
+  \s\," What\." What\comma for period
+  \s\," When\." When\comma for period
+  \s\," Where\." Where\comma for period
+
+r_,"\s+(All|Also|But|For|His|Her|Many|Over|One|Only|Some|Until|With|Yes|You|Your)\b_." $1_comma for period
+  \s\," All \." All \comma for period
+  \s\," Also\." Also\comma for period
+  \s\," But \." But \comma for period
+  \s\," For \." For \comma for period
+  \s\," His\." His\comma for period
+  \s\," Her \." Her \comma for period
+  \s\," Many\." Many\comma for period
+  \s\," Over \." Over \comma for period
+  \s\," One \." One \comma for period
+  \s\," Only\." Only\comma for period
+  \s\," Some\." Some\comma for period
+  \s\," Until\." Until\comma for period
+  \s\," With \." With \comma for period
+  \s\," Yes\." Yes\comma for period
+  \s\," Yo\." Yo\comma for period
+
+r_([AEO]h);_$1,_semicolon for comma
+  \s\Ah;\Ah,\semicolon for comma
+  \s\Oh;\Oh,\semicolon for comma
+
+r_\b([vV]iz\.);_$1:_semicolon for colon
+
+
+    NUMBERS
+
+r_(ary|ber)\s*,(\d)_$1, $2_leave a space after comma
+r_(\d)\s*,(\d{4,4})_$1, $2_leave a space after comma
+
+    ZERO/OH CONFUSION
+w\0\O\zero for letter "O"
+r_([A-Z])0_$1O_zero for letter "O"
+r_0([a-su-zA-Z])_O$1_zero for letter "O"
+  \r_\b0([fhlnrFHLNR])\b_O$1_zero for letter "O"
+    \w\0h\Oh\zero for letter "O"
+    \w\0F\OF\zero for letter "O"
+    \w\0N\ON\zero for letter "O"
+  \s\0a\Oa\zero for "O"
+    etc.
+  \s\0t\Ot\zero for "O"       [commented out--too many false positives!]
+s\ 0,\ O,\zero for "O"
+
+r_(\d)[oO]_$10_"O" or "o" for zero
+r_[oO]([\d%°¢])_0$1_"O" or "o" for zero
+  \s\1O\10\"O" for zero
+    etc.
+  \s\o%\0%\"o" for zero
+  \s\O%\0%\"O" for zero
+  \s\O°\0°\"O" for zero
+  \s\o°\0°\"o" for zero
+
+   ONE/I CONFUSION
+\Numbers, els, ohs, etc.
+r_\b1\b_I_one for "I"
+  \s\ 1 \ I \one for "I"
+
+    EL/I CONFUSION
+r_l([A-Z])_I$1_"el" for "I"
+  \r_([A-Z])l_$1I_"el" for "I" (too many false positives)
+r_\bl\b_I_"el" for "I"
+  \s\ l \ I \"el" for "I"
+r_([a-zA-Z])I([a-z])_$1l$2_I for el
+
+    ONE/EL CONFUSION
+r_\s*'1[1l]_'ll_one(s) for el(s)
+  \s\'11\'ll\ones for els
+  \s\'1l\'ll\one for el
+s\'l1\'ll\one for el
+r_([a-zA-Z])11_$1ll_ones for els
+  \w\I11\Ill\stealth scanno
+r_\b[lI][oO0]th_10th_scanno or stealth scanno
+r_(\d)[lI][oO0]th_$110th_scanno or stealth scanno
+w\lst\1st\scanno (el for one)
+w\111\Ill\stealth scanno
+r_([\d\$£#])[lI|]_$11_"el" or "I" or pipe for one
+r_[lI\|]([\d%°¢])_1$1_"el" or "I" or pipe for one
+  \s\l0\10\"el" for one
+    etc.
+  \s\l%\1%\"el" for one
+  \s\l°\1°\"el" for one
+  \s\$l\$1\"el" for one
+  \s\£l\£1\"el" for one
+r_[lI\|](,\d])_1$1_"el" or "I" or pipe for one
+r_\b[l\|]\._1._"el" or pipe for one
+r_\bllth\b_11th_"els" for ones
+r_\b1lth\b_11th_"el" for one
+r_\bl1th\b_11th_"el" for one
+
+r_([\[\(\{])l([\]\)\}])_$11$2_"el" for one
+  \s\(l)\(1)\"el" for one
+  \s\[l]\[1]\"el" for one
+  \s\{l}\{1}\"el" for one
+r=([\[\(\{]_)l(_[\]\)\}])=$11$2="el" for one
+  \s\(_l_)\(_1_)\"el" for one
+  \s\[_l_]\[_1_]\"el" for one
+
+
+    SEPARATED WORDS
+r_\b([bB]e)\s+(ached|aching|cause|devil|fall|fore|foul|gin|gone|guile|half|have|head|hind|hold|lay|long|moan|muse|rate|stir|tray|troth|ware|witch|yond)_$1$2_remove space
+r_\b([eE]nd)\s+(ear|orse|owe|owing)_$1$2_re-join separated compound words (stealth scanno)
+r_\b([eE]very|[nN]o)\s+(thing|body|where)_$1$2_re-join separated compound words (stealth scanno)
+r_\b([iI]n)\s+(born|bred|cite|come|coming|credible|effective|famous|fancy|firm|fra|fuse|tact|to|vent)_$1$2_remove space
+r_\b([iI]n)\s+d(ebt|eed|ices|oor|uct)_$1d$2_remove space
+r_\b([iI]n)\s+s(ane|anity|eparab|ide|ubordinat|ure)_$1s$2_remove space
+r_\b([iI]s)\s+(land|let)_$1$2_remove space
+
+
+    SYMBOLS
+
+  Confusion between degree symbol and masculine-ordinal symbol
+r_(\d)º\s*([cfkrCFKR]\.*)_$1° $2_replace masculine-ordinal symbol by degree symbol
+  \r_(\d)º\s*([cC]entigrade|[cC]elsius|[fF]ahren|[kK]elvin|[rR]ankine)_$1° $2_replace masculine-ordinal symbol by degree symbol
+
+
+    Special for Copyright Renewals!
+
+s\®\©\"registered" for "copyright"
+s\@\©\"at" for "copyright"
+s\ c \ © \"c" for "copyright"
+s\ o \ © \"o" for "copyright"
+s\0ct\Oct\zero for "oh"
+s\Ju1\Jul\one for "el"
+
+
+  In the list below, items in square brackets are from the old version; items in braces are from the new version; I also include an indication of what the page scan shows, e.g., [ps=AND]. The old version uses ALL CAPS instead of _italics_, which naturally I did not count as an error.
+
+  o= original text matches page scan
+  n= new text matches page scan
+  xx= neither text matches page scan
+  n/a= not necessarily an error in either case (more a matter of preference) (?)
+  ??= could not determine which is correct
+
+
+  n[-Ball-] {+Bull} [ps=Bull]
+
+  n[-textbook-] {+text-book+} [ps=text-/linebreak/book; other page scans show text-book]
+
+  o[-us,-] {+as,+} [ps=us,]
+  o[-us-] {+as+} [ps=us]
+    Diabolical! Maybe in context ... e.g., "to/for/with/of/by/... as" --> "... us".
+
+  n[-test-book,-] {+text-book,+} [ps=text-book]
+
+  n[-dressing table-] {+dressing-table+} [ps=dressing-table]
+
+  n[-fore head.-] {+forehead.+} [ps=fore-/linebreak/head; other pages show forehead]
+
+  n[-to- night."-] {+to-night."+} [ps=to-/linebreak/night]
+
+  n[-child-hood-] {+childhood+} [ps=child-/pagebreak/hood]
+
+  o[-I.:-] {+L:+} [ps=I.:]
+
+  n[-catting-] {+cutting+} [ps=cutting]
+       Also, capping for cupping, canning for cunning
+
+  o[-Mlle.-] {+Mile,+} [ps=Mlle.]
+       already handled as stealth scanno
+
+  o[-stove-] {+store+} [ps=stove]
+      add to stealth scanno (also -s, -d, -ing)
+
+  n[-heart searching-] {+heart-searching+} [ps=heart-/pagebreak/searching]
+
+  n[-ill-] {+in+} [ps=in]
+
+  n[-wood-chopper-] {+woodchopper+} [ps=wood-/pagebreak/chopper; other pages show woodchopper]
+
+  ??[-tip-toed-] {+tiptoed+} [ps=tip-/linebreak/toed; no other instances found]
+
+  n[-Bo peep-] {+Bo-peep+} [ps=Bo-peep]
+
+  n[-bluejay-] {+blue-jay+} [ps=blue-jay]
+
+  n[-ho-] {+he+} [ps=he]
+    Add to stealth scannos.
+
+  n[-cob-webs-] {+cobwebs+} [ps=cob-/linebreak/webs; other pages show cobwebs]
+
+  o[-must-] {+mast+} [ps=must]
+    Add to stealth scannos.
+
+  xx[-Ltd. 2s-] {+Ltd, 2s.+} [ps=Ltd. 2s.]
+    Add to English money handler.
+
+  o[-9d.)-] {+9d)]+} [ps=9d.]
+    Add to English money handler.
+
+  n[-aa-] {+as+} [ps=as]
+    Add to stealth scannos.
+
+  n[-over-hanging-] {+overhanging+} [ps=over-/linebreak/hanging; other page shows overhanging]
+
+  n[-flipperty--flopperty,-] {+flipperty-flopperty,+} [ps=flipperty-flopperty,]
+
+  o[-Rat-] {+Eat+} [ps=Rat]
+
+  ??[-failing-] {+falling+} [ps=[??] looks like falling with incomplete letter l]
+
+  n[-Co,-] {+Co.+} [ps=Co.]
+     Already handled.
+
+  n[-grandfather-] {+grand father+} [ps=grand-/linebreak/father]
+      Also, -mother, -pa, -ma, etc., -son, -daughter, and capitalized.
+
+  o[-gentle,-] {+gentle+} [ps=gentle,]
+
+  o[-silky-haired,-] {+silky-haired+} [ps=haired,]
+
+  ??[-moon-beam-] {+moonbeam+} [ps=moon-/linebreak/beam; no other instances found]
+
+  n[-em-broidered-] {+embroidered+} [ps=embroidered]
+
+  n[-son-god.-] {+sun-god.+} [ps=sun-god.]
+
+  n[-BEAN-] {+BEEN+} [ps=BEEN]
+
+  n[-out-] {+cut+} [ps=cut]
+
+  n[-feed-ing-] {+feeding+} [ps=feeding]
+
+  n[-Finally-] {+Finally,+} [ps=Finally,]
+
+  n[-stable-] {+stable,+} [ps=stable,]
+
+  n[-For-] {+_For+} unto you is born, this day, in the city of David, a
+  saviour,--which is Christ the [-Lord.-] {+Lord._+} And this shall be a sign unto you: ye
+  shall find the babe, wrapped in swaddling clothes, [-lying-] {+_lying+} in a [-manger."-] {+manger_."+} [ps=ital in both phrases]
+
+  n[-story teller-] {+story-teller+} [ps=story-teller]

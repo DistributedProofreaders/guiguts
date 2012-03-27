@@ -1,0 +1,98 @@
+/U03Encoding [
+
+% 0300
+/gravecomb /acutecomb /circumflexcmb /tildecomb 
+/macroncmb /overlinecmb /brevecmb /dotaccentcmb 
+/dieresiscmb /hookcmb /ringcmb /hungarumlautcmb 
+/caroncmb /verticallineabovecmb /dblverticallineabovecmb /dblgravecmb 
+
+% 0310
+/candrabinducmb /breveinvertedcmb /commaturnedabovecmb /commaabovecmb 
+/commareversedabovecmb /commaaboverightcmb /gravebelowcmb /acutebelowcmb 
+/lefttackbelowcmb /righttackbelowcmb /leftangleabovecmb /horncmb 
+/ringhalfleftbelowcmb /uptackbelowcmb /downtackbelowcmb /plusbelowcmb 
+
+% 0320
+/minusbelowcmb /hookpalatalizedbelowcmb /hookretroflexbelowcmb /dotbelowcomb 
+/dieresisbelowcmb /ringbelowcmb /uni0326 /cedillacmb 
+/ogonekcmb /verticallinebelowcmb /bridgebelowcmb /dblarchinvertedbelowcmb 
+/caronbelowcmb /circumflexbelowcmb /brevebelowcmb /breveinvertedbelowcmb 
+
+% 0330
+/tildebelowcmb /macronbelowcmb /lowlinecmb /dbllowlinecmb 
+/tildeoverlaycmb /strokeshortoverlaycmb /strokelongoverlaycmb /solidusshortoverlaycmb 
+/soliduslongoverlaycmb /ringhalfrightbelowcmb /bridgeinvertedbelowcmb /squarebelowcmb 
+/seagullbelowcmb /xabovecmb /tildeverticalcmb /dbloverlinecmb 
+
+% 0340
+/gravetonecmb /acutetonecmb /perispomenigreekcmb /koroniscmb 
+/dialytikatonoscmb /ypogegrammenigreekcmb /uni0346 /uni0347 
+/uni0348 /uni0349 /uni034a /uni034b 
+/uni034c /uni034d /uni034e /uni034f 
+
+% 0350
+/uni0350 /uni0351 /uni0352 /uni0353 
+/uni0354 /uni0355 /uni0356 /uni0357 
+/uni0358 /uni0359 /uni035a /uni035b 
+/uni035c /uni035d /uni035e /uni035f 
+
+% 0360
+/tildedoublecmb /breveinverteddoublecmb /uni0362 /uni0363 
+/uni0364 /uni0365 /uni0366 /uni0367 
+/uni0368 /uni0369 /uni036a /uni036b 
+/uni036c /uni036d /uni036e /uni036f 
+
+% 0370
+/uni0370 /uni0371 /uni0372 /uni0373 
+/numeralsigngreek /numeralsignlowergreek /uni0376 /uni0377 
+/uni0378 /uni0379 /ypogegrammeni /uni037b 
+/uni037c /uni037d /questiongreek /uni037f 
+
+% 0380
+/uni0380 /uni0381 /uni0382 /uni0383 
+/tonos /dieresistonos /Alphatonos /anoteleia 
+/Epsilontonos /Etatonos /Iotatonos /uni038b 
+/Omicrontonos /uni038d /Upsilontonos /Omegatonos 
+
+% 0390
+/iotadieresistonos /Alpha /Beta /Gamma 
+/Deltagreek /Epsilon /Zeta /Eta 
+/Theta /Iota /Kappa /Lambda 
+/Mu /Nu /Xi /Omicron 
+
+% 03a0
+/Pi /Rho /uni03a2 /Sigma 
+/Tau /Upsilon /Phi /Chi 
+/Psi /Omegagreek /Iotadieresis /Upsilondieresis 
+/alphatonos /epsilontonos /etatonos /iotatonos 
+
+% 03b0
+/upsilondieresistonos /alpha /beta /gamma 
+/delta /epsilon /zeta /eta 
+/theta /iota /kappa /lambda 
+/mugreek /nu /xi /omicron 
+
+% 03c0
+/pi /rho /sigmafinal /sigma 
+/tau /upsilon /phi /chi 
+/psi /omega /iotadieresis /upsilondieresis 
+/omicrontonos /upsilontonos /omegatonos /uni03cf 
+
+% 03d0
+/betasymbolgreek /thetasymbolgreek /Upsilonhooksymbol /Upsilonacutehooksymbolgreek 
+/Upsilondieresishooksymbolgreek /phisymbolgreek /pisymbolgreek /uni03d7 
+/uni03d8 /uni03d9 /Stigmagreek /uni03db 
+/Digammagreek /uni03dd /Koppagreek /uni03df 
+
+% 03e0
+/Sampigreek /uni03e1 /Sheicoptic /sheicoptic 
+/Feicoptic /feicoptic /Kheicoptic /kheicoptic 
+/Horicoptic /horicoptic /Gangiacoptic /gangiacoptic 
+/Shimacoptic /shimacoptic /Deicoptic /deicoptic 
+
+% 03f0
+/kappasymbolgreek /rhosymbolgreek /sigmalunatesymbolgreek /yotgreek 
+/uni03f4 /uni03f5 /uni03f6 /uni03f7 
+/uni03f8 /uni03f9 /uni03fa /uni03fb 
+/uni03fc /uni03fd /uni03fe /uni03ff 
+] def

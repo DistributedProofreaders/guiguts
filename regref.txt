@@ -1,0 +1,136 @@
+$Id: regref.txt 305 2010-03-20 17:54:55Z vlsimpson $
+
+GUIGUTS REGEX REFERENCE
+For the most part, guiguts uses a standard perl regex
+engine for searching. It does differ from standard for
+replacement assertions however.
+
+LEGAL REGEX SEARCH ASSERTIONS
+
+   \       Escapes the character immediately following it
+   .       Matches any single character except a newline
+   ^       Matches at the beginning of the string
+   $       Matches at the end of the string
+   *       Matches the preceding element 0 or more times
+   +       Matches the preceding element 1 or more times
+   ?       Matches the preceding element 0 or 1 times
+   {...}   Specifies a range of occurrences for the element preceding it
+   [...]   Matches any one of the characters contained within the brackets
+   (...)   Groups subexpressions for capturing to $1, $2...
+   (?:...) Groups subexpressions without capturing (cluster)
+   |       Matches either the subexpression preceding or following it
+   \1, \2 ...  The text from the Nth group
+
+ESCAPE SEQUENCES
+
+These work as in normal strings.
+
+   \f       Formfeed
+   \n       Newline
+   \r       Carriage return
+   \t       Tab
+   \0__     Any octal ASCII value
+   \x__     Any hexadecimal ASCII value
+   \x{263a} A wide hexadecimal value
+   \c_      Control-_
+   \N{name} A named character
+
+CHARACTER CLASSES
+
+   [amy]    Match 'a', 'm' or 'y'
+   [f-j]    Dash specifies "range". Match 'f','g','h','i', or 'j'
+   [f-j-]   Dash escaped or at start or end means 'dash'. Match 'f','g','h','i', 'j' or '-'
+   [^f-j]   Initial caret indicates "match any character _except_ these"
+
+The following sequences work within or without a character class. The first six are
+locale aware, all are Unicode aware. The default character class equivalent are given.
+
+   \d      A digit                     [0-9]
+   \D      A nondigit                  [^0-9]
+   \w      A word character            [a-zA-Z0-9_]
+   \W      A non-word character        [^a-zA-Z0-9_]
+   \s      A whitespace character      [ \t\n\r\f]
+   \S      A non-whitespace character  [^ \t\n\r\f]
+
+   \C      Match a byte (with Unicode, '.' matches a character)
+   \pP     Match P-named (Unicode) property
+   \p{...} Match Unicode property with long name
+   \PP     Match non-P
+   \P{...} Match lack of Unicode property with long name
+   \X      Match extended unicode sequence
+
+POSIX character classes and their Unicode and Perl equivalents:
+
+   alnum   IsAlnum              Alphanumeric
+   alpha   IsAlpha              Alphabetic
+   ascii   IsASCII              Any ASCII char
+   blank   IsSpace  [ \t]       Horizontal whitespace (GNU extension)
+   cntrl   IsCntrl              Control characters
+   digit   IsDigit  \d          Digits
+   graph   IsGraph              Alphanumeric and punctuation
+   lower   IsLower              Lowercase chars (locale and Unicode aware)
+   print   IsPrint              Alphanumeric, punct, and space
+   punct   IsPunct              Punctuation
+   space   IsSpace  [\s\ck]     Whitespace
+           IsSpacePerl   \s     Perl's whitespace definition
+   upper   IsUpper              Uppercase chars (locale and Unicode aware)
+   word    IsWord   \w          Alphanumeric plus _ (Perl extension)
+   xdigit  IsXDigit [0-9A-Fa-f] Hexadecimal digit
+
+Within a character class:
+
+    POSIX       traditional   Unicode
+    [:digit:]       \d        \p{IsDigit}
+    [:^digit:]      \D        \P{IsDigit}
+
+ANCHORS
+
+All are zero-width assertions.
+
+   ^  Match string start
+   $  Match string end
+   \b Match word boundary (between \w and \W)
+   \B Match except at word boundary (between \w and \w or \W and \W)
+
+QUANTIFIERS
+
+Quantifiers are greedy by default -- match the longest leftmost.
+
+   Maximal Minimal Allowed range
+   ------- ------- -------------
+   {n,m}   {n,m}?  Must occur at least n times but no more than m times
+   {n,}    {n,}?   Must occur at least n times
+   {n}     {n}?    Must occur exactly n times
+   *       *?      0 or more times (same as {0,})
+   +       +?      1 or more times (same as {1,})
+   ?       ??      0 or 1 time (same as {0,1})
+
+There is no quantifier {,n} -- that gets understood as a literal string.
+
+EXTENDED CONSTRUCTS
+
+   (?=...)          Zero-width positive lookahead assertion
+   (?!...)          Zero-width negative lookahead assertion
+   (?<=...)         Zero-width positive lookbehind assertion
+   (?<!...)         Zero-width negative lookbehind assertion
+   (?>...)          Grab what we can, prohibit backtracking
+
+
+
+LEGAL REPLACEMENT TERM ASSERTIONS
+
+   \$  Literal dollar sign (only necessary when it procedes a digit - \$1.00)
+   \n  New line
+   \t  Tab character
+   \A  Make named anchor from text until \E
+   \C  Evaluate as code until \E
+   \G  Convert from transliterated Greek to Unicode until \E
+   \L  Lowercase until \E
+   \U  Uppercase until \E
+   \T  Title case until \E
+   \E  End assertion
+   $1, $2 ...  hold the Xth captured expr (Up to 8)
+
+\*..\E constructs cannot be nested
+
+---------------------------------------------------------------------

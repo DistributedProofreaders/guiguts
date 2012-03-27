@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<pgExtensions>
+  <pgCharMap n="utf8 to iso-8859-1">
+
+    <note><p>Transcribers note: In this format all characters not in
+    iso-8859-1 have been substituted with similar looking characters
+    from iso-8859-1.</p></note>
+
+    <char id="U0x152">
+      <charName>OElig</charName>
+      <desc>LATIN CAPITAL LIGATURE OE</desc>
+      <mapping>OE</mapping>
+    </char>
+    <char id="U0x153">
+      <charName>oelig</charName>
+      <desc>LATIN SMALL LIGATURE OE</desc>
+      <mapping>oe</mapping>
+    </char>
+    <char id="U0x2002">
+      <charName>nspace</charName>
+      <desc>EN SPACE</desc>
+      <mapping>&#160;</mapping>
+    </char>
+    <char id="U0x2003">
+      <charName>mspace</charName>
+      <desc>EM SPACE</desc>
+      <mapping>&#160;&#160;</mapping>
+    </char>
+    <char id="U0x2009">
+      <charName>thinsp</charName>
+      <desc>THIN SPACE</desc>
+      <mapping> </mapping>
+    </char>
+    <char id="U0x200d">
+      <charName>zwj</charName>
+      <desc>ZERO WIDTH JOINER</desc>
+      <mapping></mapping>
+    </char>
+    <char id="U0x2013">
+      <charName>ndash</charName>
+      <desc>EN DASH</desc>
+      <mapping>-</mapping>
+    </char>
+    <char id="U0x2014">
+      <charName>mdash</charName>
+      <desc>EM DASH</desc>
+      <mapping>--</mapping>
+    </char>
+    <char id="U0x2015">
+      <charName>qdash</charName>
+      <desc>QUOTATION DASH</desc>
+      <mapping>----</mapping>
+    </char>
+    <char id="U0x2018">
+      <charName>lsquo</charName>
+      <desc>LEFT SINGLE QUOTATION MARK</desc>
+      <mapping>`</mapping>
+    </char>
+    <char id="U0x2019">
+      <charName>rsquo</charName>
+      <desc>RIGHT SINGLE QUOTATION MARK</desc>
+      <mapping>'</mapping>
+    </char>
+    <char id="U0x201a">
+      <charName>rbquo</charName>
+      <desc>SINGLE LOW-9 QUOTATION MARK</desc>
+      <mapping>,</mapping>
+    </char>
+    <char id="U0x201c">
+      <charName>ldquo</charName>
+      <desc>LEFT DOUBLE QUOTATION MARK</desc>
+      <mapping>"</mapping>
+    </char>
+    <char id="U0x201d">
+      <charName>rdquo</charName>
+      <desc>RIGHT DOUBLE QUOTATION MARK</desc>
+      <mapping>"</mapping>
+    </char>
+    <char id="U0x201e">
+      <charName>rbquo</charName>
+      <desc>DOUBLE LOW-9 QUOTATION MARK</desc>
+      <mapping>"</mapping>
+    </char>
+    <char id="U0x2020">
+      <charName>dagger</charName>
+      <desc>DAGGER</desc>
+      <mapping>+</mapping>
+    </char>
+    <char id="U0x2021">
+      <charName>Dagger</charName>
+      <desc>DOUBLE DAGGER</desc>
+      <mapping>++</mapping>
+    </char>
+    <char id="U0x2022">
+      <charName>bull</charName>
+      <desc>BULLET</desc>
+      <mapping>*</mapping>
+    </char>
+    <char id="U0x2026">
+      <charName>hellip</charName>
+      <desc>HORIZONTAL ELLIPSIS</desc>
+      <mapping>...</mapping>
+    </char>
+    <char id="U0x2030">
+      <charName>permil</charName>
+      <desc>PER MILLE SIGN</desc>
+      <mapping>%o</mapping>
+    </char>
+    <char id="U0x2032">
+      <charName>prime</charName>
+      <desc>PRIME</desc>
+      <mapping>'</mapping>
+    </char>
+    <char id="U0x2033">
+      <charName>Prime</charName>
+      <desc>DOUBLE PRIME</desc>
+      <mapping>"</mapping>
+    </char>
+    <char id="U0x2039">
+      <charName>lsaquo</charName>
+      <desc>SINGLE LEFT-POINTING ANGLE QUOTATION MARK</desc>
+      <mapping>&lt;</mapping>
+    </char>
+    <char id="U0x203a">
+      <charName>rsaquo</charName>
+      <desc>SINGLE RIGHT-POINTING ANGLE QUOTATION MARK</desc>
+      <mapping>&gt;</mapping>
+    </char>
+    <char id="U0x20ac">
+      <charName>euro</charName>
+      <desc>EURO SIGN</desc>
+      <mapping>EUR</mapping>
+    </char>
+    <char id="U0x2122">
+      <charName>trade</charName>
+      <desc>TRADE MARK SIGN</desc>
+      <mapping>(tm)</mapping>
+    </char>
+  </pgCharMap>
+</pgExtensions>
