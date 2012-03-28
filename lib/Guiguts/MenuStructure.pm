@@ -2632,7 +2632,7 @@ sub menubuildtwo {
 			[
 			   Button   => 'View in Browser',
 			   -command => sub {
-				   ::runner( ::cmdinterp("$::extops[0]{command}") );
+				   ::runner( ::cmdinterp($::defaultfilehandler) );
 			   },
 			],
 			[
