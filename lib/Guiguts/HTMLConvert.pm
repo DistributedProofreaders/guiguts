@@ -2167,7 +2167,7 @@ sub htmlpopup {
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f8->Button(
 			-activebackground => $::activecolor,
-			-command          => \&::hyperlinkpagenums,
+			-command          => \&hyperlinkpagenums,
 			-text             => 'Hyperlink Page Nums',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );

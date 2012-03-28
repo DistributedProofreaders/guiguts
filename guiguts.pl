@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.16';
+our $VERSION = '1.0.15';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
@@ -121,6 +121,7 @@ if ($::OS_WIN)              { $globalbrowserstart = 'start'; }
 if ($OS_MAC)                { $globalbrowserstart = 'open'; }
 our $globalfirefoxstart = 'firefox';
 if ($OS_MAC) { $globalbrowserstart = 'open -a firefox'; }
+our $defaultfilehandler = "$globalbrowserstart \$d\$f\$e";
 our $globalimagepath        = q{};
 our $globallastpath         = q{};
 our $globalspelldictopt     = q{};
@@ -208,7 +209,7 @@ our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
 our @extops = (
 	{
 		'label'   => 'Open current file in its default program',
-		'command' => "$globalbrowserstart \$d\$f\$e"
+		'command' => $defaultfilehandler
 	},
 	{
 		'label'   => 'Open current file in Firefox',
