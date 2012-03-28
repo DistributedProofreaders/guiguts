@@ -26,8 +26,8 @@ $htmlspanentry       = ' class="i2"';
 $ignoreversions      = 'revision';
 $italic_char         = '_';
 $jeebiesmode         = 'p';
-$lastversioncheck    = '1332821336';
-$lastversionrun      = '1.0.16';
+$lastversioncheck    = '1332900775';
+$lastversionrun      = '1.0.15';
 $lmargin             = '1';
 $poetrylmargin       = '4';
 $rmargin             = '72';
@@ -37,6 +37,7 @@ $utffontname         = 'Courier New';
 $utffontsize         = '14';
 $useoldmenus         = '1';
 
+$globallastpath      = 'C:\dp\ggp\tests\\';
 $globalspellpath     = '\Program Files\Aspell\bin\aspell.exe';
 $globalviewerpath    = '\Program Files\XnView\xnview.exe';
 $globalbrowserstart  = 'start';
@@ -49,6 +50,7 @@ $validatecsscommand  = 'C:\dp\ggp\tools\W3C\css-validator.jar';
 $gnutenbergdirectory = 'C:\dp\ggp\tools\gnutenberg\0.4';
 
 @recentfile = (
+	'C:\dp\ggp\tests\errorcheck.html',
 	'README.txt',
 );
 
