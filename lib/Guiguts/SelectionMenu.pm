@@ -126,7 +126,7 @@ sub selectrewrap {
 		while ( $textwindow->get($start) =~ /^\s*\n/ )
 		{                          #if the selection starts on a blank line
 			$start = $textwindow->index(
-					   "$start+1c") #advance the selection start until it isn't.
+				"$start+1c")       #advance the selection start until it isn't.
 		}
 		while ( $textwindow->get("$end+1c") =~ /^\s*\n/ )
 		{    #if the selection ends at the end of a line but not over it
@@ -171,19 +171,18 @@ sub selectrewrap {
 		while (1) {
 			$indent = $::defaultindent;
 			my $length = 5;
-			$::searchstartindex =
-			  $textwindow->search(
-								   '-regex', '-forwards',
-								   '-count' => \$length,
-								   '--', 'x', '1.0', 'end'
-			  );
+			$::searchstartindex = $textwindow->search(
+				'-regex', '-forwards',
+				'-count' => \$length,
+				'--', 'x', '1.0', 'end'
+			);
 			my $regex = 'x';
 			$thisblockend =
 			  $textwindow->search( '-regex', $regex, '1.0', 'end' )
 			  ;    #find end of paragraph
 			$thisblockend =
 			  $textwindow->search( '-regex', '--', '^[\x7f]*$', $thisblockstart,
-								   $end );    #find end of paragraph
+				$end );    #find end of paragraph
 
 #			  $textwindow->search( '-regex', '--', '^(\x7f)*$', $thisblockstart, #debugger chokes
 #								   $end );    #find end of paragraph
@@ -193,7 +192,7 @@ sub selectrewrap {
 			} else {
 				$thisblockend = $end;
 			}
-			;    #or end of text if end of selection
+			;              #or end of text if end of selection
 			$selection = $textwindow->get( $thisblockstart, $thisblockend )
 			  if $thisblockend;    #get the paragraph of text
 			unless ($selection) {
@@ -205,8 +204,8 @@ sub selectrewrap {
 				next;
 			}
 			last
-			  if (    ( $thisblockend eq $lastend )
-				   || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) )
+			  if ( ( $thisblockend eq $lastend )
+				|| ( $textwindow->compare( $thisblockend, '<', $lastend ) ) )
 			  ;                    #quit if the search isn't advancing
 			$textwindow->see($thisblockend);
 			$textwindow->update;
@@ -267,7 +266,7 @@ sub selectrewrap {
 				if ($inblock) {
 					if ($enableindent) {
 						$indentblockend = $textwindow->search( '-regex', '--',
-									'^\x7f*[pP\*Ll]\/', $thisblockstart, $end );
+							'^\x7f*[pP\*Ll]\/', $thisblockstart, $end );
 						$indentblockend = $indentblockend || $end;
 						$textwindow->markSet( 'rewrapend', $indentblockend );
 						unless ($offset) { $offset = 0 }
@@ -280,9 +279,9 @@ sub selectrewrap {
 								  $textwindow->get( "$line.0", "$line.end" );
 								if ($textline) {
 									$textwindow->search(
-											'-regexp',
-											'-count' => \$spaces,
-											'--', '^\s+', "$line.0", "$line.end"
+										'-regexp',
+										'-count' => \$spaces,
+										'--', '^\s+', "$line.0", "$line.end"
 									);
 									unless ($spaces) { $spaces = 0 }
 									if ( $spaces < $offset ) {
@@ -297,16 +296,16 @@ sub selectrewrap {
 							$textline =
 							  $textwindow->get( "$line.0", "$line.end" );
 							next
-							  if (    ( $textline =~ /^\x7f*\/[pP\*Ll]/ )
-								   || ( $textline =~ /^\x7f*[pP\*LlFf]\// ) );
+							  if ( ( $textline =~ /^\x7f*\/[pP\*Ll]/ )
+								|| ( $textline =~ /^\x7f*[pP\*LlFf]\// ) );
 							if ( $enableindent and $fblock == 0 ) {
 								$textwindow->insert( "$line.0",
-													 ( ' ' x $indent ) )
+									( ' ' x $indent ) )
 								  if ( $indent > 0 );
 								if ( $indent < 0 ) {
 									if (
-										 $textwindow->get( "$line.0",
-											  "$line.@{[abs $indent]}" ) =~ /\S/
+										$textwindow->get( "$line.0",
+											"$line.@{[abs $indent]}" ) =~ /\S/
 									  )
 									{
 										while (
@@ -316,7 +315,7 @@ sub selectrewrap {
 										}
 									} else {
 										$textwindow->delete( "$line.0",
-													 "$line.@{[abs $indent]}" );
+											"$line.@{[abs $indent]}" );
 									}
 								}
 							} else {
@@ -337,19 +336,15 @@ sub selectrewrap {
 					$selection =~ s/\(/\x9d/g;
 					$selection =~ s/\)/\x98/g;
 					if ($::blockwrap) {
-						$rewrapped =
-						  wrapper(
-								   $leftmargin,  $firstmargin,
-								   $rightmargin, $selection,
-								   $::rwhyphenspace
-						  );
+						$rewrapped = wrapper(
+							$leftmargin, $firstmargin, $rightmargin,
+							$selection,  $::rwhyphenspace
+						);
 					} else {    #rewrap the paragraph
-						$rewrapped =
-						  wrapper(
-								   $::lmargin, $::lmargin,
-								   $::rmargin, $selection,
-								   $::rwhyphenspace
-						  );
+						$rewrapped = wrapper(
+							$::lmargin, $::lmargin, $::rmargin,
+							$selection, $::rwhyphenspace
+						);
 					}
 					$rewrapped =~ s/\x8d/<i>/g;     #convert the characters back
 					$rewrapped =~ s/\x8e/<\/i>/g;
@@ -386,8 +381,8 @@ sub selectrewrap {
 				  if ( $textwindow->compare( $thisblockstart, '>=', 'end' ) );
 				next
 				  if (
-					   $textwindow->get( $thisblockstart,
-										 "$thisblockstart lineend" ) eq ''
+					$textwindow->get( $thisblockstart,
+						"$thisblockstart lineend" ) eq ''
 				  );
 				last;
 			}
@@ -405,8 +400,8 @@ sub selectrewrap {
 		$textwindow->focus;
 		$textwindow->update;
 		$textwindow->Busy( -recurse => 1 );
-		if (@savelist) {               #if there are saved page markers
-			while (@savelist) {        #reinsert them
+		if (@savelist) {              #if there are saved page markers
+			while (@savelist) {       #reinsert them
 				$markname = shift @savelist;
 				$markindex =
 				  $textwindow->search( '-regex', '--', '\x7f', '1.0', 'end' );
@@ -451,7 +446,7 @@ sub aligntext {
 		for my $linenum ( $sr .. $er - 1 ) {
 			$indexpos[$linenum] =
 			  $textwindow->search( '--', $alignstring, "$linenum.0 -1c",
-								   "$linenum.end" );
+				"$linenum.end" );
 			if ( $indexpos[$linenum] ) {
 				( $r, $c ) = split /\./, $indexpos[$linenum];
 			} else {
@@ -463,13 +458,8 @@ sub aligntext {
 		for my $linenum ( $sr .. $er ) {
 			$indexpos[$linenum] = 0 unless defined $indexpos[$linenum];
 			if ( $indexpos[$linenum] > (-1) ) {
-				$textwindow->insert(
-									 "$linenum.0",
-									 (
-										' ' x
-										  ( $textindex - $indexpos[$linenum] )
-									 )
-				);
+				$textwindow->insert( "$linenum.0",
+					( ' ' x ( $textindex - $indexpos[$linenum] ) ) );
 			}
 		}
 		$textwindow->addGlobEnd;
@@ -496,19 +486,17 @@ sub asciibox {
 		::selectrewrap() unless $asciiwrap;
 		$::lmargin = $saveleft;
 		$::rmargin = $saveright;
-		$textwindow->insert(
-							 'asciistart',
-							 ${$ascii}[0]
-							   . ( ${$ascii}[1] x ( $asciiwidth - 2 ) )
-							   . ${$ascii}[2] . "\n"
-		);
-		$textwindow->insert(
-							 'asciiend',
-							 "\n"
-							   . ${$ascii}[6]
-							   . ( ${$ascii}[7] x ( $asciiwidth - 2 ) )
-							   . ${$ascii}[8] . "\n"
-		);
+		$textwindow->insert( 'asciistart',
+			    ${$ascii}[0]
+			  . ( ${$ascii}[1] x ( $asciiwidth - 2 ) )
+			  . ${$ascii}[2]
+			  . "\n" );
+		$textwindow->insert( 'asciiend',
+			    "\n"
+			  . ${$ascii}[6]
+			  . ( ${$ascii}[7] x ( $asciiwidth - 2 ) )
+			  . ${$ascii}[8]
+			  . "\n" );
 		$start = $textwindow->index('asciistart');
 		$end   = $textwindow->index('asciiend');
 		( $sr, $sc ) = split /\./, $start;
@@ -600,16 +588,16 @@ sub surround {
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f1 = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $surstrt = $f1->Entry(
-								  -width      => 8,
-								  -background => $::bkgcolor,
-								  -font       => $font,
-								  -relief     => 'sunken',
+			-width      => 8,
+			-background => $::bkgcolor,
+			-font       => $font,
+			-relief     => 'sunken',
 		)->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $surend = $f1->Entry(
-								 -width      => 8,
-								 -background => $::bkgcolor,
-								 -font       => $font,
-								 -relief     => 'sunken',
+			-width      => 8,
+			-background => $::bkgcolor,
+			-font       => $font,
+			-relief     => 'sunken',
 		)->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f2 = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $gobut = $f2->Button(
@@ -647,61 +635,63 @@ sub surroundit {
 		my $end   = pop(@ranges);
 		my $start = pop(@ranges);
 		$textwindow->replacewith( $start, $end,
-							  $pre . $textwindow->get( $start, $end ) . $post );
+			$pre . $textwindow->get( $start, $end ) . $post );
 	}
 	$textwindow->addGlobEnd;
 }
 
 sub flood {
-	my ( $textwindow, $top, $floodpop, $font, $activecolor, $icon ) = @_;
+	#my ( $textwindow, $top, $floodpop, $font, $activecolor, $icon ) = @_;
+	my $top=$::top;
+	my $textwindow = $::textwindow;
 	my $ffchar;
-	if ( defined($floodpop) ) {
-		$floodpop->deiconify;
-		$floodpop->raise;
-		$floodpop->focus;
+	if ( defined( $::lglobal{floodpop} ) ) {
+		$::lglobal{floodpop}->deiconify;
+		$::lglobal{floodpop}->raise;
+		$::lglobal{floodpop}->focus;
 	} else {
-		$floodpop = $top->Toplevel;
-		$floodpop->title('Flood Fill String:');
-		my $f = $floodpop->Frame->pack( -side => 'top', -anchor => 'n' );
+		$::lglobal{floodpop} = $top->Toplevel;
+		$::lglobal{floodpop}->title('Flood Fill String:');
+		::initialize_popup_with_deletebinding('floodpop');
+		my $f = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
 "Flood fill string.\n(Blank will default to spaces.)\nHotkey Control+w",
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-		my $f1 =
-		  $floodpop->Frame->pack(
-								  -side   => 'top',
-								  -anchor => 'n',
-								  -expand => 'y',
-								  -fill   => 'x'
-		  );
-		my $floodch = $f1->Entry(
-								  -background   => $::bkgcolor,
-								  -font         => $font,
-								  -relief       => 'sunken',
-								  -textvariable => \$ffchar,
-		  )->pack(
-				   -side   => 'left',
-				   -pady   => 5,
-				   -padx   => 2,
-				   -anchor => 'w',
-				   -expand => 'y',
-				   -fill   => 'x'
-		  );
-		my $f2 = $floodpop->Frame->pack( -side => 'top', -anchor => 'n' );
-		my $gobut = $f2->Button(
-						  -activebackground => $::activecolor,
-						  -command => sub { floodfill( $textwindow, $ffchar ) },
-						  -text    => 'Flood Fill',
-						  -width   => 16
-		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-		$floodpop->protocol(
-			'WM_DELETE_WINDOW' => sub {
-				$floodpop->destroy;
-				undef $floodpop;
-			}
+		my $f1 = $::lglobal{floodpop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-expand => 'y',
+			-fill   => 'x'
 		);
-		$floodpop->Icon( -image => $icon );
+		my $floodch = $f1->Entry(
+			-background   => $::bkgcolor,
+			-font         => $::lglobal{font},
+			-relief       => 'sunken',
+			-textvariable => \$ffchar,
+		  )->pack(
+			-side   => 'left',
+			-pady   => 5,
+			-padx   => 2,
+			-anchor => 'w',
+			-expand => 'y',
+			-fill   => 'x'
+		  );
+		my $f2 = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $gobut = $f2->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { floodfill( $textwindow, $ffchar ) },
+			-text             => 'Flood Fill',
+			-width            => 16
+		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
+#		$::lglobal{floodpop}->protocol(
+#			'WM_DELETE_WINDOW' => sub {
+#				$::lglobal{floodpop}->destroy;
+#				undef $::lglobal{floodpop};
+#			}
+#		);
+#		$::lglobal{floodpop}->Icon( -image => $icon );
 	}
-	return $floodpop;
+	return $::lglobal{floodpop};
 }
 
 sub floodfill {
@@ -714,14 +704,9 @@ sub floodfill {
 		my $end       = pop(@ranges);
 		my $start     = pop(@ranges);
 		my $selection = $textwindow->get( $start, $end );
-		my $temp = substr(
-						   $ffchar x (
-								( ( length $selection ) / ( length $ffchar ) ) +
-								  1
-						   ),
-						   0,
-						   ( length $selection )
-		);
+		my $temp      = substr(
+			$ffchar x ( ( ( length $selection ) / ( length $ffchar ) ) + 1 ),
+			0, ( length $selection ) );
 		chomp $selection;
 		my @temparray = split( /\n/, $selection );
 		my $replacement;
@@ -765,15 +750,16 @@ sub indent {
 					}
 					$textwindow->insert( $start, $char )
 					  unless (
-						 $textwindow->get( $start, "$start lineend" ) =~ /^$/ );
+						$textwindow->get( $start, "$start lineend" ) =~ /^$/ );
 					$end = "$end+1c"
 					  unless (
-							 $textwindow->get( $end, "$end lineend" ) =~ /^$/ );
+						$textwindow->get( $end, "$end lineend" ) =~ /^$/ );
 					push @selarray, ( "$start+1c", $end );
 				} elsif ( $indent eq 'out' ) {
 					if (
-						 $textwindow->compare( $start, '==', "$start linestart"
-						 )
+						$textwindow->compare(
+							$start, '==', "$start linestart"
+						)
 					  )
 					{
 						push @selarray, ( $start, $end );
@@ -790,8 +776,8 @@ sub indent {
 					if ( $indent eq 'in' ) {
 						$textwindow->insert( $index, ' ' )
 						  unless (
-								 $textwindow->get( $index, "$index lineend" ) =~
-								 /^$/ );
+							$textwindow->get( $index, "$index lineend" ) =~
+							/^$/ );
 					} elsif ( $indent eq 'out' ) {
 						if ( $textwindow->get( $index, "$index+1c" ) eq ' ' ) {
 							$textwindow->delete( $index, "$index+1c" );
@@ -811,31 +797,31 @@ sub indent {
 					last;
 				} else {
 					while (
-							$textwindow->compare(
-											  "$end-1l", '>=', "$end-1l lineend"
-							)
+						$textwindow->compare(
+							"$end-1l", '>=', "$end-1l lineend"
+						)
 					  )
 					{
 						$textwindow->insert( "$end-1l lineend", ' ' );
 					}
 					my $templine = $textwindow->get( "$start-1l", "$end-1l" );
 					$textwindow->replacewith( "$start-1l", "$end-1l",
-										 ( $textwindow->get( $start, $end ) ) );
+						( $textwindow->get( $start, $end ) ) );
 					push @selarray, ( "$start-1l", "$end-1l" );
 					while (@ranges) {
 						$start = pop(@ranges);
 						$end   = pop(@ranges);
 						$textwindow->replacewith( "$start-1l", "$end-1l",
-										 ( $textwindow->get( $start, $end ) ) );
+							( $textwindow->get( $start, $end ) ) );
 						push @selarray, ( "$start-1l", "$end-1l" );
 					}
 					$textwindow->replacewith( $start, $end, $templine );
 				}
 			} elsif ( $indent eq 'dn' ) {
 				if (
-					 $textwindow->compare(
-									  "$end+1l", '>=', $textwindow->index('end')
-					 )
+					$textwindow->compare(
+						"$end+1l", '>=', $textwindow->index('end')
+					)
 				  )
 				{
 					push @selarray, ( $start, $end );
@@ -843,22 +829,22 @@ sub indent {
 					last;
 				} else {
 					while (
-							$textwindow->compare(
-											  "$end+1l", '>=', "$end+1l lineend"
-							)
+						$textwindow->compare(
+							"$end+1l", '>=', "$end+1l lineend"
+						)
 					  )
 					{
 						$textwindow->insert( "$end+1l lineend", ' ' );
 					}
 					my $templine = $textwindow->get( "$start+1l", "$end+1l" );
 					$textwindow->replacewith( "$start+1l", "$end+1l",
-										 ( $textwindow->get( $start, $end ) ) );
+						( $textwindow->get( $start, $end ) ) );
 					push @selarray, ( "$start+1l", "$end+1l" );
 					while (@ranges) {
 						$end   = pop(@ranges);
 						$start = pop(@ranges);
 						$textwindow->replacewith( "$start+1l", "$end+1l",
-										 ( $textwindow->get( $start, $end ) ) );
+							( $textwindow->get( $start, $end ) ) );
 						push @selarray, ( "$start+1l", "$end+1l" );
 					}
 					$textwindow->replacewith( $start, $end, $templine );
@@ -893,11 +879,11 @@ sub alignpopup {
 		my $f1 =
 		  $::lglobal{alignpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f1->Entry(
-					-width        => 8,
-					-background   => $::bkgcolor,
-					-font         => $::lglobal{font},
-					-relief       => 'sunken',
-					-textvariable => \$::lglobal{alignstring},
+			-width        => 8,
+			-background   => $::bkgcolor,
+			-font         => $::lglobal{font},
+			-relief       => 'sunken',
+			-textvariable => \$::lglobal{alignstring},
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $gobut = $f1->Button(
 			-activebackground => $::activecolor,
@@ -916,7 +902,7 @@ sub blockrewrap {
 	my $textwindow = $::textwindow;
 	$::blockwrap = 1;
 	selectrewrap( $textwindow, $::lglobal{seepagenums}, $::scannos_highlighted,
-				  $::rwhyphenspace );
+		$::rwhyphenspace );
 	$::blockwrap = 0;
 }
 
@@ -944,66 +930,62 @@ sub asciipopup {
 			$row = int $_ / 3;
 			$col = $_ % 3;
 			$f5->Entry(
-						-width        => 1,
-						-background   => $::bkgcolor,
-						-font         => $::lglobal{font},
-						-relief       => 'sunken',
-						-textvariable => \${ $::lglobal{ascii} }[$_],
+				-width        => 1,
+				-background   => $::bkgcolor,
+				-font         => $::lglobal{font},
+				-relief       => 'sunken',
+				-textvariable => \${ $::lglobal{ascii} }[$_],
 			  )->grid(
-					   -row    => $row,
-					   -column => $col,
-					   -padx   => 3,
-					   -pady   => 3
+				-row    => $row,
+				-column => $col,
+				-padx   => 3,
+				-pady   => 3
 			  );
 		}
 		my $f0 =
 		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $wlabel = $f0->Label(
-								 -width => 16,
-								 -text  => 'ASCII Box Width',
+			-width => 16,
+			-text  => 'ASCII Box Width',
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
 		my $wmentry = $f0->Entry(
-								  -width        => 6,
-								  -background   => $::bkgcolor,
-								  -relief       => 'sunken',
-								  -textvariable => \$::lglobal{asciiwidth},
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::lglobal{asciiwidth},
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
 		my $f1 =
 		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		my $leftjust =
-		  $f1->Radiobutton(
-							-text        => 'left justified',
-							-selectcolor => $::lglobal{checkcolor},
-							-variable    => \$::lglobal{asciijustify},
-							-value       => 'left',
-		  )->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
-		my $centerjust =
-		  $f1->Radiobutton(
-							-text        => 'centered',
-							-selectcolor => $::lglobal{checkcolor},
-							-variable    => \$::lglobal{asciijustify},
-							-value       => 'center',
-		  )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
-		my $rightjust =
-		  $f1->Radiobutton(
-							-selectcolor => $::lglobal{checkcolor},
-							-text        => 'right justified',
-							-variable    => \$::lglobal{asciijustify},
-							-value       => 'right',
-		  )->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
-		my $asciiw =
-		  $f1->Checkbutton(
-							-variable    => \$::lglobal{asciiwrap},
-							-selectcolor => $::lglobal{checkcolor},
-							-text        => 'Don\'t Rewrap'
-		  )->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
+		my $leftjust = $f1->Radiobutton(
+			-text        => 'left justified',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{asciijustify},
+			-value       => 'left',
+		)->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
+		my $centerjust = $f1->Radiobutton(
+			-text        => 'centered',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{asciijustify},
+			-value       => 'center',
+		)->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
+		my $rightjust = $f1->Radiobutton(
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'right justified',
+			-variable    => \$::lglobal{asciijustify},
+			-value       => 'right',
+		)->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
+		my $asciiw = $f1->Checkbutton(
+			-variable    => \$::lglobal{asciiwrap},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Don\'t Rewrap'
+		)->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
 		my $gobut = $f1->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
 				asciibox(
-						  $textwindow,            $::lglobal{asciiwrap},
-						  $::lglobal{asciiwidth}, $::lglobal{ascii},
-						  $::lglobal{asciijustify}
+					$textwindow,            $::lglobal{asciiwrap},
+					$::lglobal{asciiwidth}, $::lglobal{ascii},
+					$::lglobal{asciijustify}
 				);
 			},
 			-text  => 'Draw Box',
