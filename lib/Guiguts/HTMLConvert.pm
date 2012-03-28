@@ -172,19 +172,20 @@ sub html_convert_footnotes {
 	::working('Converting Footnotes');
 	::footnotefixup();
 	::getlz();
+
 	# Keep track of last footnote to set closing </div>
 	$textwindow->markSet( 'lastfnindex', '1.0' );
 	$textwindow->tagRemove( 'footnote',  '1.0', 'end' );
 	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 	$textwindow->see('1.0');
 	$textwindow->update;
-
 	while (1) {
 		$step++;
 		last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
 		last unless $fnarray->[$step][0];
 		next unless $fnarray->[$step][3];
 		$textwindow->ntdelete( 'fne' . "$step" . '-1c', 'fne' . "$step" );
+
 		#print $step. ":step\n";
 		$textwindow->ntinsert( 'fne' . "$step", '</p></div>' );
 		$textwindow->ntinsert(
@@ -297,6 +298,7 @@ sub html_convert_body {
 	my $incontents = '1.0';
 	my $indent     = 0;
 	my $intitle    = 0;
+	my $inheader   = 0;
 	my $ital       = 0;
 	my $listmark   = 0;
 	my $pgoffset   = 0;
@@ -862,11 +864,6 @@ sub html_convert_body {
 # the header.
 				if ( $step - 5 <= $pagemarkline ) {
 					$textwindow->markSet( "HRULE$pagemarkline", $hmarkindex );
-
-					#print "HRULE$pagemarkline  $hmarkindex\n";
-				} else {
-
-					#print "NO HRULE\n";
 				}
 			}
 
@@ -879,16 +876,21 @@ sub html_convert_body {
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
 					"<h2><a name=\"" . $aname . "\" id=\"" . $aname . "\">" );
-				$step++;
-				$selection = $textwindow->get( "$step.0", "$step.end" );
-				my $restofheader = $selection;
-				$restofheader =~ s/^\s+|\s+$//g;
-				if ( length($restofheader) ) {
-					$textwindow->ntinsert( "$step.end", '</a></h2>' );
-					$completeheader .= ' ' . $restofheader;
-				} else {
-					$step--;
-					$textwindow->ntinsert( "$step.end", '</a></h2>' );
+				while (1) {
+					$step++;
+					$selection = $textwindow->get( "$step.0", "$step.end" );
+					my $restofheader = $selection;
+					$restofheader =~ s/^\s+|\s+$//g;
+					if ( length($restofheader) ) {
+						#$textwindow->ntinsert( "$step.end", '</a></h2>' );
+						# accumulate header for TOC
+						$completeheader .= ' ' . $restofheader;
+					} else {
+						# end of header reached
+						$step--;
+						$textwindow->ntinsert( "$step.end", '</a></h2>' );
+						last;
+					}
 				}
 			}
 
@@ -993,6 +995,7 @@ sub html_convert_underscoresmallcaps {
 	{
 		$textwindow->ntdelete( "$thisblockstart+6c", "$thisblockstart+10c" );
 	}
+
 	# Set opening and closing markup for footnotes
 	$thisblockstart = '1.0';
 	while (
@@ -1004,30 +1007,34 @@ sub html_convert_underscoresmallcaps {
 		$textwindow->ntdelete( $thisblockstart, "$thisblockstart+17c" );
 		$textwindow->insert( $thisblockstart,
 			'<div class="footnotes"><h3>FOOTNOTES:</h3>' );
-		# Improved logic for finding end of footnote block: find 
+
+		# Improved logic for finding end of footnote block: find
 		# the next footnote block
-		my $nextfootnoteblock = $textwindow->search(
-			'-exact', '--', 'FOOTNOTES:', $thisblockstart.'+1l', 'end'
-		);
+		my $nextfootnoteblock =
+		  $textwindow->search( '-exact', '--', 'FOOTNOTES:',
+			$thisblockstart . '+1l', 'end' );
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock='end';			
+			$nextfootnoteblock = 'end';
 		}
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock='end';			
+			$nextfootnoteblock = 'end';
 		}
-		# find the start of last footnote 
-		my $lastfootnoteinblock = $textwindow->search(
-			'-exact','-backwards', '--', '<div class="footnote">', $nextfootnoteblock
-		);
+
+		# find the start of last footnote
+		my $lastfootnoteinblock =
+		  $textwindow->search( '-exact', '-backwards', '--',
+			'<div class="footnote">',
+			$nextfootnoteblock );
+
 		# find the end of the last footnote
-		my $endoflastfootnoteinblock = $textwindow->search(
-			'-exact', '--', '</p></div>', $lastfootnoteinblock
-		);
-		$textwindow->insert( $endoflastfootnoteinblock.'+10c', '</div>' );
-		if ($endoflastfootnoteinblock){
-			$thisblockstart =$endoflastfootnoteinblock
+		my $endoflastfootnoteinblock =
+		  $textwindow->search( '-exact', '--', '</p></div>',
+			$lastfootnoteinblock );
+		$textwindow->insert( $endoflastfootnoteinblock . '+10c', '</div>' );
+		if ($endoflastfootnoteinblock) {
+			$thisblockstart = $endoflastfootnoteinblock;
 		} else {
-			$thisblockstart='end';
+			$thisblockstart = 'end';
 		}
 	}
 	return;

@@ -14,7 +14,7 @@ than Windows/Mac.
 
 Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine
-error for hyperlinkpagenumbers.
+error for hyperlinkpagenumbers. Handled headers of 3 or more lines.
 
 Version 1.0.14. Added 'Do All (beta)' feature to Page Separator popup that
 handles all page separators in one pass, assuming the file has been
