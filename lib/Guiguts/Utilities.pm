@@ -2511,7 +2511,7 @@ sub toggle_autosave {
 sub viewprojectcomments {
 	::operationadd('View project comments');
 	return if ::nofileloadedwarning();
-	my $defaulthandler = $::extops[0]{command};
+	my $defaulthandler = $::defaultfilehandler;
 	$defaulthandler =~ s/\$f\$e/project_comments.html/;
 	runner( cmdinterp($defaulthandler) );
 }

@@ -1857,8 +1857,6 @@ sub htmlpopup {
 			-activebackground => $::activecolor,
 			-command          => sub {
 				::runner( ::cmdinterp($::defaultfilehandler) );
-				#::runner( ::cmdinterp("$::extops[0]{command}") );
-				
 			},
 			-text  => 'View in Browser',
 			-width => 16,
