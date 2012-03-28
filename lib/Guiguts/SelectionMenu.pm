@@ -93,16 +93,17 @@ sub wrapper {
 }
 
 sub selectrewrap {
-	my ( $textwindow, $seepagenums, $scannos_highlighted ) = @_;
-	::viewpagenums() if ($seepagenums);
+	#my ( $textwindow, $seepagenums, $scannos_highlighted ) = @_;
+	my $textwindow = $::textwindow;
+	::viewpagenums() if ($::seepagenums);
 	::savesettings();
 	my $marker      = shift @_;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	my $thisblockstart;
 	my $start;
-	my $scannosave = $scannos_highlighted;
-	$scannos_highlighted  = 0;
+	my $scannosave = $::scannos_highlighted;
+	$::scannos_highlighted  = 0;
 	$::operationinterrupt = 0;
 
 	if ( $range_total == 0 ) {

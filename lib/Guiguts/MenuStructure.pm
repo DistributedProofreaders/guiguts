@@ -901,8 +901,7 @@ sub menubuildold {
 			   -command => sub {
 				   $textwindow->addGlobStart;
 				   $::lglobal{floodpop} =
-					 ::flood( $textwindow, $top, $::lglobal{floodpop},
-							   $::lglobal{font}, $::activecolor, $::icon );
+					 ::flood();
 				   $textwindow->addGlobEnd;
 				 }
 			],
@@ -1499,8 +1498,7 @@ sub menubuild {
 			   -command => sub {
 				   $textwindow->addGlobStart;
 				   $::lglobal{floodpop} =
-					 ::flood( $textwindow, $top, $::lglobal{floodpop},
-							   $::lglobal{font}, $::activecolor, $::icon );
+					 ::flood();
 				   $textwindow->addGlobEnd;
 				 }
 			],
@@ -2436,8 +2434,7 @@ sub menubuildtwo {
 			   -command => sub {
 				   $textwindow->addGlobStart;
 				   $::lglobal{floodpop} =
-					 ::flood( $textwindow, $top, $::lglobal{floodpop},
-							  $::lglobal{font}, $::activecolor, $::icon );
+					 ::flood();
 				   $textwindow->addGlobEnd;
 				 }
 			],
