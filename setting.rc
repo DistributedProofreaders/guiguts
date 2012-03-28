@@ -37,7 +37,7 @@ $utffontname         = 'Courier New';
 $utffontsize         = '14';
 $useppwizardmenus    = '1';
 
-$globallastpath      = '.\\';
+$globallastpath      = 'tests\\';
 $globalspellpath     = '\Program Files\Aspell\bin\aspell.exe';
 $globalviewerpath    = '\Program Files\XnView\xnview.exe';
 $globalbrowserstart  = 'start';
@@ -50,8 +50,14 @@ $validatecsscommand  = 'C:\dp\ggp\tools\W3C\css-validator.jar';
 $gnutenbergdirectory = 'C:\dp\ggp\tools\gnutenberg\0.4';
 
 @recentfile = (
+	'tests\testhtml2.txt',
+	'tests\testhtml1.txt',
+	'tests\testfile.txt',
+	'readme.txt',
+	'tests\errorcheck.html',
+	'C:\dp\ggp\tests\temp.txt',
+	'C:\dp\ggp\tests\testfilebaseline.txt',
 	'README.txt',
-	'C:\dp\ggp\tests\errorcheck.html',
 );
 
 @extops = (
@@ -68,14 +74,14 @@ $gnutenbergdirectory = 'C:\dp\ggp\tools\gnutenberg\0.4';
 	{'label' => '', 'command' => ''},
 );
 
-$geometryhash{ucharpop} = '550x450+53+87';
 $geometryhash{utfpop} = '791x422+46+46';
+$geometryhash{ucharpop} = '550x450+53+87';
 $geometryhash{regexrefpop} = '663x442+106+72';
 $geometryhash{pagepop} = '281x112+334+176';
 $geometryhash{wfpop} = '462x583+565+63';
 $geometryhash{pnumpop} = '210x253+502+97';
-$geometryhash{hpopup} = '187x197+884+211';
 $geometryhash{hotpop} = '583x462+144+119';
+$geometryhash{hpopup} = '187x197+884+211';
 $geometryhash{footpop} = '352x361+255+157';
 $geometryhash{gcpop} = '462x583+684+72';
 $geometryhash{xtpop} = '800x543+120+38';
@@ -84,14 +90,16 @@ $geometryhash{errorcheckpop} = '508x609+684+72';
 $geometryhash{alignpop} = '168x94+338+83';
 $geometryhash{brkpop} = '201x203+482+131';
 $geometryhash{aboutpop} = '378x392+312+136';
-$geometryhash{asciipop} = '278x209+358+187';
 $geometryhash{ordpop} = '316x150+191+132';
+$geometryhash{asciipop} = '278x209+358+187';
 $geometryhash{fixpop} = '441x440+34+22';
+$geometryhash{stoppop} = '126x43+184+184';
 $geometryhash{jeepop} = '462x583+684+72';
 
 @mygcview = ();
 
 @search_history = (
+	"second",
 );
 
 @replace_history = (
