@@ -16,7 +16,8 @@ Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine
 error for hyperlinkpagenumbers. Handled headers of 3 or more lines.
 Removed upper case for &amp; in author. Fixed problem with flood fill
-popup. Fixed problem with Draw Boxes.
+popup. Fixed problem with Draw Boxes. Corrected space in replace string 
+after regex search for . lower.
 
 Version 1.0.14. Added 'Do All (beta)' feature to Page Separator popup that
 handles all page separators in one pass, assuming the file has been
