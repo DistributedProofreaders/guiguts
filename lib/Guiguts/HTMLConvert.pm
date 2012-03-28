@@ -1397,6 +1397,7 @@ sub html_parse_header {
 		$author =~ s/^by //i;
 		$author = ucfirst( lc($author) );
 		$author     =~ s/(\W)(\w)/$1\U$2\E/g;
+		$author =~ s/Amp/amp/;
 		$headertext =~ s/AUTHOR/$author/;
 	}
 	return $headertext;
