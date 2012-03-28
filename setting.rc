@@ -35,9 +35,9 @@ $rwhyphenspace       = '1';
 $toolside            = 'bottom';
 $utffontname         = 'Courier New';
 $utffontsize         = '14';
-$useoldmenus         = '1';
+$useppwizardmenus    = '1';
 
-$globallastpath      = 'C:\dp\ggp\tests\\';
+$globallastpath      = '.\\';
 $globalspellpath     = '\Program Files\Aspell\bin\aspell.exe';
 $globalviewerpath    = '\Program Files\XnView\xnview.exe';
 $globalbrowserstart  = 'start';
@@ -50,8 +50,8 @@ $validatecsscommand  = 'C:\dp\ggp\tools\W3C\css-validator.jar';
 $gnutenbergdirectory = 'C:\dp\ggp\tools\gnutenberg\0.4';
 
 @recentfile = (
-	'C:\dp\ggp\tests\errorcheck.html',
 	'README.txt',
+	'C:\dp\ggp\tests\errorcheck.html',
 );
 
 @extops = (
