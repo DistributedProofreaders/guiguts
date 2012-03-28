@@ -13,21 +13,22 @@ helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
 Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
-Source Check to the Text Version(s) menu. 
+Source Check to the Text Version(s) menu. Fixed undefined subroutine
+error for hyperlinkpagenumbers.
 
 Version 1.0.14. Added 'Do All (beta)' feature to Page Separator popup that
 handles all page separators in one pass, assuming the file has been
 proofread and footnotes handled with no extra or missing blank lines.
 Possible soft hyphens -* are not rejoined. Fixed highlighting of
-quotes.  
+quotes.
 
 Version 1.0.13. Fixed Replace All where the search term has a regexp
 metacharacter such as '['. Made the "div" and "span" entries on the
 HTML Fixup popup sticky. Marked PP Wizard as beta and not
 the default menu structure.
 
-Version 1.0.12. Provided message when current version is up to date, reset 
-the update clock when a new version is run, and added a "Working" message 
+Version 1.0.12. Provided message when current version is up to date, reset
+the update clock when a new version is run, and added a "Working" message
 while it is checking. Remove extra line before footnote being moved.
 Further fix to Search and Replace All undefined subroutine error and
 a handful of similar errors.
@@ -36,17 +37,17 @@ Version 1.0.11. Rejoin footnotes no longer leaves an extra new line
 where the rejoined footnote used to be. Search and Replace All no
 longer produces undefined subroutine error.
 
-Version 1.0.10. Page markers are centered in Adjust Page Marker dialog with 
+Version 1.0.10. Page markers are centered in Adjust Page Marker dialog with
 an option "Do No Center Page Markers". Fixed an error "Undefined subroutine
-b2scroll". 
+b2scroll".
 
 Version 1.0.9. After "Find Next ... Block" screen is centered on what is
-found. Size/location of main window and font are sticky again (broken 
-after 1.0.5). 
+found. Size/location of main window and font are sticky again (broken
+after 1.0.5).
 
 Version 1.0.8. In HTML generation, fixed pileup of page numbers at a
 thought break (a fix for this in an earlier version was lost). Improved
-placement of closing markup for a block of footnotes.  
+placement of closing markup for a block of footnotes.
 
 Version 1.0.7. Poetry converted to HTML has an indent of one em for
 every two spaces. Conversion does not assume poetry is already rewrapped
