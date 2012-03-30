@@ -12,6 +12,8 @@ guiguts-1.0.nn.zip is a stripped down version for those who have all the
 helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
+Version 1.0.16. Made Do All into a button rather than a checkbox.
+
 Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine
 error for hyperlinkpagenumbers. Handled headers of 3 or more lines.

@@ -502,16 +502,6 @@ sub separatorpopup {
 		my $sf3 =
 		  $::lglobal{pagepop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
-		my $doallbutton = $sf3->Checkbutton(
-			-variable => \$::lglobal{joindoall},
-			-command  => sub {
-				$::lglobal{jsemiautomatic} = 0 if $::lglobal{jsemiautomatic};
-				$::lglobal{jautomatic}     = 0 if $::lglobal{jautomatic};
-				iterateeautomatic();
-			},
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Do All (beta)',
-		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $jautobutton = $sf3->Checkbutton(
 			-variable => \$::lglobal{jautomatic},
 			-command  => sub {
@@ -545,20 +535,6 @@ sub separatorpopup {
 			-underline        => 0,
 			-width            => 8
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		my $undobutton = $sf4->Button(
-			-activebackground => $::activecolor,
-			-command          => sub { undojoin() },
-			-text             => 'Undo',
-			-underline        => 0,
-			-width            => 8
-		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		my $redobutton = $sf4->Button(
-			-activebackground => $::activecolor,
-			-command          => sub { redojoin() },
-			-text             => 'Redo',
-			-underline        => 0,
-			-width            => 8
-		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $delbutton = $sf4->Button(
 			-activebackground => $::activecolor,
 			-command          => sub { processpageseparator('d') },
@@ -571,6 +547,34 @@ sub separatorpopup {
 			-command          => sub { pageseparatorhelppopup() },
 			-text             => '?',
 			-width            => 1
+		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+		my $sf5 =
+		  $::lglobal{pagepop}
+		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+		my $undobutton = $sf5->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { undojoin() },
+			-text             => 'Undo',
+			-underline        => 0,
+			-width            => 8
+		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+		my $redobutton = $sf5->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { redojoin() },
+			-text             => 'Redo',
+			-underline        => 0,
+			-width            => 8
+		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+		my $doall2button = $sf5->Button(
+			-activebackground => $::activecolor,
+			-command  => sub {
+				$::lglobal{jsemiautomatic} = 0 if $::lglobal{jsemiautomatic};
+				$::lglobal{jautomatic}     = 0 if $::lglobal{jautomatic};
+				iterateeautomatic();
+			},
+			-text             => 'Do All (beta)',
+			-underline        => 0,
+			-width            => 12
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		$::lglobal{jsemiautomatic} = 1
 		  unless ( ( $::lglobal{jautomatic} ) || ( $::lglobal{joindoall} ) );
