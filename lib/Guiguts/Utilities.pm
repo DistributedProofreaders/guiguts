@@ -14,7 +14,7 @@ BEGIN {
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
 	  &checkforupdates &checkforupdatesmonthly &hotkeyshelp &regexref &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
-	  &xtops &fontsize &toolbar_toggle
+	  &xtops &toolbar_toggle
 	  &toggle_autosave &killpopup &viewprojectcomments &viewprojectdiscussion
 	  &b2scroll);
 }
