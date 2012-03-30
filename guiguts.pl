@@ -166,9 +166,7 @@ our $spellindexbkmrk     = q{};
 our $stayontop           = 0;
 our $suspectindex;
 our $toolside           = 'bottom';
-our $useoldmenus        = 1;
-our $useppwizardmenus   = 0;
-our $usemenutwo         = 0;
+our $menulayout         = 'old'; 
 our $utffontname        = 'Courier New';
 our $utffontsize        = 14;
 our $verboseerrorchecks = 0;
@@ -268,7 +266,7 @@ our $menubar;
 initialize();    # Initialize a bunch of vars that need it.
 
 # Set up the custom menus
-menubuild();
+menurebuild();
 
 # Set up the key bindings for the text widget
 textbindings();

@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setbrowser &setpngspath &set_autosave 
-	  &saveinterval &setcolor);
+	  &autosaveinterval &saveinterval &setcolor);
 }
 
 sub setviewerpath {    #Find your image viewer
@@ -297,6 +297,57 @@ sub setpngspath {
 	::openpng( $textwindow, $pagenum ) if defined $pagenum;
 }
 
+# Pop up a window where you can adjust the auto save interval
+sub saveinterval {
+	my $top = $::top;
+    if ( $::lglobal{intervalpop} ) {
+        $::lglobal{intervalpop}->deiconify;
+        $::lglobal{intervalpop}->raise;
+    }
+    else {
+        $::lglobal{intervalpop} = $top->Toplevel;
+        $::lglobal{intervalpop}->title('Autosave Interval');
+        $::lglobal{intervalpop}->resizable( 'no', 'no' );
+        my $frame = $::lglobal{intervalpop}
+            ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+        $frame->Label( -text => 'Minutes between Autosave' )
+            ->pack( -side => 'left' );
+        my $entry = $frame->Entry(
+            -background   => 'white',
+            -width        => 5,
+            -textvariable => \$::autosaveinterval,
+            -validate     => 'key',
+            -vcmd         => sub {
+                return 1 unless $_[0];
+                return 0 if ( $_[0] =~ /\D/ );
+                return 0 if ( $_[0] < 1 );
+                return 0 if ( $_[0] > 999 );
+                return 1;
+            },
+        )->pack( -side => 'left', -fill => 'x' );
+        my $frame1 = $::lglobal{intervalpop}
+            ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+        $frame1->Label( -text => '1-999 minutes' )->pack( -side => 'left' );
+        my $button = $frame1->Button(
+            -text    => 'OK',
+            -command => sub {
+                $::autosaveinterval = 5 unless $::autosaveinterval;
+                $::lglobal{intervalpop}->destroy;
+                undef $::lglobal{scrlspdpop};
+            },
+        )->pack( -side => 'left' );
+        $::lglobal{intervalpop}->protocol(
+            'WM_DELETE_WINDOW' => sub {
+                $::autosaveinterval = 5 unless $::autosaveinterval;
+                $::lglobal{intervalpop}->destroy;
+                undef $::lglobal{intervalpop};
+            }
+        );
+        $::lglobal{intervalpop}->Icon( -image => $::icon );
+        $entry->selectionRange( 0, 'end' );
+    }
+}
+
 sub set_autosave {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
@@ -321,7 +372,7 @@ sub set_autosave {
 	$::lglobal{savetool}
 	  ->configure( -background => 'green', -activebackground => 'green' )
 	  unless $::notoolbar;
-	$::lglobal{autosaveinterval} = time;
+	#$::lglobal{autosaveinterval} = time;
 }
 
 sub setcolor {    # Color picking routine
