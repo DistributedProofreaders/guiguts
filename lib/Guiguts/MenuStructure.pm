@@ -630,6 +630,11 @@ sub menubuildold {
 			[ 'command', '~Stealth Scannos...', -command => \&::stealthscanno ],
 			[ 'command', 'Spell ~Check...',     -command => \&::spellchecker ],
 			[
+				Button => 'Spell check in multiple languages',
+				-command =>
+				  sub { ::spellmultiplelanguages( $textwindow, $top ) }
+			],
+			[
 				'command',
 				'Goto ~Line...',
 				-command => sub {
@@ -1702,6 +1707,11 @@ sub menubuildwizard {
 			[ Button => 'Gutcheck options...', -command => \&::gutopts ],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
 			[ 'command', 'Spell ~Check...', -command => \&::spellchecker ],
+			[
+				Button => 'Spell check in multiple languages',
+				-command =>
+				  sub { ::spellmultiplelanguages( $textwindow, $top ) }
+			],
 		]
 	);
 	my $txtcleanup = $menubar->cascade(
@@ -2544,12 +2554,12 @@ sub menubuildtwo {
 				Button   => 'Run ~Word Frequency Routine...',
 				-command => sub { ::wordfrequency() }
 			],
+			[ 'command',   'Spell ~Check...', -command => \&::spellchecker ],
 			[
-				Button => 'Spell in multiple languages',
+				Button => 'Spell check in multiple languages',
 				-command =>
 				  sub { ::spellmultiplelanguages( $textwindow, $top ) }
 			],
-			[ 'command',   'Spell ~Check...', -command => \&::spellchecker ],
 			[ 'separator', '' ],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
 			[ Button => 'Run ~Gutcheck...',    -command => \&::gutcheck ],
