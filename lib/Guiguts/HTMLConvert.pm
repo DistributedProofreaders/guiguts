@@ -876,8 +876,10 @@ sub html_convert_body {
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
 					"<h2><a name=\"" . $aname . "\" id=\"" . $aname . "\">" );
+				my $linesinheader=1;
 				while (1) {
 					$step++;
+					$linesinheader++;
 					$selection = $textwindow->get( "$step.0", "$step.end" );
 					my $restofheader = $selection;
 					$restofheader =~ s/^\s+|\s+$//g;
@@ -889,6 +891,9 @@ sub html_convert_body {
 						# end of header reached
 						$step--;
 						$textwindow->ntinsert( "$step.end", '</a></h2>' );
+						if ($linesinheader>3) {
+							$textwindow->ntinsert( "$step.end", '<Warning: long header>' );
+						}
 						last;
 					}
 				}
@@ -2177,7 +2182,7 @@ sub htmlpopup {
 			-text             => 'Hyperlink Page Nums',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-		unless ( $::useppwizardmenus and not $::usemenutwo ) {
+		unless ( $::menulayout eq 'wizard' ) {
 			$f8->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {

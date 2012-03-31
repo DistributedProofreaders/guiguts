@@ -846,9 +846,6 @@ sub readsettings {
 		$::lastversioncheck = time();
 		$::lastversionrun=$::VERSION;
 	}
-	if ($::useppwizardmenus || $::usemenutwo) {
-		$::useoldmenus = 0;
-	}
 }
 ## Save setting.rc file
 sub savesettings {
@@ -880,7 +877,7 @@ EOM
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights
 			notoolbar poetrylmargin rmargin rwhyphenspace scannos_highlighted stayontop toolside utffontname utffontsize
-			useoldmenus useppwizardmenus usemenutwo verboseerrorchecks vislnnm w3cremote wfstayontop/
+			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
 		{
 			if ( eval '$::' . $_ ) {

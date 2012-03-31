@@ -13,6 +13,9 @@ helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
 Version 1.0.16. Made Do All into a button rather than a checkbox.
+Radiobuttons for menu structure selection. Fixed undefined
+subroutine for Auto Save Interval and fontsize. Made choice of menus
+a Radiobutton.
 
 Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine
