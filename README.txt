@@ -15,7 +15,8 @@ than Windows/Mac.
 Version 1.0.16. Made Do All into a button rather than a checkbox.
 Radiobuttons for menu structure selection. Fixed undefined
 subroutine for Auto Save Interval and fontsize. Made choice of menus
-a Radiobutton.
+a Radiobutton. Added warning for headers (<h2>) with four or more
+lines through the invalid tag '<Warning: long header>'.
 
 Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine

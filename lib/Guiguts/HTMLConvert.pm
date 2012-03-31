@@ -890,6 +890,7 @@ sub html_convert_body {
 						# end of header reached
 						$step--;
 						$textwindow->ntinsert( "$step.end", '</a></h2>' );
+						$linesinheader--;
 						if ($linesinheader>3) {
 							$textwindow->ntinsert( "$step.end", '<Warning: long header>' );
 						}
