@@ -884,7 +884,6 @@ sub html_convert_body {
 					my $restofheader = $selection;
 					$restofheader =~ s/^\s+|\s+$//g;
 					if ( length($restofheader) ) {
-						#$textwindow->ntinsert( "$step.end", '</a></h2>' );
 						# accumulate header for TOC
 						$completeheader .= ' ' . $restofheader;
 					} else {
