@@ -174,10 +174,10 @@ sub runtests {
 	#greekpopup();
 	ok( $::debug == 0, "Do not release with \$debug = 1" );
 	ok(
-		::deaccent(
+		::deaccentdisplay(
 'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı'
 		  ) eq 'AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiOOOOOOooooooNnUUUUuuuuYyy',
-"deaccent('ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı')"
+"deaccentdisplay('ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı')"
 	);
 	ok( ( ::entity('\xff') eq '&yuml;' ), "entity('\\xff') eq '&yuml;'" );
 	ok( $::debug == 0, "Do not release with \$debug = 1" );

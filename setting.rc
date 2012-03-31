@@ -26,8 +26,8 @@ $htmlspanentry       = ' class="i2"';
 $ignoreversions      = 'revision';
 $italic_char         = '_';
 $jeebiesmode         = 'p';
-$lastversioncheck    = '1333073490';
-$lastversionrun      = '1.0.15';
+$lastversioncheck    = '1333164249';
+$lastversionrun      = '1.0.16';
 $lmargin             = '1';
 $poetrylmargin       = '4';
 $rmargin             = '72';
@@ -35,9 +35,9 @@ $rwhyphenspace       = '1';
 $toolside            = 'bottom';
 $utffontname         = 'Courier New';
 $utffontsize         = '14';
-$useoldmenus         = '1';
+$menulayout          = 'new2';
 
-$globallastpath      = 'C:\dp\Franklinv3\\';
+$globallastpath      = 'tests\\';
 $globalspellpath     = '\Program Files\Aspell\bin\aspell.exe';
 $globalviewerpath    = '\Program Files\XnView\xnview.exe';
 $globalbrowserstart  = 'start';
@@ -50,6 +50,14 @@ $validatecsscommand  = 'C:\dp\ggp\tools\W3C\css-validator.jar';
 $gnutenbergdirectory = 'C:\dp\ggp\tools\gnutenberg\0.4';
 
 @recentfile = (
+	'tests\testhtml2.txt',
+	'tests\testhtml1.txt',
+	'tests\testfile.txt',
+	'readme.txt',
+	'tests\errorcheck.html',
+	'C:\dp\ggp\tests\temp.txt',
+	'C:\dp\ggp\tests\poetry.txt',
+	'C:\dp\ggp\tests\errorcheckbaseline.txt',
 	'C:\dp\Franklinv3\markedup.txt',
 	'README.txt',
 );
@@ -78,6 +86,7 @@ $geometryhash{hpopup} = '187x197+884+211';
 $geometryhash{hotpop} = '583x462+144+119';
 $geometryhash{footpop} = '352x361+255+157';
 $geometryhash{gcpop} = '462x583+684+72';
+$geometryhash{fspop} = '189x127+46+46';
 $geometryhash{xtpop} = '800x543+120+38';
 $geometryhash{grpop} = '50x8+144+153';
 $geometryhash{errorcheckpop} = '508x609+684+72';
@@ -87,11 +96,13 @@ $geometryhash{aboutpop} = '378x392+312+136';
 $geometryhash{asciipop} = '278x209+358+187';
 $geometryhash{ordpop} = '316x150+191+132';
 $geometryhash{fixpop} = '441x440+34+22';
+$geometryhash{stoppop} = '126x43+46+46';
 $geometryhash{jeepop} = '462x583+684+72';
 
 @mygcview = ();
 
 @search_history = (
+	"Warning",
 );
 
 @replace_history = (

@@ -1,0 +1,14 @@
+
+%htmllabels = (
+  'footnote' => 'Fodnote',
+  'footnoteheading' => 'FODNOTER',
+  'fnanchor' => 'FNanker',
+  'pagelbl' => 'Side',
+  'pageno1' => '[S. ',
+  'pageno2' => ']',
+);
+
+%convertcharsdisplay = qw(Æ AE Ø OE Å AA Ä AE Ö OE æ ae ø oe å aa ä ae ö oe Þ TH þ th ß ss);
+%convertcharssort = qw(Æ zzzzf Ä zzzzg Ø zzzzh Ö zzzzi Å zzzzj æ zzzzf ä zzzzg ø zzzzh ö zzzzi å zzzzj Þ zzzzm þ zzzzm ß ss);
+
+1;

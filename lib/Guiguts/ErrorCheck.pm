@@ -322,7 +322,12 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 	::update_indicators();
 	my $title = $top->cget('title');
 	if ( $title =~ /No File Loaded/ ) { ::savefile( $textwindow, $top ) }
-	my $types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	my $types;
+	if ($::OS_WIN) {
+		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	} else {
+		$types = [ [ 'All Files', ['*'] ] ];
+	}
 	if ( $errorchecktype eq 'W3C Validate CSS' ) {
 		$types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
 	}
@@ -1161,7 +1166,12 @@ sub jeebiesrun {
 	$listbox->delete( '0', 'end' );
 	::savefile() if ( $textwindow->numberChanges );
 	my $title = ::os_normal( $::lglobal{global_filename} );
-	my $types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	my $types;
+	if ($::OS_WIN) {
+		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	} else {
+		$types = [ [ 'All Files', ['*'] ] ];
+	}
 	unless ($::jeebiescommand) {
 		$::jeebiescommand =
 		  $textwindow->getOpenFile( -filetypes => $types,
@@ -1270,7 +1280,12 @@ sub gutcheck {
 	$title =~ s/edited - //;
 	$title = ::os_normal($title);
 	( $name, $path, $extension ) = ::fileparse( $title, '\.[^\.]*$' );
-	my $types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	my $types;
+	if ($::OS_WIN) {
+		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	} else {
+		$types = [ [ 'All Files', ['*'] ] ];
+	}
 	unless ($::gutcommand) {
 		$::gutcommand =
 		  $textwindow->getOpenFile(-filetypes => $types,

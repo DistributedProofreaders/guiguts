@@ -900,7 +900,7 @@ END
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
 			my $linkname;
-			$linkname = makeanchor( deaccent($seg1) );
+			$linkname = makeanchor( deaccentdisplay($seg1) );
 			$seg1     = "<a id=\"$linkname\"></a>";
 			$replbuild .= $seg1;
 			$replbuild .= $seg2 if $seg2;

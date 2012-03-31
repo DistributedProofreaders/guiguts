@@ -809,6 +809,7 @@ sub openfile {    # and open it
 	_recentupdate($name);
 	::update_indicators();
 	file_mark_pages() if $::auto_page_marks;
+	::readlabels();
 
    #push @::operations, ( localtime() . " - Open $::lglobal{global_filename}" );
    #oppopupdate() if $::lglobal{oppop};

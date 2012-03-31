@@ -203,13 +203,13 @@ sub html_convert_footnotes {
 		);
 		$textwindow->ntinsert(
 			'fns' . "$step" . '+10c',
-			"<div class=\"footnote\"><p><a name=\"Footnote_"
+			"<div class=\"footnote\"><p><a name=\"$::htmllabels{footnote}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\" id=\"Footnote_"
+			  . "\" id=\"$::htmllabels{footnote}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\"></a><a href=\"#FNanchor_"
+			  . "\"></a><a href=\"#$::htmllabels{fnanchor}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
 			  . "\"><span class=\"label\">["
@@ -219,13 +219,13 @@ sub html_convert_footnotes {
 		  if ( $fnarray->[$step][3] );
 		$textwindow->ntinsert(
 			'fna' . "$step",
-			"<a name=\"FNanchor_"
+			"<a name=\"$::htmllabels{fnanchor}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\" id=\"FNanchor_"
+			  . "\" id=\"$::htmllabels{fnanchor}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\"></a><a href=\"#Footnote_"
+			  . "\"></a><a href=\"#$::htmllabels{footnote}_"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
 			  . "\" class=\"fnanchor\">"
@@ -869,7 +869,7 @@ sub html_convert_body {
 
 			# make an anchor for autogenerate TOC
 			$aname =~ s/<\/?[hscalup].*?>//g;
-			$aname = makeanchor( ::deaccent($selection) );
+			$aname = makeanchor( ::deaccentdisplay($selection) );
 			my $completeheader = $selection;
 
 			# insert chapter heading unless already a para or heading open
@@ -1012,34 +1012,30 @@ sub html_convert_underscoresmallcaps {
 		$textwindow->ntdelete( $thisblockstart, "$thisblockstart+17c" );
 		$textwindow->insert( $thisblockstart,
 			'<div class="footnotes"><h3>FOOTNOTES:</h3>' );
-
-		# Improved logic for finding end of footnote block: find
+		# Improved logic for finding end of footnote block: find 
 		# the next footnote block
-		my $nextfootnoteblock =
-		  $textwindow->search( '-exact', '--', 'FOOTNOTES:',
-			$thisblockstart . '+1l', 'end' );
+		my $nextfootnoteblock = $textwindow->search(
+			'-exact', '--', 'FOOTNOTES:', $thisblockstart.'+1l', 'end'
+		);
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock = 'end';
+			$nextfootnoteblock='end';			
 		}
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock = 'end';
+			$nextfootnoteblock='end';			
 		}
-
-		# find the start of last footnote
-		my $lastfootnoteinblock =
-		  $textwindow->search( '-exact', '-backwards', '--',
-			'<div class="footnote">',
-			$nextfootnoteblock );
-
+		# find the start of last footnote 
+		my $lastfootnoteinblock = $textwindow->search(
+			'-exact','-backwards', '--', '<div class="footnote">', $nextfootnoteblock
+		);
 		# find the end of the last footnote
-		my $endoflastfootnoteinblock =
-		  $textwindow->search( '-exact', '--', '</p></div>',
-			$lastfootnoteinblock );
-		$textwindow->insert( $endoflastfootnoteinblock . '+10c', '</div>' );
-		if ($endoflastfootnoteinblock) {
-			$thisblockstart = $endoflastfootnoteinblock;
+		my $endoflastfootnoteinblock = $textwindow->search(
+			'-exact', '--', '</p></div>', $lastfootnoteinblock
+		);
+		$textwindow->insert( $endoflastfootnoteinblock.'+10c', '</div>' );
+		if ($endoflastfootnoteinblock){
+			$thisblockstart =$endoflastfootnoteinblock
 		} else {
-			$thisblockstart = 'end';
+			$thisblockstart='end';
 		}
 	}
 	return;
@@ -1170,7 +1166,7 @@ sub html_convert_pageanchors {
 							$br = '';    # No page break for exportwithmarkup
 						} else {
 							$pagereference .= "$br"
-							  . "<a name=\"Page_$_\" id=\"Page_$_\">[Pg $_]</a>";
+							  . "<a name=\"$::htmllabels{pagelbl}_$_\" id=\"$::htmllabels{pagelbl}_$_\">$::htmllabels{pageno1}$_$::htmllabels{pageno2}</a>";
 							$br = "<br />";
 						}
 					}
@@ -1182,13 +1178,13 @@ sub html_convert_pageanchors {
 						$pagereference = "<$mark>";
 					} else {
 						$pagereference =
-"<a name=\"Page_$num\" id=\"Page_$num\">[Pg $num]</a>";
+"<a name=\"$::htmllabels{pagelbl}_$num\" id=\"$::htmllabels{pagelbl}_$num\">$::htmllabels{pageno1}$num$::htmllabels{pageno2}</a>";
 					}
 				}
 			}
 
 			# comment only
-			$textwindow->ntinsert( $markindex, '<!-- Page ' . $num . ' -->' )
+			$textwindow->ntinsert( $markindex, "<!-- $::htmllabels{pagelbl} $num -->" )
 			  if ( $::pagecmt and $num );
 			if ($pagereference) {
 
@@ -1405,6 +1401,7 @@ sub html_parse_header {
 		$author =~ s/Amp/amp/;
 		$headertext =~ s/AUTHOR/$author/;
 	}
+	$headertext =~ s/BOOKLANG/$::booklang/g;
 	return $headertext;
 }
 
@@ -1423,7 +1420,21 @@ sub html_wrapup {
 		}
 	}
 	insert_paragraph_close( $textwindow, 'end' );
-	$textwindow->ntinsert( 'end', "\n<\/body>\n<\/html>" );
+	if ( -e 'footer.txt' ) {
+		my $footertext;
+		open my $infile, '<', 'footer.txt';
+		while (<$infile>) {
+			$_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
+
+			# FIXME: $_ = eol_convert($_);
+			$footertext .= $_;
+		}
+		close $infile;
+		$textwindow->ntinsert( 'end', $footertext );
+	}
+	else {
+		$textwindow->ntinsert( 'end', "\n<\/body>\n<\/html>" );
+	}
 	$thisblockstart = $textwindow->search( '--', '</style', '1.0', '500.0' );
 	$thisblockstart = '75.0' unless $thisblockstart;
 	$thisblockstart =
@@ -2573,7 +2584,7 @@ sub markup {
 						undef $::lglobal{linkpop};
 					}
 				);
-				my $tempvar   = lc( makeanchor( ::deaccent($selection) ) );
+				my $tempvar   = lc( makeanchor( ::deaccentdisplay($selection) ) );
 				my $flag      = 0;
 				my @entrarray = split( /_/, $tempvar );
 				$entrarray[1] = '@' unless $entrarray[1];
@@ -2581,10 +2592,10 @@ sub markup {
 				for ( sort (@intanchors) ) {
 					last unless $tempvar;
 					next
-					  if ( ( ( $_ =~ /#Footnote/ ) || ( $_ =~ /#FNanchor/ ) )
+					  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 						&& $::lglobal{fnlinks} );
 					next
-					  if ( ( $_ =~ /#Page_/ ) && $::lglobal{pglinks} );
+					  if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
 					next unless ( lc($_) eq '#' . $tempvar );
 					$linklistbox->insert( 'end', $_ );
 					$flag++;
@@ -2602,10 +2613,10 @@ sub markup {
 				}
 				for ( sort (@intanchors) ) {
 					next
-					  if ( ( ( $_ =~ /#Footnote/ ) || ( $_ =~ /#FNanchor/ ) )
+					  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 						&& $::lglobal{fnlinks} );
 					next
-					  if ( ( $_ =~ /#Page_/ ) && $::lglobal{pglinks} );
+					  if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
 					next
 					  unless (
 						lc($_) =~
@@ -2623,7 +2634,7 @@ sub markup {
 			my $linkname;
 			$selection = $textwindow->get( $thisblockstart, $thisblockend )
 			  || '';
-			$linkname = makeanchor( ::deaccent($selection) );
+			$linkname = makeanchor( ::deaccentdisplay($selection) );
 			$done     = "<a id=\"" . $linkname . "\"></a>";
 			$textwindow->insert( $thisblockstart, $done );
 		} elsif ( $mark =~ /h\d/ ) {
@@ -2669,7 +2680,7 @@ sub hyperlinkpagenums {
 	::searchpopup();
 	::searchoptset(qw/0 x x 1/);
 	$::lglobal{searchentry}->insert( 'end', "(?<!\\d)(\\d{1,3})" );
-	$::lglobal{replaceentry}->insert( 'end', "<a href=\"#Page_\$1\">\$1</a>" );
+	$::lglobal{replaceentry}->insert( 'end', "<a href=\"#$::htmllabels{pagelbl}_\$1\">\$1</a>" );
 }
 
 sub makeanchor {
@@ -3138,17 +3149,17 @@ sub linkpopulate {
 	if ( $::lglobal{ilinksrt} ) {
 		for ( ::natural_sort_alpha( @{$anchorsref} ) ) {
 			next
-			  if ( ( ( $_ =~ /#Footnote/ ) || ( $_ =~ /#FNanchor/ ) )
+			  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 				&& $::lglobal{fnlinks} );
-			next if ( ( $_ =~ /#Page_/ ) && $::lglobal{pglinks} );
+			next if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
 			$linklistbox->insert( 'end', $_ );
 		}
 	} else {
 		foreach ( @{$anchorsref} ) {
 			next
-			  if ( ( ( $_ =~ /#Footnote/ ) || ( $_ =~ /#FNanchor/ ) )
+			  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 				&& $::lglobal{fnlinks} );
-			next if ( ( $_ =~ /#Page_/ ) && $::lglobal{pglinks} );
+			next if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
 			$linklistbox->insert( 'end', $_ );
 		}
 	}
@@ -3641,10 +3652,10 @@ sub pageadjust {
 
 sub addpagelinks {
 	my $selection = shift;
-	$selection =~ s/(\d{1,3})-(\d{1,3})/<a href="#Page_$1">$1-$2<\/a>/g;
-	$selection =~ s/(\d{1,3})([,;\.])/<a href="#Page_$1">$1<\/a>$2/g;
-	$selection =~ s/\s(\d{1,3})\s/ <a href="#Page_$1">$1<\/a> /g;
-	$selection =~ s/(\d{1,3})$/<a href="#Page_$1">$1<\/a>/;
+	$selection =~ s/(\d{1,3})-(\d{1,3})/<a href="#$::htmllabels{pagelbl}_$1">$1-$2<\/a>/g;
+	$selection =~ s/(\d{1,3})([,;\.])/<a href="#$::htmllabels{pagelbl}_$1">$1<\/a>$2/g;
+	$selection =~ s/\s(\d{1,3})\s/ <a href="#$::htmllabels{pagelbl}_$1">$1<\/a> /g;
+	$selection =~ s/(\d{1,3})$/<a href="#$::htmllabels{pagelbl}_$1">$1<\/a>/;
 	return $selection;
 }
 1;
