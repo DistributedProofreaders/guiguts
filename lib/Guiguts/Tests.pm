@@ -27,19 +27,25 @@ sub runtests {
 	$::lglobal{pageanch} = 1;
 	$::lglobal{pagecmt}  = 0;
 	ok( 1 == do { 1 }, "do block" );
-	ok( -e "tests/errorcheck.html", "tests/errorcheck.html exists" );
-	ok( 1 == do { ::openfile("tests/errorcheck.html"); 1 },
-		"openfile on tests/errorcheck.html" );
-	::errorcheckpop_up( $textwindow, $top, 'Check All' );
-	open my $logfile, ">", "tests/errors.err" || die "output file error\n";
-	print $logfile $::lglobal{errorchecklistbox}->get( '1.0', 'end' );
-	close $logfile;
-	ok( ::compare( "tests/errors.err", 'tests/errorcheckbaseline.txt' ) == 0,
-		"Check All was successful" );
-	print "begin diff\n";
-	system "diff tests/errorcheckbaseline.txt tests/errors.err";
-	print "end diff\n";
-	#unlink 'tests/errors.err';
+	my $logfile;
+	if ($::OS_WIN) {
+		ok( -e "tests/errorcheck.html", "tests/errorcheck.html exists" );
+		ok( 1 == do { ::openfile("tests/errorcheck.html"); 1 },
+			"openfile on tests/errorcheck.html" );
+		::errorcheckpop_up( $textwindow, $top, 'Check All' );
+		open $logfile, ">", "tests/errors.err" || die "output file error\n";
+		print $logfile $::lglobal{errorchecklistbox}->get( '1.0', 'end' );
+		close $logfile;
+		ok(
+			::compare( "tests/errors.err", 'tests/errorcheckbaseline.txt' ) ==
+			  0,
+			"Check All was successful"
+		);
+		print "begin diff\n";
+		system "diff tests/errorcheckbaseline.txt tests/errors.err";
+		print "end diff\n";
+		unlink 'tests/errors.err';
+	}
 	ok( 1 == do { ::openfile("readme.txt"); 1 }, "openfile on readme.txt" );
 	ok( "readme.txt" eq $textwindow->FileName, "File is named readme.txt" );
 	ok( 1 == do { ::file_close($textwindow); 1 }, "close readme.txt" );
@@ -52,7 +58,7 @@ sub runtests {
 	ok(
 		1 == do {
 			::selectrewrap( $textwindow, $::lglobal{seepagenums},
-							$::scannos_highlighted, $::rwhyphenspace );
+				$::scannos_highlighted, $::rwhyphenspace );
 			1;
 		},
 		"Rewrap Selection"
@@ -83,8 +89,10 @@ sub runtests {
 	ok( 1 == do { $textwindow->SaveUTF('tests/testhtml1.html'); 1 },
 		"test of file save as tests/testfilewrapped" );
 	ok( -e 'tests/testhtml1.html', "tests/testhtml1.html was saved" );
-	ok( -e "tests/testhtml1baseline.html",
-		"tests/testhtml1baseline.html exists" );
+	ok(
+		-e "tests/testhtml1baseline.html",
+		"tests/testhtml1baseline.html exists"
+	);
 	open my $infile, "<", "tests/testhtml1.html" || die "no source file\n";
 	open $logfile, ">", "tests/testhtml1temp.html" || die "output file error\n";
 
@@ -121,8 +129,10 @@ sub runtests {
 	ok( 1 == do { $textwindow->SaveUTF('tests/testhtml2.html'); 1 },
 		"test of file save as tests/testfilewrapped" );
 	ok( -e 'tests/testhtml2.html', "tests/testhtml2.html was saved" );
-	ok( -e "tests/testhtml2baseline.html",
-		"tests/testhtml2baseline.html exists" );
+	ok(
+		-e "tests/testhtml2baseline.html",
+		"tests/testhtml2baseline.html exists"
+	);
 	open $infile,  "<", "tests/testhtml2.html"     || die "no source file\n";
 	open $logfile, ">", "tests/testhtml2temp.html" || die "output file error\n";
 	@book   = ();

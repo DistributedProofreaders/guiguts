@@ -404,7 +404,7 @@ sub UpDownLine {
 	# 2. The insert cursor position has changed from the previous
 	#    time the up or down key was pressed -- or --
 	# 3. The cursor has reached the beginning or end of the widget.
-	if ( not defined $w->{'origx'} or ( $w->{'lastindex'} != $i ) ) {
+	if ( not defined $w->{'origx'} or ((defined $w->{'lastindex'})  && ( $w->{'lastindex'} != $i) ) ) {
 		$w->{'origx'} = $bx;
 	}
 

@@ -13,6 +13,9 @@ helper applications or are upgrading or who use operating systems other
 than Windows/Mac. Added spell check in multiple languages to old menus
 and PP Wizard.
 
+Version 1.0.17. Fixed error from hitting down arrow twice 
+after startup.
+
 Version 1.0.16. Made Do All into a button rather than a checkbox.
 Radiobuttons for menu structure selection. Fixed undefined
 subroutine for Auto Save Interval and fontsize. Made choice of menus
