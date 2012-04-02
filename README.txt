@@ -14,7 +14,7 @@ than Windows/Mac. Added spell check in multiple languages to old menus
 and PP Wizard.
 
 Version 1.0.17. Fixed error from hitting down arrow twice 
-after startup.
+after startup. Throw away tags in word frequency popup.
 
 Version 1.0.16. Made Do All into a button rather than a checkbox.
 Radiobuttons for menu structure selection. Fixed undefined
