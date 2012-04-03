@@ -13,12 +13,13 @@ helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
 Version 1.0.17. Fixed error from hitting down arrow twice 
-after startup. Throw away tags in word frequency popup; throw
+after startup. Ignore tags in word frequency popup; ignore
 away '*' characters (the way it used to be) except for '-*'
 (not the way it used to be). Added spell check in multiple 
 languages to old menus and PP Wizard (actually done in 1.0.16).
 Write setting.rc to guiguts home directory. Fixed problem 
-changing font sizes.
+changing font sizes. Made check for two words (flash light
+vs. flashlight vs. flash-light) optional.
 
 Version 1.0.16. Made Do All into a button rather than a checkbox.
 Radiobuttons for menu structure selection. Fixed undefined
