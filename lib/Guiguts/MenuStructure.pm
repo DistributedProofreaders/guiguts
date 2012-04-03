@@ -409,6 +409,12 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
+				[
+					Checkbutton => "Include two words ('flash light') in hyphen check",
+					-variable   => \$::twowordsinhyphencheck,
+					-onvalue    => 1,
+					-offvalue   => 0
+				],
 				[ 'separator', '' ],
 				[
 					Button   => 'Spellcheck Dictionary Select...',

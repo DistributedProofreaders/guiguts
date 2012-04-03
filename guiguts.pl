@@ -167,6 +167,7 @@ our $stayontop           = 0;
 our $suspectindex;
 our $toolside           = 'bottom';
 our $menulayout         = 'old'; 
+our $twowordsinhyphencheck = 0;
 our $utffontname        = 'Courier New';
 our $utffontsize        = 14;
 our $verboseerrorchecks = 0;

@@ -877,7 +877,8 @@ EOM
 			geometry2 geometry3 geometrypnumpop globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights
-			notoolbar poetrylmargin rmargin rwhyphenspace scannos_highlighted stayontop toolside utffontname utffontsize
+			notoolbar poetrylmargin rmargin rwhyphenspace scannos_highlighted stayontop toolside 
+			twowordsinhyphencheck utffontname utffontsize
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
 		{
