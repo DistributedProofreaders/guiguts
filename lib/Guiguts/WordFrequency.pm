@@ -43,6 +43,7 @@ sub wordfrequencybuildwordlist {
 		$line =~ s/_/ /g;
 		$line =~ s/<!--//g;
 		$line =~ s/-->//g;
+		$line =~ s/<\/?[a-z]*>/ /g;    # throw away tags
 		if ( $::lglobal{ignore_case} ) { $line = lc($line) }
 		@words = split( /\s+/, $line );
 
@@ -71,8 +72,9 @@ sub wordfrequencybuildwordlist {
 			}
 			$lastwordseen = $word;
 
-			#$word =~ s/\*//;
-			$word =~ s/[\.',-]+$//;    # throw away punctuation at end
+			$word =~ s/(?<!\-)\*//;
+			$word =~ s/^\*$//;
+			$word =~ s/[\.	',-]+$//;    # throw away punctuation at end
 			$word =~ s/^[\.,'-]+//;    #and at the beginning
 			next if ( $word eq '' );
 			$wc++;

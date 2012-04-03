@@ -282,6 +282,7 @@ our $textwindow;
 our $menubar;
 initialize();    # Initialize a bunch of vars that need it.
 
+readlabels();
 # Set up the custom menus
 menurebuild();
 
