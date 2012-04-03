@@ -860,9 +860,9 @@ sub savesettings {
 # You shouldn't ever have to edit this file manually.\n\n
 EOM
 	my ( $index, $savethis );
-	my $thispath = $0;
-	$thispath =~ s/[^\\]*$//;
-	my $savefile = $thispath . 'setting.rc';
+	#my $thispath = $0;
+	#$thispath =~ s/[^\\]*$//;
+	my $savefile = ::catfile($::lglobal{guigutsdirectory} , 'setting.rc');
 	$::geometry = $top->geometry unless $::geometry;
 	if ( open my $save_handle, '>', $savefile ) {
 		print $save_handle $message;

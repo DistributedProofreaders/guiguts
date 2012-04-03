@@ -182,7 +182,7 @@ sub fontsize {
 		my $fontlist = $tframe->BrowseEntry(
 			-label     => 'Font',
 			-browsecmd => sub {
-				fontinit();
+				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 			},
 			-variable => \$::fontname
@@ -193,7 +193,7 @@ sub fontsize {
 			-activebackground => $::activecolor,
 			-command          => sub {
 				$::fontsize++;
-				fontinit();
+				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 				$sizelabel->configure( -text => $::fontsize );
 			},
@@ -207,7 +207,7 @@ sub fontsize {
 			-activebackground => $::activecolor,
 			-command          => sub {
 				$::fontsize--;
-				fontinit();
+				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 				$sizelabel->configure( -text => $::fontsize );
 			},
@@ -220,7 +220,7 @@ sub fontsize {
 			-offvalue    => '',
 			-selectcolor => $::activecolor,
 			-command     => sub {
-				fontinit();
+				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 			},
 			-text => 'Bold'

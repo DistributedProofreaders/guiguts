@@ -865,6 +865,11 @@ sub initialize {
 		-format => 'gif',
 		-data   => $::icondata
 	);
+	if ( $0 =~ m/\/|\\/ ) {
+		my $dir = $0;
+		$dir =~ s/(\/|\\)[^\/\\]+$/$1/;
+		chdir $dir if length $dir;
+	}
 	::readsettings();
 	::fontinit();    # Initialize the fonts for the two windows
 	::utffontinit();
@@ -929,12 +934,6 @@ sub initialize {
 			  }
 		]
 	);
-
-	if ( $0 =~ m/\/|\\/ ) {
-		my $dir = $0;
-		$dir =~ s/(\/|\\)[^\/\\]+$/$1/;
-		chdir $dir if length $dir;
-	}
 
 	# Ignore any watchdog timer alarms. Subroutines that take a long time to
 	# complete can trip it
