@@ -933,9 +933,9 @@ sub footnotemove {
 		  if ( $textwindow->get("fne$::lglobal{fnindex} +1c") eq "\n" );
 		$textwindow->delete("fns$::lglobal{fnindex} -1c")
 		  if ( $textwindow->get("fns$::lglobal{fnindex} -1c") eq "\n" );
-		# Try to remove extra line before moved footnote
-		$textwindow->delete("fns$::lglobal{fnindex} -1c")
-		  if ( $textwindow->get("fns$::lglobal{fnindex} -1c") eq "\n" );
+		# Try to remove extra line before moved footnote 
+		#$textwindow->delete("fns$::lglobal{fnindex} -1c")
+		# if ( $textwindow->get("fns$::lglobal{fnindex} -1c") eq "\n" );
 		$textwindow->delete( "fns$::lglobal{fnindex}",
 							 "fne$::lglobal{fnindex}" );
 		$::lglobal{fnindex}--;
