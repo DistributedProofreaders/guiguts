@@ -730,40 +730,47 @@ sub escape_regexmetacharacters {
 sub deaccent {
 	my $phrase = shift;
 	return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
-	eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
+	eval
+"\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
 	$phrase =~ s/([$::convertcharsmultisearch])/$::convertcharssort{$1}/g;
 	return $phrase;
 }
 
 sub deaccentdisplay {
-	# deaccent is used both by htmlconvert and sorting - they need to different kinds of deaccenting
+
+# deaccent is used both by htmlconvert and sorting - they need to different kinds of deaccenting
 	my $phrase = shift;
 	return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
+
 	# first convert the characters specified by the language
 	$phrase =~ s/([$::convertcharsdisplaysearch])/$::convertcharsdisplay{$1}/g;
-	# then convert anything that hasn't been converted already, using the default one character substitute
-	$phrase =~ tr/ÀÁÂÃÄÅàáâãäåÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı/AAAAAAaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy/;
+
+# then convert anything that hasn't been converted already, using the default one character substitute
+	$phrase =~
+tr/ÀÁÂÃÄÅàáâãäåÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı/AAAAAAaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy/;
 	return $phrase;
 }
 
 sub readlabels {
-	my $labelfile = 'labels_'.$::booklang.'.rc';
+	my $labelfile = 'labels_' . $::booklang . '.rc';
 	if ( -e $labelfile ) {
 		unless ( my $return = ::dofile($labelfile) ) {
 			# do something here?
-                }
-		$::convertcharsdisplaysearch = join('', keys %::convertcharsdisplay);
-		$::convertcharsmultisearch   = join('', keys %::convertcharssort);
-		$::convertcharssinglesearch  = "ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı";  # Æ Å Ş ş ß
-		$::convertcharssinglereplace = "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy";
+		}
+		$::convertcharsdisplaysearch = join( '', keys %::convertcharsdisplay );
+		$::convertcharsmultisearch   = join( '', keys %::convertcharssort );
+		$::convertcharssinglesearch =
+"ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı"
+		  ;                                             # Æ Å Ş ş ß
+		$::convertcharssinglereplace =
+		  "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy";
 		my @chararray = keys %::convertcharssort;
-		for ( my $i = 0; $i < @chararray ; $i++) {
-			my $index = index($::convertcharssinglesearch, $chararray[$i]);
+		for ( my $i = 0 ; $i < @chararray ; $i++ ) {
+			my $index = index( $::convertcharssinglesearch, $chararray[$i] );
 			substr $::convertcharssinglesearch,  $index, 1, '';
 			substr $::convertcharssinglereplace, $index, 1, '';
 		}
-        }
-
+	}
 }
 
 sub BindMouseWheel {
@@ -1085,6 +1092,7 @@ sub initialize {
 			)
 		);
 	}
+
 	# Update check needs to be done after readsettings to reset the update clock
 	# when a user has just upgraded
 	%{ $::lglobal{utfblocks} } = (
@@ -1735,8 +1743,9 @@ sub checkforupdates {
 	::working();
 	if ($onlineversion) {
 		if ( $monthlycheck eq "monthly" ) {
-			if (  # ( $onlineversion eq "$::VERSION" ) or
-				 ( $onlineversion eq $::ignoreversionnumber ) )
+			if (    # ( $onlineversion eq "$::VERSION" ) or
+				( $onlineversion eq $::ignoreversionnumber )
+			  )
 			{
 				return;
 			}
@@ -2338,8 +2347,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . '(So, to pass the currently open file, use $d$f$e.)' . "\n\n"
 			  . "\$i = the directory with full path that the png files are in.\n"
 			  . "\$p = the number of the page that the cursor is currently in.\n"
-			  . "\$t = the currently highlighted text.\n"
-		)->pack;
+			  . "\$t = the currently highlighted text.\n" )->pack;
 		my $f1 =
 		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		for my $menutempvar ( 0 .. 9 ) {
