@@ -12,6 +12,8 @@ guiguts-1.0.nn.zip is a stripped down version for those who have all the
 helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
+Version 1.0.18. 
+
 Version 1.0.17. Fixed error from hitting down arrow twice 
 after startup. Ignore tags in word frequency popup; ignore
 away '*' characters (the way it used to be) except for '-*'
