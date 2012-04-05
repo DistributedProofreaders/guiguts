@@ -864,6 +864,8 @@ sub html_convert_body {
 # the header.
 				if ( $step - 5 <= $pagemarkline ) {
 					$textwindow->markSet( "HRULE$pagemarkline", $hmarkindex );
+				} else {
+					$textwindow->insert($step . '.0-1l','<hr class="chap" />');
 				}
 			}
 
