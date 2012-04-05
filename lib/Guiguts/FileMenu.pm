@@ -96,6 +96,7 @@ sub file_saveas {
 	} else {
 		return;
 	}
+	$textwindow->ResetUndo;    #necessary to reset edited flag
 	::update_indicators();
 	return;
 }
@@ -415,7 +416,7 @@ sub savefile {    # Determine which save routine to use and then use it
 		}
 		$textwindow->SaveUTF;
 	}
-	$textwindow->ResetUndo;    #necessary to rest edited flag
+	$textwindow->ResetUndo;    #necessary to reset edited flag
 	::_bin_save();
 	::set_autosave() if $::autosave;
 	::update_indicators();

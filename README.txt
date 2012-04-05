@@ -12,7 +12,9 @@ guiguts-1.0.nn.zip is a stripped down version for those who have all the
 helper applications or are upgrading or who use operating systems other
 than Windows/Mac.
 
-Version 1.0.19. Fixed highlighting of newly selected wordlist.
+Version 1.0.19. Fixed highlighting of newly selected wordlist. Fixed
+undefined subroutine reference when choosing 'Enable Scanno Highlighting'.
+Reset 'edited' flag after "Save As'.
 
 Version 1.0.18. Fixed removal of too many lines when moving
 footnotes to landing zone.
