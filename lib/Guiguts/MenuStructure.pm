@@ -272,7 +272,7 @@ sub menu_preferences {
 					-variable   => \$::scannos_highlighted,
 					-onvalue    => 1,
 					-offvalue   => 0,
-					-command    => \&highlight_scannos
+					-command    => \&::highlight_scannos
 				],
 				[
 					Checkbutton => 'Leave Bookmarks Highlighted',

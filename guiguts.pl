@@ -16,10 +16,10 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.18';
+our $VERSION = '1.0.19';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
-our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
+our $debug = 1; # turn on to report debug messages. Do not commit with $debug on
 use FindBin;
 use lib $FindBin::Bin . "/lib";
 
