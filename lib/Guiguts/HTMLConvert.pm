@@ -1792,7 +1792,7 @@ sub htmlautoconvert {
 		$::lglobal{keep_latin1} );
 	html_wrapup( $textwindow, $headertext, $::lglobal{leave_utf},
 		$::lglobal{autofraction} );
-	$textwindow->ResetUndo;
+	#$textwindow->ResetUndo;
 }
 
 sub thumbnailbrowse {

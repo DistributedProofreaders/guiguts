@@ -15,7 +15,9 @@ than Windows/Mac.
 Version 1.0.19. Fixed highlighting of newly selected wordlist. Fixed
 undefined subroutine reference when choosing 'Enable Scanno Highlighting'.
 Reset 'edited' flag after "Save As'. Fixed missing <hr class="chap" />
-before a chapter heading in the middle of a page.
+before a chapter heading in the middle of a page. Removed duplicate 
+insertion of footnote landing zone (FOOTNOTE) at end of file. Retained * 
+in word frequency list only if preceded by a hyphen.
 
 Version 1.0.18. Fixed removal of too many lines when moving
 footnotes to landing zone.
