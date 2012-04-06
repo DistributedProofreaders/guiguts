@@ -883,7 +883,7 @@ sub autochaptlz {
 sub autoendlz {
 	my $textwindow = $::textwindow;
 	$textwindow->markSet( 'insert', 'end -1c' );
-	$textwindow->insert( 'insert', "FOOTNOTES:\n\n" );
+	#$textwindow->insert( 'insert', "FOOTNOTES:\n\n" );
 	setlz();
 }
 

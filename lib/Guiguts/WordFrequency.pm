@@ -71,7 +71,7 @@ sub wordfrequencybuildwordlist {
 				$::lglobal{seenwordpairs}->{"$lastwordseen $word"}++;
 			}
 			$lastwordseen = $word;
-			$word =~ s/(?<!\-)\*//;
+			$word =~ s/(?<!\-)\*//g;
 			$word =~ s/^\*$//;
 			$word =~ s/[\.	',-]+$//;    # throw away punctuation at end
 			$word =~ s/^[\.,'-]+//;     #and at the beginning
