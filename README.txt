@@ -10,7 +10,7 @@ languages). guiguts-mac-1.0.nn should also work out of the box for Mac
 users; it does not include as many helper applications.
 guiguts-1.0.nn.zip is a stripped down version for those who have all the
 helper applications or are upgrading or who use operating systems other
-than Windows/Mac.
+than Windows/Mac. 
 
 Version 1.0.19. Fixed highlighting of newly selected wordlist. Fixed
 undefined subroutine reference when choosing 'Enable Scanno Highlighting'.
