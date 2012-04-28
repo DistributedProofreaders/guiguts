@@ -1633,16 +1633,14 @@ sub htmlimage {
 					$alignment = 'center' unless $alignment;
 					$selection = $::lglobal{captiontext}->get;
 					$selection ||= '';
-					$selection =~ s/"/&quot;/g;
-					$selection =~ s/'/&#39;/g;
 					my $alt = $::lglobal{alttext}->get;
-					$alt       = " alt=\"$alt\"";
+					$alt =~ s/"/&quot;/g;
+					$alt = " alt=\"$alt\"";
 					$selection = "<span class=\"caption\">$selection</span>\n"
 					  if $selection;
 					$preservep = '' unless $selection;
 					my $title = $::lglobal{titltext}->get || '';
 					$title =~ s/"/&quot;/g;
-					$title =~ s/'/&#39;/g;
 					$title = " title=\"$title\"" if $title;
 					$textwindow->addGlobStart;
 					my $closeimg =
