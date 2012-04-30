@@ -79,6 +79,7 @@ sub update_indicators {
 		update_next_img_button();
 		update_auto_img_button();
 		update_label_button();
+		update_lang_button();
 		update_img_lbl_values($pnum);
 		update_proofers_button($pnum);
 	}
@@ -176,7 +177,7 @@ sub buildstatusbar {
 							   -text       => ' No Selection ',
 							   -relief     => 'ridge',
 							   -background => 'gray',
-	  )->grid( -row => 1, -column => 10, -sticky => 'nw' );
+	  )->grid( -row => 1, -column => 11, -sticky => 'nw' );
 	$::lglobal{selectionlabel}->bind(
 		'<1>',
 		sub {
@@ -263,7 +264,7 @@ sub buildstatusbar {
 							   -relief     => 'ridge',
 							   -background => 'gray',
 							   -width      => 2,
-	  )->grid( -row => 1, -column => 9, -sticky => 'nw' );
+	  )->grid( -row => 1, -column => 10, -sticky => 'nw' );
 	$::lglobal{insert_overstrike_mode_label}->bind(
 		'<1>',
 		sub {
@@ -282,7 +283,7 @@ sub buildstatusbar {
 							   -relief     => 'ridge',
 							   -background => 'gray',
 							   -anchor     => 'w',
-	  )->grid( -row => 1, -column => 11 );
+	  )->grid( -row => 1, -column => 12 );
 	$::lglobal{ordinallabel}->bind(
 		'<1>',
 		sub {
@@ -557,6 +558,63 @@ sub update_img_lbl_values {
 	}
 }
 
+sub update_lang_button {
+	my $textwindow = $::textwindow;
+	unless ( $::lglobal{langbutton} ) {
+		$::lglobal{langbutton} =
+		  $::counter_frame->Label(
+			   -width      => 8,
+			   -relief     => 'ridge',
+			   -background => 'gray',
+		  )->grid( -row => 1, -column => 8 );
+		_butbind( $::lglobal{langbutton} );
+		$::lglobal{langbutton}->bind( '<1>',
+			sub {
+				$::lglobal{langbutton}->configure( -relief => 'sunken' );
+				setlang();
+			}
+		);
+		$::lglobal{statushelp}->attach( $::lglobal{langbutton},
+						   -balloonmsg => "Set language of current project." );
+	}
+	$::lglobal{langbutton}->configure( -text  => "Lang:$::booklang" );
+}
+
+sub setlang {
+	my $textwindow = $::textwindow;
+	my $top        = $::top;
+	unless ( defined( $::lglobal{setlangpop} ) ) {
+		$::lglobal{setlangpop} = $top->DialogBox(
+			-buttons => [qw[Ok Cancel]],
+			-title   => 'Set language',
+			-popover => $top,
+			-command => sub {
+				if ( $_[0] eq 'Ok' ) {
+					$::booklang = $::lglobal{booklang};
+					update_lang_button();
+					::readlabels();
+				}
+				$::lglobal{setlangpop}->destroy;
+				undef $::lglobal{setlangpop};
+			}
+		);
+		$::lglobal{setlangpop}->resizable( 'no', 'no' );
+		my $frame = $::lglobal{setlangpop}->Frame->pack( -fill => 'x' );
+		$frame->Label( -text => 'Language: ' )->pack( -side => 'left' );
+		$::lglobal{booklang} = $::booklang;
+		my $entry = $frame->Entry(
+					   -background   => $::bkgcolor,
+					   -width        => 20,
+					   -textvariable => \$::lglobal{booklang},
+		)->pack( -side => 'left', -fill => 'x' );
+		$::lglobal{setlangpop}->Advertise( entry => $entry );
+		$::lglobal{setlangpop}->Popup;
+		$::lglobal{setlangpop}->Subwidget('entry')->focus;
+		$::lglobal{setlangpop}->Subwidget('entry')->selectionRange( 0, 'end' );
+		$::lglobal{setlangpop}->Wait;
+	}
+}
+
 #
 # New subroutine "update_proofers_button" extracted - Tue Mar 22 00:13:24 2011.
 #
@@ -571,7 +629,7 @@ sub update_proofers_button {
 									   -width      => 11,
 									   -relief     => 'ridge',
 									   -background => 'gray',
-			  )->grid( -row => 1, -column => 8 );
+			  )->grid( -row => 1, -column => 9 );
 			$::lglobal{proofbutton}->bind(
 				'<1>',
 				sub {
