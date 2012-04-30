@@ -206,14 +206,6 @@ our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
 our %htmllabels;
-%htmllabels = (
-  'footnote' => 'Footnote',
-  'footnoteheading' => 'FOOTNOTES',
-  'fnanchor' => 'FNanchor',
-  'pagelbl' => 'Page',
-  'pageno1' => '[Pg ',
-  'pageno2' => ']',
-);
 
 our %convertcharsdisplay = qw(Æ AE Å A æ ae å a Ð TH ð th Þ TH þ th ß ss );
 our %convertcharssort    = qw(Æ AE Å A æ ae å a Ð TH ð th Þ TH þ th ß ss);

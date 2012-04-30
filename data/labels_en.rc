@@ -1,0 +1,32 @@
+# This file contains some language specific data for Guiguts.
+
+# LABELS TO USE WHEN GENERATING HTML CODE:
+
+%htmllabels = (
+  'pglabel' => 'Page_',
+  'pgnumbefore' => '[Pg ',
+  'pgnumafter' => ']',
+  'fnlabel' => 'Footnote_',
+  'fnanchor' => 'FNanchor_',
+  'fnheading' => 'FOOTNOTES',
+);
+
+
+#####  YOU PROBABLY DON'T WANT TO EDIT BELOW THIS LINE!  #####
+
+# CHARACTER CONVERSION, for conversion of Latin-1 characters to ASCII:
+# - display indicates how to convert characters for display purposes, such as
+#   chapter anchors.  Characters that are replaced by a single character can
+#   be left out, and will then be converted using the default one-character
+#   conversion.
+# - sort indicates how characters are converted in alphabetisation.  For
+#   example, Swedish would place ä at the end of the alphabet, while German
+#   and languages that don't use ä natively, would usually treat is as a.
+# FORMAT: Each character is immediately followed by the string that should
+# be used to replace it.
+
+%convertcharsdisplay = qw(Æ AE æ ae Þ TH þ th ß ss );
+%convertcharssort    = qw(Æ AE æ ae Þ TH þ th ß ss);
+
+1;
+

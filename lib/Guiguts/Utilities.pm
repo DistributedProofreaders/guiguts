@@ -752,8 +752,8 @@ tr/ÀÁÂÃÄÅàáâãäåÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı/AAAAAAaaaaaaCcDd
 }
 
 sub readlabels {
-	my $labelfile        = "labels_$::booklang.rc";
-	my $defaultlabelfile = "labels_default.rc";
+	my $labelfile        = ::catfile( 'data', "labels_$::booklang.rc");
+	my $defaultlabelfile = ::catfile( 'data', 'labels_default.rc' );
 
 	# read the default values first, in case some are missing from the user file
 	::dofile($defaultlabelfile);
