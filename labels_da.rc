@@ -1,11 +1,11 @@
 
 %htmllabels = (
-  'footnote' => 'Fodnote',
-  'footnoteheading' => 'FODNOTER',
-  'fnanchor' => 'FNanker',
-  'pagelbl' => 'Side',
-  'pageno1' => '[S. ',
-  'pageno2' => ']',
+  'pglabel' => 'Side_',
+  'pgnumbefore' => '[S. ',
+  'pgnumafter' => ']',
+  'fnlabel' => 'Fodnote_',
+  'fnanchor' => 'FNanker_',
+  'fnheading' => 'FODNOTER',
 );
 
 %convertcharsdisplay = qw(Æ AE Ø OE Å AA Ä AE Ö OE æ ae ø oe å aa ä ae ö oe Þ TH þ th ß ss);

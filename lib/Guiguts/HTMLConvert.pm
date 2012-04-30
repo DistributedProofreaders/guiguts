@@ -203,13 +203,13 @@ sub html_convert_footnotes {
 		);
 		$textwindow->ntinsert(
 			'fns' . "$step" . '+10c',
-			"<div class=\"footnote\"><p><a name=\"$::htmllabels{footnote}_"
+			"<div class=\"footnote\"><p><a name=\"$::htmllabels{fnlabel}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\" id=\"$::htmllabels{footnote}_"
+			  . "\" id=\"$::htmllabels{fnlabel}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\"></a><a href=\"#$::htmllabels{fnanchor}_"
+			  . "\"></a><a href=\"#$::htmllabels{fnanchor}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
 			  . "\"><span class=\"label\">["
@@ -219,13 +219,13 @@ sub html_convert_footnotes {
 		  if ( $fnarray->[$step][3] );
 		$textwindow->ntinsert(
 			'fna' . "$step",
-			"<a name=\"$::htmllabels{fnanchor}_"
+			"<a name=\"$::htmllabels{fnanchor}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\" id=\"$::htmllabels{fnanchor}_"
+			  . "\" id=\"$::htmllabels{fnanchor}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\"></a><a href=\"#$::htmllabels{footnote}_"
+			  . "\"></a><a href=\"#$::htmllabels{fnlabel}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
 			  . "\" class=\"fnanchor\">"
@@ -1168,7 +1168,7 @@ sub html_convert_pageanchors {
 							$br = '';    # No page break for exportwithmarkup
 						} else {
 							$pagereference .= "$br"
-							  . "<a name=\"$::htmllabels{pagelbl}_$_\" id=\"$::htmllabels{pagelbl}_$_\">$::htmllabels{pageno1}$_$::htmllabels{pageno2}</a>";
+							  . "<a name=\"$::htmllabels{pglabel}$_\" id=\"$::htmllabels{pglabel}$_\">$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}</a>";
 							$br = "<br />";
 						}
 					}
@@ -1180,13 +1180,13 @@ sub html_convert_pageanchors {
 						$pagereference = "<$mark>";
 					} else {
 						$pagereference =
-"<a name=\"$::htmllabels{pagelbl}_$num\" id=\"$::htmllabels{pagelbl}_$num\">$::htmllabels{pageno1}$num$::htmllabels{pageno2}</a>";
+"<a name=\"$::htmllabels{pglabel}$num\" id=\"$::htmllabels{pglabel}$num\">$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}</a>";
 					}
 				}
 			}
 
 			# comment only
-			$textwindow->ntinsert( $markindex, "<!-- $::htmllabels{pagelbl} $num -->" )
+			$textwindow->ntinsert( $markindex, "<!-- $::htmllabels{pglabel} $num -->" )
 			  if ( $::pagecmt and $num );
 			if ($pagereference) {
 
@@ -2592,10 +2592,10 @@ sub markup {
 				for ( sort (@intanchors) ) {
 					last unless $tempvar;
 					next
-					  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+					  if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 						&& $::lglobal{fnlinks} );
 					next
-					  if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
+					  if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
 					next unless ( lc($_) eq '#' . $tempvar );
 					$linklistbox->insert( 'end', $_ );
 					$flag++;
@@ -2613,10 +2613,11 @@ sub markup {
 				}
 				for ( sort (@intanchors) ) {
 					next
-					  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+					  if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 						&& $::lglobal{fnlinks} );
+
 					next
-					  if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
+					  if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
 					next
 					  unless (
 						lc($_) =~
@@ -2680,7 +2681,7 @@ sub hyperlinkpagenums {
 	::searchpopup();
 	::searchoptset(qw/0 x x 1/);
 	$::lglobal{searchentry}->insert( 'end', "(?<!\\d)(\\d{1,3})" );
-	$::lglobal{replaceentry}->insert( 'end', "<a href=\"#$::htmllabels{pagelbl}_\$1\">\$1</a>" );
+	$::lglobal{replaceentry}->insert( 'end', "<a href=\"#$::htmllabels{pglabel}\$1\">\$1</a>" );
 }
 
 sub makeanchor {
@@ -3149,17 +3150,17 @@ sub linkpopulate {
 	if ( $::lglobal{ilinksrt} ) {
 		for ( ::natural_sort_alpha( @{$anchorsref} ) ) {
 			next
-			  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+			  if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 				&& $::lglobal{fnlinks} );
-			next if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
+			next if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
 			$linklistbox->insert( 'end', $_ );
 		}
 	} else {
 		foreach ( @{$anchorsref} ) {
 			next
-			  if ( ( ( $_ =~ /#$::htmllabels{footnote}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+			  if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
 				&& $::lglobal{fnlinks} );
-			next if ( ( $_ =~ /#$::htmllabels{pagelbl}_/ ) && $::lglobal{pglinks} );
+			next if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
 			$linklistbox->insert( 'end', $_ );
 		}
 	}
@@ -3652,10 +3653,10 @@ sub pageadjust {
 
 sub addpagelinks {
 	my $selection = shift;
-	$selection =~ s/(\d{1,3})-(\d{1,3})/<a href="#$::htmllabels{pagelbl}_$1">$1-$2<\/a>/g;
-	$selection =~ s/(\d{1,3})([,;\.])/<a href="#$::htmllabels{pagelbl}_$1">$1<\/a>$2/g;
-	$selection =~ s/\s(\d{1,3})\s/ <a href="#$::htmllabels{pagelbl}_$1">$1<\/a> /g;
-	$selection =~ s/(\d{1,3})$/<a href="#$::htmllabels{pagelbl}_$1">$1<\/a>/;
+	$selection =~ s/(\d{1,3})-(\d{1,3})/<a href="#$::htmllabels{pglabel}$1">$1-$2<\/a>/g;
+	$selection =~ s/(\d{1,3})([,;\.])/<a href="#$::htmllabels{pglabel}$1">$1<\/a>$2/g;
+	$selection =~ s/\s(\d{1,3})\s/ <a href="#$::htmllabels{pglabel}$1">$1<\/a> /g;
+	$selection =~ s/(\d{1,3})$/<a href="#$::htmllabels{pglabel}$1">$1<\/a>/;
 	return $selection;
 }
 1;
