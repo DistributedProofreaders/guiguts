@@ -193,7 +193,7 @@ sub html_convert_footnotes {
 				'fns' . "$step" . '+'
 				  . ( length( $fnarray->[$step][4] ) + 11 ) . "c"
 			),
-			'$::htmllabels{fnanchafter}</span></a>'
+			"$::htmllabels{fnanchafter}</span></a>"
 		);
 		$textwindow->ntdelete(
 			'fns' . "$step" . '+'
@@ -204,13 +204,13 @@ sub html_convert_footnotes {
 		$textwindow->ntinsert(
 			'fns' . "$step" . '+10c',
 			"<div class=\"footnote\"><p><a name=\"$::htmllabels{fnlabel}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\" id=\"$::htmllabels{fnlabel}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\"></a><a href=\"#$::htmllabels{fnanchor}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\"><span class=\"label\">$::htmllabels{fnanchbefore}"
 		);
@@ -226,13 +226,13 @@ sub html_convert_footnotes {
 		$textwindow->ntinsert(
 			'fna' . "$step",
 			"<a name=\"$::htmllabels{fnanchor}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\" id=\"$::htmllabels{fnanchor}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\"></a><a href=\"#$::htmllabels{fnlabel}"
-			  . $fnarray->[$step][4] . '_'
+			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\" class=\"fnanchor\">"
 		) if ( $fnarray->[$step][3] );
@@ -1192,7 +1192,7 @@ sub html_convert_pageanchors {
 			}
 
 			# comment only
-			$textwindow->ntinsert( $markindex, "<!-- $::htmllabels{pglabel} $num -->" )
+			$textwindow->ntinsert( $markindex, "<!-- Page $num -->" )
 			  if ( $::pagecmt and $num );
 			if ($pagereference) {
 
@@ -1924,6 +1924,18 @@ sub htmlpopup {
 		  )->grid(
 			-row    => 2,
 			-column => 3,
+			-padx   => 1,
+			-pady   => 2,
+			-sticky => 'w'
+		  );
+		my $shortfootnotes = $f0->Checkbutton(
+			-variable    => \$::lglobal{shorthtmlfootnotes},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Short FN Anchors',
+			-anchor      => 'w',
+		  )->grid(
+			-row    => 2,
+			-column => 4,
 			-padx   => 1,
 			-pady   => 2,
 			-sticky => 'w'
