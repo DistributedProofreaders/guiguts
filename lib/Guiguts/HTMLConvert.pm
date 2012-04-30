@@ -193,7 +193,7 @@ sub html_convert_footnotes {
 				'fns' . "$step" . '+'
 				  . ( length( $fnarray->[$step][4] ) + 11 ) . "c"
 			),
-			']</span></a>'
+			'$::htmllabels{fnanchafter}</span></a>'
 		);
 		$textwindow->ntdelete(
 			'fns' . "$step" . '+'
@@ -212,9 +212,15 @@ sub html_convert_footnotes {
 			  . "\"></a><a href=\"#$::htmllabels{fnanchor}"
 			  . $fnarray->[$step][4] . '_'
 			  . $step
-			  . "\"><span class=\"label\">["
+			  . "\"><span class=\"label\">$::htmllabels{fnanchbefore}"
 		);
 		$textwindow->ntdelete( 'fns' . "$step", 'fns' . "$step" . '+10c' );
+		unless ( $::htmllabels{fnanchbefore} eq '[' && $::htmllabels{fnanchafter} eq ']' ){
+			$textwindow->ntinsert("fna$step+1c", $::htmllabels{fnanchbefore} ); # insert before delete, otherwise it gets excluded from the tag
+			$textwindow->ntdelete("fna$step", "fna$step"."+1c");
+			$textwindow->ntdelete("fnb$step -1c", "fnb$step");
+			$textwindow->ntinsert("fnb$step", $::htmllabels{fnanchafter} );
+		}
 		$textwindow->ntinsert( 'fnb' . "$step", '</a>' )
 		  if ( $fnarray->[$step][3] );
 		$textwindow->ntinsert(

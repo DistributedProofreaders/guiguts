@@ -1,0 +1,19 @@
+
+%htmllabels = (
+  'pglabel' => 'Sid_',
+  'pgnumbefore' => '[s. ',
+  'pgnumafter' => ']',
+  'fnlabel' => 'Fotnot_',
+  'fnanchor' => 'FNankare_',
+  'fnanchbefore' => '[',
+  'fnanchafter' => ']',
+  'fnheading' => 'FOTNOTER',
+);
+
+
+#####  YOU PROBABLY DON'T WANT TO EDIT BELOW THIS LINE!  #####
+
+%convertcharsdisplay = qw( Å AA Ä AE Ö OE Æ AE Ø OE å aa ä ae ö oe æ ae ø oe Þ TH þ th ß ss Ü UE ü ue );
+%convertcharssort = qw( Å zzzzf Ä zzzzh Æ zzzzh Ö zzzzj Ø zzzzj å zzzzf ä zzzzh æ zzzzh ö zzzzj ø zzzzj Þ th þ th ß ss );
+
+1;

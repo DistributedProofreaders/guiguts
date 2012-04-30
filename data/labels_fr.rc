@@ -1,0 +1,19 @@
+
+%htmllabels = (
+  'pglabel' => 'Page_',
+  'pgnumbefore' => '[p. ',
+  'pgnumafter' => ']',
+  'fnlabel' => 'Note_',
+  'fnanchor' => 'NoteRef_',
+  'fnanchbefore' => '[',
+  'fnanchafter' => ']',
+  'fnheading' => 'NOTES',
+);
+
+
+#####  YOU PROBABLY DON'T WANT TO EDIT BELOW THIS LINE!  #####
+
+%convertcharsdisplay = qw( Æ AE æ ae Þ TH þ th ß ss );
+%convertcharssort = qw( Æ ae æ ae Þ TH þ th ß ss );
+
+1;

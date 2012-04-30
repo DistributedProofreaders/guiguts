@@ -5,10 +5,15 @@
   'pgnumafter' => ']',
   'fnlabel' => 'Fodnote_',
   'fnanchor' => 'FNanker_',
+  'fnanchbefore' => '[',
+  'fnanchafter' => ']',
   'fnheading' => 'FODNOTER',
 );
 
-%convertcharsdisplay = qw(Æ AE Ø OE Å AA Ä AE Ö OE æ ae ø oe å aa ä ae ö oe Þ TH þ th ß ss);
-%convertcharssort = qw(Æ zzzzf Ä zzzzg Ø zzzzh Ö zzzzi Å zzzzj æ zzzzf ä zzzzg ø zzzzh ö zzzzi å zzzzj Þ zzzzm þ zzzzm ß ss);
+
+#####  YOU PROBABLY DON'T WANT TO EDIT BELOW THIS LINE!  #####
+
+%convertcharsdisplay = qw( Æ AE Ø OE Å AA Ä AE Ö OE æ ae ø oe å aa ä ae ö oe Þ TH þ th ß ss Ü UE ü ue );
+%convertcharssort = qw( Æ zzzzf Ä zzzzf Ø zzzzh Ö zzzzh Å zzzzj æ zzzzf ä zzzzf ø zzzzh ö zzzzh å zzzzj Þ th þ th ß ss );
 
 1;

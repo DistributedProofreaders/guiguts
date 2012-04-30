@@ -8,6 +8,8 @@
   'pgnumafter' => ']',
   'fnlabel' => 'Footnote_',
   'fnanchor' => 'FNanchor_',
+  'fnanchbefore' => '[',
+  'fnanchafter' => ']',
   'fnheading' => 'FOOTNOTES',
 );
 
@@ -23,10 +25,10 @@
 #   example, Swedish would place ä at the end of the alphabet, while German
 #   and languages that don't use ä natively, would usually treat is as a.
 # FORMAT: Each character is immediately followed by the string that should
-# be used to replace it.
+# replace it.
 
-%convertcharsdisplay = qw(Æ AE æ ae Þ TH þ th ß ss );
-%convertcharssort    = qw(Æ AE æ ae Þ TH þ th ß ss);
+%convertcharsdisplay = qw( Æ AE æ ae Þ TH þ th ß ss );
+%convertcharssort    = qw( Æ AE æ ae Þ TH þ th ß ss );
 
 1;
 

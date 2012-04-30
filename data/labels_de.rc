@@ -1,0 +1,19 @@
+
+%htmllabels = (
+  'pglabel' => 'Seite_',
+  'pgnumbefore' => '[S. ',
+  'pgnumafter' => ']',
+  'fnlabel' => 'Fussnote_',
+  'fnanchor' => 'FNAnker_',
+  'fnanchbefore' => '[',
+  'fnanchafter' => ']',
+  'fnheading' => 'Fußnoten',
+);
+
+
+#####  YOU PROBABLY DON'T WANT TO EDIT BELOW THIS LINE!  #####
+
+%convertcharsdisplay = qw( Ä AE Ö OE Ü UE Æ AE Ø OE ä ae ö oe ü ue æ ae ø oe Þ TH þ th ß ss );
+%convertcharssort = qw( Æ ae æ ae ß ss Þ TH þ th );
+
+1;

@@ -206,12 +206,10 @@ our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
 our %htmllabels;
-
-our %convertcharsdisplay = qw(Æ AE Å A æ ae å a Ğ TH ğ th Ş TH ş th ß ss );
-our %convertcharssort    = qw(Æ AE Å A æ ae å a Ğ TH ğ th Ş TH ş th ß ss);
-
-our $convertcharssinglesearch  = "ÀÁÂÃàáâãÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕòóôõÑñÙÚÛÜùúûüİÿı";
-our $convertcharssinglereplace = "AAAAaaaaCcDdEEEEeeeeIIIIiiiiOOOOooooNnUUUUuuuuYyy";
+our %convertcharsdisplay;
+our %convertcharssort;
+our $convertcharssinglesearch;
+our $convertcharssinglereplace;
 our $convertcharsmultisearch;
 our $convertcharsdisplaysearch;
 our @extops = (
