@@ -507,25 +507,22 @@ sub update_auto_img_button {
 								   -background => 'gray',
 		  )->grid( -row => 1, -column => 6 );
 		if ($::auto_show_images) {
-			$::lglobal{autoimagebutton}->configure( -text => 'No Img' );
+			$::lglobal{autoimagebutton}->configure( -background => $::highlightcolor );
 		}
 		$::lglobal{autoimagebutton}->bind(
 			'<1>',
 			sub {
 				$::auto_show_images = 1 - $::auto_show_images;
 				if ($::auto_show_images) {
-					$::lglobal{autoimagebutton}
-					  ->configure( -relief => 'sunken' );
-					$::lglobal{autoimagebutton}->configure( -text => 'No Img' );
+					$::lglobal{autoimagebutton}->configure( -relief => 'sunken' );
+					$::lglobal{autoimagebutton}->configure( -background => $::highlightcolor );
 					$::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
 						-balloonmsg =>
 "Stop automatically showing the image for the current page."
 					);
 				} else {
-					$::lglobal{autoimagebutton}
-					  ->configure( -relief => 'sunken' );
-					$::lglobal{autoimagebutton}
-					  ->configure( -text => 'Auto Img' );
+					$::lglobal{autoimagebutton}->configure( -relief => 'sunken' );
+					$::lglobal{autoimagebutton}->configure( -background => 'gray' );
 					$::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
 						-balloonmsg =>
 "Automatically show the image for the current page (focus shifts to image window)."
@@ -537,6 +534,14 @@ sub update_auto_img_button {
 		$::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
 			-balloonmsg =>
 "Automatically show the image for the current page (focus shifts to image window)."
+		);
+		$::lglobal{autoimagebutton}->bind(
+			'<Leave>',
+			sub {
+				$::lglobal{autoimagebutton}
+				  ->configure( -background => $::auto_show_images ? $::highlightcolor : 'gray' );
+				$::lglobal{autoimagebutton}->configure( -relief => 'ridge' );
+			}
 		);
 	}
 }
