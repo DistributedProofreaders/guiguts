@@ -752,24 +752,35 @@ tr/ÀÁÂÃÄÅàáâãäåÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı/AAAAAAaaaaaaCcDd
 }
 
 sub readlabels {
-	my $labelfile = 'labels_' . $::booklang . '.rc';
-	if ( -e $labelfile ) {
+	my $labelfile        = "labels_$::booklang.rc";
+	my $defaultlabelfile = "labels_default.rc";
+
+	# read the default values first, in case some are missing from the user file
+	::dofile($defaultlabelfile);
+	if ( -e $labelfile ) { # if file exists, use it
 		unless ( my $return = ::dofile($labelfile) ) {
-			# do something here?
+			print "A problem was encountered when reading $labelfile. Using default values.\n";
 		}
-		$::convertcharsdisplaysearch = join( '', keys %::convertcharsdisplay );
-		$::convertcharsmultisearch   = join( '', keys %::convertcharssort );
-		$::convertcharssinglesearch =
-"ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı"
-		  ;                                             # Æ Å Ş ş ß
-		$::convertcharssinglereplace =
-		  "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy";
-		my @chararray = keys %::convertcharssort;
-		for ( my $i = 0 ; $i < @chararray ; $i++ ) {
-			my $index = index( $::convertcharssinglesearch, $chararray[$i] );
-			substr $::convertcharssinglesearch,  $index, 1, '';
-			substr $::convertcharssinglereplace, $index, 1, '';
-		}
+	}
+	else {
+		::copy( $defaultlabelfile, $labelfile );
+		print "No label file found, creating file $labelfile with default values.\n";
+	}
+
+	# Prepare the strings to be used for deaccenting:
+	# - Single-char-search and single-char-replace to be used in tr/single-char-search/single-char-replace/ in deaccentsort
+	# - Multi-char-search to be used together with convertcharssort in s/// in deaccentsort
+	# - Display-multi-char-search to be used with convertcharsdisplay in s/// in deaccentdisplay
+	$::convertcharsdisplaysearch = join('', keys %::convertcharsdisplay);
+	$::convertcharsmultisearch   = join('', keys %::convertcharssort);
+
+	$::convertcharssinglesearch  = "ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı";
+	$::convertcharssinglereplace = "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy";
+	my @chararray = keys %::convertcharssort;
+	for ( my $i = 0; $i < @chararray ; $i++) {
+		my $index = index($::convertcharssinglesearch, $chararray[$i]);
+		substr $::convertcharssinglesearch,  $index, 1, '';
+		substr $::convertcharssinglereplace, $index, 1, '';
 	}
 }
 
