@@ -301,6 +301,14 @@ sub footnotepop {
 						   -state => 'disabled',
 						   -width => 30
 		  )->grid( -row => 1, -column => 2, -padx => 3, -pady => 4 );
+		$::lglobal{fnmvinlinebutton} =
+		  $frame3->Button(
+						   -activebackground => $::activecolor,
+						   -command          => sub { footnotemoveinline() },
+						   -text  => 'Move FNs To Para (beta)',
+						   -state => 'disabled',
+						   -width => 30
+		  )->grid( -row => 2, -column => 2, -padx => 3, -pady => 4 );
 		my $frame4 =
 		  $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$frame4->Button(
@@ -820,8 +828,10 @@ sub footnotefixup {
 	}
 	$::lglobal{fnindex}      = 1;
 	$::lglobal{fnsecondpass} = 1;
-	$::lglobal{fnfpbutton}->configure( '-state' => 'normal' )
-	  if $::lglobal{footpop};
+	if ( $::lglobal{footpop} ) {
+		$::lglobal{fnfpbutton}->configure( '-state' => 'normal' );
+		$::lglobal{fnmvinlinebutton}->configure( '-state' => 'normal' );
+	}
 	footnoteshow();
 }
 
@@ -985,6 +995,31 @@ sub footnotemove {
 	}
 	$textwindow->markSet( 'insert', '1.0' );
 	$textwindow->see('1.0');
+}
+
+sub footnotemoveinline {
+	my $textwindow = $::textwindow;
+	$::lglobal{fnindex} = $::lglobal{fntotal};
+	while ( $::lglobal{fnindex} ) {
+		my $start     = $textwindow->index("fns$::lglobal{fnindex}");
+		my $end       = $textwindow->index("fne$::lglobal{fnindex}");
+		my $anchor    = $textwindow->index("fna$::lglobal{fnindex}");
+		my $anchorend = $textwindow->index("fnb$::lglobal{fnindex}");
+		
+		my $nextbreak = $textwindow->search( '-regex', '--', '^$', "$anchor", 'end' );
+		my $footnotetext = $textwindow->get( "$start", "$end" );
+
+		$textwindow->delete("$end +1c")
+		  if ( $textwindow->get("$end +1c") eq "\n" );
+		$textwindow->delete("$start -1c")
+		  if ( $textwindow->get("$start -1c") eq "\n" );
+		$textwindow->delete( "fns$::lglobal{fnindex}", "fne$::lglobal{fnindex}"  );
+
+		$textwindow->insert( "$nextbreak", "\n$footnotetext\n" );
+
+		$::lglobal{fnindex}--;
+
+	}
 }
 
 sub footnoteadjust {
