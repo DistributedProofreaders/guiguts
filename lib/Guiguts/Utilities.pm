@@ -9,7 +9,7 @@ BEGIN {
 	@EXPORT = qw(&openpng &get_image_file &arabic &roman
 	  &textbindings &cmdinterp &nofileloadedwarning &getprojectid &win32_cmdline &win32_start
 	  &win32_is_exe &win32_create_process &runner &debug_dump &run &escape_regexmetacharacters
-	  &deaccent &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
+	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
 	  &checkforupdates &checkforupdatesmonthly &hotkeyshelp &regexref &gotobookmark &setbookmark
@@ -727,25 +727,22 @@ sub escape_regexmetacharacters {
 	return $inputstring;
 }
 
-sub deaccent {
+sub deaccentsort {
 	my $phrase = shift;
 	return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
-	eval
-"\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
+	eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
 	$phrase =~ s/([$::convertcharsmultisearch])/$::convertcharssort{$1}/g;
 	return $phrase;
 }
 
 sub deaccentdisplay {
-
-# deaccent is used both by htmlconvert and sorting - they need to different kinds of deaccenting
 	my $phrase = shift;
 	return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
 
 	# first convert the characters specified by the language
 	$phrase =~ s/([$::convertcharsdisplaysearch])/$::convertcharsdisplay{$1}/g;
 
-# then convert anything that hasn't been converted already, using the default one character substitute
+	# then convert anything that hasn't been converted already, using the default one character substitute
 	$phrase =~
 tr/ÀÁÂÃÄÅàáâãäåÇçÐðÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßÞþÙÚÛÜùúûüÝÿý/AAAAAAaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy/;
 	return $phrase;
@@ -1250,6 +1247,7 @@ sub initialize {
 		"\x{1F51}" => 'y(',
 		"\x{1F59}" => 'Y(',
 		"\x{1F60}" => 'ô)',
+
 		"\x{1F61}" => 'ô(',
 		"\x{1F68}" => 'Ô)',
 		"\x{1F69}" => 'Ô(',
@@ -1615,13 +1613,13 @@ sub drag {
 sub natural_sort_alpha {
 	my $i;
 	s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg, $_ .= ' ' . $i++
-	  for ( my @x = map { lc deaccent $_} @_ );
+	  for ( my @x = map { lc deaccentsort $_} @_ );
 	@_[ map { (split)[-1] } sort @x ];
 }
 ## Fast length sort with secondary natural sort - wants an array
 sub natural_sort_length {
 	$_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
-	  for ( my @x = map { [ length noast($_), $_, lc deaccent $_ ] } @_ );
+	  for ( my @x = map { [ length noast($_), $_, lc deaccentsort $_ ] } @_ );
 	map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
 }
 ## Fast freqency sort with secondary natural sort - wants a hash reference
@@ -1629,7 +1627,7 @@ sub natural_sort_freq {
 	$_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
 	  for (
 		my @x =
-		map { [ $_[0]->{$_}, $_, lc deaccent $_ ] } keys %{ $_[0] }
+		map { [ $_[0]->{$_}, $_, lc deaccentsort $_ ] } keys %{ $_[0] }
 	  );
 	map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
 }

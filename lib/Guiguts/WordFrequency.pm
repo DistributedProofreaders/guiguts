@@ -707,9 +707,9 @@ sub accentcheck {
 			my $wordtemp = $word;
 			$display{$word} = $::lglobal{seenwords}->{$word}
 			  unless $::lglobal{suspects_only};
-			my @dwords = ( ::deaccent($word) );
+			my @dwords = ( ::deaccentsort($word) );
 			if ( $word =~ s/\xC6/Ae/ ) {
-				push @dwords, ( ::deaccent($word) );
+				push @dwords, ( ::deaccentsort($word) );
 			}
 			for my $wordd (@dwords) {
 				my $line;
@@ -1239,7 +1239,7 @@ sub harmonicspop {
 		$::lglobal{hlistbox}
 		  ->insert( 'end', "$wc 1st order harmonics for $active." );
 	}
-	foreach my $word ( sort { ::deaccent( lc $a ) cmp ::deaccent( lc $b ) }
+	foreach my $word ( sort { ::deaccentsort( lc $a ) cmp ::deaccentsort( lc $b ) }
 		( keys %{ $::lglobal{harmonic} } ) )
 	{
 		$line =

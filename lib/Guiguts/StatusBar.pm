@@ -879,7 +879,7 @@ sub prfrbyname {
 	}
 	prfrhdr($max);
 	delete $proofersort{''};
-	foreach my $prfr ( sort { deaccent( lc($a) ) cmp deaccent( lc($b) ) }
+	foreach my $prfr ( sort { deaccentsort( lc($a) ) cmp deaccentsort( lc($b) ) }
 					   ( keys %proofersort ) )
 	{
 		for ( 1 .. $::lglobal{numrounds} ) {
@@ -924,7 +924,7 @@ sub prfrby {
 	foreach my $prfr (
 		sort {
 			$ptemp{$b} <=> $ptemp{$a}
-			  || ( ::deaccent( lc($a) ) cmp ::deaccent( lc($b) ) )
+			  || ( ::deaccentsort( lc($a) ) cmp ::deaccentsort( lc($b) ) )
 		} keys %ptemp
 	  )
 	{
