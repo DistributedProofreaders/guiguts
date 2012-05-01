@@ -1440,9 +1440,11 @@ sub html_wrapup {
 		close $infile;
 		$textwindow->ntinsert( 'end', $footertext );
 	}
-	else {
-		$textwindow->ntinsert( 'end', "\n<\/body>\n<\/html>" );
-	}
+	$textwindow->ntinsert( 'end', "\n<\/body>\n<\/html>" );
+
+	::named ( '><p', ">\n\n<p" ); # improve readability of code
+	::named ( '><hr', ">\n\n<hr" );
+
 	$thisblockstart = $textwindow->search( '--', '</style', '1.0', '500.0' );
 	$thisblockstart = '75.0' unless $thisblockstart;
 	$thisblockstart =

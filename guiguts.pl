@@ -117,10 +117,10 @@ our $geometry;
 our $globalaspellmode   = 'normal';
 our $globalbrowserstart = $ENV{BROWSER};
 if ( !$globalbrowserstart ) { $globalbrowserstart = 'xdg-open'; }
-if ($::OS_WIN)              { $globalbrowserstart = 'start'; }
+if ($OS_WIN)                { $globalbrowserstart = 'start'; }
 if ($OS_MAC)                { $globalbrowserstart = 'open'; }
 our $globalfirefoxstart = 'firefox';
-if ($OS_MAC) { $globalbrowserstart = 'open -a firefox'; }
+if ($OS_MAC) { $globalfirefoxstart = 'open -a firefox'; }
 our $defaultfilehandler = "$globalbrowserstart \$d\$f\$e";
 our $globalimagepath        = q{};
 our $globallastpath         = q{};
@@ -205,6 +205,7 @@ our @recentfile;
 our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
+
 our %htmllabels;
 our %convertcharsdisplay;
 our %convertcharssort;
@@ -212,6 +213,7 @@ our $convertcharssinglesearch;
 our $convertcharssinglereplace;
 our $convertcharsmultisearch;
 our $convertcharsdisplaysearch;
+
 our @extops = (
 	{
 		'label'   => 'Open current file in its default program',
@@ -273,7 +275,9 @@ our $textwindow;
 our $menubar;
 initialize();    # Initialize a bunch of vars that need it.
 
+# Set up language-dependent labels and sorting (default English)
 readlabels();
+
 # Set up the custom menus
 menurebuild();
 
