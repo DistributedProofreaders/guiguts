@@ -11,7 +11,7 @@ BEGIN {
 	  &isvalid &swapterms &findascanno &reghint &replaceeval &replace &opstop &replaceall &killstoppop
 	  &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
 	  &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
-	  &loadscannos);
+	  &loadscannos &replace_incr_counter);
 }
 
 sub add_search_history {
@@ -2128,4 +2128,20 @@ sub loadscannos {
 		return 1;
 	}
 }
+
+
+sub replace_incr_counter {
+    my $counter = 1;
+    my $textwindow = $::textwindow;
+    my $pos = '1.0';
+    while (1) {
+	my $newpos = $textwindow->search( '-exact', '--', '[::]', "$pos", 'end' );
+	last unless $newpos;
+	$textwindow->delete( "$newpos", "$newpos+4c" );
+	$textwindow->insert( "$newpos", $counter );
+	$pos = $newpos;
+	$counter++;
+    }
+}
+
 1;

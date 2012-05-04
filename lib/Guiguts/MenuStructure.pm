@@ -738,6 +738,11 @@ sub menubuildold {
 				-command => \&::find_transliterations
 			],
 			[ 'separator', '' ],
+		        [
+			   Button => 'Replace [::] with incremental counter',
+			   -command => \&::replace_incr_counter
+			],
+			[ 'separator', '' ],
 			[
 				'command', 'Highlight double quotes in selection',
 				-command     => [ \&::hilite, '"' ],
@@ -1517,6 +1522,11 @@ sub menubuildwizard {
 				  }
 			],
 			[ 'separator', '' ],
+		        [
+			   Button => 'Replace [::] with incremental counter',
+			   -command => \&::replace_incr_counter
+			],
+			[ 'separator', '' ],
 			[
 				'command', 'Highlight double quotes in selection',
 				-command     => [ \&::hilite, '"' ],
@@ -2282,6 +2292,11 @@ sub menubuildtwo {
 				'command',
 				'Find previous indented block',
 				-command => [ \&::nextblock, 'indent', 'reverse' ]
+			],
+			[ 'separator', '' ],
+		        [
+			   Button => 'Replace [::] with incremental counter',
+			   -command => \&::replace_incr_counter
 			],
 		]
 	);
