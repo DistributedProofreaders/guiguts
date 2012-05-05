@@ -1006,7 +1006,16 @@ sub footnotemoveinline {
 		my $anchor    = $textwindow->index("fna$::lglobal{fnindex}");
 		my $anchorend = $textwindow->index("fnb$::lglobal{fnindex}");
 		
+		# FIND NEXT PARA BREAK (next blank line, unless there's a page sep getting in the way)
 		my $nextbreak = $textwindow->search( '-regex', '--', '^$', "$anchor", 'end' );
+		if ( $textwindow->get( "$nextbreak -1l", "$nextbreak" ) =~ m/^-----/ ) { # make sure we don't end at the top of the next page
+			$nextbreak = "$nextbreak -1l";
+			while ( $textwindow->get( "$nextbreak -1l", "$nextbreak" ) =~ m/(^-----|^\[)/ ) {
+				# possibly skip over several pages, possibly [Blanks
+				$nextbreak = "$nextbreak -1l";
+			}
+		}
+
 		my $footnotetext = $textwindow->get( "$start", "$end" );
 
 		$textwindow->delete("$end +1c")
@@ -1015,10 +1024,11 @@ sub footnotemoveinline {
 		  if ( $textwindow->get("$start -1c") eq "\n" );
 		$textwindow->delete( "fns$::lglobal{fnindex}", "fne$::lglobal{fnindex}"  );
 
-		$textwindow->insert( "$nextbreak", "\n$footnotetext\n" );
+		# INSERT THE FOOTNOTE AT ITS NEW LOCATION
+		# -1c ensures that we get on the right side of page break markers
+		$textwindow->insert( "$nextbreak -1c", "\n\n$footnotetext" );
 
 		$::lglobal{fnindex}--;
-
 	}
 }
 
