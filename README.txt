@@ -1,34 +1,58 @@
 See http://www.pgdp.net/wiki/Guiguts_new_features_and_bug_fixes for a
 description of new features and bug fixes in Version 1.0.0. Detailed
-release notes for subsequent versions will be added below.
+release notes for subsequent versions are added below.
 
-guiguts-win-1.0.nn.zip is the best download for Windows users. It
-includes guiguts.pl and supporting files and helper applications
-including those for working with RST and PGTEI files. It should work out
-of the box by running guiguts.bat (it includes copies of perl and Python
-languages). guiguts-mac-1.0.nn should also work out of the box for Mac
-users; it does not include as many helper applications.
-guiguts-1.0.nn.zip is a stripped down version for those who have all the
-helper applications or are upgrading or who use operating systems other
-than Windows/Mac.
+WINDOWS:
+
+guiguts-win-1.0.nn.zip is the easiest download for Windows users. It
+includes guiguts.pl and supporting files and helper applications,
+including those for working with RST and PGTEI files, excluding image
+viewer and spellchecker. It should work out of the box by running
+guiguts.bat (it includes copies of perl and Python languages).
+
+MAC:
+
+guiguts-mac-1.0.nn (if available) should work out of the box for Mac
+users; it includes a few helper applications.
+
+OTHER:
+
+guiguts-1.0.nn.zip is the basic guiguts version with no helper
+applications; it includes compilable source code for GutCheck and
+Jeebies.
+
+RELEASE NOTES:
+
+Version 1.0.20.
+- Display and set language added to statusbar (+ some adjustments of
+  language behaviour, which has been partially available since 1.0.16).
+- BOOKLANG included in headerdefault.txt.
+- Short footnote anchors option added to html popup.
+- Move footnotes to containing para added to footnote popup.
+- Added line breaks to improve readability of generated html.
+- Added 'replace [::] with incremental counter'.
+- Bug fix: escaping of single and double quotes around images in html
+  cleaned up.
+- Bug fix: External commands containing several commands
+  separated by semicolon was broken since 1.0.5. Non-Windows only.
 
 Version 1.0.19. Fixed highlighting of newly selected wordlist. Fixed
 undefined subroutine reference when choosing 'Enable Scanno Highlighting'.
 Reset 'edited' flag after "Save As'. Fixed missing <hr class="chap" />
-before a chapter heading in the middle of a page. Removed duplicate 
-insertion of footnote landing zone (FOOTNOTE) at end of file. Retained * 
+before a chapter heading in the middle of a page. Removed duplicate
+insertion of footnote landing zone (FOOTNOTE) at end of file. Retained *
 in word frequency list only if preceded by a hyphen. Set
-'edited' flag after generating HTML. 
+'edited' flag after generating HTML.
 
 Version 1.0.18. Fixed removal of too many lines when moving
 footnotes to landing zone.
 
-Version 1.0.17. Fixed error from hitting down arrow twice 
+Version 1.0.17. Fixed error from hitting down arrow twice
 after startup. Ignore tags in word frequency popup; ignore
 away '*' characters (the way it used to be) except for '-*'
-(not the way it used to be). Added spell check in multiple 
+(not the way it used to be). Added spell check in multiple
 languages to old menus and PP Wizard (actually done in 1.0.16).
-Write setting.rc to guiguts home directory. Fixed problem 
+Write setting.rc to guiguts home directory. Fixed problem
 changing font sizes. Made check for two words (flash light
 vs. flashlight vs. flash-light) optional.
 
@@ -44,7 +68,7 @@ Version 1.0.15. In the PP Wizard menu structure, moved pptxt from
 Source Check to the Text Version(s) menu. Fixed undefined subroutine
 error for hyperlinkpagenumbers. Handled headers of 3 or more lines.
 Removed upper case for &amp; in author. Fixed problem with flood fill
-popup. Fixed problem with Draw Boxes. Corrected space in replace string 
+popup. Fixed problem with Draw Boxes. Corrected space in replace string
 after regex search for . lower.
 
 Version 1.0.14. Added 'Do All (beta)' feature to Page Separator popup that
