@@ -374,6 +374,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 	} else {
 		$name = 'errors.tmp';
 	}
+	my $unicode = ::currentfileisunicode();
 	if ( open my $td, '>', $name ) {
 		my $count = 0;
 		my $index = '1.0';
@@ -381,8 +382,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 		while ( $textwindow->compare( $index, '<', 'end' ) ) {
 			my $end = $textwindow->index("$index  lineend +1c");
 			my $gettext = $textwindow->get( $index, $end );
-
-			#utf8::encode($gettext);
+			utf8::encode($gettext) if ( $unicode );
 			print $td $gettext;
 			$index = $end;
 		}
@@ -404,7 +404,11 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 		$::lglobal{errorchecklistbox}->delete( '0', 'end' );
 	}
 	if ( $errorchecktype eq 'HTML Tidy' ) {
-		::run( $::tidycommand, "-f", "errors.err", "-o", "null", $name );
+		if ( $unicode ) {
+			::run( $::tidycommand, "-f", "errors.err", "-o", "null", "-utf8", $name );
+		} else {
+			::run( $::tidycommand, "-f", "errors.err", "-o", "null", $name );
+		}
 	} elsif ( $errorchecktype eq 'W3C Validate' ) {
 		if ( $::w3cremote == 0 ) {
 			my $validatepath = ::dirname($::validatecommand);

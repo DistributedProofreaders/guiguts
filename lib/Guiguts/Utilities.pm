@@ -14,8 +14,8 @@ BEGIN {
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
 	  &checkforupdates &checkforupdatesmonthly &hotkeyshelp &regexref &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
-	  &xtops &toolbar_toggle
-	  &toggle_autosave &killpopup &viewprojectcomments &viewprojectdiscussion
+	  &xtops &toolbar_toggle &toggle_autosave &killpopup &currentfileisunicode
+	  &viewprojectcomments &viewprojectdiscussion
 	  &b2scroll);
 }
 
@@ -2554,6 +2554,11 @@ sub toggle_autosave {
 			-activebackground => 'SystemButtonFace'
 		) unless $::notoolbar;
 	}
+}
+
+sub currentfileisunicode {
+	my $textwindow = $::textwindow;
+	return $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
 }
 
 sub viewprojectcomments {
