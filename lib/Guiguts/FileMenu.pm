@@ -61,6 +61,7 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 
 sub file_saveas {
 	my $textwindow = shift;
+	::viewpagenums() if ( $::lglobal{seepagenums} );
 	my ($name);
 	$name = $textwindow->getSaveFile(
 		-title      => 'Save As',
