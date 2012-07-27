@@ -69,17 +69,15 @@ sub SaveUTF {
 	my $count = 0;
 	my $index = '1.0';
 	my $progress;
-	my $unicode = 0;
 	my $fileend = $w->index('end -1c');
 	my ($lines) = $fileend =~ /^(\d+)\./;
-	$unicode =
-	  $w->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
-
-	if ($unicode) {
-		my $bom = "\x{FEFF}";
-		utf8::encode($bom);
-		print $tempfh $bom;
-	}
+	my $unicode = ::currentfileisunicode();
+	# No BOM please
+	#if ($unicode) {
+	#	my $bom = "\x{FEFF}";
+	#	utf8::encode($bom);
+	#	print $tempfh $bom;
+	#}
 	while ( $w->compare( $index, '<', $fileend ) ) {
 		my $end = $w->index("$index lineend +1c");
 		my $line = $w->get( $index, $end );
