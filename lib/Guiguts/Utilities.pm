@@ -403,10 +403,13 @@ sub cmdinterp {
 		# Replace $t with selected text for instance for a dictionary search
 		if ( $arg =~ m/\$t/ ) {
 			my @ranges = $textwindow->tagRanges('sel');
-			return ' ' unless @ranges;
-			my $end   = pop(@ranges);
-			my $start = pop(@ranges);
-			$selection = $textwindow->get( $start, $end );
+			if ( @ranges ) {
+				my $end   = pop(@ranges);
+				my $start = pop(@ranges);
+				$selection = $textwindow->get( $start, $end );
+			} else {
+				$selection = '';
+			}
 			$arg =~ s/\$t/$selection/;
 			$arg = ::encode( "utf-8", $arg );
 		}
@@ -699,7 +702,7 @@ sub debug_dump {
 	utf8::encode($section);
 	print $save $section;
 	close $save;
-	$section = "\%lglobal{seenwordsland}\n";
+	$section = "\%lglobal{seenwordslang}\n";
 	open $save, '>:bytes', 'words2.txt';
 	for my $key ( keys %{ $::lglobal{seenwords} } ) {
 		if ( $::lglobal{seenwordslang}{$key} ) {
@@ -2120,12 +2123,12 @@ sub epubmaker {
 		print
 "Running in background with no messages that processing is complete.\n";
 		my $rstfilename = $1;
-		my $pwd         = getcwd();
+		my $pwd         = ::getcwd();
 		chdir $::globallastpath;
-		my $epubmakerpath = catfile( $::lglobal{guigutsdirectory},
+		my $epubmakerpath = ::catfile( $::lglobal{guigutsdirectory},
 			'python27', 'scripts', 'epubmaker-script.py' );
 		my $pythonpath =
-		  catfile( $::lglobal{guigutsdirectory}, 'python27', 'python.exe' );
+		  ::catfile( $::lglobal{guigutsdirectory}, 'python27', 'python.exe' );
 
 		if ( defined $format
 			and ( ( $format eq 'html' ) or ( $format eq 'epub' ) ) )

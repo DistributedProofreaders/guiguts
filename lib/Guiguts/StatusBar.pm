@@ -712,7 +712,7 @@ sub tglprfbar {
 						  $::lglobal{proofbar}[$round]->cget( -text );
 						$proofer =~ s/\s+Round \d\s+|\s+$//g;
 						$proofer =~ s/\s/%20/g;
-						::prfrmessage($proofer);
+						prfrmessage($proofer);
 					}
 				);
 			}
@@ -746,7 +746,7 @@ sub showproofers {
 					$proofer =~ s/\s\s.*//s;
 					$proofer =~ s/\s/%20/g;
 				}
-				::prfrmessage($proofer);
+				prfrmessage($proofer);
 			},
 			-text  => 'Send Message',
 			-width => 12
@@ -879,7 +879,7 @@ sub prfrbyname {
 	}
 	prfrhdr($max);
 	delete $proofersort{''};
-	foreach my $prfr ( sort { deaccentsort( lc($a) ) cmp deaccentsort( lc($b) ) }
+	foreach my $prfr ( sort { ::deaccentsort( lc($a) ) cmp ::deaccentsort( lc($b) ) }
 					   ( keys %proofersort ) )
 	{
 		for ( 1 .. $::lglobal{numrounds} ) {

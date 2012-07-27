@@ -900,7 +900,7 @@ END
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
 			my $linkname;
-			$linkname = makeanchor( deaccentdisplay($seg1) );
+			$linkname = ::makeanchor( ::deaccentdisplay($seg1) );
 			$seg1     = "<a id=\"$linkname\"></a>";
 			$replbuild .= $seg1;
 			$replbuild .= $seg2 if $seg2;
@@ -1646,7 +1646,11 @@ sub stealthscanno {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	$::lglobal{doscannos} = 1;
-	$::lglobal{searchpop}->destroy if defined $::lglobal{searchpop};
+	if ( defined $::lglobal{searchpop} ) {
+		$::lglobal{regrepeat}->cancel;
+		undef $::lglobal{regrepeat};
+		$::lglobal{searchpop}->destroy;
+	}
 	undef $::lglobal{searchpop};
 	searchoptset(qw/1 x x 0 1/)
 	  ;    # force search to begin at start of doc, whole word
