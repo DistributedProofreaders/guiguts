@@ -186,3 +186,4 @@ well as /* */ and /$ $/) blocks if the first option is checked. Fixed
 ordering of page numbers anchored inside HTML <h1> or <h2> tags. Add gutcheck
 and jeebies directories without the .exe files to the guiguts-n.n.n.zip
 file.
+
