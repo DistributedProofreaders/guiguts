@@ -899,12 +899,13 @@ sub autoendlz {
 
 sub setlz {
 	my $textwindow = $::textwindow;
-	# Put footnotes at the end of the previous page before a chapter 
+	# Put footnotes at the end of the previous page before a chapter <-- not working
 	my $markindex = $textwindow->markPrevious('insert');
 	if ($textwindow->compare($markindex,'<','insert-2l')) {
 		$textwindow->insert( 'insert', "FOOTNOTES:\n\n" );
 	} else {
-		$textwindow->insert( $markindex.'-1c', "\n\nFOOTNOTES:" );
+		#$textwindow->insert( $markindex.'-1c', "\n\nFOOTNOTES:" );
+		$textwindow->insert( $markindex, "\n\nFOOTNOTES:" );
 	}
 	$::lglobal{fnmvbutton}->configure( '-state' => 'normal' )
 	  if ( ( $::lglobal{fnsecondpass} ) && ( $::lglobal{footstyle} eq 'end' ) );
