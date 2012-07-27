@@ -86,8 +86,8 @@ use Guiguts::CharacterTools;
 use Guiguts::Utilities;
 use Guiguts::WordFrequency;
 ### Constants
-my $no_proofer_url  = 'http://www.pgdp.net/phpBB2/privmsg.php?mode=post';
-my $yes_proofer_url = 'http://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
+our $no_proofer_url  = 'http://www.pgdp.net/phpBB2/privmsg.php?mode=post';
+our $yes_proofer_url = 'http://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
 ### Application Globals
 our $OS_WIN = $^O =~ m{Win};
 our $OS_MAC = $^O =~ m{darwin};
@@ -235,7 +235,7 @@ our @extops = (
 	},
 	{
 		'label'   => 'Onelook.com (several dictionaries)',
-		'command' => "$globalbrowserstart http://www.onelook.com/?ls=a&w=\$t"
+		'command' => "$globalbrowserstart http://www.onelook.com/?w=\$t"
 	},
 	{
 		'label'   => 'Shape Catcher (Unicode character finder)',

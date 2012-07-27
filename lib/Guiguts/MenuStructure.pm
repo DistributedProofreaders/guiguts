@@ -2829,6 +2829,7 @@ sub menurebuild {
    } elsif($::menulayout eq 'new2'){ 
       menubuildtwo(); 
    } 
+   ::savesettings();
    return; 
 }
 sub unicodemenu {
