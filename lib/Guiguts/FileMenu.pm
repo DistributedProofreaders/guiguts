@@ -654,7 +654,7 @@ sub operationadd {
 	my $operation = shift;
 	my ( $sec, $min, $hour, $mday, $mon, $year ) = localtime(time);
 	$year += 1900;
-	my $timestamp = sprintf('%4d-%2d-%2d %2d:%2d:%2d', $year,$mon,$mday,$hour,$min,$sec);
+	my $timestamp = sprintf('%4d-%02d-%02d %02d:%02d:%02d', $year,$mon,$mday,$hour,$min,$sec);
 	
 	$::operationshash{$operation} = $timestamp;
 	$operation = ::escape_problems($operation);
