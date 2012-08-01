@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.20';
+our $VERSION = '1.0.21pre';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
@@ -142,6 +142,7 @@ our $lastversioncheck       = time();
 our $lastversionrun         = $VERSION;
 our $lmargin                = 1;
 our $markupthreshold        = 4;
+our $multisearchsize        = 2;
 our $nobell                 = 0;
 our $donotcenterpagemarkers = 0;
 our $nohighlights           = 0;

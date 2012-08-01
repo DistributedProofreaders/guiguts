@@ -1142,7 +1142,8 @@ sub searchpopup {
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Show Images'
 		)->pack( -side => 'left', -anchor => 'n', -pady => 1 );
-		my ( $sf13, $sf14, $sf5 );
+		my $sf5;
+		my @multisearch;
 		my $sf10 = $::lglobal{searchpop}->Frame->pack(
 			-side   => 'top',
 			-anchor => 'n',
@@ -1158,8 +1159,7 @@ sub searchpopup {
 			-variable => \$::multiterm,
 			-value    => 0,
 			-command  => sub {
-
-				for ( $sf13, $sf14 ) {
+				for ( @multisearch ) {
 					$_->packForget;
 				}
 			},
@@ -1169,8 +1169,8 @@ sub searchpopup {
 			-variable => \$::multiterm,
 			-value    => 1,
 			-command  => sub {
-				for ( $sf13, $sf14 ) {
-					print "$::multiterm:single\n";
+				for ( @multisearch ) {
+					#print "$::multiterm:single\n";
 					if ( defined $sf5 ) {
 						$_->pack(
 							-before => $sf5,
@@ -1266,11 +1266,13 @@ sub searchpopup {
 			-width  => 9,
 			-height => 15,
 		)->pack( -side => 'right', -anchor => 'w' );
-		$sf13 = $::lglobal{searchpop}->Frame;
-		$sf13->Button(
+		for ( 1 .. $::multisearchsize ) {
+			push @multisearch, $::lglobal{searchpop}->Frame;
+			my $replaceentry = "replaceentry$_";
+		$multisearch[$_-1]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				replaceall( $::lglobal{replaceentry1}->get( '1.0', '1.end' ) );
+				replaceall( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 			},
 			-text  => 'Rpl All',
 			-width => 5
@@ -1280,10 +1282,10 @@ sub searchpopup {
 			-padx   => 2,
 			-anchor => 'nw'
 		  );
-		$sf13->Button(
+		$multisearch[$_-1]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				replace( $::lglobal{replaceentry1}->get( '1.0', '1.end' ) );
+				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 				searchtext('');
 			},
 			-text  => 'R & S',
@@ -1294,12 +1296,12 @@ sub searchpopup {
 			-padx   => 2,
 			-anchor => 'nw'
 		  );
-		$sf13->Button(
+		$multisearch[$_-1]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				replace( $::lglobal{replaceentry1}->get( '1.0', '1.end' ) );
+				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 				add_search_history(
-					$::lglobal{replaceentry1}->get( '1.0', '1.end' ),
+					$::lglobal{$replaceentry}->get( '1.0', '1.end' ),
 					\@::replace_history );
 			},
 			-text  => 'Replace',
@@ -1310,7 +1312,7 @@ sub searchpopup {
 			-padx   => 2,
 			-anchor => 'nw'
 		  );
-		$::lglobal{replaceentry1} = $sf13->Text(
+		$::lglobal{$replaceentry} = $multisearch[$_-1]->Text(
 			-background => $::bkgcolor,
 			-width      => 60,
 			-height     => 1,
@@ -1321,83 +1323,19 @@ sub searchpopup {
 			-expand => 'y',
 			-fill   => 'x'
 		  );
-		$sf13->Button(
+		$multisearch[$_-1]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				search_history( $::lglobal{replaceentry1},
+				search_history( $::lglobal{$replaceentry},
 					\@::replace_history );
 			},
 			-image  => $::lglobal{hist_img},
 			-width  => 9,
 			-height => 15,
 		)->pack( -side => 'right', -anchor => 'w' );
-		$sf14 = $::lglobal{searchpop}->Frame;
-		$sf14->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replaceall( $::lglobal{replaceentry2}->get( '1.0', '1.end' ) );
-			},
-			-text  => 'Rpl All',
-			-width => 5
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$sf14->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replace( $::lglobal{replaceentry2}->get( '1.0', '1.end' ) );
-				searchtext('');
-			},
-			-text  => 'R & S',
-			-width => 5
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$sf14->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replace( $::lglobal{replaceentry2}->get( '1.0', '1.end' ) );
-				add_search_history(
-					$::lglobal{replaceentry2}->get( '1.0', '1.end' ),
-					\@::replace_history );
-			},
-			-text  => 'Replace',
-			-width => 6
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$::lglobal{replaceentry2} = $sf14->Text(
-			-background => $::bkgcolor,
-			-width      => 60,
-			-height     => 1,
-		  )->pack(
-			-side   => 'right',
-			-anchor => 'w',
-			-padx   => 1,
-			-expand => 'y',
-			-fill   => 'x'
-		  );
-		$sf14->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				search_history( $::lglobal{replaceentry2},
-					\@::replace_history );
-			},
-			-image  => $::lglobal{hist_img},
-			-width  => 9,
-			-height => 15,
-		)->pack( -side => 'right', -anchor => 'w' );
+		}
 		if ($::multiterm) {
-			for ( $sf13, $sf14 ) {
+			for ( @multisearch ) {
 				$_->pack(
 					-side   => 'top',
 					-anchor => 'w',
@@ -1570,8 +1508,6 @@ sub searchpopup {
 		);
 		$::lglobal{searchentry}->{_MENU_}   = ();
 		$::lglobal{replaceentry}->{_MENU_}  = ();
-		$::lglobal{replaceentry1}->{_MENU_} = ();
-		$::lglobal{replaceentry2}->{_MENU_} = ();
 		$::lglobal{searchentry}->bind(
 			'<FocusIn>',
 			sub {
@@ -1584,18 +1520,13 @@ sub searchpopup {
 				$::lglobal{hasfocus} = $::lglobal{replaceentry};
 			}
 		);
-		$::lglobal{replaceentry1}->bind(
-			'<FocusIn>',
-			sub {
-				$::lglobal{hasfocus} = $::lglobal{replaceentry1};
-			}
-		);
-		$::lglobal{replaceentry2}->bind(
-			'<FocusIn>',
-			sub {
-				$::lglobal{hasfocus} = $::lglobal{replaceentry2};
-			}
-		);
+		for ( 1 .. $::multisearchsize ) {
+			$::lglobal{"replaceentry$_"}->{_MENU_} = ();
+			$::lglobal{"replaceentry$_"}->bind(
+				'<FocusIn>',
+				eval " sub { \$::lglobal{hasfocus} = \$::lglobal{replaceentry$_}; } "
+			);
+		}
 		$::lglobal{searchpop}->Tk::bind(
 			'<Control-Return>' => sub {
 				$::lglobal{searchentry}->see('1.0');
