@@ -872,7 +872,8 @@ EOM
 		print $save_handle "$_," || '0,' for @::gcopt;
 		print $save_handle ");\n\n";
 
-		# a variable's value is not saved unless it is nonzero
+		# a variable's value is also saved if it is zero
+		# otherwise we can't have a default value of 1 without overwriting the user's setting
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
 			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers failedsearch fontname fontsize fontweight geometry
@@ -884,10 +885,8 @@ EOM
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
 		{
-			if ( eval '$::' . $_ ) {
-				print $save_handle "\$$_", ' ' x ( 20 - length $_ ), "= '",
-				  eval '$::' . $_, "';\n";
-			}
+			print $save_handle "\$$_", ' ' x ( 20 - length $_ ), "= '",
+			  eval '$::' . $_, "';\n";
 		}
 		print $save_handle "\n";
 		for (
