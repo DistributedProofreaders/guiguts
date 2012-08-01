@@ -62,8 +62,7 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 sub file_saveas {
 	my $textwindow = shift;
 	::viewpagenums() if ( $::lglobal{seepagenums} );
-	my ($name);
-	$name = $textwindow->getSaveFile(
+	my $name = $textwindow->getSaveFile(
 		-title      => 'Save As',
 		-initialdir => $::globallastpath
 	);
@@ -105,6 +104,7 @@ sub file_saveas {
 sub file_close {
 	my $textwindow = shift;
 	return if ( ::confirmempty() =~ m{cancel}i );
+	::viewpagenums() if ( $::lglobal{seepagenums} );
 	clearvars($textwindow);
 	::update_indicators();
 	return;
@@ -116,7 +116,7 @@ sub file_import_preptext {
 	my $directory = $top->chooseDirectory( -title =>
 		  'Choose the directory containing the text files to be imported.', );
 	return 0
-	  unless ( -d $directory and defined $directory and $directory ne '' );
+	  unless ( defined $directory and -d $directory and $directory ne '' );
 	$top->Busy( -recurse => 1 );
 	my $pwd = ::getcwd();
 	chdir $directory;
@@ -126,7 +126,7 @@ sub file_import_preptext {
 	$directory        = ::os_normal($directory);
 	$::globallastpath = $directory;
 
-	for my $file ( sort { $a <=> $b } @files ) {
+	for my $file ( sort @files ) {
 		if ( $file =~ /^(\w+)\.txt/ ) {
 			$textwindow->ntinsert( 'end', ( "\n" . '-' x 5 ) );
 			$textwindow->ntinsert( 'end', "File: $1.png" );
@@ -137,7 +137,6 @@ sub file_import_preptext {
 				utf8::decode($line);
 				$line =~ s/^\x{FEFF}?//;
 				$line =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
 				#$line = eol_convert($line);
 				$line =~ s/[\t \xA0]+$//smg;
 				$textwindow->ntinsert( 'end', $line );
@@ -148,7 +147,7 @@ sub file_import_preptext {
 	}
 	$textwindow->markSet( 'insert', '1.0' );
 	$::lglobal{prepfile} = 1;
-	::file_mark_pages();
+	::file_mark_pages() if ( $::auto_page_marks );
 	$::pngspath = '';
 	$top->Unbusy( -recurse => 1 );
 	return;
@@ -168,13 +167,10 @@ sub file_export_preptext {
 	$top->Busy( -recurse => 1 );
 	my @marks = $textwindow->markNames;
 	my @pages = sort grep ( /^Pg\S+$/, @marks );
-	my $unicode =
-	  $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0',
-		'end' );
+	my $unicode = ::currentfileisunicode();
 	my ( $f, $globalfilename, $e ) =
 	  ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
 	if ( $exporttype eq 'onefile' ) {
-
 		# delete the existing file
 		open my $fh, '>', "$directory/prep.txt";
 		close $fh;
@@ -209,7 +205,6 @@ sub file_export_preptext {
 		$file =~ s/-*\s?File:\s?(\S+)\.(png|jpg)---[^\n]*\n//;
 		$file =~ s/\n+$//;
 		if ($unicode) {
-
 			#$file = "\x{FEFF}" . $file;    # Add the BOM to beginning of file.
 			utf8::encode($file);
 		}
@@ -249,6 +244,7 @@ sub _flash_save {
 	);
 	return;
 }
+
 ## save the .bin file associated with the text file
 sub _bin_save {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
@@ -342,7 +338,7 @@ sub _bin_save {
 		print $fh "\n\n";
 		print $fh "\$::spellindexbkmrk = '$::spellindexbkmrk';\n\n";
 		print $fh "\$::projectid = '$::projectid';\n\n";
-		print $fh "\$booklang = '$::booklang';\n\n";
+		print $fh "\$::booklang = '$::booklang';\n\n";
 		print $fh
 "\$scannoslistpath = '@{[::escape_problems(::os_normal($::scannoslistpath))]}';\n\n";
 		print $fh '1;';
@@ -352,6 +348,7 @@ sub _bin_save {
 	}
 	return;
 }
+
 ## Clear persistent variables before loading another file
 sub clearvars {
 	my $textwindow = shift;
@@ -479,6 +476,7 @@ sub file_mark_pages {
 	$top->Unbusy( -recurse => 1 );
 	return;
 }
+
 ## Track recently open files for the menu
 sub _recentupdate {    # FIXME: Seems to be choking.
 	my $name = shift;
@@ -494,6 +492,7 @@ sub _recentupdate {    # FIXME: Seems to be choking.
 	::menurebuild();
 	return;
 }
+
 ## Global Exit
 sub _exit {
 	if ( confirmdiscard() =~ m{no}i ) {
@@ -654,12 +653,10 @@ sub operationadd {
 	my $operation = shift;
 	my ( $sec, $min, $hour, $mday, $mon, $year ) = localtime(time);
 	$year += 1900;
-	my $timestamp = sprintf('%4d-%02d-%02d %02d:%02d:%02d', $year,$mon,$mday,$hour,$min,$sec);
-	
+	my $timestamp = sprintf('%4d-%02d-%02d %02d:%02d:%02d', $year,$mon,$mday,$hour,$min,$sec);	
 	$::operationshash{$operation} = $timestamp;
 	$operation = ::escape_problems($operation);
 	::oppopupdate() if $::lglobal{oppop};
-
 	::_bin_save();
 }
 
@@ -852,6 +849,7 @@ sub readsettings {
 		$::lmargin = 0 if ( $::lmargin == 1 );
 	}
 }
+
 ## Save setting.rc file
 sub savesettings {
 	my $top = $::top;
@@ -879,7 +877,7 @@ EOM
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
 			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers failedsearch fontname fontsize fontweight geometry
-			geometry2 geometry3 geometrypnumpop globalaspellmode highlightcolor history_size 
+			geometry2 geometry3 globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights
 			notoolbar poetrylmargin rmargin rwhyphenspace scannos_highlighted stayontop toolside 
@@ -981,9 +979,7 @@ sub file_export_pagemarkers {
 
 		# write the file with page markup
 		open my $fh2, '>', "$name" or die "Could not read $name";
-		my $unicode =
-		  $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0',
-			'end' );
+		my $unicode = ::currentfileisunicode();
 		my $filecontents = $textwindow->get( '1.0', 'end -1c' );
 		if ($unicode) {
 			utf8::encode($filecontents);
