@@ -848,6 +848,8 @@ sub readsettings {
 	unless ($::lastversionrun eq $::VERSION) {
 		$::lastversioncheck = time();
 		$::lastversionrun=$::VERSION;
+
+		$::lmargin = 0 if ( $::lmargin == 1 );
 	}
 }
 ## Save setting.rc file

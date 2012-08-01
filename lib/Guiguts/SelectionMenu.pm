@@ -19,8 +19,6 @@ sub wrapper {
 	my $rightmargin   = shift;
 	my $paragraph     = shift;
 	my $rwhyphenspace = shift;
-	$leftmargin--  if $leftmargin;
-	$firstmargin-- if $firstmargin;
 	$rightmargin++;
 	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
 	$paragraph =~ s/\n/ /g;
@@ -42,10 +40,10 @@ sub wrapper {
 				}
 			}
 			if ( $word =~ /^\x7f*\/#\x8A(\d+)?(\.)(\d+)/ ) {
-				if ( length $3 ) { $firstmargin = $3 }
+				if ( length $3 ) { $firstmargin = $3; }
 			}
 			if ( $word =~ /^\x7f*\/#\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
-				if ($4) { $rightmargin = $4 }
+				if ($4) { $rightmargin = $4 + 1; } # needs +1 to match $rightmargin++ above
 			}
 			$line =~ s/\s$//;
 			if ( $line =~ /\S/ ) {
