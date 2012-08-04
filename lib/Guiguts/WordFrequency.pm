@@ -109,7 +109,6 @@ sub wordfrequency {
 		$::lglobal{wfpop} = $top->Toplevel;
 		$::lglobal{wfpop}
 		  ->title('Word frequency - Ctrl+s to save, Ctrl+x to export');
-		::initialize_popup_without_deletebinding('wfpop');
 		my $wordfreqseframe =
 		  $::lglobal{wfpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $wcopt3 = $wordfreqseframe->Checkbutton(
@@ -283,6 +282,7 @@ sub wordfrequency {
 			-padx   => 2,
 			-pady   => 2
 		  );
+		::initialize_popup_without_deletebinding('wfpop');
 		::drag( $::lglobal{wclistbox} );
 		$::lglobal{wfpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {

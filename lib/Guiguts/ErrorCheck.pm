@@ -21,7 +21,6 @@ sub errorcheckpop_up {
 	}
 	$::lglobal{errorcheckpop} = $top->Toplevel;
 	$::lglobal{errorcheckpop}->title($errorchecktype);
-	::initialize_popup_with_deletebinding('errorcheckpop');
 	$::lglobal{errorcheckpop}->transient($top) if $::stayontop;
 	my $ptopframe = $::lglobal{errorcheckpop}->Frame->pack;
 	my $opsbutton = $ptopframe->Button(
@@ -74,6 +73,8 @@ sub errorcheckpop_up {
 			   -padx   => 2,
 			   -pady   => 2
 	  );
+	::initialize_popup_with_deletebinding('errorcheckpop');
+
 	::drag( $::lglobal{errorchecklistbox} );
 	::BindMouseWheel( $::lglobal{errorchecklistbox} );
 	$::lglobal{errorchecklistbox}

@@ -21,7 +21,6 @@ sub tablefx {
 		$::lglobal{columnspaces} = '';
 		$::lglobal{tblfxpop}     = $top->Toplevel;
 		$::lglobal{tblfxpop}->title('ASCII Table Special Effects');
-		::initialize_popup_without_deletebinding('tblfxpop');
 		my $f0 =
 		  $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my %tb_buttons = (
@@ -191,6 +190,8 @@ sub tablefx {
 					 -text             => 'Convert Step to Grid',
 					 -width            => 16
 		)->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
+		::initialize_popup_without_deletebinding('tblfxpop');
+
 		$::lglobal{tblfxpop}->bind( '<Control-Left>',  sub { coladjust(-1) } );
 		$::lglobal{tblfxpop}->bind( '<Control-Right>', sub { coladjust(1) } );
 		$::lglobal{tblfxpop}->bind( '<Left>',  sub { tlineselect('p') } );

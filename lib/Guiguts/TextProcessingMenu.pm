@@ -84,7 +84,6 @@ sub fixpopup {
 	} else {
 		$::lglobal{fixpop} = $top->Toplevel;
 		$::lglobal{fixpop}->title('Fixup Options');
-		::initialize_popup_with_deletebinding('fixpop');
 		my $tframe = $::lglobal{fixpop}->Frame->pack;
 		$tframe->Button(
 			-activebackground => $::activecolor,
@@ -141,6 +140,7 @@ sub fixpopup {
 							-value       => 0,
 							-text => 'German style angle quotes »guillemots«',
 		)->grid( -row => $row, -column => 1 );
+		::initialize_popup_with_deletebinding('fixpop');
 	}
 }
 ## Fixup Popup

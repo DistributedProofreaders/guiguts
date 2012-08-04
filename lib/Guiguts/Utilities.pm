@@ -873,6 +873,34 @@ sub initialize {
 		$dir =~ s/(\/|\\)[^\/\\]+$/$1/;
 		chdir $dir if length $dir;
 	}
+
+	# For backward compatibility, carry over old geometry settings
+	unless ($::geometry2) {
+		$::geometry2 = '462x583+684+72';
+	}
+	unless ( $::geometryhash{wfpop} ) {
+		$::geometryhash{aboutpop}      = '+312+136';
+		$::geometryhash{alignpop}      = '+338+83';
+		$::geometryhash{asciipop}      = '+358+187';
+		$::geometryhash{brkpop}        = '+482+131';
+		$::geometryhash{errorcheckpop} = '+484+72';
+		$::geometryhash{fixpop}        = '+34+22';
+		$::geometryhash{gcpop}         = '+224+72';
+		$::geometryhash{grpop}         = '+144+153';
+		$::geometryhash{hotpop}        = '+144+119';
+		$::geometryhash{hpopup}        = '300x400+584+211';
+		$::geometryhash{jeepop}        = '+284+72';
+		$::geometryhash{ordpop}        = '+191+132';
+		$::geometryhash{regexrefpop}   = '+106+72';
+		$::geometryhash{ucharpop}      = '+53+87';
+		$::geometryhash{utfpop}        = '+46+46';
+		$::geometryhash{wfpop}         = '+365+63';
+		$::geometryhash{xtpop}         = '+120+38';
+		$::positionhash{footpop}       = '+255+157';
+		$::positionhash{pagepop}       = '+334+176';
+		$::positionhash{pnumpop}       = '+302+97';
+	}
+
 	::readsettings();
 	::fontinit();    # Initialize the fonts for the two windows
 	::utffontinit();
@@ -981,37 +1009,6 @@ sub initialize {
 	@{ $::lglobal{ascii} } = qw/+ - + | | | + - +/;
 	@{ $::lglobal{fixopt} } = ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 
-	# For backward compatibility, carry over old geometry settings
-	unless ($::geometry2) {
-		$::geometry2 = '462x583+684+72';
-	}
-	unless ( $::geometryhash{wfpop} ) {
-		$::geometryhash{wfpop}         = $::geometry2;
-		$::geometryhash{gcpop}         = $::geometry2;
-		$::geometryhash{jeepop}        = $::geometry2;
-		$::geometryhash{errorcheckpop} = $::geometry2;
-		$::geometryhash{hpopup}        = $::geometry3;
-		$::geometryhash{ucharpop}      = '550x450+53+87';
-		$::geometryhash{utfpop}        = '791x422+46+46';
-		$::geometryhash{regexrefpop}   = '663x442+106+72';
-		$::geometryhash{pagepop}       = '281x112+334+176';
-		$::geometryhash{fixpop}        = '441x440+34+22';
-		$::geometryhash{wfpop}         = '462x583+565+63';
-		$::geometryhash{pnumpop}       = '210x253+502+97';
-		$::geometryhash{hotpop}        = '583x462+144+119';
-		$::geometryhash{hpopup}        = '187x197+884+211';
-		$::geometryhash{footpop}       = '352x361+255+157';
-		$::geometryhash{gcpop}         = '462x583+684+72';
-		$::geometryhash{xtpop}         = '800x543+120+38';
-		$::geometryhash{grpop}         = '50x8+144+153';
-		$::geometryhash{errorcheckpop} = '508x609+684+72';
-		$::geometryhash{alignpop}      = '168x94+338+83';
-		$::geometryhash{brkpop}        = '201x203+482+131';
-		$::geometryhash{aboutpop}      = '378x392+312+136';
-		$::geometryhash{asciipop}      = '278x209+358+187';
-		$::geometryhash{ordpop}        = '316x150+191+132';
-		$::geometryhash{jeepop}        = '462x583+684+72';
-	}
 	$::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) )
 	  unless defined $::lglobal{guigutsdirectory};
 	$::scannospath = ::catfile( $::lglobal{guigutsdirectory}, 'scannos' )
@@ -1520,14 +1517,26 @@ sub killpopup {
 sub initialize_popup_without_deletebinding {
 	my $top       = $::top;
 	my $popupname = shift;
-	$::lglobal{$popupname}->geometry( $::geometryhash{$popupname} )
-	  if $::geometryhash{$popupname};
-	$::lglobal{"$popupname"}->bind(
-		'<Configure>' => sub {
-			$::geometryhash{"$popupname"} = $::lglobal{"$popupname"}->geometry;
-			$::lglobal{geometryupdate} = 1;
-		}
-	);
+	if ( $::geometryhash{$popupname} ) {
+		$::lglobal{$popupname}->geometry( $::geometryhash{$popupname} );
+		$::lglobal{$popupname}->bind(
+			'<Configure>' => sub {
+				$::geometryhash{$popupname} = $::lglobal{$popupname}->geometry;
+				$::lglobal{geometryupdate} = 1;
+			}
+		);
+	}
+	elsif ( $::positionhash{$popupname} ) {
+		$::lglobal{$popupname}->geometry( $::positionhash{$popupname} );
+		$::lglobal{$popupname}->bind(
+			'<Configure>' => sub {
+				my $pos = $::lglobal{$popupname}->geometry;
+				$pos =~ s/^[0-9x]*(\+\d+\+\d+)$/$1/;
+				$::positionhash{$popupname} = $pos; # don't try using ->x and ->y, ->y has a wrong value (at least on mac)
+				$::lglobal{geometryupdate} = 1;
+			}
+		);
+	}
 	$::lglobal{$popupname}->Icon( -image => $::icon );
 	if ( ($::stayontop) and ( not $popupname eq "wfpop" ) ) {
 		$::lglobal{$popupname}->transient($top);
@@ -2046,7 +2055,6 @@ sub regexref {
 	} else {
 		$::lglobal{regexrefpop} = $top->Toplevel;
 		$::lglobal{regexrefpop}->title('Regex Quick Reference');
-		initialize_popup_with_deletebinding('regexrefpop');
 		my $button_ok = $::lglobal{regexrefpop}->Button(
 			-activebackground => $::activecolor,
 			-text             => 'Close',
@@ -2061,6 +2069,7 @@ sub regexref {
 			-background => $::bkgcolor,
 			-font       => $::lglobal{font},
 		)->pack( -anchor => 'n', -expand => 'y', -fill => 'both' );
+		initialize_popup_with_deletebinding('regexrefpop');
 		drag($regtext);
 		if ( -e 'regref.txt' ) {
 			if ( open my $ref, '<', 'regref.txt' ) {
@@ -2339,7 +2348,6 @@ sub externalpopup {    # Set up the external commands menu
 		$::lglobal{xtpop}->deiconify;
 	} else {
 		$::lglobal{xtpop} = $top->Toplevel( -title => 'External programs', );
-		::initialize_popup_with_deletebinding('xtpop');
 		my $f0 =
 		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0->Label( -text =>
@@ -2397,6 +2405,7 @@ sub externalpopup {    # Set up the external commands menu
 			-text  => 'OK',
 			-width => 8
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
+		::initialize_popup_with_deletebinding('xtpop');
 	}
 }
 

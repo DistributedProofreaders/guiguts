@@ -1973,7 +1973,6 @@ sub searchsize {  # Pop up a window where you can adjust the search history size
 	} else {
 		$::lglobal{hssizepop} = $top->Toplevel;
 		$::lglobal{hssizepop}->title('History Size');
-		::initialize_popup_with_deletebinding('hssizepop');
 		$::lglobal{hssizepop}->resizable( 'no', 'no' );
 		my $frame =
 		  $::lglobal{hssizepop}
@@ -2005,6 +2004,7 @@ sub searchsize {  # Pop up a window where you can adjust the search history size
 				undef $::lglobal{hssizepop};
 			}
 		)->pack;
+		::initialize_popup_with_deletebinding('hssizepop');
 		$::lglobal{hssizepop}->raise;
 		$::lglobal{hssizepop}->focus;
 	}

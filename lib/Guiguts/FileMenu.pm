@@ -847,6 +847,16 @@ sub readsettings {
 		$::lastversionrun=$::VERSION;
 
 		$::lmargin = 0 if ( $::lmargin == 1 );
+
+		# get rid of geometry values that are out of use, but keep the position
+		for ( keys %::geometryhash ) {
+			if ( $::positionhash{$_} ) {
+				if ( $::geometryhash{$_} =~ m/^\d+x\d+(\+\d+\+\d+)$/) {
+					$::positionhash{$_} = $1;
+				}
+				delete $::geometryhash{$_};
+			}
+		}
 	}
 }
 
@@ -918,6 +928,11 @@ EOM
 			print $save_handle "\$geometryhash{$_} = '$::geometryhash{$_}';\n";
 		}
 		print $save_handle "\n";
+		for ( keys %::positionhash ) {
+			print $save_handle "\$positionhash{$_} = '$::positionhash{$_}';\n";
+		}
+		print $save_handle "\n";
+
 		print $save_handle '@mygcview = (';
 		for (@::mygcview) { print $save_handle "$_," }
 		print $save_handle (");\n\n");

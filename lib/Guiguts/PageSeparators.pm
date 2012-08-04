@@ -459,7 +459,6 @@ sub separatorpopup {
 		$::lglobal{pagepop}->focus;
 	} else {
 		$::lglobal{pagepop} = $top->Toplevel;
-		::initialize_popup_without_deletebinding('pagepop');
 		$::lglobal{pagepop}->title('Page Separator Fixup');
 		my $sf1 =
 		  $::lglobal{pagepop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -580,6 +579,7 @@ sub separatorpopup {
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		$::lglobal{jsemiautomatic} = 1
 		  unless ( ( $::lglobal{jautomatic} ) || ( $::lglobal{joindoall} ) );
+		::initialize_popup_without_deletebinding('pagepop');
 	}
 	$::lglobal{pagepop}->protocol(
 		'WM_DELETE_WINDOW' => sub {

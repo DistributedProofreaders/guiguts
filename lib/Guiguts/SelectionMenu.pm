@@ -649,7 +649,6 @@ sub flood {
 	} else {
 		$::lglobal{floodpop} = $top->Toplevel;
 		$::lglobal{floodpop}->title('Flood Fill String:');
-		::initialize_popup_with_deletebinding('floodpop');
 		my $f = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
 "Flood fill string.\n(Blank will default to spaces.)\nHotkey Control+w",
@@ -680,13 +679,7 @@ sub flood {
 			-text             => 'Flood Fill',
 			-width            => 16
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-#		$::lglobal{floodpop}->protocol(
-#			'WM_DELETE_WINDOW' => sub {
-#				$::lglobal{floodpop}->destroy;
-#				undef $::lglobal{floodpop};
-#			}
-#		);
-#		$::lglobal{floodpop}->Icon( -image => $icon );
+		::initialize_popup_with_deletebinding('floodpop');
 	}
 	return $::lglobal{floodpop};
 }
@@ -867,7 +860,6 @@ sub alignpopup {
 		$::lglobal{alignpop}->focus;
 	} else {
 		$::lglobal{alignpop} = $top->Toplevel;
-		::initialize_popup_with_deletebinding('alignpop');
 		$::lglobal{alignpop}->title('Align text');
 		my $f =
 		  $::lglobal{alignpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -892,6 +884,7 @@ sub alignpopup {
 			-text  => 'Align selected text',
 			-width => 16
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
+		::initialize_popup_with_deletebinding('alignpop');
 	}
 }
 
@@ -913,7 +906,6 @@ sub asciipopup {
 		$::lglobal{asciipop}->focus;
 	} else {
 		$::lglobal{asciipop} = $top->Toplevel;
-		::initialize_popup_with_deletebinding('asciipop');
 		$::lglobal{asciipop}->title('ASCII Boxes');
 		my $f =
 		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -989,6 +981,7 @@ sub asciipopup {
 			-width => 16
 		)->grid( -row => 4, -column => 2, -padx => 1, -pady => 2 );
 
+		::initialize_popup_with_deletebinding('asciipop');
 		#$::lglobal{asciipop}->resizable( 'no', 'no' );
 		#$::lglobal{asciipop}->deiconify;
 		$::lglobal{asciipop}->raise;
