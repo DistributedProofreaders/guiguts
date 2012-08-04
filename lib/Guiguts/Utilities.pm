@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
 	@EXPORT = qw(&openpng &get_image_file &arabic &roman
-	  &textbindings &cmdinterp &nofileloadedwarning &getprojectid &win32_cmdline &win32_start
+	  &textbindings &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
 	  &win32_is_exe &win32_create_process &runner &debug_dump &run &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
@@ -15,7 +15,7 @@ BEGIN {
 	  &checkforupdates &checkforupdatesmonthly &hotkeyshelp &regexref &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &currentfileisunicode
-	  &viewprojectcomments &viewprojectdiscussion
+	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion
 	  &b2scroll);
 }
 
@@ -456,20 +456,6 @@ sub nofileloadedwarning {
 		my $answer = $dialog->Show;
 		return 1;
 	}
-}
-
-#FIXME: doesnt work quite right if multiple volumes held in same directory!
-sub getprojectid {
-	my $fname = $::lglobal{global_filename};
-	my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
-	opendir( DIR, "$d" );
-	for ( readdir(DIR) ) {
-		if ( $_ =~ m/(project.*)_comments.html/ ) {
-			$::projectid = $1;
-		}
-	}
-	closedir(DIR);
-	return;
 }
 
 sub win32_cmdline {
@@ -1249,7 +1235,6 @@ sub initialize {
 		"\x{1F51}" => 'y(',
 		"\x{1F59}" => 'Y(',
 		"\x{1F60}" => 'ô)',
-
 		"\x{1F61}" => 'ô(',
 		"\x{1F68}" => 'Ô)',
 		"\x{1F69}" => 'Ô(',
@@ -1709,22 +1694,20 @@ sub showversion {
 	my $os  = $^O;
 	$os =~ s/^([^\[]+)\[.+/$1/;
 	my $perl = sprintf( "Perl v%vd", $^V );
-	my $winver;
+	my $winver = ''; # stops "uninitialised value" message on non windows systems
 	if ($::OS_WIN) {
 		$winver = qx{ver};
 		$winver =~ s{\n}{}smg;
-	} else {
-		$winver = "";
-	}    # stops "uninitialised value" message on non windows systems
+	}
 	my $message = <<"END";
-Currently Running :
-$::APP_NAME, Version : $::VERSION
-Platform : $os
+Currently Running:
+$::APP_NAME, Version: $::VERSION
+Platform: $os
 $winver
 $perl
-perl/Tk Version : $Tk::VERSION
-Tk patchLevel : $Tk::patchLevel
-Tk libraries : $Tk::library
+perl/Tk Version: $Tk::VERSION
+Tk patchLevel: $Tk::patchLevel
+Tk libraries: $Tk::library
 END
 	my $dialog = $top->Dialog(
 		-title   => 'Versions',
@@ -2450,7 +2433,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-command => [ \&::savefile ],
 			-tip     => 'Save',
 		);
-		$::lglobal{savetool}->bind( '<3>', sub { set_autosave() } );
+		$::lglobal{savetool}->bind( '<3>', sub { ::set_autosave() } );
 		$::lglobal{savetool}->bind(
 			'<Shift-3>',
 			sub {
@@ -2498,11 +2481,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		$::lglobal{toptool}->ToolButton(
 			-text    => 'WF²',
 			-font    => $::lglobal{toolfont},
-			-command => [
-				sub {
-					::wordfrequency();
-				  }
-			],
+			-command => [ \&::wordfrequency ],
 			-tip => 'Word Frequency'
 		);
 		$::lglobal{toptool}->ToolButton(
@@ -2557,7 +2536,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 
 sub toggle_autosave {
 	if ($::autosave) {
-		set_autosave();
+		::set_autosave();
 	} else {
 		$::lglobal{autosaveid}->cancel;
 		undef $::lglobal{autosaveid};
@@ -2577,19 +2556,62 @@ sub currentfileisunicode {
 	return $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
 }
 
+#FIXME: doesnt work quite right if multiple volumes held in same directory
+sub getprojectid {
+	my $fname = $::lglobal{global_filename};
+	my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
+	opendir( DIR, "$d$::projectfileslocation" );
+	for ( readdir(DIR) ) {
+		if ( $_ =~ m/(projectID[0-9a-f]*)_comments.html/ ) {
+			$::projectid = $1;
+		}
+	}
+	closedir(DIR);
+	return;
+}
+
+sub setprojectid {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	my $projectidpop = $top->DialogBox(
+		-buttons => ['Close'],
+		-title   => 'DP Project ID',
+	);
+	$projectidpop->resizable( 'no', 'no' );
+	my $frame = $projectidpop->Frame->pack( -fill => 'x' );
+	$frame->Label( -text => 'Project ID: ' )->pack( -side => 'left' );
+	my $entry = $frame->Entry(
+		-background   => $::bkgcolor,
+		-width        => 30,
+		-textvariable => \$::projectid,
+	)->pack( -side => 'left', -fill => 'x' );
+	$projectidpop->Show;
+}
+
 sub viewprojectcomments {
-	::operationadd('View project comments');
+	::operationadd('View project comments locally');
 	return if ::nofileloadedwarning();
+	::setprojectid() unless $::projectid;
 	my $defaulthandler = $::defaultfilehandler;
 	$defaulthandler =~ s/\$f\$e/project_comments.html/;
-	runner( cmdinterp($defaulthandler) );
+	runner( cmdinterp($defaulthandler) ) if $::projectid;
 }
 
 sub viewprojectdiscussion {
-	::operationadd('View project discussion');
+	::operationadd('View project discussion online');
 	return if ::nofileloadedwarning();
+	::setprojectid() unless $::projectid;
 	::runner( $::globalbrowserstart,
 "http://www.pgdp.net/c/tools/proofers/project_topic.php?project=$::projectid"
 	) if $::projectid;
 }
+
+sub viewprojectpage {
+	::operationadd('View project page online');
+	return if ::nofileloadedwarning();
+	::setprojectid() unless ( $::projectid );
+	::runner( $::globalbrowserstart,
+"http://www.pgdp.net/c/project.php?id=$::projectid"
+	) if $::projectid;
+}
+
 1;

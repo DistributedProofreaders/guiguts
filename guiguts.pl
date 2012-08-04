@@ -151,6 +151,7 @@ our $intelligentWF          = 0;
 our $operationinterrupt;
 our $pngspath            = q{};
 our $projectid           = q{};
+our $projectfileslocation= '';
 our $regexpentry         = q();
 our $rmargin             = 72;
 our $rwhyphenspace       = 1;
