@@ -31,7 +31,7 @@ EOM
 		$::lglobal{phelppop}->focus;
 	} else {
 		$::lglobal{phelppop} = $top->Toplevel;
-		$::lglobal{phelppop}->title('Functions and Hotkeys');
+		$::lglobal{phelppop}->title('Functions and Hotkeys for Page Separator Fixup');
 		::initialize_popup_with_deletebinding('phelppop');
 		$::lglobal{phelppop}->Label(
 			-justify => "left",
@@ -210,6 +210,7 @@ sub processpageseparator {
 	return unless $1;
 	$pagesep  = " <!--Pg$1-->";
 	$pagemark = 'Pg' . $1;
+	my $asterisk = 0;
 	$textwindow->delete( $::searchstartindex, $::searchendindex )
 	  if ( $::searchstartindex && $::searchendindex );
 	$textwindow->markSet( 'page',    $::searchstartindex );
@@ -235,6 +236,7 @@ sub processpageseparator {
 			last if ( $textwindow->compare( $index, '>=', 'end' ) );
 			$line = $textwindow->get("$index-1c");
 			if ( $line eq '*' ) {
+				$asterisk = 1;
 				$line = $textwindow->get("$index-2c") . '*';
 			}
 			if ( ( $line =~ /[\s\n]$/ ) || ( $line =~ /[\w-]\*$/ ) ) {
@@ -357,7 +359,9 @@ sub processpageseparator {
 				)
 			  )
 			{
-				if ($::rwhyphenspace) {
+				# if the hyphen is starred, it should be clothed, no matter rwhyphenspace
+				# (in fact, we shouldn't even move anything up if it's unstarred)
+				if ( !$asterisk && $::rwhyphenspace ) {
 					$textwindow->insert( "$index", " " );
 					$index =
 					  $textwindow->search( '-regexp', '--', '\s', "$index+1c",
@@ -372,8 +376,6 @@ sub processpageseparator {
 				  $textwindow->search( '-regexp', '--', '\s', "$index+1c",
 					'end' );
 				$textwindow->delete($index);
-				if ($::rwhyphenspace) {
-				}
 				$::lglobal{joinundo}++;
 			}
 		}
@@ -458,7 +460,7 @@ sub separatorpopup {
 	} else {
 		$::lglobal{pagepop} = $top->Toplevel;
 		::initialize_popup_without_deletebinding('pagepop');
-		$::lglobal{pagepop}->title('Page separators');
+		$::lglobal{pagepop}->title('Page Separator Fixup');
 		my $sf1 =
 		  $::lglobal{pagepop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $joinbutton = $sf1->Button(
