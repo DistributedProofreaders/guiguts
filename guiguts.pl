@@ -121,7 +121,6 @@ if ($OS_WIN)                { $globalbrowserstart = 'start'; }
 if ($OS_MAC)                { $globalbrowserstart = 'open'; }
 our $globalfirefoxstart = 'firefox';
 if ($OS_MAC) { $globalfirefoxstart = 'open -a firefox'; }
-our $defaultfilehandler = "$globalbrowserstart \$d\$f\$e";
 our $globalimagepath        = q{};
 our $globallastpath         = q{};
 our $globalspelldictopt     = q{};
@@ -219,7 +218,7 @@ our $convertcharsdisplaysearch;
 our @extops = (
 	{
 		'label'   => 'Open current file in its default program',
-		'command' => $defaultfilehandler
+		'command' => "$globalbrowserstart \$d\$f\$e"
 	},
 	{
 		'label'   => 'Open current file in Firefox',

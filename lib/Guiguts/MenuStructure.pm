@@ -2602,7 +2602,7 @@ sub menubuildtwo {
 			[
 				Button   => 'View in Browser',
 				-command => sub {
-					::runner( ::cmdinterp($::defaultfilehandler) );
+					::runner( ::cmdinterp( "$::globalbrowserstart \$d\$f\$e" ) );
 				},
 			],
 			[

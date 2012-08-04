@@ -2591,7 +2591,7 @@ sub viewprojectcomments {
 	::operationadd('View project comments locally');
 	return if ::nofileloadedwarning();
 	::setprojectid() unless $::projectid;
-	my $defaulthandler = $::defaultfilehandler;
+	my $defaulthandler = "$::globalbrowserstart \$d\$f\$e";
 	$defaulthandler =~ s/\$f\$e/project_comments.html/;
 	runner( cmdinterp($defaulthandler) ) if $::projectid;
 }
