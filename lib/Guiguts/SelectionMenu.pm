@@ -562,9 +562,7 @@ sub case {
 				$done = lc($selection);
 				$done =~ s/(^\W*\w)/\U$1\E/;
 			} elsif ( $marker eq 'tc' ) {
-				$done = lc($selection);
-				$done =~ s/(^\W*\w)/\U$1\E/;
-				$done =~ s/([\s\n]+\W*\w)/\U$1\E/g;
+				$done = ::titlecase($selection);
 			}
 			$textwindow->replacewith( $start, $end, $done );
 		}

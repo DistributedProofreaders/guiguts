@@ -1352,9 +1352,7 @@ sub html_parse_header {
 		next unless length($selection);
 		$title = $selection;
 		$title =~ s/[,.]$//;                        #throw away trailing , or .
-		$title = lc($title);                        #lowercase title
-		$title =~ s/(^\W*\w)/\U$1\E/;
-		$title =~ s/([\s\n]+\W*\w)/\U$1\E/g;
+		$title =  ::titlecase($title);
 		$title =~ s/^\s+|\s+$//g;
 		$title =~ s/<[^>]*>//g;
 

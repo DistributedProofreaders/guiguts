@@ -10,7 +10,7 @@ BEGIN {
 	  &textbindings &cmdinterp &nofileloadedwarning &getprojectid &win32_cmdline &win32_start
 	  &win32_is_exe &win32_create_process &runner &debug_dump &run &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
-	  &initialize_popup_without_deletebinding &os_normal &escape_problems &natural_sort_alpha
+	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
 	  &checkforupdates &checkforupdatesmonthly &hotkeyshelp &regexref &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
@@ -1552,6 +1552,15 @@ sub initialize_popup_without_deletebinding {
 	}
 }
 
+sub titlecase {
+	my $text = shift;
+	$text = lc($text);
+	$text =~ s/(^\W*\w)/\U$1\E/;
+	$text =~ s/([\s\n]+\W*\w)/\U$1\E/g;
+	$text =~ s/ (A|An|And|At|By|From|In|Of|On|The|To)\b/ \L$1\E/g if ( $::booklang eq 'en' );
+	return $text;
+}
+
 sub os_normal {
 	$_[0] =~ s|/|\\|g if $::OS_WIN && $_[0];
 	return $_[0];
@@ -1611,6 +1620,7 @@ sub drag {
 		}
 	);
 }
+
 ## Ultra fast natural sort - wants an array
 sub natural_sort_alpha {
 	my $i;
@@ -1618,12 +1628,14 @@ sub natural_sort_alpha {
 	  for ( my @x = map { lc deaccentsort $_} @_ );
 	@_[ map { (split)[-1] } sort @x ];
 }
+
 ## Fast length sort with secondary natural sort - wants an array
 sub natural_sort_length {
 	$_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
 	  for ( my @x = map { [ length noast($_), $_, lc deaccentsort $_ ] } @_ );
 	map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
 }
+
 ## Fast freqency sort with secondary natural sort - wants a hash reference
 sub natural_sort_freq {
 	$_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
@@ -1633,6 +1645,7 @@ sub natural_sort_freq {
 	  );
 	map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
 }
+
 ## No Asterisks
 sub noast {
 	local $/ = ' ****';
@@ -1640,6 +1653,7 @@ sub noast {
 	chomp $phrase;
 	return $phrase;
 }
+
 ### Edit Menu
 sub cut {
 	my $textwindow  = $::textwindow;
@@ -2083,6 +2097,7 @@ sub regexref {
 		}
 	}
 }
+
 ### Bookmarks
 sub setbookmark {
 	my $bookmark   = shift;
@@ -2161,6 +2176,7 @@ sub gnutenberg {
 		"$gnutenbergoutput" );
 	chdir $pwd;
 }
+
 ## Sidenote Fixup
 sub sidenotes {
 	my $textwindow = $::textwindow;
