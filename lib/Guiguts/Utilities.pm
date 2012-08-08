@@ -202,22 +202,12 @@ sub textbindings {
 		'<Control-t>' => sub { ::case( $textwindow, 'tc' ); $top->break } );
 	$textwindow->bind(
 		'TextUnicode',
-		'<Control-Z>' => sub {
-			$textwindow->undo;
-			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-			$textwindow->see('insert');
-		}
-	);
-	$textwindow->bind(
-		'TextUnicode',
 		'<Control-z>' => sub {
 			$textwindow->undo;
 			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 			$textwindow->see('insert');
 		}
 	);
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Y>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-y>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
