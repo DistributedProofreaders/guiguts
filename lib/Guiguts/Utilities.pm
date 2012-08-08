@@ -882,7 +882,6 @@ sub initialize {
 		$::geometryhash{aboutpop}      = '+312+136';
 		$::geometryhash{alignpop}      = '+338+83';
 		$::geometryhash{asciipop}      = '+358+187';
-		$::geometryhash{brkpop}        = '+482+131';
 		$::geometryhash{errorcheckpop} = '+484+72';
 		$::geometryhash{fixpop}        = '+34+22';
 		$::geometryhash{gcpop}         = '+224+72';
@@ -896,6 +895,7 @@ sub initialize {
 		$::geometryhash{utfpop}        = '+46+46';
 		$::geometryhash{wfpop}         = '+365+63';
 		$::geometryhash{xtpop}         = '+120+38';
+		$::positionhash{brkpop}        = '+482+131';
 		$::positionhash{footpop}       = '+255+157';
 		$::positionhash{pagepop}       = '+334+176';
 		$::positionhash{pnumpop}       = '+302+97';

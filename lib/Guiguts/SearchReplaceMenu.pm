@@ -1752,7 +1752,6 @@ sub orphanedbrackets {
 	} else {
 		$::lglobal{brkpop} = $top->Toplevel;
 		$::lglobal{brkpop}->title('Find orphan brackets');
-		::initialize_popup_without_deletebinding('brkpop');
 		$::lglobal{brkpop}->Label( -text => 'Bracket or Markup Style' )->pack;
 		my $frame = $::lglobal{brkpop}->Frame->pack;
 		$psel = $frame->Radiobutton(
@@ -1809,15 +1808,14 @@ sub orphanedbrackets {
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => "\«|\»",
-			-text        => 'Angle quotes « »',
+			-text        => 'French angle quotes « »',
 		)->grid( -row => 2, -column => 2, -pady => 5 );
 		my $gqusel = $frame3->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => '»|«',
-			-text        => 'German Angle quotes » «',
+			-text        => 'German angle quotes » «',
 		)->grid( -row => 3, -column => 2 );
-
 		#		my $allqsel =
 		#		  $frame3->Radiobutton(
 		#								-variable    => \$::lglobal{brsel},
@@ -1825,14 +1823,19 @@ sub orphanedbrackets {
 		#								-value       => 'all',
 		#								-text        => 'All brackets ( )',
 		#		  )->grid( -row => 3, -column => 2 );
+
 		my $frame2     = $::lglobal{brkpop}->Frame->pack;
+		my ( $brkresult, $brnextbt );
+		$brkresult = $frame2->Label(
+			-text => '',
+		)->grid( -row => 0, -column => 1, -columnspan => 2 );
 		my $brsearchbt = $frame2->Button(
 			-activebackground => $::activecolor,
 			-text             => 'Search',
-			-command          => \&brsearch,
-			-width            => 10,
-		)->grid( -row => 1, -column => 2, -pady => 5 );
-		my $brnextbt = $frame2->Button(
+			-command          => sub { brsearch( $brkresult, $brnextbt ); },
+			-width            => 16,
+		)->grid( -row => 1, -column => 1, -padx => 4, -pady => 5 );
+		$brnextbt = $frame2->Button(
 			-activebackground => $::activecolor,
 			-text             => 'Next',
 			-command          => sub {
@@ -1840,13 +1843,20 @@ sub orphanedbrackets {
 				  if @{ $::lglobal{brbrackets} };
 				shift @{ $::lglobal{brindices} }
 				  if @{ $::lglobal{brindices} };
-				$textwindow->bell
-				  unless ( $::lglobal{brbrackets}[1] || $::nobell );
-				return unless $::lglobal{brbrackets}[1];
-				brnext();
+				unless ( $::lglobal{brbrackets}[1] ) {
+					my $brackets = printable_brackets ( $::lglobal{brsel} );
+					::operationadd( "Found no more orphaned $brackets" );
+					$brkresult->configure( -text => "No more orphaned $brackets found." );
+					$brnextbt->configure ( -state => 'disabled', -text => 'Next' );
+					$textwindow->bell unless $::nobell;
+					return;
+				}
+				brnext( $brkresult, $brnextbt );
 			},
-			-width => 10,
-		)->grid( -row => 2, -column => 2, -pady => 5 );
+			-state => 'disabled',
+			-width => 16,
+		)->grid( -row => 1, -column => 2, -padx => 4, -pady => 5 );
+		::initialize_popup_without_deletebinding('brkpop');
 	}
 	$::lglobal{brkpop}->protocol(
 		'WM_DELETE_WINDOW' => sub {
@@ -1855,12 +1865,13 @@ sub orphanedbrackets {
 			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 		}
 	);
-	$::lglobal{brkpop}->transient($top) if $::stayontop;
 	if ($psel) { $psel->select; }
 
 	sub brsearch {
+		my ( $brkresult, $brnextbt ) = @_;
 		my $textwindow = $::textwindow;
 		::viewpagenums() if ( $::lglobal{seepagenums} );
+		$brkresult->configure( -text => '' );
 		@{ $::lglobal{brbrackets} } = ();
 		@{ $::lglobal{brindices} }  = ();
 		$::lglobal{brindex} = '1.0';
@@ -1872,13 +1883,6 @@ sub orphanedbrackets {
 				'-count' => \$brlength,
 				'--', "$::lglobal{brsel}", $::lglobal{brindex}, 'end'
 			);
-			my $brackets = $::lglobal{brsel};
-			if ( $brackets =~ /^\[(.*)\]$/ ) {
-				$brackets = $1;
-				$brackets =~ s/\\//g;
-				::operationadd( 'Found no more orphaned ' . $brackets )
-				  unless $::lglobal{brindex};
-			}
 			last unless $::lglobal{brindex};
 			$::lglobal{brbrackets}[$brcount] =
 			  $textwindow->get( $::lglobal{brindex},
@@ -1887,10 +1891,33 @@ sub orphanedbrackets {
 			$brcount++;
 			$::lglobal{brindex} .= '+1c';
 		}
-		brnext() if @{ $::lglobal{brbrackets} };
+		my $brackets = printable_brackets ( $::lglobal{brsel} );
+		$brnextbt->configure( -text => "Next $brackets", -state => 'normal' );
+		if ( @{ $::lglobal{brbrackets} } ) {
+			brnext( $brkresult, $brnextbt);
+		} else {
+			::operationadd( "Found no more orphaned $brackets" );
+			$brkresult->configure( -text => "No more orphaned $brackets found." );
+			$brnextbt->configure( -text => 'Next', -state => 'disabled' );
+			$textwindow->bell unless $::nobell;
+		}
+	}
+
+	sub printable_brackets {
+		my $brackets = shift;
+		if ( $brackets =~ /^\[(.*)\]$/ ) {
+			$brackets = $1;
+			$brackets =~ s/\\//g;
+		} elsif ( $brackets =~ /\^?\\\/(.*)\\\// ) {
+			$brackets = $1;
+			$brackets =~ s/\\//g;
+			$brackets = "/$brackets/";
+		}
+		return $brackets;
 	}
 
 	sub brnext {
+		my ( $brkresult, $brnextbt ) = @_;
 		my $textwindow = $::textwindow;
 		::viewpagenums() if ( $::lglobal{seepagenums} );
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
@@ -1932,10 +1959,10 @@ sub orphanedbrackets {
 				shift @{ $::lglobal{brbrackets} };
 				shift @{ $::lglobal{brindices} };
 				shift @{ $::lglobal{brindices} };
-				brnext();
+				brnext( $brkresult, $brnextbt );
 			}
 		}
-		if ( @{ $::lglobal{brbrackets} } ) {
+		if ( @{ $::lglobal{brbrackets} } && $::lglobal{brindices}[0]) {
 			$textwindow->markSet( 'insert', $::lglobal{brindices}[0] )
 			  if $::lglobal{brindices}[0];
 			$textwindow->see( $::lglobal{brindices}[0] )
@@ -1951,6 +1978,12 @@ sub orphanedbrackets {
 				  . 'c' )
 			  if $::lglobal{brindices}[1];
 			$textwindow->focus;
+		} else {
+			my $brackets = printable_brackets( $::lglobal{brsel} );
+			::operationadd( "Found no more orphaned $brackets" );
+			$brkresult->configure( -text => "No more orphaned $brackets found." );
+			$brnextbt->configure( -text => 'Next', -state => 'disabled' );
+			$textwindow->bell unless $::nobell;
 		}
 	}
 }
