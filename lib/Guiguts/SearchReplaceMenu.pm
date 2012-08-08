@@ -1138,11 +1138,11 @@ sub searchpopup {
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Start at Beginning'
 		)->pack( -side => 'left', -anchor => 'n', -pady => 1 );
-		$::lglobal{searchop5} = $sf2->Checkbutton(
-			-variable    => \$::auto_show_images,
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Show Images'
-		)->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+		#$::lglobal{searchop5} = $sf2->Checkbutton( # if this comes back, make sure it syncs properly with the statusbar
+		#	-variable    => \$::auto_show_images,
+		#	-selectcolor => $::lglobal{checkcolor},
+		#	-text        => 'Show Images'
+		#)->pack( -side => 'left', -anchor => 'n', -pady => 1 );
 		my $sf5;
 		my @multisearch;
 		my $sf10 = $::lglobal{searchpop}->Frame->pack(

@@ -730,25 +730,6 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
-		my $showimagebutton;
-		$showimagebutton = $spf4->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				$::auto_show_images = 1 - $::auto_show_images;
-				if ($::auto_show_images) {
-					$showimagebutton->configure( -text => 'No Images' );
-				} else {
-					$showimagebutton->configure( -text => 'Show Images' );
-				}
-			},
-			-text  => 'Show Images',
-			-width => 22,
-		  )->pack(
-				   -side   => 'left',
-				   -pady   => 2,
-				   -padx   => 3,
-				   -anchor => 'nw'
-		  );
 		my $spf5 =
 		  $::lglobal{spellpopup}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );

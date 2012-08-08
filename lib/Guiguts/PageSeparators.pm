@@ -522,11 +522,6 @@ sub separatorpopup {
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Semi Auto',
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		$::lglobal{jsshowimagebutton} = $sf3->Checkbutton(
-			-variable    => \$::auto_show_images,
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Images'
-		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf4 =
 		  $::lglobal{pagepop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
