@@ -205,6 +205,7 @@ sub textbindings {
 		'<Control-Z>' => sub {
 			$textwindow->undo;
 			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+			$textwindow->see('insert');
 		}
 	);
 	$textwindow->bind(
@@ -212,12 +213,13 @@ sub textbindings {
 		'<Control-z>' => sub {
 			$textwindow->undo;
 			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+			$textwindow->see('insert');
 		}
 	);
 	$textwindow->bind( 'TextUnicode',
-		'<Control-Y>' => sub { $textwindow->redo } );
+		'<Control-Y>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
 	$textwindow->bind( 'TextUnicode',
-		'<Control-y>' => sub { $textwindow->redo } );
+		'<Control-y>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
 	$textwindow->bind( 'TextUnicode', '<Control-F>' => \&::searchpopup );
 	$textwindow->bind( 'TextUnicode', '<Control-p>' => \&::gotopage );
@@ -2462,12 +2464,12 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		$::lglobal{toptool}->separator;
 		$::lglobal{toptool}->ToolButton(
 			-image   => 'actundo16',
-			-command => sub { $textwindow->undo },
+			-command => sub { $textwindow->undo; $textwindow->see('insert'); },
 			-tip     => 'Undo'
 		);
 		$::lglobal{toptool}->ToolButton(
 			-image   => 'actredo16',
-			-command => sub { $textwindow->redo },
+			-command => sub { $textwindow->redo; $textwindow->see('insert'); },
 			-tip     => 'Redo'
 		);
 		$::lglobal{toptool}->separator;

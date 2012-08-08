@@ -1067,6 +1067,7 @@ sub searchpopup {
 			-command          => sub {
 				$textwindow->undo;
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+				$textwindow->see('insert');
 			},
 			-text  => 'Undo',
 			-width => 6

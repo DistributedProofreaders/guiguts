@@ -574,12 +574,12 @@ sub menubuildold {
 		-menuitems => [
 			[
 				'command', 'Undo',
-				-command     => sub { $textwindow->undo },
+				-command     => sub { $textwindow->undo; $textwindow->see('insert'); },
 				-accelerator => 'Ctrl+z'
 			],
 			[
 				'command', 'Redo',
-				-command     => sub { $textwindow->redo },
+				-command     => sub { $textwindow->redo; $textwindow->see('insert'); },
 				-accelerator => 'Ctrl+y'
 			],
 			[ 'separator', '' ],
@@ -1308,7 +1308,7 @@ sub menubuildwizard {
 				'command',
 				'Undo',
 				-command => sub {
-					$textwindow->undo;
+					$textwindow->undo; $textwindow->see('insert');
 				},
 				-accelerator => 'Ctrl+z'
 			],
@@ -1316,7 +1316,7 @@ sub menubuildwizard {
 				'command',
 				'Redo',
 				-command => sub {
-					$textwindow->redo;
+					$textwindow->redo; $textwindow->see('insert');
 				},
 				-accelerator => 'Ctrl+y'
 			],
@@ -2149,12 +2149,12 @@ sub menubuildtwo {
 		-menuitems => [
 			[
 				'command', 'Undo',
-				-command     => sub { $textwindow->undo },
+				-command     => sub { $textwindow->undo; $textwindow->see('insert'); },
 				-accelerator => 'Ctrl+z'
 			],
 			[
 				'command', 'Redo',
-				-command     => sub { $textwindow->redo },
+				-command     => sub { $textwindow->redo; $textwindow->see('insert'); },
 				-accelerator => 'Ctrl+y'
 			],
 			[ 'separator', '' ],

@@ -426,6 +426,7 @@ sub undojoin {
 	if ( $::lglobal{jautomatic} ) {
 		$textwindow->undo;
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+		$textwindow->see('insert');
 		return;
 	}
 	my $joinundo = pop @::joinundolist;
@@ -439,12 +440,12 @@ sub redojoin {
 	if ( $::lglobal{jautomatic} ) {
 		$textwindow->redo;
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+		$textwindow->see('insert');
 		return;
 	}
 	my $joinredo = pop @::joinredolist;
 	push @::joinundolist, $joinredo;
 	$textwindow->redo for ( 0 .. $joinredo );
-
 	#refreshpageseparator();
 }
 

@@ -174,13 +174,14 @@ sub tablefx {
 			-command          => sub {
 				$textwindow->undo;
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+				$textwindow->see('insert');
 			},
 			-text  => 'Undo',
 			-width => 10
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
 		$f4->Button(
 					 -activebackground => $::activecolor,
-					 -command          => sub { $textwindow->redo },
+					 -command          => sub { $textwindow->redo; $textwindow->see('insert'); },
 					 -text             => 'Redo',
 					 -width            => 10
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
@@ -201,6 +202,7 @@ sub tablefx {
 			sub {
 				$textwindow->undo;
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+				$textwindow->see('insert');
 			}
 		);
 		$::lglobal{tblfxpop}->bind( '<Delete>', sub { tlineremove() } );
