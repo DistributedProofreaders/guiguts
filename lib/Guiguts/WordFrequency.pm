@@ -170,7 +170,6 @@ sub wordfrequency {
 		$wordfreqseframe->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-
 				#return if $::lglobal{global_filename} =~ /No File Loaded/;
 				#savefile() unless ( $textwindow->numberChanges == 0 );
 				wordfrequency();

@@ -1848,7 +1848,8 @@ sub orphanedbrackets {
 					my $brackets = printable_brackets ( $::lglobal{brsel} );
 					::operationadd( "Found no more orphaned $brackets" );
 					$brkresult->configure( -text => "No more orphaned $brackets found." );
-					$brnextbt->configure ( -state => 'disabled', -text => 'Next' );
+					$brnextbt->configure( -state => 'disabled', -text => 'Next' );
+					$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 					$textwindow->bell unless $::nobell;
 					return;
 				}
@@ -1895,11 +1896,12 @@ sub orphanedbrackets {
 		my $brackets = printable_brackets ( $::lglobal{brsel} );
 		$brnextbt->configure( -text => "Next $brackets", -state => 'normal' );
 		if ( @{ $::lglobal{brbrackets} } ) {
-			brnext( $brkresult, $brnextbt);
+			brnext( $brkresult, $brnextbt );
 		} else {
 			::operationadd( "Found no more orphaned $brackets" );
 			$brkresult->configure( -text => "No more orphaned $brackets found." );
 			$brnextbt->configure( -text => 'Next', -state => 'disabled' );
+			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 			$textwindow->bell unless $::nobell;
 		}
 	}
@@ -1984,6 +1986,7 @@ sub orphanedbrackets {
 			::operationadd( "Found no more orphaned $brackets" );
 			$brkresult->configure( -text => "No more orphaned $brackets found." );
 			$brnextbt->configure( -text => 'Next', -state => 'disabled' );
+			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 			$textwindow->bell unless $::nobell;
 		}
 	}
@@ -2098,19 +2101,20 @@ sub loadscannos {
 	}
 }
 
-
 sub replace_incr_counter {
-    my $counter = 1;
-    my $textwindow = $::textwindow;
-    my $pos = '1.0';
-    while (1) {
-	my $newpos = $textwindow->search( '-exact', '--', '[::]', "$pos", 'end' );
-	last unless $newpos;
-	$textwindow->delete( "$newpos", "$newpos+4c" );
-	$textwindow->insert( "$newpos", $counter );
-	$pos = $newpos;
-	$counter++;
-    }
+	my $counter = 1;
+	my $textwindow = $::textwindow;
+	my $pos = '1.0';
+	$textwindow->addGlobStart;
+	while (1) {
+		my $newpos = $textwindow->search( '-exact', '--', '[::]', "$pos", 'end' );
+		last unless $newpos;
+		$textwindow->delete( "$newpos", "$newpos+4c" );
+		$textwindow->insert( "$newpos", $counter );
+		$pos = $newpos;
+		$counter++;
+	}
+	$textwindow->addGlobEnd;
 }
 
 1;

@@ -590,11 +590,11 @@ sub setlang {
 	my $top        = $::top;
 	unless ( defined( $::lglobal{setlangpop} ) ) {
 		$::lglobal{setlangpop} = $top->DialogBox(
-			-buttons => [qw[Ok Cancel]],
+			-buttons => [qw[OK Cancel]],
 			-title   => 'Set language',
 			-popover => $top,
 			-command => sub {
-				if ( $_[0] eq 'Ok' ) {
+				if ( $_[0] eq 'OK' ) {
 					$::booklang = $::lglobal{booklang};
 					update_lang_button();
 					::readlabels();

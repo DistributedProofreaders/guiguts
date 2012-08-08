@@ -44,8 +44,8 @@ sub setdefaultpath {
 
 sub setmargins {
 	my $top = $::top;
-	my $getmargins = $top->DialogBox( -title   => 'Set margins for rewrap',
-									  -buttons => ['OK'], );
+	my $getmargins = $top->DialogBox( -title   => 'Set Margins for Rewrap',
+									  -buttons => ['Close'], );
 	my $lmframe =
 	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $lmlabel = $lmframe->Label(
@@ -177,6 +177,7 @@ sub fontsize {
 	} else {
 		$::lglobal{fspop} = $top->Toplevel;
 		$::lglobal{fspop}->title('Font');
+		$::lglobal{fspop}->resizable( 'no', 'no' );
 		::initialize_popup_with_deletebinding('fspop');
 		my $tframe = $::lglobal{fspop}->Frame->pack;
 		my $fontlist = $tframe->BrowseEntry(
@@ -192,12 +193,12 @@ sub fontsize {
 		my $smallerbutton = $mframe->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				$::fontsize++;
+				$::fontsize--;
 				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 				$sizelabel->configure( -text => $::fontsize );
 			},
-			-text  => 'Bigger',
+			-text  => 'Smaller',
 			-width => 10
 		)->grid( -row => 1, -column => 1, -pady => 5 );
 		$sizelabel =
@@ -206,12 +207,12 @@ sub fontsize {
 		my $biggerbutton = $mframe->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				$::fontsize--;
+				$::fontsize++;
 				::fontinit();
 				$textwindow->configure( -font => $::lglobal{font} );
 				$sizelabel->configure( -text => $::fontsize );
 			},
-			-text  => 'Smaller',
+			-text  => 'Bigger',
 			-width => 10
 		)->grid( -row => 1, -column => 3, -pady => 5 );
 		my $weightbox = $mframe->Checkbutton(
@@ -227,14 +228,13 @@ sub fontsize {
 		)->grid( -row => 2, -column => 2, -pady => 5 );
 		my $button_ok = $mframe->Button(
 			-activebackground => $::activecolor,
-			-text             => 'OK',
+			-text             => 'Close',
 			-command          => sub {
 				$::lglobal{fspop}->destroy;
 				undef $::lglobal{fspop};
 				::savesettings();
 			}
 		)->grid( -row => 3, -column => 2, -pady => 5 );
-		$::lglobal{fspop}->resizable( 'no', 'no' );
 		$::lglobal{fspop}->raise;
 		$::lglobal{fspop}->focus;
 	}
@@ -310,7 +310,7 @@ sub saveinterval {
         $::lglobal{intervalpop}->resizable( 'no', 'no' );
         my $frame = $::lglobal{intervalpop}
             ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        $frame->Label( -text => 'Minutes between Autosave' )
+        $frame->Label( -text => 'Minutes between autosave' )
             ->pack( -side => 'left' );
         my $entry = $frame->Entry(
             -background   => 'white',
@@ -327,7 +327,7 @@ sub saveinterval {
         )->pack( -side => 'left', -fill => 'x' );
         my $frame1 = $::lglobal{intervalpop}
             ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        $frame1->Label( -text => '1-999 minutes' )->pack( -side => 'left' );
+        $frame->Label( -text => '(1-999)' )->pack( -side => 'left' );
         my $button = $frame1->Button(
             -text    => 'OK',
             -command => sub {
@@ -335,7 +335,7 @@ sub saveinterval {
                 $::lglobal{intervalpop}->destroy;
                 undef $::lglobal{scrlspdpop};
             },
-        )->pack( -side => 'left' );
+        )->pack;
         $::lglobal{intervalpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 $::autosaveinterval = 5 unless $::autosaveinterval;

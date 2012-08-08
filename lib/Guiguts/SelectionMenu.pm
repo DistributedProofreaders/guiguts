@@ -578,10 +578,10 @@ sub surround {
 		$surpop->focus;
 	} else {
 		$surpop = $top->Toplevel;
-		$surpop->title('Surround text with:');
+		$surpop->title('Surround With');
 		my $f = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
-"Surround the selection with?\n\\n will be replaced with a newline.",
+"Surround the selection with:\n\\n will be replaced with a newline.",
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f1 = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $surstrt = $f1->Entry(
@@ -648,10 +648,10 @@ sub flood {
 		$::lglobal{floodpop}->focus;
 	} else {
 		$::lglobal{floodpop} = $top->Toplevel;
-		$::lglobal{floodpop}->title('Flood Fill String:');
+		$::lglobal{floodpop}->title('Flood Fill');
 		my $f = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
-"Flood fill string.\n(Blank will default to spaces.)\nHotkey Control+w",
+"Flood fill selection with string:n(Blank will default to spaces.)\nHotkey Control+w",
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f1 = $::lglobal{floodpop}->Frame->pack(
 			-side   => 'top',

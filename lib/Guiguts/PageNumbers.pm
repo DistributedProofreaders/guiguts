@@ -51,6 +51,7 @@ sub viewpagenums {
 		::pnumadjust();
 	}
 }
+
 ## Pop up a window which will allow jumping directly to a specified page
 sub gotolabel {
 	my $textwindow = $::textwindow;

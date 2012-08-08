@@ -37,7 +37,7 @@ sub html_convert_subscripts {
 	return;
 }
 
-# FIXME: Doesn't convert Gen^rl; workaround Gen^{rl}
+# Doesn't convert Gen^rl; workaround Gen^{rl} - correct behaviour, not a bug, cf. the guidelines
 sub html_convert_superscripts {
 	my ( $textwindow, $selection, $step ) = @_;
 	if ( $selection =~ s/\^\{([^}]+?)\}/<sup>$1<\/sup>/g ) {

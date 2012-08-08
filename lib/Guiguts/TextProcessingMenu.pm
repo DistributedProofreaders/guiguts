@@ -84,20 +84,8 @@ sub fixpopup {
 	} else {
 		$::lglobal{fixpop} = $top->Toplevel;
 		$::lglobal{fixpop}->title('Fixup Options');
-		my $tframe = $::lglobal{fixpop}->Frame->pack;
-		$tframe->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				$::lglobal{fixpop}->UnmapWindow;
-				fixup();
-				$::lglobal{fixpop}->destroy;
-				undef $::lglobal{fixpop};
-			},
-			-text  => 'Go!',
-			-width => 14
-		)->pack( -pady => 6 );
 		my $pframe = $::lglobal{fixpop}->Frame->pack;
-		$pframe->Label( -text => 'Select options for the fixup routine.', )
+		$pframe->Label( -text => 'Select options for the fixup routine:', )
 		  ->pack;
 		my $pframe1 = $::lglobal{fixpop}->Frame->pack;
 		${ $::lglobal{fixopt} }[15] = 1;
@@ -131,18 +119,31 @@ sub fixpopup {
 							-variable    => \${ $::lglobal{fixopt} }[15],
 							-selectcolor => $::lglobal{checkcolor},
 							-value       => 1,
-							-text => 'French style angle quotes «guillemots»',
+							-text => 'French style angle quotes «guillemets»',
 		)->grid( -row => $row, -column => 1 );
 		++$row;
 		$pframe1->Radiobutton(
 							-variable    => \${ $::lglobal{fixopt} }[15],
 							-selectcolor => $::lglobal{checkcolor},
 							-value       => 0,
-							-text => 'German style angle quotes »guillemots«',
+							-text => 'German style angle quotes »guillemets«',
 		)->grid( -row => $row, -column => 1 );
+		my $tframe = $::lglobal{fixpop}->Frame->pack;
+		$tframe->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				$::lglobal{fixpop}->UnmapWindow;
+				fixup();
+				$::lglobal{fixpop}->destroy;
+				undef $::lglobal{fixpop};
+			},
+			-text  => 'Go!',
+			-width => 14
+		)->pack( -pady => 6 );
 		::initialize_popup_with_deletebinding('fixpop');
 	}
 }
+
 ## Fixup Popup
 sub fixup {
 	my $textwindow = $::textwindow;
@@ -242,13 +243,13 @@ sub fixup {
 				$edited++ if $line =~ s/(?<![\.\!\?])\.{3}(?!\.)/ \.\.\./g;
 				$edited++ if $line =~ s/^ \./\./;
 			}
-			;        # format guillemots correctly
-			;        # french guillemots
+			;        # format guillemets correctly
+			;        # french guillemets
 			if ( ${ $::lglobal{fixopt} }[14] and ${ $::lglobal{fixopt} }[15] ) {
 				$edited++ if $line =~ s/«\s+/«/g;
 				$edited++ if $line =~ s/\s+»/»/g;
 			}
-			;        # german guillemots
+			;        # german guillemets
 			if ( ${ $::lglobal{fixopt} }[14] and !${ $::lglobal{fixopt} }[15] )
 			{
 				$edited++ if $line =~ s/\s+«/«/g;
@@ -293,6 +294,7 @@ sub text_remove_smallcaps_markup {
 	$::lglobal{replaceentry}->delete( '1.0', 'end' );
 	$::lglobal{replaceentry}->insert( 'end', "\$1" );
 }
+
 ## End of Line Cleanup
 sub endofline {
 	my $textwindow = $::textwindow;
@@ -309,6 +311,7 @@ sub endofline {
 	$textwindow->FindAndReplaceAll( '-regex', '-nocase', '\s+$', '' );
 	::update_indicators();
 }
+
 ## Clean Up Rewrap
 sub cleanup {
 	my $textwindow = $::textwindow;
@@ -316,6 +319,7 @@ sub cleanup {
 	$top->Busy( -recurse => 1 );
 	$::searchstartindex = '1.0';
 	::viewpagenums() if ( $::lglobal{seepagenums} );
+	$textwindow->addGlobStart;
 	while (1) {
 		$::searchstartindex =
 		  $textwindow->search( '-regexp', '--',
@@ -325,6 +329,8 @@ sub cleanup {
 		$textwindow->delete( "$::searchstartindex -1c",
 							 "$::searchstartindex lineend" );
 	}
+	$textwindow->addGlobEnd;
 	$top->Unbusy( -recurse => 1 );
 }
+
 1;

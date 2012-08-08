@@ -440,7 +440,7 @@ sub nofileloadedwarning {
 	my $top = $::top;
 	if ( $::lglobal{global_filename} =~ m/No File Loaded/ ) {
 		my $dialog = $top->Dialog(
-			-text    => "No File Loaded",
+			-text    => "No file loaded.",
 			-bitmap  => 'warning',
 			-title   => "No File Loaded",
 			-buttons => ['OK']
@@ -993,7 +993,6 @@ sub initialize {
 	$::lglobal{suspects_only}     = 0;
 	$::lglobal{tblcoljustify}     = 'l';
 	$::lglobal{tblrwcol}          = 1;
-	$::lglobal{ToolBar}           = 1;
 	$::lglobal{uoutp}             = 'h';
 	$::lglobal{utfrangesort}      = 0;
 	$::lglobal{visibleline}       = '';
@@ -2125,9 +2124,9 @@ sub epubmaker {
 		my $pwd         = ::getcwd();
 		chdir $::globallastpath;
 		my $epubmakerpath = ::catfile( $::lglobal{guigutsdirectory},
-			'python27', 'scripts', 'epubmaker-script.py' );
+			'Python27', 'Scripts', 'epubmaker-script.py' );
 		my $pythonpath =
-		  ::catfile( $::lglobal{guigutsdirectory}, 'python27', 'python.exe' );
+		  ::catfile( $::lglobal{guigutsdirectory}, 'Python27', 'python.exe' );
 
 		if ( defined $format
 			and ( ( $format eq 'html' ) or ( $format eq 'epub' ) ) )
@@ -2418,7 +2417,6 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		  $top->ToolBar( -side => $::toolside, -close => '30' );
 		$::lglobal{toolfont} = $top->Font(
 			-family => 'Times',
-
 			# -slant  => 'italic',
 			-weight => 'bold',
 			-size   => 9
@@ -2466,7 +2464,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		$::lglobal{toptool}->ToolButton(
 			-image   => 'filefind16',
 			-command => [ \&::searchpopup ],
-			-tip     => 'Search'
+			-tip     => 'Search & Replace'
 		);
 		$::lglobal{toptool}->ToolButton(
 			-image   => 'actcheck16',
@@ -2496,7 +2494,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-text    => 'Ltn-1',
 			-font    => $::lglobal{toolfont},
 			-command => [ \&::latinpopup ],
-			-tip     => 'Latin - 1 Popup'
+			-tip     => 'Latin-1 Popup'
 		);
 		$::lglobal{toptool}->ToolButton(
 			-text    => 'Grk',
@@ -2563,8 +2561,9 @@ sub getprojectid {
 	my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
 	opendir( DIR, "$d$::projectfileslocation" );
 	for ( readdir(DIR) ) {
-		if ( $_ =~ m/(projectID[0-9a-f]*)_comments.html/ ) {
+		if ( $_ =~ m/(projectID[0-9a-f]*)_comments\.html/ ) {
 			$::projectid = $1;
+			last;
 		}
 	}
 	closedir(DIR);

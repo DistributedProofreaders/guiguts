@@ -19,11 +19,13 @@ sub pageseparatorhelppopup {
     New Chapter - remove spaces as necessary. Keep four blank lines (chapter break). - Hotkey h
     Refresh - search for and center next page separator. - Hotkey r
     Undo - undo the previous page separator edit. - Hotkey u
+    Redo - redo the latest undo page separator edit. - Hotkey e
     Delete - delete the page separator. Make no other edits. - Hotkey d
-    Full Auto - automatically search for and convert if possible the next page separator. - Toggle - a
-    Semi Auto - automatically search for and center the next page separator after an edit. - Toggle - s
+    Full Auto - automatically search for and try to convert the next page separator. - Toggle: a
+    Semi Auto - automatically search for and center the next page separator after an edit. - Toggle: s
+    Do All (beta) - handle ALL page separators automatically
     View page image - Hotkey v
-    View Page Separator help -Hotkey ?
+    View Page Separator help - Hotkey ?
 EOM
 	if ( defined( $::lglobal{phelppop} ) ) {
 		$::lglobal{phelppop}->deiconify;
@@ -576,44 +578,43 @@ sub separatorpopup {
 		$::lglobal{jsemiautomatic} = 1
 		  unless ( ( $::lglobal{jautomatic} ) || ( $::lglobal{joindoall} ) );
 		::initialize_popup_without_deletebinding('pagepop');
+		$::lglobal{pagepop}->protocol(
+			'WM_DELETE_WINDOW' => sub {
+				$::lglobal{pagepop}->destroy;
+				undef $::lglobal{pagepop};
+				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+			}
+		);
+		$::lglobal{pagepop}->Tk::bind( '<j>' => sub { processpageseparator('j') } );
+		$::lglobal{pagepop}->Tk::bind( '<k>' => sub { processpageseparator('k') } );
+		$::lglobal{pagepop}->Tk::bind( '<l>' => sub { processpageseparator('l') } );
+		$::lglobal{pagepop}->Tk::bind( '<h>' => sub { processpageseparator('h') } );
+		$::lglobal{pagepop}->Tk::bind( '<d>' => sub { processpageseparator('d') } );
+		$::lglobal{pagepop}->Tk::bind( '<t>' => sub { processpageseparator('t') } );
+		$::lglobal{pagepop}
+		  ->Tk::bind( '<?>' => sub { pageseparatorhelppopup('?') } );
+		$::lglobal{pagepop}->Tk::bind( '<r>' => \&refreshpageseparator );
+		$::lglobal{pagepop}->Tk::bind(
+			'<v>' => sub {
+				::openpng( $textwindow, ::get_page_number() );
+				$::lglobal{pagepop}->raise;
+			}
+		);
+		$::lglobal{pagepop}->Tk::bind( '<u>' => \&undojoin );
+		$::lglobal{pagepop}->Tk::bind( '<e>' => \&redojoin );
+		$::lglobal{pagepop}->Tk::bind(
+			'<a>' => sub {
+				if   ( $::lglobal{jautomatic} ) { $::lglobal{jautomatic} = 0 }
+				else                            { $::lglobal{jautomatic} = 1 }
+			}
+		);
+		$::lglobal{pagepop}->Tk::bind(
+			'<s>' => sub {
+				if ( $::lglobal{jsemiautomatic} ) { $::lglobal{jsemiautomatic} = 0 }
+				else                              { $::lglobal{jsemiautomatic} = 1 }
+			}
+		);
 	}
-	$::lglobal{pagepop}->protocol(
-		'WM_DELETE_WINDOW' => sub {
-			$::lglobal{pagepop}->destroy;
-			undef $::lglobal{pagepop};
-			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-		}
-	);
-	$::lglobal{pagepop}->Tk::bind( '<j>' => sub { processpageseparator('j') } );
-	$::lglobal{pagepop}->Tk::bind( '<k>' => sub { processpageseparator('k') } );
-	$::lglobal{pagepop}->Tk::bind( '<l>' => sub { processpageseparator('l') } );
-	$::lglobal{pagepop}->Tk::bind( '<h>' => sub { processpageseparator('h') } );
-	$::lglobal{pagepop}->Tk::bind( '<d>' => sub { processpageseparator('d') } );
-	$::lglobal{pagepop}->Tk::bind( '<t>' => sub { processpageseparator('t') } );
-	$::lglobal{pagepop}
-	  ->Tk::bind( '<?>' => sub { pageseparatorhelppopup('?') } );
-	$::lglobal{pagepop}->Tk::bind( '<r>' => \&refreshpageseparator );
-	$::lglobal{pagepop}->Tk::bind(
-		'<v>' => sub {
-			::openpng( $textwindow, ::get_page_number() );
-			$::lglobal{pagepop}->raise;
-		}
-	);
-	$::lglobal{pagepop}->Tk::bind( '<u>' => \&undojoin );
-	$::lglobal{pagepop}->Tk::bind( '<e>' => \&redojoin );
-	$::lglobal{pagepop}->Tk::bind(
-		'<a>' => sub {
-			if   ( $::lglobal{jautomatic} ) { $::lglobal{jautomatic} = 0 }
-			else                            { $::lglobal{jautomatic} = 1 }
-		}
-	);
-	$::lglobal{pagepop}->Tk::bind(
-		'<s>' => sub {
-			if ( $::lglobal{jsemiautomatic} ) { $::lglobal{jsemiautomatic} = 0 }
-			else                              { $::lglobal{jsemiautomatic} = 1 }
-		}
-	);
-	$::lglobal{pagepop}->transient($top) if $::stayontop;
 }
 
 # Run through automatic cases without deep recursion
@@ -643,6 +644,7 @@ sub delblanklines {
 	$::searchstartindex = '2.0';
 	$::searchendindex   = '2.0';
 	$textwindow->Busy;
+	$textwindow->addGlobStart;
 	while ($::searchstartindex) {
 		$::searchstartindex =
 		  $textwindow->search( '-nocase', '-regexp', '--',
@@ -665,6 +667,8 @@ sub delblanklines {
 		}
 		$::searchendindex = $r ? "$r.end" : '2.0';
 	}
+	$textwindow->addGlobEnd;
 	$textwindow->Unbusy;
 }
+
 1;

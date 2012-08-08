@@ -57,7 +57,7 @@ sub footnotepop {
 				$::lglobal{fnindex}--;
 				footnoteshow();
 			},
-			-text  => '<--- Last FN',
+			-text  => '<--- Prev. FN',
 			-width => 14
 		)->grid( -row => 2, -column => 1 );
 		$::lglobal{fnindexbrowse} = $frame2->BrowseEntry(
@@ -263,7 +263,7 @@ sub footnotepop {
 					);
 				}
 			},
-			-text  => '<--- Last LZ',
+			-text  => '<--- Prev. LZ',
 			-width => 12
 		)->grid( -row => 2, -column => 1, -padx => 2, -pady => 4 );
 		$frame1->Button(
@@ -289,7 +289,7 @@ sub footnotepop {
 		)->grid( -row => 2, -column => 3, -padx => 6, -pady => 4 );
 		my $frame3 =
 		  $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		$frame3->Checkbutton(
+		$::lglobal{unlimitedsearchbutton} = $frame3->Checkbutton(
 							  -variable => \$::lglobal{fnsearchlimit},
 							  -text     => 'Unlimited Anchor Search'
 		)->grid( -row => 1, -column => 1, -padx => 3, -pady => 4 );
@@ -459,6 +459,7 @@ sub fninsertmarkers {
 # Join the footnote fnindex '*[Footnote:' with the previous.
 sub fnjoin {
 	my $textwindow = $::textwindow;
+	$textwindow->addGlobStart;
 	$textwindow->tagRemove( 'footnote',  '1.0', 'end' );
 	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 	# Find the colon in this footnote
@@ -485,6 +486,7 @@ sub fnjoin {
 	$textwindow->delete( "fna$::lglobal{fnindex}", "fnb$::lglobal{fnindex}" );
 	$textwindow->delete( "fns$::lglobal{fnindex}-1c", "fns$::lglobal{fnindex}" )
 	  if ( $textwindow->get("fns$::lglobal{fnindex}-1c") eq '*' );
+	$textwindow->addGlobEnd;
 	$::lglobal{fnarray}->[ $::lglobal{fnindex} ][0] = '';
 	$::lglobal{fnarray}->[ $::lglobal{fnindex} ][1] = '';
 	footnoteadjust();
@@ -513,7 +515,7 @@ sub fnview {
 	} else {
 		$::lglobal{footviewpop} = $top->Toplevel( -background => $::bkgcolor );
 		::initialize_popup_with_deletebinding('footviewpop');
-		$::lglobal{footviewpop}->title('Footnotes');
+		$::lglobal{footviewpop}->title('Footnote Check');
 		my $frame1 =
 		  $::lglobal{footviewpop}->Frame( -background => $::bkgcolor )
 		  ->pack( -side => 'top', -anchor => 'n' );
@@ -914,12 +916,13 @@ sub setlz {
 sub footnotemove {
 	my $textwindow = $::textwindow;
 	my ( $lz, %footnotes, $zone, $index, $r, $c, $marker );
-	::operationadd('Move footnotes to landing zone');
+	::operationadd('Moved footnotes to landing zone');
 	$::lglobal{fnsecondpass} = 0;
 	footnotefixup();
 	autoendlz();
 	getlz();
 	$::lglobal{fnindex} = 1;
+	$textwindow->addGlobStart;
 	foreach my $lz ( @{ $::lglobal{fnlzs} } ) {
 
 		if ( $::lglobal{fnarray}->[ $::lglobal{fnindex} ][0] ) {
@@ -994,13 +997,17 @@ sub footnotemove {
 		}
 		$index .= '+4l';
 	}
+	$textwindow->addGlobEnd;
+	$::lglobal{unlimitedsearchbutton}->select;
 	$textwindow->markSet( 'insert', '1.0' );
 	$textwindow->see('1.0');
 }
 
 sub footnotemoveinline {
 	my $textwindow = $::textwindow;
+	::operationadd('Moved footnotes to end-of-paragraph');
 	$::lglobal{fnindex} = $::lglobal{fntotal};
+	$textwindow->addGlobStart;
 	while ( $::lglobal{fnindex} ) {
 		my $start     = $textwindow->index("fns$::lglobal{fnindex}");
 		my $end       = $textwindow->index("fne$::lglobal{fnindex}");
@@ -1031,6 +1038,7 @@ sub footnotemoveinline {
 
 		$::lglobal{fnindex}--;
 	}
+	$textwindow->addGlobEnd;
 }
 
 sub footnoteadjust {
@@ -1133,6 +1141,7 @@ sub footnotetidy {
 	footnotefixup();
 	return unless $::lglobal{fntotal} > 0;
 	$::lglobal{fnindex} = 1;
+	$textwindow->addGlobStart;
 	while (1) {
 		$begin = $textwindow->index( 'fns' . $::lglobal{fnindex} );
 		$textwindow->delete( "$begin+1c", "$begin+10c" );
@@ -1153,6 +1162,7 @@ sub footnotetidy {
 		$::lglobal{fnindex}++;
 		last if $::lglobal{fnindex} > $::lglobal{fntotal};
 	}
+	$textwindow->addGlobEnd;
 }
 
 sub setanchor {

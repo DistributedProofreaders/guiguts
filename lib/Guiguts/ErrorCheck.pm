@@ -299,6 +299,7 @@ sub errorcheckpop_up {
 	$::lglobal{errorchecklistbox}->update;
 	$::lglobal{errorchecklistbox}->yview( 'scroll', -1, 'units' );
 	$::lglobal{errorchecklistbox}->focus;
+	$::lglobal{errorcheckpop}->raise;
 }
 
 sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
@@ -750,7 +751,7 @@ sub gcviewops {
 		$::lglobal{viewpop}->focus;
 	} else {
 		$::lglobal{viewpop} = $top->Toplevel;
-		$::lglobal{viewpop}->title('Gutcheck view options');
+		$::lglobal{viewpop}->title('Gutcheck View Options');
 		my $pframe = $::lglobal{viewpop}->Frame->pack;
 		$pframe->Label( -text => 'Select option to hide that error.', )->pack;
 		my $pframe1 = $::lglobal{viewpop}->Frame->pack;
@@ -775,7 +776,7 @@ sub gcviewops {
 				}
 				gutwindowpopulate($linesref);
 			},
-			-text  => 'Hide all',
+			-text  => 'Hide All',
 			-width => 12
 		  )->pack(
 				   -side   => 'left',
@@ -791,7 +792,7 @@ sub gcviewops {
 				}
 				gutwindowpopulate($linesref);
 			},
-			-text  => 'See all',
+			-text  => 'See All',
 			-width => 12
 		  )->pack(
 				   -side   => 'left',
@@ -882,20 +883,20 @@ sub gcheckpop_up {
 		my $opsbutton =
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
-							  -command => sub { gcviewops( \@gclines ) },
-							  -text    => 'GC View Options',
-							  -width   => 16
+							  -command          => sub { ::gutcheck() },
+							  -text             => 'Re-run Gutcheck',
+							  -width            => 16
 		  )->pack(
 				   -side   => 'left',
 				   -pady   => 10,
-				   -padx   => 2,
+				   -padx   => 80,
 				   -anchor => 'n'
 		  );
 		my $opsbutton2 =
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
-							  -command          => sub { ::gutcheck() },
-							  -text             => 'Re-run Gutcheck',
+							  -command          => sub { ::gutopts() },
+							  -text             => 'GC Run Options',
 							  -width            => 16
 		  )->pack(
 				   -side   => 'left',
@@ -906,8 +907,8 @@ sub gcheckpop_up {
 		my $opsbutton3 =
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
-							  -command          => sub { ::gutopts() },
-							  -text             => 'GC Run Options',
+							  -command          => sub { gcviewops( \@gclines ) },
+							  -text             => 'GC View Options',
 							  -width            => 16
 		  )->pack(
 				   -side   => 'left',
@@ -1236,6 +1237,7 @@ sub jeebiesview {
 	$::lglobal{jeepop}->raise;
 	$::geometryhash{jeepop} = $::lglobal{jeepop}->geometry;
 }
+
 ## Gutcheck
 sub gutcheck {
 	my $textwindow = $::textwindow;
@@ -1336,7 +1338,7 @@ sub gutopts {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	$::lglobal{gcdialog} =
-	  $top->DialogBox( -title => 'Gutcheck Options', -buttons => ['OK'] );
+	  $top->DialogBox( -title => 'Gutcheck Run Options', -buttons => ['Close'] );
 	::initialize_popup_without_deletebinding('gcdialog');
 	my $gcopt6 =
 	  $::lglobal{gcdialog}->add(
@@ -1416,7 +1418,6 @@ sub jeebiespop_up {
 		$::lglobal{jeepop} = $top->Toplevel;
 		$::lglobal{jeepop}->title('Jeebies');
 		::initialize_popup_with_deletebinding('jeepop');
-		$::lglobal{jeepop}->transient($top) if $::stayontop;
 		my $ptopframe = $::lglobal{jeepop}->Frame->pack;
 		$ptopframe->Label( -text => 'Search mode:', )
 		  ->pack( -side => 'left', -padx => 2 );
