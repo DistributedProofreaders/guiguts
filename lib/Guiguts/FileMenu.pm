@@ -9,7 +9,7 @@ BEGIN {
 	@EXPORT =
 	  qw(&file_open &file_saveas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
 	  &_flash_save &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
-	  &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkers
+	  &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
 	  &file_import_markup &operationadd);
 }
 
@@ -969,7 +969,7 @@ sub getbinname {
 	return $binname;
 }
 
-sub file_export_pagemarkers {
+sub file_export_pagemarkup {
 	my $textwindow = $::textwindow;
 	my ($name);
 	::savefile() if ( $textwindow->numberChanges );

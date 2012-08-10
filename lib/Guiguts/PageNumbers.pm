@@ -67,7 +67,7 @@ sub gotolabel {
 			-title   => 'Goto Page Label',
 			-popover => $top,
 			-command => sub {
-				if ( $_[0] eq 'Ok' ) {
+				if ( $_[0] && $_[0] eq 'Ok' ) {
 					my $mark;
 					for ( keys %::pagenumbers ) {
 						if (    $::pagenumbers{$_}{label}

@@ -314,7 +314,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			$errorchecktype = 'W3C Validate';
 		}
 	}
-	::operationadd('$errorchecktype' );
+	::operationadd( "$errorchecktype" );
 	::viewpagenums() if ( $::lglobal{seepagenums} );
 	if ( $::lglobal{errorcheckpop} ) {
 		$::lglobal{errorchecklistbox}->delete( '0', 'end' );
@@ -396,7 +396,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 				  . cwd()
 				  . ' directory. Check for write permission or space problems.',
 				-bitmap  => 'question',
-				-title   => '$errorchecktype problem',
+				-title   => "$errorchecktype problem",
 				-buttons => [qw/OK/],
 		);
 		$dialog->Show;

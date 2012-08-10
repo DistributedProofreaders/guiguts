@@ -561,7 +561,7 @@ sub separatorpopup {
 			-activebackground => $::activecolor,
 			-command          => sub { redojoin() },
 			-text             => 'Redo',
-			-underline        => 0,
+			-underline        => 1,
 			-width            => 8
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $doall2button = $sf5->Button(
@@ -572,7 +572,6 @@ sub separatorpopup {
 				iterateeautomatic();
 			},
 			-text             => 'Do All (beta)',
-			-underline        => 0,
 			-width            => 12
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		$::lglobal{jsemiautomatic} = 1
@@ -592,7 +591,7 @@ sub separatorpopup {
 		$::lglobal{pagepop}->Tk::bind( '<d>' => sub { processpageseparator('d') } );
 		$::lglobal{pagepop}->Tk::bind( '<t>' => sub { processpageseparator('t') } );
 		$::lglobal{pagepop}
-		  ->Tk::bind( '<?>' => sub { pageseparatorhelppopup('?') } );
+		  ->Tk::bind( '<Key-question>' => sub { pageseparatorhelppopup('?') } );
 		$::lglobal{pagepop}->Tk::bind( '<r>' => \&refreshpageseparator );
 		$::lglobal{pagepop}->Tk::bind(
 			'<v>' => sub {

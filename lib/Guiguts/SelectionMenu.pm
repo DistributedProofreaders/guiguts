@@ -6,7 +6,7 @@ BEGIN {
 	use Exporter();
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
-	@EXPORT = qw(&case &surround &surroundit &flood &indent &asciibox &aligntext
+	@EXPORT = qw(&case &surround &surroundit &flood &floodfill &indent &asciibox &aligntext
 	  &selectrewrap &wrapper &alignpopup &asciipopup &blockrewrap);
 }
 
