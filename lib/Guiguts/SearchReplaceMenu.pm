@@ -1192,25 +1192,14 @@ sub searchpopup {
 			-value    => 1,
 			-command  => sub {
 				for ( @multisearch ) {
-					#print "$::multiterm:single\n";
-					if ( defined $sf5 ) {
-						$_->pack(
-							-before => $sf5,
-							-side   => 'top',
-							-anchor => 'w',
-							-padx   => 3,
-							-expand => 'y',
-							-fill   => 'x'
-						);
-					} else {
-						$_->pack(
-							-side   => 'top',
-							-anchor => 'w',
-							-padx   => 3,
-							-expand => 'y',
-							-fill   => 'x'
-						);
-					}
+					$_->pack(
+						-before => $sf5,
+						-side   => 'top',
+						-anchor => 'w',
+						-padx   => 3,
+						-expand => 'y',
+						-fill   => 'x'
+					);
 				}
 			},
 		)->grid( -row => 1, -column => 4 );
@@ -1367,10 +1356,10 @@ sub searchpopup {
 				);
 			}
 		}
+		$sf5 =
+		  $::lglobal{searchpop}
+		  ->Frame->pack( -side => 'top', -anchor => 'n' );
 		if ( $::lglobal{doscannos} ) {
-			$sf5 =
-			  $::lglobal{searchpop}
-			  ->Frame->pack( -side => 'top', -anchor => 'n' );
 			my $nextbutton = $sf5->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {
