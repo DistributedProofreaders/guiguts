@@ -215,14 +215,17 @@ sub html_convert_footnotes {
 			  . "\"><span class=\"label\">$::htmllabels{fnanchbefore}"
 		);
 		$textwindow->ntdelete( 'fns' . "$step", 'fns' . "$step" . '+10c' );
-		unless ( $::htmllabels{fnanchbefore} eq '[' && $::htmllabels{fnanchafter} eq ']' ){
-			$textwindow->ntinsert("fna$step+1c", $::htmllabels{fnanchbefore} ); # insert before delete, otherwise it gets excluded from the tag
-			$textwindow->ntdelete("fna$step", "fna$step"."+1c");
-			$textwindow->ntdelete("fnb$step -1c", "fnb$step");
-			$textwindow->ntinsert("fnb$step", $::htmllabels{fnanchafter} );
+		# jump through some hoops to steer clear of page markers
+		if ( $fnarray->[$step][3] ) {
+			$textwindow->ntinsert( "fnb$step -1c", ']</a>' );
+			$textwindow->ntdelete( "fnb$step -1c", "fnb$step");
 		}
-		$textwindow->ntinsert( 'fnb' . "$step", '</a>' )
-		  if ( $fnarray->[$step][3] );
+		unless ( $::htmllabels{fnanchbefore} eq '[' && $::htmllabels{fnanchafter} eq ']' ){
+			$textwindow->ntinsert("fna$step +1c", $::htmllabels{fnanchbefore} ); # insert before delete, otherwise it gets excluded from the tag
+			$textwindow->ntdelete("fna$step", "fna$step +1c");
+			$textwindow->ntdelete("fnb$step -5c", "fnb$step -4c");
+			$textwindow->ntinsert("fnb$step -4c", $::htmllabels{fnanchafter} );
+		}
 		$textwindow->ntinsert(
 			'fna' . "$step",
 			"<a name=\"$::htmllabels{fnanchor}"
