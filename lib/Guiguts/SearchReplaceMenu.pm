@@ -748,7 +748,7 @@ END
 		$replbuild   = '';
 	}
 
-	# \Ltest\L is converted to lower case
+	# \Ltest\E is converted to lower case
 	if ($lfound) {
 		if ( $replaceterm =~ s/^\\L// ) {
 			if ( $replaceterm =~ s/\\L// ) {
@@ -770,7 +770,7 @@ END
 		$replbuild   = '';
 	}
 
-	# \Utest\U is converted to lower case
+	# \Utest\E is converted to uppercase
 	if ($ufound) {
 		if ( $replaceterm =~ s/^\\U// ) {
 			if ( $replaceterm =~ s/\\U// ) {
@@ -792,7 +792,7 @@ END
 		$replbuild   = '';
 	}
 
-	# \Ttest\T is converted to title case
+	# \Ttest\E is converted to title case
 	if ($tfound) {
 		if ( $replaceterm =~ s/^\\T// ) {
 			if ( $replaceterm =~ s/\\T// ) {
@@ -900,9 +900,7 @@ END
 		while ( $replaceseg = shift @replarray ) {
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-			my $linkname;
-			$linkname = ::makeanchor( ::deaccentdisplay($seg1) );
-			$seg1     = "<a id=\"$linkname\"></a>";
+			$seg1 = ::makeanchor( ::deaccentdisplay($seg1) );
 			$replbuild .= $seg1;
 			$replbuild .= $seg2 if $seg2;
 		}
