@@ -18,7 +18,7 @@ sub menu_file {
 		],
 		[ 'separator', '' ],
 		map ( [
-				Button   => "$::recentfile[$_]",
+				Button   => ($_<9?'~':'').($_+1).": $::recentfile[$_]",
 				-command => [ \&::openfile, $::recentfile[$_] ]
 			],
 			( 0 .. scalar(@::recentfile) - 1 ) ),
