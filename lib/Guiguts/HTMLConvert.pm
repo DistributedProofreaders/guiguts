@@ -3510,7 +3510,6 @@ sub pageadjust {
 					}
 					if ( $style eq 'Roman' ) {
 						$label = lc( ::roman($index) );
-						$label =~ s/\.//;
 					} else {
 						$label = $index;
 						$label =~ s/^0+// if $label and length $label;

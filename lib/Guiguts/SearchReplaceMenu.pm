@@ -667,7 +667,7 @@ sub replaceeval {
 	my ( $m1, $m2, $m3, $m4, $m5, $m6, $m7, $m8 );
 	my (
 		$cfound,  $lfound,  $ufound, $tfound,
-		$gafound, $gbfound, $gfound, $afound
+		$gafound, $gbfound, $gfound, $afound, $rfound
 	);
 
 	#check for control codes before the $1 codes for text found are inserted
@@ -679,6 +679,7 @@ sub replaceeval {
 	if ( $replaceterm =~ /\\GB/ ) { $gbfound = 1; }
 	if ( $replaceterm =~ /\\G/ )  { $gfound  = 1; }
 	if ( $replaceterm =~ /\\A/ )  { $afound  = 1; }
+	if ( $replaceterm =~ /\\R/ )  { $rfound  = 1; }
 	my $found = $textwindow->get( $::searchstartindex, $::searchendindex );
 	$searchterm =~ s/\Q(?<=\E.*?\)//;
 	$searchterm =~ s/\Q(?=\E.*?\)//;
@@ -902,6 +903,28 @@ END
 			my $linkname;
 			$linkname = ::makeanchor( ::deaccentdisplay($seg1) );
 			$seg1     = "<a id=\"$linkname\"></a>";
+			$replbuild .= $seg1;
+			$replbuild .= $seg2 if $seg2;
+		}
+		$replaceterm = $replbuild;
+	}
+
+	# \R converts to Roman numerals
+	if ($rfound) {
+		if ( $replaceterm =~ s/^\\R// ) {
+			if ( $replaceterm =~ s/\\R// ) {
+				@replarray = split /\\R/, $replaceterm;
+			} else {
+				push @replarray, $replaceterm;
+			}
+		} else {
+			@replarray = split /\\R/, $replaceterm;
+			$replbuild = shift @replarray;
+		}
+		while ( $replaceseg = shift @replarray ) {
+			$seg1 = $seg2 = '';
+			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
+			$seg1 = ::roman( $seg1 );
 			$replbuild .= $seg1;
 			$replbuild .= $seg2 if $seg2;
 		}

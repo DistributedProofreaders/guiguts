@@ -345,7 +345,7 @@ sub footnotepop {
 		$::lglobal{footnoteletter}
 		  ->configure( -text => alpha( $::lglobal{fnalpha} ) );
 		$::lglobal{footnoteroman}
-		  ->configure( -text => ::roman( $::lglobal{fnroman} ) );
+		  ->configure( -text => ::roman( $::lglobal{fnroman} ).'.' );
 		$::lglobal{footnotetotal}->configure(
 			   -text => "# $::lglobal{fnindex}" . "/" . "$::lglobal{fntotal}" );
 		$::lglobal{fnsecondpass} = 0;
@@ -430,7 +430,7 @@ sub fninsertmarkers {
 		  alpha( $::lglobal{fnalpha} )
 		  if $style eq 'a';
 		$::lglobal{fnarray}->[ $::lglobal{fnindex} ][4] =
-		  ::roman( $::lglobal{fnroman} )
+		  ::roman( $::lglobal{fnroman} ).'.'
 		  if $style eq 'r';
 		$::lglobal{fncount}++ if $style eq 'n';
 		$::lglobal{fnalpha}++ if $style eq 'a';
@@ -662,7 +662,7 @@ sub footnotefixup {
 	  ->configure( -text => alpha( $::lglobal{fnalpha} ) )
 	  if $::lglobal{footpop};
 	$::lglobal{footnoteroman}
-	  ->configure( -text => ::roman( $::lglobal{fnroman} ) )
+	  ->configure( -text => ::roman( $::lglobal{fnroman} ).'.' )
 	  if $::lglobal{footpop};
 	$::lglobal{ftnoteindexstart} = '1.0';
 	$textwindow->markSet( 'fnindex', $::lglobal{ftnoteindexstart} );
@@ -1086,7 +1086,7 @@ sub footnoteadjust {
 		$::lglobal{footnoteletter}
 		  ->configure( -text => alpha( $::lglobal{fnalpha} ) );
 		$::lglobal{footnoteroman}
-		  ->configure( -text => ::roman( $::lglobal{fnroman} ) );
+		  ->configure( -text => ::roman( $::lglobal{fnroman} ).'.' );
 		$::lglobal{fnarray}->[ $::lglobal{fnindex} ] = ();
 		$::lglobal{fnindex} = $tempsave;
 		$::lglobal{fntotal}--;
@@ -1118,7 +1118,7 @@ sub footnoteadjust {
 	  ->configure( -text => alpha( $::lglobal{fnalpha} ) )
 	  if $::lglobal{footpop};
 	$::lglobal{footnoteroman}
-	  ->configure( -text => ::roman( $::lglobal{fnroman} ) )
+	  ->configure( -text => ::roman( $::lglobal{fnroman} ).'.' )
 	  if $::lglobal{footpop};
 
 	if ( $end eq "$start+10c" ) {

@@ -88,7 +88,8 @@ sub roman {
 		$arg -= $digit * $_;
 		$x = $i;
 	}
-	return "$roman.";
+	#return "$roman.";
+	return "$roman"; # getting rid of trailing dot
 }
 
 sub arabic {

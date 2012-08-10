@@ -18,7 +18,7 @@ sub runtests {
 	ok( 1 == 1, "Dummy test 1==1" );
 
 	#if ( -e "setting.rc" ) { rename( "setting.rc", "setting.old" ); }
-	ok( ::roman(22)       eq 'XXII.', "roman(22)==XXII" );
+	ok( ::roman(22)       eq 'XXII',  "roman(22)==XXII" );
 	ok( ::arabic('XXII.') eq '22',    "arabic(XXII.) eq '22'" );
 	ok( not( ::arabic('XXII.') eq '23' ), "not arabic(XXII.) eq '23'" );
 	my $ln;

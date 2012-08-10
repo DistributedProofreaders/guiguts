@@ -128,6 +128,7 @@ LEGAL REPLACEMENT TERM ASSERTIONS
    \n  New line
    \t  Tab character
    \A  Make named anchor from text until \E
+   \R  Convert to Roman numeral until \E
    \C  Evaluate as code until \E
    \G  Convert from transliterated Greek to Unicode until \E
    \L  Lowercase until \E
