@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setbrowser &setpngspath &set_autosave 
-	  &autosaveinterval &saveinterval &setcolor);
+	  &autosaveinterval &saveinterval &setcolor &locateAspellExe);
 }
 
 sub setviewerpath {    #Find your image viewer
@@ -386,5 +386,24 @@ sub setcolor {    # Color picking routine
 	);
 }
 
+sub locateAspellExe {
+	my $textwindow = shift;
+	my $types;
+	if ($::OS_WIN) {
+		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	} else {
+		$types = [ [ 'All Files', ['*'] ] ];
+	}
+	$::lglobal{pathtemp} = $textwindow->getOpenFile(
+		-filetypes  => $types,
+		-title      => 'Where is the Aspell executable?',
+		-initialdir => ::dirname($::globalspellpath)
+	);
+	$::globalspellpath = $::lglobal{pathtemp}
+	  if $::lglobal{pathtemp};
+	return unless $::globalspellpath;
+	$::globalspellpath = ::os_normal($::globalspellpath);
+	::savesettings();
+}
 
 1;
