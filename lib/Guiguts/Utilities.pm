@@ -2153,7 +2153,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . "\$t = the currently highlighted text.\n" )->pack;
 		my $f1 =
 		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		for my $menutempvar ( 0 .. 9 ) {
+		for my $menutempvar ( 0 .. $::extops_size-1 ) {
 			$f1->Entry(
 				-width        => 50,
 				-background   => $::bkgcolor,

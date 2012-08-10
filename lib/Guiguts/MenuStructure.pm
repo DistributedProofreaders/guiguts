@@ -549,10 +549,10 @@ sub menu_bookmarks {
 sub menu_external {
 	[
 		map ( [
-				Button   => "~$_ $::extops[$_]{label}",
+				Button   => ($_<9?'~':'').($_==9?'1~0':$_+1).": $::extops[$_]{label}",
 				-command => [ \&::xtops, $_ ]
 			],
-			( 0 .. 9 ) ),
+			( 0 .. $::extops_size-1 ) ),
 		[ 'separator', '' ],
 		[
 			Button   => 'Setup External Operations...',

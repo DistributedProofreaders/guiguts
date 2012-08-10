@@ -107,6 +107,7 @@ our $blockwrap;
 our $booklang      = 'en';
 our $bold_char     = "=";
 our $defaultindent = 0;
+our $extops_size   = 10;
 our $failedsearch  = 0;
 our $fontname      = 'Courier New';
 our $fontsize      = 10;
