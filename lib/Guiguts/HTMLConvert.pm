@@ -3343,9 +3343,10 @@ sub named {
 		)
 	  )
 	{
-		$textwindow->ntdelete( $searchstartindex,
-			$searchstartindex . '+' . $length . 'c' );
 		$textwindow->ntinsert( $searchstartindex, $to );
+		$textwindow->ntdelete( $searchstartindex . '+' . length($to) . 'c',
+			$searchstartindex . '+' . ($length+length($to)) . 'c' );
+		# insert before delete to stay on the right side of page markers
 		$searchstartindex = $textwindow->index("$searchstartindex+1c");
 	}
 }
