@@ -92,7 +92,7 @@ sub menu_help {
 					"http://www.pgdp.net/wiki/PPTools/Guiguts" );
 			  }
 		],
-		[ Button => '~Hot keys',              -command => \&::hotkeyshelp ],
+		[ Button => 'Keyboard S~hortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
 		[ Button   => '~PP Process Checklist',
 		  -command => sub {                      # FIXME: sub this out.
