@@ -1176,6 +1176,23 @@ sub menubuildold {
 				Button   => "Options...",
 				-command => sub { ::text_convert_options($top) }
 			],
+			[ 'separator', '' ],
+			[
+				Button   => "Center Selection",
+				-command => sub { ::rcaligntext( 'c', 0 ); }
+			],
+			[
+				Button   => "Right-Align Selection",
+				-command => sub { ::rcaligntext( 'r', 0 ); }
+			],
+			#[
+			#	Button   => "Right-Align Selection -4",
+			#	-command => sub { ::rcaligntext( 'r', -4 ); }
+			#],
+			#[
+			#	Button   => "TOC-Align Selection",
+			#	-command => sub { ::tocalignselection( 0 ); }
+			#],
 		]
 	);
 	my $external = $::menubar->cascade(
@@ -1719,6 +1736,23 @@ sub menubuildwizard {
 				Button   => "Options...",
 				-command => sub { ::text_convert_options($top) }
 			],
+			[ 'separator', '' ],
+			[
+				Button   => "Center Selection",
+				-command => sub { ::rcaligntext( 'c', 0 ); }
+			],
+			[
+				Button   => "Right-Align Selection",
+				-command => sub { ::rcaligntext( 'r', 0 ); }
+			],
+			#[
+			#	Button   => "Right-Align Selection -4",
+			#	-command => sub { ::rcaligntext( 'r', -4 ); }
+			#],
+			#[
+			#	Button   => "TOC-Align Selection",
+			#	-command => sub { ::tocalignselection( 0 ); }
+			#],
 			[ 'separator', '' ],
 			[ Button => 'ASCII ~Boxes...', -command => \&::asciipopup ],
 			[
