@@ -1306,8 +1306,6 @@ sub html_parse_header {
 	my ( $textwindow, $headertext ) = @_;
 	my $selection;
 	my $step;
-	my $title;
-	my $author;
 	::working('Parsing Header');
 	$selection = $textwindow->get( '1.0', '1.end' );
 	if ( $selection =~ /DOCTYPE/ ) {
@@ -1335,8 +1333,15 @@ sub html_parse_header {
 		}
 		close $infile;
 	}
+
+	# extract title and author info
+	my ( $title, $author ) = get_title_author();
+	$headertext =~ s/TITLE/$title/ if $title;
+	$headertext =~ s/AUTHOR/$author/ if $author;
+	$headertext =~ s/BOOKLANG/$::booklang/g;
+
+	# locate and markup title
 	$step = 0;
-	my $completetitle = '';
 	my $intitle       = 0;
 	while (1) {
 		$step++;
@@ -1353,15 +1358,8 @@ sub html_parse_header {
 		}                                           #done finding title
 		next if ( $selection =~ /^\/[\$fx]/i );     # Skip /$|/F tags
 		next unless length($selection);
-		$title = $selection;
-		$title =~ s/[,.]$//;                        #throw away trailing , or .
-		$title =  ::titlecase($title);
-		$title =~ s/^\s+|\s+$//g;
-		$title =~ s/<[^>]*>//g;
-
 		if ( $intitle == 0 ) {
 			$textwindow->ntinsert( "$step.0", '<h1>' );
-			$completetitle = $title;
 			$intitle       = 1;
 		} else {
 			if ( ( $title =~ /^by/i ) or ( $title =~ /\Wby\s/i ) ) {
@@ -1369,11 +1367,46 @@ sub html_parse_header {
 				$textwindow->ntinsert( "$step.end", '</h1>' );
 				last;
 			}
-			$completetitle .= ' ' . $title;
 		}
 	}
-	if ($completetitle) {
-		$headertext =~ s/TITLE/$completetitle/;
+	return $headertext;
+}
+
+sub get_title_author {
+	my $textwindow = $::textwindow;
+	my $step = 0;
+	my ( $selection, $title, $author );
+	my $completetitle = '';
+	my $intitle = 0;
+	while (1) { # find title
+		$step++;
+		last if ( $textwindow->compare( "$step.0", '>', 'end' ) || $step>500 );
+		$selection = $textwindow->get( "$step.0", "$step.end" );
+		next if ( $selection =~ /^\[Illustr/i );    # Skip Illustrations
+		next if ( $selection =~ /^\/[\$fx]/i );     # Skip /$|/F tags
+		if (    ($intitle)
+			and ( ( not length($selection) or ( $selection =~ /^f\//i ) ) ) )
+		{
+			$step--;
+			last;
+		}                                           #done finding title
+		next if ( $selection =~ /^\/[\$fx]/i );     # Skip /$|/F tags
+		next unless length($selection);
+		$title = $selection;
+		$title =~ s/[,.]$//;                        #throw away trailing , or .
+		$title =  ::titlecase($title);
+		$title =~ s/^\s+|\s+$//g;
+		$title =~ s/<[^>]*>//g;
+		if ( $intitle == 0 ) {
+			$completetitle = $title;
+			$intitle       = 1;
+		} else {
+			if ( ( $title =~ /^by/i ) or ( $title =~ /\Wby\s/i ) ) {
+				$step--;
+				last;
+			}
+			$completetitle .= ' ' . $title;
+		}
 	}
 	while (1) {
 		$step++;
@@ -1382,9 +1415,6 @@ sub html_parse_header {
 		if ( ( $selection =~ /^by/i ) and ( $step < 100 ) ) {
 			last if ( $selection =~ /[\/[Ff]/ );
 			if ( $selection =~ /^by$/i ) {
-				$selection = '<h3>' . $selection . '</h3>';
-				$textwindow->ntdelete( "$step.0", "$step.end" );
-				$textwindow->ntinsert( "$step.0", $selection );
 				do {
 					$step++;
 					$selection = $textwindow->get( "$step.0", "$step.end" );
@@ -1396,11 +1426,6 @@ sub html_parse_header {
 				$author =~ s/\s$//i;
 			}
 		}
-
-		#		Dropped this--not an accurate way to find the author
-		#		$selection = '<h2>' . $selection . '</h2>' if $author;
-		#		$textwindow->ntdelete( "$step.0", "$step.end" );
-		#		$textwindow->ntinsert( "$step.0", $selection );
 		last if $author || ( $step > 100 );
 	}
 	if ($author) {
@@ -1408,10 +1433,8 @@ sub html_parse_header {
 		$author = ucfirst( lc($author) );
 		$author     =~ s/(\W)(\w)/$1\U$2\E/g;
 		$author =~ s/Amp/amp/;
-		$headertext =~ s/AUTHOR/$author/;
 	}
-	$headertext =~ s/BOOKLANG/$::booklang/g;
-	return $headertext;
+	return ( $completetitle, $author );
 }
 
 sub html_wrapup {
