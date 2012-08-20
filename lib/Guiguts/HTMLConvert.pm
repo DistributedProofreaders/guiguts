@@ -106,15 +106,6 @@ sub html_convert_codepage {
 sub html_convert_utf {
 	my ( $textwindow, $leave_utf, $keep_latin1 ) = @_;
 	my $blockstart;
-	if ($leave_utf) {
-		$blockstart =
-		  $textwindow->search( '-exact', '--', 'charset=iso-8859-1', '1.0',
-			'end' );
-		if ($blockstart) {
-			$textwindow->ntdelete( $blockstart, "$blockstart+18c" );
-			$textwindow->ntinsert( $blockstart, 'charset=UTF-8' );
-		}
-	}
 	unless ($leave_utf) {
 		::working("Converting UTF-8...");
 		while (
@@ -1339,6 +1330,14 @@ sub html_parse_header {
 	$headertext =~ s/TITLE/$title/ if $title;
 	$headertext =~ s/AUTHOR/$author/ if $author;
 	$headertext =~ s/BOOKLANG/$::booklang/g;
+	if ( $::lglobal{leave_utf} ) {
+		$headertext =~ s/BOOKCHARSET/utf-8/;
+	} elsif ( $::lglobal{keep_latin1} ) {
+		$headertext =~ s/BOOKCHARSET/iso-8859-1/;
+	} else {
+		$headertext =~ s/BOOKCHARSET/ascii/;
+	}
+	eval ( '$headertext =~ s#\{LANG='. uc( $::booklang ) .'\}(.*?)\{/LANG\}#$1#gs' ) ; # code duplicated near footertext
 
 	# locate and markup title
 	$step = 0;
