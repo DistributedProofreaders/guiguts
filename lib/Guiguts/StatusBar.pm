@@ -807,9 +807,9 @@ sub showproofers {
 sub prfrmessage {
 	my $proofer = shift;
 	if ( $proofer eq '' ) {
-		::runner( $::globalbrowserstart, $::no_proofer_url );
+		::launchurl( $::no_proofer_url );
 	} else {
-		::runner( $::globalbrowserstart, "$::yes_proofer_url$proofer" );
+		::launchurl( "$::yes_proofer_url$proofer" );
 	}
 }
 

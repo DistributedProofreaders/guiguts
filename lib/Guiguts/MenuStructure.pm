@@ -87,18 +87,15 @@ sub menu_help {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top);
 	[
 		[ Button   => '~Manual',
-			-command => sub {        # FIXME: sub this out.
-				::runner( $::globalbrowserstart,
-					"http://www.pgdp.net/wiki/PPTools/Guiguts" );
+			-command => sub {
+				::launchurl( "http://www.pgdp.net/wiki/PPTools/Guiguts" );
 			  }
 		],
 		[ Button => 'Keyboard S~hortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
 		[ Button   => '~PP Process Checklist',
-		  -command => sub {                      # FIXME: sub this out.
-			::runner( $::globalbrowserstart,
-				"http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist"
-			);
+		  -command => sub {
+			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
 		}
 		],
 		[ 'separator', '' ],
@@ -1047,8 +1044,7 @@ sub menubuildold {
 					[
 						Button   => 'Gnutenberg Press Online',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://pgtei.pglaf.org/marcello/0.4/tei-online"
+							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online"
 							);
 						  }
 					],
@@ -1061,8 +1057,7 @@ sub menubuildold {
 					[
 						Button   => 'EpubMaker Online',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://epubmaker.pglaf.org/" );
+							::launchurl ( "http://epubmaker.pglaf.org/" );
 						  }
 					],
 					[
@@ -1076,8 +1071,7 @@ sub menubuildold {
 					[
 						Button   => 'dp2rst Conversion',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://www.pgdp.net/wiki/Dp2rst" );
+							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
 						  }
 					],
 				]
@@ -1759,8 +1753,7 @@ sub menubuildwizard {
 					[
 						Button   => 'EpubMaker Online',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://epubmaker.pglaf.org/" );
+							::launchurl( "http://epubmaker.pglaf.org/" );
 						  }
 					],
 					[
@@ -1847,9 +1840,7 @@ sub menubuildwizard {
 					[
 						Button   => 'Gnutenberg Press Online',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://pgtei.pglaf.org/marcello/0.4/tei-online"
-							);
+							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online" );
 						  }
 					],
 					[
@@ -1869,8 +1860,7 @@ sub menubuildwizard {
 					[
 						Button   => 'dp2rst Conversion',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://www.pgdp.net/wiki/Dp2rst" );
+							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
 						  }
 					],
 					[
@@ -1884,8 +1874,7 @@ sub menubuildwizard {
 					[
 						Button   => 'EpubMaker Online',
 						-command => sub {
-							::runner( $::globalbrowserstart,
-								"http://epubmaker.pglaf.org/" );
+							::launchurl( "http://epubmaker.pglaf.org/" );
 						  }
 					],
 				],

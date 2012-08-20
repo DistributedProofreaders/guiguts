@@ -8,7 +8,7 @@ BEGIN {
 	@ISA    = qw(Exporter);
 	@EXPORT = qw(&openpng &get_image_file &arabic &roman
 	  &textbindings &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
-	  &win32_is_exe &win32_create_process &runner &debug_dump &run &escape_regexmetacharacters
+	  &win32_is_exe &win32_create_process &runner &debug_dump &run &launchurl &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
@@ -558,6 +558,11 @@ sub run {
 		$? = $exitcode << 8;
 	}
 	return;
+}
+
+sub launchurl {
+	my $url = shift;
+	::runner( $::globalbrowserstart, $url );
 }
 
 # Start an external program
@@ -1788,8 +1793,7 @@ sub checkforupdates {
 		$button_frame->Button(
 			-text    => 'Update',
 			-command => sub {
-				runner( $::globalbrowserstart,
-					"http://sourceforge.net/projects/guiguts/" );
+				::launchurl( "http://sourceforge.net/projects/guiguts/" );
 				$versionbox->destroy;
 				undef $versionbox;
 			}
@@ -2395,7 +2399,7 @@ sub viewprojectdiscussion {
 	::operationadd('View project discussion online');
 	return if ::nofileloadedwarning();
 	::setprojectid() unless $::projectid;
-	::runner( $::globalbrowserstart,
+	::launchurl(
 "http://www.pgdp.net/c/tools/proofers/project_topic.php?project=$::projectid"
 	) if $::projectid;
 }
@@ -2404,7 +2408,7 @@ sub viewprojectpage {
 	::operationadd('View project page online');
 	return if ::nofileloadedwarning();
 	::setprojectid() unless ( $::projectid );
-	::runner( $::globalbrowserstart,
+	::launchurl(
 "http://www.pgdp.net/c/project.php?id=$::projectid"
 	) if $::projectid;
 }
