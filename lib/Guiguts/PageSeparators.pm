@@ -279,7 +279,7 @@ sub processpageseparator {
 		if ( $line =~ />/ ) {
 			my $markupl = $textwindow->get( "$index-4c", $index );
 			my $markupn = $textwindow->get( $index,      "$index+3c" );
-			if ( ( $markupl =~ /<\/([ib])>/i ) && ( $markupn =~ /<$1>/i ) ) {
+			if ( ( $markupl =~ /<\/([ibgf])>/i ) && ( $markupn =~ /<$1>/i ) ) {
 				$textwindow->delete( $index, "$index+3c" );
 				$::lglobal{joinundo}++;
 				$textwindow->delete( "$index-4c", $index );
@@ -331,7 +331,7 @@ sub processpageseparator {
 		if ( $line =~ />/ ) {
 			my $markupl = $textwindow->get( "$index-4c", $index );
 			my $markupn = $textwindow->get( $index,      "$index+3c" );
-			if ( ( $markupl =~ /<\/[ib]>/i ) && ( $markupn =~ /<[ib]>/i ) ) {
+			if ( ( $markupl =~ /<\/([ibgf])>/i ) && ( $markupn =~ /<$1>/i ) ) {
 				$textwindow->delete( $index, "$index+3c" );
 				$::lglobal{joinundo}++;
 				$textwindow->delete( "$index-4c", $index );
