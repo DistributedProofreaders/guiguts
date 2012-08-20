@@ -515,11 +515,6 @@ sub menu_preferences {
 					Button   => 'Set Rewrap ~Margins...',
 					-command => \&::setmargins
 				],
-				[ 'separator', '' ],
-				[
-					Button   => 'Browser Start Command...',
-					-command => \&::setbrowser
-				],
 			  ]
 		]
 	];

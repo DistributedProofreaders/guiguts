@@ -858,6 +858,26 @@ sub readsettings {
 				delete $::geometryhash{$_};
 			}
 		}
+
+		# force the first element of extops to be "view in browser"
+		if ( $::extops[0]{label} eq 'Open current file in its default program'
+		     || $::extops[0]{label} eq 'Pass open file to default handler') {
+			$::extops[0]{label} = 'View in browser';
+		}
+		if ( $::extops[0]{label} =~ m/browser/ ) {
+			$::extops[0]{label} = 'View in browser';
+		}
+		else {
+			if ( $::extops[$::extops_size-1]{label} || $::extops[$::extops_size-1]{command} ) {
+				$::extops_size++;
+			}
+			for ( my $i = $::extops_size-1; $i > 0; --$i ) {
+				$::extops[$i]{label}   = $::extops[$i-1]{label};
+				$::extops[$i]{command} = $::extops[$i-1]{command};
+			}
+			$::extops[0]{label}   = 'View in browser';
+			$::extops[0]{command} = $::globalbrowserstart . ' "$d$f$e"';
+		}
 	}
 }
 
@@ -887,7 +907,7 @@ EOM
 		# otherwise we can't have a default value of 1 without overwriting the user's setting
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
-			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers failedsearch fontname fontsize fontweight geometry
+			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch fontname fontsize fontweight geometry
 			geometry2 geometry3 globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights

@@ -1889,7 +1889,7 @@ sub htmlpopup {
 		$f0->Button(    #hkm added
 			-activebackground => $::activecolor,
 			-command          => sub {
-				::runner( ::cmdinterp( "$::globalbrowserstart \$d\$f\$e" ) );
+				::runner( ::cmdinterp( $::extops[0]{command} ) );
 			},
 			-text  => 'View in Browser',
 			-width => 16,

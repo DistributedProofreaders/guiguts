@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setbrowser &setpngspath &set_autosave 
+	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
 	  &autosaveinterval &saveinterval &setcolor &locateAspellExe);
 }
 
@@ -238,45 +238,6 @@ sub fontsize {
 		$::lglobal{fspop}->raise;
 		$::lglobal{fspop}->focus;
 	}
-}
-## Set up command to start a browser, varies by OS and browser
-sub setbrowser {
-	my $top       = $::top;
-	my $browsepop = $top->Toplevel;
-	$browsepop->title('Browser Start Command?');
-	$browsepop->Label( -text =>
-"Enter the complete path to the executable.\n(Under Windows, you can use 'start' to use the default handler.\n"
-		. "Under OSX, 'open' will start the default browser.)" )
-	  ->grid( -row => 0, -column => 1, -columnspan => 2 );
-	my $browserentry =
-	  $browsepop->Entry(
-						 -width        => 60,
-						 -background   => $::bkgcolor,
-						 -textvariable => $::globalbrowserstart,
-	  )->grid( -row => 1, -column => 1, -columnspan => 2, -pady => 3 );
-	my $button_ok = $browsepop->Button(
-		-activebackground => $::activecolor,
-		-text             => 'OK',
-		-width            => 6,
-		-command          => sub {
-			$::globalbrowserstart = $browserentry->get;
-			::savesettings();
-			$browsepop->destroy;
-			undef $browsepop;
-		}
-	)->grid( -row => 2, -column => 1, -pady => 8 );
-	my $button_cancel = $browsepop->Button(
-		-activebackground => $::activecolor,
-		-text             => 'Cancel',
-		-width            => 6,
-		-command          => sub {
-			$browsepop->destroy;
-			undef $browsepop;
-		}
-	)->grid( -row => 2, -column => 2, -pady => 8 );
-	$browsepop->protocol(
-		 'WM_DELETE_WINDOW' => sub { $browsepop->destroy; undef $browsepop; } );
-	$browsepop->Icon( -image => $::icon );
 }
 
 sub setpngspath {

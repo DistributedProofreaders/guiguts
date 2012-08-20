@@ -560,9 +560,12 @@ sub run {
 	return;
 }
 
+# Launch url in browser
 sub launchurl {
 	my $url = shift;
-	::runner( $::globalbrowserstart, $url );
+	my $command = $::extops[0]{command};
+	eval ( '$command =~ s/\$d\$f\$e/$url/' );
+	::runner( ::cmdinterp ( $command ) );
 }
 
 # Start an external program
@@ -2164,6 +2167,7 @@ sub externalpopup {    # Set up the external commands menu
 				-background   => $::bkgcolor,
 				-relief       => 'sunken',
 				-textvariable => \$::extops[$menutempvar]{label},
+				-state        => ( $menutempvar ? 'normal' : 'readonly' ),
 			  )->grid(
 				-row    => "$menutempvar" + 1,
 				-column => 1,
@@ -2390,7 +2394,7 @@ sub viewprojectcomments {
 	::operationadd('View project comments locally');
 	return if ::nofileloadedwarning();
 	::setprojectid() unless $::projectid;
-	my $defaulthandler = "$::globalbrowserstart \$d\$f\$e";
+	my $defaulthandler = $::extops[0]{command};
 	$defaulthandler =~ s/\$f\$e/project_comments.html/;
 	runner( cmdinterp($defaulthandler) ) if $::projectid;
 }

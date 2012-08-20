@@ -219,8 +219,8 @@ our $convertcharsdisplaysearch;
 
 our @extops = (
 	{
-		'label'   => 'Open current file in its default program',
-		'command' => "$globalbrowserstart \$d\$f\$e"
+		'label'   => 'View in browser',
+		'command' => "$globalbrowserstart \"\$d\$f\$e\""
 	},
 	{
 		'label'   => 'Open current file in Firefox',
