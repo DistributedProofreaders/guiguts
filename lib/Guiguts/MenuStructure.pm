@@ -1123,6 +1123,11 @@ sub menubuildold {
 		-tearoff   => 1,
 		-menuitems => [
 			[
+				Button   => "Txt Conversion Palette...",
+				-command => sub { ::txt_convert_palette() }
+			],
+			[ 'separator', '' ],
+			[
 				Button   => "Convert Italics",
 				-command => sub {
 					::text_convert_italic( $textwindow, $::italic_char );
@@ -1161,7 +1166,7 @@ sub menubuildold {
 			],
 			[
 				Button   => 'Small caps to all caps',
-				-command => \&::text_convert_smallcaps
+				-command => \&::text_uppercase_smallcaps
 			],
 			[
 				Button   => 'Remove small caps markup',
@@ -1661,6 +1666,11 @@ sub menubuildwizard {
 		-tearoff   => 1,
 		-menuitems => [
 			[
+				Button   => "Txt Conversion Palette...",
+				-command => sub { ::txt_convert_palette() }
+			],
+			[ 'separator', '' ],
+			[
 				Button   => "Convert Italics",
 				-command => sub {
 					::text_convert_italic( $textwindow, $::italic_char );
@@ -1699,7 +1709,7 @@ sub menubuildwizard {
 			],
 			[
 				Button   => 'Small caps to all caps',
-				-command => \&::text_convert_smallcaps
+				-command => \&::text_uppercase_smallcaps
 			],
 			[
 				Button   => 'Remove small caps markup',

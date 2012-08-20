@@ -907,11 +907,13 @@ EOM
 		# otherwise we can't have a default value of 1 without overwriting the user's setting
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
-			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch fontname fontsize fontweight geometry
-			geometry2 geometry3 globalaspellmode highlightcolor history_size 
+			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch
+			font_char fontname fontsize fontweight geometry
+			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights
-			notoolbar poetrylmargin rmargin rwhyphenspace scannos_highlighted stayontop toolside 
+			notoolbar poetrylmargin rmargin rwhyphenspace sc_char scannos_highlighted stayontop toolside 
+			txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
 			twowordsinhyphencheck utffontname utffontsize
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )

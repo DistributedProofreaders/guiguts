@@ -105,7 +105,6 @@ our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang      = 'en';
-our $bold_char     = "=";
 our $defaultindent = 0;
 our $extops_size   = 10;
 our $failedsearch  = 0;
@@ -133,7 +132,6 @@ our $htmldiventry   = ' class="i2"';
 our $htmlspanentry  = ' class="i2"';
 our $highlightcolor = '#a08dfc';
 our $history_size   = 20;
-our $italic_char    = "_";
 our $ignoreversions =
   "revision";    #ignore revisions by default but not major or minor versions
 our $ignoreversionnumber    = "";         #ignore a specific version
@@ -216,6 +214,12 @@ our $convertcharssinglesearch;
 our $convertcharssinglereplace;
 our $convertcharsmultisearch;
 our $convertcharsdisplaysearch;
+
+our ( $txt_conv_bold, $txt_conv_italic, $txt_conv_gesperrt, $txt_conv_font,
+	$txt_conv_sc, $txt_conv_tb )
+  = ( 1, 1, 0, 0, 2, 1 );
+our ( $bold_char, $italic_char, $gesperrt_char, $font_char, $sc_char )
+  = ( '=', '_', '~', '=', '+' );
 
 our @extops = (
 	{

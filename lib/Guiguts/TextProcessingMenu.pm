@@ -7,8 +7,8 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&text_convert_italic &text_convert_bold &text_thought_break &text_convert_tb
-	  &text_convert_options &fixpopup &text_convert_smallcaps &text_remove_smallcaps_markup
+	  qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
+	  &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
 	  &endofline &cleanup);
 }
 
@@ -25,6 +25,13 @@ sub text_convert_bold {
 	my $replace = "$bold_char";
 	$textwindow->FindAndReplaceAll( '-regexp', '-nocase', $bold, $replace );
 }
+
+sub txt_convert_simple_markup {
+	my ( $textwindow, $markup, $replace ) = @_;
+	my $search    = eval ( 'qr{'.$markup.'}' );
+	$textwindow->FindAndReplaceAll( '-regexp', '-nocase', $search, $replace );
+}
+
 ## Insert a "Thought break" (duh)
 sub text_thought_break {
 	my ($textwindow) = @_;
@@ -71,6 +78,194 @@ sub text_convert_options {
 						  -textvariable => \$::bold_char,
 	  )->pack( -side => 'left' );
 	$options->Show;
+	::savesettings();
+}
+
+sub txt_convert_palette {
+	my ($textwindow, $top) = ( $::textwindow, $::top);
+	if ( defined( $::lglobal{txtconvpop} ) ) {
+		$::lglobal{txtconvpop}->deiconify;
+		$::lglobal{txtconvpop}->raise;
+		$::lglobal{txtconvpop}->focus;
+	} else {
+		$::lglobal{txtconvpop} = $top->Toplevel;
+		$::lglobal{txtconvpop}->title('Txt Markup');
+
+		my $italic_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		$italic_frame->Label(
+			-text     => '<i></i>',
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $italic_check = $italic_frame->Checkbutton(
+			-variable => \$::txt_conv_italic,
+			-width => 10,
+			-text  => 'convert to:'
+		)->pack( -side => 'left' );
+		my $italic_entry = $italic_frame->Entry(
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::italic_char,
+		)->pack( -side => 'left' );
+		my $italic_button = $italic_frame->Button(
+			-width        => 16,
+			-text         => 'Convert <i></i> now',
+			-command      => sub { text_convert_simple_markup( $textwindow, "</?i>", $::italic_char ); }
+		)->pack( -side => 'left' );
+		my $bold_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		$bold_frame->Label(
+			-text     => '<b></b>',
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $bold_check = $bold_frame->Checkbutton(
+			-variable => \$::txt_conv_bold,
+			-width => 10,
+			-text  => 'convert to:'
+		)->pack( -side => 'left' );
+		my $bold_entry = $bold_frame->Entry(
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::bold_char,
+		)->pack( -side => 'left' );
+		my $bold_button = $bold_frame->Button(
+			-width        => 16,
+			-text         => 'Convert <b></b> now',
+			-command      => sub { text_convert_simple_markup( $textwindow, "</?b>", $::bold_char ); }
+		)->pack( -side => 'left' );
+		my $g_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		$g_frame->Label(
+			-text     => '<g></g>',
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $g_check = $g_frame->Checkbutton(
+			-variable => \$::txt_conv_gesperrt,
+			-text     => 'convert to:',
+			-width    => 10,
+		)->pack(-side => 'left' );
+		my $g_entry = $g_frame->Entry(
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::gesperrt_char,
+		)->pack( -side => 'left' );
+		my $g_button = $g_frame->Button(
+			-width        => 16,
+			-text         => 'Convert <g></g> now',
+			-command      => sub { text_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char ); }
+		)->pack( -side => 'left' );
+		my $f_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		$f_frame->Label(
+			-text     => '<f></f>',
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $f_check = $f_frame->Checkbutton(
+			-variable => \$::txt_conv_font,
+			-text     => 'convert to:',
+			-width    => 10,
+		)->pack(-side => 'left' );
+		my $f_entry = $f_frame->Entry(
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::font_char,
+		)->pack( -side => 'left' );
+		my $f_button = $f_frame->Button(
+			-width        => 16,
+			-text         => 'Convert <f></f> now',
+			-command      => sub { text_convert_simple_markup( $textwindow, "</?f>", $::font_char ); }
+		)->pack( -side => 'left' );
+		my $sc_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		my $sc_label = $sc_frame->Label(
+			-text     => "<sc></sc>",
+			-width    => 9,
+		)->pack(-side => 'left' );
+		my $sc_none = $sc_frame->Radiobutton(
+			-variable => \$::txt_conv_sc,
+			-value    => 0,
+			-text     => "ignore",
+			-width    => 7,
+		)->pack(-side => 'left' );
+		my $sc_uc = $sc_frame->Radiobutton(
+			-variable => \$::txt_conv_sc,
+			-value    => 2,
+			-text     => "UPPERCASE",
+			-width    => 10,
+		)->pack(-side => 'left' );
+		my $sc_char = $sc_frame->Radiobutton(
+			-variable => \$::txt_conv_sc,
+			-value    => 1,
+			-text     => "convert to:",
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $sc_entry = $sc_frame->Entry(
+			-width        => 6,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+			-textvariable => \$::sc_char,
+		)->pack( -side => 'left' );
+		my $tb_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		$tb_frame->Label(
+			-text     => "<tb>",
+			-width    => 8,
+		)->pack(-side => 'left' );
+		my $tb_check = $tb_frame->Checkbutton(
+			-variable => \$::txt_conv_tb,
+			-text     => 'convert to stars',
+			-width    => 15,
+		)->pack(-side => 'left' );
+		my $tb_button = $tb_frame->Button(
+			-width        => 16,
+			-text         => 'Convert <tb> now',
+			-command      => sub { ::text_convert_tb($textwindow); }
+		)->pack( -side => 'left' );
+		my $all_frame =
+		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		#my $sc_manual = $all_frame->Button(
+		#	-width        => 20,
+		#	-text         => 'Do <sc> manually...',
+		#	-command      => sub {
+		#		::searchpopup();
+		#		$::multiterm = 1;
+		#		$::lglobal{searchentry}->delete( '1.0', 'end' );
+		#		$::lglobal{replaceentry}->delete( '1.0', 'end' );
+		#		$::lglobal{replaceentry1}->delete( '1.0', 'end' );
+		#		$::lglobal{replaceentry2}->delete( '1.0', 'end' );
+		#		$::lglobal{searchentry}->insert( 'end', '<sc>(.+?\n?)</sc>' );
+		#		$::lglobal{replaceentry}->insert( 'end', '$1' );
+		#		$::lglobal{replaceentry1}->insert( 'end', '\U$1\E' );
+		#		$::lglobal{replaceentry2}->insert( 'end', $::sc_char . '$1' . $::sc_char );
+		#	}
+		#)->pack( -side => 'left', -padx => 10 );
+		my $all_button = $all_frame->Button(
+			-width        => 20,
+			-text         => 'Do All Selected',
+			-command      => sub {
+			  txt_convert_simple_markup( $textwindow, "</?i>", $::italic_char )
+			    if ( $::txt_conv_italic );
+			  txt_convert_simple_markup( $textwindow, "</?b>", $::bold_char )
+			    if ( $::txt_conv_bold );
+			  txt_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char )
+			    if ( $::txt_conv_gesperrt );
+			  txt_convert_simple_markup( $textwindow, "</?f>", $::font_char )
+			    if ( $::txt_conv_font );
+			  txt_convert_tb( $textwindow )
+			    if ( $::txt_conv_tb );
+			  if ( $::txt_conv_sc ) {
+				text_uppercase_smallcaps() if ( $::txt_conv_sc == 2 );
+				txt_convert_simple_markup( $textwindow, "</?sc>", $::sc_char)
+				    if ( $::txt_conv_sc == 1 );
+			  }
+			}
+		)->pack( -side => 'left' );
+		::initialize_popup_with_deletebinding('txtconvpop');
+	}
 	::savesettings();
 }
 
@@ -277,7 +472,7 @@ sub fixup {
 	::update_indicators();
 }
 
-sub text_convert_smallcaps {
+sub text_uppercase_smallcaps {
 	::searchpopup();
 	::searchoptset(qw/0 x x 1/);
 	$::lglobal{searchentry}->delete( '1.0', 'end' );

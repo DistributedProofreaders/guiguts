@@ -902,6 +902,7 @@ sub initialize {
 		$::positionhash{footpop}       = '+255+157';
 		$::positionhash{pagepop}       = '+334+176';
 		$::positionhash{pnumpop}       = '+302+97';
+		$::positionhash{txtconvpop}    = '+82+131';
 	}
 
 	::readsettings();
