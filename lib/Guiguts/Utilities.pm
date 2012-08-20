@@ -1936,7 +1936,16 @@ sub epubmaker {
 		if ( defined $format
 			and ( ( $format eq 'html' ) or ( $format eq 'epub' ) ) )
 		{
+			my $textwindow = $::textwindow;
+			my $titlestart = $textwindow->search( '-exact', '--', '<h1', '1.0', 'end' );
+			my $titleend = $textwindow->search( '-exact', '--', '</h1>', '1.0', 'end' );
+			my $title = $textwindow->get( $titlestart, $titleend );
+			$title =~ s/\n/ /g;
+			$title =~ s/<[^>]*>//g;
+			$title = 'notitle' if ( length($title) < 1 );
 			runner( $pythonpath, $epubmakerpath, "--make", $format,
+				#"--title", "\"$title\"",
+				#"--input-encoding", ( ::currentfileisunicode() ? '"utf8"' : '"Latin1"' ),
 				$rstfilename );
 		} else {
 			runner( $pythonpath, $epubmakerpath, $rstfilename );
