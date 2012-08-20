@@ -17,7 +17,7 @@ sub viewpagenums {
 	if ( $::lglobal{seepagenums} ) {
 		$::lglobal{seepagenums} = 0;
 		my @marks = $textwindow->markNames;
-		for ( sort @marks ) {
+		for ( reverse sort @marks ) {
 			if ( $_ =~ m{Pg(\S+)})  {
 				my $pagenum = " Pg$1 ";
 				$textwindow->ntdelete( $_, "$_ +@{[length $pagenum]}c" );
@@ -35,7 +35,7 @@ sub viewpagenums {
 	} else {
 		$::lglobal{seepagenums} = 1;
 		my @marks = $textwindow->markNames;
-		for ( sort @marks ) {
+		for ( reverse sort @marks ) {
 			if ( $_ =~ m{Pg(\S+)} ) {
 				my $pagenum = " Pg$1 ";
 				$textwindow->ntinsert( $_, $pagenum );
