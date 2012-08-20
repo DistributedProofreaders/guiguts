@@ -91,12 +91,41 @@ sub menu_help {
 				::launchurl( "http://www.pgdp.net/wiki/PPTools/Guiguts" );
 			  }
 		],
+		[ Button  => 'Guiguts Help on DP Forum [www]',
+		  -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=30324'); }
+		],
 		[ Button => 'Keyboard S~hortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
+		[ Button => 'Rewrap Markers [www]',
+		  -command => sub {
+			::launchurl( 'http://www.pgdp.net/wiki/PPTools/Guiguts/Rewrapping#Rewrap_Markers' );
+		  }
+		],
+		[ Cascade => 'Bugs and Feature Requests',
+		  -tearoff => 1,
+		  -menuitems =>
+		  [
+		    [ Button  => 'Report a Bug (SF tracker) [www]',
+		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
+		        . ( $::OS_WIN ? '' : '&atid=1009518' ) ); } 
+		    ],
+		    [ Button  => 'Report a Bug (DP forum) [www]',
+		      -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=48584'); }
+		    ],
+		    [ Button  => 'Suggest Feature (SF tracker) [www]',
+		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
+		        .( $::OS_WIN ? '' : '&atid=1009521' ) ); } 
+		    ],
+		    [ Button  => 'Suggest Feature (DP wiki) [www]',
+		      -command => sub { ::launchurl('http://www.pgdp.net/wiki/Guiguts_Enhancements'); }
+		    ],
+		  ]
+		],
+		[ 'separator', '' ],
 		[ Button   => '~PP Process Checklist',
 		  -command => sub {
 			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
-		}
+		  }
 		],
 		[ 'separator', '' ],
 		[ Button => '~Greek Transliteration', -command => \&::greekpopup ],

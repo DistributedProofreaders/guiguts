@@ -391,7 +391,9 @@ sub cmdinterp {
 	my ( $fname, $pagenum, $number, $pname );
 	my ( $selection, $ranges );
 	foreach my $arg (@args) {
-		$arg =~ s/^"(.*)"$/$1/;
+		# not sure why we'd want this, so leaving it in for windows
+		# - it breaks e.g. urls with & (which windows can't do anyway)
+		$arg =~ s/^"(.*)"$/$1/ if ( $::OS_WIN );
 
 		# Replace $t with selected text for instance for a dictionary search
 		if ( $arg =~ m/\$t/ ) {
@@ -479,7 +481,7 @@ sub win32_start {
 	# which doesn't have this limitation.
 	#
 	foreach (@args) {
-		if (m/["<>|&()!%^]/) {
+		if ( m/["<>|&()!%^]/ ) { # would be very nice to have & for urls...""
 			warn
 'Refusing to run "start" command with unsafe characters ("<>|&()!%^): '
 			  . join( " ", @args );
