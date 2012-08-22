@@ -127,6 +127,149 @@ sub html_convert_utf {
 	return;
 }
 
+sub html_string_convert_utf {
+	my ( $string, $leave_utf, $keep_latin1 ) = @_;
+	$string =~ s/([\x{100}-\x{65535}])/sprintf("&x%x;",ord($1))/eg unless $leave_utf;
+	$string = html_string_convert_latin1($string) unless $keep_latin1;
+	return $string;
+}
+
+sub html_string_convert_latin1 {
+	my $string = shift;
+	my %markuphash = (
+		"\x80" => "&#8364;",
+		"\x81" => "&#129;",
+		"\x82" => "&#8218;",
+		"\x83" => "&#402;",
+		"\x84" => "&#8222;",
+		"\x85" => "&#8230;",
+		"\x86" => "&#8224;",
+		"\x87" => "&#8225;",
+		"\x88" => "&#710;",
+		"\x89" => "&#8240;",
+		"\x8a" => "&#352;",
+		"\x8b" => "&#8249;",
+		"\x8c" => "&#338;",
+		"\x8d" => "&#141;",
+		"\x8e" => "&#381;",
+		"\x8f" => "&#143;",
+		"\x90" => "&#144;",
+		"\x91" => "&#8216;",
+		"\x92" => "&#8217;",
+		"\x93" => "&#8220;",
+		"\x94" => "&#8221;",
+		"\x95" => "&#8226;",
+		"\x96" => "&#8211;",
+		"\x97" => "&#8212;",
+		"\x98" => "&#732;",
+		"\x99" => "&#8482;",
+		"\x9a" => "&#353;",
+		"\x9b" => "&#8250;",
+		"\x9c" => "&#339;",
+		"\x9d" => "&#157;",
+		"\x9e" => "&#382;",
+		"\x9f" => "&#376;",
+		"\xa0" => "&nbsp;",
+		"\xa1" => "&iexcl;",
+		"\xa2" => "&cent;",
+		"\xa3" => "&pound;",
+		"\xa4" => "&curren;",
+		"\xa5" => "&yen;",
+		"\xa6" => "&brvbar;",
+		"\xa7" => "&sect;",
+		"\xa8" => "&uml;",
+		"\xa9" => "&textcopy;",
+		"\xaa" => "&ordf;",
+		"\xab" => "&laquo;",
+		"\xac" => "&not;",
+		"\xad" => "&shy;",
+		"\xae" => "&reg;",
+		"\xaf" => "&macr;",
+		"\xb0" => "&deg;",
+		"\xb1" => "&plusmn;",
+		"\xb2" => "&sup2;",
+		"\xb3" => "&sup3;",
+		"\xb4" => "&acute;",
+		"\xb5" => "&micro;",
+		"\xb6" => "&para;",
+		"\xb7" => "&middot;",
+		"\xb8" => "&cedil;",
+		"\xb9" => "&sup1;",
+		"\xba" => "&ordm;",
+		"\xbb" => "&raquo;",
+		"\xbc" => "&frac14;",
+		"\xbd" => "&frac12;",
+		"\xbe" => "&frac34;",
+		"\xbf" => "&iquest;",
+		"\xc0" => "&Agrave;",
+		"\xc1" => "&Aacute;",
+		"\xc2" => "&Acirc;",
+		"\xc3" => "&Atilde;",
+		"\xc4" => "&Auml;",
+		"\xc5" => "&Aring;",
+		"\xc6" => "&AElig;",
+		"\xc7" => "&Ccedil;",
+		"\xc8" => "&Egrave;",
+		"\xc9" => "&Eacute;",
+		"\xca" => "&Ecirc;",
+		"\xcb" => "&Euml;",
+		"\xcc" => "&Igrave;",
+		"\xcd" => "&Iacute;",
+		"\xce" => "&Icirc;",
+		"\xcf" => "&Iuml;",
+		"\xd0" => "&ETH;",
+		"\xd1" => "&Ntilde;",
+		"\xd2" => "&Ograve;",
+		"\xd3" => "&Oacute;",
+		"\xd4" => "&Ocirc;",
+		"\xd5" => "&Otilde;",
+		"\xd6" => "&Ouml;",
+		"\xd7" => "&times;",
+		"\xd8" => "&Oslash;",
+		"\xd9" => "&Ugrave;",
+		"\xda" => "&Uacute;",
+		"\xdb" => "&Ucirc;",
+		"\xdc" => "&Uuml;",
+		"\xdd" => "&Yacute;",
+		"\xde" => "&THORN;",
+		"\xdf" => "&szlig;",
+		"\xe0" => "&agrave;",
+		"\xe1" => "&aacute;",
+		"\xe2" => "&acirc;",
+		"\xe3" => "&atilde;",
+		"\xe4" => "&auml;",
+		"\xe5" => "&aring;",
+		"\xe6" => "&aelig;",
+		"\xe7" => "&ccedil;",
+		"\xe8" => "&egrave;",
+		"\xe9" => "&eacute;",
+		"\xea" => "&ecirc;",
+		"\xeb" => "&euml;",
+		"\xec" => "&igrave;",
+		"\xed" => "&iacute;",
+		"\xee" => "&icirc;",
+		"\xef" => "&iuml;",
+		"\xf0" => "&eth;",
+		"\xf1" => "&ntilde;",
+		"\xf2" => "&ograve;",
+		"\xf3" => "&oacute;",
+		"\xf4" => "&ocirc;",
+		"\xf5" => "&otilde;",
+		"\xf6" => "&ouml;",
+		"\xf7" => "&divide;",
+		"\xf8" => "&oslash;",
+		"\xf9" => "&ugrave;",
+		"\xfa" => "&uacute;",
+		"\xfb" => "&ucirc;",
+		"\xfc" => "&uuml;",
+		"\xfd" => "&yacute;",
+		"\xfe" => "&thorn;",
+		"\xff" => "&yuml;",
+	);
+	$string =~ s/([\x80-\xff])/$markuphash{$1}/g;
+	return $string;
+}
+
 sub html_cleanup_markers {
 	my ($textwindow) = @_;
 	my $thisblockend;
@@ -288,7 +431,6 @@ sub html_convert_body {
 	::working('Converting Body');
 	my @contents = ("\n");
 	my $aname    = q{};
-	my $author;
 	my $blkquot = 0;
 	my $cflag   = 0;
 	my $front;
@@ -1294,7 +1436,7 @@ sub html_convert_pageanchors {
 }
 
 sub html_parse_header {
-	my ( $textwindow, $headertext ) = @_;
+	my ( $textwindow, $headertext, $title, $author ) = @_;
 	my $selection;
 	my $step;
 	::working('Parsing Header');
@@ -1325,8 +1467,11 @@ sub html_parse_header {
 		close $infile;
 	}
 
-	# extract title and author info
-	my ( $title, $author ) = get_title_author();
+	$author      =~ s/&/&amp;/g if $author;
+	unless ( $::lglobal{leave_utf} ) {
+		$title = html_string_convert_utf ( $title, $::lglobal{leave_utf}, $::lglobal{keep_latin1} );
+		$author = html_string_convert_utf ( $author, $::lglobal{leave_utf}, $::lglobal{keep_latin1} );
+	}
 	$headertext =~ s/TITLE/$title/ if $title;
 	$headertext =~ s/AUTHOR/$author/ if $author;
 	$headertext =~ s/BOOKLANG/$::booklang/g;
@@ -1431,7 +1576,6 @@ sub get_title_author {
 		$author =~ s/^by //i;
 		$author = ucfirst( lc($author) );
 		$author     =~ s/(\W)(\w)/$1\U$2\E/g;
-		$author =~ s/Amp/amp/;
 	}
 	return ( $completetitle, $author );
 }
@@ -1778,7 +1922,7 @@ sub htmlimages {
 }
 
 sub htmlautoconvert {
-	my ( $textwindow, $top ) = @_;
+	my ( $textwindow, $top, $title, $author ) = @_;
 	::viewpagenums() if ( $::lglobal{seepagenums} );
 	my $headertext;
 	if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
@@ -1803,7 +1947,7 @@ sub htmlautoconvert {
 	$textwindow->FileName($savefn);
 	html_convert_codepage();
 	html_convert_ampersands($textwindow);
-	$headertext = html_parse_header( $textwindow, $headertext );
+	$headertext = html_parse_header( $textwindow, $headertext, $title, $author );
 	html_convert_emdashes();
 	$::lglobal{fnsecondpass}  = 0;
 	$::lglobal{fnsearchlimit} = 1;
@@ -1902,6 +2046,35 @@ sub htmlgenpopup {
 			-text             => 'Auto Illus Search',
 			-width            => 16,
 		)->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
+
+		my ( $htmltitle, $htmlauthor ) = get_title_author ();
+		my $f0a =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f0a->Label( -text => 'Title:', )
+		  ->grid( -row => 0, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
+		$f0a->Entry(
+			-textvariable => \$htmltitle,
+			-width        => 45,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+		)->grid( -row => 0, -column => 1, -pady => 2, -sticky => 'w' );
+		$f0a->Label( -text => 'Author:', )
+		  ->grid( -row => 1, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
+		$f0a->Entry(
+			-textvariable => \$htmlauthor,
+			-width        => 45,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+		)->grid( -row => 1, -column => 1, -pady => 2, -sticky => 'w' );
+		$f0a->Label( -text => 'Language:', )
+		  ->grid( -row => 2, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
+		$f0a->Entry(
+		        -textvariable => \$::booklang,
+			-width        => 5,
+			-background   => $::bkgcolor,
+			-relief       => 'sunken',
+		)->grid( -row => 2, -column => 1, -pady => 2, -sticky => 'w' );
+
 		my $f0 =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $pagecomments = $f0->Checkbutton(
@@ -2009,7 +2182,7 @@ sub htmlgenpopup {
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f2->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { htmlautoconvert( $textwindow, $top ) },
+			-command          => sub { htmlautoconvert( $textwindow, $top, $htmltitle, $htmlauthor ) },
 			-text             => 'Autogenerate HTML',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 5, -pady => 1 );
