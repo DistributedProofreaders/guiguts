@@ -2324,22 +2324,67 @@ sub htmlmarkpopup {
 				-row    => $row,
 				-column => $col,
 				-padx   => 1,
-				-pady   => 2
+				-pady   => 1
 			  );
 			++$inc;
 		}
-		$f1->Button(
+		while ( $inc % 5 gt 0 ) { ++$inc; }
+		for (
+		    qw/ nbsp /
+		  )
+		{
+			$col = $inc % 5;
+			$row = int $inc / 5;
+			$f1->Button(
+			    -activebackground => $::activecolor,
+				-command          => [
+					sub { markup( $textwindow, $top, $_[0] ); },
+				],
+			    -text             => "$_",
+			    -width            => 10,
+			  )->grid(
+					   -row    => $row,
+					   -column => $col,
+					   -padx   => 1,
+					   -pady   => 1,
+			  );
+			++$inc;
+		}
+		my $f5 =
+		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $diventry = $f5->Entry(
+			-width      => 40,
+			-background => $::bkgcolor,
+			-relief     => 'sunken',
+		)->grid( -row => 1, -column => 1, -pady => 2 );
+		$f5->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { markup( $textwindow, $top, '&nbsp;' ) },
-			-text             => 'nb space',
-			-width            => 10
-		)->grid( -row => 4, -column => 3, -padx => 1, -pady => 2 );
-		$f1->Button(
+			-command          => sub {
+				$::htmldiventry = $diventry->get;
+				markup( $textwindow, $top, 'div', $::htmldiventry );
+				$textwindow->focus;
+			},
+			-text  => 'div',
+			-width => 8
+		)->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
+		my $spanentry = $f5->Entry(
+			-width      => 40,
+			-background => $::bkgcolor,
+			-relief     => 'sunken',
+		)->grid( -row => 2, -column => 1, -pady => 2 );
+		$f5->Button(
 			-activebackground => $::activecolor,
-			-command          => \&poetryhtml,
-			-text             => 'Poetry',
-			-width            => 10
-		)->grid( -row => 4, -column => 4, -padx => 1, -pady => 2 );
+			-command          => sub {
+				$::htmlspanentry = $spanentry->get;
+				markup( $textwindow, $top, 'span', $::htmlspanentry );
+				$textwindow->focus;
+			},
+			-text  => 'span',
+			-width => 8
+		)->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
+		$diventry->insert( 'end', $::htmldiventry );
+		$spanentry->insert( 'end', $::htmlspanentry );
+
 		my $f2 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my %hbuttons = (
@@ -2366,31 +2411,7 @@ sub htmlmarkpopup {
 			  );
 			++$col;
 		}
-		my $f3 =
-		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		$f3->Button(
-			-activebackground => $::activecolor,
-			-command          => sub { markup( $textwindow, $top, 'del' ) },
-			-text             => 'Remove markup from selection',
-			-width            => 28
-		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-		$f3->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				for my $orphan (
-					'b',  'i',  'center', 'u',  'sub', 'sup',
-					'sc', 'h1', 'h2',     'h3', 'h4',  'h5',
-					'h6', 'p',  'span'
-				  )
-				{
-					::working( 'Checking <' . $orphan . '>' );
-					last if orphans($orphan);
-				}
-				::working();
-			},
-			-text  => 'Find orphaned markup',
-			-width => 28
-		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
+
 		my $f4 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $unorderselect = $f4->Radiobutton(
@@ -2417,24 +2438,31 @@ sub htmlmarkpopup {
 			-onvalue  => 1,
 			-offvalue => 0
 		)->grid( -row => 1, -column => 5 );
+		$f4->Label( -text => 'Column Fmt:', )
+		  ->grid( -row => 2, -column => 1, -padx => 2, -pady => 2, -sticky => 'e' );
+		$tableformat = $f4->Entry(
+			-width      => 30,
+			-background => $::bkgcolor,
+			-relief     => 'sunken',
+		)->grid( -row => 2, -column => 2, -columnspan => 3, -pady => 2, -sticky => 'w' );
 		my $leftselect = $f4->Radiobutton(
 			-text        => 'left',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
 			-value       => ' align="left"',
-		)->grid( -row => 2, -column => 1 );
+		)->grid( -row => 3, -column => 1 );
 		my $censelect = $f4->Radiobutton(
 			-text        => 'center',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
 			-value       => ' align="center"',
-		)->grid( -row => 2, -column => 2 );
+		)->grid( -row => 3, -column => 2 );
 		my $rghtselect = $f4->Radiobutton(
 			-text        => 'right',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
 			-value       => ' align="right"',
-		)->grid( -row => 2, -column => 3 );
+		)->grid( -row => 3, -column => 3 );
 		$leftselect->select;
 		$unorderselect->select;
 		$f4->Button(
@@ -2445,54 +2473,14 @@ sub htmlmarkpopup {
 			},
 			-text  => 'Auto Table',
 			-width => 16
-		)->grid( -row => 2, -column => 4, -padx => 1, -pady => 2 );
+		)->grid( -row => 3, -column => 4, -padx => 1, -pady => 2 );
 		$f4->Checkbutton(
 			-text     => 'ML',
 			-variable => \$::lglobal{tbl_multiline},
 			-onvalue  => 1,
 			-offvalue => 0
-		)->grid( -row => 2, -column => 5 );
-		my $f5 =
-		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		$tableformat = $f5->Entry(
-			-width      => 40,
-			-background => $::bkgcolor,
-			-relief     => 'sunken',
-		)->grid( -row => 0, -column => 1, -pady => 2 );
-		$f5->Label( -text => 'Column Fmt', )
-		  ->grid( -row => 0, -column => 2, -padx => 2, -pady => 2 );
-		my $diventry = $f5->Entry(
-			-width      => 40,
-			-background => $::bkgcolor,
-			-relief     => 'sunken',
-		)->grid( -row => 1, -column => 1, -pady => 2 );
-		$f5->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				$::htmldiventry = $diventry->get;
-				markup( $textwindow, $top, 'div', $::htmldiventry );
-				$textwindow->focus;
-			},
-			-text  => 'div',
-			-width => 8
-		)->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
-		my $f6 =
-		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		my $spanentry = $f6->Entry(
-			-width      => 40,
-			-background => $::bkgcolor,
-			-relief     => 'sunken',
-		)->grid( -row => 1, -column => 1, -pady => 2 );
-		$f6->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				$::htmlspanentry = $spanentry->get;
-				markup( $textwindow, $top, 'span', $::htmlspanentry );
-				$textwindow->focus;
-			},
-			-text  => 'span',
-			-width => 8
-		)->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
+		)->grid( -row => 3, -column => 5 );
+
 		my $f7 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f7->Button(
@@ -2503,7 +2491,6 @@ sub htmlmarkpopup {
 				my $headertext;
 				while (<$infile>) {
 					$_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
 					#$_ =::eol_convert($_);
 					$headertext .= $_;
 				}
@@ -2511,9 +2498,42 @@ sub htmlmarkpopup {
 				close $infile;
 				$textwindow->insert( 'end', "<\/body>\n<\/html>" );
 			},
-			-text  => 'Header',
-			-width => 16
+			-text  => 'Insert Header',
+			-width => 28
+		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+		$f7->Button(
+			-activebackground => $::activecolor,
+			-command          => \&poetryhtml,
+			-text             => 'Apply Poetry Markup to Sel.',
+			-width            => 28
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
+
+		my $f3 =
+		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f3->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { markup( $textwindow, $top, 'del' ) },
+			-text             => 'Remove Markup from Selection',
+			-width            => 28
+		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+		$f3->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				for my $orphan (
+					'b',  'i',  'center', 'u',  'sub', 'sup',
+					'sc', 'h1', 'h2',     'h3', 'h4',  'h5',
+					'h6', 'p',  'span'
+				  )
+				{
+					::working( 'Checking <' . $orphan . '>' );
+					last if orphans($orphan);
+				}
+				::working();
+			},
+			-text  => 'Find Orphaned Markup',
+			-width => 28
+		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
+
 		my $f8 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f8->Button(
@@ -2522,8 +2542,7 @@ sub htmlmarkpopup {
 			-text             => 'Hyperlink Page Nums',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-		$diventry->insert( 'end', $::htmldiventry );
-		$spanentry->insert( 'end', $::htmlspanentry );
+
 		::initialize_popup_without_deletebinding('markpop');
 		$::lglobal{markpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
