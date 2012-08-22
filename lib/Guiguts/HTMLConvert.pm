@@ -8,7 +8,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&htmlautoconvert &htmlpopup &makeanchor &autoindex &entity &named &tonamed
+	  qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
 	  &fromnamed &fracconv &pageadjust &html_convert_pageanchors);
 }
 
@@ -1877,38 +1877,38 @@ sub thumbnailbrowse {
 	);
 }
 
-sub htmlpopup {
-	my ( $textwindow, $top ) = @_;
-	::operationadd('Begin HTML Markup');
+sub htmlgenpopup {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	::operationadd('Begin HTML Generation');
 	::viewpagenums() if ( $::lglobal{seepagenums} );
-	if ( defined( $::lglobal{markpop} ) ) {
-		$::lglobal{markpop}->deiconify;
-		$::lglobal{markpop}->raise;
-		$::lglobal{markpop}->focus;
+	if ( defined( $::lglobal{htmlgenpop} ) ) {
+		$::lglobal{htmlgenpop}->deiconify;
+		$::lglobal{htmlgenpop}->raise;
+		$::lglobal{htmlgenpop}->focus;
 	} else {
 		my $blockmarkup;
-		$::lglobal{markpop} = $top->Toplevel;
-		$::lglobal{markpop}->title('HTML Markup');
-		my $tableformat;
-		my $f0 =
-		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		$f0->Button(
+		$::lglobal{htmlgenpop} = $top->Toplevel;
+		$::lglobal{htmlgenpop}->title('HTML Generator');
+
+		my $f1 =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f1->Button(
 			-activebackground => $::activecolor,
 			-command          => sub { htmlautoconvert( $textwindow, $top ) },
 			-text             => 'Autogenerate HTML',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 1 );
-		$f0->Button(
+		$f1->Button(
 			-text    => 'Custom Page Labels',
 			-command => sub { pageadjust() },
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
-		$f0->Button(
+		$f1->Button(
 			-activebackground => $::activecolor,
 			-command          => sub { htmlimages( $textwindow, $top ); },
 			-text             => 'Auto Illus Search',
 			-width            => 16,
 		)->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
-		$f0->Button(    #hkm added
+		$f1->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
 				::runner( ::cmdinterp( $::extops[0]{command} ) );
@@ -1916,6 +1916,8 @@ sub htmlpopup {
 			-text  => 'View in Browser',
 			-width => 16,
 		)->grid( -row => 1, -column => 4, -padx => 1, -pady => 1 );
+		my $f0 =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $pagecomments = $f0->Checkbutton(
 			-variable    => \$::lglobal{pagecmt},
 			-selectcolor => $::lglobal{checkcolor},
@@ -2008,6 +2010,119 @@ sub htmlpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
+
+		my $f7 =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f7->Checkbutton(
+			-variable    => \$::lglobal{poetrynumbers},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Find and Format Poetry Line Numbers'
+		)->grid( -row => 1, -column => 1, -pady => 2 );
+
+		if ( $::menulayout eq 'old' ) {
+			my $f8 =
+			  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Link Check' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'Link Check',
+				-width => 16
+			)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'HTML Tidy' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'HTML Tidy',
+				-width => 16
+			)->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					if ($::w3cremote) {
+						::errorcheckpop_up( $textwindow, $top,
+							'W3C Validate Remote' );
+					} else {
+						::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
+					}
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'W3C Validate',
+				-width => 16
+			)->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'W3C Validate CSS' )
+					  ;    #validatecssrun('');
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'W3C Validate CSS',
+				-width => 16
+			)->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'pphtml' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'pphtml',
+				-width => 16
+			)->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'Image Check',
+				-width => 16
+			)->grid( -row => 3, -column => 1, -padx => 1, -pady => 2 );
+			#			$f8->Button(
+			#				-activebackground => $::activecolor,
+			#				-command          => sub {
+			#					::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
+			#					unlink 'null' if ( -e 'null' );
+			#				},
+			#				-text  => 'Epub Friendly',
+			#				-width => 16
+			#			)->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Check All' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'Check All',
+				-width => 16
+			)->grid( -row => 3, -column => 3, -padx => 1, -pady => 2 );
+		}
+		::initialize_popup_without_deletebinding('htmlgenpop');
+		$::lglobal{htmlgenpop}->protocol(
+			'WM_DELETE_WINDOW' => sub {
+				$::lglobal{htmlgenpop}->destroy;
+				undef $::lglobal{htmlgenpop};
+			}
+		);
+	}
+}
+
+sub htmlmarkpopup {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	::operationadd('Begin HTML Markup');
+	::viewpagenums() if ( $::lglobal{seepagenums} );
+	if ( defined( $::lglobal{markpop} ) ) {
+		$::lglobal{markpop}->deiconify;
+		$::lglobal{markpop}->raise;
+		$::lglobal{markpop}->focus;
+	} else {
+		$::lglobal{markpop} = $top->Toplevel;
+		$::lglobal{markpop}->title('HTML Markup');
+		my $tableformat;
 		my $f1 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my ( $inc, $row, $col ) = ( 0, 0, 0 );
@@ -2204,11 +2319,6 @@ sub htmlpopup {
 		)->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
 		my $f7 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		$f7->Checkbutton(
-			-variable    => \$::lglobal{poetrynumbers},
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Find and Format Poetry Line Numbers'
-		)->grid( -row => 1, -column => 1, -pady => 2 );
 		$f7->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -2236,97 +2346,15 @@ sub htmlpopup {
 			-text             => 'Hyperlink Page Nums',
 			-width            => 16
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-		unless ( $::menulayout eq 'wizard' ) {
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Link Check' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'Link Check',
-				-width => 16
-			)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'HTML Tidy' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'HTML Tidy',
-				-width => 16
-			)->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					if ($::w3cremote) {
-						::errorcheckpop_up( $textwindow, $top,
-							'W3C Validate Remote' );
-					} else {
-						::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
-					}
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'W3C Validate',
-				-width => 16
-			)->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'W3C Validate CSS' )
-					  ;    #validatecssrun('');
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'W3C Validate CSS',
-				-width => 16
-			)->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'pphtml' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'pphtml',
-				-width => 16
-			)->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'Image Check',
-				-width => 16
-			)->grid( -row => 3, -column => 1, -padx => 1, -pady => 2 );
-
-			#			$f8->Button(
-			#				-activebackground => $::activecolor,
-			#				-command          => sub {
-			#					::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
-			#					unlink 'null' if ( -e 'null' );
-			#				},
-			#				-text  => 'Epub Friendly',
-			#				-width => 16
-			#			)->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Check All' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'Check All',
-				-width => 16
-			)->grid( -row => 3, -column => 3, -padx => 1, -pady => 2 );
-		}
 		$diventry->insert( 'end', $::htmldiventry );
 		$spanentry->insert( 'end', $::htmlspanentry );
+		::initialize_popup_without_deletebinding('markpop');
 		$::lglobal{markpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
 				$::lglobal{markpop}->destroy;
 				undef $::lglobal{markpop};
 			}
 		);
-		$::lglobal{markpop}->Icon( -image => $::icon );
-		$::lglobal{markpop}->transient($top) if $::stayontop;
 	}
 }
 

@@ -1030,8 +1030,12 @@ sub menubuildold {
 			[ 'separator', '' ],
 			[ Button => '~Footnote Fixup...', -command => \&::footnotepop ],
 			[
-				Button   => '~HTML Fixup...',
-				-command => sub { ::htmlpopup( $textwindow, $top ) }
+				Button   => 'H~TML Generator...',
+				-command => sub { ::htmlgenpopup( $textwindow, $top ) }
+			],
+			[
+				Button   => '~HTML Markup...',
+				-command => sub { ::htmlmarkpopup( $textwindow, $top ) }
 			],
 			[ Button => '~Sidenote Fixup...', -command => \&::sidenotes ],
 			[
@@ -1807,8 +1811,12 @@ sub menubuildwizard {
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => '~HTML Fixup',
-				-command => sub { ::htmlpopup( $textwindow, $top ) }
+				Button   => 'H~TML Generator...',
+				-command => sub { ::htmlgenpopup( $textwindow, $top ) }
+			],
+			[
+				Button   => '~HTML Markup...',
+				-command => sub { ::htmlmarkpopup( $textwindow, $top ) }
 			],
 			[
 				Button   => 'HTML Auto ~Index (List)',

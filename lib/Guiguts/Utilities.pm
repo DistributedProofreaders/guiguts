@@ -2327,8 +2327,8 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		$::lglobal{toptool}->ToolButton(
 			-text    => 'HTML',
 			-font    => $::lglobal{toolfont},
-			-command => sub { ::htmlpopup( $textwindow, $top ) },
-			-tip     => 'HTML Fixup'
+			-command => sub { ::htmlmarkpopup( $textwindow, $top ) },
+			-tip     => 'HTML Markup'
 		);
 		$::lglobal{toptool}->separator;
 		$::lglobal{toptool}->ToolButton(
