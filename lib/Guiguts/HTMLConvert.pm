@@ -1893,12 +1893,6 @@ sub htmlgenpopup {
 		my $f1 =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f1->Button(
-			-activebackground => $::activecolor,
-			-command          => sub { htmlautoconvert( $textwindow, $top ) },
-			-text             => 'Autogenerate HTML',
-			-width            => 16
-		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 1 );
-		$f1->Button(
 			-text    => 'Custom Page Labels',
 			-command => sub { pageadjust() },
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
@@ -1908,14 +1902,6 @@ sub htmlgenpopup {
 			-text             => 'Auto Illus Search',
 			-width            => 16,
 		)->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
-		$f1->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				::runner( ::cmdinterp( $::extops[0]{command} ) );
-			},
-			-text  => 'View in Browser',
-			-width => 16,
-		)->grid( -row => 1, -column => 4, -padx => 1, -pady => 1 );
 		my $f0 =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $pagecomments = $f0->Checkbutton(
@@ -1924,7 +1910,7 @@ sub htmlgenpopup {
 			-text        => 'Pg #s as comments',
 			-anchor      => 'w',
 		  )->grid(
-			-row    => 2,
+			-row    => 1,
 			-column => 1,
 			-padx   => 1,
 			-pady   => 2,
@@ -1936,13 +1922,37 @@ sub htmlgenpopup {
 			-text        => 'Insert Anchors at Pg #s',
 			-anchor      => 'w',
 		  )->grid(
-			-row    => 2,
+			-row    => 1,
 			-column => 2,
 			-padx   => 1,
 			-pady   => 2,
 			-sticky => 'w'
 		  );
 		$pageanchors->select;
+		my $utfconvert = $f0->Checkbutton(
+			-variable    => \$::lglobal{leave_utf},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Keep UTF-8 Chars',
+			-anchor      => 'w',
+		  )->grid(
+			-row    => 2,
+			-column => 1,
+			-padx   => 1,
+			-pady   => 2,
+			-sticky => 'w'
+		  );
+		my $latin1_convert = $f0->Checkbutton(
+			-variable    => \$::lglobal{keep_latin1},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Keep Latin-1 Chars',
+			-anchor      => 'w',
+		  )->grid(
+			-row    => 2,
+			-column => 2,
+			-padx   => 1,
+			-pady   => 2,
+			-sticky => 'w'
+		  );
 		my $fractions = $f0->Checkbutton(
 			-variable    => \$::lglobal{autofraction},
 			-selectcolor => $::lglobal{checkcolor},
@@ -1959,30 +1969,6 @@ sub htmlgenpopup {
 			-variable    => \$::lglobal{shorthtmlfootnotes},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Short FN Anchors',
-			-anchor      => 'w',
-		  )->grid(
-			-row    => 2,
-			-column => 4,
-			-padx   => 1,
-			-pady   => 2,
-			-sticky => 'w'
-		  );
-		my $utfconvert = $f0->Checkbutton(
-			-variable    => \$::lglobal{leave_utf},
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Keep UTF-8 Chars',
-			-anchor      => 'w',
-		  )->grid(
-			-row    => 3,
-			-column => 1,
-			-padx   => 1,
-			-pady   => 2,
-			-sticky => 'w'
-		  );
-		my $latin1_convert = $f0->Checkbutton(
-			-variable    => \$::lglobal{keep_latin1},
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Keep Latin-1 Chars',
 			-anchor      => 'w',
 		  )->grid(
 			-row    => 3,
@@ -2005,7 +1991,7 @@ sub htmlgenpopup {
 			-anchor => 'w',
 		  )->grid(
 			-row    => 3,
-			-column => 3,
+			-column => 1,
 			-padx   => 1,
 			-pady   => 2,
 			-sticky => 'w'
@@ -2019,6 +2005,23 @@ sub htmlgenpopup {
 			-text        => 'Find and Format Poetry Line Numbers'
 		)->grid( -row => 1, -column => 1, -pady => 2 );
 
+		my $f2 =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f2->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { htmlautoconvert( $textwindow, $top ) },
+			-text             => 'Autogenerate HTML',
+			-width            => 16
+		)->grid( -row => 1, -column => 1, -padx => 5, -pady => 1 );
+		$f2->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				::runner( ::cmdinterp( $::extops[0]{command} ) );
+			},
+			-text  => 'View in Browser',
+			-width => 16,
+		)->grid( -row => 1, -column => 2, -padx => 5, -pady => 1 );
+
 		if ( $::menulayout eq 'old' ) {
 			my $f8 =
 			  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2029,6 +2032,15 @@ sub htmlgenpopup {
 					unlink 'null' if ( -e 'null' );
 				},
 				-text  => 'Link Check',
+				-width => 16
+			)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+			$f8->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
+					unlink 'null' if ( -e 'null' );
+				},
+				-text  => 'Image Check',
 				-width => 16
 			)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 			$f8->Button(
@@ -2073,15 +2085,6 @@ sub htmlgenpopup {
 				-text  => 'pphtml',
 				-width => 16
 			)->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
-			$f8->Button(
-				-activebackground => $::activecolor,
-				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
-					unlink 'null' if ( -e 'null' );
-				},
-				-text  => 'Image Check',
-				-width => 16
-			)->grid( -row => 3, -column => 1, -padx => 1, -pady => 2 );
 			#			$f8->Button(
 			#				-activebackground => $::activecolor,
 			#				-command          => sub {
@@ -2090,7 +2093,7 @@ sub htmlgenpopup {
 			#				},
 			#				-text  => 'Epub Friendly',
 			#				-width => 16
-			#			)->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
+			#			)->grid( -row => 3, -column => 3, -padx => 1, -pady => 2 );
 			$f8->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {
@@ -2099,7 +2102,7 @@ sub htmlgenpopup {
 				},
 				-text  => 'Check All',
 				-width => 16
-			)->grid( -row => 3, -column => 3, -padx => 1, -pady => 2 );
+			)->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
 		}
 		::initialize_popup_without_deletebinding('htmlgenpop');
 		$::lglobal{htmlgenpop}->protocol(
