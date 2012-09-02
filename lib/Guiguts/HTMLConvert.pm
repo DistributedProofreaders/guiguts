@@ -1114,7 +1114,7 @@ sub html_convert_body {
 sub html_convert_underscoresmallcaps {
 	my ($textwindow) = @_;
 	my $thisblockstart = '1.0';
-	::working("Converting underscore and small caps markup");
+	::working("Converting underline and small caps markup");
 	while ( $thisblockstart =
 		$textwindow->search( '-exact', '--', '<u>', '1.0', 'end' ) )
 	{
@@ -1144,9 +1144,13 @@ sub html_convert_underscoresmallcaps {
 	{
 		$textwindow->ntdelete( "$thisblockstart+6c", "$thisblockstart+10c" );
 	}
+}
 
-	# Set opening and closing markup for footnotes
-	$thisblockstart = '1.0';
+# Set opening and closing markup for footnotes
+sub html_convert_footnoteblocks {
+	my ($textwindow) = @_;
+	my $thisblockstart = '1.0';
+	::working("Marking footnote blocks");
 	while (
 		$thisblockstart = $textwindow->search(
 			'-exact', '--', '<p>FOOTNOTES:', $thisblockstart, 'end'
@@ -1959,6 +1963,7 @@ sub htmlautoconvert {
 	);
 	html_cleanup_markers($textwindow);
 	html_convert_underscoresmallcaps($textwindow);
+	html_convert_footnoteblocks($textwindow);
 	html_convert_sidenotes($textwindow);
 	html_convert_pageanchors();
 	html_convert_utf( $textwindow, $::lglobal{leave_utf},
