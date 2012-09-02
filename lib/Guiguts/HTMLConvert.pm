@@ -2305,7 +2305,8 @@ sub htmlmarkpopup {
 
 	   # Warning: if you add tags to the list below move nbsp and poetry buttons
 		for (
-			qw/i b h1 h2 h3 h4 h5 h6 p hr br big small ol ul li sup sub table tr td blockquote code /
+			qw/ em strong i b h1 h2 h3 h4 h5 h6 p hr br big small ol ul li
+                            sup sub blockquote q pre ins del table tr td /
 		  )
 		{
 			$col = $inc % 5;
@@ -2330,7 +2331,7 @@ sub htmlmarkpopup {
 		}
 		while ( $inc % 5 gt 0 ) { ++$inc; }
 		for (
-		    qw/ nbsp /
+		    qw/ nbsp mdash ndash dagger Dagger lsquo rsquo sbquo ldquo rdquo bdquo /
 		  )
 		{
 			$col = $inc % 5;
