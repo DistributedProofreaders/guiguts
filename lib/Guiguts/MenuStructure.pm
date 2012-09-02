@@ -18,7 +18,7 @@ sub menu_file {
 		],
 		[ 'separator', '' ],
 		map ( [
-				Button   => ($_<9?'~':'').($_+1).": $::recentfile[$_]",
+				Button   => ($_<9?'~':'').($_==9?'1~0':$_+1).": $::recentfile[$_]",
 				-command => [ \&::openfile, $::recentfile[$_] ]
 			],
 			( 0 .. scalar(@::recentfile) - 1 ) ),
@@ -41,41 +41,56 @@ sub menu_file {
 			Cascade    => '~Project',
 			-tearoff   => 0,
 			-menuitems => [
-				[	'command', 'View Project Comments',
+				[	'command', 'See ~Image...',
+					-command => \&::seecurrentimage
+				],
+				[	'command', 'See ~Proofers...',
+					-command => \&::showproofers
+				],
+				[	'command' => 'View Operations ~History...',
+					-command => \&::opspop_up ],
+				[ 'separator', '' ],
+			        [	'command', 'Set Project ~Language...',
+					-command => \&::setlang ],
+			        [	'command', 'Set Pro~ject ID...',
+					-command => \&::setprojectid ],
+				[	'command', 'Set I~mage Directory...',
+					 -command => \&::setpngspath
+				],
+				[ 'separator', '' ],
+				[	'command', 'View Project ~Comments...',
 					-command => \&::viewprojectcomments
 				],
-				[	'command', 'View Project Discussion',
+				[	'command', 'View Project ~Discussion [www]',
 					-command => \&::viewprojectdiscussion
 				],
-				[	'command' => 'Operations History',
-					-command => \&::opspop_up ],
 				[ 'separator', '' ],
 				[	'command', '~Guess Page Markers...',
 					-command => \&::file_guess_page_marks
 				],
-				[	'command', 'Set Page ~Markers...',
+				[	'command', '~Set Page Markers',
 					-command => \&::file_mark_pages
 				],
-				[	'command', '~Adjust Page Markers',
+				[	'command', '~Adjust Page Markers...',
 					-command => \&::viewpagenums
 				],
 				[ 'separator', '' ],
-				[	'command', 'Export with Page Separators',
+				[	'command', 'Export One File with Page Separators',
 					-command => sub { ::file_export_preptext('onefile') }
 				],
-				[	'command', 'Export with Page Markup',
+				[	'command', 'Export One File with Page Markup',
 					-command => sub { ::file_export_pagemarkup(); }
 				],
-				[	'command', 'Import with Page Markup',
+				[	'command', 'Import One File with Page Markup',
 					-command => sub { ::file_import_markup(); }
 				],
 			]
 		],
-		[	'command', 'Import Prep Text Files',
+		[	'command', 'I~mport Prep Text Files',
 			-command =>
 			  sub { ::file_import_preptext( $textwindow, $top ) }
 		],
-		[	'command', 'Export As Prep Text Files',
+		[	'command', 'Expor~t As Prep Text Files',
 			-command => sub { ::file_export_preptext('separatefiles') }
 		],
 		[ 'separator', '' ],
@@ -148,21 +163,21 @@ sub menu_preferences {
 	my $textwindow = $::textwindow;
 	[
 		[
-			Cascade  => 'File ~Paths',
+			Cascade  => '~File Paths',
 			-tearoff => 1,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
 				[
-					Button   => 'Locate Aspell Executable',
+					Button   => 'Locate ~Aspell Executable',
 					-command => sub { ::locateAspellExe($textwindow); }
 				],
 				[
-					Button   => 'Locate Image Viewer Executable',
+					Button   => 'Locate ~Image Viewer Executable',
 					-command => sub { ::setviewerpath($textwindow) }
 				],
 				[ 'separator', '' ],
 				[
-					Button   => 'Locate Gutcheck Executable',
+					Button   => 'Locate ~Gutcheck Executable',
 					-command => sub {
 						my $types;
 						if ($::OS_WIN) {
@@ -186,7 +201,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Button   => 'Locate Jeebies Executable',
+					Button   => 'Locate ~Jeebies Executable',
 					-command => sub {
 						my $types;
 						if ($::OS_WIN) {
@@ -210,7 +225,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Button   => 'Locate Tidy Executable',
+					Button   => 'Locate ~Tidy Executable',
 					-command => sub {
 						my $types;
 						if ($::OS_WIN) {
@@ -232,7 +247,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Button   => 'Locate W3C Validate (onsgmls) Executable',
+					Button   => 'Locate W3C ~Validate (onsgmls) Executable',
 					-command => sub {
 						my $types;
 						if ($::OS_WIN) {
@@ -256,7 +271,7 @@ sub menu_preferences {
 				],
 				[
 					Button =>
-					  'Locate W3C CSS Validator (css-validator.jar) Executable',
+					  'Locate W3C ~CSS Validator (css-validator.jar) Executable',
 					-command => sub {
 						my $types;
 						if ($::OS_WIN) {
@@ -301,15 +316,10 @@ sub menu_preferences {
 						::savesettings();
 					  }
 				],
-				[ 'separator', '' ],
-				[
-					Button   => 'Set Images Directory',
-					-command => \&::setpngspath
-				],
 			  ]
 		],
 		[
-			Cascade  => 'Appearance',
+			Cascade  => '~Appearance',
 			-tearoff => 0,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
@@ -396,12 +406,12 @@ sub menu_preferences {
 			  ]
 		],
 		[
-			Cascade  => 'Menu structure',
+			Cascade  => '~Menu structure',
 			-tearoff => 0,
 			-menuitems => &select_menulayout
 		],
 		[
-			Cascade    => 'Toolbar',
+			Cascade    => '~Toolbar',
 			-tearoff   => 1,
 			-menuitems => [
 				[
@@ -458,7 +468,7 @@ sub menu_preferences {
 			],
 		],
 		[
-			Cascade  => 'Backup',
+			Cascade  => '~Backup',
 			-tearoff => 0,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
@@ -487,7 +497,7 @@ sub menu_preferences {
 			  ]
 		],
 		[
-			Cascade  => 'Processing',
+			Cascade  => '~Processing',
 			-tearoff => 0,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
@@ -576,7 +586,7 @@ sub menu_external {
 			( 0 .. $::extops_size-1 ) ),
 		[ 'separator', '' ],
 		[
-			Button   => 'Setup External Operations...',
+			Button   => '~Setup External Operations...',
 			-command => \&::externalpopup
 		],
 	];
@@ -801,7 +811,7 @@ sub menubuildold {
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => '~lowercase Selection',
+				Button   => '~lowercase selection',
 				-command => sub {
 					::case( $textwindow, 'lc' );
 				  },
@@ -823,7 +833,7 @@ sub menubuildold {
 			],
 			[ 'separator', '' ],
 			[
-				Button   => 'Surround Selection With...',
+				Button   => 'Surroun~d Selection With...',
 				-command => sub {
 					if ( defined( $::lglobal{surpop} ) ) {
 						$::lglobal{surpop}->deiconify;
@@ -898,7 +908,7 @@ sub menubuildold {
 				  }
 			],
 			[
-				Button   => 'Flood Fill Selection With...',
+				Button   => '~Flood Fill Selection With...',
 				-command => sub {
 					$textwindow->addGlobStart;
 					$::lglobal{floodpop} = ::flood();
@@ -945,7 +955,7 @@ sub menubuildold {
 				-command => sub { $::operationinterrupt = 1 }
 			],
 			[ 'separator', '' ],
-			[ Button => 'ASCII ~Boxes...', -command => \&::asciipopup ],
+			[ Button => 'ASCII Boxes...', -command => \&::asciipopup ],
 			[
 				Button   => '~Align text on string...',
 				-command => \&::alignpopup
@@ -1009,7 +1019,7 @@ sub menubuildold {
 			],
 			[ 'separator', '' ],
 			[
-				Button   => 'Remove End-of-line Spaces',
+				Button   => 'Remove ~End-of-line Spaces',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::endofline();
@@ -1122,31 +1132,31 @@ sub menubuildold {
 				  }
 			],
 			[ 'separator', '' ],
-			[ Button => 'Find Greek...', -command => \&::findandextractgreek ]
+			[ Button => 'Find G~reek...', -command => \&::findandextractgreek ]
 		]
 	);
 	my $text = $::menubar->cascade(
-		-label     => 'Text Processing',
+		-label     => '~Txt Processing',
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => "Txt Conversion Palette...",
+				Button   => "Txt Conversion ~Palette...",
 				-command => sub { ::txt_convert_palette() }
 			],
 			[ 'separator', '' ],
 			[
-				Button   => "Convert Italics",
+				Button   => "Convert ~Italics",
 				-command => sub {
 					::text_convert_italic( $textwindow, $::italic_char );
 				  }
 			],
 			[
-				Button => "Convert Bold",
+				Button => "Convert ~Bold",
 				-command =>
 				  sub { ::text_convert_bold( $textwindow, $::bold_char ) }
 			],
 			[
-				Button   => 'Convert <tb> to asterisk break',
+				Button   => 'Convert <~tb> to asterisk break',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::text_convert_tb($textwindow);
@@ -1154,7 +1164,7 @@ sub menubuildold {
 				  }
 			],
 			[
-				Button   => 'All of the above',
+				Button   => '~All of the above',
 				-command => sub {
 					::text_convert_italic( $textwindow, $::italic_char );
 					::text_convert_bold( $textwindow, $::bold_char );
@@ -1164,7 +1174,7 @@ sub menubuildold {
 				  }
 			],
 			[
-				Button   => '~Add a Thought Break',
+				Button   => 'Add a Thought Break',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::text_thought_break($textwindow);
@@ -1180,16 +1190,16 @@ sub menubuildold {
 				-command => \&::text_remove_smallcaps_markup
 			],
 			[
-				Button   => "Options...",
+				Button   => "~Options...",
 				-command => sub { ::text_convert_options($top) }
 			],
 			[ 'separator', '' ],
 			[
-				Button   => "Center Selection",
+				Button   => "~Center Selection",
 				-command => sub { ::rcaligntext( 'c', 0 ); }
 			],
 			[
-				Button   => "Right-Align Selection",
+				Button   => "~Right-Align Selection",
 				-command => sub { ::rcaligntext( 'r', 0 ); }
 			],
 			#[
@@ -1203,7 +1213,7 @@ sub menubuildold {
 		]
 	);
 	my $external = $::menubar->cascade(
-		-label     => 'External',
+		-label     => 'Exter~nal',
 		-tearoff   => 1,
 		-menuitems => &menu_external,
 	);
@@ -1319,7 +1329,7 @@ sub menubuildwizard {
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => '~lowercase Selection',
+				Button   => '~lowercase selection',
 				-command => sub {
 					::case( $textwindow, 'lc' );
 				  },
@@ -1341,7 +1351,7 @@ sub menubuildwizard {
 			],
 			[ 'separator', '' ],
 			[
-				Button   => 'Surround Selection With...',
+				Button   => 'Surroun~d Selection With...',
 				-command => sub {
 					if ( defined( $::lglobal{surpop} ) ) {
 						$::lglobal{surpop}->deiconify;
@@ -1416,7 +1426,7 @@ sub menubuildwizard {
 				  }
 			],
 			[
-				Button   => 'Flood Fill Selection With...',
+				Button   => '~Flood Fill Selection With...',
 				-command => sub {
 					$textwindow->addGlobStart;
 					$::lglobal{floodpop} = ::flood();

@@ -94,11 +94,14 @@ MENUS
 
 <alt>+f -- file menu
 <alt>+e -- edit menu
-<alt>+b -- bookmarks
-<alt>+s -- search menu
-<alt>+g -- gutcheck menu
+<alt>+r -- search & replace menu
+<alt>+b -- bookmarks menu
+<alt>+s -- selection menu
 <alt>+x -- fixup menu
-<alt>+w -- word frequency menu
+<alt>+t -- txt processing menu
+<alt>+u -- unicode menu
+<alt>+p -- preferences menu
+<alt>+h -- help menu
 
 
 SEARCH POPUP

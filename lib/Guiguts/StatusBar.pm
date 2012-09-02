@@ -7,7 +7,8 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&update_indicators &_updatesel &buildstatusbar &selection &gotoline &gotopage);
+	  qw(&update_indicators &_updatesel &buildstatusbar &seecurrentimage
+	  &setlang &showproofers &selection &gotoline &gotopage);
 }
 
 # Routine to update the status bar when something has changed.
@@ -448,16 +449,7 @@ sub update_see_img_button {
 								   -background => 'gray',
 		  )->grid( -row => 1, -column => 4 );
 		$::lglobal{pagebutton}->bind(
-			'<1>',
-			sub {
-				$::lglobal{pagebutton}->configure( -relief => 'sunken' );
-				my $pagenum = ::get_page_number();
-				if ( defined $::lglobal{pnumpop} ) {
-					$::lglobal{pagenumentry}->delete( '0', 'end' );
-					$::lglobal{pagenumentry}->insert( 'end', "Pg" . $pagenum );
-				}
-				::openpng( $textwindow, $pagenum );
-			}
+			'<1>', \&seecurrentimage
 		);
 		$::lglobal{pagebutton}->bind( '<3>', sub { ::setpngspath() } );
 		_butbind( $::lglobal{pagebutton} );
@@ -466,6 +458,17 @@ sub update_see_img_button {
 			   "Open Image corresponding to current page in an external viewer."
 		);
 	}
+}
+
+sub seecurrentimage {
+	my $textwindow = $::textwindow;
+	$::lglobal{pagebutton}->configure( -relief => 'sunken' );
+	my $pagenum = ::get_page_number();
+	if ( defined $::lglobal{pnumpop} ) {
+		$::lglobal{pagenumentry}->delete( '0', 'end' );
+		$::lglobal{pagenumentry}->insert( 'end', "Pg" . $pagenum );
+	}
+	::openpng( $textwindow, $pagenum );
 }
 
 sub update_next_img_button {
