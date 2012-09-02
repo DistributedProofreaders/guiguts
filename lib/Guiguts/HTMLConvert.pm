@@ -3128,7 +3128,7 @@ sub autoindex {
 		while ( $step <= $ler ) {
 			my $selection = $textwindow->get( "$step.0", "$step.end" );
 			unless ($selection) { $step++; $blanks++; next }
-			$selection = ::addpagelinks($selection);
+			$selection = addpagelinks($selection);
 			if ( $first == 1 ) { $blanks = 2; $first = 0 }
 			if ( $blanks == 2 ) {
 				$selection = '<li class="ifrst">' . $selection . '</li>';
