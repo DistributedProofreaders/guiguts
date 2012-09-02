@@ -1593,15 +1593,6 @@ sub html_wrapup {
 	my $thisblockstart;
 	::fracconv( $textwindow, '1.0', 'end' ) if $autofraction;
 	$textwindow->ntinsert( '1.0', $headertext );
-	if ($leave_utf) {
-		$thisblockstart =
-		  $textwindow->search( '-exact', '--', 'charset=iso-8859-1', '1.0',
-			'end' );
-		if ($thisblockstart) {
-			$textwindow->ntdelete( $thisblockstart, "$thisblockstart+18c" );
-			$textwindow->ntinsert( $thisblockstart, 'charset=utf-8' );
-		}
-	}
 	insert_paragraph_close( $textwindow, 'end' );
 	if ( -e 'footer.txt' ) {
 		my $footertext;
