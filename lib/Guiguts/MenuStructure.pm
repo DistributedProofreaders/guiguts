@@ -804,7 +804,8 @@ sub menubuildold {
 				Button   => '~lowercase Selection',
 				-command => sub {
 					::case( $textwindow, 'lc' );
-				  }
+				  },
+				-accelerator => 'Ctrl+l'
 			],
 			[
 				Button   => '~Sentence case Selection',
@@ -812,11 +813,13 @@ sub menubuildold {
 			],
 			[
 				Button   => '~Title Case Selection',
-				-command => sub { ::case( $textwindow, 'tc' ); }
+				-command => sub { ::case( $textwindow, 'tc' ); },
+				-accelerator => 'Ctrl+t'
 			],
 			[
 				Button   => '~UPPERCASE Selection',
-				-command => sub { ::case( $textwindow, 'uc' ); }
+				-command => sub { ::case( $textwindow, 'uc' ); },
+				-accelerator => 'Ctrl+u'
 			],
 			[ 'separator', '' ],
 			[
@@ -1319,7 +1322,8 @@ sub menubuildwizard {
 				Button   => '~lowercase Selection',
 				-command => sub {
 					::case( $textwindow, 'lc' );
-				  }
+				  },
+				-accelerator => 'Ctrl+l'
 			],
 			[
 				Button   => '~Sentence case Selection',
@@ -1327,11 +1331,13 @@ sub menubuildwizard {
 			],
 			[
 				Button   => '~Title Case Selection',
-				-command => sub { ::case( $textwindow, 'tc' ); }
+				-command => sub { ::case( $textwindow, 'tc' ); },
+				-accelerator => 'Ctrl+t'
 			],
 			[
 				Button   => '~UPPERCASE Selection',
-				-command => sub { ::case( $textwindow, 'uc' ); }
+				-command => sub { ::case( $textwindow, 'uc' ); },
+				-accelerator => 'Ctrl+u'
 			],
 			[ 'separator', '' ],
 			[
