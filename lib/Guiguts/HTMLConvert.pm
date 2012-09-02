@@ -132,6 +132,7 @@ sub html_convert_utf {
 
 sub html_string_convert_utf {
 	my ( $string, $leave_utf, $keep_latin1 ) = @_;
+	return unless $string;
 	$string =~ s/([\x{100}-\x{65535}])/sprintf("&x%x;",ord($1))/eg unless $leave_utf;
 	$string = html_string_convert_latin1($string) unless $keep_latin1;
 	return $string;
