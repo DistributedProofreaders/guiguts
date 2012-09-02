@@ -571,51 +571,74 @@ sub case {
 }
 
 sub surround {
-	my ( $textwindow, $surpop, $top, $font, $activecolor, $icon ) = @_;
-	if ( defined($surpop) ) {
-		$surpop->deiconify;
-		$surpop->raise;
-		$surpop->focus;
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	if ( defined( $::lglobal{surpop} ) ) {
+		$::lglobal{surpop}->deiconify;
+		$::lglobal{surpop}->raise;
+		$::lglobal{surpop}->focus;
 	} else {
-		$surpop = $top->Toplevel;
-		$surpop->title('Surround With');
-		my $f = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
+		$::lglobal{surpop} = $top->Toplevel;
+		$::lglobal{surpop}->title('Surround With');
+		my $f = $::lglobal{surpop}
+		  ->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
 "Surround the selection with:\n\\n will be replaced with a newline.",
-		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-		my $f1 = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
+		  )->pack(
+			-side   => 'top',
+			-pady   => 5,
+			-padx   => 2,
+			-anchor => 'n'
+		  );
+		my $f1 = $::lglobal{surpop}
+		  ->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $surstrt = $f1->Entry(
 			-width      => 8,
 			-background => $::bkgcolor,
-			-font       => $font,
+			-font       => $::lglobal{font},
 			-relief     => 'sunken',
-		)->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'n' );
+		  )->pack(
+			-side   => 'left',
+			-pady   => 5,
+			-padx   => 2,
+			-anchor => 'n'
+		  );
 		my $surend = $f1->Entry(
 			-width      => 8,
 			-background => $::bkgcolor,
-			-font       => $font,
+			-font       => $::lglobal{font},
 			-relief     => 'sunken',
-		)->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'n' );
-		my $f2 = $surpop->Frame->pack( -side => 'top', -anchor => 'n' );
+		  )->pack(
+			-side   => 'left',
+			-pady   => 5,
+			-padx   => 2,
+			-anchor => 'n'
+		  );
+		my $f2 = $::lglobal{surpop}
+		  ->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				surroundit( $surstrt->get, $surend->get, $textwindow );
+				::surroundit( $surstrt->get, $surend->get,
+					$textwindow );
 			},
 			-text  => 'OK',
 			-width => 16
-		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-		$surpop->protocol(
+		  )->pack(
+			-side   => 'top',
+			-pady   => 5,
+			-padx   => 2,
+			-anchor => 'n'
+		  );
+		$::lglobal{surpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				$surpop->destroy;
-				undef $surpop;
+				$::lglobal{surpop}->destroy;
+				undef $::lglobal{surpop};
 			}
 		);
 		$surstrt->insert( 'end', '_' ) unless ( $surstrt->get );
 		$surend->insert( 'end', '_' ) unless ( $surend->get );
-		$surpop->Icon( -image => $icon );
+		$::lglobal{surpop}->Icon( -image => $::icon );
 	}
-	return $surpop;
 }
 
 sub surroundit {

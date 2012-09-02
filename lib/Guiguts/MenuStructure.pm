@@ -834,78 +834,7 @@ sub menubuildold {
 			[ 'separator', '' ],
 			[
 				Button   => 'Surroun~d Selection With...',
-				-command => sub {
-					if ( defined( $::lglobal{surpop} ) ) {
-						$::lglobal{surpop}->deiconify;
-						$::lglobal{surpop}->raise;
-						$::lglobal{surpop}->focus;
-					} else {
-						$::lglobal{surpop} = $top->Toplevel;
-						$::lglobal{surpop}->title('Surround text with:');
-						my $f =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						$f->Label( -text =>
-"Surround the selection with?\n\\n will be replaced with a newline.",
-						  )->pack(
-							-side   => 'top',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $f1 =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						my $surstrt = $f1->Entry(
-							-width      => 8,
-							-background => $::bkgcolor,
-							-font       => $::lglobal{font},
-							-relief     => 'sunken',
-						  )->pack(
-							-side   => 'left',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $surend = $f1->Entry(
-							-width      => 8,
-							-background => $::bkgcolor,
-							-font       => $::lglobal{font},
-							-relief     => 'sunken',
-						  )->pack(
-							-side   => 'left',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $f2 =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						my $gobut = $f2->Button(
-							-activebackground => $::activecolor,
-							-command          => sub {
-								::surroundit( $surstrt->get, $surend->get,
-									$textwindow );
-							},
-							-text  => 'OK',
-							-width => 16
-						  )->pack(
-							-side   => 'top',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						$::lglobal{surpop}->protocol(
-							'WM_DELETE_WINDOW' => sub {
-								$::lglobal{surpop}->destroy;
-								undef $::lglobal{surpop};
-							}
-						);
-						$surstrt->insert( 'end', '_' ) unless ( $surstrt->get );
-						$surend->insert( 'end', '_' ) unless ( $surend->get );
-						$::lglobal{surpop}->Icon( -image => $::icon );
-					}
-				  }
+				-command => \&::surround
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
@@ -1352,78 +1281,7 @@ sub menubuildwizard {
 			[ 'separator', '' ],
 			[
 				Button   => 'Surroun~d Selection With...',
-				-command => sub {
-					if ( defined( $::lglobal{surpop} ) ) {
-						$::lglobal{surpop}->deiconify;
-						$::lglobal{surpop}->raise;
-						$::lglobal{surpop}->focus;
-					} else {
-						$::lglobal{surpop} = $top->Toplevel;
-						$::lglobal{surpop}->title('Surround text with:');
-						my $f =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						$f->Label( -text =>
-"Surround the selection with?\n\\n will be replaced with a newline.",
-						  )->pack(
-							-side   => 'top',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $f1 =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						my $surstrt = $f1->Entry(
-							-width      => 8,
-							-background => $::bkgcolor,
-							-font       => $::lglobal{font},
-							-relief     => 'sunken',
-						  )->pack(
-							-side   => 'left',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $surend = $f1->Entry(
-							-width      => 8,
-							-background => $::bkgcolor,
-							-font       => $::lglobal{font},
-							-relief     => 'sunken',
-						  )->pack(
-							-side   => 'left',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						my $f2 =
-						  $::lglobal{surpop}
-						  ->Frame->pack( -side => 'top', -anchor => 'n' );
-						my $gobut = $f2->Button(
-							-activebackground => $::activecolor,
-							-command          => sub {
-								::surroundit( $surstrt->get, $surend->get,
-									$textwindow );
-							},
-							-text  => 'OK',
-							-width => 16
-						  )->pack(
-							-side   => 'top',
-							-pady   => 5,
-							-padx   => 2,
-							-anchor => 'n'
-						  );
-						$::lglobal{surpop}->protocol(
-							'WM_DELETE_WINDOW' => sub {
-								$::lglobal{surpop}->destroy;
-								undef $::lglobal{surpop};
-							}
-						);
-						$surstrt->insert( 'end', '_' ) unless ( $surstrt->get );
-						$surend->insert( 'end', '_' ) unless ( $surend->get );
-						$::lglobal{surpop}->Icon( -image => $::icon );
-					}
-				  }
+				-command => \&::surround
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
