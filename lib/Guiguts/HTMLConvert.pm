@@ -44,17 +44,20 @@ sub html_convert_superscripts {
 		$textwindow->ntdelete( "$step.0", "$step.end" );
 		$textwindow->ntinsert( "$step.0", $selection );
 	}
-
-  # Fixed a bug--did not handle the case without curly brackets, i.e., Philad^a.
+	# Fixed a bug--did not handle the case without curly brackets, i.e., Philad^a.
 	if ( $selection =~ s/\^(.)/<sup>$1<\/sup>/g ) {
 		$textwindow->ntdelete( "$step.0", "$step.end" );
 		$textwindow->ntinsert( "$step.0", $selection );
 	}
+	return;
+}
 
-	# handle <g>gesperrt text</g>
-	if ( $selection =~ s/<g>(.*)<\/g>/<em class="gesperrt">$1<\/em>/g ) {
-		$textwindow->ntdelete( "$step.0", "$step.end" );
-		$textwindow->ntinsert( "$step.0", $selection );
+sub html_convert_simple_tag {
+	my ( $markup, $replace ) = @_;
+	if ( "<$markup>" ne $replace ) {
+		::named ( "<$markup>", $replace );
+		$replace =~ s/^<([a-z0-9]+).*>$/$1/;
+		::named ( "</$markup>", "</$replace>");
 	}
 	return;
 }
@@ -1963,6 +1966,7 @@ sub htmlautoconvert {
 	);
 	html_cleanup_markers($textwindow);
 	html_convert_underscoresmallcaps($textwindow);
+	html_convert_simple_tag('g', '<em class="gesperrt">');
 	html_convert_footnoteblocks($textwindow);
 	html_convert_sidenotes($textwindow);
 	html_convert_pageanchors();
