@@ -1967,7 +1967,10 @@ sub htmlautoconvert {
 	);
 	html_cleanup_markers($textwindow);
 	html_convert_underscoresmallcaps($textwindow);
-	html_convert_simple_tag('g', '<em class="gesperrt">');
+	html_convert_simple_tag('i', $::lglobal{html_i});
+	html_convert_simple_tag('b', $::lglobal{html_b});
+	html_convert_simple_tag('g', $::lglobal{html_g});
+	html_convert_simple_tag('f', $::lglobal{html_f});
 	html_convert_footnoteblocks($textwindow);
 	html_convert_sidenotes($textwindow);
 	html_convert_pageanchors();
@@ -2187,6 +2190,117 @@ sub htmlgenpopup {
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Find and Format Poetry Line Numbers'
 		)->grid( -row => 1, -column => 1, -pady => 2 );
+
+		my $f4 =
+		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f4->Label( -text => '<i>:', )
+		  ->grid( -row => 1, -column => 0, -padx => 2, -pady => 2 );
+		my $iselect = $f4->Radiobutton(
+			-text        => '<i>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_i},
+			-value       => '<i>',
+		)->grid( -row => 1, -column => 1 );
+		$iselect->select;
+		$f4->Radiobutton(
+			-text        => '<em>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_i},
+			-value       => '<em>',
+		)->grid( -row => 1, -column => 2 );
+		$f4->Radiobutton(
+			-text        => '<em class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_i},
+			-value       => '<em class="italic">',
+		)->grid( -row => 1, -column => 3 );
+		$f4->Radiobutton(
+			-text        => '<span class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_i},
+			-value       => '<span class="italic">',
+		)->grid( -row => 1, -column => 4 );
+		$f4->Label( -text => '<b>:', )
+		  ->grid( -row => 2, -column => 0, -padx => 2, -pady => 2 );
+		my $bselect = $f4->Radiobutton(
+			-text        => '<b>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_b},
+			-value       => '<b>',
+		)->grid( -row => 2, -column => 1 );
+		$bselect->select;
+		$f4->Radiobutton(
+			-text        => '<em>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_b},
+			-value       => '<em>',
+		)->grid( -row => 2, -column => 2 );
+		$f4->Radiobutton(
+			-text        => '<em class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_b},
+			-value       => '<em class="bold">',
+		)->grid( -row => 2, -column => 3 );
+		$f4->Radiobutton(
+			-text        => '<span class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_b},
+			-value       => '<span class="bold">',
+		)->grid( -row => 2, -column => 4 );
+		$f4->Label( -text => '<g>:', )
+		  ->grid( -row => 3, -column => 0, -padx => 2, -pady => 2 );
+		$f4->Radiobutton(
+			-text        => 'ign.',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_g},
+			-value       => '<g>',
+		)->grid( -row => 3, -column => 1 );
+		$f4->Radiobutton(
+			-text        => '<em>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_g},
+			-value       => '<em>',
+		)->grid( -row => 3, -column => 2 );
+		my $gselect = $f4->Radiobutton(
+			-text        => '<em class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_g},
+			-value       => '<em class="gesperrt">',
+		)->grid( -row => 3, -column => 3 );
+		$gselect->select;
+		$f4->Radiobutton(
+			-text        => '<span class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_g},
+			-value       => '<span class="gesperrt">',
+		)->grid( -row => 3, -column => 4 );
+		$f4->Label( -text => '<f>:', )
+		  ->grid( -row => 4, -column => 0, -padx => 2, -pady => 2 );
+		$f4->Radiobutton(
+			-text        => 'ign.',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_f},
+			-value       => '<f>',
+		)->grid( -row => 4, -column => 1 );
+		$f4->Radiobutton(
+			-text        => '<em>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_f},
+			-value       => '<em>',
+		)->grid( -row => 4, -column => 2 );
+		$f4->Radiobutton(
+			-text        => '<em class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_f},
+			-value       => '<em class="antiqua">',
+		)->grid( -row => 4, -column => 3 );
+		my $fselect = $f4->Radiobutton(
+			-text        => '<span class>',
+			-selectcolor => $::lglobal{checkcolor},
+			-variable    => \$::lglobal{html_f},
+			-value       => '<span class="antiqua">',
+		)->grid( -row => 4, -column => 4 );
+		$fselect->select;
 
 		my $f2 =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
