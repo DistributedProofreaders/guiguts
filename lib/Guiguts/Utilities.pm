@@ -1073,6 +1073,10 @@ sub initialize {
 			)
 		);
 	} else {
+		my $tmpcommand = substr( qx/which tidy/, 0, -1 ); # strip trailing \n
+		$::tidycommand   = ::setdefaultpath( $::tidycommand, $tmpcommand );
+		$tmpcommand = substr( qx/which aspell/, 0, -1 );
+		$::globalspellpath = ::setdefaultpath( $::globalspellpath, $tmpcommand );
 		$::gutcommand = ::setdefaultpath(
 			$::gutcommand,
 			::catfile(
