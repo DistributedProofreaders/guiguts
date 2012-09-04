@@ -61,6 +61,9 @@ sub menu_file {
 				[	'command', 'View Project ~Comments...',
 					-command => \&::viewprojectcomments
 				],
+				[	'command', 'View Project Page [~www]',
+					-command => \&::viewprojectpage
+				],
 				[	'command', 'View Project ~Discussion [www]',
 					-command => \&::viewprojectdiscussion
 				],
