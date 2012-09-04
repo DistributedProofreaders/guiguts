@@ -1959,7 +1959,10 @@ sub menurebuild {
       menubuildold(); 
    } elsif($::menulayout eq 'wizard'){ 
       menubuildwizard(); 
-   } 
+   } else {
+      $::menulayout = 'old';
+      menubuildold();
+   }
    ::savesettings();
    return; 
 }
