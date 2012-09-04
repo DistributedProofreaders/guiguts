@@ -120,6 +120,7 @@ if ( !$globalbrowserstart ) { $globalbrowserstart = 'xdg-open'; }
 if ($OS_WIN)                { $globalbrowserstart = 'start'; }
 if ($OS_MAC)                { $globalbrowserstart = 'open'; }
 our $globalfirefoxstart = 'firefox';
+if ($OS_WIN) { $globalfirefoxstart = 'start firefox'; }
 if ($OS_MAC) { $globalfirefoxstart = 'open -a firefox'; }
 our $globalimagepath        = q{};
 our $globallastpath         = q{};
@@ -228,7 +229,7 @@ our @extops = (
 	},
 	{
 		'label'   => 'Open current file in Firefox',
-		'command' => "$globalfirefoxstart \$d\$f\$e"
+		'command' => "$globalfirefoxstart \"\$d\$f\$e\""
 	},
 	{
 		'label' => "Websters 1913 (Specialist Online Dictionary)",
