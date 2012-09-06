@@ -107,7 +107,8 @@ sub insertit {
 	my $letter  = shift;
 	my $isatext = 0;
 	my $spot;
-	$isatext = 1 if $::lglobal{hasfocus}->isa('Text');
+	#$isatext = 1 if $::lglobal{hasfocus}->isa('Text'); # isa('Text') never seems to match
+	$isatext = $::lglobal{hasfocus}->isa('Entry') || $::lglobal{hasfocus} == $::textwindow;
 	if ($isatext) {
 		$spot = $::lglobal{hasfocus}->index('insert');
 		my @ranges = $::lglobal{hasfocus}->tagRanges('sel');
