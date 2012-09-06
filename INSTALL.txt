@@ -1,5 +1,6 @@
-Upgrading requires a complete reinstall (save header.txt and setting.rc
-although in theory these should not be be overwritten).
+Upgrading requires a complete reinstall (save header.txt, setting.rc,
+and any files you wish to keep in the data/ directory, although in
+theory these should not be overwritten).
 
 WINDOWS
 

@@ -12,8 +12,8 @@ guiguts.bat (it includes copies of perl and Python languages).
 
 MAC:
 
-guiguts-mac-1.0.nn (if available) should work out of the box for Mac
-users; it includes a few helper applications.
+guiguts-mac-1.0.nn.zip (if available) should work out of the box for
+Mac users; it includes a few helper applications.
 
 OTHER:
 
@@ -21,7 +21,28 @@ guiguts-1.0.nn.zip is the basic guiguts version with no helper
 applications; it includes compilable source code for GutCheck and
 Jeebies.
 
+
 RELEASE NOTES:
+
+Version 1.0.21.
+- HTML Fixup split in two: HTML Markup and HTML Generator.
+- Rewrap margins made consistent.
+- Added Txt Conversion popup.
+- Centering and right-aligning of txt added.
+- Orphaned brackets made less confusing.
+- minor cleanup of menus and some popups.
+- positionhash added as a supplement to geometryhash.
+- Various bug fixes, including:
+  - sentence-ending punctuation eaten by footnote markers.
+  - $t in extops with no selection.
+  - Save As while Page Markers visible.
+  - bom is gone.
+  - tidy handles unicode better.
+  - some html page numbers inserted in a wrong place.
+  - undo and redo will move the window to show the edited position.
+  - some "undefined subroutine"s fixed.
+  - some user settings would be ignored and overwritten by the default.
+  - inserting from character popups didn't overwrite selection.
 
 Version 1.0.20.
 - Display and set language added to statusbar (+ some adjustments of
