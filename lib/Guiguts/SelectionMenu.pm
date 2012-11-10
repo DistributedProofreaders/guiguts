@@ -213,20 +213,20 @@ sub selectrewrap {
 			# if selection begins with "/#"
 			if ( $selection =~ /^\x7f*\/\#/ ) {
 				$::blockwrap = 1;
-				$leftmargin  = $::blocklmargin + 1;
-				$firstmargin = $::blocklmargin + 1;
+				$leftmargin  = $::blocklmargin;
+				$firstmargin = $::blocklmargin;
 				$rightmargin = $::blockrmargin;
 
 				# if there are any parameters /#[n...
 				if ( $selection =~ /^\x7f*\/#\[(\d+)/ )
 				{    #check for block rewrapping with parameter markup
-					if ($1) { $leftmargin = $1 + 1 }
+					if ($1) { $leftmargin = $1 }
 					$firstmargin = $leftmargin;
 				}
 
 				# if there are any parameters /#[n.n...
 				if ( $selection =~ /^\x7f*\/#\[(\d+)?(\.)(\d+)/ ) {
-					if ( length $3 ) { $firstmargin = $3 + 1 }
+					if ( length $3 ) { $firstmargin = $3 }
 				}
 
 				# if there are any parameters /#[n.n,n...
