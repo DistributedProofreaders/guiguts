@@ -161,8 +161,9 @@ sub closeupmarkup {
 	my $changemade = 0;
 	my $linebefore = $textwindow->get( 'page-1l linestart', 'page-1l lineend' );
 	my $lineafter  = $textwindow->get( 'page+1l linestart', 'page+1l lineend' );
-	if ( $linebefore =~ /((#|\*|p|x|f))\/$/ ) {
+	if ( $linebefore =~ /((#|\*|p|x|f|l))\/$/ ) {
 		my $closemarkup = "/$1\$";
+		$closemarkup = "/\\\*\$" if ( $1 eq '*' );
 		if ( $lineafter =~ $closemarkup ) {
 			$textwindow->delete( 'page+1l linestart', 'page+1l lineend' );
 			$textwindow->delete('page+1l linestart');
@@ -170,8 +171,8 @@ sub closeupmarkup {
 			$textwindow->delete('page-1l linestart');
 			$changemade = 1;
 		}
-	} elsif ( $linebefore =~ /<\/(i|b|sc)>([,;*]?)$/ ) {
-		my $lengthmarkup = 4 + length($2);
+	} elsif ( $linebefore =~ /<\/(i|b|f|g|sc)>([,;*]?)$/ ) {
+		my $lengthmarkup = 3 + length($1) + length($2);
 		my $lengthpunctuation;
 		if ($2) {
 			$lengthpunctuation = length($2) if ($2);
@@ -180,7 +181,7 @@ sub closeupmarkup {
 		}
 		my $openmarkup = "^<$1>";
 		if ( $lineafter =~ $openmarkup ) {
-			$textwindow->delete( 'page+1l linestart', 'page+1l linestart+3c' );
+			$textwindow->delete( 'page+1l linestart', 'page+1l linestart +'.($lengthmarkup-1).'c' );
 			$textwindow->delete(
 				"page-1l lineend-$lengthmarkup" . "c",
 				"page-1l lineend-$lengthpunctuation" . "c"
