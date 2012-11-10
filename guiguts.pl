@@ -87,8 +87,10 @@ use Guiguts::CharacterTools;
 use Guiguts::Utilities;
 use Guiguts::WordFrequency;
 ### Constants
-our $no_proofer_url  = 'http://www.pgdp.net/phpBB2/privmsg.php?mode=post';
-our $yes_proofer_url = 'http://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
+our $url_no_proofer  = 'http://www.pgdp.net/phpBB2/privmsg.php?mode=post';
+our $url_yes_proofer = 'http://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
+our $urlprojectpage  = 'http://www.pgdp.net/c/project.php?id=';
+our $urlprojectdiscussion = 'http://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
 ### Application Globals
 our $OS_WIN = $^O =~ m{Win};
 our $OS_MAC = $^O =~ m{darwin};

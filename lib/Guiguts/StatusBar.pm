@@ -823,9 +823,9 @@ sub showproofers {
 sub prfrmessage {
 	my $proofer = shift;
 	if ( $proofer eq '' ) {
-		::launchurl( $::no_proofer_url );
+		::launchurl( $::url_no_proofer );
 	} else {
-		::launchurl( "$::yes_proofer_url$proofer" );
+		::launchurl( "$::url_yes_proofer$proofer" );
 	}
 }
 

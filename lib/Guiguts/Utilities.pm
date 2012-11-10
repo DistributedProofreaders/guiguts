@@ -2193,18 +2193,14 @@ sub viewprojectdiscussion {
 	::operationadd('View project discussion online');
 	return if ::nofileloadedwarning();
 	::setprojectid() unless $::projectid;
-	::launchurl(
-"http://www.pgdp.net/c/tools/proofers/project_topic.php?project=$::projectid"
-	) if $::projectid;
+	::launchurl( $::urlprojectdiscussion . $::projectid ) if $::projectid;
 }
 
 sub viewprojectpage {
 	::operationadd('View project page online');
 	return if ::nofileloadedwarning();
-	::setprojectid() unless ( $::projectid );
-	::launchurl(
-"http://www.pgdp.net/c/project.php?id=$::projectid"
-	) if $::projectid;
+	::setprojectid() unless $::projectid ;
+	::launchurl( $::urlprojectpage . $::projectid ) if $::projectid;
 }
 
 1;
