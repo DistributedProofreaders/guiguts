@@ -1,6 +1,9 @@
 /setting.rc
+/header.txt
+/data/labels_en.rc
+*.pl~
+*.pm~
 /packup.bat
-/guiguts-1.0.15.zip
-/guiguts-win-1.0.15.zip
+/guiguts-*.zip
 /perl
 /Python27
