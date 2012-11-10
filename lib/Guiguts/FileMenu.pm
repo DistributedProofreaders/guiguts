@@ -61,7 +61,7 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 
 sub file_saveas {
 	my $textwindow = shift;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $name = $textwindow->getSaveFile(
 		-title      => 'Save As',
 		-initialdir => $::globallastpath
@@ -104,7 +104,7 @@ sub file_saveas {
 sub file_close {
 	my $textwindow = shift;
 	return if ( ::confirmempty() =~ m{cancel}i );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	clearvars($textwindow);
 	::update_indicators();
 	return;
@@ -377,7 +377,7 @@ sub clearvars {
 
 sub savefile {    # Determine which save routine to use and then use it
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
 		if ( $textwindow->numberChanges == 0 ) {
 			return;
@@ -424,7 +424,7 @@ sub file_mark_pages {
 	my $top        = $::top;
 	my $textwindow = $::textwindow;
 	$top->Busy( -recurse => 1 );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my ( $line, $index, $page, $rnd1, $rnd2, $pagemark );
 	$::searchstartindex = '1.0';
 	$::searchendindex   = '1.0';

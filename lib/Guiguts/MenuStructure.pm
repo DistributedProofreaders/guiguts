@@ -75,7 +75,7 @@ sub menu_file {
 					-command => \&::file_mark_pages
 				],
 				[	'command', '~Adjust Page Markers...',
-					-command => \&::viewpagenums
+					-command => \&::togglepagenums
 				],
 				[ 'separator', '' ],
 				[	'command', 'Export One File with Page Separators',
@@ -1407,7 +1407,7 @@ sub menubuildwizard {
 					[
 						'command',
 						'~Adjust Page Markers',
-						-command => \&::viewpagenums
+						-command => \&::togglepagenums
 					],
 				]
 			],

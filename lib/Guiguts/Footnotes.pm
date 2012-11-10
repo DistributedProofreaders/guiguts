@@ -13,7 +13,7 @@ sub footnotepop {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	::operationadd('Footnote Fixup' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{footpop} ) ) {
 		$::lglobal{footpop}->deiconify;
 		$::lglobal{footpop}->raise;
@@ -507,7 +507,7 @@ sub fnview {
 	my $textwindow = $::textwindow;
 	my ( %fnotes, %anchors, $ftext );
 	my $allcheckspassed =1; # flag if all checks passed
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{footviewpop} ) ) {
 		$::lglobal{footviewpop}->deiconify;
 		$::lglobal{footviewpop}->raise;
@@ -642,7 +642,7 @@ sub fnview {
 sub footnotefixup {
 	my $top        = $::top;
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::operationadd('Reindex footnotes') if 	$::lglobal{fnsecondpass} == 1;
 	my ( $start, $end, $anchor, $pointer );
 	$textwindow->markSet( 'lastfnindex', '1.0' );
@@ -1158,7 +1158,7 @@ sub footnotetidy {
 		$textwindow->delete("$end-1c");
 		$textwindow->tagAdd( 'sel', 'fns' . $::lglobal{fnindex}, "$end+1c" );
 		::selectrewrap( $textwindow, $::lglobal{seepagenums},
-						 $MAIN::scannos_highlighted, $::rwhyphenspace );
+						 $::scannos_highlighted, $::rwhyphenspace );
 		$::lglobal{fnindex}++;
 		last if $::lglobal{fnindex} > $::lglobal{fntotal};
 	}

@@ -14,7 +14,7 @@ sub errorcheckpop_up {
 	my ( $textwindow, $top, $errorchecktype ) = @_;
 	my ( %errors,     @errorchecklines );
 	my ( $line,       $lincol );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( $::lglobal{errorcheckpop} ) {
 		$::lglobal{errorcheckpop}->destroy;
 		undef $::lglobal{errorcheckpop};
@@ -315,7 +315,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 		}
 	}
 	::operationadd( "$errorchecktype" );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( $::lglobal{errorcheckpop} ) {
 		$::lglobal{errorchecklistbox}->delete( '0', 'end' );
 	}
@@ -870,7 +870,7 @@ sub gcheckpop_up {
 	my $textwindow = $::textwindow;
 	my @gclines;
 	my ( $line, $linenum, $colnum, $lincol, $word );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( $::lglobal{gcpop} ) {
 		$::lglobal{gcpop}->deiconify;
 		$::lglobal{gclistbox}->delete( '0', 'end' );
@@ -1244,7 +1244,7 @@ sub gutcheck {
 	my $top        = $::top;
 	no warnings;
 	::operationadd('Gutcheck' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my ( $name, $path, $extension, @path );
 	$textwindow->focus;
 	::update_indicators();
@@ -1411,7 +1411,7 @@ sub jeebiespop_up {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my @jlines;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( $::lglobal{jeepop} ) {
 		$::lglobal{jeepop}->deiconify;
 	} else {

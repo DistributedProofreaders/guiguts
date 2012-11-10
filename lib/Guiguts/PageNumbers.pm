@@ -7,11 +7,21 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw( &viewpagenums &gotolabel &pnumadjust &pgnext &pgprevious &pgrenum &pmovedown
+	  qw( &hidepagenums &displaypagenums &togglepagenums &gotolabel
+	  &pnumadjust &pgnext &pgprevious &pgrenum &pmovedown
 	  &pmoveup &pmoveleft &pmoveright &pageadd &pageremove	);
 }
+
+sub hidepagenums {
+	::togglepagenums() if $::lglobal{seepagenums};
+}
+
+sub displaypagenums {
+	::togglepagenums() unless $::lglobal{seepagenums};
+}
+
 ## Toggle visible page markers. This is not line numbers but marks for pages.
-sub viewpagenums {
+sub togglepagenums {
 	my $showallmarkers = shift;
 	my $textwindow = $::textwindow;
 	if ( $::lglobal{seepagenums} ) {
@@ -113,6 +123,7 @@ sub gotolabel {
 		$::lglobal{gotolabpop}->Wait;
 	}
 }
+
 ## Page Number Adjust
 sub pnumadjust {
 	my $textwindow = $::textwindow;
@@ -249,7 +260,7 @@ sub pnumadjust {
 		$frame6->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				viewpagenums();
+				::togglepagenums();
 				$textwindow->addGlobStart;
 				my @marks = $textwindow->markNames;
 				for ( sort @marks ) {
@@ -278,11 +289,10 @@ sub pnumadjust {
 		  ->bind( $::lglobal{pnumpop}, '<Delete>' => \&::pageremove );
 		$::lglobal{pnumpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-
 				#$geometryhash{pnumpop} = $::lglobal{pnumpop}->geometry;
 				$::lglobal{pnumpop}->destroy;
 				undef $::lglobal{pnumpop};
-				::viewpagenums() if ( $::lglobal{seepagenums} );
+				::hidepagenums();
 			}
 		);
 		if ($::OS_WIN) {
@@ -305,14 +315,14 @@ sub pageremove {    # Delete a page marker
 	my $textwindow = $::textwindow;
 	my $num        = $::lglobal{pagenumentry}->get;
 	$num = $textwindow->index('insert') unless $num;
-	::viewpagenums() if $::lglobal{seepagenums};
+	::hidepagenums();
 	$textwindow->markUnset($num);
 	%::pagenumbers = ();
 	my @marks = $textwindow->markNames;
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\S+/;
 	}
-	::viewpagenums();
+	::displaypagenums();
 }
 
 sub pageadd {    # Add a page marker
@@ -343,17 +353,15 @@ sub pageadd {    # Add a page marker
 	$mark = "Pg$mark";
 	$textwindow->markSet( 'insert', $insert );
 	return 0 if ( $textwindow->markExists($mark) );
-	::viewpagenums() if $::lglobal{seepagenums};
+	::hidepagenums();
 	$textwindow->markSet( $mark, $insert );
 	$textwindow->markGravity( $mark, 'left' );
 	%::pagenumbers = ();
 	my @marks = $textwindow->markNames;
-
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\S+/;
 	}
-	$::lglobal{seepagenums} = 0;
-	::viewpagenums();
+	::displaypagenums();
 	return 1;
 }
 
@@ -399,8 +407,7 @@ sub pgrenum {    # Re sequence page markers
 	}
 	$textwindow->bell unless $offset;
 	return unless $offset;
-	$::lglobal{seepagenums} = 1;
-	::viewpagenums();
+	::hidepagenums();
 	$textwindow->markSet( 'insert', '1.0' );
 	%::pagenumbers = ();
 	while (1) {
@@ -423,8 +430,7 @@ sub pgrenum {    # Re sequence page markers
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\d+/;
 	}
-	$::lglobal{seepagenums} = 0;
-	::viewpagenums();
+	::displaypagenums();
 }
 
 sub pgprevious {    #move focus to previous page marker
@@ -500,7 +506,6 @@ sub pmoveup {    # move the page marker up a line
 	if ( $num eq '1.0' ) {
 		return if $textwindow->compare( $index, '<', '1.0' );
 	} else {
-
 		#		return
 		#		  if $textwindow->compare(
 		#								   $index, '<',
@@ -617,4 +622,5 @@ sub pmovedown {    # move the page marker down a line
 	$textwindow->see($mark);
 }
 ## End Page Number Adjust
+
 1;

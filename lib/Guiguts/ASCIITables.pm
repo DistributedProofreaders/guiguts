@@ -8,9 +8,10 @@ BEGIN {
 	@ISA    = qw(Exporter);
 	@EXPORT = qw(&tablefx);
 }
+
 ## ASCII Table Special Effects
 sub tablefx {
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	if ( defined( $::lglobal{tblfxpop} ) ) {

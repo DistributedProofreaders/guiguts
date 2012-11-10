@@ -93,7 +93,7 @@ sub wrapper {
 sub selectrewrap {
 	#my ( $textwindow, $seepagenums, $scannos_highlighted ) = @_;
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ($::seepagenums);
+	::hidepagenums();
 	::savesettings();
 	my $marker      = shift @_;
 	my @ranges      = $textwindow->tagRanges('sel');
@@ -922,7 +922,7 @@ sub blockrewrap {
 sub asciipopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{asciipop} ) ) {
 		$::lglobal{asciipop}->deiconify;
 		$::lglobal{asciipop}->raise;

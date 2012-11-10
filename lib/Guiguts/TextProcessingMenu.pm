@@ -271,7 +271,7 @@ sub txt_convert_palette {
 
 sub fixpopup {
 	my $top = $::top;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{fixpop} ) ) {
 		$::lglobal{fixpop}->deiconify;
 		$::lglobal{fixpop}->raise;
@@ -343,7 +343,7 @@ sub fixpopup {
 sub fixup {
 	my $textwindow = $::textwindow;
 	::operationadd('Fixup Routine' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my ($line);
 	my $index     = '1.0';
 	my $lastindex = '1.0';
@@ -494,7 +494,7 @@ sub text_remove_smallcaps_markup {
 sub endofline {
 	my $textwindow = $::textwindow;
 	::operationadd('Remove end-of-line spaces' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $start  = '1.0';
 	my $end    = $textwindow->index('end');
 	my @ranges = $textwindow->tagRanges('sel');
@@ -513,7 +513,7 @@ sub cleanup {
 	my $top        = $::top;
 	$top->Busy( -recurse => 1 );
 	$::searchstartindex = '1.0';
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	$textwindow->addGlobStart;
 	while (1) {
 		$::searchstartindex =

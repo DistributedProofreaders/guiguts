@@ -33,7 +33,7 @@ sub searchtext {
 	my ($searchterm) = @_;
 	my $textwindow   = $::textwindow;
 	my $top          = $::top;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 
 #print $::sopt[0],$::sopt[1],$::sopt[2],$::sopt[3],$::sopt[4].":sopt\n";
 # $::sopt[0] --> 0 = pattern search                       1 = whole word search
@@ -618,7 +618,7 @@ sub updatesearchlabels {
 # calls the replacewith command after calling replaceeval
 # to allow arbitrary perl code to be included in the replace entry
 sub replace {
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $replaceterm = shift;
 	$replaceterm = '' unless length $replaceterm;
 	return unless $::searchstartindex;
@@ -1051,7 +1051,7 @@ sub searchoptset {
 sub searchpopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::operationadd('Stealth Scannos') if $::lglobal{doscannos};
 	my $aacheck;
 	my $searchterm = '';
@@ -1882,7 +1882,7 @@ sub orphanedbrackets {
 	sub brsearch {
 		my ( $brkresult, $brnextbt ) = @_;
 		my $textwindow = $::textwindow;
-		::viewpagenums() if ( $::lglobal{seepagenums} );
+		::hidepagenums();
 		$brkresult->configure( -text => '' );
 		@{ $::lglobal{brbrackets} } = ();
 		@{ $::lglobal{brindices} }  = ();
@@ -1932,7 +1932,7 @@ sub orphanedbrackets {
 	sub brnext {
 		my ( $brkresult, $brnextbt ) = @_;
 		my $textwindow = $::textwindow;
-		::viewpagenums() if ( $::lglobal{seepagenums} );
+		::hidepagenums();
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 		while (1) {
 			last

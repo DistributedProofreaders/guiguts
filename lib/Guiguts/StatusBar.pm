@@ -342,7 +342,7 @@ sub update_img_button {
 			'<3>',
 			sub {
 				$::lglobal{img_num_label}->configure( -relief => 'sunken' );
-				::viewpagenums();
+				::togglepagenums();
 				::update_indicators();
 			}
 		);
@@ -423,7 +423,7 @@ sub update_prev_img_button {
 			sub {
 				$::lglobal{previmagebutton}->configure( -relief => 'sunken' );
 				$::lglobal{showthispageimage} = 1;
-				::viewpagenums() unless $::lglobal{pnumpop};
+				::displaypagenums();
 				$textwindow->focus;
 				::pgprevious();
 			}
@@ -486,7 +486,7 @@ sub update_next_img_button {
 			sub {
 				$::lglobal{nextimagebutton}->configure( -relief => 'sunken' );
 				$::lglobal{showthispageimage} = 1;
-				::viewpagenums() unless $::lglobal{pnumpop};
+				::displaypagenums();
 				$textwindow->focus;
 				::pgnext();
 			}

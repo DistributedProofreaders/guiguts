@@ -1983,7 +1983,7 @@ sub gnutenberg {
 sub sidenotes {
 	my $textwindow = $::textwindow;
 	::operationadd('Sidenote Fixup');
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	$textwindow->markSet( 'sidenote', '1.0' );
 	my ( $bracketndx, $nextbracketndx, $bracketstartndx, $bracketendndx,
 		$paragraphp, $paragraphn, $sidenote, $sdnoteindexstart );
@@ -2088,7 +2088,7 @@ sub sidenotes {
 sub poetrynumbers {
 	my $textwindow = $::textwindow;
 	$::searchstartindex = '1.0';
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::operationadd('Reformat poetry line numbers');
 	my ( $linenum, $line, $spacer, $row, $col );
 	while (1) {

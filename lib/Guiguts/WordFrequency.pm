@@ -93,7 +93,7 @@ sub wordfrequency {
 	my $top        = $::top;
 	my $textwindow = $::textwindow;
 	::operationadd('Word Frequency');
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::oppopupdate()  if $::lglobal{oppop};
 	my ( @words, $match, @savesets );
 	my $index = '1.0';

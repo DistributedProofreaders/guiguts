@@ -35,7 +35,7 @@ my $minfreq = 5;
 sub spellmultiplelanguages {
 	my ( $textwindow, $top ) = @_;
 	::operationadd('multilingual spelling' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 
 	# find Aspell and base language if necessary
 	::spelloptions() unless $::globalspellpath;
@@ -49,7 +49,7 @@ sub spellmultiplelanguages {
 sub multilangpopup {
 	my ( $textwindow, $top ) = @_;
 	::operationadd('Multilingual Spelling' );
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 
 	# open popup if necessary
 	if ( defined( $::lglobal{multispellpop} ) ) {

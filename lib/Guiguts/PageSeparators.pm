@@ -55,7 +55,7 @@ EOM
 # Search for page separator. If automatic, then process it.
 sub refreshpageseparator {
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	findpageseparator();
 	$textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
 	  if $::searchstartindex;
@@ -200,7 +200,7 @@ sub closeupmarkup {
 sub processpageseparator {
 	my $op         = shift;
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my ( $line, $index, $r, $c );
 	findpageseparator();
 	$::lglobal{joinundo} = 0;
@@ -637,7 +637,7 @@ sub iterateeautomatic {
 # Delete blank lines before page separators
 sub delblanklines {
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::operationadd('Remove blank lines before page separators');
 	my ( $line, $index, $r, $c, $pagemark );
 	$::searchstartindex = '2.0';

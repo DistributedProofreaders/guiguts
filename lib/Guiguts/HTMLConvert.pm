@@ -1922,7 +1922,7 @@ sub htmlimages {
 
 sub htmlautoconvert {
 	my ( $textwindow, $top, $title, $author ) = @_;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $headertext;
 	if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
 		$top->messageBox(
@@ -2028,7 +2028,7 @@ sub thumbnailbrowse {
 sub htmlgenpopup {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	::operationadd('Begin HTML Generation');
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{htmlgenpop} ) ) {
 		$::lglobal{htmlgenpop}->deiconify;
 		$::lglobal{htmlgenpop}->raise;
@@ -2405,7 +2405,7 @@ sub htmlgenpopup {
 sub htmlmarkpopup {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	::operationadd('Begin HTML Markup');
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	if ( defined( $::lglobal{markpop} ) ) {
 		$::lglobal{markpop}->deiconify;
 		$::lglobal{markpop}->raise;
@@ -2675,7 +2675,7 @@ sub markup {
 	my $mark       = shift;
 	my $mark1;
 	$mark1 = shift if @_;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	::savesettings();
 	my @ranges = $textwindow->tagRanges('sel');
 
@@ -3101,7 +3101,7 @@ sub makeanchor {
 
 sub autoindex {
 	my $textwindow = shift;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my @ranges = $textwindow->tagRanges('sel');
 	unless (@ranges) {
 		push @ranges, $textwindow->index('insert');
@@ -3157,7 +3157,7 @@ sub autoindex {
 
 sub autolist {
 	my $textwindow = shift;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my @ranges = $textwindow->tagRanges('sel');
 	unless (@ranges) {
 		push @ranges, $textwindow->index('insert');
@@ -3221,7 +3221,7 @@ sub autolist {
 
 sub autotable {
 	my ( $textwindow, $format ) = @_;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my @cformat;
 	if ($format) {
 		@cformat = split( //, $format );
@@ -3308,7 +3308,7 @@ sub autotable {
 
 sub orphans {
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my $br = shift;
 	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 	my ( $thisindex, $open, $close, $crow, $ccol, $orow, $ocol, @op );
@@ -3440,7 +3440,7 @@ sub orphans {
 
 sub poetryhtml {
 	my $textwindow = $::textwindow;
-	::viewpagenums() if ( $::lglobal{seepagenums} );
+	::hidepagenums();
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	if ( $range_total == 0 ) {
