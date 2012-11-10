@@ -806,6 +806,9 @@ sub openfile {    # and open it
 	}
 	::getprojectid() unless $::projectid;
 	_recentupdate($name);
+	unless ( -e $::pngspath ) {
+		$::pngspath = '';
+	}
 	::update_indicators();
 	file_mark_pages() if $::auto_page_marks;
 	::readlabels();
