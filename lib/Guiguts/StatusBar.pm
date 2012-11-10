@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&update_indicators &_updatesel &buildstatusbar &seecurrentimage
-	  &setlang &showproofers &selection &gotoline &gotopage);
+	  &setlang &tglprfbar &showproofers &selection &gotoline &gotopage);
 }
 
 # Routine to update the status bar when something has changed.
