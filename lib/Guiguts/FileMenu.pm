@@ -658,7 +658,6 @@ sub operationadd {
 	$::operationshash{$operation} = $timestamp;
 	$operation = ::escape_problems($operation);
 	::oppopupdate() if $::lglobal{oppop};
-	::_bin_save();
 }
 
 # Pop up an "Operation" history. Track which functions have already been
