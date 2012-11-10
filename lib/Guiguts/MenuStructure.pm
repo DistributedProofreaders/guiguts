@@ -472,6 +472,16 @@ sub menu_preferences {
 				],
 				[ 'separator', '' ],
 				[
+					Checkbutton => 'Display Character Names',
+					-variable   => \$::lglobal{longordlabel},
+					-command    => sub {
+						$::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
+						::togglelongordlabel();
+					},
+					-onvalue    => 1,
+					-offvalue   => 0
+				],
+				[
 					Checkbutton => 'Display Proofer Bar',
 					-variable   => \$::lglobal{proofbarvisible},
 					-command    => sub {

@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&update_indicators &_updatesel &buildstatusbar &seecurrentimage
+	  qw(&update_indicators &_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
 	  &setlang &tglprfbar &showproofers &selection &gotoline &gotopage);
 }
 
@@ -302,8 +302,7 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
 		'<1>',
 		sub {
 			$::lglobal{ordinallabel}->configure( -relief => 'sunken' );
-			$::lglobal{longordlabel} = $::lglobal{longordlabel} ? 0 : 1;
-			::update_indicators();
+			::togglelongordlabel();
 		}
 	);
 	_butbind($_)
@@ -419,6 +418,11 @@ sub update_ordinal_button {
 										  -width => 18
 		) if ( $::lglobal{ordinallabel} );
 	}
+}
+
+sub togglelongordlabel {
+	$::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
+	::update_indicators();
 }
 
 sub update_prev_img_button {
