@@ -39,7 +39,7 @@ sub menu_file {
 		[ 'separator', '' ],
 		[
 			Cascade    => '~Project',
-			-tearoff   => 0,
+			-tearoff   => 1,
 			-menuitems => [
 				[	'command', 'See ~Image...',
 					-command => \&::seecurrentimage
@@ -68,14 +68,17 @@ sub menu_file {
 					-command => \&::viewprojectdiscussion
 				],
 				[ 'separator', '' ],
+				[	'command', '~Display/Adjust Page Markers...',
+					-command => \&::togglepagenums
+				],
 				[	'command', '~Guess Page Markers...',
 					-command => \&::file_guess_page_marks
 				],
 				[	'command', '~Set Page Markers',
 					-command => \&::file_mark_pages
 				],
-				[	'command', '~Adjust Page Markers...',
-					-command => \&::togglepagenums
+				[	'command', 'Configure Page La~bels...',
+					-command => \&::pageadjust
 				],
 				[ 'separator', '' ],
 				[	'command', 'Export One File with Page Separators',
@@ -104,60 +107,59 @@ sub menu_file {
 sub menu_help {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top);
 	[
-		[ Button   => '~Manual',
+		[ Button   => '~Manual [www]',
 			-command => sub {
 				::launchurl( "http://www.pgdp.net/wiki/PPTools/Guiguts" );
 			  }
 		],
-		[ Button  => 'Guiguts Help on DP Forum [www]',
+		[ Button  => 'Guiguts ~Help on DP Forum [www]',
 		  -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=30324'); }
 		],
-		[ Button => 'Keyboard S~hortcuts',    -command => \&::hotkeyshelp ],
+		[ Button => '~Keyboard Shortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
-		[ Button => 'Rewrap Markers [www]',
+		[ Button => 'Re~wrap Markers [www]',
 		  -command => sub {
 			::launchurl( 'http://www.pgdp.net/wiki/PPTools/Guiguts/Rewrapping#Rewrap_Markers' );
-		  }
-		],
-		[ Cascade => 'Bugs and Feature Requests',
-		  -tearoff => 1,
-		  -menuitems =>
-		  [
-		    [ Button  => 'Report a Bug (SF tracker) [www]',
-		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
-		        . ( $::OS_WIN ? '' : '&atid=1009518' ) ); } 
-		    ],
-		    [ Button  => 'Report a Bug (DP forum) [www]',
-		      -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=48584'); }
-		    ],
-		    [ Button  => 'Suggest Feature (SF tracker) [www]',
-		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
-		        .( $::OS_WIN ? '' : '&atid=1009521' ) ); } 
-		    ],
-		    [ Button  => 'Suggest Feature (DP wiki) [www]',
-		      -command => sub { ::launchurl('http://www.pgdp.net/wiki/Guiguts_Enhancements'); }
-		    ],
-		  ]
-		],
-		[ 'separator', '' ],
-		[ Button   => '~PP Process Checklist',
-		  -command => sub {
-			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
 		  }
 		],
 		[ 'separator', '' ],
 		[ Button => '~Greek Transliteration', -command => \&::greekpopup ],
 		[ Button => '~Latin 1 Chart',         -command => \&::latinpopup ],
-		[ Button => '~UTF Character entry',   -command => \&::utford ],
-		[ Button => '~UTF Character Search',  -command => \&::uchar ],
+		[ Button => 'UTF Character ~Entry',   -command => \&::utford ],
+		[ Button => 'UTF Character ~Search',  -command => \&::uchar ],
+		[ 'separator', '' ],
+		[ Button   => 'GG ~PP Process Checklist',
+		  -command => sub {
+			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
+		  }
+		],
 		[ 'separator', '' ],
 		[ Button => '~About Guiguts', -command => sub { ::about_pop_up($top) } ],
-		[ Button => '~Versions', -command => [ \&::showversion ] ],
-
+		[ Button => 'Software ~Versions', -command => [ \&::showversion ] ],
 		# FIXME: Disable update check until it works - so? does it now?
 		[
-			Button   => 'Check For ~Updates',
+			Button   => 'Check for ~Updates',
 			-command => sub { ::checkforupdates(0) }
+		],
+		[ Cascade => '~Bugs and Enhancements',
+		  -tearoff => 1,
+		  -menuitems =>
+		  [
+		    [ Button  => 'Report a ~Bug (SF Tracker) [www]',
+		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
+		        . ( $::OS_WIN ? '' : '&atid=1009518' ) ); } 
+		    ],
+		    [ Button  => 'Report a Bug (DP ~Forum) [www]',
+		      -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=48584'); }
+		    ],
+		    [ Button  => 'Suggest ~Enhancement (SF Tracker) [www]',
+		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
+		        .( $::OS_WIN ? '' : '&atid=1009521' ) ); } 
+		    ],
+		    [ Button  => 'Suggest Enhancement (DP ~Wiki) [www]',
+		      -command => sub { ::launchurl('http://www.pgdp.net/wiki/Guiguts_Enhancements'); }
+		    ],
+		  ]
 		],
 	];
 }
@@ -323,7 +325,7 @@ sub menu_preferences {
 		],
 		[
 			Cascade  => '~Appearance',
-			-tearoff => 0,
+			-tearoff => 1,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
 				[ Button => '~Font...', -command => \&::fontsize ],
@@ -468,6 +470,19 @@ sub menu_preferences {
 					},
 					-value => 'right'
 				],
+				[ 'separator', '' ],
+				[
+					Checkbutton => 'Display Proofer Bar',
+					-variable   => \$::lglobal{proofbarvisible},
+					-command    => sub {
+						if ( $::lglobal{img_num_label} ) {
+							$::lglobal{proofbarvisible} = 1 - $::lglobal{proofbarvisible};
+							::tglprfbar();
+						}
+					},
+					-onvalue    => 1,
+					-offvalue   => 0
+				],
 			],
 		],
 		[
@@ -501,7 +516,7 @@ sub menu_preferences {
 		],
 		[
 			Cascade  => '~Processing',
-			-tearoff => 0,
+			-tearoff => 1,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
 				[
@@ -754,7 +769,7 @@ sub menubuildold {
 			],
 			[
 				'command',
-				'Find Orphaned Markup...',
+				'Find Orphaned DP Markup...',
 				-command => \&::orphanedmarkup
 			],
 			[
@@ -975,7 +990,7 @@ sub menubuildold {
 			[ 'separator', '' ],
 			[ Button => '~Footnote Fixup...', -command => \&::footnotepop ],
 			[
-				Button   => 'H~TML Generator...',
+				Button   => 'H~TML Generator & Checks...',
 				-command => sub { ::htmlgenpopup( $textwindow, $top ) }
 			],
 			[
@@ -997,7 +1012,7 @@ sub menubuildold {
 			],
 			[
 				Cascade    => 'PGTEI Tools',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => [
 					[
 						Button   => 'W3C Validate PGTEI',
@@ -1025,7 +1040,7 @@ sub menubuildold {
 			],
 			[
 				Cascade    => 'RST Tools',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => [
 					[
 						Button   => 'EpubMaker Online',
@@ -1382,17 +1397,17 @@ sub menubuildwizard {
 			],
 			[
 				Cascade    => 'Bookmarks',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => &menu_bookmarks
 			],
 			[
 				Cascade    => 'External',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => &menu_external
 			],
 			[
 				Cascade    => 'Page Markers',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => [
 					[
 						'command',
@@ -1688,7 +1703,7 @@ sub menubuildwizard {
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => 'H~TML Generator...',
+				Button   => 'H~TML Generator & Checks...',
 				-command => sub { ::htmlgenpopup( $textwindow, $top ) }
 			],
 			[
@@ -1759,13 +1774,13 @@ sub menubuildwizard {
 					unlink 'null' if ( -e 'null' );
 				  }
 			],
-			[
-				Button   => 'Epub Friendly',
-				-command => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
-					unlink 'null' if ( -e 'null' );
-				  }
-			],
+			#[
+			#	Button   => 'Check some common epub problems',
+			#	-command => sub {
+			#		::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
+			#		unlink 'null' if ( -e 'null' );
+			#	  }
+			#],
 			[
 				Button   => 'Check All',
 				-command => sub {
@@ -1781,7 +1796,7 @@ sub menubuildwizard {
 		-menuitems => [
 			[
 				Cascade    => 'PGTEI Tools',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => [
 					[
 						Button   => 'W3C Validate PGTEI',
@@ -1808,7 +1823,7 @@ sub menubuildwizard {
 			],
 			[
 				Cascade    => 'RST Tools',
-				-tearoff   => 0,
+				-tearoff   => 1,
 				-menuitems => [
 					[
 						Button   => 'dp2rst Conversion',

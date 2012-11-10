@@ -371,6 +371,7 @@ sub clearvars {
 	$::pngspath               = q{};
 	$::lglobal{seepagenums}   = 0;
 	@{ $::lglobal{fnarray} } = ();
+	::tglprfbar() if $::lglobal{proofbarvisible};
 	undef $::lglobal{prepfile};
 	return;
 }
