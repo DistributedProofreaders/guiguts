@@ -521,7 +521,7 @@ sub linkcheckrun {
 						if ( !$imagedir ) {
 							$imagedir = $img;
 							$imagedir =~ s/\/.*?$/\//;
-							@ifiles = glob( $d . $imagedir . '*.*' );
+							@ifiles = glob( ::dos_path( $d . $imagedir ) . '*.*' );
 							for (@ifiles) { $_ =~ s/\Q$d\E// }
 							for (@ifiles) { $imagefiles{$_} = '' }
 						}

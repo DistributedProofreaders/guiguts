@@ -8,7 +8,7 @@ BEGIN {
 	@ISA    = qw(Exporter);
 	@EXPORT = qw(&openpng &get_image_file &arabic &roman
 	  &textbindings &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
-	  &win32_is_exe &win32_create_process &runner &debug_dump &run &launchurl &escape_regexmetacharacters
+	  &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
@@ -542,6 +542,14 @@ sub win32_create_process {
 		return undef;
 	}
 	return;
+}
+
+# This turns long Windows path to DOS path, e.g., C:\Program Files\
+# becomes C:\Progra~1\.
+# Removed from code in 1.0.6 (why?), reintroduced 1.0.22
+# to fix Link Check etc. failing with spaces in names
+sub dos_path {
+	return Win32::GetShortPathName( $_[0] );
 }
 
 # system(LIST)
