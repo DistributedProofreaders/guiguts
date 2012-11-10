@@ -69,6 +69,7 @@ use Guiguts::Greekgifs;
 use Guiguts::HelpMenu;
 use Guiguts::Highlight;
 use Guiguts::HTMLConvert;
+use Guiguts::KeyBindings;
 use Guiguts::LineNumberText;
 use Guiguts::MenuStructure;
 use Guiguts::MultiLingual;
@@ -290,7 +291,7 @@ readlabels();
 menurebuild();
 
 # Set up the key bindings for the text widget
-textbindings();
+keybindings();
 buildstatusbar();
 
 # Load the icon into the window bar. Needs to happen late in the process

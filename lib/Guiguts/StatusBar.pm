@@ -148,6 +148,19 @@ sub _updatesel {
 sub buildstatusbar {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
+	$::lglobal{drag_img} = $top->Photo(
+		-format => 'gif',
+		-data   => '
+R0lGODlhDAAMALMAAISChNTSzPz+/AAAAOAAyukAwRIA4wAAd8oA0MEAe+MTYHcAANAGgnsAAGAA
+AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
+'
+	);
+	$::lglobal{hist_img} = $top->Photo(
+		-format => 'gif',
+		-data =>
+		  'R0lGODlhBwAEAIAAAAAAAP///yH5BAEAAAEALAAAAAAHAAQAAAIIhA+BGWoNWSgAOw=='
+	);
+	::drag($textwindow);
 	$::lglobal{current_line_label} =
 	  $::counter_frame->Label(
 							   -text       => 'Ln: 1/1 - Col: 0',
