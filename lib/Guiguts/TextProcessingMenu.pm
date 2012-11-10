@@ -255,7 +255,7 @@ sub txt_convert_palette {
 			    if ( $::txt_conv_gesperrt );
 			  txt_convert_simple_markup( $textwindow, "</?f>", $::font_char )
 			    if ( $::txt_conv_font );
-			  txt_convert_tb( $textwindow )
+			  text_convert_tb( $textwindow )
 			    if ( $::txt_conv_tb );
 			  if ( $::txt_conv_sc ) {
 				text_uppercase_smallcaps() if ( $::txt_conv_sc == 2 );
