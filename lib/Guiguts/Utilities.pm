@@ -1342,11 +1342,12 @@ sub os_normal {
 }
 
 sub escape_problems {
-	if ( $_[0] ) {
-		$_[0] =~ s/\\+$/\\\\/g;
-		$_[0] =~ s/(?!<\\)'/\\'/g;
+	my $var = shift;
+	if ( $var ) {
+		$var =~ s/\\+$/\\\\/g;
+		$var =~ s/(?!<\\)'/\\'/g;
 	}
-	return $_[0];
+	return $var;
 }
 
 sub drag {
