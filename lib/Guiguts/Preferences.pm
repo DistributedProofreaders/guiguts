@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
-	  &autosaveinterval &saveinterval &setcolor &locateAspellExe);
+	  &autosaveinterval &saveinterval &setcolor &locateAspellExe &setDPurls );
 }
 
 sub setviewerpath {    #Find your image viewer
@@ -365,6 +365,58 @@ sub locateAspellExe {
 	return unless $::globalspellpath;
 	$::globalspellpath = ::os_normal($::globalspellpath);
 	::savesettings();
+}
+
+sub setDPurls {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	if ( defined( $::lglobal{defurlspop} ) ) {
+		$::lglobal{defurlspop}->deiconify;
+		$::lglobal{defurlspop}->raise;
+		$::lglobal{defurlspop}->focus;
+	} else {
+		$::lglobal{defurlspop} = $top->Toplevel;
+		$::lglobal{defurlspop}->title('URLs');
+		my $f0 =
+		  $::lglobal{defurlspop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		$f0->Label( -text => "Contact proofer with username:")
+		   ->grid( -row => 1, -column => 0, -sticky => 'w' );
+		$f0->Entry(
+			-width        => 70,
+			-textvariable => \$::url_yes_proofer,
+			-relief       => 'sunken',
+		    )->grid( -row => 1, -column => 1, -pady => 2 );
+		$f0->Label( -text => "Contact proofer without username:")
+		   ->grid( -row => 2, -column => 0, -sticky => 'w' );
+		$f0->Entry(
+			-width        => 70,
+			-textvariable => \$::url_no_proofer,
+			-relief       => 'sunken',
+		    )->grid( -row => 2, -column => 1, -pady => 2 );
+		$f0->Label( -text => "View project page of projectid:")
+		   ->grid( -row => 3, -column => 0, -sticky => 'w' );
+		$f0->Entry(
+			-width        => 70,
+			-textvariable => \$::urlprojectpage,
+			-relief       => 'sunken',
+		    )->grid( -row => 3, -column => 1, -pady => 2 );
+		$f0->Label( -text => "View project discussion of projectid:")
+		   ->grid( -row => 4, -column => 0, -sticky => 'w' );
+		$f0->Entry(
+			-width        => 70,
+			-textvariable => \$::urlprojectdiscussion,
+			-relief       => 'sunken',
+		    )->grid( -row => 4, -column => 1, -pady => 2 );
+		$f0->Button(
+			-activebackground => $::activecolor,
+			-text             => 'Close',
+			-command          => sub {
+				$::lglobal{defurlspop}->destroy;
+				undef $::lglobal{defurlspop};
+				::savesettings();
+			}
+		)->grid( -row => 5, -column => 0, -columnspan => 2, -pady => 5 );
+		::initialize_popup_with_deletebinding('defurlspop');
+	}
 }
 
 1;

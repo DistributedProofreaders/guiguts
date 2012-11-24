@@ -918,6 +918,7 @@ EOM
 			notoolbar poetrylmargin rmargin rwhyphenspace sc_char scannos_highlighted stayontop toolside 
 			txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
 			twowordsinhyphencheck utffontname utffontsize
+			url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
 		{

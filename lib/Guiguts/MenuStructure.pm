@@ -321,6 +321,11 @@ sub menu_preferences {
 						::savesettings();
 					  }
 				],
+				[ 'separator', '' ],
+				[
+					Button   => 'Set DP ~URLs...',
+					-command => \&::setDPurls,
+				],
 			  ]
 		],
 		[
