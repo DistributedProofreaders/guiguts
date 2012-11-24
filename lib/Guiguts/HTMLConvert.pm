@@ -2418,7 +2418,6 @@ sub htmlmarkpopup {
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my ( $inc, $row, $col ) = ( 0, 0, 0 );
 
-	   # Warning: if you add tags to the list below move nbsp and poetry buttons
 		for (
 			qw/ em strong i b h1 h2 h3 h4 h5 h6 p hr br big small ol ul li
                             sup sub blockquote q pre ins del table tr td /
@@ -2444,6 +2443,7 @@ sub htmlmarkpopup {
 			  );
 			++$inc;
 		}
+
 		while ( $inc % 5 gt 0 ) { ++$inc; }
 		for (
 		    qw/ nbsp mdash ndash dagger Dagger lsquo rsquo sbquo ldquo rdquo bdquo /
@@ -2455,6 +2455,7 @@ sub htmlmarkpopup {
 			    -activebackground => $::activecolor,
 				-command          => [
 					sub { markup( $textwindow, $top, $_[0] ); },
+					"&$_;"
 				],
 			    -text             => "$_",
 			    -width            => 10,
