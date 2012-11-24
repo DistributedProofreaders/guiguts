@@ -2051,7 +2051,9 @@ sub htmlgenpopup {
 			-width            => 16,
 		)->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
 
-		my ( $htmltitle, $htmlauthor ) = get_title_author ();
+		my $ishtml = $textwindow->search( '-nocase', '--', '<html', '1.0' );
+		my ( $htmltitle, $htmlauthor ) = ( '', '' );
+		( $htmltitle, $htmlauthor ) = get_title_author () unless $ishtml;
 		my $f0a =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0a->Label( -text => 'Title:', )
