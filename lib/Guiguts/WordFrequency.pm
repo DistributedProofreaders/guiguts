@@ -225,7 +225,7 @@ sub wordfrequency {
 				[
 					\&anythingwfcheck,
 					'words with possible ligatures',
-					'(oe|ae|æ|Æ|\x{0153}|\x{0152})'
+					'(ae|\xe6|AE|Ae|\xc6|oe|\x{0153}|OE|Oe|\x{0152})'
 				]
 			],
 			[ 'RegExpEntry', [ \&anythingwfcheck, 'dummy entry', 'dummy' ] ],
