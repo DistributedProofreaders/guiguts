@@ -2422,7 +2422,7 @@ sub htmlmarkpopup {
 
 		for (
 			qw/ em strong i b h1 h2 h3 h4 h5 h6 p hr br big small ol ul li
-                            sup sub blockquote q pre ins del table tr td /
+                            sup sub blockquote q cite ins del table tr td pre /
 		  )
 		{
 			$col = $inc % 5;
@@ -2639,9 +2639,11 @@ sub htmlmarkpopup {
 			-activebackground => $::activecolor,
 			-command          => sub {
 				for my $orphan (
-					'b',  'i',  'center', 'u',  'sub', 'sup',
-					'sc', 'h1', 'h2',     'h3', 'h4',  'h5',
-					'h6', 'p',  'span'
+					'i', 'b', 'u', 'center', 'sub', 'sup',
+					'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+					'p', 'em', 'strong', 'big', 'small',
+					'q', 'blockquote', 'cite', 'pre',
+					'del', 'ins',
 				  )
 				{
 					::working( 'Checking <' . $orphan . '>' );
@@ -2649,7 +2651,7 @@ sub htmlmarkpopup {
 				}
 				::working();
 			},
-			-text  => 'Find Orphaned Markup',
+			-text  => 'Find Some Orphaned Markup',
 			-width => 28
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 

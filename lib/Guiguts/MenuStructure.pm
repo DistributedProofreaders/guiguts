@@ -1514,7 +1514,7 @@ sub menubuildwizard {
 			],
 			[
 				'command',
-				'Find Orphaned Markup...',
+				'Find Orphaned DP Markup...',
 				-command => \&::orphanedmarkup
 			],
 			[
