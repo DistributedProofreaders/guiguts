@@ -1008,7 +1008,7 @@ sub html_convert_body {
 
 # This sets a mark for the horizontal rule at the page marker rather than just before
 # the header.
-				if ( $step - 5 <= $pagemarkline ) {
+				if ( $step - 5 <= $pagemarkline && $::lglobal{pageanch} ) {
 					$textwindow->markSet( "HRULE$pagemarkline", $hmarkindex );
 				} else {
 					$textwindow->insert($step . '.0-1l','<hr class="chap" />');
