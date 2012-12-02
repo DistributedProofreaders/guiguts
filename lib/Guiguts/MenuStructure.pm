@@ -413,6 +413,17 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
+				[
+					Checkbutton => 'Display Line Numbers',
+					-variable   => \$::vislnnm,
+					-onvalue    => 1,
+					-offvalue   => 0,
+				 	-command    => sub { $::vislnnm ?
+								 $textwindow->showlinenum :
+								 $textwindow->hidelinenum;
+							     ::savesettings();
+					}
+				],
 			  ]
 		],
 		[
