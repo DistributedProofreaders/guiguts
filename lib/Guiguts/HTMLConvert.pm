@@ -627,8 +627,9 @@ sub html_convert_body {
 				$selection = '</div></div>';
 
 				#delete two characters, insert closing </div></div>
-				$textwindow->ntdelete( "$step.0", "$step.0 +2c" );
-				$textwindow->ntinsert( "$step.0", $selection );
+				#(delete three instead, so a page number doesn't fall inside the closing tag)
+				$textwindow->ntdelete( "$step.0", "$step.0 +3c" );
+				$textwindow->ntinsert( "$step.0 -1c", "\n$selection" );
 				push @last5, $selection;
 				shift @last5 while ( scalar(@last5) > 4 );
 				$ital = 0;
