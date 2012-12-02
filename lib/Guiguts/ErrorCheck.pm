@@ -196,6 +196,9 @@ sub errorcheckpop_up {
 				{
 					next;
 				}
+				if ( !$::OS_WIN && $thiserrorchecktype eq 'W3C Validate CSS' ) {
+					$line =~ s/(\x0d)$//;
+				}
 
 				# skip some unnecessary lines from W3C Validate for PGTEI
 				if ( $line =~ /^In entity TEI/ ) {

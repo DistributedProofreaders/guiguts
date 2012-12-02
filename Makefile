@@ -24,6 +24,7 @@ generic:
 	$(ZIP) guiguts-$(VERSION).zip scannos/* wordlist/* -x $(EXCLUDES)
 	$(ZIP) guiguts-$(VERSION).zip data/labels_*_default.rc
 	$(ZIP) guiguts-$(VERSION).zip tools/gutcheck/*.* tools/jeebies/*.* tools/DPCustomMono lib/Tk/Toolbar/tkIcons -x .\* \*.exe
+	$(ZIP) guiguts-$(VERSION).zip tools/W3C/css-validator.jar tools/W3C/lib/*.jar
 
 
 clean:

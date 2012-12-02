@@ -790,6 +790,13 @@ sub initialize {
 	  unless defined $::lglobal{guigutsdirectory};
 	$::scannospath = ::catfile( $::lglobal{guigutsdirectory}, 'scannos' )
 	  unless $::scannospath;
+	$::validatecsscommand = ::setdefaultpath(
+		$::validatecsscommand,
+		::catfile(
+			$::lglobal{guigutsdirectory}, 'tools',
+			'W3C',                        'css-validator.jar'
+		)
+	);
 	if ($::OS_WIN) {
 		$::gutcommand = ::setdefaultpath(
 			$::gutcommand,
@@ -823,20 +830,6 @@ sub initialize {
 			::catfile(
 				$::lglobal{guigutsdirectory},
 				'tools', 'W3C', 'onsgmls.exe'
-			)
-		);
-		$::validatecsscommand = ::setdefaultpath(
-			$::validatecsscommand,
-			::catfile(
-				$::lglobal{guigutsdirectory}, 'tools',
-				'W3C',                        'css-validator.jar'
-			)
-		);
-		$::validatecsscommand = ::setdefaultpath(
-			$::validatecsscommand,
-			::catfile(
-				$::lglobal{guigutsdirectory}, 'tools',
-				'W3C',                        'css-validator.jar'
 			)
 		);
 		$::gnutenbergdirectory = ::setdefaultpath(
