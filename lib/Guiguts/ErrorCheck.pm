@@ -422,6 +422,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 	} elsif ( $errorchecktype eq 'W3C Validate' ) {
 		if ( $::w3cremote == 0 ) {
 			my $validatepath = ::dirname($::validatecommand);
+			$ENV{SP_BCTF} = 'UTF-8' if $unicode;
 			::run(
 					$::validatecommand,    "--directory=$validatepath",
 					"--catalog=".($::OS_WIN?"xhtml.soc":"tools/W3C/xhtml.soc"),
