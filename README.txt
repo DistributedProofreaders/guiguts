@@ -8,7 +8,7 @@ guiguts-win-1.0.nn.zip is the easiest download for Windows users. It
 includes guiguts.pl and supporting files and helper applications,
 including those for working with RST and PGTEI files, excluding image
 viewer and spellchecker. It should work out of the box by running
-guiguts.bat (it includes copies of perl and Python languages).
+run_guiguts.bat (it includes copies of perl and Python languages).
 
 MAC:
 
@@ -17,12 +17,25 @@ Mac users; it includes a few helper applications.
 
 OTHER:
 
-guiguts-1.0.nn.zip is the basic guiguts version with no helper
+guiguts-1.0.nn.zip is the basic guiguts version with a few helper
 applications; it includes compilable source code for GutCheck and
-Jeebies.
+Jeebies. See http://www.pgdp.net/wiki/Guiguts/Install for details
+on further helper applications.
 
 
 RELEASE NOTES:
+
+Version 1.0.22.
+- updating ppvimage to 1.06.
+- guiguts.bat renamed to run_guiguts.bat
+- DP urls user-editable
+- bug fix: indenting /# #/ blocks with more than one paragraph
+- bug fix: Link Checker with spaces in path
+- bug fix: some issues with reading page markers when opening a file
+- bug fix: proofer bar is now working
+- bug fix: .bin file getting out of sync (saved too often)
+- bug fix: file names with apostrophe making file history explode
+- various minor bug fixes and menu cleanups
 
 Version 1.0.21.
 - HTML Fixup split in two: HTML Markup and HTML Generator.

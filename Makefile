@@ -1,6 +1,6 @@
 
 # version number
-VERSION=1.0.21
+VERSION=1.0.22
 # DON'T FORGET to update the version number in guiguts.pl too
 
 # zip utility to use
@@ -16,14 +16,14 @@ all: win generic
 win:
 	cp other.zip guiguts-win-$(VERSION).zip
 	$(ZIP) guiguts-win-$(VERSION).zip * -x $(EXCLUDES) wordlist/\* scannos/\*
-	$(ZIP) guiguts-win-$(VERSION).zip guiguts.bat data/labels_*_default.rc
+	$(ZIP) guiguts-win-$(VERSION).zip run_guiguts.bat data/labels_*_default.rc tools/ppvimage/ppvimage.pl
 
 
 generic:
 	$(ZIP) guiguts-$(VERSION).zip * -x $(EXCLUDES) \*.exe
 	$(ZIP) guiguts-$(VERSION).zip scannos/* wordlist/* -x $(EXCLUDES)
 	$(ZIP) guiguts-$(VERSION).zip data/labels_*_default.rc
-	$(ZIP) guiguts-$(VERSION).zip tools/gutcheck/*.* tools/jeebies/*.* tools/DPCustomMono lib/Tk/Toolbar/tkIcons -x .\* \*.exe
+	$(ZIP) guiguts-$(VERSION).zip tools/gutcheck/*.* tools/jeebies/*.* tools/ppvimage/*.* tools/DPCustomMono lib/Tk/Toolbar/tkIcons -x .\* \*.exe
 	$(ZIP) guiguts-$(VERSION).zip tools/W3C/css-validator.jar tools/W3C/lib/*.jar
 	$(ZIP) guiguts-$(VERSION).zip tools/W3C/* -x .\* \*.exe \*.dll
 
