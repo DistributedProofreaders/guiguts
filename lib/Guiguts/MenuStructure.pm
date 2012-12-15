@@ -1725,11 +1725,11 @@ sub menubuildwizard {
 		]
 	);
 	my $htmlversion = $menubar->cascade(
-		-label     => '~HTML Version',
+		-label     => 'HT~ML Version',
 		-tearoff   => 1,
 		-menuitems => [
 			[
-				Button   => 'H~TML Generator & Checks...',
+				Button   => 'H~TML Generator...',
 				-command => sub { ::htmlgenpopup( $textwindow, $top ) }
 			],
 			[

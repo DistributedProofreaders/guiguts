@@ -2354,7 +2354,7 @@ sub htmlgenpopup {
 					}
 					unlink 'null' if ( -e 'null' );
 				},
-				-text  => 'W3C Validate',
+				-text  => 'W3C Validate HTML',
 				-width => 16
 			)->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
 			$f8->Button(
