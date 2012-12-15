@@ -844,6 +844,8 @@ sub initialize {
 		$::tidycommand   = ::setdefaultpath( $::tidycommand, $tmpcommand );
 		$tmpcommand = substr( qx/which aspell/, 0, -1 );
 		$::globalspellpath = ::setdefaultpath( $::globalspellpath, $tmpcommand );
+		$tmpcommand = substr( qx/which onsgmls/, 0, -1 );
+		$::validatecommand   = ::setdefaultpath( $::validatecommand, $tmpcommand );
 		$::gutcommand = ::setdefaultpath(
 			$::gutcommand,
 			::catfile(

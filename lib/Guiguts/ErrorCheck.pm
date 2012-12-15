@@ -424,7 +424,8 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			my $validatepath = ::dirname($::validatecommand);
 			::run(
 					$::validatecommand,    "--directory=$validatepath",
-					"--catalog=xhtml.soc", "--no-output",
+					"--catalog=".($::OS_WIN?"xhtml.soc":"tools/W3C/xhtml.soc"),
+					"--no-output",
 					"--open-entities",     "--error-file=errors.err",
 					$name
 			);
