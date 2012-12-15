@@ -42,6 +42,7 @@ sub errorcheckpop_up {
 	if (    ( $errorchecktype eq 'Check All' )
 		 or ( $errorchecktype eq 'Link Check' )
 		 or ( $errorchecktype eq 'W3C Validate CSS' )
+		 or ( $errorchecktype eq 'ppvimage' )
 		 or ( $errorchecktype eq 'pphtml' ) )
 	{
 		$ptopframe->Checkbutton(
@@ -136,7 +137,7 @@ sub errorcheckpop_up {
 		@errorchecktypes = (
 							 'W3C Validate',
 							 'HTML Tidy',
-							 'Image Check',
+							 'ppvimage',
 							 'Link Check',
 							 'W3C Validate CSS',
 #							 'Epub Friendly',
@@ -154,6 +155,7 @@ sub errorcheckpop_up {
 			$textwindow->markUnset($_);
 		}
 	}
+	my $unicode = ::currentfileisunicode();
 	foreach my $thiserrorchecktype (@errorchecktypes) {
 		::working($thiserrorchecktype);
 		push @errorchecklines, "Beginning check: " . $thiserrorchecktype;
@@ -173,6 +175,7 @@ sub errorcheckpop_up {
 			$dialog->Show;
 		} else {
 			while ( $line = <$fh> ) {
+				utf8::decode($line) if $unicode;
 				$line =~ s/^\s//g;
 				chomp $line;
 
@@ -241,23 +244,21 @@ sub errorcheckpop_up {
 						  or ( $thiserrorchecktype eq "W3C Validate Remote" )
 						  or ( $thiserrorchecktype eq "pphtml" )
 						  or ( $thiserrorchecktype eq "Epub Friendly" )
-						  or ( $thiserrorchecktype eq "Image Check" ) )
+						  or ( $thiserrorchecktype eq "ppvimage" ) )
 				{
 					$line =~ s/^.*:(\d+:\d+)/line $1/;
 					$line =~ s/^(\d+:\d+)/line $1/;
+					$line =~ s/^(line \d+) /$1:1/;
 					$::errors{$line} = '';
 					$lincol = '';
 					if ( $line =~ /line (\d+):(\d+)/ ) {
-						push @errorchecklines, $line;
 						$lincol = "$1.$2";
 						$lincol =~ s/\.0/\.1/;  # change column zero to column 1
 						$mark++;
 						$textwindow->markSet( "t$mark", $lincol );
 						$::errors{$line} = "t$mark";
 					}
-					if ( $line =~ /^\+/ ) {
-						push @errorchecklines, $line;
-					}
+					push @errorchecklines, $line unless $line eq '';
 				} elsif (    ( $thiserrorchecktype eq "W3C Validate CSS" )
 						  or ( $thiserrorchecktype eq "Link Check" )
 						  or ( $thiserrorchecktype eq "pptxt" ) )
@@ -376,6 +377,10 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 		 or ( $errorchecktype eq 'W3C Validate CSS' ) )
 	{
 		$name = 'validate.html';
+	} elsif ( $errorchecktype eq 'ppvimage' ) {
+		my ( $f, $d, $e ) =
+		  ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+		$name = $d . 'errors.tmp'; # ppvimage requires tmp file to be in the right dir, so the paths match
 	} else {
 		$name = 'errors.tmp';
 	}
@@ -455,10 +460,14 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 				"errors.err" );
 	} elsif ( $errorchecktype eq 'Link Check' ) {
 		linkcheckrun();
-	} elsif ( $errorchecktype eq 'Image Check' ) {
-		my ( $f, $d, $e ) =
-		  ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
-		::run( "perl", "lib/ppvchecks/ppvimage.pl", $name, $d );
+	} elsif ( $errorchecktype eq 'ppvimage' ) {
+		if ( $::verboseerrorchecks ) {
+			::run( 'perl', 'tools/ppvimage/ppvimage.pl',
+			  '-gg', '-o', 'errors.err', $name );
+		} else {
+			::run( 'perl', 'tools/ppvimage/ppvimage.pl',
+			  '-gg', '-terse', '-o', 'errors.err', $name );
+		}
 	} elsif ( $errorchecktype eq 'pptxt' ) {
 		::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $name, "-o",
 				"errors.err" );

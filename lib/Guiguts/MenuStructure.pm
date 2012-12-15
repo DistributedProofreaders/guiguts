@@ -1794,9 +1794,9 @@ sub menubuildwizard {
 				  }
 			],
 			[
-				Button   => 'Image Check',
+				Button   => 'ppvimage',
 				-command => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
+					::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
 					unlink 'null' if ( -e 'null' );
 				  }
 			],

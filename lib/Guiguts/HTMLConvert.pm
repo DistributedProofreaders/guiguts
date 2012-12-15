@@ -2328,10 +2328,10 @@ sub htmlgenpopup {
 			$f8->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Image Check' );
+					::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
 					unlink 'null' if ( -e 'null' );
 				},
-				-text  => 'Image Check',
+				-text  => 'ppvimage',
 				-width => 16
 			)->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 			$f8->Button(
