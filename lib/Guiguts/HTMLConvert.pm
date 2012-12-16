@@ -2632,7 +2632,7 @@ sub htmlmarkpopup {
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f3->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { markup( $textwindow, $top, 'del' ) },
+			-command          => sub { markup( $textwindow, $top, 'delete' ) },
 			-text             => 'Remove Markup from Selection',
 			-width            => 28
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
@@ -2702,7 +2702,7 @@ sub markup {
 		my $thisblockstart = $start;
 		my $thisblockend   = $end;
 		my $selection;
-		if ( $mark eq 'del' ) {
+		if ( $mark eq 'delete' ) {
 			my ( $lsr, $lsc, $ler, $lec, $step, $edited );
 			( $lsr, $lsc ) = split /\./, $thisblockstart;
 			( $ler, $lec ) = split /\./, $thisblockend;
