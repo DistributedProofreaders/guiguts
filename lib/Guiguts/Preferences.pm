@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
-	  &autosaveinterval &saveinterval &setcolor &locateExecutable &setDPurls );
+	  &autosaveinterval &saveinterval &setcolor &locateExecutable &filePathsPopup &setDPurls );
 }
 
 sub setviewerpath {    #Find your image viewer
@@ -370,6 +370,163 @@ sub locateExecutable {
 	return unless ${$exepathref};
 	${$exepathref} = ::os_normal(${$exepathref});
 	::savesettings();
+}
+
+sub filePathsPopup {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	if ( defined( $::lglobal{filepathspop} ) ) {
+		$::lglobal{filepathspop}->deiconify;
+		$::lglobal{filepathspop}->raise;
+		$::lglobal{filepathspop}->focus;
+	} else {
+		$::lglobal{filepathspop} = $top->Toplevel;
+		$::lglobal{filepathspop}->title('Set File Paths');
+		my $f1 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f1->Label( -text => "Image Viewer:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f1->Button(
+			-text    => 'Locate Image Viewer...',
+			-command => sub { ::locateExecutable('image viewer', \$::globalviewerpath); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f1->Entry(
+			-textvariable => \$::globalviewerpath,
+			-width   => 60,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f2 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f2->Label( -text => "Aspell:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f2->Button(
+			-text    => 'Locate Aspell...',
+			-command => sub { ::locateExecutable('Aspell', \$::globalspellpath); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f2->Entry(
+			-textvariable => \$::globalspellpath,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f3 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f3->Label( -text => "Gutcheck:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f3->Button(
+			-text    => 'Locate Gutcheck...',
+			-command => sub { ::locateExecutable('Gutcheck', \$::gutcommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f3->Entry(
+			-textvariable => \$::gutcommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f4 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f4->Label( -text => "Jeebies:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f4->Button(
+			-text    => 'Locate Jeebies...',
+			-command => sub { ::locateExecutable('Jeebies', \$::jeebiescommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f4->Entry(
+			-textvariable => \$::jeebiescommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f5 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f5->Label( -text => "HTML Tidy:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f5->Button(
+			-text    => 'Locate Tidy...',
+			-command => sub { ::locateExecutable('Tidy', \$::tidycommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f5->Entry(
+			-textvariable => \$::tidycommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f6 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f6->Label( -text => "W3C Validator (onsgmls):", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f6->Button(
+			-text    => 'Locate onsgmls...',
+			-command => sub { ::locateExecutable('onsgmls', \$::validatecommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f6->Entry(
+			-textvariable => \$::validatecommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f7 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f7->Label( -text => "W3C CSS Validator:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f7->Button(
+			-text    => 'Locate CSS Validator...',
+			-command => sub { ::locateExecutable('css-validator.js', \$::validatecsscommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f7->Entry(
+			-textvariable => \$::validatecsscommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f0 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f0->Label( -text => "Browser command:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f0->Entry(
+			-textvariable => \$::extops[0]{command},
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		$::lglobal{filepathspop}->Button(
+			-activebackground => $::activecolor,
+			-text             => 'Close',
+			-command          => sub {
+				$::lglobal{filepathspop}->destroy;
+				undef $::lglobal{filepathspop};
+				::savesettings();
+			}
+		)->pack;
+		$::lglobal{filepathspop}->Tk::bind(
+			'<Return>' => sub { ::killpopup('filepathspop'); }
+		);
+		::initialize_popup_with_deletebinding('filepathspop');
+	}
 }
 
 sub setDPurls {

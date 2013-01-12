@@ -173,41 +173,10 @@ sub menu_preferences {
 			-menuitems =>
 			  [
 				[
-					Button   => 'Locate ~Aspell Executable',
-					-command => sub { ::locateExecutable('Aspell', \$::globalspellpath ); }
-				],
-				[
-					Button   => 'Locate ~Image Viewer Executable',
-					-command => sub { ::locateExecutable('image viewer', \$::globalviewerpath ); }
+					Button   => 'Set ~File Paths...',
+					-command => sub { ::filePathsPopup(); },
 				],
 				[ 'separator', '' ],
-				[
-					Button   => 'Locate ~Gutcheck Executable',
-					-command => sub { ::locateExecutable('GutCheck', \$::gutcommand ); }
-				],
-				[
-					Button   => 'Locate ~Jeebies Executable',
-					-command => sub { ::locateExecutable('Jeebies', \$::jeebiescommand ); }
-				],
-				[
-					Button   => 'Locate ~Tidy Executable',
-					-command => sub { ::locateExecutable('Tidy', \$::tidycommand ); }
-				],
-				[
-					Button   => 'Locate W3C ~Validator (onsgmls) Executable',
-					-command => sub { ::locateExecutable('onsgmls', \$::validatecommand ); }
-				],
-				[
-					Button =>
-					  'Locate W3C ~CSS Validator (css-validator.jar) Executable',
-					-command => sub {
-						my $types = [
-							[ 'Java Executable', [ '.jar', ] ],
-							[ 'All Files',  ['*'] ],
-						];
-						::locateExecutable('css-validator.jar', \$::validatecsscommand, $types );
-					  }
-				],
 				[
 					Button   => 'Locate Gnutenberg Press (if self-installed)',
 					-command => sub {
@@ -231,6 +200,12 @@ sub menu_preferences {
 					  }
 				],
 				[ 'separator', '' ],
+				[
+					Checkbutton => 'Do W3C Validation Remotely',
+					-variable   => \$::w3cremote,
+					-onvalue    => 1,
+					-offvalue   => 0
+				],
 				[
 					Button   => 'Set DP ~URLs...',
 					-command => \&::setDPurls,
@@ -457,12 +432,6 @@ sub menu_preferences {
 				[
 					Checkbutton => 'Auto Set Page Markers On File Open',
 					-variable   => \$::auto_page_marks,
-					-onvalue    => 1,
-					-offvalue   => 0
-				],
-				[
-					Checkbutton => 'Do W3C Validation Remotely',
-					-variable   => \$::w3cremote,
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
