@@ -254,7 +254,7 @@ sub setpngspath {
 	$path .= '/';
 	$path       = ::os_normal($path);
 	$::pngspath = $path;
-	::_bin_save();
+	::setedited(1);
 	::openpng( $textwindow, $pagenum ) if defined $pagenum;
 }
 
@@ -319,7 +319,7 @@ sub set_autosave {
 		( $::autosaveinterval * 60000 ),
 		sub {
 			::savefile()
-			  if $textwindow->numberChanges
+			  if ::isedited()
 				  and $::lglobal{global_filename} !~ /No File Loaded/;
 		}
 	);

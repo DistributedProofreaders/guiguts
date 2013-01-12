@@ -10,7 +10,7 @@ BEGIN {
 	  qw(&file_open &file_saveas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
 	  &_flash_save &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
 	  &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
-	  &file_import_markup &operationadd);
+	  &file_import_markup &operationadd &isedited &setedited);
 }
 
 sub file_open {    # Find a text file to open
@@ -97,6 +97,7 @@ sub file_saveas {
 		return;
 	}
 	$textwindow->ResetUndo;    #necessary to reset edited flag
+	::setedited(0);
 	::update_indicators();
 	return;
 }
@@ -369,7 +370,8 @@ sub clearvars {
 	@::operations             = ();
 	@::bookmarks              = ();
 	$::pngspath               = q{};
-	$::lglobal{seepagenums}   = 0;
+	::setedited(0);
+	::hidepagenums();
 	@{ $::lglobal{fnarray} } = ();
 	::tglprfbar() if $::lglobal{proofbarvisible};
 	undef $::lglobal{prepfile};
@@ -380,7 +382,7 @@ sub savefile {    # Determine which save routine to use and then use it
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	::hidepagenums();
 	if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
-		if ( $textwindow->numberChanges == 0 ) {
+		unless ( ::isedited() ) {
 			return;
 		}
 		my ($name);
@@ -417,6 +419,7 @@ sub savefile {    # Determine which save routine to use and then use it
 	}
 	$textwindow->ResetUndo;    #necessary to reset edited flag
 	::_bin_save();
+	::setedited(0);
 	::set_autosave() if $::autosave;
 	::update_indicators();
 }
@@ -659,6 +662,7 @@ sub operationadd {
 	$::operationshash{$operation} = $timestamp;
 	$operation = ::escape_problems($operation);
 	::oppopupdate() if $::lglobal{oppop};
+	::setedited(1);
 }
 
 # Pop up an "Operation" history. Track which functions have already been
@@ -700,7 +704,7 @@ sub opspop_up {
 sub confirmdiscard {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	if ( $textwindow->numberChanges ) {
+	if ( ::isedited() ) {
 		my $ans = $top->messageBox(
 			-icon    => 'warning',
 			-type    => 'YesNoCancel',
@@ -1114,4 +1118,17 @@ sub interpretbinfile {
 	$textwindow->focus;
 	return ();
 }
+
+sub isedited {
+	my $textwindow = $::textwindow;
+	return $textwindow->numberChanges || $::lglobal{isedited};
+}
+
+sub setedited {
+	my $val = shift;
+	my $textwindow = $::textwindow;
+	$::lglobal{isedited} = $val;
+	$textwindow->ResetUndo unless $val;
+}
+
 1;

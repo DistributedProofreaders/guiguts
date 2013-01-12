@@ -1968,7 +1968,7 @@ sub htmlautoconvert {
 		$::lglobal{keep_latin1} );
 	html_wrapup( $textwindow, $headertext, $::lglobal{leave_utf},
 		$::lglobal{autofraction} );
-	#$textwindow->ResetUndo;
+	::setedited(1);
 }
 
 sub thumbnailbrowse {
@@ -3908,6 +3908,7 @@ sub pageadjust {
 					$::pagenumbers{$page}{base} = $pagetrack{$num}[5]->get;
 				}
 				$recalc->invoke;
+				::setedited(1);
 				$::lglobal{padjpopgoem} = $::lglobal{padjpop}->geometry;
 				$::lglobal{padjpop}->destroy;
 				undef $::lglobal{padjpop};

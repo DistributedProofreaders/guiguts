@@ -764,6 +764,7 @@ sub initialize {
 	$::lglobal{ftnoteindexstart}  = '1.0';
 	$::lglobal{groutp}            = 'l';
 	$::lglobal{htmlimgar}         = 1;             #html image aspect ratio
+	$::lglobal{isedited}          = 0;
 	$::lglobal{ignore_case}       = 0;
 	$::lglobal{keep_latin1}       = 1;
 	$::lglobal{lastmatchindex}    = '1.0';
@@ -2182,6 +2183,7 @@ sub setprojectid {
 		-width        => 30,
 		-textvariable => \$::projectid,
 	)->pack( -side => 'left', -fill => 'x' );
+	::setedited(1);
 	$projectidpop->Show;
 }
 

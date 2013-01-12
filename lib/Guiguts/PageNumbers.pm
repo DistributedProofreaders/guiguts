@@ -322,6 +322,7 @@ sub pageremove {    # Delete a page marker
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\S+/;
 	}
+	::setedited(1);
 	::displaypagenums();
 }
 
@@ -361,6 +362,7 @@ sub pageadd {    # Add a page marker
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\S+/;
 	}
+	::setedited(1);
 	::displaypagenums();
 	return 1;
 }
@@ -430,6 +432,7 @@ sub pgrenum {    # Re sequence page markers
 	for (@marks) {
 		$::pagenumbers{$_}{offset} = $textwindow->index($_) if $_ =~ /Pg\d+/;
 	}
+	::setedited(1);
 	::displaypagenums();
 }
 
@@ -522,6 +525,7 @@ sub pmoveup {    # move the page marker up a line
 	$textwindow->ntinsert( $mark, $pagenum );
 	$textwindow->tagAdd( 'pagenum', $mark,
 						 $mark . ' +' . length($pagenum) . ' chars' );
+	::setedited(1);
 	$textwindow->see($mark);
 }
 
@@ -557,6 +561,7 @@ sub pmoveleft {    # move the page marker left a character
 	$textwindow->ntinsert( $mark, $pagenum );
 	$textwindow->tagAdd( 'pagenum', $mark,
 						 $mark . ' +' . length($pagenum) . 'c' );
+	::setedited(1);
 	$textwindow->see($mark);
 }
 
@@ -594,6 +599,7 @@ sub pmoveright {    # move the page marker right a character
 	$textwindow->ntinsert( $mark, $pagenum );
 	$textwindow->tagAdd( 'pagenum', $mark,
 						 $mark . ' +' . length($pagenum) . 'c' );
+	::setedited(1);
 	$textwindow->see($mark);
 }
 
@@ -619,6 +625,7 @@ sub pmovedown {    # move the page marker down a line
 	$textwindow->ntinsert( $mark, $pagenum );
 	$textwindow->tagAdd( 'pagenum', $mark,
 						 $mark . ' +' . length($pagenum) . 'c' );
+	::setedited(1);
 	$textwindow->see($mark);
 }
 ## End Page Number Adjust

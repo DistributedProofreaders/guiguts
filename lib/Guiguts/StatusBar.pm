@@ -40,7 +40,7 @@ sub update_indicators {
 	$filename = ::os_normal($filename);
 	$::lglobal{global_filename} = $filename;
 	my $edit_flag = '';
-	if ( $textwindow->numberChanges ) {
+	if ( ::isedited() ) {
 		$edit_flag = 'edited';
 	}
 
@@ -615,6 +615,7 @@ sub setlang {
 			-popover => $top,
 			-command => sub {
 				if ( $_[0] eq 'OK' ) {
+					::setedited(1);
 					$::booklang = $::lglobal{booklang};
 					update_lang_button();
 					::readlabels();
