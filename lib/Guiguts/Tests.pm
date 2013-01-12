@@ -46,9 +46,9 @@ sub runtests {
 		print "end diff\n";
 		unlink 'tests/errors.err';
 	}
-	ok( 1 == do { ::openfile("readme.txt"); 1 }, "openfile on readme.txt" );
-	ok( "readme.txt" eq $textwindow->FileName, "File is named readme.txt" );
-	ok( 1 == do { ::file_close($textwindow); 1 }, "close readme.txt" );
+	ok( 1 == do { ::openfile("README.txt"); 1 }, "openfile on README.txt" );
+	ok( "README.txt" eq $textwindow->FileName, "File is named README.txt" );
+	ok( 1 == do { ::file_close($textwindow); 1 }, "close README.txt" );
 
 	# Test of rewrapping
 	ok( -e "tests/testfile.txt", "tests/testfile.txt exists" );

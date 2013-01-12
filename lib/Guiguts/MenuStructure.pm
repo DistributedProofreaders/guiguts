@@ -517,7 +517,7 @@ sub menu_preferences {
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
 				[
-					Checkbutton => 'Enable Auto Save',
+					Checkbutton => 'Enable ~Auto Save',
 					-variable   => \$::autosave,
 					-command    => sub {
 						::toggle_autosave();
@@ -525,7 +525,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Button   => 'Auto Save Interval...',
+					Button   => 'Auto Save ~Interval...',
 					-command => sub {
 						::saveinterval();
 						::savesettings();
@@ -533,7 +533,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Checkbutton => 'Enable Auto Backups',
+					Checkbutton => 'Keep a ~Backup Before Saving',
 					-variable   => \$::autobackup,
 					-onvalue    => 1,
 					-offvalue   => 0
@@ -1002,7 +1002,7 @@ sub menubuildold {
 			[ Button => 'Run Fi~xup...', -command => \&::fixpopup ],
 			[ 'separator', '' ],
 			[
-				Button   => 'Fix ~Page Separators...',
+				Button   => 'Fixup ~Page Separators...',
 				-command => \&::separatorpopup
 			],
 			[
@@ -1560,7 +1560,7 @@ sub menubuildwizard {
 			[ Button => 'Run Fi~xup...', -command => \&::fixpopup ],
 			[ Button => 'Find Greek...', -command => \&::findandextractgreek ],
 			[
-				Button   => 'Fix ~Page Separators',
+				Button   => 'Fixup ~Page Separators',
 				-command => \&::separatorpopup
 			],
 			[

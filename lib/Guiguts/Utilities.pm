@@ -6,7 +6,7 @@ BEGIN {
 	use Exporter();
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
-	@EXPORT = qw(&openpng &get_image_file &arabic &roman
+	@EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
 	  &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
 	  &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
@@ -674,8 +674,10 @@ sub initialize {
 		$::geometryhash{xtpop}         = '+120+38';
 		$::positionhash{brkpop}        = '+482+131';
 		$::positionhash{footpop}       = '+255+157';
+		$::positionhash{htmlimpop}     = '+45+37';
 		$::positionhash{pagepop}       = '+334+176';
 		$::positionhash{pnumpop}       = '+302+97';
+		$::positionhash{spellpopup}    = '+152+97';
 		$::positionhash{txtconvpop}    = '+82+131';
 	}
 

@@ -126,3 +126,9 @@ v -- View the current page in the image viewer.
 a -- Cycle Automatic modes.
 ? -- View hotkey help popup.
 
+
+ADJUST PAGE MARKERS POPUP
+
+PgDn/PgUp -- move to next/previous page marker.
+Up/Down/Left/Right arrows -- move current page marker up/down/left/right.
+

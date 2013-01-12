@@ -205,9 +205,9 @@ sub utfpopup {
 	$fontlist->insert( 'end', sort( $textwindow->fontFamilies ) );
 	my $bigger = $cframe->Button(
 		-activebackground => $::activecolor,
-		-text             => 'Bigger',
+		-text             => 'Smaller',
 		-command          => sub {
-			$::utffontsize++;
+			$::utffontsize--;
 			::utffontinit();
 			for (@buttons) {
 				$_->configure( -font => $::lglobal{utffont} );
@@ -220,9 +220,9 @@ sub utfpopup {
 	  ->grid( -row => 1, -column => 3, -padx => 2, -pady => 2 );
 	my $smaller = $cframe->Button(
 		-activebackground => $::activecolor,
-		-text             => 'Smaller',
+		-text             => 'Bigger',
 		-command          => sub {
-			$::utffontsize--;
+			$::utffontsize++;
 			utffontinit();
 			for (@buttons) {
 				$_->configure( -font => $::lglobal{utffont} );
@@ -474,7 +474,7 @@ sub utfchar_bind {
 		'<ButtonPress-1>',
 		sub {
 			$widget->configure( -relief => 'sunken' );
-			$textwindow->insert( 'insert', $widget->cget('-text') );
+			$::lglobal{hasfocus}->insert( 'insert', $widget->cget('-text') );
 		}
 	);
 	$widget->bind(

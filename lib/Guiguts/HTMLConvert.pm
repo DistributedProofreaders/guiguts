@@ -2087,7 +2087,7 @@ sub htmlgenpopup {
 		my $pagecomments = $f0->Checkbutton(
 			-variable    => \$::lglobal{pagecmt},
 			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Pg #s as comments',
+			-text        => 'Pg #s as Comments',
 			-anchor      => 'w',
 		  )->grid(
 			-row    => 1,

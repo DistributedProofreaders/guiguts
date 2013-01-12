@@ -1037,7 +1037,7 @@ sub rcaligntext {
 			if ( length($line) < $::rmargin){
 				my $paddval = $::rmargin - length($line) + $indentval;
 				if ( $align eq 'c' ) { $paddval = $paddval / 2 ; }
-				$textwindow->insert( $index, ' ' x $paddval );
+				$textwindow->insert( $index, ' ' x $paddval ) unless $line eq '';
 			}
 			$index++;
 			$index .= '.0';

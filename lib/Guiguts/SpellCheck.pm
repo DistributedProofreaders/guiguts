@@ -557,7 +557,6 @@ sub spellchecker {    # Set up spell check window
 		$::lglobal{spellpopup}
 		  ->title(    'Current Dictionary - ' . $::globalspelldictopt
 				   || 'No dictionary!' );
-		$::lglobal{spellpopup}->Icon( -image => $::icon );
 		my $spf1 =
 		  $::lglobal{spellpopup}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
@@ -763,12 +762,13 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
+		::initialize_popup_without_deletebinding('spellpopup');
 		$::lglobal{spellpopup}->protocol(
 			'WM_DELETE_WINDOW' => sub {
 				@{ $::lglobal{misspelledlist} } = ();
 				$::lglobal{spellpopup}->destroy;
 				undef
-				  $::lglobal{spellpopup};   # completly remove spellcheck window
+				  $::lglobal{spellpopup};   # completely remove spellcheck window
 				print OUT "\cC\n"
 				  if $::lglobal{spellpid};    # send quit signal to aspell
 				aspellstop();                 # and remove the process
@@ -816,7 +816,6 @@ sub spellchecker {    # Set up spell check window
 				spellreplace();
 			}
 		);
-		$::lglobal{spellpopup}->transient($top) if $::stayontop;
 		$::lglobal{replacementlist}
 		  ->bind( '<Double-Button-1>', \&spellmisspelled_replace );
 		$::lglobal{replacementlist}->bind( '<Triple-Button-1>',
