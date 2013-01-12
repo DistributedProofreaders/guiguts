@@ -114,16 +114,15 @@ SEARCH POPUP
 
 PAGE SEPARATOR POPUP
 
-'j' -- Join Lines - join lines, remove all blank lines, spaces, asterisks and hyphens.
-'k' -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisks, keep hyphen.
-'l' -- Blank Line - leave one blank line. Close up any other whitespace. (Paragraph Break)
-'t' -- New Section - leave two blank lines. Close up any other whitespace. (Section Break)
-'h' -- New Chapter - leave four blank lines. Close up any other whitespace. (Chapter Break)
-'r' -- Refresh - search for, highlight and re-center the next page separator.
-'u' -- Undo - undo the last edit. (Note: in Full Automatic mode,\n\tthis just single steps back through the undo buffer)
-'d' -- Delete - delete the page separator. Make no other edits.
-'v' -- View the current page in the image viewer.
-'a' -- Toggle Full Automatic mode.
-'s' -- Toggle Semi Automatic mode.
-'?' -- View hotkey help popup.
+j -- Join Lines - join lines, remove all blank lines, spaces, asterisks and hyphens.
+k -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisks, keep hyphen.
+l -- Blank Line - leave one blank line. Close up any other whitespace. (Paragraph Break)
+t -- New Section - leave two blank lines. Close up any other whitespace. (Section Break)
+h -- New Chapter - leave four blank lines. Close up any other whitespace. (Chapter Break)
+r -- Refresh - search for, highlight and re-center the next page separator.
+u -- Undo - undo the last edit. (Note: in Full Automatic mode,\n\tthis just single steps back through the undo buffer)
+d -- Delete - delete the page separator. Make no other edits.
+v -- View the current page in the image viewer.
+a -- Cycle Automatic modes.
+? -- View hotkey help popup.
 

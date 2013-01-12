@@ -21,9 +21,9 @@ sub pageseparatorhelppopup {
     Undo - undo the previous page separator edit. - Hotkey u
     Redo - redo the latest undo page separator edit. - Hotkey e
     Delete - delete the page separator. Make no other edits. - Hotkey d
-    Full Auto - automatically search for and try to convert the next page separator. - Toggle: a
-    Semi Auto - automatically search for and center the next page separator after an edit. - Toggle: s
-    Do All (beta) - handle ALL page separators automatically
+    Auto Advance - automatically search for and center the next page separator after an edit. - Cycle: a
+    80% Auto - (prev. "full") automatically search for and try (conservatively) to convert the next page separator.
+    99% Auto - automatically search for and try (confidently) to convert the next page separator.
     View page image - Hotkey v
     View Page Separator help - Hotkey ?
 EOM
@@ -41,7 +41,7 @@ EOM
 		)->pack;
 		my $button_ok = $::lglobal{phelppop}->Button(
 			-activebackground => $::activecolor,
-			-text             => 'OK',
+			-text             => 'Close',
 			-command          => sub {
 				$::lglobal{phelppop}->destroy;
 				undef $::lglobal{phelppop};
@@ -61,7 +61,7 @@ sub refreshpageseparator {
 	  if $::searchstartindex;
 
 	# Handle Automatic
-	if ( ( $::lglobal{jautomatic} )
+	if ( $::lglobal{pagesepauto} >= 2
 		&& $::searchstartindex )
 	{
 		handleautomaticonrefresh();
@@ -95,33 +95,25 @@ sub handleautomaticonrefresh {
 	$textwindow->insert( $index, "\n" );
 	$::lglobal{joinundo}++;
 
-	# If the last character is a word, ";" or ","
-	# and the next character is \n or *, then delete the character
-	# Revision: dropped \n
-	if ( $character =~ /[\w;,]/ ) {
-		while (1) {
-			$index     = $textwindow->index('page1');
-			$character = $textwindow->get($index);
-			if ( $character =~ /[\*]/ ) {    # dropped \n
-				print "deleting:character page1\n";
-				$textwindow->delete($index);
-				$::lglobal{joinundo}++;
-				last
-				  if $textwindow->compare( 'page1 +1l', '>=', 'end' );
-			} else {
-				last;
+	if ( $::lglobal{pagesepauto} == 2 ) {
+		# If the last character is a word, ";" or ","
+		# and the next character is \n or *, then delete the character
+		# Revision: dropped \n
+		if ( $character =~ /[\w;,]/ ) {
+			while (1) {
+				$index     = $textwindow->index('page1');
+				$character = $textwindow->get($index);
+				if ( $character =~ /[\*]/ ) {    # dropped \n
+					print "deleting:character page1\n";
+					$textwindow->delete($index);
+					$::lglobal{joinundo}++;
+					last
+					  if $textwindow->compare( 'page1 +1l', '>=', 'end' );
+				} else {
+					last;
+				}
 			}
 		}
-	}
-
-	# Do all specific
-	if ( $::lglobal{joindoall} ) {
-		if ( closeupmarkup() ) {
-			refreshpageseparator();
-		}    #else {
-		     #	processpageseparator('d');
-		     #}
-	} else {
 
 		# Join if the next character is lower case or with I
 		#print $character.":page?\n";
@@ -135,6 +127,44 @@ sub handleautomaticonrefresh {
 		# Insert blank line if the character is ."'?
 		if ( ( $character =~ /[\.\"\'\?]/ ) && ( $c < ( $size * 0.5 ) ) ) {
 			processpageseparator('l');
+		}
+	} elsif ( $::lglobal{pagesepauto} == 3 ) {
+		my $linebefore = $textwindow->get("$index -10c", $index);
+		my $lineafter  = $textwindow->get("$index +1c +1l", "$index +1c +1l +5c");
+		if ( $lineafter =~ /^\n\n\n\n/ ) {
+			processpageseparator('h');
+		} elsif ( $lineafter =~ /^\n\n/ ) {
+			processpageseparator('t');
+		} elsif ( $lineafter =~ /^\n/ ) {
+			processpageseparator('l');
+		} elsif ( $lineafter =~ /^-----File/ ) {
+			processpageseparator('l');
+		} elsif ( $lineafter =~ /^\S/ ) {
+			if ( closeupmarkup() ) {
+				$linebefore = $textwindow->get("$index -10c", $index);
+				$lineafter  = $textwindow->get("$index +1c +1l", "$index +1c +1l +5c");
+			}
+			if ( $lineafter =~ /^\n/ ) { # can be reached if closeupmarkup did something
+				processpageseparator('l');
+			} elsif ( $lineafter =~ /^\// ) {
+			} elsif ( $lineafter =~ /^\*--\S/ ) {
+				processpageseparator('k');
+			} elsif ( $lineafter =~ /^-- / ) {
+				processpageseparator('j');
+			} elsif ( $lineafter =~ /^\*-- / ) {
+			} elsif ( $lineafter =~ /^--\S/ ) {
+			} elsif ( $linebefore =~ /\S--\*$/ ) {
+				processpageseparator('k');
+			} elsif ( $linebefore =~ / --$/ ) {
+				processpageseparator('k');
+			} elsif ( $linebefore =~ / --\*$/ ) {
+			} elsif ( $linebefore =~ /\S--$/ ) {
+			} elsif ( $linebefore =~ /-\*$/ ) {
+			} elsif ( $linebefore =~ /-$/ ) {
+				processpageseparator('k') if $::rwhyphenspace ;
+			} else {
+				processpageseparator('j');
+			}
 		}
 	}
 }
@@ -171,7 +201,8 @@ sub closeupmarkup {
 			$textwindow->delete('page-1l linestart');
 			$changemade = 1;
 		}
-	} elsif ( $linebefore =~ /<\/(i|b|f|g|sc)>([,;*]?)$/ ) {
+	}
+	if ( $linebefore =~ /<\/(i|b|f|g|sc)>([,;*]?)$/ ) {
 		my $lengthmarkup = 3 + length($1) + length($2);
 		my $lengthpunctuation;
 		if ($2) {
@@ -289,6 +320,16 @@ sub processpageseparator {
 				$line  = $textwindow->get("$index-1c");
 				last if ( $textwindow->compare( $index, '>=', 'end' ) );
 			}
+			if ( ( $textwindow->get( "$index-5c", $index ) =~ /<\/sc>/i )
+			     && ( $textwindow->get( $index, "$index+4c" ) =~ /<sc>/i ) ) {
+				$textwindow->delete( $index, "$index+4c" );
+				$::lglobal{joinundo}++;
+				$textwindow->delete( "$index-5c", $index );
+				$::lglobal{joinundo}++;
+				$index = $textwindow->index('page');
+				$line  = $textwindow->get("$index-1c");
+				last if ( $textwindow->compare( $index, '>=', 'end' ) );
+			}
 			while ( $line eq '*' ) {
 				$textwindow->delete("$index-1c");
 				$index = $textwindow->index('page');
@@ -298,7 +339,8 @@ sub processpageseparator {
 		}
 		if ( $line =~ /\-/ ) {
 			unless (
-				$textwindow->search(
+				$textwindow->get("$index-2c", $index) =~ /--/ # only remove a hyphen, not a dash
+				|| $textwindow->search(
 					'-regexp', '--', '-----*\s?File:', $index,
 					"$index lineend"
 				)
@@ -356,24 +398,16 @@ sub processpageseparator {
 		}
 		if ( $line =~ /-/ ) {
 			unless (
-				$textwindow->search(
+				( $::rwhyphenspace && !$asterisk )
+				|| $textwindow->search(
 					'-regexp', '--', '^-----*\s?File:', $index,
 					"$index lineend"
 				)
 			  )
 			{
-				# if the hyphen is starred, it should be clothed, no matter rwhyphenspace
-				# (in fact, we shouldn't even move anything up if it's unstarred)
-				if ( !$asterisk && $::rwhyphenspace ) {
-					$textwindow->insert( "$index", " " );
-					$index =
-					  $textwindow->search( '-regexp', '--', '\s', "$index+1c",
-						'end' );
-				} else {
-					$index =
-					  $textwindow->search( '-regexp', '--', '\s', "$index",
-						'end' );
-				}
+				$index =
+				  $textwindow->search( '-regexp', '--', '\s', "$index",
+					'end' );
 				$textwindow->insert( "$index", " " );
 				$index =
 				  $textwindow->search( '-regexp', '--', '\s', "$index+1c",
@@ -418,15 +452,13 @@ sub processpageseparator {
 
 	# refreshpageseparator and processpageseparator call each other
 	# recursively
-	refreshpageseparator()
-	  if ( $::lglobal{jautomatic} || $::lglobal{jsemiautomatic} )
-	  ;                         # || $::lglobal{joindoall}
+	refreshpageseparator() if $::lglobal{pagesepauto} >= 1;
 	push @::joinundolist, $::lglobal{joinundo};
 }
 
 sub undojoin {
 	my $textwindow = $::textwindow;
-	if ( $::lglobal{jautomatic} ) {
+	if ( $::lglobal{pagesepauto} >= 2 ) {
 		$textwindow->undo;
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 		$textwindow->see('insert');
@@ -440,7 +472,7 @@ sub undojoin {
 
 sub redojoin {
 	my $textwindow = $::textwindow;
-	if ( $::lglobal{jautomatic} ) {
+	if ( $::lglobal{pagesepauto} >= 2 ) {
 		$textwindow->redo;
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 		$textwindow->see('insert');
@@ -456,7 +488,7 @@ sub separatorpopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	::operationadd('Begin Page Separators Fixup');
-	refreshpageseparator();
+	$::lglobal{pagesepauto} = 1 if $::lglobal{pagesepauto} >= 2;
 	if ( defined( $::lglobal{pagepop} ) ) {
 		$::lglobal{pagepop}->deiconify;
 		$::lglobal{pagepop}->raise;
@@ -507,23 +539,29 @@ sub separatorpopup {
 		my $sf3 =
 		  $::lglobal{pagepop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
-		my $jautobutton = $sf3->Checkbutton(
-			-variable => \$::lglobal{jautomatic},
-			-command  => sub {
-				$::lglobal{jsemiautomatic} = 0 if $::lglobal{jsemiautomatic};
-				$::lglobal{joindoall}      = 0 if $::lglobal{joindoall};
-			},
+		$sf3->Radiobutton(
+			-variable    => \$::lglobal{pagesepauto},
+		        -value       => 0,
 			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Full Auto',
+			-text        => 'No Auto',
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		my $jsautobutton = $sf3->Checkbutton(
-			-variable => \$::lglobal{jsemiautomatic},
-			-command  => sub {
-				$::lglobal{jautomatic} = 0 if $::lglobal{jautomatic};
-				$::lglobal{joindoall}  = 0 if $::lglobal{joindoall};
-			},
+		$sf3->Radiobutton(
+			-variable    => \$::lglobal{pagesepauto},
+		        -value       => 1,
 			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Semi Auto',
+			-text        => 'Auto Advance',
+		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+		$sf3->Radiobutton(
+			-variable    => \$::lglobal{pagesepauto},
+			-value       => 2,
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => '80% Auto',
+		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+		$sf3->Radiobutton(
+			-variable    => \$::lglobal{pagesepauto},
+			-value       => 3,
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => '99% Auto',
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf4 =
 		  $::lglobal{pagepop}
@@ -565,18 +603,6 @@ sub separatorpopup {
 			-underline        => 1,
 			-width            => 8
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		my $doall2button = $sf5->Button(
-			-activebackground => $::activecolor,
-			-command  => sub {
-				$::lglobal{jsemiautomatic} = 0 if $::lglobal{jsemiautomatic};
-				$::lglobal{jautomatic}     = 0 if $::lglobal{jautomatic};
-				iterateeautomatic();
-			},
-			-text             => 'Do All (beta)',
-			-width            => 12
-		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		$::lglobal{jsemiautomatic} = 1
-		  unless ( ( $::lglobal{jautomatic} ) || ( $::lglobal{joindoall} ) );
 		::initialize_popup_without_deletebinding('pagepop');
 		$::lglobal{pagepop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
@@ -604,35 +630,12 @@ sub separatorpopup {
 		$::lglobal{pagepop}->Tk::bind( '<e>' => \&redojoin );
 		$::lglobal{pagepop}->Tk::bind(
 			'<a>' => sub {
-				if   ( $::lglobal{jautomatic} ) { $::lglobal{jautomatic} = 0 }
-				else                            { $::lglobal{jautomatic} = 1 }
-			}
-		);
-		$::lglobal{pagepop}->Tk::bind(
-			'<s>' => sub {
-				if ( $::lglobal{jsemiautomatic} ) { $::lglobal{jsemiautomatic} = 0 }
-				else                              { $::lglobal{jsemiautomatic} = 1 }
+				$::lglobal{pagesepauto}++;
+				$::lglobal{pagesepauto} = 0 if $::lglobal{pagesepauto} == 4;
 			}
 		);
 	}
-}
-
-# Run through automatic cases without deep recursion
-sub iterateeautomatic {
-	::working('Do All Page Separators');
-	my $iterationlimit = 0;
-	while ($::searchstartindex) {
-		findpageseparator();
-		unless ($::searchstartindex) {
-			last;
-		}
-		handleautomaticonrefresh();
-		processpageseparator('d');
-		if ($iterationlimit++ > 5000) {
-			last;
-		}
-	}
-	::working();
+	refreshpageseparator();
 }
 
 # Delete blank lines before page separators
