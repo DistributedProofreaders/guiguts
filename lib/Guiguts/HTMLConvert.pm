@@ -1403,17 +1403,15 @@ sub html_convert_pageanchors {
 				if ( $textwindow->compare( $hend, '<', $hstart ) ) {
 					$insertpoint = $textwindow->index("$hstart-1l lineend");
 				}
-				my $spanstart =
-				  $textwindow->search( '-backwards', '-exact', '--', '<span',
-					$markindex, '1.0' )
-				  || '1.0';
-				my $spanend =
-				  $textwindow->search( '-backwards', '-exact', '--', '</span',
-					$markindex, '1.0' )
-				  || '1.0';
-				if ( $textwindow->compare( $spanend, '<', $spanstart ) ) {
-					$insertpoint = $spanend . '+7c';
+
+				# poetry (but not other kinds of spans)
+				if ( $textwindow->get( "$markindex linestart", "$markindex linestart +14c" )
+				     eq '<span class="i'
+				     && $textwindow->get( "$markindex lineend -7c", "$markindex lineend" )
+				     eq '</span>' ) {
+					$insertpoint = "$markindex lineend";
 				}
+
 				$textwindow->ntinsert( $insertpoint, $inserttext )
 				  if $::lglobal{pageanch};
 			}
