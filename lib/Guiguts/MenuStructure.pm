@@ -171,132 +171,41 @@ sub menu_preferences {
 			Cascade  => '~File Paths',
 			-tearoff => 1,
 			-menuitems =>
-			  [ # FIXME: sub this and generalize for all occurences in menu code.
+			  [
 				[
 					Button   => 'Locate ~Aspell Executable',
-					-command => sub { ::locateAspellExe($textwindow); }
+					-command => sub { ::locateExecutable('Aspell', \$::globalspellpath ); }
 				],
 				[
 					Button   => 'Locate ~Image Viewer Executable',
-					-command => sub { ::setviewerpath($textwindow) }
+					-command => sub { ::locateExecutable('image viewer', \$::globalviewerpath ); }
 				],
 				[ 'separator', '' ],
 				[
 					Button   => 'Locate ~Gutcheck Executable',
-					-command => sub {
-						my $types;
-						if ($::OS_WIN) {
-							$types = [
-								[ 'Executable', [ '.exe', ] ],
-								[ 'All Files',  ['*'] ],
-							];
-						} else {
-							$types = [ [ 'All Files', ['*'] ] ];
-						}
-						$::lglobal{pathtemp} = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-title      => 'Where is the Gutcheck executable?',
-							-initialdir => ::dirname($::gutcommand)
-						);
-						$::gutcommand = $::lglobal{pathtemp}
-						  if $::lglobal{pathtemp};
-						return unless $::gutcommand;
-						$::gutcommand = ::os_normal($::gutcommand);
-						::savesettings();
-					  }
+					-command => sub { ::locateExecutable('GutCheck', \$::gutcommand ); }
 				],
 				[
 					Button   => 'Locate ~Jeebies Executable',
-					-command => sub {
-						my $types;
-						if ($::OS_WIN) {
-							$types = [
-								[ 'Executable', [ '.exe', ] ],
-								[ 'All Files',  ['*'] ],
-							];
-						} else {
-							$types = [ [ 'All Files', ['*'] ] ];
-						}
-						$::lglobal{pathtemp} = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-title      => 'Where is the Jeebies executable?',
-							-initialdir => ::dirname($::jeebiescommand)
-						);
-						$::jeebiescommand = $::lglobal{pathtemp}
-						  if $::lglobal{pathtemp};
-						return unless $::jeebiescommand;
-						$::jeebiescommand = ::os_normal($::jeebiescommand);
-						::savesettings();
-					  }
+					-command => sub { ::locateExecutable('Jeebies', \$::jeebiescommand ); }
 				],
 				[
 					Button   => 'Locate ~Tidy Executable',
-					-command => sub {
-						my $types;
-						if ($::OS_WIN) {
-							$types = [
-								[ 'Executable', [ '.exe', ] ],
-								[ 'All Files',  ['*'] ],
-							];
-						} else {
-							$types = [ [ 'All Files', ['*'] ] ];
-						}
-						$::tidycommand = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-initialdir => ::dirname($::tidycommand),
-							-title      => 'Where is the Tidy executable?'
-						);
-						return unless $::tidycommand;
-						$::tidycommand = ::os_normal($::tidycommand);
-						::savesettings();
-					  }
+					-command => sub { ::locateExecutable('Tidy', \$::tidycommand ); }
 				],
 				[
-					Button   => 'Locate W3C ~Validate (onsgmls) Executable',
-					-command => sub {
-						my $types;
-						if ($::OS_WIN) {
-							$types = [
-								[ 'Executable', [ '.exe', ] ],
-								[ 'All Files',  ['*'] ],
-							];
-						} else {
-							$types = [ [ 'All Files', ['*'] ] ];
-						}
-						$::validatecommand = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-initialdir => ::dirname($::validatecommand),
-							-title =>
-'Where is the W3C Validate (onsgmls) executable (must be in tools\W3C)?'
-						);
-						return unless $::validatecommand;
-						$::validatecommand = ::os_normal($::validatecommand);
-						::savesettings();
-					  }
+					Button   => 'Locate W3C ~Validator (onsgmls) Executable',
+					-command => sub { ::locateExecutable('onsgmls', \$::validatecommand ); }
 				],
 				[
 					Button =>
 					  'Locate W3C ~CSS Validator (css-validator.jar) Executable',
 					-command => sub {
-						my $types;
-						if ($::OS_WIN) {
-							$types = [
-								[ 'Executable', [ '.jar', ] ],
-								[ 'All Files',  ['*'] ],
-							];
-						} else {
-							$types = [ [ 'All Files', ['*'] ] ];
-						}
-						$::validatecsscommand = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-initialdir => ::dirname($::validatecsscommand),
-							-title =>
-'Where is the W3C CSS Validator (css-validator.jar) executable?'
-						);
-						return unless $::validatecsscommand;
-						$::validatecsscommand =
-						  ::os_normal($::validatecsscommand);
-						::savesettings();
+						my $types = [
+							[ 'Java Executable', [ '.jar', ] ],
+							[ 'All Files',  ['*'] ],
+						];
+						::locateExecutable('css-validator.jar', \$::validatecsscommand, $types );
 					  }
 				],
 				[

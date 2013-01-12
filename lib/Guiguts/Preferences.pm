@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
-	  &autosaveinterval &saveinterval &setcolor &locateAspellExe &setDPurls );
+	  &autosaveinterval &saveinterval &setcolor &locateExecutable &setDPurls );
 }
 
 sub setviewerpath {    #Find your image viewer
@@ -347,23 +347,28 @@ sub setcolor {    # Color picking routine
 	);
 }
 
-sub locateAspellExe {
-	my $textwindow = shift;
+sub locateExecutable {
+	my ( $exename, $exepathref, $filetypes ) = @_;
+	my $textwindow = $::textwindow;
 	my $types;
-	if ($::OS_WIN) {
-		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
+	if ( $filetypes ) {
+		$types = $filetypes;
 	} else {
-		$types = [ [ 'All Files', ['*'] ] ];
+		if ($::OS_WIN) {
+			$types = [ [ 'Executable', [ '.exe', '.bat' ] ], [ 'All Files', ['*'] ], ];
+		} else {
+			$types = [ [ 'All Files', ['*'] ] ];
+		}
 	}
 	$::lglobal{pathtemp} = $textwindow->getOpenFile(
 		-filetypes  => $types,
-		-title      => 'Where is the Aspell executable?',
-		-initialdir => ::dirname($::globalspellpath)
+		-title      => "Where is your $exename executable?",
+		-initialdir => ::dirname(${$exepathref}),
 	);
-	$::globalspellpath = $::lglobal{pathtemp}
+	${$exepathref} = $::lglobal{pathtemp}
 	  if $::lglobal{pathtemp};
-	return unless $::globalspellpath;
-	$::globalspellpath = ::os_normal($::globalspellpath);
+	return unless ${$exepathref};
+	${$exepathref} = ::os_normal(${$exepathref});
 	::savesettings();
 }
 
