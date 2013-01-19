@@ -1336,8 +1336,9 @@ sub titlecase {
 }
 
 sub os_normal {
-	$_[0] =~ s|/|\\|g if $::OS_WIN && $_[0];
-	return $_[0];
+	my $tmp = $_[0];
+	$tmp =~ s|/|\\|g if $::OS_WIN && $tmp;
+	return $tmp;
 }
 
 sub escape_problems {

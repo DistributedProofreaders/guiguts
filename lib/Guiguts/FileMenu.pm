@@ -149,7 +149,10 @@ sub file_import_preptext {
 	$textwindow->markSet( 'insert', '1.0' );
 	$::lglobal{prepfile} = 1;
 	::file_mark_pages() if ( $::auto_page_marks );
-	$::pngspath = '';
+	my $tmppath = $::globallastpath;
+	$tmppath =~ s|[^/\\]*[/\\]$||; # go one dir level up
+	$tmppath = ::catfile( $tmppath, $::defaultpngspath, '');
+	$::pngspath = $tmppath if ( -e $tmppath );
 	$top->Unbusy( -recurse => 1 );
 	return;
 }
@@ -812,7 +815,13 @@ sub openfile {    # and open it
 	::getprojectid() unless $::projectid;
 	_recentupdate($name);
 	unless ( -e $::pngspath ) {
-		$::pngspath = '';
+		$::pngspath = $::globallastpath . $::defaultpngspath;
+		unless ( -e $::pngspath ) {
+			$::pngspath = $::globallastpath . ::os_normal( $::projectid.'_images/') if $::projectid;
+		}
+		unless ( -e $::pngspath ) {
+			$::pngspath = '';
+		}
 	}
 	::update_indicators();
 	file_mark_pages() if $::auto_page_marks;
