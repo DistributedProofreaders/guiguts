@@ -9,7 +9,7 @@ BEGIN {
 	@EXPORT =
 	  qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
 	  &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
-	  &endofline &cleanup);
+	  &txt_manual_sc_conversion &endofline &cleanup);
 }
 
 sub text_convert_italic {
@@ -111,7 +111,7 @@ sub txt_convert_palette {
 		my $italic_button = $italic_frame->Button(
 			-width        => 16,
 			-text         => 'Convert <i></i> now',
-			-command      => sub { text_convert_simple_markup( $textwindow, "</?i>", $::italic_char ); }
+			-command      => sub { txt_convert_simple_markup( $textwindow, "</?i>", $::italic_char ); }
 		)->pack( -side => 'left' );
 		my $bold_frame =
 		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
@@ -133,7 +133,7 @@ sub txt_convert_palette {
 		my $bold_button = $bold_frame->Button(
 			-width        => 16,
 			-text         => 'Convert <b></b> now',
-			-command      => sub { text_convert_simple_markup( $textwindow, "</?b>", $::bold_char ); }
+			-command      => sub { txt_convert_simple_markup( $textwindow, "</?b>", $::bold_char ); }
 		)->pack( -side => 'left' );
 		my $g_frame =
 		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
@@ -155,7 +155,7 @@ sub txt_convert_palette {
 		my $g_button = $g_frame->Button(
 			-width        => 16,
 			-text         => 'Convert <g></g> now',
-			-command      => sub { text_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char ); }
+			-command      => sub { txt_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char ); }
 		)->pack( -side => 'left' );
 		my $f_frame =
 		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
@@ -177,7 +177,7 @@ sub txt_convert_palette {
 		my $f_button = $f_frame->Button(
 			-width        => 16,
 			-text         => 'Convert <f></f> now',
-			-command      => sub { text_convert_simple_markup( $textwindow, "</?f>", $::font_char ); }
+			-command      => sub { txt_convert_simple_markup( $textwindow, "</?f>", $::font_char ); }
 		)->pack( -side => 'left' );
 		my $sc_frame =
 		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
@@ -227,26 +227,16 @@ sub txt_convert_palette {
 		)->pack( -side => 'left' );
 		my $all_frame =
 		  $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
-		#my $sc_manual = $all_frame->Button(
-		#	-width        => 20,
-		#	-text         => 'Do <sc> manually...',
-		#	-command      => sub {
-		#		::searchpopup();
-		#		$::multiterm = 1;
-		#		$::lglobal{searchentry}->delete( '1.0', 'end' );
-		#		$::lglobal{replaceentry}->delete( '1.0', 'end' );
-		#		$::lglobal{replaceentry1}->delete( '1.0', 'end' );
-		#		$::lglobal{replaceentry2}->delete( '1.0', 'end' );
-		#		$::lglobal{searchentry}->insert( 'end', '<sc>(.+?\n?)</sc>' );
-		#		$::lglobal{replaceentry}->insert( 'end', '$1' );
-		#		$::lglobal{replaceentry1}->insert( 'end', '\U$1\E' );
-		#		$::lglobal{replaceentry2}->insert( 'end', $::sc_char . '$1' . $::sc_char );
-		#	}
-		#)->pack( -side => 'left', -padx => 10 );
+		my $sc_manual = $all_frame->Button(
+			-width        => 20,
+			-text         => 'Do <sc> manually...',
+			-command      => sub { ::txt_manual_sc_conversion() },
+		)->pack( -side => 'left', -padx => 10 );
 		my $all_button = $all_frame->Button(
 			-width        => 20,
 			-text         => 'Do All Selected',
 			-command      => sub {
+			  $textwindow->addGlobStart;
 			  txt_convert_simple_markup( $textwindow, "</?i>", $::italic_char )
 			    if ( $::txt_conv_italic );
 			  txt_convert_simple_markup( $textwindow, "</?b>", $::bold_char )
@@ -258,10 +248,11 @@ sub txt_convert_palette {
 			  text_convert_tb( $textwindow )
 			    if ( $::txt_conv_tb );
 			  if ( $::txt_conv_sc ) {
-				text_uppercase_smallcaps() if ( $::txt_conv_sc == 2 );
+				txt_auto_uppercase_smallcaps() if ( $::txt_conv_sc == 2 );
 				txt_convert_simple_markup( $textwindow, "</?sc>", $::sc_char)
 				    if ( $::txt_conv_sc == 1 );
 			  }
+			  $textwindow->addGlobEnd;
 			}
 		)->pack( -side => 'left' );
 		::initialize_popup_with_deletebinding('txtconvpop');
@@ -481,6 +472,20 @@ sub text_uppercase_smallcaps {
 	$::lglobal{replaceentry}->insert( 'end', "\\U\$1\\E" );
 }
 
+sub txt_auto_uppercase_smallcaps {
+	my $textwindow = $::textwindow;
+	$textwindow->addGlobStart;
+	my ( $thisblockstart, $thisblockend, $selection );
+	while ( $thisblockstart =
+		$textwindow->search( '-exact', '--', '<sc>', '1.0', 'end' ) )
+	{
+		$thisblockend = $textwindow->search( '-exact', '--', '</sc>', $thisblockstart, 'end' );
+		$selection = $textwindow->get( "$thisblockstart +4c", $thisblockend );
+		$textwindow->replacewith( $thisblockstart, "$thisblockend +5c", uc($selection) );
+	}
+	$textwindow->addGlobEnd;
+}
+
 sub text_remove_smallcaps_markup {
 	::searchpopup();
 	::searchoptset(qw/0 x x 1/);
@@ -488,6 +493,20 @@ sub text_remove_smallcaps_markup {
 	$::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
 	$::lglobal{replaceentry}->delete( '1.0', 'end' );
 	$::lglobal{replaceentry}->insert( 'end', "\$1" );
+}
+
+sub txt_manual_sc_conversion {
+	::searchpopup();
+	::searchoptset(qw/0 x x 1/);
+	$::lglobal{searchentry}->delete( '1.0', 'end' );
+	$::lglobal{replaceentry}->delete( '1.0', 'end' );
+	$::lglobal{replaceentry1}->delete( '1.0', 'end' );
+	$::lglobal{replaceentry2}->delete( '1.0', 'end' );
+	$::lglobal{searchentry}->insert( 'end', '<sc>(\\n?[^<]+)</sc>' );
+	$::lglobal{replaceentry}->insert( 'end', '$1' );
+	$::lglobal{replaceentry1}->insert( 'end', '\U$1\E' );
+	$::lglobal{replaceentry2}->insert( 'end', "$::sc_char\$1$::sc_char" );
+	$::lglobal{searchmulti}->invoke;
 }
 
 ## End of Line Cleanup

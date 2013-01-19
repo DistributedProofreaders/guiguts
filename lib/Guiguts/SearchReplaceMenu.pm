@@ -1176,7 +1176,7 @@ sub searchpopup {
 		  $sf10->Label( -text => "Replacement Text\t\t", )
 		  ->grid( -row => 1, -column => 1 );
 		$sf10->Label( -text => 'Terms - ' )->grid( -row => 1, -column => 2 );
-		$sf10->Radiobutton(
+		$::lglobal{searchsingle} = $sf10->Radiobutton(
 			-text     => 'single',
 			-variable => \$::multiterm,
 			-value    => 0,
@@ -1186,7 +1186,7 @@ sub searchpopup {
 				}
 			},
 		)->grid( -row => 1, -column => 3 );
-		$sf10->Radiobutton(
+		$::lglobal{searchmulti} = $sf10->Radiobutton(
 			-text     => 'multi',
 			-variable => \$::multiterm,
 			-value    => 1,

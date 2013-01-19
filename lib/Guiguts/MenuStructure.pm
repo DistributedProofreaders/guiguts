@@ -1023,28 +1023,31 @@ sub menubuildold {
 			[
 				Button   => '~All of the above',
 				-command => sub {
+					$textwindow->addGlobStart;
 					::text_convert_italic( $textwindow, $::italic_char );
 					::text_convert_bold( $textwindow, $::bold_char );
-					$textwindow->addGlobStart;
 					::text_convert_tb($textwindow);
 					$textwindow->addGlobEnd;
 				  }
 			],
+			[ 'separator', '' ],
 			[
 				Button   => 'Add a Thought Break',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::text_thought_break($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
-				Button   => 'Small caps to all caps',
+				Button   => 'Small caps to all caps...',
 				-command => \&::text_uppercase_smallcaps
 			],
 			[
-				Button   => 'Remove small caps markup',
+				Button   => 'Remove small caps markup...',
 				-command => \&::text_remove_smallcaps_markup
+			],
+			[
+				Button   => 'Manually convert small caps markup...',
+				-command => \&::txt_manual_sc_conversion
 			],
 			[
 				Button   => "~Options...",
@@ -1515,28 +1518,31 @@ sub menubuildwizard {
 			[
 				Button   => 'All of the above',
 				-command => sub {
+					$textwindow->addGlobStart;
 					::text_convert_italic( $textwindow, $::italic_char );
 					::text_convert_bold( $textwindow, $::bold_char );
-					$textwindow->addGlobStart;
 					::text_convert_tb($textwindow);
 					$textwindow->addGlobEnd;
 				  }
 			],
+			[ 'separator', '' ],
 			[
 				Button   => '~Add a Thought Break',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::text_thought_break($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
-				Button   => 'Small caps to all caps',
+				Button   => 'Small caps to all caps...',
 				-command => \&::text_uppercase_smallcaps
 			],
 			[
-				Button   => 'Remove small caps markup',
+				Button   => 'Remove small caps markup...',
 				-command => \&::text_remove_smallcaps_markup
+			],
+			[
+				Button   => 'Manually convert small caps markup...',
+				-command => \&::txt_manual_sc_conversion
 			],
 			[
 				Button   => "Options...",
