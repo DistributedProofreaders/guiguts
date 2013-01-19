@@ -1062,68 +1062,56 @@ sub rcaligntext {
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	return if ( $range_total == 0 );
-	while (@ranges) {
-		my $end            = pop(@ranges);
-		my $start          = pop(@ranges);
-		my $thisblockstart = int($start) . '.0';
-		my $thisblockend   = int($end) . '.0';
-		my $index          = $thisblockstart;
-		if ( $thisblockstart == $thisblockend ) {
-			$thisblockend  = (int($end)+1) . '.0'
+	my ($start, $end) = ::expandselection();
+	my $thisblockstart = "$start.0";
+	my $thisblockend   = "$end.0";
+	my $index          = $thisblockstart;
+	$textwindow->addGlobStart;
+	while ( $index < $thisblockend ) {
+		while ( $textwindow->get( $index, "$index+1c" ) eq ' ' ) {
+			$textwindow->delete( $index, "$index+1c" );
 		}
-		$textwindow->addGlobStart;
-		while ( $index < $thisblockend ) {
-			while ( $textwindow->get( $index, "$index+1c" ) eq ' ' ) {
-				$textwindow->delete( $index, "$index+1c" );
-			}
-			my $line = $textwindow->get($index, "$index lineend");
-			if ( length($line) < $::rmargin){
-				my $paddval = $::rmargin - length($line) + $indentval;
-				if ( $align eq 'c' ) { $paddval = $paddval / 2 ; }
-				$textwindow->insert( $index, ' ' x $paddval ) unless $line eq '';
-			}
-			$index++;
-			$index .= '.0';
+		my $line = $textwindow->get($index, "$index lineend");
+		if ( length($line) < $::rmargin){
+			my $paddval = $::rmargin - length($line) + $indentval;
+			if ( $align eq 'c' ) { $paddval = $paddval / 2 ; }
+			$textwindow->insert( $index, ' ' x $paddval ) unless $line eq '';
 		}
-		$textwindow->addGlobEnd;
-		$textwindow->focus;
+		$index++;
+		$index .= '.0';
 	}
+	$textwindow->addGlobEnd;
+	$textwindow->focus;
 }
 
 sub tocalignselection {
 	::savesettings();
-	my ( $align, $indentval ) = @_;
+	my $indentval = @_;
 	my $textwindow = $::textwindow;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	return if ( $range_total == 0 );
-	while (@ranges) {
-		my $end            = pop(@ranges);
-		my $start          = pop(@ranges);
-		my $thisblockstart = int($start) . '.0';
-		my $thisblockend   = int($end) . '.0';
-		my $index          = $thisblockstart;
-		if ( $thisblockstart == $thisblockend ) {
-			$thisblockend  = (int($end)+1) . '.0'
-		} 
-		$textwindow->addGlobStart;
-		while ( $index < $thisblockend ) {
-			my $line = $textwindow->get( $index, "$index lineend" );
-			if ( $line =~ /^(.*)  *(\d+)$/ ) {
-				my $len1 = length($1);
-				my $len2 = length($2);
-				my $spacelen = length($line) - $len1 - $len2;
-				if ( $len1 + $len2 + 2 < $::rmargin){
-					my $paddval = $::rmargin - $len1 - $len2 - $spacelen + $indentval;
-					$textwindow->insert( $index."+$len1 c", ' ' x $paddval );
-				}
+	my ( $start, $end ) = ::expandselection();
+	my $thisblockstart = "$start.0";
+	my $thisblockend   = "$end.0";
+	my $index          = $thisblockstart;
+	$textwindow->addGlobStart;
+	while ( $index < $thisblockend ) {
+		my $line = $textwindow->get( $index, "$index lineend" );
+		if ( $line =~ /^(.*)  +(\d+\.?)$/ ) {
+			my $len1 = length($1);
+			my $len2 = length($2);
+			my $spacelen = length($line) - $len1 - $len2;
+			if ( $len1 + $len2 + 2 < $::rmargin){
+				my $paddval = $::rmargin - $len1 - $len2 - $spacelen + $indentval;
+				$textwindow->insert( $index."+$len1 c", ' ' x $paddval );
 			}
-			$index++;
-			$index .= '.0';
 		}
-		$textwindow->addGlobEnd;
-		$textwindow->focus;
+		$index++;
+		$index .= '.0';
 	}
+	$textwindow->addGlobEnd;
+	$textwindow->focus;
 }
 
 1;

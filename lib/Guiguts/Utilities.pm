@@ -14,7 +14,7 @@ BEGIN {
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
 	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
-	  &xtops &toolbar_toggle &toggle_autosave &killpopup &currentfileisunicode &currentfileislatin1
+	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion
 	  &scrolldismiss &b2scroll);
 }
@@ -2144,6 +2144,26 @@ sub toggle_autosave {
 			-activebackground => 'SystemButtonFace'
 		) unless $::notoolbar;
 	}
+}
+
+# expand current selection to span entire lines
+# if multiple selections, span from first to last
+sub expandselection {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	my @ranges = $textwindow->tagRanges('sel');
+	unless (@ranges) {
+		push @ranges, $textwindow->index('insert');
+		push @ranges, $textwindow->index('insert');
+	}
+	my $range_total = @ranges;
+	return if $range_total == 0;
+	my $thisblockend   = pop(@ranges);
+	my $thisblockstart = $ranges[0];
+	my ( $lsr, $lsc ) = split (/\./, $thisblockstart);
+	my ( $ler, $lec ) = split (/\./, $thisblockend);
+	$ler++ if $lec;
+	$textwindow->tagAdd('sel', "$lsr.0", "$ler.0");
+	return ( $lsr, $ler );
 }
 
 sub currentfileisunicode {
