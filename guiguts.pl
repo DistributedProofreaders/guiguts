@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.22';
+our $VERSION = '1.0.23-pre';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
@@ -76,6 +76,7 @@ use Guiguts::MultiLingual;
 use Guiguts::PageNumbers;
 use Guiguts::PageSeparators;
 use Guiguts::Preferences;
+use Guiguts::ReflowGG;
 use Guiguts::SearchReplaceMenu;
 use Guiguts::SelectionMenu;
 use Guiguts::SpellCheck;
@@ -155,7 +156,9 @@ our $pngspath            = q{};
 our $projectid           = q{};
 our $projectfileslocation= '';
 our $regexpentry         = q();
+our $rewrapalgo          = 2;
 our $rmargin             = 72;
+our $rmargindiff         = 1;
 our $rwhyphenspace       = 1;
 our $scannos_highlighted = 0;
 our $scannoslist         = q{wordlist/en-common.txt};

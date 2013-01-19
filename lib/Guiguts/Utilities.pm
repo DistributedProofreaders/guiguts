@@ -675,6 +675,7 @@ sub initialize {
 		$::positionhash{brkpop}        = '+482+131';
 		$::positionhash{footpop}       = '+255+157';
 		$::positionhash{htmlimpop}     = '+45+37';
+		$::positionhash{marginspop}    = '+145+137';
 		$::positionhash{pagepop}       = '+334+176';
 		$::positionhash{pnumpop}       = '+302+97';
 		$::positionhash{spellpopup}    = '+152+97';

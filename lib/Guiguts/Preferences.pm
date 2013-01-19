@@ -44,125 +44,144 @@ sub setdefaultpath {
 
 sub setmargins {
 	my $top = $::top;
-	my $getmargins = $top->DialogBox( -title   => 'Set Margins for Rewrap',
-									  -buttons => ['Close'], );
+	if ( defined( $::lglobal{marginspop} ) ) {
+		$::lglobal{marginspop}->deiconify;
+		$::lglobal{marginspop}->raise;
+		$::lglobal{marginspop}->focus;
+	} else {
+		$::lglobal{marginspop} = $top->Toplevel;
+		$::lglobal{marginspop}->title('Set Margins for Rewrap');
+		$::lglobal{marginspop}->resizable('no', 'no');
+		
 	my $lmframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $lmlabel = $lmframe->Label(
 								   -width => 25,
-								   -text  => 'Rewrap Left Margin',
+								   -text  => 'Left Margin',
 	)->pack( -side => 'left' );
-	my $lmentry = $lmframe->Entry(
+	my $lmentry = $lmframe->Spinbox(
 								   -width        => 6,
 								   -background   => $::bkgcolor,
 								   -relief       => 'sunken',
 								   -textvariable => \$::lmargin,
+								   -increment    => 1,
+								   -from         => 0,
+								   -to           => 120,
 	)->pack( -side => 'left' );
 	my $rmframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $rmlabel = $rmframe->Label(
 								   -width => 25,
-								   -text  => 'Rewrap Right Margin',
+								   -text  => 'Max. Right Margin',
 	)->pack( -side => 'left' );
-	my $rmentry = $rmframe->Entry(
+	my $rmentry = $rmframe->Spinbox(
 								   -width        => 6,
 								   -background   => $::bkgcolor,
 								   -relief       => 'sunken',
 								   -textvariable => \$::rmargin,
+								   -increment    => 1,
+								   -from         => 0,
+								   -to           => 120,
 	)->pack( -side => 'left' );
 	my $blmframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $blmlabel = $blmframe->Label(
 									 -width => 25,
-									 -text  => 'Block Rewrap Left Margin',
+									 -text  => 'Block Left Margin',
 	)->pack( -side => 'left' );
-	my $blmentry = $blmframe->Entry(
+	my $blmentry = $blmframe->Spinbox(
 									 -width        => 6,
 									 -background   => $::bkgcolor,
 									 -relief       => 'sunken',
 									 -textvariable => \$::blocklmargin,
+									 -increment    => 1,
+									 -from         => 0,
+									 -to           => 120,
 	)->pack( -side => 'left' );
 	my $brmframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $brmlabel = $brmframe->Label(
 									 -width => 25,
-									 -text  => 'Block Rewrap Right Margin',
+									 -text  => 'Block Max. Right Margin',
 	)->pack( -side => 'left' );
-	my $brmentry = $brmframe->Entry(
+	my $brmentry = $brmframe->Spinbox(
 									 -width        => 6,
 									 -background   => $::bkgcolor,
 									 -relief       => 'sunken',
 									 -textvariable => \$::blockrmargin,
+									 -increment    => 1,
+									 -from         => 0,
+									 -to           => 120,
 	)->pack( -side => 'left' );
-
-	#
 	my $plmframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
 	my $plmlabel = $plmframe->Label(
 									 -width => 25,
-									 -text  => 'Poetry Rewrap Left Margin',
+									 -text  => 'Poetry Left Margin',
 	)->pack( -side => 'left' );
-	my $plmentry = $plmframe->Entry(
+	my $plmentry = $plmframe->Spinbox(
 									 -width        => 6,
 									 -background   => $::bkgcolor,
 									 -relief       => 'sunken',
 									 -textvariable => \$::poetrylmargin,
+									 -increment    => 1,
+									 -from         => 0,
+									 -to           => 20,
 	)->pack( -side => 'left' );
-
-	#
 	my $didntframe =
-	  $getmargins->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
-	my $didntlabel =
-	  $didntframe->Label(
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+	my $didntlabel = $didntframe->Label(
 						  -width => 25,
 						  -text  => 'Default Indent for /*  */ Blocks',
 	  )->pack( -side => 'left' );
-	my $didntmentry =
-	  $didntframe->Entry(
+	my $didntmentry = $didntframe->Spinbox(
 						  -width        => 6,
 						  -background   => $::bkgcolor,
 						  -relief       => 'sunken',
 						  -textvariable => \$::defaultindent,
+						  -increment    => 1,
+						  -from         => 0,
+						  -to           => 120,
 	  )->pack( -side => 'left' );
-	$getmargins->Icon( -image => $::icon );
-	$getmargins->Show;
-	if (    ( $::blockrmargin eq '' )
-		 || ( $::blocklmargin eq '' )
-		 || ( $::rmargin      eq '' )
-		 || ( $::lmargin      eq '' ) )
-	{
-		$top->messageBox(
+	if ( $::rewrapalgo == 2 ) {
+		my $rmdiffframe =
+		  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+		my $rmdifflabel = $rmdiffframe->Label(
+							  -width => 25,
+							  -text  => 'Right Margin Max.-Opt. Diff.',
+		  )->pack( -side => 'left' );
+		my $rmdiffentry = $rmdiffframe->Spinbox(
+							  -width        => 6,
+							  -background   => $::bkgcolor,
+							  -relief       => 'sunken',
+							  -textvariable => \$::rmargindiff,
+							  -increment    => 1,
+							  -from         => 0,
+							  -to           => 10,
+		  )->pack( -side => 'left' );
+	}
+		::initialize_popup_without_deletebinding('marginspop');
+		$::lglobal{marginspop}->protocol(
+			'WM_DELETE_WINDOW' => sub {
+				$::lglobal{marginspop}->destroy;
+				undef $::lglobal{marginspop};
+				if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) )
+				{
+					$top->messageBox(
 						  -icon    => 'error',
-						  -message => 'The margins must be a positive integer.',
-						  -title   => 'Incorrect margin ',
+						  -title   => 'Incorrect margins',
+						  -message => 'The left margin must be smaller than the right margin.',
 						  -type    => 'OK',
+					);
+					setmargins();
+				} else {
+					::savesettings();
+				}
+			}
 		);
-		setmargins();
 	}
-	if (    ( $::blockrmargin =~ /[\D\.]/ )
-		 || ( $::blocklmargin =~ /[\D\.]/ )
-		 || ( $::rmargin      =~ /[\D\.]/ )
-		 || ( $::lmargin      =~ /[\D\.]/ ) )
-	{
-		$top->messageBox(
-						  -icon    => 'error',
-						  -message => 'The margins must be a positive integer.',
-						  -title   => 'Incorrect margin ',
-						  -type    => 'OK',
-		);
-		setmargins();
-	}
-	if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) )
-	{
-		$top->messageBox(
-			  -icon    => 'error',
-			  -message => 'The left margins must come before the right margin.',
-			  -title   => 'Incorrect margin ',
-			  -type    => 'OK',
-		);
-		setmargins();
-	}
-	::savesettings();
+	$::lglobal{marginspop}->raise;
+	$::lglobal{marginspop}->focus;
 }
 
 # FIXME: Adapt to work with fontCreate thingy

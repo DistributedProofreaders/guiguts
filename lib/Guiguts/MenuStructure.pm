@@ -473,6 +473,12 @@ sub menu_preferences {
 					  }
 				],
 				[
+					Checkbutton => "Use Greedy, Traditional Rewrap Algorithm",
+					-variable   => \$::rewrapalgo,
+					-onvalue    => 1,
+					-offvalue   => 2,
+				],
+				[
 					Button   => 'Set Rewrap ~Margins...',
 					-command => \&::setmargins
 				],

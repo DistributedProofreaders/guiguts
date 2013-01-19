@@ -11,6 +11,16 @@ BEGIN {
 }
 
 sub wrapper {
+	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
+	return $paragraph if ( $paragraph =~ m|^[#\*pPlLxXfF]/\n$| || $paragraph =~ m|^/[#\*pPlLxXfF]\n$| );
+	if ( $::rewrapalgo == 1 ) {
+		return greedy_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
+	} elsif ( $::rewrapalgo == 2 ) {
+		return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
+	}
+}
+
+sub greedy_wrapper {
 	my @words         = ();
 	my $word          = '';
 	my $line          = '';
@@ -88,6 +98,35 @@ sub wrapper {
 		$paragraph =~ s/\n(\S+)-([#\*]\/)/ $1-\n$2/;
 	}
 	return ($paragraph);
+}
+
+sub knuth_wrapper {
+	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
+	my ( $pre, $post ) = ( '', '' );
+	my $indent = ' ' x $firstmargin;
+	if ( $paragraph =~ s|^(/#\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
+	if ( $paragraph =~ s|^(/#)|| ) { $pre = "$1\n"; }
+	if ( $paragraph =~ s|(#/)$|| ) { $post = "$1\n"; }
+	$rightmargin++;
+	my $maxwidth = $rightmargin - $leftmargin;
+	my $optwidth = $rightmargin - $::rmargindiff - $leftmargin;
+	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
+	$paragraph =~ s/\n/ /g;
+	my $reflowed = ::reflow_string( $paragraph,
+		maximum => $maxwidth,
+		optimum => $optwidth,
+		indent1 => ' ' x $firstmargin, 
+		frenchspacing => 'y',
+		semantic => 0,
+		namebreak => 0,
+		sentence => 0,
+		independent => 0,
+		dependent => 0,
+		shortlast => 0,
+		connpenalty => 0, );
+	$reflowed =~ s/\n/\n$indent/g if $leftmargin;
+	$reflowed =~ s/ *$//;
+	return $pre . $reflowed . $post;
 }
 
 sub selectrewrap {
@@ -182,6 +221,10 @@ sub selectrewrap {
 			$thisblockend =
 			  $textwindow->search( '-regex', '--', '^[\x7f]*$', $thisblockstart,
 				$end );    #find end of paragraph
+			# if two start rewrap block markers aren't separated by a blank line, just let it become added
+			$thisblockend = $thisblockstart
+				if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c")
+				        =~ /^\/[\*\$lLpPfFxX]$/ );
 
 #			  $textwindow->search( '-regex', '--', '^(\x7f)*$', $thisblockstart, #debugger chokes
 #								   $end );    #find end of paragraph
