@@ -540,8 +540,17 @@ sub cleanup {
 							   '^\/[\*\$#pPfFLlXx]|^[Pp\*\$#fFLlXx]\/',
 							   $::searchstartindex, 'end' );
 		last unless $::searchstartindex;
-		$textwindow->delete( "$::searchstartindex -1c",
+		# if a start rewrap block marker is followed by a start rewrap block marker,
+		# also delete the blank line between the two
+		if ( $textwindow->get($::searchstartindex, "$::searchstartindex +1c") eq '/'
+		     && $textwindow->get("$::searchstartindex +3c", "$::searchstartindex +6c")
+		          =~ /\n\/[\*\$#pPfFlLxX]/ ) {
+			$textwindow->delete( "$::searchstartindex -1c",
+							 "$::searchstartindex +5c lineend" );
+		} else {
+			$textwindow->delete( "$::searchstartindex -1c",
 							 "$::searchstartindex lineend" );
+		}
 	}
 	$textwindow->addGlobEnd;
 	$top->Unbusy( -recurse => 1 );
