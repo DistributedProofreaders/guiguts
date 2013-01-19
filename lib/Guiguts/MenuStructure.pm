@@ -1788,32 +1788,11 @@ sub unicodemenu {
 						-command    => \&menurebuild,
 						-value      => 0,
 					],
-					[
-						Cascade  => 'More',
-						-tearoff => 0,
-						-menuitems =>
-						  [ # FIXME: sub this and generalize for all occurences in menu code.
-							map ( [
-									Button   => "$utfsorthash{$_}",
-									-command => [
-										\&::utfpopup,
-										$utfsorthash{$_},
-										$::lglobal{utfblocks}
-										  { $utfsorthash{$_} }[0],
-										$::lglobal{utfblocks}
-										  { $utfsorthash{$_} }[1]
-									],
-									-accelerator =>
-									  $::lglobal{utfblocks}{ $utfsorthash{$_} }
-									  [0] . ' - '
-									  . $::lglobal{utfblocks}
-									  { $utfsorthash{$_} }[1]
-								],
-								( sort ( keys %utfsorthash ) )[ 34 .. 67 ] ),
-						  ]
-					],
 					map ( [
 							Button   => "$utfsorthash{$_}",
+							-columnbreak => (
+								($::unicodemenusplit==3 && ($_ eq '0D80' || $_ eq '2300'))
+								|| ($::unicodemenusplit==2 && $_ eq '1740') ? 1 : 0 ),
 							-command => [
 								\&::utfpopup,
 								$utfsorthash{$_},
@@ -1825,7 +1804,7 @@ sub unicodemenu {
 							  . ' - '
 							  . $::lglobal{utfblocks}{ $utfsorthash{$_} }[1]
 						],
-						( sort ( keys %utfsorthash ) )[ 0 .. 33 ] ),
+						( sort ( keys %utfsorthash ) )[ 0 .. 67 ] ),
 				],
 			);
 		} else {
@@ -1837,29 +1816,11 @@ sub unicodemenu {
 						-command    => \&menurebuild,
 						-value      => 1,
 					],
-					[
-						Cascade  => 'More',
-						-tearoff => 0,
-						-menuitems =>
-						  [ # FIXME: sub this and generalize for all occurences in menu code.
-							map ( [
-									Button   => "$_",
-									-command => [
-										\&::utfpopup,
-										$_,
-										$::lglobal{utfblocks}{$_}[0],
-										$::lglobal{utfblocks}{$_}[1]
-									],
-									-accelerator => $::lglobal{utfblocks}{$_}[0]
-									  . ' - '
-									  . $::lglobal{utfblocks}{$_}[1]
-								],
-								( sort ( keys %{ $::lglobal{utfblocks} } ) )
-								  [ 34 .. 67 ] ),
-						  ]
-					],
 					map ( [
 							Button   => "$_",
+							-columnbreak => (
+								($::unicodemenusplit==3 && ($_ eq 'Ethiopic' || $_ eq 'Mongolian'))
+								|| ($::unicodemenusplit==2 && $_ eq 'Lao') ? 1 : 0 ),
 							-command => [
 								\&::utfpopup,
 								$_,
@@ -1869,7 +1830,7 @@ sub unicodemenu {
 							-accelerator => $::lglobal{utfblocks}{$_}[0] . ' - '
 							  . $::lglobal{utfblocks}{$_}[1]
 						],
-						( sort ( keys %{ $::lglobal{utfblocks} } ) )[ 1 .. 33 ]
+						( sort ( keys %{ $::lglobal{utfblocks} } ) )[ 0 .. 67 ]
 					),
 				],
 			);

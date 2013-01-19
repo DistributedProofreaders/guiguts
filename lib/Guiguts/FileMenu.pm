@@ -927,10 +927,11 @@ EOM
 			font_char fontname fontsize fontweight geometry
 			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
-			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin multiterm nobell nohighlights
-			notoolbar poetrylmargin rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
+			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
+			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin
+			rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
 			txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
-			twowordsinhyphencheck utffontname utffontsize
+			twowordsinhyphencheck unicodemenusplit utffontname utffontsize
 			url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
