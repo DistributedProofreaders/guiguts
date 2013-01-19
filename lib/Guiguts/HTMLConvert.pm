@@ -2630,7 +2630,7 @@ sub htmlmarkpopup {
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f3->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { markup( $textwindow, $top, 'delete' ) },
+			-command          => sub { clearmarkupinselection() },
 			-text             => 'Remove Markup from Selection',
 			-width            => 28
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
@@ -2682,50 +2682,21 @@ sub markup {
 	::hidepagenums();
 	::savesettings();
 	my @ranges = $textwindow->tagRanges('sel');
-
 	unless (@ranges) {
 		push @ranges, $textwindow->index('insert');
 		push @ranges, $textwindow->index('insert');
 	}
 	my $range_total = @ranges;
 	my $done        = '';
-	my $open        = 0;
-	my $close       = 0;
 	my @intanchors;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
+	return unless $range_total;
+	if ( 1 ) {
 		my $end            = pop(@ranges);
 		my $start          = pop(@ranges);
 		my $thisblockstart = $start;
 		my $thisblockend   = $end;
 		my $selection;
-		if ( $mark eq 'delete' ) {
-			my ( $lsr, $lsc, $ler, $lec, $step, $edited );
-			( $lsr, $lsc ) = split /\./, $thisblockstart;
-			( $ler, $lec ) = split /\./, $thisblockend;
-			$step = $lsr;
-			while ( $step <= $ler ) {
-				$selection = $textwindow->get( "$step.0", "$step.end" );
-				$edited++ if ( $selection =~ s/<\/td>/  /g );
-				$edited++ if ( $selection =~ s/<\/?body>//g );
-				$edited++ if ( $selection =~ s/<br.*?>//g );
-				$edited++ if ( $selection =~ s/<\/?div[^>]*?>//g );
-				$edited++
-				  if ( $selection =~
-					s/<span.*?margin-left: (\d+\.?\d?)em.*?>/' ' x ($1 *2)/e );
-				$edited++ if ( $selection =~ s/<\/?span[^>]*?>//g );
-				$edited++ if ( $selection =~ s/<\/?[hscalupt].*?>//g );
-				$edited++ if ( $selection =~ s/&nbsp;/ /g );
-				$edited++ if ( $selection =~ s/<\/?blockquote>//g );
-				$edited++ if ( $selection =~ s/\s+$// );
-				$textwindow->delete( "$step.0", "$step.end" ) if $edited;
-				$textwindow->insert( "$step.0", $selection ) if $edited;
-				$step++;
-				unless ( $step % 25 ) { $textwindow->update }
-			}
-			$textwindow->tagAdd( 'sel', $start, $end );
-		} elsif ( $mark eq 'br' ) {
+		if ( $mark eq 'br' ) {
 			my ( $lsr, $lsc, $ler, $lec, $step );
 			( $lsr, $lsc ) = split /\./, $thisblockstart;
 			( $ler, $lec ) = split /\./, $thisblockend;
@@ -3051,16 +3022,69 @@ sub markup {
 			$textwindow->insert( $thisblockstart, $done );
 		}
 	}
-	if ( $open != $close ) {
-		$top->messageBox(
-			-icon => 'error',
-			-message =>
-"Mismatching open and close markup removed.\nYou may have orphaned markup.",
-			-title => 'Mismatching markup.',
-			-type  => 'Ok',
-		);
-	}
 	$textwindow->focus;
+}
+
+sub clearmarkupinselection {
+	my ( $textwindow, $top ) = ( $::textwindow, $::top );
+	::hidepagenums();	
+	my @ranges = $textwindow->tagRanges('sel');
+	unless (@ranges) {
+		push @ranges, $textwindow->index('insert');
+		push @ranges, $textwindow->index('insert');
+	}
+	my $range_total = @ranges;
+	return unless $range_total;
+	#my $open           = 0;
+	#my $close          = 0;
+	$textwindow->addGlobStart;
+	while ( @ranges ) {
+		my $end            = pop(@ranges);
+		my $start          = pop(@ranges);
+		my $thisblockstart = $start;
+		my $thisblockend   = $end;
+		my ( $lsr, $lsc, $ler, $lec, $step, $edited, $selection, $selectionend );
+		( $lsr, $lsc ) = split ( /\./, $thisblockstart );
+		( $ler, $lec ) = split ( /\./, $thisblockend );
+		$step = $lsr;
+		my $stepend = 'end';
+		while ( $step <= $ler ) {
+			$lsc = 0 if ($step > $lsr);
+			$stepend = $lec if ($step == $ler);
+			$selection = $textwindow->get( "$step.$lsc", "$step.$stepend" );
+			$edited++ if ( $selection =~ s/<\/td>/  /g );
+			$edited++ if ( $selection =~ s/<\/?body>//g );
+			$edited++ if ( $selection =~ s/<br.*?>//g );
+			$edited++ if ( $selection =~ s/<\/?div[^>]*?>//g );
+			$edited++
+			  if ( $selection =~
+				s/<span.*?margin-left: (\d+\.?\d?)em.*?>/' ' x ($1 *2)/e );
+			$edited++ if ( $selection =~ s/<\/?span[^>]*?>//g );
+			$edited++ if ( $selection =~ s/<\/?[hscalupt].*?>//g );
+			$edited++ if ( $selection =~ s/&nbsp;/ /g );
+			$edited++ if ( $selection =~ s/<\/?blockquote>//g );
+			$textwindow->delete( "$step.$lsc", "$step.$stepend" ) if $edited;
+			$textwindow->insert( "$step.$lsc", $selection ) if $edited;
+			$step++;
+			unless ( $step % 25 ) { $textwindow->update }
+		}
+		if ($lsr == $ler) {
+			$selectionend = "$ler." . ($lsc + length($selection));
+		} else {
+			$selectionend = "$ler." . length($selection);
+		}
+		$textwindow->tagAdd( 'sel', $start, $selectionend ) if $range_total == 2;
+	}
+	$textwindow->addGlobEnd;
+	#if ( $open != $close ) { # never implemented?
+	#	$top->messageBox(
+	#		-icon => 'error',
+	#		-message =>
+	#	"Mismatching open and close markup removed.\nYou may have orphaned markup.",
+	#		-title => 'Mismatching markup.',
+	#		-type  => 'Ok',
+	#	);
+	#}
 }
 
 sub hyperlinkpagenums {
