@@ -7,7 +7,8 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&spellcheckfirst &aspellstart &aspellstop &spellchecker &spellloadprojectdict &getmisspelledwords	&spelloptions);
+	  qw(&aspellstart &aspellstop &spellchecker &spellloadprojectdict &getmisspelledwords
+	  &spelloptions &get_spellchecker_version);
 }
 
 # Initialize spellchecker
@@ -320,15 +321,13 @@ sub spellclearvars {
 sub aspellstart {
 	aspellstop();
 	my @cmd =
-	  ( $::globalspellpath, '-a', '-S', '--sug-mode', $::globalaspellmode );
+	  ( $::globalspellpath, '-a', '-S', '--sug-mode', $::globalaspellmode, '--rem-filter', 'nroff' );
 	push @cmd, '-d', $::globalspelldictopt if $::globalspelldictopt;
 	$::lglobal{spellpid} = ::open2( \*IN, \*OUT, @cmd );
 	my $line = <IN>;
 }
 
 sub get_spellchecker_version {
-
-	# the spellchecker version is not used anywhere
 	return $::lglobal{spellversion} if $::lglobal{spellversion};
 	my $aspell_version;
 	my $runner = runner::tofile('aspell.tmp');
@@ -360,9 +359,20 @@ sub spellguesses {    #feed aspell a word to get a list of guess
 	my $textwindow = $::textwindow;
 	$textwindow->Busy;                # let the user know something is happening
 	@{ $::lglobal{guesslist} } = ();  # clear the guesslist
+	my $tmpword = $word;
 	utf8::encode($word);
 	print OUT $word, "\n";            # send the word to the stdout file handle
 	my $list = <IN>;                  # and read the results
+	# then some ugly workarounds for non-ascii characters, to stay in sync
+	if ( ::get_spellchecker_version() =~ m/^0.5/ ) {
+		$list = <IN> if ( ( $::OS_WIN && $list eq "\r\n" ) || ( !$::OS_WIN && $list eq "\n" ) );
+		if ( $tmpword =~ /[\xc0-\xff]*[\xc0-\xff]/ ) {
+			$tmpword = substr($tmpword, 0, -1);
+			while ( $tmpword =~ s/[\xc0-\xff]// ) {
+				my $tmp = <IN>;
+			}
+		}
+	} # end ugliness
 	$list =~
 	  s/.*\: //;    # remove incidental stuff (word, index, number of guesses)
 	$list =~ s/\#.*0/\*none\*/;    # oops, no guesses, put a notice in.
@@ -372,6 +382,7 @@ sub spellguesses {    #feed aspell a word to get a list of guess
 		  "\r";    # if chomp didn't take care of both \r and \n in Windows...
 	@{ $::lglobal{guesslist} } =
 	  ( split /, /, $list );    # split the words into an array
+	map ( utf8::decode($_), @{ $::lglobal{guesslist} } ) if ( ::get_spellchecker_version() =~ m/^0.6/ );
 	$list = <IN>;               # throw away extra newline
 	$textwindow->Unbusy;        # done processing
 }
@@ -701,7 +712,6 @@ sub spellchecker {    # Set up spell check window
 				$textwindow->tagRemove( 'sel',       '1.0', 'end' );
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 				$textwindow->tagAdd( 'sel', 'spellbkmk', 'end' );
-
 				#print $textwindow->index('spellbkmk')."\n";
 				spellcheckfirst();
 			},
@@ -826,6 +836,7 @@ sub spellchecker {    # Set up spell check window
 		spellcheckfirst();             # Start the spellcheck
 	}
 }
+
 ## Spell Check
 #needed elsewhere - load projectdict
 sub getprojectdic {
@@ -866,7 +877,7 @@ sub spelloptions {
 			my $name = $spellop->getOpenFile( -title => 'Aspell executable?' );
 			if ($name) {
 				$::globalspellpath = $name;
-				$::globalspellpath = os_normal($::globalspellpath);
+				$::globalspellpath = ::os_normal($::globalspellpath);
 				$spellpathentry->delete( 0, 'end' );
 				$spellpathentry->insert( 'end', $::globalspellpath );
 				::savesettings();
@@ -895,7 +906,7 @@ sub spelloptions {
 					 -width        => 30,
 					 -textvariable => \$::lglobal{spellencoding},
 	  )->pack;
-	my $dictlabel = $spellop->add( 'Label', -text => 'Dictionary files' )->pack;
+	my $dictlabel = $spellop->add( 'Label', -text => 'Dictionary files (double-click to select):' )->pack;
 	$dictlist = $spellop->add(
 							   'ScrlListbox',
 							   -scrollbars => 'oe',
@@ -976,4 +987,5 @@ sub spelloptions {
 	)->grid( -row => 3, -sticky => 'w' );
 	$spellop->Show;
 }
+
 1;

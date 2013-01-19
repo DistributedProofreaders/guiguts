@@ -1485,17 +1485,19 @@ sub showversion {
 	my $os  = $^O;
 	$os =~ s/^([^\[]+)\[.+/$1/;
 	my $perl = sprintf( "Perl v%vd", $^V );
+	my $aspell = 'Aspell ' . ::get_spellchecker_version();
 	my $winver = ''; # stops "uninitialised value" message on non windows systems
 	if ($::OS_WIN) {
 		$winver = qx{ver};
 		$winver =~ s{\n}{}smg;
+		$winver = "\n$winver";
 	}
 	my $message = <<"END";
 Currently Running:
 $::APP_NAME, Version: $::VERSION
-Platform: $os
-$winver
+Platform: $os$winver
 $perl
+$aspell
 perl/Tk Version: $Tk::VERSION
 Tk patchLevel: $Tk::patchLevel
 Tk libraries: $Tk::library
