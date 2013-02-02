@@ -699,8 +699,9 @@ sub operationadd {
 	my $operation = shift;
 	my ( $sec, $min, $hour, $mday, $mon, $year ) = localtime(time);
 	$year += 1900;
-	my $timestamp = sprintf('%4d-%02d-%02d %02d:%02d:%02d',
-				 $year,$mon,$mday,$hour,$min,$sec);
+	$mon  += 1;
+	my $timestamp = sprintf('%4d-%02d-%02d %02d:%02d',
+				 $year,$mon,$mday,$hour,$min);
 	$::operationshash{$operation} = $timestamp;
 	$operation = ::escape_problems($operation);
 	::oppopupdate() if $::lglobal{oppop};
