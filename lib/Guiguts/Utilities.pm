@@ -659,7 +659,6 @@ sub initialize {
 		$::geometryhash{errorcheckpop} = '+484+72';
 		$::geometryhash{fixpop}        = '+34+22';
 		$::geometryhash{gcpop}         = '+224+72';
-		$::geometryhash{grpop}         = '+144+153';
 		$::geometryhash{hotpop}        = '+144+119';
 		$::geometryhash{hpopup}        = '300x400+584+211';
 		$::geometryhash{jeepop}        = '+284+72';
@@ -672,6 +671,7 @@ sub initialize {
 		$::positionhash{brkpop}        = '+482+131';
 		$::positionhash{filepathspop}  = '+55+7';
 		$::positionhash{footpop}       = '+255+157';
+		$::positionhash{grpop}         = '+144+153';
 		$::positionhash{htmlgenpop}    = '+145+37';
 		$::positionhash{htmlimpop}     = '+45+37';
 		$::positionhash{marginspop}    = '+145+137';
