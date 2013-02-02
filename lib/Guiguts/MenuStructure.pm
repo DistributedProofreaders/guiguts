@@ -218,6 +218,7 @@ sub menu_preferences {
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
 				[ Button => '~Font...', -command => \&::fontsize ],
+				[ 'separator', '' ],
 				[
 					Checkbutton => 'Keep Pop-ups On Top',
 					-variable   => \$::stayontop,
@@ -230,6 +231,7 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
+				[ 'separator', '' ],
 				[
 					Checkbutton => 'Enable Bell',
 					-variable   => \$::nobell,
@@ -237,11 +239,29 @@ sub menu_preferences {
 					-offvalue   => 1
 				],
 				[
+					Checkbutton => 'Display Line Numbers',
+					-variable   => \$::vislnnm,
+					-onvalue    => 1,
+					-offvalue   => 0,
+				 	-command    => sub { $::vislnnm ?
+								 $textwindow->showlinenum :
+								 $textwindow->hidelinenum;
+							     ::savesettings();
+					}
+				],
+				[
+					Checkbutton => 'Auto Show Page Images',
+					-variable   => \$::auto_show_images,
+					-onvalue    => 1,
+					-offvalue   => 0
+				],
+				[
 					Checkbutton => 'Do Not Center Page Markers',
 					-variable   => \$::donotcenterpagemarkers,
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
+				[ 'separator', '' ],
 				[
 					Button   => 'Set Background Color...',
 					-command => sub {
@@ -271,12 +291,6 @@ sub menu_preferences {
 						::savesettings();
 					  }
 				],
-				[
-					Checkbutton => 'Auto Show Page Images',
-					-variable   => \$::auto_show_images,
-					-onvalue    => 1,
-					-offvalue   => 0
-				],
 				[ 'separator', '' ],
 				[
 					Checkbutton => 'Enable Quotes Highlighting',
@@ -296,17 +310,6 @@ sub menu_preferences {
 					-variable   => \$::bkmkhl,
 					-onvalue    => 1,
 					-offvalue   => 0
-				],
-				[
-					Checkbutton => 'Display Line Numbers',
-					-variable   => \$::vislnnm,
-					-onvalue    => 1,
-					-offvalue   => 0,
-				 	-command    => sub { $::vislnnm ?
-								 $textwindow->showlinenum :
-								 $textwindow->hidelinenum;
-							     ::savesettings();
-					}
 				],
 			  ]
 		],
@@ -435,13 +438,7 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
-				[
-					Checkbutton =>
-					  'Leave Space After End-Of-Line Hyphens During Rewrap',
-					-variable => \$::rwhyphenspace,
-					-onvalue  => 1,
-					-offvalue => 0
-				],
+				[ 'separator', '' ],
 				[
 					Checkbutton => 'Filter Word Freqs Intelligently',
 					-variable   => \$::intelligentWF,
@@ -449,21 +446,17 @@ sub menu_preferences {
 					-offvalue   => 0
 				],
 				[
-					Checkbutton => 'Return After Failed Search',
-					-variable   => \$::failedsearch,
-					-onvalue    => 1,
-					-offvalue   => 0
-				],
-				[
-					Checkbutton => "Include two words ('flash light') in hyphen check",
+					Checkbutton => "Include Two Words ('flash light') in WF Hyphen Check (beta)",
 					-variable   => \$::twowordsinhyphencheck,
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
 				[ 'separator', '' ],
 				[
-					Button   => 'Spellcheck Dictionary Select...',
-					-command => sub { ::spelloptions() }
+					Checkbutton => 'Return After Failed Search',
+					-variable   => \$::failedsearch,
+					-onvalue    => 1,
+					-offvalue   => 0
 				],
 				[
 					Button   => 'Search History Size...',
@@ -471,6 +464,19 @@ sub menu_preferences {
 						::searchsize();
 						::savesettings();
 					  }
+				],
+				[ 'separator', '' ],
+				[
+					Button   => 'Spellcheck Dictionary Select...',
+					-command => sub { ::spelloptions() }
+				],
+				[ 'separator', '' ],
+				[
+					Checkbutton =>
+					  'Leave Space After End-Of-Line Hyphens During Rewrap',
+					-variable => \$::rwhyphenspace,
+					-onvalue  => 1,
+					-offvalue => 0
 				],
 				[
 					Checkbutton => "Use Greedy, Traditional Rewrap Algorithm",
