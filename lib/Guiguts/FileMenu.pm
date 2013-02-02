@@ -440,6 +440,15 @@ sub savefile {    # Determine which save routine to use and then use it
 			return;
 		}
 	} else {
+		my $ans = !fileisreadonly($::lglobal{global_filename}) || 'Yes' eq $top->messageBox(
+			-icon    => 'warning',
+			-title   => 'Confirm save?',
+			-type    => 'YesNo',
+			-default => 'no',
+			-message =>
+			  'File '.$::lglobal{global_filename}.' is write-protected. Remove write-protection and save anyway?',
+		    );
+		return unless $ans;
 		if ($::autobackup) {
 			if ( -e $::lglobal{global_filename} ) {
 				if ( -e "$::lglobal{global_filename}.bk2" ) {
@@ -464,6 +473,13 @@ sub savefile {    # Determine which save routine to use and then use it
 	::setedited(0);
 	::set_autosave() if $::autosave;
 	::update_indicators();
+}
+
+sub fileisreadonly {
+	my $name = shift;
+	my $mode = (stat($name))[2];
+	return 0 if ( $mode & 0200 );
+	return 1;
 }
 
 sub file_mark_pages {
@@ -857,6 +873,8 @@ sub openfile {    # and open it
 	if ( -e $binname ) {
 		::dofile($binname);     #do $binname;
 		interpretbinfile();
+	} else {
+		print "No bin file found, generating default bin file.\n";
 	}
 	::getprojectid() unless $::projectid;
 	_recentupdate($name);

@@ -36,6 +36,9 @@ sub get_image_file {
 		unless ( -e $imagefile ) {
 			$imagefile = "$::pngspath$pagenum.jpg";
 		}
+		unless ( -e $imagefile ) {
+			print "Image file $imagefile doesn't exist.\n";
+		}
 	}
 	return $imagefile;
 }
