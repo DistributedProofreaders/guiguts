@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&file_open &file_saveas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
+	  qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
 	  &_flash_save &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
 	  &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
 	  &file_import_markup &operationadd &isedited &setedited);
@@ -99,6 +99,46 @@ sub file_saveas {
 	$textwindow->ResetUndo;    #necessary to reset edited flag
 	::setedited(0);
 	::update_indicators();
+	return;
+}
+
+sub file_savecopyas {
+	my $textwindow = shift;
+	::hidepagenums();
+	my $name = $textwindow->getSaveFile(
+		-title       => 'Save As',
+		-initialdir  => $::globallastpath,
+		-initialfile => $::lglobal{global_filename},
+	);
+	if ( defined($name) and length($name) ) {
+		my $binname = $name;
+		$binname =~ s/\.[^\.]*?$/\.bin/;
+		if ( $binname eq $name ) { $binname .= '.bin' }
+		if ( -e $binname ) {
+			my $warning = $::top->Dialog(    # FIXME: heredoc
+				-text =>
+				    "WARNING! A file already exists that will use the same .bin filename.\n"
+				  . "It is highly recommended that a different file name is chosen to avoid\n"
+				  . "corrupting the .bin files.\n\n Are you sure you want to continue?",
+				-title          => 'Bin File Collision!',
+				-bitmap         => 'warning',
+				-buttons        => [qw/Continue Cancel/],
+				-default_button => qw/Cancel/,
+			);
+			my $answer = $warning->Show;
+			return unless ( $answer eq 'Continue' );
+		}
+		$textwindow->SaveUTF($name);
+		$name             = ::os_normal($name);
+		my $oldfilename = $::lglobal{global_filename};
+		$::lglobal{global_filename} = $name; # first do a bin_save, then restore the file name
+		_bin_save();
+		$::lglobal{global_filename} = $oldfilename;
+		$textwindow->FileName($oldfilename);
+		::_recentupdate($name);
+	} else {
+		return;
+	}
 	return;
 }
 

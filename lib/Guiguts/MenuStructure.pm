@@ -30,6 +30,9 @@ sub menu_file {
 		[	'command', 'Save ~As...',
 			-command => sub { ::file_saveas($textwindow) }
 		],
+		[	'command', 'Sa~ve a Copy As...',
+			-command => sub { ::file_savecopyas($textwindow) }
+		],
 		[	'command', '~Include File...',
 			-command => sub { ::file_include($textwindow); }
 		],
