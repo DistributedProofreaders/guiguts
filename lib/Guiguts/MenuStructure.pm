@@ -778,6 +778,17 @@ sub menubuildold {
 				  }
 			],
 			[
+				Button   => 'Indent Selection 4',
+				-command => sub {
+					$textwindow->addGlobStart;
+					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' );
+					$textwindow->addGlobEnd;
+				  }
+			],
+			[
 				Button   => 'Indent Selection -1',
 				-command => sub {
 					$textwindow->addGlobStart;
@@ -1061,10 +1072,10 @@ sub menubuildold {
 			#	Button   => "Right-Align Selection -4",
 			#	-command => sub { ::rcaligntext( 'r', -4 ); }
 			#],
-			#[
-			#	Button   => "TOC-Align Selection",
-			#	-command => sub { ::tocalignselection( 0 ); }
-			#],
+			[
+				Button   => "TOC-Align Selection",
+				-command => sub { ::tocalignselection( 0 ); }
+			],
 		]
 	);
 	my $external = $::menubar->cascade(
@@ -1218,6 +1229,17 @@ sub menubuildwizard {
 				Button   => 'Indent Selection 1',
 				-command => sub {
 					$textwindow->addGlobStart;
+					::indent( $textwindow, 'in' );
+					$textwindow->addGlobEnd;
+				  }
+			],
+			[
+				Button   => 'Indent Selection 4',
+				-command => sub {
+					$textwindow->addGlobStart;
+					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' );
 					::indent( $textwindow, 'in' );
 					$textwindow->addGlobEnd;
 				  }
@@ -1551,10 +1573,10 @@ sub menubuildwizard {
 			#	Button   => "Right-Align Selection -4",
 			#	-command => sub { ::rcaligntext( 'r', -4 ); }
 			#],
-			#[
-			#	Button   => "TOC-Align Selection",
-			#	-command => sub { ::tocalignselection( 0 ); }
-			#],
+			[
+				Button   => "TOC-Align Selection",
+				-command => sub { ::tocalignselection( 0 ); }
+			],
 			[ 'separator', '' ],
 			[ Button => 'ASCII ~Boxes...', -command => \&::asciipopup ],
 			[
