@@ -99,6 +99,7 @@ MENUS
 <alt>+s -- selection menu
 <alt>+x -- fixup menu
 <alt>+t -- txt processing menu
+<alt>+n -- external operations menu
 <alt>+u -- unicode menu
 <alt>+p -- preferences menu
 <alt>+h -- help menu
@@ -120,11 +121,19 @@ l -- Blank Line - leave one blank line. Close up any other whitespace. (Paragrap
 t -- New Section - leave two blank lines. Close up any other whitespace. (Section Break)
 h -- New Chapter - leave four blank lines. Close up any other whitespace. (Chapter Break)
 r -- Refresh - search for, highlight and re-center the next page separator.
-u -- Undo - undo the last edit. (Note: in Full Automatic mode,\n\tthis just single steps back through the undo buffer)
+u -- Undo - undo the last edit.
 d -- Delete - delete the page separator. Make no other edits.
 v -- View the current page in the image viewer.
 a -- Cycle Automatic modes.
 ? -- View hotkey help popup.
+
+
+SPELL CHECK POPUP
+
+<ctrl>+s -- Skip word
+<ctrl>+i -- Skip all/ignore word
+<ctrl>+a -- Add word to Aspell dictionary
+<ctrl>+p -- Add word to project dictionary 
 
 
 ADJUST PAGE MARKERS POPUP

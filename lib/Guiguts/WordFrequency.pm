@@ -794,7 +794,7 @@ s/([\.\?\!]['"]*[\n\s]['"]*\p{Upper}\p{Alnum}*),([\n\s]['"]*\p{Upper})/$1 $2/g;
 
 sub itwords {
 	my $top = $::top;
-	::operationadd('Check Ital/Bold/SC');
+	::operationadd('WF Check Ital/Bold/SC');
 	$top->Busy( -recurse => 1 );
 	$::lglobal{wclistbox}->delete( '0', 'end' );
 	my %display  = ();
@@ -1074,7 +1074,6 @@ sub stealthcheck {
 	my $index = '1.0';
 	my $end   = $textwindow->index('end');
 	my $wordw = 0;
-
 	while ( ( $scanno, $word ) = each(%::scannoslist) ) {
 		$list{$word}   = '';
 		$list{$scanno} = '';

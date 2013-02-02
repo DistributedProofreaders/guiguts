@@ -306,20 +306,6 @@ sub _bin_save {
 			print $fh "'base' => '$::pagenumbers{$page}{base}'},\n";
 		}
 		print $fh ");\n\n";
-		print $fh '$::bookmarks[0] = \''
-		  . $textwindow->index('insert') . "';\n";
-		for ( 1 .. 5 ) {
-			print $fh '$::bookmarks[' 
-			  . $_ 
-			  . '] = \''
-			  . $textwindow->index( 'bkmk' . $_ ) . "';\n"
-			  if $::bookmarks[$_];
-		}
-		if ($::pngspath) {
-			print $fh
-			  "\n\$::pngspath = '@{[::escape_problems($::pngspath)]}';\n\n";
-		}
-		my ($prfr);
 		delete $::proofers{''};
 		foreach my $page ( sort keys %::proofers ) {
 			no warnings 'uninitialized';
@@ -333,13 +319,26 @@ sub _bin_save {
 				}
 			}
 		}
-		print $fh "\n\n";
+		print $fh "\n";
 		foreach ( keys %::operationshash ) {
 			my $mark = ::escape_problems($_);
 			print $fh "\$::operationshash{'$mark'}='"
 			  . $::operationshash{$mark} . "';\n";
 		}
-		print $fh "\n\n";
+		print $fh "\n";
+		print $fh '$::bookmarks[0] = \''
+		  . $textwindow->index('insert') . "';\n";
+		for ( 1 .. 5 ) {
+			print $fh '$::bookmarks[' 
+			  . $_ 
+			  . '] = \''
+			  . $textwindow->index( 'bkmk' . $_ ) . "';\n"
+			  if $::bookmarks[$_];
+		}
+		if ($::pngspath) {
+			print $fh
+			  "\n\$::pngspath = '@{[::escape_problems($::pngspath)]}';\n\n";
+		}
 		print $fh "\$::spellindexbkmrk = '$::spellindexbkmrk';\n\n";
 		print $fh "\$::projectid = '$::projectid';\n\n";
 		print $fh "\$::booklang = '$::booklang';\n\n";
@@ -494,8 +493,8 @@ sub _recentupdate {    # FIXME: Seems to be choking.
 	# place $name at the top
 	unshift @::recentfile, $name;
 
-	# limit the list to 10 entries
-	pop @::recentfile while ( $#::recentfile > 10 );
+	# limit the list to the desired number of entries
+	pop @::recentfile while ( $#::recentfile >= $::recentfile_size );
 	::menurebuild();
 	return;
 }
@@ -713,7 +712,7 @@ sub confirmdiscard {
 			-type    => 'YesNoCancel',
 			-default => 'yes',
 			-message =>
-			  'The text has been modified without being saved. Save edits?'
+			  'The file has been modified without being saved. Save edits?'
 		);
 		if ( $ans =~ /yes/i ) {
 			savefile();
@@ -928,15 +927,15 @@ EOM
 			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size 
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
-			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin
-			rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
+			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin projectfileslocation
+			recentfile_size rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
 			txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
 			twowordsinhyphencheck unicodemenusplit utffontname utffontsize
 			url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
 		  )
 		{
-			print $save_handle "\$$_", ' ' x ( 20 - length $_ ), "= '",
+			print $save_handle "\$$_", ' ' x ( 25 - length $_ ), "= '",
 			  eval '$::' . $_, "';\n";
 		}
 		print $save_handle "\n";
@@ -964,13 +963,14 @@ EOM
 		}
 		print $save_handle ");\n\n";
 
-		#print $save_handle ("\%geometryhash = (\n");
 		for ( keys %::geometryhash ) {
-			print $save_handle "\$geometryhash{$_} = '$::geometryhash{$_}';\n";
+			print $save_handle "\$geometryhash{$_}", ' ' x ( 18 - length $_ ),
+				"= '$::geometryhash{$_}';\n";
 		}
 		print $save_handle "\n";
 		for ( keys %::positionhash ) {
-			print $save_handle "\$positionhash{$_} = '$::positionhash{$_}';\n";
+			print $save_handle "\$positionhash{$_}", ' ' x ( 18 - length $_ ),
+				"= '$::positionhash{$_}';\n";
 		}
 		print $save_handle "\n";
 

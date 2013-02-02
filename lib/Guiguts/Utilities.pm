@@ -15,7 +15,7 @@ BEGIN {
 	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
-	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion
+	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
 	  &scrolldismiss &b2scroll);
 }
 
@@ -48,7 +48,7 @@ sub openpng {
 	}
 	$::lglobal{pageimageviewed} = $pagenum;
 	if ( not $::globalviewerpath ) {
-		::setviewerpath($textwindow);
+		::locateExecutable('image viewer', \$::globalviewerpath);
 	}
 	my $imagefile = ::get_image_file($pagenum);
 	if ( $imagefile && $::globalviewerpath ) {
@@ -158,7 +158,7 @@ sub cmdinterp {
 	foreach my $arg (@args) {
 		# not sure why we'd want this, so leaving it in for windows
 		# - it breaks e.g. urls with & (which windows can't do anyway)
-		$arg =~ s/^"(.*)"$/$1/ if ( $::OS_WIN );
+		$arg =~ s/^"(.*)"$/$1/g if ( $::OS_WIN );
 
 		# Replace $t with selected text for instance for a dictionary search
 		if ( $arg =~ m/\$t/ ) {
@@ -170,7 +170,7 @@ sub cmdinterp {
 			} else {
 				$selection = '';
 			}
-			$arg =~ s/\$t/$selection/;
+			$arg =~ s/\$t/$selection/g;
 			$arg = ::encode( "utf-8", $arg );
 		}
 
@@ -179,12 +179,9 @@ sub cmdinterp {
 			return if nofileloadedwarning();
 			$fname = $::lglobal{global_filename};
 			my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
-			$arg =~ s/\$f/$f/ if $f;
-			$arg =~ s/\$d/$d/ if $d;
-			$arg =~ s/\$e/$e/ if $e;
-			if ( $arg =~ m/project_comments.html/ ) {
-				$arg =~ s/project/$::projectid/;
-			}
+			$arg =~ s/\$f/$f/g if $f;
+			$arg =~ s/\$d/$d/g if $d;
+			$arg =~ s/\$e/$e/g if $e;
 		}
 
 		# Pass image file to default file handler
@@ -194,11 +191,11 @@ sub cmdinterp {
 			$number =~ s/.+?(\d+).*/$1/;
 			$pagenum = $number;
 			return ' ' unless $pagenum;
-			$arg =~ s/\$p/$number/;
+			$arg =~ s/\$p/$number/g;
 		}
 		if ( $arg =~ m/\$i/ ) {
 			return ' ' unless $::pngspath;
-			$arg =~ s/\$i/$::pngspath/;
+			$arg =~ s/\$i/$::pngspath/g;
 		}
 	}
 	return @args;
@@ -673,7 +670,9 @@ sub initialize {
 		$::geometryhash{wfpop}         = '+365+63';
 		$::geometryhash{xtpop}         = '+120+38';
 		$::positionhash{brkpop}        = '+482+131';
+		$::positionhash{filepathspop}  = '+55+7';
 		$::positionhash{footpop}       = '+255+157';
+		$::positionhash{htmlgenpop}    = '+145+37';
 		$::positionhash{htmlimpop}     = '+45+37';
 		$::positionhash{marginspop}    = '+145+137';
 		$::positionhash{pagepop}       = '+334+176';
@@ -1588,7 +1587,6 @@ sub checkforupdates {
 		$button_frame->Button(
 			-text    => 'Ignore This Version',
 			-command => sub {
-
 				#print $::ignoreversionnumber;
 				$::ignoreversionnumber = $onlineversion;
 				::savesettings();
@@ -1733,7 +1731,7 @@ sub epubmaker {
 		}
 		chdir $pwd;
 	} else {
-		print "Not an .rst file\n";
+		print "Not an RST or HTML file\n";
 	}
 }
 
@@ -1909,9 +1907,6 @@ sub get_page_number {
 				$pnum = $1;
 				last;
 			} else {
-
-				#print "$mark:1\n";
-				#print $textwindow->markNext($mark).":2\n";
 				if (   ( not defined $textwindow->markNext($mark) )
 					|| ( $mark eq $textwindow->markNext($mark) ) )
 				{
@@ -2144,6 +2139,7 @@ sub toggle_autosave {
 			-activebackground => 'SystemButtonFace'
 		) unless $::notoolbar;
 	}
+	::save_settings();
 }
 
 # expand current selection to span entire lines
@@ -2216,7 +2212,8 @@ sub viewprojectcomments {
 	return if ::nofileloadedwarning();
 	::setprojectid() unless $::projectid;
 	my $defaulthandler = $::extops[0]{command};
-	$defaulthandler =~ s/\$f\$e/project_comments.html/;
+	my $commentsfile = $::projectfileslocation.$::projectid.'_comments.html';
+	$defaulthandler =~ s/\$f\$e/$commentsfile/;
 	runner( cmdinterp($defaulthandler) ) if $::projectid;
 }
 

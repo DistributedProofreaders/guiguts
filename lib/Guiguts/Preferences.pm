@@ -7,30 +7,8 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&setviewerpath &setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
+	  qw(&setdefaultpath &setmargins &fontsize &setpngspath &set_autosave 
 	  &autosaveinterval &saveinterval &setcolor &locateExecutable &filePathsPopup &setDPurls );
-}
-
-sub setviewerpath {    #Find your image viewer
-	my $textwindow = shift;
-	my $types;
-	if ($::OS_WIN) {
-		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
-	} else {
-		$types = [ [ 'All Files', ['*'] ] ];
-	}
-
-	#print $::globalviewerpath."aa\n";
-	#	print ::dirname($::globalviewerpath)."aa\n";
-	$::lglobal{pathtemp} =
-	  $textwindow->getOpenFile(
-								-filetypes  => $types,
-								-title      => 'Where is your image viewer?',
-								-initialdir => ::dirname($::globalviewerpath)
-	  );
-	$::globalviewerpath = $::lglobal{pathtemp} if $::lglobal{pathtemp};
-	$::globalviewerpath = ::os_normal($::globalviewerpath);
-	::savesettings();
 }
 
 sub setdefaultpath {
@@ -565,6 +543,7 @@ sub setDPurls {
 			-width        => 70,
 			-textvariable => \$::url_yes_proofer,
 			-relief       => 'sunken',
+			-background   => $::bkgcolor,
 		    )->grid( -row => 1, -column => 1, -pady => 2 );
 		$f0->Label( -text => "Contact proofer without username:")
 		   ->grid( -row => 2, -column => 0, -sticky => 'w' );
@@ -572,6 +551,7 @@ sub setDPurls {
 			-width        => 70,
 			-textvariable => \$::url_no_proofer,
 			-relief       => 'sunken',
+			-background   => $::bkgcolor,
 		    )->grid( -row => 2, -column => 1, -pady => 2 );
 		$f0->Label( -text => "View project page of projectid:")
 		   ->grid( -row => 3, -column => 0, -sticky => 'w' );
@@ -579,6 +559,7 @@ sub setDPurls {
 			-width        => 70,
 			-textvariable => \$::urlprojectpage,
 			-relief       => 'sunken',
+			-background   => $::bkgcolor,
 		    )->grid( -row => 3, -column => 1, -pady => 2 );
 		$f0->Label( -text => "View project discussion of projectid:")
 		   ->grid( -row => 4, -column => 0, -sticky => 'w' );
@@ -586,6 +567,7 @@ sub setDPurls {
 			-width        => 70,
 			-textvariable => \$::urlprojectdiscussion,
 			-relief       => 'sunken',
+			-background   => $::bkgcolor,
 		    )->grid( -row => 4, -column => 1, -pady => 2 );
 		$f0->Button(
 			-activebackground => $::activecolor,

@@ -834,7 +834,7 @@ END
 		while ( $replaceseg = shift @replarray ) {
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-			$replbuild .= betaascii($seg1);
+			$replbuild .= ::betaascii($seg1);
 			$replbuild .= $seg2 if $seg2;
 		}
 		$replaceterm = $replbuild;
@@ -1277,7 +1277,7 @@ sub searchpopup {
 			-width  => 9,
 			-height => 15,
 		)->pack( -side => 'right', -anchor => 'w' );
-		for ( 1 .. $::multisearchsize ) {
+		for ( 1 .. $::multisearchsize-1 ) {
 			push @multisearch, $::lglobal{searchpop}->Frame;
 			my $replaceentry = "replaceentry$_";
 		$multisearch[$_-1]->Button(
@@ -1531,7 +1531,7 @@ sub searchpopup {
 				$::lglobal{hasfocus} = $::lglobal{replaceentry};
 			}
 		);
-		for ( 1 .. $::multisearchsize ) {
+		for ( 1 .. $::multisearchsize-1 ) {
 			$::lglobal{"replaceentry$_"}->{_MENU_} = ();
 			$::lglobal{"replaceentry$_"}->bind(
 				'<FocusIn>',
@@ -1808,13 +1808,13 @@ sub orphanedbrackets {
 			-value       => '\/\$|\$\/',
 			-text        => '/$ $/',
 		)->grid( -row => 1, -column => 3, -pady => 5 );
-		my $frame3  = $::lglobal{brkpop}->Frame->pack;
-		my $parasel = $frame3->Radiobutton(
+		my $parasel = $frame1->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => '^\/[Pp]|[Pp]\/',
 			-text        => '/p p/',
-		)->grid( -row => 2, -column => 1, -pady => 5 );
+		)->grid( -row => 1, -column => 4, -pady => 5 );
+		my $frame3  = $::lglobal{brkpop}->Frame->pack;
 		my $qusel = $frame3->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
@@ -1826,7 +1826,7 @@ sub orphanedbrackets {
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => '»|«',
 			-text        => 'German angle quotes » «',
-		)->grid( -row => 3, -column => 2 );
+		)->grid( -row => 3, -column => 2, -pady => 5 );
 		#		my $allqsel =
 		#		  $frame3->Radiobutton(
 		#								-variable    => \$::lglobal{brsel},
@@ -1834,7 +1834,6 @@ sub orphanedbrackets {
 		#								-value       => 'all',
 		#								-text        => 'All brackets ( )',
 		#		  )->grid( -row => 3, -column => 2 );
-
 		my $frame2     = $::lglobal{brkpop}->Frame->pack;
 		my ( $brkresult, $brnextbt );
 		$brkresult = $frame2->Label(
@@ -1869,14 +1868,14 @@ sub orphanedbrackets {
 			-width => 16,
 		)->grid( -row => 1, -column => 2, -padx => 4, -pady => 5 );
 		::initialize_popup_without_deletebinding('brkpop');
+		$::lglobal{brkpop}->protocol(
+			'WM_DELETE_WINDOW' => sub {
+				$::lglobal{brkpop}->destroy;
+				undef $::lglobal{brkpop};
+				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+			}
+		);
 	}
-	$::lglobal{brkpop}->protocol(
-		'WM_DELETE_WINDOW' => sub {
-			$::lglobal{brkpop}->destroy;
-			undef $::lglobal{brkpop};
-			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-		}
-	);
 	if ($psel) { $psel->select; }
 
 	sub brsearch {
@@ -2019,7 +2018,7 @@ sub searchsize {  # Pop up a window where you can adjust the search history size
 		$::lglobal{hssizepop}->raise;
 	} else {
 		$::lglobal{hssizepop} = $top->Toplevel;
-		$::lglobal{hssizepop}->title('History Size');
+		$::lglobal{hssizepop}->title('Search History Size');
 		$::lglobal{hssizepop}->resizable( 'no', 'no' );
 		my $frame =
 		  $::lglobal{hssizepop}

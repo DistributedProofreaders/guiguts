@@ -207,17 +207,17 @@ sub tablefx {
 			}
 		);
 		$::lglobal{tblfxpop}->bind( '<Delete>', sub { tlineremove() } );
+		$::lglobal{tblfxpop}->protocol(
+			'WM_DELETE_WINDOW' => sub {
+				$textwindow->tagRemove( 'table',   '1.0', 'end' );
+				$textwindow->tagRemove( 'linesel', '1.0', 'end' );
+				$textwindow->markUnset( 'tblstart', 'tblend' );
+				$::lglobal{tblfxpop}->destroy;
+				undef $::lglobal{tblfxpop};
+			}
+		);
 		tblselect();
 	}
-	$::lglobal{tblfxpop}->protocol(
-		'WM_DELETE_WINDOW' => sub {
-			$textwindow->tagRemove( 'table',   '1.0', 'end' );
-			$textwindow->tagRemove( 'linesel', '1.0', 'end' );
-			$textwindow->markUnset( 'tblstart', 'tblend' );
-			$::lglobal{tblfxpop}->destroy;
-			undef $::lglobal{tblfxpop};
-		}
-	);
 }
 
 sub tblselect {

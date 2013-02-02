@@ -145,7 +145,7 @@ our $lastversioncheck       = time();
 our $lastversionrun         = $VERSION;
 our $lmargin                = 0;
 our $markupthreshold        = 4;
-our $multisearchsize        = 2;
+our $multisearchsize        = 3;
 our $nobell                 = 0;
 our $donotcenterpagemarkers = 0;
 our $nohighlights           = 0;
@@ -156,6 +156,7 @@ our $defaultpngspath     = ::os_normal('pngs/');
 our $pngspath            = q{};
 our $projectid           = q{};
 our $projectfileslocation= '';
+our $recentfile_size     = 9;
 our $regexpentry         = q();
 our $rewrapalgo          = 2;
 our $rmargin             = 72;
@@ -348,6 +349,6 @@ if ( $lglobal{runtests} ) {
 	runtests();
 } else {
 	print
-"If you have any problems, please report any error messages that appear here.\n";
+"Guiguts $VERSION: If you have any problems, please include any error messages that appear here with your bug report.\n";
 	MainLoop;
 }

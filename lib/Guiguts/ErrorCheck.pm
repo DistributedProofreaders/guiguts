@@ -6,8 +6,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&errorcheckpop_up &errorcheckrun &gutcheckview &gutwindowpopulate &gcviewops
-	  &gcheckpop_up &jeebiesview jeebiesrun &gutcheck &gutopts &jeebiespop_up);
+	  qw(&errorcheckpop_up &gcheckpop_up &gutcheck &gutopts &jeebiespop_up);
 }
 
 sub errorcheckpop_up {
@@ -208,7 +207,7 @@ sub errorcheckpop_up {
 					next;
 				}
 
-				# Skip verbose informational warnngs in Link Check
+				# Skip verbose informational warnings in Link Check
 				if (     ( not $::verboseerrorchecks )
 					 and ( $thiserrorchecktype eq 'Link Check' )
 					 and ( $line =~ /^Link statistics/i ) )
@@ -288,11 +287,11 @@ sub errorcheckpop_up {
 			push @errorchecklines, "Check is complete: " . $thiserrorchecktype;
 			if ( $thiserrorchecktype eq "W3C Validate" ) {
 				push @errorchecklines,
-				  "Do the final validation at validator.w3.org";
+				  "Don't forget to do the final validation at http://validator.w3.org";
 			}
 			if ( $thiserrorchecktype eq "W3C Validate CSS" ) {
 				push @errorchecklines,
-"Do the final validation at http://jigsaw.w3.org/css-validator/";
+"Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
 			}
 			push @errorchecklines, "";
 		}

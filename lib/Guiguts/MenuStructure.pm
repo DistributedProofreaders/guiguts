@@ -13,7 +13,7 @@ BEGIN {
 sub menu_file {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	[
-		[	'command', '~Open',
+		[	'command', '~Open...',
 			-command => sub { ::file_open($textwindow) }
 		],
 		[ 'separator', '' ],
@@ -27,10 +27,10 @@ sub menu_file {
 			-accelerator => 'Ctrl+s',
 			-command     => \&::savefile
 		],
-		[	'command', 'Save ~As',
+		[	'command', 'Save ~As...',
 			-command => sub { ::file_saveas($textwindow) }
 		],
-		[	'command', '~Include File',
+		[	'command', '~Include File...',
 			-command => sub { ::file_include($textwindow); }
 		],
 		[	'command', '~Close',
@@ -41,24 +41,16 @@ sub menu_file {
 			Cascade    => '~Project',
 			-tearoff   => 1,
 			-menuitems => [
-				[	'command', 'See ~Image...',
+				[	'command', 'See ~Image',
 					-command => \&::seecurrentimage
 				],
-				[	'command', 'See ~Proofers...',
+				[	'command', 'See ~Proofers',
 					-command => \&::showproofers
 				],
-				[	'command' => 'View Operations ~History...',
+				[	'command' => 'View Operations ~History',
 					-command => \&::opspop_up ],
 				[ 'separator', '' ],
-			        [	'command', 'Set Project ~Language...',
-					-command => \&::setlang ],
-			        [	'command', 'Set Pro~ject ID...',
-					-command => \&::setprojectid ],
-				[	'command', 'Set I~mage Directory...',
-					 -command => \&::setpngspath
-				],
-				[ 'separator', '' ],
-				[	'command', 'View Project ~Comments...',
+				[	'command', 'View Project ~Comments',
 					-command => \&::viewprojectcomments
 				],
 				[	'command', 'View Project Page [~www]',
@@ -68,7 +60,15 @@ sub menu_file {
 					-command => \&::viewprojectdiscussion
 				],
 				[ 'separator', '' ],
-				[	'command', '~Display/Adjust Page Markers...',
+			        [	'command', 'Set Project ~Language...',
+					-command => \&::setlang ],
+			        [	'command', 'Set Pro~ject ID...',
+					-command => \&::setprojectid ],
+				[	'command', 'Set I~mage Directory...',
+					 -command => \&::setpngspath
+				],
+				[ 'separator', '' ],
+				[	'command', 'Display/~Adjust Page Markers...',
 					-command => \&::togglepagenums
 				],
 				[	'command', '~Guess Page Markers...',
@@ -81,22 +81,22 @@ sub menu_file {
 					-command => \&::pageadjust
 				],
 				[ 'separator', '' ],
-				[	'command', 'Export One File with Page Separators',
+				[	'command', 'Export One File with Page Separators...',
 					-command => sub { ::file_export_preptext('onefile') }
 				],
-				[	'command', 'Export One File with Page Markup',
+				[	'command', 'Export One File with Page Sep. Markup...',
 					-command => sub { ::file_export_pagemarkup(); }
 				],
-				[	'command', 'Import One File with Page Markup',
+				[	'command', 'Import One File with Page Sep. Markup...',
 					-command => sub { ::file_import_markup(); }
 				],
 			]
 		],
-		[	'command', 'I~mport Prep Text Files',
+		[	'command', 'I~mport Prep Text Files...',
 			-command =>
 			  sub { ::file_import_preptext( $textwindow, $top ) }
 		],
-		[	'command', 'Expor~t As Prep Text Files',
+		[	'command', 'Expor~t as Prep Text Files...',
 			-command => sub { ::file_export_preptext('separatefiles') }
 		],
 		[ 'separator', '' ],
@@ -766,11 +766,7 @@ sub menubuildold {
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
-				-command => sub {
-					$textwindow->addGlobStart;
-					$::lglobal{floodpop} = ::flood();
-					$textwindow->addGlobEnd;
-				  }
+				-command => sub { ::flood() }
 			],
 			[ 'separator', '' ],
 			[
@@ -865,7 +861,6 @@ sub menubuildold {
 			],
 			[ 'separator', '' ],
 			[ Button => 'Run ~Gutcheck...',    -command => \&::gutcheck ],
-			[ Button => 'Gutcheck options...', -command => \&::gutopts ],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
 			[
 				Button   => 'pptxt...',
@@ -890,7 +885,7 @@ sub menubuildold {
 				-command => \&::separatorpopup
 			],
 			[
-				Button   => 'Remove Blank Lines Before Page Separators',
+				Button   => 'Remove End-of-page ~Blank Lines',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::delblanklines();
@@ -1216,11 +1211,7 @@ sub menubuildwizard {
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
-				-command => sub {
-					$textwindow->addGlobStart;
-					$::lglobal{floodpop} = ::flood();
-					$textwindow->addGlobEnd;
-				  }
+				-command => sub { ::flood() }
 			],
 			[ 'separator', '' ],
 			[
@@ -1451,7 +1442,7 @@ sub menubuildwizard {
 				-command => \&::separatorpopup
 			],
 			[
-				Button   => 'Remove Blank Lines Before Page Separators',
+				Button   => 'Remove End-of-page Blank Lines',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::delblanklines();
@@ -1477,7 +1468,6 @@ sub menubuildwizard {
 			[ 'command', '~Stealth Scannos...', -command => \&::stealthscanno ],
 			[ 'separator', '' ],
 			[ Button => 'Run ~Gutcheck...',    -command => \&::gutcheck ],
-			[ Button => 'Gutcheck options...', -command => \&::gutopts ],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
 			[ 'command', 'Spell ~Check...', -command => \&::spellchecker ],
 			[

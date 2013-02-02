@@ -448,12 +448,13 @@ sub pgprevious {    #move focus to previous page marker
 	}
 	$::lglobal{pagenumentry}->delete( '0', 'end' );
 	$::lglobal{pagenumentry}->insert( 'end', $mark );
-	seeindex($textwindow->index($mark));
 	if ( $::lglobal{showthispageimage} and ( $mark =~ /Pg(\S+)/ ) ) {
 		$textwindow->focus;
 		::openpng( $textwindow, $1 );
 		$::lglobal{showthispageimage} = 0;
 	}
+	$textwindow->markSet( 'insert', $mark );
+	seeindex($textwindow->index($mark));
 	::update_indicators();
 }
 
@@ -481,12 +482,13 @@ sub pgnext {    #move focus to next page marker
 	}
 	$::lglobal{pagenumentry}->delete( '0', 'end' );
 	$::lglobal{pagenumentry}->insert( 'end', $mark );
-	seeindex($textwindow->index($mark));
 	if ( $::lglobal{showthispageimage} and ( $mark =~ /Pg(\S+)/ ) ) {
 		$textwindow->focus;
 		::openpng( $textwindow, $1 );
 		$::lglobal{showthispageimage} = 0;
 	}
+	$textwindow->markSet( 'insert', $mark );
+	seeindex($textwindow->index($mark));
 	::update_indicators();
 }
 

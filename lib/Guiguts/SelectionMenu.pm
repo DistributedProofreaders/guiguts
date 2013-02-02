@@ -134,7 +134,6 @@ sub selectrewrap {
 	my $textwindow = $::textwindow;
 	::hidepagenums();
 	::savesettings();
-	my $marker      = shift @_;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	my $thisblockstart;
@@ -150,7 +149,7 @@ sub selectrewrap {
 		$start = pop(@ranges);     #get the start index of the selection
 		my @marklist = $textwindow->dump( -mark, $start, $end )
 		  ;                        #see if there any page markers set
-		my ( $markname, @savelist, $markindex, %markhash );
+		my ( $markname, @savelist, $markindex );
 		while (@marklist) {        #save the pagemarkers if they have been set
 			shift @marklist;
 			$markname  = shift @marklist;
@@ -580,8 +579,6 @@ sub asciibox {
 sub case {
 	::savesettings();
 	my ( $textwindow, $marker ) = @_;
-
-	#my $marker      = shift;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	my $done        = '';
@@ -596,7 +593,6 @@ sub case {
 			my $thisblockend   = $end;
 			my $selection = $textwindow->get( $thisblockstart, $thisblockend );
 			my @words     = ();
-			my $buildsentence = '';
 			if ( $marker eq 'uc' ) {
 				$done = uc($selection);
 			} elsif ( $marker eq 'lc' ) {
@@ -672,15 +668,9 @@ sub surround {
 			-padx   => 2,
 			-anchor => 'n'
 		  );
-		$::lglobal{surpop}->protocol(
-			'WM_DELETE_WINDOW' => sub {
-				$::lglobal{surpop}->destroy;
-				undef $::lglobal{surpop};
-			}
-		);
+		::initialize_popup_with_deletebinding('surpop');
 		$surstrt->insert( 'end', '_' ) unless ( $surstrt->get );
 		$surend->insert( 'end', '_' ) unless ( $surend->get );
-		$::lglobal{surpop}->Icon( -image => $::icon );
 	}
 }
 
@@ -717,7 +707,7 @@ sub flood {
 		$::lglobal{floodpop}->title('Flood Fill');
 		my $f = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
-"Flood fill selection with string:n(Blank will default to spaces.)\nHotkey Control+w",
+"Flood fill selection with string:\n(Blank will default to spaces.)\nHotkey Control+w",
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f1 = $::lglobal{floodpop}->Frame->pack(
 			-side   => 'top',
@@ -747,7 +737,6 @@ sub flood {
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		::initialize_popup_with_deletebinding('floodpop');
 	}
-	return $::lglobal{floodpop};
 }
 
 sub floodfill {
