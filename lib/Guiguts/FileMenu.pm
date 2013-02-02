@@ -696,6 +696,7 @@ sub oppopupdate {
 }
 
 sub operationadd {
+	return unless $::trackoperations;
 	my $operation = shift;
 	my ( $sec, $min, $hour, $mday, $mon, $year ) = localtime(time);
 	$year += 1900;
@@ -718,7 +719,11 @@ sub opspop_up {
 	} else {
 		$::lglobal{oppop} = $top->Toplevel;
 		$::lglobal{oppop}->title('Operations history');
-		::initialize_popup_with_deletebinding('oppop');
+		$::lglobal{oppop}->Label(
+			-text => ($::trackoperations?'':"Tracking operations is currently DISABLED.\n")
+			."Note that the Operations History usually records when an activity is started,\n"
+			."and does not guarantee that it has been completed.")
+		->pack( -side => 'top', -padx => 5, -pady => 2 );
 		my $frame = $::lglobal{oppop}->Frame->pack(
 			-anchor => 'nw',
 			-fill   => 'both',
@@ -740,6 +745,7 @@ sub opspop_up {
 			-pady   => 2
 		  );
 		::drag( $::lglobal{oplistbox} );
+		::initialize_popup_with_deletebinding('oppop');
 	}
 	::oppopupdate();
 }
@@ -970,7 +976,7 @@ EOM
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
 			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin projectfileslocation
 			recentfile_size rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
-			txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
+			trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
 			twowordsinhyphencheck unicodemenusplit utffontname utffontsize
 			url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
 			menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/

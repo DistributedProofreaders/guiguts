@@ -50,7 +50,7 @@ sub menu_file {
 				[	'command', 'See ~Proofers',
 					-command => \&::showproofers
 				],
-				[	'command' => 'View Operations ~History',
+				[	'command' => 'View Operations ~History'.($::trackoperations?'':' (disabled)'),
 					-command => \&::opspop_up ],
 				[ 'separator', '' ],
 				[	'command', 'View Project ~Comments',
@@ -440,6 +440,13 @@ sub menu_preferences {
 					-variable   => \$::auto_page_marks,
 					-onvalue    => 1,
 					-offvalue   => 0
+				],
+				[
+					Checkbutton => 'Track Operations History',
+					-variable   => \$::trackoperations,
+					-onvalue    => 1,
+					-offvalue   => 0,
+					-command    => \&menurebuild,
 				],
 				[ 'separator', '' ],
 				[
