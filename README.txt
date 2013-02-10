@@ -25,6 +25,18 @@ on further helper applications.
 
 RELEASE NOTES:
 
+Version 1.0.23.
+- bug fix: html page numbers being placed one line too early in poetry
+- bug fix: Remove Markup from Selection removing markup not in selection
+- updated rewrap algorithm
+- updated Fix Page Separators dialog and added 99% auto mode
+- updated display of 'edited' marker
+- Operations History now stores January as 01, not 00, etc.
+- HTML generate image captions as div instead of span, enclose in p
+- some tweaking of aspell interaction
+- added some basic mac shortcut keys (Cmd)
+- various minor tweaks and cleanup
+
 Version 1.0.22.
 - updating ppvimage to 1.06.
 - guiguts.bat renamed to run_guiguts.bat
