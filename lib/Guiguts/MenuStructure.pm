@@ -131,7 +131,7 @@ sub menu_help {
 		[ Button => 'UTF Character ~Entry',   -command => \&::utford ],
 		[ Button => 'UTF Character ~Search',  -command => \&::uchar ],
 		[ 'separator', '' ],
-		[ Button   => 'GG ~PP Process Checklist',
+		[ Button   => 'GG ~PP Process Checklist [www]',
 		  -command => sub {
 			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
 		  }
@@ -151,9 +151,6 @@ sub menu_help {
 		    [ Button  => 'Report a ~Bug (SF Tracker) [www]',
 		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
 		        . ( $::OS_WIN ? '' : '&atid=1009518' ) ); } 
-		    ],
-		    [ Button  => 'Report a Bug (DP ~Forum) [www]',
-		      -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=48584'); }
 		    ],
 		    [ Button  => 'Suggest ~Enhancement (SF Tracker) [www]',
 		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'

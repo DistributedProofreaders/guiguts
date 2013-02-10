@@ -63,8 +63,9 @@ sub file_saveas {
 	my $textwindow = shift;
 	::hidepagenums();
 	my $name = $textwindow->getSaveFile(
-		-title      => 'Save As',
-		-initialdir => $::globallastpath
+		-title       => 'Save As',
+		-initialdir  => $::globallastpath,
+		-initialfile => $::lglobal{global_filename},
 	);
 	if ( defined($name) and length($name) ) {
 		my $binname = $name;
@@ -155,7 +156,7 @@ sub file_import_preptext {
 	my ( $textwindow, $top ) = @_;
 	return if ( ::confirmempty() =~ /cancel/i );
 	my $directory = $top->chooseDirectory( -title =>
-		  'Choose the directory containing the text files to be imported.', );
+		  'Choose the directory containing the text files to be imported', );
 	return 0
 	  unless ( defined $directory and -d $directory and $directory ne '' );
 	$top->Busy( -recurse => 1 );
@@ -203,7 +204,7 @@ sub file_export_preptext {
 	my $textwindow       = $::textwindow;
 	my $midwordpagebreak = 0;
 	my $directory        = $top->chooseDirectory(
-		-title => 'Choose the directory to export the text files to.', );
+		-title => 'Choose the directory to export the text files to', );
 	return 0 unless ( defined $directory and $directory ne '' );
 	unless ( -e $directory ) {
 		mkdir $directory or warn "Could not make directory $!\n" and return;
@@ -774,6 +775,7 @@ sub confirmdiscard {
 			-icon    => 'warning',
 			-type    => 'YesNoCancel',
 			-default => 'yes',
+			-title   => 'Save file?',
 			-message =>
 			  'The file has been modified without being saved. Save edits?'
 		);
@@ -821,7 +823,7 @@ sub openfile {    # and open it
 		my $dbox = $top->Dialog(
 			-text    => 'Could not find file. Has it been moved or deleted?',
 			-bitmap  => 'error',
-			-title   => 'Could not find File.',
+			-title   => 'Could not find file',
 			-buttons => ['Ok']
 		);
 		$dbox->Show;

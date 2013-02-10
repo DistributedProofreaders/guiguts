@@ -244,7 +244,7 @@ sub setpngspath {
 
 	#print $pagenum.'';
 	my $path =
-	  $textwindow->chooseDirectory( -title => 'Choose the PNGs file directory.',
+	  $textwindow->chooseDirectory( -title => 'Choose the PNGs file directory',
 									-initialdir => "$::globallastpath" . "pngs",
 	  );
 	return unless defined $path and -e $path;

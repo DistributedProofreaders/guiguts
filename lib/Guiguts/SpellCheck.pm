@@ -534,6 +534,7 @@ sub spelladdgoodwords {
 		-icon    => 'warning',
 		-type    => 'YesNo',
 		-default => 'yes',
+		-title   => 'Warning',
 		-message =>
 'Warning: Before adding good_words.txt first check whether they do not contain misspellings, multiple spellings, etc. Continue?'
 	);
@@ -560,7 +561,7 @@ sub spellchecker {    # Set up spell check window
 		$::lglobal{spellpopup}->raise;            # put it on top
 		$::lglobal{spellpopup}->focus;            # and give it focus
 		spelloptions()
-		  unless $::globalspellpath;   # Whoops, don't know where to find Aspell
+		  unless $::globalspellpath && -e $::globalspellpath;   # Whoops, don't know where to find Aspell
 		spellclearvars();
 		spellcheckfirst();             # Start checking the spelling
 	} else {                           # window doesn't exist so set it up
@@ -732,7 +733,7 @@ sub spellchecker {    # Set up spell check window
 				spelladdgoodwords();
 			},
 			-text  => 'Add Goodwords To Proj. Dic.',
-			-width => 22,
+			-width => 24,
 		  )->pack(
 				   -side   => 'left',
 				   -pady   => 2,
@@ -832,7 +833,7 @@ sub spellchecker {    # Set up spell check window
 							sub { spellmisspelled_replace(); spellreplace() } );
 		::BindMouseWheel( $::lglobal{replacementlist} );
 		spelloptions()
-		  unless $::globalspellpath;   # Check to see if we know where Aspell is
+		  unless $::globalspellpath && -e $::globalspellpath;   # Check to see if we know where Aspell is
 		spellcheckfirst();             # Start the spellcheck
 	}
 }
@@ -866,13 +867,13 @@ sub spelloptions {
 	my $spellop = $top->DialogBox( -title   => 'Spellcheck Options',
 								   -buttons => ['Close'] );
 	my $spellpathlabel =
-	  $spellop->add( 'Label', -text => 'Aspell executable file?' )->pack;
+	  $spellop->add( 'Label', -text => 'Aspell executable file:' )->pack;
 	my $spellpathentry =
 	  $spellop->add( 'Entry', -width => 60, -background => $::bkgcolor )->pack;
 	my $spellpathbrowse = $spellop->add(
 		'Button',
-		-text    => 'Browse',
-		-width   => 12,
+		-text    => 'Locate Aspell Executable',
+		-width   => 24,
 		-command => sub {
 			my $name = $spellop->getOpenFile( -title => 'Aspell executable?' );
 			if ($name) {
@@ -986,6 +987,8 @@ sub spelloptions {
 							 -value       => 'bad-spellers'
 	)->grid( -row => 3, -sticky => 'w' );
 	$spellop->Show;
+	$spellop->focus;
+	$spellop->raise;
 }
 
 1;
