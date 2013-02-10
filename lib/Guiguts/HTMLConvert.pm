@@ -1809,7 +1809,7 @@ sub htmlimage {
 					my $alt = $::lglobal{alttext}->get;
 					$alt =~ s/"/&quot;/g;
 					$alt = " alt=\"$alt\"";
-					$selection = "<span class=\"caption\">$selection</span>\n"
+					$selection = "<div class=\"caption\">$selection</div>\n"
 					  if $selection;
 					$preservep = '' unless $selection;
 					my $title = $::lglobal{titltext}->get || '';
@@ -1894,7 +1894,7 @@ sub htmlimage {
 	}
 	$::lglobal{alttext}->delete( 0, 'end' ) if $::lglobal{alttext};
 	$::lglobal{titltext}->delete( 0, 'end' ) if $::lglobal{titltext};
-	$::lglobal{captiontext}->insert( 'end', $selection );
+	$::lglobal{captiontext}->insert( 'end', "<p>$selection</p>" );
 	&thumbnailbrowse();
 }
 
