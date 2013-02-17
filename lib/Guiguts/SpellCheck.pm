@@ -366,7 +366,7 @@ sub spellguesses {    #feed aspell a word to get a list of guess
 	# then some ugly workarounds for non-ascii characters, to stay in sync
 	if ( ::get_spellchecker_version() =~ m/^0.5/ ) {
 		$list = <IN> if ( ( $::OS_WIN && $list eq "\r\n" ) || ( !$::OS_WIN && $list eq "\n" ) );
-		if ( $tmpword =~ /[\xc0-\xff]*[\xc0-\xff]/ ) {
+		if ( $tmpword =~ /[\xc0-\xff].*[\xc0-\xff]/ ) {
 			$tmpword = substr($tmpword, 0, -1);
 			while ( $tmpword =~ s/[\xc0-\xff]// ) {
 				my $tmp = <IN>;
