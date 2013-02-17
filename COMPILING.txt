@@ -1,5 +1,5 @@
-#This provides instructions for releasing a new guiguts file on
-SourceForge including Macintosh OSX binary.
+This provides instructions for releasing a new guiguts file on
+SourceForge including Mac OSX binary.
 
 For the perl only and Windows .zip files:
 
