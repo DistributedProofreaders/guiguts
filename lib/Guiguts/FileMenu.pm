@@ -62,10 +62,12 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 sub file_saveas {
 	my $textwindow = shift;
 	::hidepagenums();
+	my $initialfile = $::lglobal{global_filename} unless ($::lglobal{global_filename} =~ m/No File Loaded/);
+	$initialfile =~ s|.*/([^/]*)$|$1|;
 	my $name = $textwindow->getSaveFile(
 		-title       => 'Save As',
 		-initialdir  => $::globallastpath,
-		-initialfile => $::lglobal{global_filename},
+		-initialfile => $initialfile,
 	);
 	if ( defined($name) and length($name) ) {
 		my $binname = $name;
