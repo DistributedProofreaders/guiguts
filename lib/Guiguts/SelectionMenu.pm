@@ -103,19 +103,18 @@ sub greedy_wrapper {
 sub knuth_wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
 	my ( $pre, $post ) = ( '', '' );
-	my $indent = ' ' x $firstmargin;
 	if ( $paragraph =~ s|^(/#\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
 	if ( $paragraph =~ s|^(/#)|| ) { $pre = "$1\n"; }
 	if ( $paragraph =~ s|(#/)$|| ) { $post = "$1\n"; }
-	$rightmargin++;
-	my $maxwidth = $rightmargin - $leftmargin;
-	my $optwidth = $rightmargin - $::rmargindiff - $leftmargin;
+	my $maxwidth = $rightmargin;
+	my $optwidth = $rightmargin - $::rmargindiff;
 	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
 	$paragraph =~ s/\n/ /g;
 	my $reflowed = ::reflow_string( $paragraph,
 		maximum => $maxwidth,
 		optimum => $optwidth,
-		indent1 => ' ' x $firstmargin, 
+		indent1 => ' ' x $firstmargin,
+		indent2 => ' ' x $leftmargin,
 		frenchspacing => 'y',
 		semantic => 0,
 		namebreak => 0,
@@ -124,7 +123,6 @@ sub knuth_wrapper {
 		dependent => 0,
 		shortlast => 0,
 		connpenalty => 0, );
-	$reflowed =~ s/\n/\n$indent/g if $leftmargin;
 	$reflowed =~ s/ *$//;
 	return $pre . $reflowed . $post;
 }
@@ -372,10 +370,12 @@ sub selectrewrap {
 					$selection =~ s/<i>/\x8d/g
 					  ; #convert some characters that will interfere with rewrap
 					$selection =~ s/<\/i>/\x8e/g;
-					$selection =~ s/\[/\x8A/g;
-					$selection =~ s/\]/\x9A/g;
-					$selection =~ s/\(/\x9d/g;
-					$selection =~ s/\)/\x98/g;
+					if ( $::rewrapalgo==1 ) {
+						$selection =~ s/\[/\x8A/g;
+						$selection =~ s/\]/\x9A/g;
+						$selection =~ s/\(/\x9d/g;
+						$selection =~ s/\)/\x98/g;
+					}
 					if ($::blockwrap) {
 						$rewrapped = wrapper(
 							$leftmargin, $firstmargin, $rightmargin,
@@ -389,10 +389,12 @@ sub selectrewrap {
 					}
 					$rewrapped =~ s/\x8d/<i>/g;     #convert the characters back
 					$rewrapped =~ s/\x8e/<\/i>/g;
-					$rewrapped =~ s/\x8A/\[/g;
-					$rewrapped =~ s/\x9A/\]/g;
-					$rewrapped =~ s/\x98/\)/g;
-					$rewrapped =~ s/\x9d/\(/g;
+					if ( $::rewrapalgo==1 ) {
+						$rewrapped =~ s/\x8A/\[/g;
+						$rewrapped =~ s/\x9A/\]/g;
+						$rewrapped =~ s/\x98/\)/g;
+						$rewrapped =~ s/\x9d/\(/g;
+					}
 					$textwindow->delete( $thisblockstart, $thisblockend )
 					  ;    #delete the original paragraph
 					$textwindow->insert( $thisblockstart, $rewrapped )
