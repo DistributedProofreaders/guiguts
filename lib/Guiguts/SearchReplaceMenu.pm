@@ -1598,6 +1598,7 @@ sub stealthscanno {
 	  ;    # force search to begin at start of doc, whole word
 	if ( ::loadscannos() ) {
 		::savesettings();
+		::wordfrequencybuildwordlist($textwindow);
 		searchpopup();
 		getnextscanno();
 		searchtext();
