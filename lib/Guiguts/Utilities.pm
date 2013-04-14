@@ -1686,6 +1686,7 @@ sub setbookmark {
 	}
 	$::bookmarks[$bookmark] = $index;
 	$textwindow->tagAdd( 'bkmk', $index, "$index+1c" );
+	::setedited(1);
 }
 
 sub gotobookmark {
