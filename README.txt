@@ -13,7 +13,8 @@ run_guiguts.bat (it includes copies of perl and Python languages).
 MAC:
 
 guiguts-mac-1.0.nn.zip (if available) should work out of the box for
-Mac users; it includes a few helper applications.
+Mac users; it includes a few helper applications. If not available for
+a recent version, you're probably better off with the generic download.
 
 OTHER:
 
@@ -24,6 +25,12 @@ on further helper applications.
 
 
 RELEASE NOTES:
+
+Version 1.0.24.
+- bug fix: auto-run Word Frequency before Stealth Scannos.
+- bug fix: better file name suggestion in save as dialog.
+- bug fix: tweaking spell check for non-ascii.
+- bug fix: fixed a few issues with the new rewrap.
 
 Version 1.0.23.
 - bug fix: html page numbers being placed one line too early in poetry

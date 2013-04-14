@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.23';
+our $VERSION = '1.0.24';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
