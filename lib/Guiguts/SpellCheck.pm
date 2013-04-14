@@ -359,20 +359,9 @@ sub spellguesses {    #feed aspell a word to get a list of guess
 	my $textwindow = $::textwindow;
 	$textwindow->Busy;                # let the user know something is happening
 	@{ $::lglobal{guesslist} } = ();  # clear the guesslist
-	my $tmpword = $word;
 	utf8::encode($word);
 	print OUT $word, "\n";            # send the word to the stdout file handle
 	my $list = <IN>;                  # and read the results
-	# then some ugly workarounds for non-ascii characters, to stay in sync
-	if ( ::get_spellchecker_version() =~ m/^0.5/ ) {
-		$list = <IN> if ( ( $::OS_WIN && $list eq "\r\n" ) || ( !$::OS_WIN && $list eq "\n" ) );
-		if ( $tmpword =~ /[\xc0-\xff].*[\xc0-\xff]/ ) {
-			$tmpword = substr($tmpword, 0, -1);
-			while ( $tmpword =~ s/[\xc0-\xff]// ) {
-				my $tmp = <IN>;
-			}
-		}
-	} # end ugliness
 	$list =~
 	  s/.*\: //;    # remove incidental stuff (word, index, number of guesses)
 	$list =~ s/\#.*0/\*none\*/;    # oops, no guesses, put a notice in.
@@ -383,7 +372,7 @@ sub spellguesses {    #feed aspell a word to get a list of guess
 	@{ $::lglobal{guesslist} } =
 	  ( split /, /, $list );    # split the words into an array
 	map ( utf8::decode($_), @{ $::lglobal{guesslist} } ) if ( ::get_spellchecker_version() =~ m/^0.6/ );
-	$list = <IN>;               # throw away extra newline
+	do { $list = <IN> } while ( $list ne "\n" && $list ne "\r\n" ); # throw away extra lines until newline (especially for non-ascii)
 	$textwindow->Unbusy;        # done processing
 }
 
