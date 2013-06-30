@@ -1189,6 +1189,7 @@ sub interpretbinfile {
 			::setbookmark($_);
 		}
 	}
+	::setedited(0);
 	$::bookmarks[0] ||= '1.0';
 	$textwindow->markSet( 'insert',    $::bookmarks[0] );
 	$textwindow->markSet( 'spellbkmk', $::spellindexbkmrk )
