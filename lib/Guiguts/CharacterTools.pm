@@ -107,12 +107,15 @@ sub insertit {
 	my $letter  = shift;
 	my $isatext = 0;
 	my $spot;
-	#$isatext = 1 if $::lglobal{hasfocus}->isa('Text'); # isa('Text') never seems to match
-	$isatext = $::lglobal{hasfocus}->isa('Entry') || $::lglobal{hasfocus} == $::textwindow;
+	# Tk::Text matches searchentry and replaceentries
+	$isatext = $::lglobal{hasfocus}->isa('Tk::Text') || $::lglobal{hasfocus} == $::textwindow;
 	if ($isatext) {
 		$spot = $::lglobal{hasfocus}->index('insert');
 		my @ranges = $::lglobal{hasfocus}->tagRanges('sel');
 		$::lglobal{hasfocus}->delete(@ranges) if @ranges;
+	} elsif ($::lglobal{hasfocus}->isa('Tk::Entry')) {
+		$::lglobal{hasfocus}->delete('sel.first', 'sel.last')
+		  if $::lglobal{hasfocus}->selectionPresent();
 	}
 	$::lglobal{hasfocus}->insert( 'insert', $letter );
 	$::lglobal{hasfocus}
