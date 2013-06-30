@@ -149,12 +149,10 @@ sub menu_help {
 		  -menuitems =>
 		  [
 		    [ Button  => 'Report a ~Bug (SF Tracker) [www]',
-		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
-		        . ( $::OS_WIN ? '' : '&atid=1009518' ) ); } 
+		      -command => sub { ::launchurl('http://sourceforge.net/p/guiguts/bugs/'); } 
 		    ],
 		    [ Button  => 'Suggest ~Enhancement (SF Tracker) [www]',
-		      -command => sub { ::launchurl('https://sourceforge.net/tracker/?group_id=209389'
-		        .( $::OS_WIN ? '' : '&atid=1009521' ) ); } 
+		      -command => sub { ::launchurl('http://sourceforge.net/p/guiguts/feature-requests/'); } 
 		    ],
 		    [ Button  => 'Suggest Enhancement (DP ~Wiki) [www]',
 		      -command => sub { ::launchurl('http://www.pgdp.net/wiki/Guiguts_Enhancements'); }

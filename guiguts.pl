@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 #use criticism 'gentle';
-our $VERSION = '1.0.24';
+our $VERSION = '1.0.25pre';
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
@@ -104,12 +104,12 @@ our $autosave         = 0;
 our $autosaveinterval = 5;
 our $bkgcolor         = '#ffffff';
 our $bkmkhl           = 0;
-our $blocklmargin     = 5;
+our $blocklmargin     = 1;
 our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang      = 'en';
-our $defaultindent = 0;
+our $defaultindent = 2;
 our $extops_size   = 10;
 our $failedsearch  = 0;
 our $fontname      = 'Courier New';
