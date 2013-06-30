@@ -732,6 +732,7 @@ sub gcviewops {
 								 'Paragraph starts with lower-case',
 								 'Query angled bracket with From',
 								 'Query digit in',
+								 "Query had\/bad error",
 								 "Query he\/be error",
 								 "Query hut\/but error",
 								 'Query I=exclamation mark',
@@ -1145,6 +1146,14 @@ sub gcheckpop_up {
 											  "$linenum.0 +1l"
 						  );
 					}
+				}
+				if ( $line =~ /Query had\/bad/ ) {
+					$lincol =
+					  $textwindow->search(
+										   '-regexp',       '--',
+										   '(?<= )[bh]ad\W', "$linenum.0",
+										   "$linenum.0 +1l"
+					  );
 				}
 				if ( $line =~ /Query he\/be/ ) {
 					$lincol =
