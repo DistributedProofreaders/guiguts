@@ -935,7 +935,7 @@ sub gcheckpop_up {
 		  $pframe->Scrolled(
 							 'Listbox',
 							 -scrollbars  => 'se',
-							 -background  => 'white',
+							 -background  => $::bkgcolor,
 							 -font        => $::lglobal{font},
 							 -selectmode  => 'single',
 							 -activestyle => 'none',
