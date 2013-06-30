@@ -12,11 +12,13 @@ BEGIN {
 
 sub wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
-	return $paragraph if ( $paragraph =~ m|^[#\*pPlLxXfF]/\n$| || $paragraph =~ m|^/[#\*pPlLxXfF]\n$| );
+	return $paragraph if ( $paragraph =~ m|^\x7f*[#\*pPlLxXfF]/\x7f*\n\x7f*$|
+			|| $paragraph =~ m|^\x7f*/[#\*pPlLxXfF]\x7f*\n\x7f*$|
+			|| $paragraph =~ m|^\x7f*$| );
 	if ( $::rewrapalgo == 1 ) {
 		return greedy_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 	} elsif ( $::rewrapalgo == 2 ) {
-		return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
+		return knuth_wrapper(  $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 	}
 }
 
@@ -103,9 +105,9 @@ sub greedy_wrapper {
 sub knuth_wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
 	my ( $pre, $post ) = ( '', '' );
-	if ( $paragraph =~ s|^(/#\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
-	if ( $paragraph =~ s|^(/#)|| ) { $pre = "$1\n"; }
-	if ( $paragraph =~ s|(#/)$|| ) { $post = "$1\n"; }
+	if    ( $paragraph =~ s|^(\x7f*/#\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
+	elsif ( $paragraph =~ s|^(\x7f*/#)|| ) { $pre = "$1\n"; }
+	if ( $paragraph =~ s|(#/\x7f*)$|| ) { $post = "$1\n"; }
 	my $maxwidth = $rightmargin;
 	my $optwidth = $rightmargin - $::rmargindiff;
 	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
