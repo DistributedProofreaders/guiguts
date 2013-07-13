@@ -125,6 +125,18 @@ sub keybindings {
 	$textwindow->eventAdd( '<<Undo>>' => '<Control-z>' );
 	$textwindow->eventAdd( '<<Redo>>' => '<Control-y>', '<Control-Z>' );
 
+	if ( $::OS_MAC ) {
+		$textwindow->bind( 'TextUnicode', '<Meta-q>' => \&::_exit );
+		$textwindow->bind( 'TextUnicode', '<Meta-s>' => \&::savefile );
+		$textwindow->bind( 'TextUnicode', '<Meta-a>' => sub { $textwindow->selectAll } );
+		$textwindow->bind( 'TextUnicode', '<Meta-c>' => \&::textcopy );
+		$textwindow->bind( 'TextUnicode', '<Meta-x>' => \&::cut );
+		$textwindow->bind( 'TextUnicode', '<Meta-v>' => \&::paste );
+		$textwindow->bind( 'TextUnicode', '<Meta-f>' => \&::searchpopup );
+		$textwindow->eventAdd( '<<Undo>>' => '<Meta-z>' );
+		$textwindow->eventAdd( '<<Redo>>' => '<Meta-y>' );
+	}
+
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
 	$textwindow->bind( 'TextUnicode', '<Control-p>' => \&::gotopage );
 	$textwindow->bind( 'TextUnicode', '<Control-P>' => \&::gotolabel );
