@@ -578,7 +578,7 @@ sub menubuildold {
 					$textwindow->clipboardColumnPaste;
 					$textwindow->addGlobEnd;
 				},
-				-accelerator => 'Ctrl+`'
+				-accelerator => 'F3'
 			],
 			[ 'separator', '' ],
 			[
@@ -587,7 +587,7 @@ sub menubuildold {
 				-command => sub {
 					$textwindow->selectAll;
 				},
-				-accelerator => 'Ctrl+/'
+				-accelerator => 'Ctrl+a'
 			],
 			[
 				'command',
@@ -595,7 +595,6 @@ sub menubuildold {
 				-command => sub {
 					$textwindow->unselectAll;
 				},
-				-accelerator => 'Ctrl+\\'
 			],
 		]
 	);
@@ -603,11 +602,20 @@ sub menubuildold {
 		-label     => 'Search & ~Replace',
 		-tearoff   => 1,
 		-menuitems => [
-			[ 'command', 'Search & ~Replace...', -command => \&::searchpopup ],
-			[ 'command', '~Stealth Scannos...', -command => \&::stealthscanno ],
-			[ 'command', 'Spell ~Check...',     -command => \&::spellchecker ],
+			[ 'command', 'Search & ~Replace...',
+			  -accelerator => 'Ctrl+f',
+			  -command => \&::searchpopup
+			],
+			[ 'command', '~Stealth Scannos...',
+			  -accelerator => 'F8',
+			  -command => \&::stealthscanno
+			],
+			[ 'command', 'Spell ~Check...',
+			  -accelerator => 'F7',
+			  -command => \&::spellchecker
+			],
 			[
-				Button => 'Spell check in multiple languages',
+				Button => 'Spell Check in Multiple Languages',
 				-command =>
 				  sub { ::spellmultiplelanguages( $textwindow, $top ) }
 			],
@@ -622,6 +630,7 @@ sub menubuildold {
 			[
 				'command',
 				'Goto ~Page...',
+				-accelerator => 'Ctrl+p',
 				-command => sub {
 					::gotopage();
 					::update_indicators();
@@ -717,12 +726,12 @@ sub menubuildold {
 			[
 				'command', 'Highlight double quotes in selection',
 				-command     => [ \&::hilite, '"' ],
-				-accelerator => 'Ctrl+Shift+"'
+				-accelerator => 'Ctrl+.'
 			],
 			[
 				'command', 'Highlight single quotes in selection',
 				-command     => [ \&::hilite, '\'' ],
-				-accelerator => 'Ctrl+\''
+				-accelerator => 'Ctrl+,'
 			],
 			[
 				'command', 'Highlight arbitrary characters in selection...',
@@ -773,19 +782,19 @@ sub menubuildold {
 			[ 'separator', '' ],
 			[
 				Button   => 'Surroun~d Selection With...',
+				-accelerator => 'Ctrl+r',
 				-command => \&::surround
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
+				-accelerator => 'Ctrl+o',
 				-command => sub { ::flood() }
 			],
 			[ 'separator', '' ],
 			[
 				Button   => 'Indent Selection 1',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::indent( $textwindow, 'in' );
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
@@ -802,9 +811,7 @@ sub menubuildold {
 			[
 				Button   => 'Indent Selection -1',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::indent( $textwindow, 'out', $::operationinterrupt );
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[ 'separator', '' ],
@@ -877,12 +884,16 @@ sub menubuildold {
 		-menuitems => [
 			[
 				Button   => 'Run ~Word Frequency Routine...',
+				-accelerator => 'F5',
 				-command => sub {
 					::wordfrequency();
 				  }
 			],
 			[ 'separator', '' ],
-			[ Button => 'Run ~Gutcheck...',    -command => \&::gutcheck ],
+			[ 	Button => 'Run ~Gutcheck...',
+				-accelerator => 'F6',
+				-command => \&::gutcheck
+			],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
 			[
 				Button   => 'pptxt...',
@@ -1169,7 +1180,7 @@ sub menubuildwizard {
 				-command => sub {
 					$textwindow->selectAll;
 				},
-				-accelerator => 'Ctrl+/'
+				-accelerator => 'Ctrl+a'
 			],
 			[
 				'command',
@@ -1177,7 +1188,6 @@ sub menubuildwizard {
 				-command => sub {
 					$textwindow->unselectAll;
 				},
-				-accelerator => 'Ctrl+\\'
 			],
 			[
 				'command',
@@ -1228,20 +1238,20 @@ sub menubuildwizard {
 			],
 			[ 'separator', '' ],
 			[
-				Button   => 'Surroun~d Selection With...',
+				Button   => 'Su~rround Selection With...',
+				-accelerator => 'Ctrl+r',
 				-command => \&::surround
 			],
 			[
-				Button   => '~Flood Fill Selection With...',
+				Button   => 'Fl~ood Fill Selection With...',
+				-accelerator => 'Ctrl+o',
 				-command => sub { ::flood() }
 			],
 			[ 'separator', '' ],
 			[
 				Button   => 'Indent Selection 1',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::indent( $textwindow, 'in' );
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
@@ -1258,9 +1268,7 @@ sub menubuildwizard {
 			[
 				Button   => 'Indent Selection -1',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::indent( $textwindow, 'out', $::operationinterrupt );
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[ 'separator', '' ],
@@ -1311,12 +1319,12 @@ sub menubuildwizard {
 			[
 				'command', 'Highlight double quotes in selection',
 				-command     => [ \&::hilite, '"' ],
-				-accelerator => 'Ctrl+Shift+"'
+				-accelerator => 'Ctrl+.'
 			],
 			[
 				'command', 'Highlight single quotes in selection',
 				-command     => [ \&::hilite, '\'' ],
-				-accelerator => 'Ctrl+\''
+				-accelerator => 'Ctrl+,'
 			],
 			[
 				'command', 'Highlight arbitrary characters in selection...',
@@ -1496,15 +1504,25 @@ sub menubuildwizard {
 		-menuitems => [
 			[
 				Button   => 'Run ~Word Frequency Routine...',
+				-accelerator => 'F5',
 				-command => sub { ::wordfrequency() }
 			],
-			[ 'command', '~Stealth Scannos...', -command => \&::stealthscanno ],
+			[	Button   => '~Stealth Scannos...',
+				-accelerator => 'F8',
+				-command => \&::stealthscann
+			],
 			[ 'separator', '' ],
-			[ Button => 'Run ~Gutcheck...',    -command => \&::gutcheck ],
+			[	Button   => 'Run ~Gutcheck...',
+				-accelerator => 'F6',
+				-command => \&::gutcheck
+			],
 			[ Button => 'Run ~Jeebies...',     -command => \&::jeebiespop_up ],
-			[ 'command', 'Spell ~Check...', -command => \&::spellchecker ],
+			[	Button   => 'Spell ~Check...',
+				-accelerator => 'F7',
+				-command => \&::spellchecker
+			],
 			[
-				Button => 'Spell check in multiple languages',
+				Button => 'Spell Check in Multiple Languages',
 				-command =>
 				  sub { ::spellmultiplelanguages( $textwindow, $top ) }
 			],

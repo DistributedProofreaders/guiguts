@@ -30,9 +30,9 @@ sub keybindings {
 		-borderwidth => 2
 	);
 	$textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
-	$textwindow->eventAdd( '<<hlquote>>' => '<Control-quoteright>' );
+	$textwindow->eventAdd( '<<hlquote>>' => '<Control-comma>' );
 	$textwindow->bind( '<<hlquote>>', sub { ::hilite('\'') } );
-	$textwindow->eventAdd( '<<hldquote>>' => '<Control-quotedbl>' );
+	$textwindow->eventAdd( '<<hldquote>>' => '<Control-period>' );
 	$textwindow->bind( '<<hldquote>>', sub { ::hilite('"') } );
 	$textwindow->eventAdd( '<<hlrem>>' => '<Control-0>' );
 	$textwindow->bind(
@@ -43,34 +43,16 @@ sub keybindings {
 		}
 	);
 	$textwindow->bind( 'TextUnicode', '<Control-s>' => \&::savefile );
-	$textwindow->bind( 'TextUnicode', '<Control-S>' => \&::savefile );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-a>' => sub { $textwindow->selectAll } );
-	$textwindow->bind( 'TextUnicode',
-		'<Control-A>' => sub { $textwindow->selectAll } );
-	$textwindow->eventAdd(
-		'<<Copy>>' => '<Control-C>',
-		'<Control-c>', '<F1>'
-	);
+	$textwindow->eventAdd( '<<Copy>>' => '<Control-c>', '<F1>' );
 	$textwindow->bind( 'TextUnicode', '<<Copy>>' => \&::textcopy );
-	$textwindow->eventAdd(
-		'<<Cut>>' => '<Control-X>',
-		'<Control-x>', '<F2>'
-	);
+	$textwindow->eventAdd( '<<Cut>>' => '<Control-x>', '<F2>' );
 	$textwindow->bind( 'TextUnicode', '<<Cut>>'     => sub { ::cut() } );
-	$textwindow->bind( 'TextUnicode', '<Control-V>' => sub { ::paste() } );
 	$textwindow->bind( 'TextUnicode', '<Control-v>' => sub { ::paste() } );
 	$textwindow->bind(
 		'TextUnicode',
 		'<F3>' => sub {
-			$textwindow->addGlobStart;
-			$textwindow->clipboardColumnPaste;
-			$textwindow->addGlobEnd;
-		}
-	);
-	$textwindow->bind(
-		'TextUnicode',
-		'<Control-quoteleft>' => sub {
 			$textwindow->addGlobStart;
 			$textwindow->clipboardColumnPaste;
 			$textwindow->addGlobEnd;
@@ -95,42 +77,76 @@ sub keybindings {
 			}
 		}
 	);
+	$textwindow->eventAdd('<<BackSpaceWord>>'     => '<Control-BackSpace>');
+	$textwindow->eventAdd('<<ForwardDeleteWord>>' => '<Control-Delete>');
+	$textwindow->bind(
+		'TextUnicode',
+		'<<BackSpaceWord>>' => sub {
+			$textwindow->addGlobStart;
+			my $pos = $textwindow->search( '-backwards', '-regexp', '--', '\W',
+					'insert -1c', 'insert linestart' );
+			if ($pos) {
+				$pos = "$pos +1c";
+			} else {
+				$pos = 'insert linestart';
+			}
+			$textwindow->delete($pos, 'insert');
+			$textwindow->addGlobEnd;
+		}
+	);
+	$textwindow->bind(
+		'TextUnicode',
+		'<<ForwardDeleteWord>>' => sub {
+			$textwindow->addGlobStart;
+			my $pos = $textwindow->search( '-regexp', '--', '\W',
+					'insert +1c', 'insert lineend' );
+			$pos = 'insert lineend' unless $pos;
+			$textwindow->delete('insert', $pos);
+			$textwindow->addGlobEnd;
+		}
+	);
+
 	$textwindow->bind( 'TextUnicode',
 		'<Control-l>' => sub { ::case( $textwindow, 'lc' ); } );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-u>' => sub { ::case( $textwindow, 'uc' ); } );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-t>' => sub { ::case( $textwindow, 'tc' ); $top->break } );
+
 	$textwindow->bind(
 		'TextUnicode',
-		'<Control-z>' => sub {
+		'<<Undo>>' => sub {
 			$textwindow->undo;
 			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 			$textwindow->see('insert');
 		}
 	);
-	$textwindow->bind( 'TextUnicode',
-		'<Control-y>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
+	$textwindow->bind( 'TextUnicode', '<<Redo>>' => sub { $textwindow->redo; $textwindow->see('insert'); } );
+	$textwindow->eventAdd( '<<Undo>>' => '<Control-z>' );
+	$textwindow->eventAdd( '<<Redo>>' => '<Control-y>', '<Control-Z>' );
+
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
-	$textwindow->bind( 'TextUnicode', '<Control-F>' => \&::searchpopup );
 	$textwindow->bind( 'TextUnicode', '<Control-p>' => \&::gotopage );
-	$textwindow->bind( 'TextUnicode', '<Control-P>' => \&::gotopage );
-	$textwindow->bind(
-		'TextUnicode',
-		'<Control-w>' => sub {
-			$textwindow->addGlobStart;
-			::floodfill();
-			$textwindow->addGlobEnd;
+	$textwindow->bind( 'TextUnicode', '<Control-P>' => \&::gotolabel );
+	$textwindow->bind( 'TextUnicode', '<Control-o>' => sub {
+		if ( $::lglobal{floodpop} ) {
+			::floodfill( $textwindow, $::lglobal{ffchar} );
+		} else {
+			::flood();
 		}
-	);
-	$textwindow->bind(
-		'TextUnicode',
-		'<Control-W>' => sub {
-			$textwindow->addGlobStart;
-			::floodfill();
-			$textwindow->addGlobEnd;
+	});
+	$textwindow->bind( 'TextUnicode', '<Control-r>' => sub {
+		if ( $::lglobal{surpop} ) {
+			::surroundit( $::lglobal{surstrt}, $::lglobal{surend}, $textwindow );
+		} else {
+			::surround();
 		}
-	);
+	});
+	$textwindow->bind( 'TextUnicode', '<F5>' => \&::wordfrequency );
+	$textwindow->bind( 'TextUnicode', '<F6>' => \&::gutcheck );
+	$textwindow->bind( 'TextUnicode', '<F7>' => \&::spellchecker );
+	$textwindow->bind( 'TextUnicode', '<F8>' => \&::stealthscanno );
+
 	$textwindow->bind( 'TextUnicode',
 		'<Control-Shift-exclam>' => sub { ::setbookmark('1') } );
 	$textwindow->bind( 'TextUnicode',
@@ -151,39 +167,32 @@ sub keybindings {
 		'<Control-KeyPress-4>' => sub { ::gotobookmark('4') } );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-KeyPress-5>' => sub { ::gotobookmark('5') } );
+
 	$textwindow->bind(
 		'TextUnicode',
 		'<Alt-Left>' => sub {
-			$textwindow->addGlobStart;
-			::indent('out');
-			$textwindow->addGlobEnd;
+			::indent($textwindow, 'out');
 		}
 	);
 	$textwindow->bind(
 		'TextUnicode',
 		'<Alt-Right>' => sub {
-			$textwindow->addGlobStart;
-			::indent('in');
-			$textwindow->addGlobEnd;
+			::indent($textwindow, 'in');
 		}
 	);
 	$textwindow->bind(
 		'TextUnicode',
 		'<Alt-Up>' => sub {
-			$textwindow->addGlobStart;
-			::indent('up');
-			$textwindow->addGlobEnd;
+			::indent($textwindow, 'up');
 		}
 	);
 	$textwindow->bind(
 		'TextUnicode',
 		'<Alt-Down>' => sub {
-			$textwindow->addGlobStart;
-			::indent('dn');
-			$textwindow->addGlobEnd;
+			::indent($textwindow, 'dn');
 		}
 	);
-	$textwindow->bind( 'TextUnicode', '<F7>' => \&::spellchecker );
+
 	$textwindow->bind(
 		'TextUnicode',
 		'<Control-Alt-s>' => sub {
@@ -197,13 +206,12 @@ sub keybindings {
 	$textwindow->bind( 'TextUnicode',
 		'<Control-Alt-r>' => sub { ::regexref() } );
 	$textwindow->bind( 'TextUnicode', '<Shift-B1-Motion>', 'shiftB1_Motion' );
-	$textwindow->eventAdd(
-		'<<FindNext>>' => '<Control-Key-G>',
-		'<Control-Key-g>'
-	);
 	$textwindow->bind( '<<ScrollDismiss>>', \&::scrolldismiss );
 	$textwindow->bind( 'TextUnicode', '<ButtonRelease-2>',
 		sub { ::popscroll() unless $Tk::mouseMoved } );
+
+	$textwindow->eventAdd( '<<FindNext>>' => '<Control-Key-g>' );
+	$textwindow->eventAdd( '<<FindNextReverse>>' => '<Control-Key-G>' );
 	$textwindow->bind(
 		'<<FindNext>>',
 		sub {
@@ -215,6 +223,20 @@ sub keybindings {
 			}
 		}
 	);
+	$textwindow->bind(
+		'<<FindNextReverse>>',
+		sub {
+			if ( $::lglobal{searchpop} ) {
+				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+				$::lglobal{searchop2}->toggle;
+				::searchtext($searchterm);
+				$::lglobal{searchop2}->toggle;
+			} else {
+				::searchpopup();
+			}
+		}
+	);
+
 	if ($::OS_WIN) {
 		$textwindow->bind(
 			'TextUnicode',

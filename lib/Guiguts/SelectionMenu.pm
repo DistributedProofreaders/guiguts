@@ -635,6 +635,7 @@ sub surround {
 		my $f1 = $::lglobal{surpop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $surstrt = $f1->Entry(
+			-textvariable => \$::lglobal{surstrt},
 			-width      => 8,
 			-background => $::bkgcolor,
 			-font       => $::lglobal{font},
@@ -646,6 +647,7 @@ sub surround {
 			-anchor => 'n'
 		  );
 		my $surend = $f1->Entry(
+			-textvariable => \$::lglobal{surend},
 			-width      => 8,
 			-background => $::bkgcolor,
 			-font       => $::lglobal{font},
@@ -701,7 +703,6 @@ sub flood {
 	#my ( $textwindow, $top, $floodpop, $font, $activecolor, $icon ) = @_;
 	my $top=$::top;
 	my $textwindow = $::textwindow;
-	my $ffchar;
 	if ( defined( $::lglobal{floodpop} ) ) {
 		$::lglobal{floodpop}->deiconify;
 		$::lglobal{floodpop}->raise;
@@ -711,7 +712,7 @@ sub flood {
 		$::lglobal{floodpop}->title('Flood Fill');
 		my $f = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text =>
-"Flood fill selection with string:\n(Blank will default to spaces.)\nHotkey Control+w",
+			"Flood fill selection with string:\n(Blank will default to spaces.)",
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
 		my $f1 = $::lglobal{floodpop}->Frame->pack(
 			-side   => 'top',
@@ -723,7 +724,7 @@ sub flood {
 			-background   => $::bkgcolor,
 			-font         => $::lglobal{font},
 			-relief       => 'sunken',
-			-textvariable => \$ffchar,
+			-textvariable => \$::lglobal{ffchar},
 		  )->pack(
 			-side   => 'left',
 			-pady   => 5,
@@ -735,7 +736,7 @@ sub flood {
 		my $f2 = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { floodfill( $textwindow, $ffchar ) },
+			-command          => sub { floodfill( $textwindow, $::lglobal{ffchar} ) },
 			-text             => 'Flood Fill',
 			-width            => 16
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
@@ -773,7 +774,6 @@ sub indent {
 	::savesettings();
 	my ( $textwindow, $indent ) = @_;
 
-	#my $indent      = shift;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	$::operationinterrupt = 0;
@@ -782,6 +782,7 @@ sub indent {
 	} else {
 		my @selarray;
 		if ( $indent eq 'up' ) { @ranges = reverse @ranges }
+		$::textwindow->addGlobStart;
 		while (@ranges) {
 			my $end            = pop(@ranges);
 			my $start          = pop(@ranges);
@@ -907,6 +908,7 @@ sub indent {
 			my $start = pop(@selarray);
 			$textwindow->tagAdd( 'sel', $start, $end );
 		}
+		$::textwindow->addGlobEnd;
 	}
 }
 

@@ -3,38 +3,40 @@ MAIN WINDOW
 <ctrl>+x -- cut or column cut
 <ctrl>+c -- copy or column copy
 <ctrl>+v -- paste
-<ctrl>+` -- column paste
 <ctrl>+a -- select all
+<ctrl>+s -- save file
 
+<shift>+mouse drag -- column select
 F1 -- column copy
 F2 -- column cut
 F3 -- column paste
 
+F5 -- open Word Frequency
+F6 -- run Gutcheck
 F7 -- spell check selection (or document, if no selection made)
+F8 -- open Stealth Scannos search
 
 <ctrl>+z -- undo
 <ctrl>+y -- redo
-
-<ctrl>+/ -- select all
-<ctrl>+\ -- unselect all
-<Esc> -- unselect all
 
 <ctrl>+u -- Convert case of selection to upper case
 <ctrl>+l -- Convert case of selection to lower case
 <ctrl>+t -- Convert case of selection to title case
 
-<ctrl>+i -- insert a tab character before cursor (Tab)
-<ctrl>+j -- insert a newline character before cursor (Enter)
-<ctrl>+o -- insert a newline character after cursor
-
 <ctrl>+d -- delete character after cursor (Delete)
 <ctrl>+h -- delete character to the left of the cursor (Backspace)
 <ctrl>+k -- delete from cursor to end of line
+<ctrl>+<backspace> -- delete word backwards
+<ctrl>+<delete> -- delete word forwards
 
-<ctrl>+e -- move cursor to end of current line. (End)
-<ctrl>+b -- move cursor left one character (left arrow)
-<ctrl>+p -- move cursor up one line (up arrow)
-<ctrl>+n -- move cursor down one line (down arrow)
+<ctrl>+f -- open Search & Replace popup
+<ctrl>+g -- continue search
+<ctrl>+<shift>+g -- continue search in opposite direction
+
+<ctrl>+p -- go to page
+<ctrl>+P -- go to page label
+<ctrl>+o -- flood fill (if popup is open, otherwise open it)
+<ctrl>+r -- surround text (if popup is open, otherwise open it)
 
 <ctrl>+Home -- move cursor to the start of the text
 <ctrl>+End -- move cursor to end of the text
@@ -59,50 +61,25 @@ F7 -- spell check selection (or document, if no selection made)
 <shift>+<ctrl>+up arrow -- adjust selection to the start of the current paragraph
 <shift>+<ctrl>+down arrow -- adjust selection to the start of the next paragraph
 
-<ctrl>+' -- highlight all apostrophes in selection.
-<ctrl>+" -- highlight all double quotes in selection.
+<ctrl>+, -- highlight all apostrophes in selection.
+<ctrl>+. -- highlight all double quotes in selection.
 <ctrl>+0 -- remove all highlights.
 
 <Insert> -- Toggle insert / overstrike mode
 
-Double click left mouse button -- select word
-Triple click left mouse button -- select line
+Double-click left mouse button -- select word
+Triple-click left mouse button -- select line
 
-<shift> click left mouse button -- adjust selection to click point
-<shift> Double click left mouse button -- adjust selection to include word clicked on
-<shift> Triple click left mouse button -- adjust selection to include line clicked on
+<shift>+click left mouse button -- adjust selection to click point
+<shift>+double-click left mouse button -- adjust selection to include word clicked on
+<shift>+triple-click left mouse button -- adjust selection to include line clicked on
 
 Single click right mouse button -- pop up shortcut to menu bar
 
 
-BOOKMARKS
+MENUS (non-Mac)
 
-<ctrl>+<shift>+1 -- set bookmark 1
-<ctrl>+<shift>+2 -- set bookmark 1
-<ctrl>+<shift>+3 -- set bookmark 3
-<ctrl>+<shift>+4 -- set bookmark 4
-<ctrl>+<shift>+5 -- set bookmark 5
-
-<ctrl>+1 -- go to bookmark 1
-<ctrl>+2 -- go to bookmark 2
-<ctrl>+3 -- go to bookmark 3
-<ctrl>+4 -- go to bookmark 4
-<ctrl>+5 -- go to bookmark 5
-
-
-MENUS
-
-<alt>+f -- file menu
-<alt>+e -- edit menu
-<alt>+r -- search & replace menu
-<alt>+b -- bookmarks menu
-<alt>+s -- selection menu
-<alt>+x -- fixup menu
-<alt>+t -- txt processing menu
-<alt>+n -- external operations menu
-<alt>+u -- unicode menu
-<alt>+p -- preferences menu
-<alt>+h -- help menu
+Hold Alt to activate the menu bar, select an item by typing its underlined symbol.
 
 
 SEARCH POPUP
