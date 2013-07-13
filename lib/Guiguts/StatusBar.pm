@@ -1147,7 +1147,7 @@ sub gotopage {
 					my $index =
 					  $textwindow->index( 'Pg' . $::lglobal{lastpage} );
 					$textwindow->markSet( 'insert', "$index +1l linestart" );
-					$textwindow->see('insert');
+					::seeindex('insert -2l', 1);
 					$textwindow->focus;
 					update_indicators();
 					$::lglobal{gotopagpop}->destroy;

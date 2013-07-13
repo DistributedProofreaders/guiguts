@@ -96,7 +96,7 @@ sub gotolabel {
 					}
 					my $index = $textwindow->index($mark);
 					$textwindow->markSet( 'insert', "$index +1l linestart" );
-					$textwindow->see('insert');
+					::seeindex('insert -2l', 1);
 					$textwindow->focus;
 					::update_indicators();
 					$::lglobal{gotolabpop}->destroy;
@@ -454,21 +454,9 @@ sub pgprevious {    #move focus to previous page marker
 		$::lglobal{showthispageimage} = 0;
 	}
 	$textwindow->markSet( 'insert', $mark );
-	seeindex($textwindow->index($mark));
+	::seeindex($mark, $::donotcenterpagemarkers);
 	::update_indicators();
 }
-
-sub seeindex {
-	my $index = shift;
-	my $textwindow = $::textwindow;
-	if ($::donotcenterpagemarkers) {
-		$textwindow->yview( $index);
-	} else {
-		$textwindow->see('end'); # Mark will be centered
-		$textwindow->see($index);
-	}
-}
-
 
 sub pgnext {    #move focus to next page marker
 	my $textwindow = $::textwindow;
@@ -488,7 +476,7 @@ sub pgnext {    #move focus to next page marker
 		$::lglobal{showthispageimage} = 0;
 	}
 	$textwindow->markSet( 'insert', $mark );
-	seeindex($textwindow->index($mark));
+	::seeindex($mark, $::donotcenterpagemarkers);
 	::update_indicators();
 }
 

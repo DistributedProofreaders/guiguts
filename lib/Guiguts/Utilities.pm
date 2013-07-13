@@ -12,7 +12,7 @@ BEGIN {
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
-	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark
+	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
@@ -1699,6 +1699,18 @@ sub gotobookmark {
 	::update_indicators();
 	$textwindow->tagAdd( 'bkmk', "bkmk$bookmark", "bkmk$bookmark+1c" )
 	  if $::bookmarks[$bookmark];
+}
+
+sub seeindex {
+	my ( $mark, $displayattop ) = @_;
+	my $textwindow = $::textwindow;
+	my $index = $textwindow->index($mark);
+	if ($displayattop) {
+		$textwindow->yview($index);
+	} else {
+		$textwindow->see('end'); # Mark will be centered
+		$textwindow->see($index);
+	}
 }
 
 sub epubmaker {
