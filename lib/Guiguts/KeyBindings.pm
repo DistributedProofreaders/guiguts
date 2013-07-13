@@ -147,16 +147,20 @@ sub keybindings {
 	$textwindow->bind( 'TextUnicode', '<F7>' => \&::spellchecker );
 	$textwindow->bind( 'TextUnicode', '<F8>' => \&::stealthscanno );
 
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Shift-exclam>' => sub { ::setbookmark('1') } );
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Shift-at>' => sub { ::setbookmark('2') } );
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Shift-numbersign>' => sub { ::setbookmark('3') } );
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Shift-dollar>' => sub { ::setbookmark('4') } );
-	$textwindow->bind( 'TextUnicode',
-		'<Control-Shift-percent>' => sub { ::setbookmark('5') } );
+	if ( $::hotkeybookmarks ) {
+		$textwindow->bind( 'TextUnicode', '<<SetBkmk1>>' => sub { ::setbookmark('1'); } );
+		$textwindow->bind( 'TextUnicode', '<<SetBkmk2>>' => sub { ::setbookmark('2'); } );
+		$textwindow->bind( 'TextUnicode', '<<SetBkmk3>>' => sub { ::setbookmark('3'); } );
+		$textwindow->bind( 'TextUnicode', '<<SetBkmk4>>' => sub { ::setbookmark('4'); } );
+		$textwindow->bind( 'TextUnicode', '<<SetBkmk5>>' => sub { ::setbookmark('5'); } );
+		$textwindow->bind( 'TextUnicode', '<<Dummy>>' => '' );
+		$textwindow->eventAdd( '<<SetBkmk1>>' => '<Control-Shift-exclam>' );
+		$textwindow->eventAdd( '<<SetBkmk2>>' => '<Control-Shift-at>', '<Control-Shift-quotedbl>' );
+		$textwindow->eventAdd( '<<SetBkmk3>>' => '<Control-Shift-numbersign>', 
+			'<Control-Shift-sterling>', '<Control-Shift-section>', '<Control-Shift-periodcentered>' );
+		$textwindow->eventAdd( '<<SetBkmk4>>' => '<Control-Shift-dollar>', '<Control-Shift-currency>' );
+		$textwindow->eventAdd( '<<SetBkmk5>>' => '<Control-Shift-percent>' );
+	}
 	$textwindow->bind( 'TextUnicode',
 		'<Control-KeyPress-1>' => sub { ::gotobookmark('1') } );
 	$textwindow->bind( 'TextUnicode',

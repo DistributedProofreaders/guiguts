@@ -309,6 +309,13 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0
 				],
+				[
+					Checkbutton => 'Enable Shortcuts for Set Bookmark (beta)',
+					-variable   => \$::hotkeybookmarks,
+					-onvalue    => 1,
+					-offvalue   => 0,
+					-command    => sub { ::keybindings(); ::menurebuild(); ::savesettings(); },
+				],
 			  ]
 		],
 		[
@@ -503,7 +510,7 @@ sub menu_bookmarks {
 		map ( [
 				Button       => "Set Bookmark $_",
 				-command     => [ \&::setbookmark, "$_" ],
-				-accelerator => "Ctrl+Shift+$_"
+				-accelerator => ( $::hotkeybookmarks ? "Ctrl+Shift+$_" : '' ),
 			],
 			( 1 .. 5 ) ),
 		[ 'separator', '' ],

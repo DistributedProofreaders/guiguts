@@ -993,7 +993,7 @@ EOM
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
 			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch
 			font_char fontname fontsize fontweight geometry
-			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size 
+			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size hotkeybookmarks
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
 			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin projectfileslocation
