@@ -1058,12 +1058,12 @@ sub gotoline {
 	my $top        = $::top;
 	unless ( defined( $::lglobal{gotolinepop} ) ) {
 		$::lglobal{gotolinepop} = $top->DialogBox(
-			-buttons => [qw[Ok Cancel]],
+			-buttons => [qw[OK Cancel]],
 			-title   => 'Go To Line Number',
 			-popover => $top,
 			-command => sub {
 				no warnings 'uninitialized';
-				if ( $_[0] eq 'Ok' ) {
+				if ( $_[0] eq 'OK' ) {
 					$::lglobal{line_number} =~ s/[\D.]//g;
 					my ( $last_line, $junk ) =
 					  split( /\./, $textwindow->index('end') );
@@ -1088,6 +1088,9 @@ sub gotoline {
 		);
 		$::lglobal{gotolinepop}->Icon( -image => $::icon );
 		$::lglobal{gotolinepop}->resizable( 'no', 'no' );
+		$::lglobal{gotolinepop}->Tk::bind(
+			'<Key-KP_Enter>' => sub { $::lglobal{gotolinepop}->Subwidget('B_OK')->invoke; }
+		);
 		my $frame = $::lglobal{gotolinepop}->Frame->pack( -fill => 'x' );
 		$frame->Label( -text => 'Enter Line number: ' )
 		  ->pack( -side => 'left' );
@@ -1115,11 +1118,11 @@ sub gotopage {
 			last;
 		}
 		$::lglobal{gotopagpop} = $top->DialogBox(
-			-buttons => [qw[Ok Cancel]],
+			-buttons => [qw[OK Cancel]],
 			-title   => 'Goto Page Number',
 			-popover => $top,
 			-command => sub {
-				if ( ( defined $_[0] ) and ( $_[0] eq 'Ok' ) ) {
+				if ( ( defined $_[0] ) and ( $_[0] eq 'OK' ) ) {
 					unless ( $::lglobal{lastpage} ) {
 						$::lglobal{gotopagpop}->bell;
 						$::lglobal{gotopagpop}->destroy;
@@ -1160,6 +1163,9 @@ sub gotopage {
 		);
 		$::lglobal{gotopagpop}->resizable( 'no', 'no' );
 		$::lglobal{gotopagpop}->Icon( -image => $::icon );
+		$::lglobal{gotopagpop}->Tk::bind(
+			'<Key-KP_Enter>' => sub { $::lglobal{gotopagpop}->Subwidget('B_OK')->invoke; }
+		);
 		my $frame = $::lglobal{gotopagpop}->Frame->pack( -fill => 'x' );
 		$frame->Label( -text => 'Enter image number: ' )
 		  ->pack( -side => 'left' );
