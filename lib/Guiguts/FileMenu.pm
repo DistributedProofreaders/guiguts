@@ -996,7 +996,7 @@ EOM
 			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size hotkeybookmarks
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
-			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin projectfileslocation
+			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar oldspellchecklayout poetrylmargin projectfileslocation
 			recentfile_size rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted stayontop toolside 
 			trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
 			twowordsinhyphencheck unicodemenusplit utffontname utffontsize

@@ -316,6 +316,13 @@ sub menu_preferences {
 					-offvalue   => 0,
 					-command    => sub { ::keybindings(); ::menurebuild(); ::savesettings(); },
 				],
+				[
+					Checkbutton => 'Use Old Spellcheck Layout',
+					-variable   => \$::oldspellchecklayout,
+					-onvalue    => 1,
+					-offvalue   => 0,
+					-command    => \&::savesettings,
+				],
 			  ]
 		],
 		[

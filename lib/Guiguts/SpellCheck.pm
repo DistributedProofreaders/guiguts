@@ -101,7 +101,6 @@ sub spellchecknext {
 	;      # no more misspelled words, bail
 	$::lglobal{lastmatchindex} = $textwindow->index('spellindex');
 
-#print $::lglobal{misspelledlist}[$::lglobal{nextmiss}]." | $::lglobal{lastmatchindex}\n";
 	if (
 		 (
 		   $::lglobal{misspelledlist}[ $::lglobal{nextmiss} ] =~ /^[\xC0-\xFF]/
@@ -593,6 +592,16 @@ sub spellchecker {    # Set up spell check window
 		my $spf2 =
 		  $::lglobal{spellpopup}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+		my $spf3 =
+		  $::lglobal{spellpopup}
+		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+		my $spf4 =
+		  $::lglobal{spellpopup}
+		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+		my $spf5 =
+		  $::lglobal{spellpopup}
+		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+		if ( $::oldspellchecklayout ) {
 		my $changebutton =
 		  $spf2->Button(
 						 -activebackground => $::activecolor,
@@ -648,9 +657,6 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
-		my $spf3 =
-		  $::lglobal{spellpopup}
-		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $replaceallbutton =
 		  $spf3->Button(
 						-activebackground => $::activecolor,
@@ -677,16 +683,7 @@ sub spellchecker {    # Set up spell check window
 		  );
 		my $closebutton = $spf3->Button(
 			-activebackground => $::activecolor,
-			-command          => sub {
-				@{ $::lglobal{misspelledlist} } = ();
-				$::lglobal{spellpopup}->destroy;
-				undef
-				  $::lglobal{spellpopup};   # completly remove spellcheck window
-				print OUT "\cC\n"
-				  if $::lglobal{spellpid};    # send a quit signal to aspell
-				aspellstop();                 # and remove the process
-				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-			},
+			-command          => \&endaspell,
 			-text  => 'Close',
 			-width => 14
 		  )->pack(
@@ -702,7 +699,6 @@ sub spellchecker {    # Set up spell check window
 				$textwindow->tagRemove( 'sel',       '1.0', 'end' );
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 				$textwindow->tagAdd( 'sel', 'spellbkmk', 'end' );
-				#print $textwindow->index('spellbkmk')."\n";
 				spellcheckfirst();
 			},
 			-text  => 'Resume @ Bkmrk',
@@ -713,9 +709,6 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
-		my $spf4 =
-		  $::lglobal{spellpopup}
-		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $dictmybutton = $spf4->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -729,9 +722,6 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
-		my $spf5 =
-		  $::lglobal{spellpopup}
-		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $dictaddbutton = $spf5->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -762,18 +752,159 @@ sub spellchecker {    # Set up spell check window
 				   -padx   => 3,
 				   -anchor => 'nw'
 		  );
+		} else {
+			my $changebutton =
+			  $spf2->Button(
+				-activebackground => $::activecolor,
+				-command          => sub { spellreplace() },
+				-text             => 'Change',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $ignorebutton = $spf2->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					shift @{ $::lglobal{misspelledlist} };
+					spellchecknext();
+				},
+				-text             => 'Skip <Ctrl+s>',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $dictmyaddbutton = $spf2->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					spellmyaddword( $::lglobal{misspelledentry}->get );
+					spellignoreall();
+					spellchecknext();
+				},
+				-text             => 'Add To Project Dic. <Ctrl+p>',
+				-width            => 22,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $replaceallbutton = $spf3->Button(
+				-activebackground => $::activecolor,
+				-command          => sub { spellreplaceall(); spellchecknext() },
+				-text             => 'Change All',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $ignoreallbutton = $spf3->Button(
+				-activebackground => $::activecolor,
+				-command          => sub { spellignoreall(); spellchecknext() },
+				-text             => 'Skip All <Ctrl+i>',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $dictaddbutton = $spf3->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					spelladdword();
+					spellignoreall();
+					spellchecknext();
+				},
+				-text             => 'Add To Aspell Dic. <Ctrl+a>',
+				-width            => 22,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			$spf4->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					$::spellindexbkmrk =
+					  $textwindow->index( $::lglobal{lastmatchindex} . '-1c' )
+					  || '1.0';
+					$textwindow->markSet( 'spellbkmk', $::spellindexbkmrk );
+					::savesettings();
+				},
+				-text             => 'Set Bookmark',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			$spf4->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					return unless $::spellindexbkmrk;
+					$textwindow->tagRemove( 'sel',       '1.0', 'end' );
+					$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+					$textwindow->tagAdd( 'sel', 'spellbkmk', 'end' );
+					spellcheckfirst();
+				},
+				-text             => 'Resume @ Bkmrk',
+				-width            => 14,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $dictmybutton = $spf5->Button(
+				-activebackground => $::activecolor,
+				-command          => sub {
+					spelladdgoodwords();
+				},
+				-text             => 'Add Goodwords To Proj. Dic.',
+				-width            => 24,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $spelloptionsbutton =
+			  $spf5->Button(
+				-activebackground => $::activecolor,
+				-command          => sub { spelloptions() },
+				-text             => 'Options',
+				-width            => 12,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+			my $closebutton = $spf5->Button(
+				-activebackground => $::activecolor,
+				-command          => \&endaspell,
+				-text             => 'Close',
+				-width            => 12,
+			  )->pack(
+					   -side   => 'left',
+					   -pady   => 2,
+					   -padx   => 3,
+					   -anchor => 'nw'
+			  );
+		}
 		::initialize_popup_without_deletebinding('spellpopup');
 		$::lglobal{spellpopup}->protocol(
-			'WM_DELETE_WINDOW' => sub {
-				@{ $::lglobal{misspelledlist} } = ();
-				$::lglobal{spellpopup}->destroy;
-				undef
-				  $::lglobal{spellpopup};   # completely remove spellcheck window
-				print OUT "\cC\n"
-				  if $::lglobal{spellpid};    # send quit signal to aspell
-				aspellstop();                 # and remove the process
-				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-			}
+			'WM_DELETE_WINDOW' => \&endaspell
 		);
 		$::lglobal{spellpopup}->bind(
 			'<Control-a>',
@@ -825,6 +956,16 @@ sub spellchecker {    # Set up spell check window
 		  unless $::globalspellpath && -e $::globalspellpath;   # Check to see if we know where Aspell is
 		spellcheckfirst();             # Start the spellcheck
 	}
+}
+
+sub endaspell {
+	my $textwindow = $::textwindow;
+	@{ $::lglobal{misspelledlist} } = ();
+	$::lglobal{spellpopup}->destroy;
+	undef $::lglobal{spellpopup};   # completely remove spellcheck window
+	print OUT "\cC\n" if $::lglobal{spellpid};    # send quit signal to aspell
+	aspellstop();                   # and remove the process
+	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 }
 
 ## Spell Check
