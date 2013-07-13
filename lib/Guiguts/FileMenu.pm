@@ -70,6 +70,7 @@ sub file_saveas {
 		-initialfile => $initialfile,
 	);
 	if ( defined($name) and length($name) ) {
+		$::top->Busy( -recurse => 1 );
 		my $binname = $name;
 		$binname =~ s/\.[^\.]*?$/\.bin/;
 		if ( $binname eq $name ) { $binname .= '.bin' }
@@ -96,6 +97,7 @@ sub file_saveas {
 		$::lglobal{global_filename} = $name;
 		_bin_save();
 		::_recentupdate($name);
+		$::top->Unbusy( -recurse => 1 );
 	} else {
 		return;
 	}
@@ -114,6 +116,7 @@ sub file_savecopyas {
 		-initialfile => $::lglobal{global_filename},
 	);
 	if ( defined($name) and length($name) ) {
+		$::top->Busy( -recurse => 1 );
 		my $binname = $name;
 		$binname =~ s/\.[^\.]*?$/\.bin/;
 		if ( $binname eq $name ) { $binname .= '.bin' }
@@ -139,6 +142,7 @@ sub file_savecopyas {
 		$::lglobal{global_filename} = $oldfilename;
 		$textwindow->FileName($oldfilename);
 		::_recentupdate($name);
+		$::top->Unbusy( -recurse => 1 );
 	} else {
 		return;
 	}
@@ -452,6 +456,7 @@ sub savefile {    # Determine which save routine to use and then use it
 			  'File '.$::lglobal{global_filename}.' is write-protected. Remove write-protection and save anyway?',
 		    );
 		return unless $ans;
+		$::top->Busy( -recurse => 1 );
 		if ($::autobackup) {
 			if ( -e $::lglobal{global_filename} ) {
 				if ( -e "$::lglobal{global_filename}.bk2" ) {
@@ -470,6 +475,7 @@ sub savefile {    # Determine which save routine to use and then use it
 			}
 		}
 		$textwindow->SaveUTF;
+		$::top->Unbusy( -recurse => 1 );
 	}
 	$textwindow->ResetUndo;    #necessary to reset edited flag
 	::_bin_save();
