@@ -45,19 +45,14 @@ sub keybindings {
 	$textwindow->bind( 'TextUnicode', '<Control-s>' => \&::savefile );
 	$textwindow->bind( 'TextUnicode',
 		'<Control-a>' => sub { $textwindow->selectAll } );
-	$textwindow->eventAdd( '<<Copy>>' => '<Control-c>', '<F1>' );
+	$textwindow->eventAdd( '<<Copy>>' => '<Control-c>' );
 	$textwindow->bind( 'TextUnicode', '<<Copy>>' => \&::textcopy );
-	$textwindow->eventAdd( '<<Cut>>' => '<Control-x>', '<F2>' );
+	$textwindow->eventAdd( '<<Cut>>' => '<Control-x>' );
 	$textwindow->bind( 'TextUnicode', '<<Cut>>'     => sub { ::cut() } );
 	$textwindow->bind( 'TextUnicode', '<Control-v>' => sub { ::paste() } );
-	$textwindow->bind(
-		'TextUnicode',
-		'<F3>' => sub {
-			$textwindow->addGlobStart;
-			$textwindow->clipboardColumnPaste;
-			$textwindow->addGlobEnd;
-		}
-	);
+	$textwindow->bind( 'TextUnicode', '<F1>' => sub { ::colcopy($textwindow); } );
+	$textwindow->bind( 'TextUnicode', '<F2>' => sub { ::colcut($textwindow); } );
+	$textwindow->bind( 'TextUnicode', '<F3>' => sub { ::colpaste($textwindow); } );
 	$textwindow->bind(
 		'TextUnicode',
 		'<Delete>' => sub {

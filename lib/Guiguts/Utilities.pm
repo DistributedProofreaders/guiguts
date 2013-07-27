@@ -11,7 +11,7 @@ BEGIN {
 	  &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
-	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &showversion
+	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
 	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
@@ -1483,6 +1483,29 @@ sub paste {
 	}
 }
 
+sub colcut {
+	my $textwindow = shift;
+	columnizeselection($textwindow);
+	$textwindow->addGlobStart;
+	::textcopy();
+	$textwindow->addGlobEnd;
+}
+
+sub colcopy {
+	my $textwindow = shift;
+	columnizeselection($textwindow);
+	$textwindow->addGlobStart;
+	::cut();
+	$textwindow->addGlobEnd;
+}
+
+sub colpaste {
+	my $textwindow = shift;
+	$textwindow->addGlobStart;
+	$textwindow->clipboardColumnPaste;
+	$textwindow->addGlobEnd;
+}
+
 sub showversion {
 	my $top = $::top;
 	my $os  = $^O;
@@ -2177,6 +2200,23 @@ sub expandselection {
 	$ler++ if $lec;
 	$textwindow->tagAdd('sel', "$lsr.0", "$ler.0");
 	return ( $lsr, $ler );
+}
+
+# adjust current selection to column mode, spanning a block defined by the two given corners
+sub columnizeselection {
+	my $textwindow = shift;
+	my @ranges = $textwindow->tagRanges('sel');
+	my $range_total = @ranges;
+	return unless $range_total == 2;
+	my $end = pop(@ranges);
+	my $start = pop(@ranges);
+	$textwindow->unselectAll;
+	my ( $lsr, $lsc ) = split (/\./, $start);
+	my ( $ler, $lec ) = split (/\./, $end);
+	if ( $lsc > $lec ) { my $tmp = $lsc; $lsc = $lec; $lec = $tmp; }
+	for ( my $i = $lsr; $i <= $ler; $i++ ) {
+		$textwindow->tagAdd('sel', "$i.$lsc", "$i.$lec");
+	}
 }
 
 sub currentfileisunicode {
