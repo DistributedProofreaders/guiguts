@@ -818,7 +818,9 @@ sub html_convert_body {
 		# close blockquote #/
 		if ( $selection =~ /^\x7f*\#\// ) {
 			$blkquot = 0;
-			$textwindow->ntinsert( ( $step - 1 ) . '.end', $blkclose );
+			my $blkclosecopy = $blkclose;
+			$blkclosecopy =~ s|</p>|| unless is_paragraph_open( $textwindow, ($step-1).'.end' );
+			$textwindow->ntinsert( ( $step - 1 ) . '.end', $blkclosecopy );
 			push @last5, $selection;
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
