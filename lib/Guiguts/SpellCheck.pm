@@ -17,6 +17,7 @@ sub spellcheckfirst {
 	my $top        = $::top;
 	@{ $::lglobal{misspelledlist} } = ();
 	::hidepagenums();
+	$::globalspelldictopt = $::booklang;
 	spellloadprojectdict();
 	$::lglobal{lastmatchindex} = '1.0';
 

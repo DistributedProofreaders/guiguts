@@ -588,7 +588,7 @@ sub update_lang_button {
 	unless ( $::lglobal{langbutton} ) {
 		$::lglobal{langbutton} =
 		  $::counter_frame->Label(
-			   -width      => 8,
+			   -width      => 11,
 			   -relief     => 'ridge',
 			   -background => 'gray',
 		  )->grid( -row => 1, -column => 8 );
