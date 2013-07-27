@@ -768,7 +768,7 @@ sub initialize {
 	$::lglobal{groutp}            = 'l';
 	$::lglobal{htmlimgar}         = 1;             #html image aspect ratio
 	$::lglobal{isedited}          = 0;
-	$::lglobal{ignore_case}       = 0;
+	$::lglobal{wf_ignore_case}    = 0;
 	$::lglobal{keep_latin1}       = 1;
 	$::lglobal{lastmatchindex}    = '1.0';
 	$::lglobal{lastsearchterm}    = '';
@@ -788,6 +788,7 @@ sub initialize {
 	$::lglobal{uoutp}             = 'h';
 	$::lglobal{utfrangesort}      = 0;
 	$::lglobal{visibleline}       = '';
+	$::lglobal{wflastsearchterm}  = '';
 	$::lglobal{zoneindex}         = 0;
 	@{ $::lglobal{ascii} } = qw/+ - + | | | + - +/;
 	@{ $::lglobal{fixopt} } = ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );

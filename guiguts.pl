@@ -219,6 +219,7 @@ our @recentfile;
 our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
+our @wfsearchopt;
 
 our %htmllabels;
 our %convertcharsdisplay;

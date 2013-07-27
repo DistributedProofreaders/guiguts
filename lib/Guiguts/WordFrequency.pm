@@ -44,7 +44,7 @@ sub wordfrequencybuildwordlist {
 		$line =~ s/<!--//g;
 		$line =~ s/-->//g;
 		$line =~ s/<\/?[a-z]*>/ /g;    # throw away tags
-		if ( $::lglobal{ignore_case} ) { $line = lc($line) }
+		if ( $::lglobal{wf_ignore_case} ) { $line = lc($line) }
 		@words = split( /\s+/, $line );
 
 		# build a list of "word--word""
@@ -54,7 +54,7 @@ sub wordfrequencybuildwordlist {
 			$word =~ s/[\.,']$//;
 			$word =~ s/^[\.'-]+//;
 			next if ( $word eq '' );
-			$match = ( $::lglobal{ignore_case} ) ? lc($word) : $word;
+			$match = ( $::lglobal{wf_ignore_case} ) ? lc($word) : $word;
 			$::lglobal{seenwordsdoublehyphen}->{$match}++;
 		}
 		$line =~ s/[^'\.,\p{Alnum}\*-]/ /g;    # get rid of nonalphanumeric
@@ -77,7 +77,7 @@ sub wordfrequencybuildwordlist {
 			$word =~ s/^[\.,'-]+//;     #and at the beginning
 			next if ( $word eq '' );
 			$wc++;
-			$match = ( $::lglobal{ignore_case} ) ? lc($word) : $word;
+			$match = ( $::lglobal{wf_ignore_case} ) ? lc($word) : $word;
 			$::lglobal{seenwords}->{$match}++;
 		}
 		$index++;
@@ -88,6 +88,7 @@ sub wordfrequencybuildwordlist {
 	unlink 'tempfile.tmp' if ( -e 'tempfile.tmp' );
 	return $wc;
 }
+
 ## Word Frequency
 sub wordfrequency {
 	my $top        = $::top;
@@ -99,7 +100,6 @@ sub wordfrequency {
 	my $index = '1.0';
 	my $wc    = 0;
 	my $end   = $textwindow->index('end');
-	::searchoptset(qw/1 0 x 0/);    # Default is whole word search
 
 	if ( $::lglobal{wfpop} ) {
 		$::lglobal{wfpop}->deiconify;
@@ -115,30 +115,30 @@ sub wordfrequency {
 			-variable    => \$::lglobal{suspects_only},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Suspects only'
-		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
+		)->pack( -side => 'left', -anchor => 'w', -pady => 1 );
 		my $wcopt1 = $wordfreqseframe->Checkbutton(
-			-variable    => \$::lglobal{ignore_case},
+			-variable    => \$::lglobal{wf_ignore_case},
 			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'No case',
-		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
+			-text        => 'Ignore case',
+		)->pack( -side => 'left', -anchor => 'w', -pady => 1 );
 		$wordfreqseframe->Radiobutton(
 			-variable    => \$::alpha_sort,
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'a',
 			-text        => 'Alph',
-		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
+		)->pack( -side => 'left', -anchor => 'w', -pady => 1 );
 		$wordfreqseframe->Radiobutton(
 			-variable    => \$::alpha_sort,
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'f',
 			-text        => 'Frq',
-		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
+		)->pack( -side => 'left', -anchor => 'w', -pady => 1 );
 		$wordfreqseframe->Radiobutton(
 			-variable    => \$::alpha_sort,
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'l',
 			-text        => 'Len',
-		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
+		)->pack( -side => 'left', -anchor => 'w', -pady => 1 );
 		$wordfreqseframe->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -151,7 +151,7 @@ sub wordfrequency {
 			-side   => 'left',
 			-padx   => 1,
 			-pady   => 1,
-			-anchor => 'nw'
+			-anchor => 'w'
 		  );
 		$wordfreqseframe->Button(
 			-activebackground => $::activecolor,
@@ -165,7 +165,7 @@ sub wordfrequency {
 			-side   => 'left',
 			-padx   => 1,
 			-pady   => 1,
-			-anchor => 'nw'
+			-anchor => 'w'
 		  );
 		$wordfreqseframe->Button(
 			-activebackground => $::activecolor,
@@ -179,7 +179,7 @@ sub wordfrequency {
 			-side   => 'left',
 			-padx   => 2,
 			-pady   => 1,
-			-anchor => 'nw'
+			-anchor => 'w'
 		  );
 		my $wordfreqseframe1 =
 		  $::lglobal{wfpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -189,12 +189,12 @@ sub wordfrequency {
 			[ 'Alpha/num' => sub { alphanumcheck() } ],
 			[
 				'All Words' => sub {
-					$::lglobal{saveheader} =
+					$::lglobal{wfsaveheader} =
 					  "$wc total words. " .
 					  keys( %{ $::lglobal{seenwords} } )
 					  . " distinct words in file.";
 					sortwords( $::lglobal{seenwords} );
-					::searchoptset(qw/1 0 x 0/);   #default is whole word search
+					@::wfsearchopt = qw/1 0 x 0/;   #default is whole word search
 				  }
 			],
 			[ 'Check Spelling', sub { wordfrequencyspellcheck() } ],
@@ -204,6 +204,7 @@ sub wordfrequency {
 			[
 				'Initial Caps',
 				sub {
+					$::lglobal{wf_ignore_case} = 0;
 					anythingwfcheck( 'words with initial caps',
 						'^\p{Upper}\P{Upper}+$', $top );
 				  }
@@ -318,6 +319,7 @@ sub wordfrequency {
 				  $::lglobal{wclistbox}
 				  ->get( $::lglobal{wclistbox}->curselection );
 				::searchpopup();
+				::searchoptset(@::wfsearchopt);
 				$sword =~ s/\d+\s+(\S)/$1/;
 				$sword =~ s/\s+\*\*\*\*$//;
 				if ( $sword =~ /\*space\*/ ) {
@@ -340,6 +342,9 @@ sub wordfrequency {
 				$::lglobal{searchentry}->insert( 'end', $sword );
 				::updatesearchlabels();
 				$::lglobal{searchentry}->after( $::lglobal{delay} );
+				$::lglobal{searchpop}->deiconify;
+				$::lglobal{searchpop}->raise;
+				$::lglobal{searchpop}->focus;
 			}
 		);
 		$::lglobal{wclistbox}
@@ -352,6 +357,12 @@ sub wordfrequency {
 				  ->get( $::lglobal{wclistbox}->curselection );
 				return unless length $sword;
 				@savesets = @::sopt;
+				::searchoptset(@::wfsearchopt);
+				if ( $::lglobal{wf_ignore_case} ) {
+					::searchoptset( qw/x 1 0 x/ );
+				} else {
+					::searchoptset( qw/x 0 0 x/ );
+				}
 				$sword =~ s/(\d+)\s+(\S)/$2/;
 				my $snum = $1;
 				$sword =~ s/\s+\*\*\*\*$//;
@@ -361,22 +372,13 @@ sub wordfrequency {
 					$sword =~ s/\*newline\*/\n/;
 					$sword =~ s/\*space\*/ /;
 					$sword =~ s/([^\w\s\\])/\\$1/g;
-
 					#$sword = ::escape_regexmetacharacters($sword);
 					$sword .= '\b'
 					  if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
 					::searchoptset(qw/0 0 x 1/);    # Case sensitive
 				}
 
-				# not whole word search from character cnts popup
-				if (    ( length($sword) == 1 )
-					and ( $::lglobal{saveheader} =~ /characters in the file./ )
-				  )
-				{
-					::searchoptset(qw/0 0 x 0/);
-				}
 				if ( $::intelligentWF && $sword =~ /^\\,(\s|\\n)/ ) {
-
 		# during comma-Upper ck, ignore if name followed by period, !, or ?
 		# NOTE: sword will be used as a regular expression filter during display
 					$sword .= '([^\.\?\!]|$)';
@@ -392,11 +394,10 @@ sub wordfrequency {
 					}
 				}
 
-		#print $sword.":sword\n";
-		#print $::sopt[0],$::sopt[1],$::sopt[2],$::sopt[3],$::sopt[4].":sopt\n";
-				::searchfromstartifnew($sword);
+				::searchoptset(qw/x x x x 1/) if $sword ne $::lglobal{wflastsearchterm};
 				::searchtext($sword);
 				::searchoptset(@savesets);
+				$::lglobal{wflastsearchterm} = $sword;
 				$top->raise;
 			}
 		);
@@ -425,7 +426,7 @@ sub wordfrequency {
 				return if ( $sword =~ /[^\p{Alnum}']/ );
 				::spellmyaddword($sword);
 				delete( $::lglobal{spellsort}->{$sword} );
-				$::lglobal{saveheader} =
+				$::lglobal{wfsaveheader} =
 				  scalar( keys %{ $::lglobal{spellsort} } )
 				  . ' words not recognised by the spellchecker.';
 				sortwords( \%{ $::lglobal{spellsort} } );
@@ -480,18 +481,10 @@ sub wordfrequency {
 	  ->insert( 'end', 'Please wait, building word list....' );
 	$wc = wordfrequencybuildwordlist($textwindow);
 
-	#print "$index  ";
-	$::lglobal{saveheader} = "$wc total words. " .
+	$::lglobal{wfsaveheader} = "$wc total words. " .
 	  keys( %{ $::lglobal{seenwords} } ) . " distinct words in file.";
 	$::lglobal{wclistbox}->delete( '0', 'end' );
-	$::lglobal{last_sort} = $::lglobal{ignore_case};
 
-	#print $::lglobal{ignore_case}.":ignore\n";
-	if ( $::lglobal{ignore_case} ) {
-		::searchoptset("x 1 x x");
-	} else {
-		::searchoptset("x 0 x x");
-	}
 	$top->Unbusy( -recurse => 1 );
 	sortwords( \%{ $::lglobal{seenwords} } );
 	::update_indicators();
@@ -501,12 +494,13 @@ sub bangmark {
 	my $top = $::top;
 	::operationadd('Check . lower');
 	$top->Busy( -recurse => 1 );
-	$::lglobal{wclistbox}->delete( '0', 'end' );
 	my %display = ();
 	my $wordw   = 0;
 	my $ssindex = '1.0';
 	my $length  = 0;
 	return if ( nofileloaded($top) );
+	$::lglobal{wf_ignore_case} = 0;
+	$::lglobal{wclistbox}->delete( '0', 'end' );
 	$::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
 	$::lglobal{wclistbox}->update;
 	my $wholefile = slurpfile();
@@ -535,11 +529,11 @@ sub bangmark {
 		$word =~ s/\n/\\n/g;
 		$display{$word}++;
 	}
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 	  "$wordw words with lower case after period. " . '(\n means newline)';
 	sortwords( \%display );
+	@::wfsearchopt = qw/0 x x 1/;
 	$top->Unbusy;
-	::searchoptset(qw/0 x x 1/);
 }
 
 sub dashcheck {
@@ -574,10 +568,10 @@ sub dashcheck {
 			}
 		}
 	}
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 	  "$wordw emdash phrases, $wordwo suspects (marked with ****).";
 	sortwords( \%display );
-	::searchoptset(qw /0 x x 0/);
+	@::wfsearchopt = qw/0 x x 0/;
 	$top->Unbusy;
 }
 
@@ -599,12 +593,12 @@ sub alphanumcheck {
 		$wordw++;
 		$display{$_} = $::lglobal{seenwords}->{$_};
 	}
-	$::lglobal{saveheader} = "$wordw mixed alphanumeric words.";
+	$::lglobal{wfsaveheader} = "$wordw mixed alphanumeric words.";
 	sortwords( \%display );
 	$::lglobal{wclistbox}->yview( 'scroll', 1, 'units' );
 	$::lglobal{wclistbox}->update;
 	$::lglobal{wclistbox}->yview( 'scroll', -1, 'units' );
-	::searchoptset(qw/0 x x 0/);
+	@::wfsearchopt = qw/0 x x 0/;
 	$top->Unbusy;
 }
 
@@ -612,6 +606,7 @@ sub capscheck {
 	my $top = $::top;
 	::operationadd('Check ALL CAPS');
 	$top->Busy( -recurse => 1 );
+	$::lglobal{wf_ignore_case} = 0;
 	$::lglobal{wclistbox}->delete( '0', 'end' );
 	$::lglobal{wclistbox}
 	  ->insert( 'end', 'Please wait, building word list....' );
@@ -626,9 +621,9 @@ sub capscheck {
 			$display{$_} = $::lglobal{seenwords}->{$_};
 		}
 	}
-	$::lglobal{saveheader} = "$wordw distinct capitalized words.";
+	$::lglobal{wfsaveheader} = "$wordw distinct capitalized words.";
 	sortwords( \%display );
-	::searchoptset(qw/1 x x 0/);
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -636,6 +631,7 @@ sub mixedcasecheck {
 	my $top = $::top;
 	::operationadd('Check MiXeD CasE');
 	$top->Busy( -recurse => 1 );
+	$::lglobal{wf_ignore_case} = 0;
 	$::lglobal{wclistbox}->delete( '0', 'end' );
 	$::lglobal{wclistbox}
 	  ->insert( 'end', 'Please wait, building word list....' );
@@ -650,9 +646,9 @@ sub mixedcasecheck {
 		$wordw++;
 		$display{$_} = $::lglobal{seenwords}->{$_};
 	}
-	$::lglobal{saveheader} = "$wordw distinct mixed case words.";
+	$::lglobal{wfsaveheader} = "$wordw distinct mixed case words.";
 	sortwords( \%display );
-	::searchoptset(qw/1 x x 0/);
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -679,9 +675,9 @@ sub anythingwfcheck {
 		$wordw++;
 		$display{$_} = $::lglobal{seenwords}->{$_};
 	}
-	$::lglobal{saveheader} = "$wordw distinct $checktype.";
+	$::lglobal{wfsaveheader} = "$wordw distinct $checktype.";
 	sortwords( \%display );
-	::searchoptset(qw/1 x x 0/);
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -726,10 +722,10 @@ sub accentcheck {
 			$accent{$word}++;
 		}
 	}
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 	  "$wordw accented words, $wordwo suspects (marked with ****).";
 	sortwords( \%display );
-	::searchoptset(qw/0 x x 0/);
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -737,12 +733,13 @@ sub commark {
 	my $top = $::top;
 	::operationadd('Check , Upper');
 	$top->Busy( -recurse => 1 );
-	$::lglobal{wclistbox}->delete( '0', 'end' );
 	my %display = ();
 	my $wordw   = 0;
 	my $ssindex = '1.0';
 	my $length;
 	return if ( nofileloaded($top) );
+	$::lglobal{wf_ignore_case} = 0;
+	$::lglobal{wclistbox}->delete( '0', 'end' );
 	$::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
 	$::lglobal{wclistbox}->update;
 	my $wholefile = slurpfile();
@@ -785,11 +782,11 @@ s/([\.\?\!]['"]*[\n\s]['"]*\p{Upper}\p{Alnum}*),([\n\s]['"]*\p{Upper})/$1 $2/g;
 		$word =~ s/\n/\\n/g;
 		$display{ ',' . $word }++;
 	}
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 	  "$wordw words with uppercase following commas. " . '(\n means newline)';
 	sortwords( \%display );
+	@::wfsearchopt = qw/0 x x 1/;
 	$top->Unbusy;
-	::searchoptset(qw/0 0 x 1/);
 }
 
 sub itwords {
@@ -832,12 +829,12 @@ sub itwords {
 		delete $display{$wordwo} unless $display{$wordwo};
 	}
 	$suspects = ( scalar keys %display ) - $wordw;
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 "$wordw words/phrases with markup, $suspects similar without. (\\n means newline)";
 	$wholefile = ();
 	sortwords( \%display );
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
-	::searchoptset(qw/1 x x 0/);
 }
 
 sub ital_adjust {
@@ -968,9 +965,10 @@ sub hyphencheck {
 			}
 		}
 	}
-	$::lglobal{saveheader} =
+	$::lglobal{wfsaveheader} =
 	  "$wordw words with hyphens, $wordwo suspects (marked ****).";
 	sortwords( \%display );
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -1004,7 +1002,7 @@ sub wordfrequencyspellcheck {
 	  ->insert( 'end', 'Please wait, building word list....' );
 	$::lglobal{wclistbox}->update;
 	my $wordw = wordfrequencygetmisspelled();
-	$::lglobal{saveheader} = "$wordw words not recognised by the spellchecker.";
+	$::lglobal{wfsaveheader} = "$wordw words not recognised by the spellchecker.";
 	sortwords( \%{ $::lglobal{spellsort} } );
 	$top->Unbusy;
 }
@@ -1030,7 +1028,7 @@ sub charsortcheck {
 	while ( my $line = <$fh> ) {
 		utf8::decode($line);
 		$line =~ s/^\x{FEFF}?// if ( $. < 2 );    # Drop the BOM!
-		if ( $::lglobal{ignore_case} ) { $line = lc($line) }
+		if ( $::lglobal{wf_ignore_case} ) { $line = lc($line) }
 		my @words = split( //, $line );
 		foreach (@words) {
 			$chars{$_}++;
@@ -1054,9 +1052,9 @@ sub charsortcheck {
 	delete $display{"\xA0"}  if $chars{"\xA0"};
 	delete $display{"\x{d}"} if $chars{"\x{d}"};
 	delete $display{"\n"}    if $chars{"\n"};
-	$::lglobal{saveheader} = "$wordw characters in the file.";
+	$::lglobal{wfsaveheader} = "$wordw characters in the file.";
 	sortwords( \%display );
-	::searchoptset(qw/0 x x 0/);
+	@::wfsearchopt = qw/0 x x 0/;
 	$top->Unbusy;
 }
 
@@ -1083,9 +1081,9 @@ sub stealthcheck {
 		$wordw++;
 		$display{$word} = $::lglobal{seenwords}->{$word};
 	}
-	$::lglobal{saveheader} = "$wordw suspect words found in file.";
+	$::lglobal{wfsaveheader} = "$wordw suspect words found in file.";
 	sortwords( \%display );
-	::searchoptset(qw/1 x x 0/);
+	@::wfsearchopt = qw/1 x x 0/;
 	$top->Unbusy;
 }
 
@@ -1345,7 +1343,7 @@ sub sortwords {
 		}
 	}
 	$::lglobal{wclistbox}->delete('0');
-	$::lglobal{wclistbox}->insert( '0', $::lglobal{saveheader} );
+	$::lglobal{wclistbox}->insert( '0', $::lglobal{wfsaveheader} );
 	$::lglobal{wclistbox}->update;
 	$::lglobal{wclistbox}->yview( 'scroll', 1, 'units' );
 	$::lglobal{wclistbox}->update;

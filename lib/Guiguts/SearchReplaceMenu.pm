@@ -36,9 +36,9 @@ sub searchtext {
 	::hidepagenums();
 
 #print $::sopt[0],$::sopt[1],$::sopt[2],$::sopt[3],$::sopt[4].":sopt\n";
-# $::sopt[0] --> 0 = pattern search                       1 = whole word search
-# $::sopt[1] --> 0 = case sensitive                     1 = case insensitive search
-# $::sopt[2] --> 0 = search forwards    \                  1 = search backwards
+# $::sopt[0] --> 0 = pattern search               1 = whole word search
+# $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
+# $::sopt[2] --> 0 = search forwards              1 = search backwards
 # $::sopt[3] --> 0 = normal search term           1 = regex search term - 3 and 0 are mutually exclusive
 # $::sopt[4] --> 0 = search from last index       1 = Start from beginning
 #	$::searchstartindex--where the last search for this $searchterm ended
