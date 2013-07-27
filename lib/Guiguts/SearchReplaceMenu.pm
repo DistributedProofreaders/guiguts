@@ -1819,7 +1819,7 @@ sub orphanedbrackets {
 		my $qusel = $frame3->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
-			-value       => "\«|\»",
+			-value       => "«|»",
 			-text        => 'French angle quotes « »',
 		)->grid( -row => 2, -column => 2, -pady => 5 );
 		my $gqusel = $frame3->Radiobutton(
@@ -1935,14 +1935,18 @@ sub orphanedbrackets {
 		::hidepagenums();
 		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 		while (1) {
-			last
-			  unless (
-				(
-					   ( $::lglobal{brbrackets}[0] =~ m{[\[\(\{<«]} )
-					&& ( $::lglobal{brbrackets}[1] =~ m{[\]\)\}>»]} )
-				)
-				|| (   ( $::lglobal{brbrackets}[0] =~ m{[\[\(\{<»]} )
-					&& ( $::lglobal{brbrackets}[1] =~ m{[\]\)\}>«]} ) )
+			if ( $::lglobal{brsel} eq '»|«' ) {
+				last unless (
+					$::lglobal{brbrackets}[0] eq '»'
+					&& $::lglobal{brbrackets}[1] eq '«' );
+			} elsif ( $::lglobal{brsel} eq '«|»' ) {
+				last unless (
+					$::lglobal{brbrackets}[0] eq '«'
+					&& $::lglobal{brbrackets}[1] eq '»' );
+			} else {
+			  last unless (
+				   (   ( $::lglobal{brbrackets}[0] =~ m{[\[\(\{<]} )
+					&& ( $::lglobal{brbrackets}[1] =~ m{[\]\)\}>]} ) )
 				|| (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/\*} )
 					&& ( $::lglobal{brbrackets}[1] =~ m{^\x7f*\*/} ) )
 				|| (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/\$} )
@@ -1952,6 +1956,7 @@ sub orphanedbrackets {
 				|| (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/#} )
 					&& ( $::lglobal{brbrackets}[1] =~ m{^\x7f*#/} ) )
 			  );
+			}
 			shift @{ $::lglobal{brbrackets} };
 			shift @{ $::lglobal{brbrackets} };
 			shift @{ $::lglobal{brindices} };
