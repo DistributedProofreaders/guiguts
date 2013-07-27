@@ -767,8 +767,13 @@ sub html_convert_body {
 			$step++;
 			$selection = $textwindow->get( "$step.0", "$step.end" );
 			$selection =~ s/^\s+//;
+			my $blkopencopy = $blkopen;
+			if ( $selection =~ m|^/[\*\$]| ) {
+				$selection = "\n$selection"; # catch /* immediately following /#
+				$blkopencopy =~ s/<p>//;
+			}
 			$textwindow->ntdelete( "$step.0", "$step.end" );
-			$textwindow->ntinsert( "$step.0", $blkopen . $selection );
+			$textwindow->ntinsert( "$step.0", $blkopencopy . $selection );
 
 			# close para
 			if ( ( $last5[1] ) && ( !$last5[2] ) ) {
