@@ -177,7 +177,7 @@ our $spellindexbkmrk     = q{};
 our $stayontop           = 0;
 our $suspectindex;
 our $toolside           = 'bottom';
-our $menulayout         = 'old';
+our $menulayout         = 'default';
 our $trackoperations    = 1;
 our $twowordsinhyphencheck = 0;
 our $unicodemenusplit   = 2; # 2 or 3
