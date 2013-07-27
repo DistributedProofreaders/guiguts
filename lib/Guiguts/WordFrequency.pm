@@ -108,7 +108,7 @@ sub wordfrequency {
 	} else {
 		$::lglobal{wfpop} = $top->Toplevel;
 		$::lglobal{wfpop}
-		  ->title('Word frequency - Ctrl+s to save, Ctrl+x to export');
+		  ->title('Word Frequency');
 		my $wordfreqseframe =
 		  $::lglobal{wfpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $wcopt3 = $wordfreqseframe->Checkbutton(
@@ -273,6 +273,14 @@ sub wordfrequency {
 			-padx   => 2,
 			-pady   => 2
 		  );
+		my $helpframe =
+		  $::lglobal{wfpop}->Frame->pack( -side => 'bottom' );
+		my $helplabel = $helpframe->Label(
+			-text => 'Double-click a line to find in text, Right-click to open S&R, '
+			       . 'type a letter to see it (beta), '
+			       . 'Ctrl+s to save list, Ctrl+x to export list.',
+			-wraplength => 550,
+		)->pack;
 		::initialize_popup_without_deletebinding('wfpop');
 		::drag( $::lglobal{wclistbox} );
 		$::lglobal{wfpop}->protocol(
@@ -1320,6 +1328,7 @@ sub sortanddisplaywords {
 	$::lglobal{wclistbox}->delete( '0', 'end' );
 	$::lglobal{wclistbox}->insert( 'end', 'Please wait, sorting list....' );
 	$::lglobal{wclistbox}->update;
+	my $lastletter = '0';
 	if ( $::alpha_sort eq 'f' ) {    # Sorted by word frequency
 		for ( ::natural_sort_freq($href) ) {
 			my $line = sprintf( "%-8d %s", $$href{$_}, $_ ); # Print to the file
@@ -1329,6 +1338,16 @@ sub sortanddisplaywords {
 		for ( ::natural_sort_alpha( keys %$href ) ) {
 			my $line = sprintf( "%-8d %s", $$href{$_}, $_ ); # Print to the file
 			$::lglobal{wclistbox}->insert( 'end', $line );
+			my $firstletter = lc(::deaccentsort(substr($_, 0, 1)));
+			if ( $firstletter ne $lastletter && $firstletter =~ /[a-z]/ ) {
+				$lastletter = $firstletter;
+				my $thispos = $::lglobal{wclistbox}->size;
+				$::lglobal{wfpop}->Tk::bind(
+					'<Key-'.$firstletter.'>' =>
+					eval { sub { \$::lglobal{wclistbox}->yview($thispos-2) } }
+				) unless length($firstletter) > 1;
+			}
+			#$::lglobal{regexpentry}->Tk::bind( '<Key-'.$firstletter.'>' => '' );
 		}
 	} elsif ( $::alpha_sort eq 'l' ) {    # Sorted by word length
 		for ( ::natural_sort_length( keys %$href ) ) {
