@@ -1638,14 +1638,19 @@ sub find_asterisks {
 sub find_transliterations {
 	my $textwindow = $::textwindow;
 	my $pattern    = "\\[[^FIS\\d]" ;
-	my $comment    = $textwindow->search( '-regexp', '--',$pattern, "insert" );
-
-	if ($comment) {
-		my $index = $textwindow->index("$comment +1c");
-		$textwindow->SetCursor($index);
-	} else {
-		::operationadd('Found no more transliterations (\\[[^FIS\\d])');
-	}
+	searchpopup();
+	searchoptset(qw/0 x x 1/);
+	$::lglobal{searchsingle}->invoke;
+	$::lglobal{searchentry}->delete( '1.0', 'end' );
+	$::lglobal{searchentry}->insert( 'end', $pattern );
+	$::lglobal{searchbutton}->invoke;
+	#my $comment    = $textwindow->search( '-regexp', '--',$pattern, "insert" );
+	#if ($comment) {
+	#	my $index = $textwindow->index("$comment +1c");
+	#	$textwindow->SetCursor($index);
+	#} else {
+	#	::operationadd('Found no more transliterations (\\[[^FIS\\d])');
+	#}
 }
 
 sub nextblock {
