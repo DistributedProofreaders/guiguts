@@ -1271,6 +1271,9 @@ sub menubuilddefault {
 			[	'command', 'Find Next Proofer ~Comment',
 				-command => \&::find_proofer_comment
 			],
+			[	'command', 'Find Pre~vious Proofer Comment',
+				-command => [ \&::find_proofer_comment, 'reverse' ]
+			],
 			[ 'separator', '' ],
 			[	'command', 'Find Next /*..*/ Block',
 				-command => [ \&::nextblock, 'default', 'forward' ]

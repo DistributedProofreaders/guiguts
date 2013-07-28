@@ -1607,16 +1607,19 @@ sub stealthscanno {
 }
 
 sub find_proofer_comment {
-
-	#	::searchtext('[**');
+	my $direction = shift;
+	$direction = 'forward' unless $direction;
 	my $textwindow = $::textwindow;
 	my $pattern    = '[**';
-	my $comment    = $textwindow->search( $pattern, "insert" );
+	my $comment    = $textwindow->search(
+		$direction eq 'reverse' ? '-backwards' : '-forwards',
+		'--', $pattern, "insert" );
 	if ($comment) {
 		my $index = $textwindow->index("$comment +1c");
 		$textwindow->SetCursor($index);
 	} else {
-		::operationadd('Found no more proofer comments');
+		::operationadd('Found no more proofer comments')
+			if $direction ne 'reverse';
 	}
 }
 
@@ -1624,7 +1627,6 @@ sub find_asterisks {
 	my $textwindow = $::textwindow;
 	my $pattern    = "(?<!/)\\*(?!/)" ;
 	my $comment    = $textwindow->search( '-regexp', '--',$pattern, "insert" );
-
 	if ($comment) {
 		my $index = $textwindow->index("$comment +1c");
 		$textwindow->SetCursor($index);
