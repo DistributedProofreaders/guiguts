@@ -814,6 +814,28 @@ sub gcviewops {
 				   -padx   => 2,
 				   -anchor => 'n'
 		  );
+		if ( $::booklang !~ /^en/ && @::gcviewlang ) {
+		  $pframe2->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				for ( 0 .. $#::gcviewlang ) {
+					if ( $::gcviewlang[$_] ) {
+						$gsoptions[$_]->select;
+					} else {
+						$gsoptions[$_]->deselect;
+					}
+				}
+				gutwindowpopulate($linesref);
+			},
+			-text  => "Load View: '$::booklang'",
+			-width => 12
+		  )->pack(
+				   -side   => 'left',
+				   -pady   => 10,
+				   -padx   => 2,
+				   -anchor => 'n'
+		  );
+		} else {
 		$pframe2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -830,6 +852,7 @@ sub gcviewops {
 				   -padx   => 2,
 				   -anchor => 'n'
 		  );
+		}
 		$pframe2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {

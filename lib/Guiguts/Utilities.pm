@@ -516,6 +516,7 @@ sub readlabels {
 	my $labelfile        = ::catfile( 'data', "labels_$::booklang.rc");
 	my $defaultlabelfile = ::catfile( 'data', "labels_$::booklang"."_default.rc" );
 	$defaultlabelfile = ::catfile( 'data', 'labels_en_default.rc' ) unless ( -e $defaultlabelfile );
+	@::gcviewlang = ();
 
 	# read the default values first, in case some are missing from the user file
 	::dofile($defaultlabelfile);

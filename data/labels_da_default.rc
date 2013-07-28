@@ -16,4 +16,6 @@
 %convertcharsdisplay = qw( Æ AE Ø OE Å AA Ä AE Ö OE æ ae ø oe å aa ä ae ö oe Þ TH þ th ß ss Ü UE ü ue );
 %convertcharssort = qw( Æ zzzzf Ä zzzzf Ø zzzzh Ö zzzzh Å zzzzj æ zzzzf ä zzzzf ø zzzzh ö zzzzh å zzzzj Þ th þ th ß ss );
 
+@gcviewlang = (0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,);
+
 1;
