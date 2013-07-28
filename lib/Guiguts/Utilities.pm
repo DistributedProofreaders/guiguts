@@ -662,6 +662,7 @@ sub initialize {
 		$::geometryhash{asciipop}      = '+358+187';
 		$::geometryhash{errorcheckpop} = '+484+72';
 		$::geometryhash{fixpop}        = '+34+22';
+		$::geometryhash{footviewpop}   = '+22+12';
 		$::geometryhash{gcpop}         = '+224+72';
 		$::geometryhash{hotpop}        = '+144+119';
 		$::geometryhash{hpopup}        = '300x400+584+211';
@@ -2160,6 +2161,12 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-font    => $::lglobal{toolfont},
 			-command => [ \&::endofline ],
 			-tip     => 'Remove trailing spaces in selection'
+		);
+		$::lglobal{toptool}->ToolButton(
+			-text    => 'FN',
+			-font    => $::lglobal{toolfont},
+			-command => [ \&::footnotepop ],
+			-tip     => 'Footnote Fixup'
 		);
 	}
 	::savesettings();
