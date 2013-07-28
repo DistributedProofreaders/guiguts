@@ -309,6 +309,7 @@ buildstatusbar();
 # Load the icon into the window bar. Needs to happen late in the process
 $top->Icon( -image => $icon );
 $lglobal{hasfocus} = $textwindow;
+$textwindow->focus;
 toolbar_toggle();
 $top->geometry($geometry) if $geometry;
 ( $lglobal{global_filename} ) = @ARGV;
@@ -320,6 +321,9 @@ if (    ( $lglobal{global_filename} )
 }
 if (@ARGV) {
 	$lglobal{global_filename} = shift @ARGV;
+	if ( $lglobal{global_filename} =~ /^0(\d)$/ ) {
+		$lglobal{global_filename} = $::recentfile[$1-1];
+	}
 	if ( -e $lglobal{global_filename} ) {
 		my $userfn = $lglobal{global_filename};
 		$top->update;
