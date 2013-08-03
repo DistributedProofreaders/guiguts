@@ -47,6 +47,8 @@ sub latinpopup {
 							  -value       => 'h',
 							  -text        => 'HTML Named Entity',
 		)->grid( -row => 1, -column => 2 );
+		$tframe->Label( -text => 'Click to insert',
+		  )->grid( -row => 2, -column => 1, -columnspan => 2 );
 		my $frame =
 		  $::lglobal{latinpop}->Frame( -background => $::bkgcolor )->pack;
 		my @latinchars = (
@@ -178,6 +180,7 @@ sub doutfbuttons {
 		}
 	}
 }
+
 ### Unicode
 sub utfpopup {
 	my ( $block, $start, $end ) = @_;
@@ -226,7 +229,7 @@ sub utfpopup {
 		-text             => 'Bigger',
 		-command          => sub {
 			$::utffontsize++;
-			utffontinit();
+			::utffontinit();
 			for (@buttons) {
 				$_->configure( -font => $::lglobal{utffont} );
 			}
@@ -500,8 +503,6 @@ sub utford {
 	} else {
 		$::lglobal{ordpop} = $top->Toplevel;
 		$::lglobal{ordpop}->title('Ordinal to Char');
-		::initialize_popup_with_deletebinding('ordpop');
-		$::lglobal{ordpop}->resizable( 'yes', 'no' );
 		my $frame =
 		  $::lglobal{ordpop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
@@ -527,7 +528,6 @@ sub utford {
 		$inentry = $frame->Entry(
 			-background   => $::bkgcolor,
 			-width        => 6,
-			-font         => '{sanserif} 14',
 			-textvariable => \$ord,
 			-validate     => 'key',
 			-vcmd         => sub {
@@ -557,15 +557,23 @@ sub utford {
 		$outentry = $frame->ROText(
 									-background => $::bkgcolor,
 									-relief     => 'sunken',
-									-font       => '{sanserif} 14',
+									-font       => "{sanserif} $::utffontsize",
 									-width      => 6,
 									-height     => 1,
 		)->grid( -row => 2, -column => 2 );
+		my $outcopy = $frame->Button(
+			-text    => 'Copy',
+			-width   => 8,
+			-command => sub {
+				$outentry->tagAdd('sel', '1.0', '1.0 lineend');
+				$outentry->clipboardCopy;
+			},
+		)->grid( -row => 2, -column => 3 );
 		my $frame1 =
 		  $::lglobal{ordpop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		my $button = $frame1->Button(
-			-text    => 'OK',
+			-text    => 'Insert',
 			-width   => 8,
 			-command => sub {
 				$::lglobal{hasfocus}
@@ -580,6 +588,15 @@ sub utford {
 				undef $::lglobal{ordpop};
 			},
 		)->grid( -row => 1, -column => 2 );
+		$::lglobal{ordpop}->resizable( 'yes', 'no' );
+		::initialize_popup_with_deletebinding('ordpop');
+		$inentry->Tk::bind(
+			'<Return>',
+			sub {
+				$::lglobal{hasfocus}
+				  ->insert( 'insert', $outentry->get( '1.0', 'end -1c' ) );
+			}
+		); 
 	}
 }
 
