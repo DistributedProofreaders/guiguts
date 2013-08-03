@@ -374,6 +374,8 @@ sub wordfrequency {
 					#$sword = ::escape_regexmetacharacters($sword);
 					$sword .= '\b'
 					  if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
+					$sword = '\b' . $sword
+					  if ( ( length $sword gt 1 ) && ( $sword =~ /^\w/ ) );
 					::searchoptset(qw/0 0 x 1/);    # Case sensitive
 				}
 
