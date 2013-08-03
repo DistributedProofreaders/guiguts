@@ -33,6 +33,7 @@ F8 -- open Stealth Scannos search
 <ctrl>+g -- continue search
 <ctrl>+<shift>+g -- continue search in opposite direction
 
+<ctrl>+i -- view current image (as See Img button)
 <ctrl>+p -- go to page
 <ctrl>+P -- go to page label
 <ctrl>+o -- flood fill (if popup is open, otherwise open it)

@@ -133,6 +133,7 @@ sub keybindings {
 	}
 
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
+	$textwindow->bind( 'TextUnicode', '<Control-i>' => \&::seecurrentimage );
 	$textwindow->bind( 'TextUnicode', '<Control-p>' => \&::gotopage );
 	$textwindow->bind( 'TextUnicode', '<Control-P>' => \&::gotolabel );
 	$textwindow->bind( 'TextUnicode', '<Control-o>' => sub {
