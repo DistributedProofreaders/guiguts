@@ -167,16 +167,14 @@ sub fontsize {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my $sizelabel;
-	if ( defined( $::lglobal{fspop} ) ) {
-		$::lglobal{fspop}->deiconify;
-		$::lglobal{fspop}->raise;
-		$::lglobal{fspop}->focus;
+	if ( defined( $::lglobal{fontpop} ) ) {
+		$::lglobal{fontpop}->deiconify;
+		$::lglobal{fontpop}->raise;
+		$::lglobal{fontpop}->focus;
 	} else {
-		$::lglobal{fspop} = $top->Toplevel;
-		$::lglobal{fspop}->title('Font');
-		$::lglobal{fspop}->resizable( 'no', 'no' );
-		::initialize_popup_with_deletebinding('fspop');
-		my $tframe = $::lglobal{fspop}->Frame->pack;
+		$::lglobal{fontpop} = $top->Toplevel;
+		$::lglobal{fontpop}->title('Font');
+		my $tframe = $::lglobal{fontpop}->Frame->pack;
 		my $fontlist = $tframe->BrowseEntry(
 			-label     => 'Font',
 			-browsecmd => sub {
@@ -186,7 +184,7 @@ sub fontsize {
 			-variable => \$::fontname
 		)->grid( -row => 1, -column => 1, -pady => 5 );
 		$fontlist->insert( 'end', sort( $textwindow->fontFamilies ) );
-		my $mframe = $::lglobal{fspop}->Frame->pack;
+		my $mframe = $::lglobal{fontpop}->Frame->pack;
 		my $smallerbutton = $mframe->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -227,13 +225,15 @@ sub fontsize {
 			-activebackground => $::activecolor,
 			-text             => 'Close',
 			-command          => sub {
-				$::lglobal{fspop}->destroy;
-				undef $::lglobal{fspop};
+				$::lglobal{fontpop}->destroy;
+				undef $::lglobal{fontpop};
 				::savesettings();
 			}
 		)->grid( -row => 3, -column => 2, -pady => 5 );
-		$::lglobal{fspop}->raise;
-		$::lglobal{fspop}->focus;
+		$::lglobal{fontpop}->resizable( 'no', 'no' );
+		::initialize_popup_with_deletebinding('fontpop');
+		$::lglobal{fontpop}->raise;
+		$::lglobal{fontpop}->focus;
 	}
 }
 
@@ -291,7 +291,7 @@ sub saveinterval {
             -command => sub {
                 $::autosaveinterval = 5 unless $::autosaveinterval;
                 $::lglobal{intervalpop}->destroy;
-                undef $::lglobal{scrlspdpop};
+                undef $::lglobal{intervalpop};
             },
         )->pack;
         $::lglobal{intervalpop}->protocol(
@@ -330,7 +330,7 @@ sub set_autosave {
 	$::lglobal{savetool}
 	  ->configure( -background => 'green', -activebackground => 'green' )
 	  unless $::notoolbar;
-	#$::lglobal{autosaveinterval} = time;
+	#$::autosaveinterval = time;
 }
 
 sub setcolor {    # Color picking routine

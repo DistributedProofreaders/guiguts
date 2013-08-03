@@ -67,15 +67,15 @@ EOM
 
 sub hotkeyshelp {
 	my $top = $::top;
-	if ( defined( $::lglobal{hotpop} ) ) {
-		$::lglobal{hotpop}->deiconify;
-		$::lglobal{hotpop}->raise;
-		$::lglobal{hotpop}->focus;
+	if ( defined( $::lglobal{hotkeyspop} ) ) {
+		$::lglobal{hotkeyspop}->deiconify;
+		$::lglobal{hotkeyspop}->raise;
+		$::lglobal{hotkeyspop}->focus;
 	} else {
-		$::lglobal{hotpop} = $top->Toplevel;
-		$::lglobal{hotpop}->title('Keyboard Shortcuts');
+		$::lglobal{hotkeyspop} = $top->Toplevel;
+		$::lglobal{hotkeyspop}->title('Keyboard Shortcuts');
 		my $frame =
-		  $::lglobal{hotpop}->Frame->pack(
+		  $::lglobal{hotkeyspop}->Frame->pack(
 										   -anchor => 'nw',
 										   -expand => 'yes',
 										   -fill   => 'both'
@@ -94,11 +94,11 @@ sub hotkeyshelp {
 			-activebackground => $::activecolor,
 			-text             => 'Close',
 			-command          => sub {
-				$::lglobal{hotpop}->destroy;
-				undef $::lglobal{hotpop};
+				$::lglobal{hotkeyspop}->destroy;
+				undef $::lglobal{hotkeyspop};
 			}
 		)->pack;
-		::initialize_popup_with_deletebinding('hotpop');
+		::initialize_popup_with_deletebinding('hotkeyspop');
 		::drag($rotextbox);
 		$rotextbox->focus;
 		if ( -e 'hotkeys.txt' ) {

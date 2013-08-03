@@ -6,7 +6,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&errorcheckpop_up &gcheckpop_up &gutcheck &gutopts &jeebiespop_up);
+	  qw(&errorcheckpop_up &gcheckpop_up &gutcheck &jeebiespop_up);
 }
 
 sub errorcheckpop_up {
@@ -672,7 +672,7 @@ sub gutcheckview {
 	$::geometry2 = $::lglobal{gcpop}->geometry;
 }
 
-sub gutwindowpopulate {
+sub gcwindowpopulate {
 	my $linesref = shift;
 	return unless defined $::lglobal{gcpop};
 	my ( $line, $flag, $count, $start );
@@ -699,7 +699,7 @@ sub gutwindowpopulate {
 	#    $::lglobal{gclistbox}->yview( 'scroll', -1, 'units' );
 }
 
-sub gcviewops {
+sub gcviewopts {
 	my $linesref = shift;
 	my $top      = $::top;
 	my @gsoptions;
@@ -759,16 +759,16 @@ sub gcviewops {
 								 'Wrongspaced singlequotes',
 	);
 	my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
-	if ( defined( $::lglobal{viewpop} ) ) {
-		$::lglobal{viewpop}->deiconify;
-		$::lglobal{viewpop}->raise;
-		$::lglobal{viewpop}->focus;
+	if ( defined( $::lglobal{gcviewoptspop} ) ) {
+		$::lglobal{gcviewoptspop}->deiconify;
+		$::lglobal{gcviewoptspop}->raise;
+		$::lglobal{gcviewoptspop}->focus;
 	} else {
-		$::lglobal{viewpop} = $top->Toplevel;
-		$::lglobal{viewpop}->title('Gutcheck View Options');
-		my $pframe = $::lglobal{viewpop}->Frame->pack;
+		$::lglobal{gcviewoptspop} = $top->Toplevel;
+		$::lglobal{gcviewoptspop}->title('Gutcheck View Options');
+		my $pframe = $::lglobal{gcviewoptspop}->Frame->pack;
 		$pframe->Label( -text => 'Select option to hide that error.', )->pack;
-		my $pframe1 = $::lglobal{viewpop}->Frame->pack;
+		my $pframe1 = $::lglobal{gcviewoptspop}->Frame->pack;
 		my ( $gcrow, $gccol );
 		for ( 0 .. $#{ $::lglobal{gcarray} } ) {
 			$gccol = int( $_ / $gcrows );
@@ -776,19 +776,19 @@ sub gcviewops {
 			$gsoptions[$_] =
 			  $pframe1->Checkbutton(
 							   -variable => \$::gsopt[$_],
-							   -command => sub { gutwindowpopulate($linesref) },
+							   -command => sub { gcwindowpopulate($linesref) },
 							   -selectcolor => $::lglobal{checkcolor},
 							   -text        => $::lglobal{gcarray}->[$_],
 			  )->grid( -row => $gcrow, -column => $gccol, -sticky => 'nw' );
 		}
-		my $pframe2 = $::lglobal{viewpop}->Frame->pack;
+		my $pframe2 = $::lglobal{gcviewoptspop}->Frame->pack;
 		$pframe2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
 				for ( 0 .. $#gsoptions ) {
 					$gsoptions[$_]->select;
 				}
-				gutwindowpopulate($linesref);
+				gcwindowpopulate($linesref);
 			},
 			-text  => 'Hide All',
 			-width => 12
@@ -804,7 +804,7 @@ sub gcviewops {
 				for ( 0 .. $#gsoptions ) {
 					$gsoptions[$_]->deselect;
 				}
-				gutwindowpopulate($linesref);
+				gcwindowpopulate($linesref);
 			},
 			-text  => 'See All',
 			-width => 12
@@ -825,7 +825,7 @@ sub gcviewops {
 						$gsoptions[$_]->deselect;
 					}
 				}
-				gutwindowpopulate($linesref);
+				gcwindowpopulate($linesref);
 			},
 			-text  => "Load View: '$::booklang'",
 			-width => 12
@@ -842,7 +842,7 @@ sub gcviewops {
 				for ( 0 .. $#gsoptions ) {
 					$gsoptions[$_]->toggle;
 				}
-				gutwindowpopulate($linesref);
+				gcwindowpopulate($linesref);
 			},
 			-text  => 'Toggle View',
 			-width => 12
@@ -863,7 +863,7 @@ sub gcviewops {
 						$gsoptions[$_]->deselect;
 					}
 				}
-				gutwindowpopulate($linesref);
+				gcwindowpopulate($linesref);
 			},
 			-text  => 'Load My View',
 			-width => 12
@@ -889,16 +889,16 @@ sub gcviewops {
 				   -padx   => 2,
 				   -anchor => 'n'
 		  );
-		$::lglobal{viewpop}->protocol(
+		$::lglobal{gcviewoptspop}->resizable( 'no', 'no' );
+		::initialize_popup_without_deletebinding('gcviewoptspop');
+		$::lglobal{gcviewoptspop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				$::lglobal{viewpop}->destroy;
+				$::lglobal{gcviewoptspop}->destroy;
 				@{ $::lglobal{gcarray} } = ();
-				undef $::lglobal{viewpop};
+				undef $::lglobal{gcviewoptspop};
 				unlink 'gutreslts.tmp';    #cat('gutreslts.tmp')
 			}
 		);
-		$::lglobal{viewpop}->resizable( 'no', 'no' );
-		$::lglobal{viewpop}->Icon( -image => $::icon );
 	}
 }
 
@@ -932,7 +932,7 @@ sub gcheckpop_up {
 		my $opsbutton2 =
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
-							  -command          => sub { ::gutopts() },
+							  -command          => sub { gcrunopts() },
 							  -text             => 'GC Run Options',
 							  -width            => 16
 		  )->pack(
@@ -944,7 +944,7 @@ sub gcheckpop_up {
 		my $opsbutton3 =
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
-							  -command          => sub { gcviewops( \@gclines ) },
+							  -command          => sub { gcviewopts( \@gclines ) },
 							  -text             => 'GC View Options',
 							  -width            => 16
 		  )->pack(
@@ -973,7 +973,7 @@ sub gcheckpop_up {
 		::drag( $::lglobal{gclistbox} );
 		$::lglobal{gcpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				$::lglobal{viewpop}->iconify if defined $::lglobal{viewpop};
+				$::lglobal{gcviewoptspop}->iconify if defined $::lglobal{gcviewoptspop};
 				$::lglobal{gcpop}->destroy;
 				undef $::lglobal{gcpop};
 				$textwindow->markUnset($_) for values %::gc;
@@ -1207,7 +1207,7 @@ sub gcheckpop_up {
 	}
 	close $results;
 	unlink 'gutrslts.tmp';
-	gutwindowpopulate( \@gclines );
+	gcwindowpopulate( \@gclines );
 }
 
 sub jeebiesrun {
@@ -1379,76 +1379,76 @@ sub gutcheck {
 	gcheckpop_up();
 }
 
-sub gutopts {
+sub gcrunopts {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	$::lglobal{gcdialog} =
+	$::lglobal{gcrunoptspop} =
 	  $top->DialogBox( -title => 'Gutcheck Run Options', -buttons => ['Close'] );
-	::initialize_popup_without_deletebinding('gcdialog');
 	my $gcopt6 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 							   'Checkbutton',
 							   -variable    => \$::gcopt[6],
 							   -selectcolor => $::lglobal{checkcolor},
 							   -text => '-v Enable verbose mode (Recommended).',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt0 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[0],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text => '-t Disable check for common typos.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt1 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[1],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text        => '-x Disable paranoid mode.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt2 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 							 'Checkbutton',
 							 -variable    => \$::gcopt[2],
 							 -selectcolor => $::lglobal{checkcolor},
 							 -text => '-p Report ALL unbalanced double quotes.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt3 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 							 'Checkbutton',
 							 -variable    => \$::gcopt[3],
 							 -selectcolor => $::lglobal{checkcolor},
 							 -text => '-s Report ALL unbalanced single quotes.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt4 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[4],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text        => '-m Interpret HTML markup.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt5 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[5],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text => '-l Do not report non DOS newlines.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt7 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[7],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text => '-u Flag words from the .typ file.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
 	my $gcopt8 =
-	  $::lglobal{gcdialog}->add(
+	  $::lglobal{gcrunoptspop}->add(
 								 'Checkbutton',
 								 -variable    => \$::gcopt[8],
 								 -selectcolor => $::lglobal{checkcolor},
 								 -text => '-d Ignore DP style page separators.',
 	  )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-	$::lglobal{gcdialog}->Show;
+	::initialize_popup_without_deletebinding('gcrunoptspop');
+	$::lglobal{gcrunoptspop}->Show;
 	::savesettings();
 }
 

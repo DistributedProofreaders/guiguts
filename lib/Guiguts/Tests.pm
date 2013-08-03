@@ -171,7 +171,7 @@ sub runtests {
 	#harmonicspop();
 	#pnumadjust();
 	#searchpopup();
-	#asciipopup();
+	#asciibox_popup();
 	#alignpopup();
 	#wordfrequency();
 	#jeebiespop_up();

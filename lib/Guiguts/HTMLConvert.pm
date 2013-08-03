@@ -3870,19 +3870,18 @@ sub fracconv {
 sub pageadjust {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	if ( defined $::lglobal{padjpop} ) {
-		$::lglobal{padjpop}->deiconify;
-		$::lglobal{padjpop}->raise;
+	if ( defined $::lglobal{pagelabelpop} ) {
+		$::lglobal{pagelabelpop}->deiconify;
+		$::lglobal{pagelabelpop}->raise;
 	} else {
 		my @marks = $textwindow->markNames;
 		my @pages = sort grep ( /^Pg\S+$/, @marks );
 		my %pagetrack;
-		$::lglobal{padjpop} = $top->Toplevel;
-		$::lglobal{padjpop}->title('Configure Page Labels');
-		$::geometryhash{padjpop} = ('375x500') unless $::geometryhash{padjpop};
-		::initialize_popup_with_deletebinding('padjpop');
+		$::lglobal{pagelabelpop} = $top->Toplevel;
+		$::lglobal{pagelabelpop}->title('Configure Page Labels');
+		::initialize_popup_with_deletebinding('pagelabelpop');
 		my $frame0 =
-		  $::lglobal{padjpop}
+		  $::lglobal{pagelabelpop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -pady => 4 );
 
 		unless (@pages) {
@@ -3940,12 +3939,11 @@ sub pageadjust {
 				}
 				$recalc->invoke;
 				::setedited(1);
-				$::lglobal{padjpopgoem} = $::lglobal{padjpop}->geometry;
-				$::lglobal{padjpop}->destroy;
-				undef $::lglobal{padjpop};
+				$::lglobal{pagelabelpop}->destroy;
+				undef $::lglobal{pagelabelpop};
 			}
 		)->grid( -row => 1, -column => 2, -padx => 5 );
-		my $frame1 = $::lglobal{padjpop}->Scrolled(
+		my $frame1 = $::lglobal{pagelabelpop}->Scrolled(
 			'Pane',
 			-scrollbars => 'se',
 			-background => $::bkgcolor,
@@ -3963,7 +3961,7 @@ sub pageadjust {
 		for my $page (@pages) {
 			my ($num) = $page =~ /Pg(\S+)/;
 			$updatetemp++;
-			$::lglobal{padjpop}->update if ( $updatetemp == 20 );
+			$::lglobal{pagelabelpop}->update if ( $updatetemp == 20 );
 			$pagetrack{$num}[0] = $frame1->Button(
 				-text    => "Image# $num",
 				-width   => 12,

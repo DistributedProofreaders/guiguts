@@ -27,27 +27,27 @@ sub pageseparatorhelppopup {
     View page image - Hotkey v
     View Page Separator help - Hotkey ?
 EOM
-	if ( defined( $::lglobal{phelppop} ) ) {
-		$::lglobal{phelppop}->deiconify;
-		$::lglobal{phelppop}->raise;
-		$::lglobal{phelppop}->focus;
+	if ( defined( $::lglobal{pagesephelppop} ) ) {
+		$::lglobal{pagesephelppop}->deiconify;
+		$::lglobal{pagesephelppop}->raise;
+		$::lglobal{pagesephelppop}->focus;
 	} else {
-		$::lglobal{phelppop} = $top->Toplevel;
-		$::lglobal{phelppop}->title('Functions and Hotkeys for Page Separator Fixup');
-		::initialize_popup_with_deletebinding('phelppop');
-		$::lglobal{phelppop}->Label(
+		$::lglobal{pagesephelppop} = $top->Toplevel;
+		$::lglobal{pagesephelppop}->title('Functions and Hotkeys for Page Separator Fixup');
+		::initialize_popup_with_deletebinding('pagesephelppop');
+		$::lglobal{pagesephelppop}->Label(
 			-justify => "left",
 			-text    => $help_text
 		)->pack;
-		my $button_ok = $::lglobal{phelppop}->Button(
+		my $button_ok = $::lglobal{pagesephelppop}->Button(
 			-activebackground => $::activecolor,
 			-text             => 'Close',
 			-command          => sub {
-				$::lglobal{phelppop}->destroy;
-				undef $::lglobal{phelppop};
+				$::lglobal{pagesephelppop}->destroy;
+				undef $::lglobal{pagesephelppop};
 			}
 		)->pack;
-		$::lglobal{phelppop}->resizable( 'no', 'no' );
+		$::lglobal{pagesephelppop}->resizable( 'no', 'no' );
 	}
 }
 
@@ -489,15 +489,15 @@ sub separatorpopup {
 	my $top        = $::top;
 	::operationadd('Begin Page Separators Fixup');
 	$::lglobal{pagesepauto} = 1 if $::lglobal{pagesepauto} >= 2;
-	if ( defined( $::lglobal{pagepop} ) ) {
-		$::lglobal{pagepop}->deiconify;
-		$::lglobal{pagepop}->raise;
-		$::lglobal{pagepop}->focus;
+	if ( defined( $::lglobal{pageseppop} ) ) {
+		$::lglobal{pageseppop}->deiconify;
+		$::lglobal{pageseppop}->raise;
+		$::lglobal{pageseppop}->focus;
 	} else {
-		$::lglobal{pagepop} = $top->Toplevel;
-		$::lglobal{pagepop}->title('Page Separator Fixup');
+		$::lglobal{pageseppop} = $top->Toplevel;
+		$::lglobal{pageseppop}->title('Page Separator Fixup');
 		my $sf1 =
-		  $::lglobal{pagepop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $joinbutton = $sf1->Button(
 			-activebackground => $::activecolor,
 			-command          => sub { processpageseparator('j') },
@@ -513,7 +513,7 @@ sub separatorpopup {
 			-width            => 19
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf2 =
-		  $::lglobal{pagepop}
+		  $::lglobal{pageseppop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $blankbutton = $sf2->Button(
 			-activebackground => $::activecolor,
@@ -537,7 +537,7 @@ sub separatorpopup {
 			-width            => 12
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf3 =
-		  $::lglobal{pagepop}
+		  $::lglobal{pageseppop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		$sf3->Radiobutton(
 			-variable    => \$::lglobal{pagesepauto},
@@ -564,7 +564,7 @@ sub separatorpopup {
 			-text        => '99% Auto',
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf4 =
-		  $::lglobal{pagepop}
+		  $::lglobal{pageseppop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $refreshbutton = $sf4->Button(
 			-activebackground => $::activecolor,
@@ -587,7 +587,7 @@ sub separatorpopup {
 			-width            => 1
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
 		my $sf5 =
-		  $::lglobal{pagepop}
+		  $::lglobal{pageseppop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 		my $undobutton = $sf5->Button(
 			-activebackground => $::activecolor,
@@ -603,32 +603,32 @@ sub separatorpopup {
 			-underline        => 1,
 			-width            => 8
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-		::initialize_popup_without_deletebinding('pagepop');
-		$::lglobal{pagepop}->protocol(
+		::initialize_popup_without_deletebinding('pageseppop');
+		$::lglobal{pageseppop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				$::lglobal{pagepop}->destroy;
-				undef $::lglobal{pagepop};
+				$::lglobal{pageseppop}->destroy;
+				undef $::lglobal{pageseppop};
 				$textwindow->tagRemove( 'highlight', '1.0', 'end' );
 			}
 		);
-		$::lglobal{pagepop}->Tk::bind( '<j>' => sub { processpageseparator('j') } );
-		$::lglobal{pagepop}->Tk::bind( '<k>' => sub { processpageseparator('k') } );
-		$::lglobal{pagepop}->Tk::bind( '<l>' => sub { processpageseparator('l') } );
-		$::lglobal{pagepop}->Tk::bind( '<h>' => sub { processpageseparator('h') } );
-		$::lglobal{pagepop}->Tk::bind( '<d>' => sub { processpageseparator('d') } );
-		$::lglobal{pagepop}->Tk::bind( '<t>' => sub { processpageseparator('t') } );
-		$::lglobal{pagepop}
+		$::lglobal{pageseppop}->Tk::bind( '<j>' => sub { processpageseparator('j') } );
+		$::lglobal{pageseppop}->Tk::bind( '<k>' => sub { processpageseparator('k') } );
+		$::lglobal{pageseppop}->Tk::bind( '<l>' => sub { processpageseparator('l') } );
+		$::lglobal{pageseppop}->Tk::bind( '<h>' => sub { processpageseparator('h') } );
+		$::lglobal{pageseppop}->Tk::bind( '<d>' => sub { processpageseparator('d') } );
+		$::lglobal{pageseppop}->Tk::bind( '<t>' => sub { processpageseparator('t') } );
+		$::lglobal{pageseppop}
 		  ->Tk::bind( '<Key-question>' => sub { pageseparatorhelppopup('?') } );
-		$::lglobal{pagepop}->Tk::bind( '<r>' => \&refreshpageseparator );
-		$::lglobal{pagepop}->Tk::bind(
+		$::lglobal{pageseppop}->Tk::bind( '<r>' => \&refreshpageseparator );
+		$::lglobal{pageseppop}->Tk::bind(
 			'<v>' => sub {
 				::openpng( $textwindow, ::get_page_number() );
-				$::lglobal{pagepop}->raise;
+				$::lglobal{pageseppop}->raise;
 			}
 		);
-		$::lglobal{pagepop}->Tk::bind( '<u>' => \&undojoin );
-		$::lglobal{pagepop}->Tk::bind( '<e>' => \&redojoin );
-		$::lglobal{pagepop}->Tk::bind(
+		$::lglobal{pageseppop}->Tk::bind( '<u>' => \&undojoin );
+		$::lglobal{pageseppop}->Tk::bind( '<e>' => \&redojoin );
+		$::lglobal{pageseppop}->Tk::bind(
 			'<a>' => sub {
 				$::lglobal{pagesepauto}++;
 				$::lglobal{pagesepauto} = 0 if $::lglobal{pagesepauto} == 4;

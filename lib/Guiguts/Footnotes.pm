@@ -332,7 +332,7 @@ sub footnotepop {
 		::initialize_popup_without_deletebinding('footpop');
 		$::lglobal{footpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				::killpopup('footviewpop');
+				::killpopup('footcheckpop');
 				$::lglobal{footpop}->destroy;
 				undef $::lglobal{footpop};
 				$textwindow->tagRemove( 'footnote', '1.0', 'end' );
@@ -525,9 +525,9 @@ sub fnjoin {
 	  if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'r';
 	$::lglobal{fnindex}--;
 	# reload the Check Footnotes window to update the list
-	if ( defined ( $::lglobal{footviewpop} ) ) {
-		$::lglobal{footviewpop}->destroy;
-		undef $::lglobal{footviewpop};
+	if ( defined ( $::lglobal{footcheckpop} ) ) {
+		$::lglobal{footcheckpop}->destroy;
+		undef $::lglobal{footcheckpop};
 		fnview($::lglobal{fnindex});
 	}
 	footnoteshow();
@@ -544,16 +544,16 @@ sub fnview {
 	my ( %fnotes, %anchors, $ftext );
 	my $allcheckspassed =1; # flag if all checks passed
 	::hidepagenums();
-	if ( defined( $::lglobal{footviewpop} ) ) {
-		$::lglobal{footviewpop}->deiconify;
-		$::lglobal{footviewpop}->raise;
-		$::lglobal{footviewpop}->focus;
+	if ( defined( $::lglobal{footcheckpop} ) ) {
+		$::lglobal{footcheckpop}->deiconify;
+		$::lglobal{footcheckpop}->raise;
+		$::lglobal{footcheckpop}->focus;
 	} else {
-		$::lglobal{footviewpop} = $top->Toplevel;
-		::initialize_popup_with_deletebinding('footviewpop');
-		$::lglobal{footviewpop}->title('Footnote Check');
+		$::lglobal{footcheckpop} = $top->Toplevel;
+		::initialize_popup_with_deletebinding('footcheckpop');
+		$::lglobal{footcheckpop}->title('Footnote Check');
 		my $frame1 =
-		  $::lglobal{footviewpop}->Frame
+		  $::lglobal{footcheckpop}->Frame
 		  ->pack( -side => 'top', -anchor => 'n' );
 		$frame1->Label(
 			  -text =>
@@ -588,7 +588,7 @@ sub fnview {
 		my $longlbl   = $frame1->Label( -background => 'tan'    )
 			->grid( -row => 2, -column => 4, -sticky => 'ew' );
 		my $frame2 =
-		  $::lglobal{footviewpop}->Frame->pack(
+		  $::lglobal{footcheckpop}->Frame->pack(
 			-side   => 'top',
 			-anchor => 'n',
 			-fill   => 'both',
@@ -612,9 +612,9 @@ sub fnview {
 		$ftext->tagConfigure( 'noanch', background => 'pink' );
 		$ftext->tagConfigure( 'long',   background => 'tan' );
 
-		$::lglobal{footviewpop}
+		$::lglobal{footcheckpop}
 		  ->eventAdd( '<<find>>' => '<Double-Button-1>', '<Return>' );
-		$::lglobal{footviewpop}->bind(
+		$::lglobal{footcheckpop}->bind(
 			'<<find>>',
 			sub {
 				my ( $row, $col ) = split( /\./, $ftext->index('insert') );
@@ -709,8 +709,8 @@ sub footnotefixup {
 	$::lglobal{fncount} = '1';
 	$::lglobal{fnalpha} = '1';
 	$::lglobal{fnroman} = '1';
-	if ( defined( $::lglobal{footviewpop} ) ) {
-		::killpopup('footviewpop');
+	if ( defined( $::lglobal{footcheckpop} ) ) {
+		::killpopup('footcheckpop');
 	}
 	
 	$::lglobal{fnindexbrowse}->delete( '0', 'end' ) if $::lglobal{footpop};

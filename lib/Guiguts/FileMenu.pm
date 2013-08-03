@@ -576,17 +576,16 @@ sub file_guess_page_marks {
 	my $top        = $::top;
 	my $textwindow = $::textwindow;
 	my ( $totpages, $line25, $linex );
-	if ( $::lglobal{pgpop} ) {
-		$::lglobal{pgpop}->deiconify;
+	if ( $::lglobal{guesspgmarkerpop} ) {
+		$::lglobal{guesspgmarkerpop}->deiconify;
 	} else {
-		$::lglobal{pgpop} = $top->Toplevel;
-		$::lglobal{pgpop}->title('Guess Page Numbers');
-		::initialize_popup_with_deletebinding('pgpop');
-		my $f0 = $::lglobal{pgpop}->Frame->pack;
+		$::lglobal{guesspgmarkerpop} = $top->Toplevel;
+		$::lglobal{guesspgmarkerpop}->title('Guess Page Markers');
+		my $f0 = $::lglobal{guesspgmarkerpop}->Frame->pack;
 		$f0->Label( -text =>
 'This function should only be used if you have the page images but no page markers in the text.',
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-		my $f1 = $::lglobal{pgpop}->Frame->pack;
+		my $f1 = $::lglobal{guesspgmarkerpop}->Frame->pack;
 		$f1->Label( -text => 'How many pages are there total?', )
 		  ->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
 		my $tpages = $f1->Entry(
@@ -599,11 +598,11 @@ sub file_guess_page_marks {
 			-background => $::bkgcolor,
 			-width      => 8,
 		)->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
-		my $f3 = $::lglobal{pgpop}->Frame->pack;
+		my $f3 = $::lglobal{guesspgmarkerpop}->Frame->pack;
 		$f3->Label(
 			-text => 'Select a page near the back, before the index starts.', )
 		  ->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
-		my $f4 = $::lglobal{pgpop}->Frame->pack;
+		my $f4 = $::lglobal{guesspgmarkerpop}->Frame->pack;
 		$f4->Label( -text => 'Page #?.', )
 		  ->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
 		$f4->Label( -text => 'Line #?.', )
@@ -616,7 +615,7 @@ sub file_guess_page_marks {
 			-background => $::bkgcolor,
 			-width      => 8,
 		)->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
-		my $f2         = $::lglobal{pgpop}->Frame->pack;
+		my $f2         = $::lglobal{guesspgmarkerpop}->Frame->pack;
 		my $calcbutton = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -692,12 +691,13 @@ sub file_guess_page_marks {
 					$textwindow->markSet( "Pg$number", "$lnum.0" );
 					$textwindow->markGravity( "Pg$number", 'left' );
 				}
-				$::lglobal{pgpop}->destroy;
-				undef $::lglobal{pgpop};
+				$::lglobal{guesspgmarkerpop}->destroy;
+				undef $::lglobal{guesspgmarkerpop};
 			},
 			-text  => 'Guess Page #s',
 			-width => 18
 		)->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+		::initialize_popup_with_deletebinding('guesspgmarkerpop');
 	}
 	return;
 }
@@ -862,9 +862,9 @@ sub openfile {    # and open it
 		$::lglobal{footpop}->destroy;
 		undef $::lglobal{footpop};
 	}
-	if ( $::lglobal{footviewpop} ) {
-		$::lglobal{footviewpop}->destroy;
-		undef $::lglobal{footviewpop};
+	if ( $::lglobal{footcheckpop} ) {
+		$::lglobal{footcheckpop}->destroy;
+		undef $::lglobal{footcheckpop};
 	}
 	my ( $fname, $extension, $filevar );
 	$textwindow->Load($name);
@@ -999,7 +999,7 @@ EOM
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
 			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch
 			font_char fontname fontsize fontweight geometry
-			geometry2 geometry3 gesperrt_char globalaspellmode highlightcolor history_size hotkeybookmarks
+			geometry2 gesperrt_char globalaspellmode highlightcolor history_size hotkeybookmarks
 			htmldiventry htmlspanentry ignoreversionnumber
 			intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin	
 			multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar oldspellchecklayout poetrylmargin projectfileslocation

@@ -130,8 +130,8 @@ sub menu_help {
 		[ 'separator', '' ],
 		[ Button => '~Greek Transliteration', -command => \&::greekpopup ],
 		[ Button => '~Latin-1 Chart',         -command => \&::latinpopup ],
-		[ Button => 'UTF Character ~Entry',   -command => \&::utford ],
-		[ Button => 'UTF Character ~Search',  -command => \&::uchar ],
+		[ Button => 'UTF Character ~Entry',   -command => \&::utfcharentrypopup ],
+		[ Button => 'UTF Character ~Search',  -command => \&::utfcharsearchpopup ],
 	];
 	my $help_bottom = [
 		[ 'separator', '' ],
@@ -866,7 +866,7 @@ sub menubuildold {
 				-command => sub { $::operationinterrupt = 1 }
 			],
 			[ 'separator', '' ],
-			[ Button => 'ASCII Boxes...', -command => \&::asciipopup ],
+			[ Button => 'ASCII Boxes...', -command => \&::asciibox_popup ],
 			[
 				Button   => '~Align text on string...',
 				-command => \&::alignpopup
@@ -1366,10 +1366,10 @@ sub menubuilddefault {
 						-command => \&::latinpopup
 					],
 					[	Button => 'UTF Character ~Entry',
-						-command => \&::utford
+						-command => \&::utfcharentrypopup
 					],
 					[	Button => 'UTF Character ~Search',
-						-command => \&::uchar
+						-command => \&::utfcharsearchpopup
 					],
 					[ 'separator', '' ],
 					[	Button => '~Greek Transliteration',
@@ -1598,7 +1598,7 @@ sub menubuilddefault {
 			],
 			[ 'separator', '' ],
 			[	Button   => 'Dra~w ASCII Boxes...',
-				-command => \&::asciipopup
+				-command => \&::asciibox_popup
 			],
 			[	Button   => 'ASCII Table E~ffects...',
 				-command => \&::tablefx

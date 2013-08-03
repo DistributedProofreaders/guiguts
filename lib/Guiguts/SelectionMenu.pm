@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
 	@EXPORT = qw(&case &surround &surroundit &flood &floodfill &indent &asciibox &aligntext
-	  &selectrewrap &wrapper &alignpopup &asciipopup &blockrewrap &rcaligntext &tocalignselection);
+	  &selectrewrap &wrapper &alignpopup &asciibox_popup &blockrewrap &rcaligntext &tocalignselection);
 }
 
 sub wrapper {
@@ -245,6 +245,7 @@ sub selectrewrap {
 				next;
 			}
 			last
+
 			  if ( ( $thisblockend eq $lastend )
 				|| ( $textwindow->compare( $thisblockend, '<', $lastend ) ) )
 			  ;                    #quit if the search isn't advancing
@@ -957,23 +958,23 @@ sub blockrewrap {
 	$::blockwrap = 0;
 }
 
-sub asciipopup {
+sub asciibox_popup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	::hidepagenums();
-	if ( defined( $::lglobal{asciipop} ) ) {
-		$::lglobal{asciipop}->deiconify;
-		$::lglobal{asciipop}->raise;
-		$::lglobal{asciipop}->focus;
+	if ( defined( $::lglobal{asciiboxpop} ) ) {
+		$::lglobal{asciiboxpop}->deiconify;
+		$::lglobal{asciiboxpop}->raise;
+		$::lglobal{asciiboxpop}->focus;
 	} else {
-		$::lglobal{asciipop} = $top->Toplevel;
-		$::lglobal{asciipop}->title('ASCII Boxes');
+		$::lglobal{asciiboxpop} = $top->Toplevel;
+		$::lglobal{asciiboxpop}->title('ASCII Boxes');
 		my $f =
-		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text => 'ASCII Drawing Characters', )
 		  ->pack( -side => 'top', -pady => 2, -padx => 2, -anchor => 'n' );
 		my $f5 =
-		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my ( $row, $col );
 		for ( 0 .. 8 ) {
 			next if $_ == 4;
@@ -993,7 +994,7 @@ sub asciipopup {
 			  );
 		}
 		my $f0 =
-		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $wlabel = $f0->Label(
 			-width => 16,
 			-text  => 'ASCII Box Width',
@@ -1005,7 +1006,7 @@ sub asciipopup {
 			-textvariable => \$::lglobal{asciiwidth},
 		)->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
 		my $f1 =
-		  $::lglobal{asciipop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $leftjust = $f1->Radiobutton(
 			-text        => 'left justified',
 			-selectcolor => $::lglobal{checkcolor},
@@ -1041,12 +1042,10 @@ sub asciipopup {
 			-text  => 'Draw Box',
 			-width => 16
 		)->grid( -row => 4, -column => 2, -padx => 1, -pady => 2 );
-
-		::initialize_popup_with_deletebinding('asciipop');
-		#$::lglobal{asciipop}->resizable( 'no', 'no' );
-		#$::lglobal{asciipop}->deiconify;
-		$::lglobal{asciipop}->raise;
-		$::lglobal{asciipop}->focus;
+		$::lglobal{asciiboxpop}->resizable( 'no', 'no' );
+		::initialize_popup_with_deletebinding('asciiboxpop');
+		$::lglobal{asciiboxpop}->raise;
+		$::lglobal{asciiboxpop}->focus;
 	}
 }
 

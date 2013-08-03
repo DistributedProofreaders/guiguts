@@ -657,33 +657,44 @@ sub initialize {
 		$::geometry2 = '462x583+684+72';
 	}
 	unless ( $::geometryhash{wfpop} ) {
+		# positionhash stores user's window position
+		# geometryhash stores user's window position and size
 		$::geometryhash{aboutpop}      = '+312+136';
 		$::geometryhash{alignpop}      = '+338+83';
-		$::geometryhash{asciipop}      = '+358+187';
-		$::geometryhash{errorcheckpop} = '+484+72';
-		$::geometryhash{fixpop}        = '+34+22';
-		$::geometryhash{footviewpop}   = '+22+12';
-		$::geometryhash{gcpop}         = '+224+72';
-		$::geometryhash{hotpop}        = '+144+119';
-		$::geometryhash{hpopup}        = '300x400+584+211';
-		$::geometryhash{jeepop}        = '+284+72';
-		$::geometryhash{ordpop}        = '+191+132';
-		$::geometryhash{regexrefpop}   = '+106+72';
-		$::geometryhash{ucharpop}      = '+53+87';
-		$::geometryhash{utfpop}        = '+46+46';
-		$::geometryhash{wfpop}         = '+365+63';
-		$::geometryhash{xtpop}         = '+120+38';
+		$::geometryhash{asciiboxpop}   = '+358+187';
 		$::positionhash{brkpop}        = '+482+131';
+		$::geometryhash{errorcheckpop} = '+484+72';
 		$::positionhash{filepathspop}  = '+55+7';
+		$::positionhash{fixpop}        = '+34+22';
+		$::positionhash{fontpop}       = '+10+10';
+		$::geometryhash{footcheckpop}  = '+22+12';
 		$::positionhash{footpop}       = '+255+157';
+		$::geometryhash{gcpop}         = '+224+72';
+		$::geometryhash{gcrunoptspop}  = '+244+72';
+		$::geometryhash{gcviewoptspop} = '+264+72';
 		$::positionhash{grpop}         = '+144+153';
+		$::positionhash{guesspgmarkerpop}='+10+10';
+		$::geometryhash{hotkeyspop}    = '+144+119';
+		$::geometryhash{hpopup}        = '300x400+584+211';
 		$::positionhash{htmlgenpop}    = '+145+37';
 		$::positionhash{htmlimpop}     = '+45+37';
+		$::geometryhash{jeepop}        = '+284+72';
+		$::positionhash{latinpop}      = '+10+10';
 		$::positionhash{marginspop}    = '+145+137';
-		$::positionhash{pagepop}       = '+334+176';
-		$::positionhash{pnumpop}       = '+302+97';
+		$::geometryhash{pagelabelpop}  = '375x500+20+20';
+		$::positionhash{pagemarkerpop} = '+302+97';
+		$::geometryhash{pagesephelppop}= '+191+132';
+		$::positionhash{pageseppop}    = '+334+176';
+		$::geometryhash{regexrefpop}   = '+106+72';
+		$::positionhash{searchpop}     = '+10+10';
+		$::positionhash{srchhistsizepop}='+152+97';
 		$::positionhash{spellpopup}    = '+152+97';
 		$::positionhash{txtconvpop}    = '+82+131';
+		$::positionhash{utfentrypop}   = '+191+132';
+		$::geometryhash{utfpop}        = '+46+46';
+		$::geometryhash{utfsearchpop}  = '550x450+53+87';
+		$::geometryhash{wfpop}         = '+365+63';
+		$::geometryhash{extpop}        = '+120+38';
 	}
 
 	::readsettings();
@@ -1267,7 +1278,6 @@ sub scrolldismiss {
 	$::lglobal{scroller} = '';
 	$::lglobal{scroll_id}->cancel if $::lglobal{scroll_id};
 	$::lglobal{scroll_id}     = '';
-	$::lglobal{scrolltrigger} = 0;
 }
 
 sub b2scroll {
@@ -1984,12 +1994,14 @@ sub externalpopup {    # Set up the external commands menu
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my $menutempvar;
-	if ( $::lglobal{xtpop} ) {
-		$::lglobal{xtpop}->deiconify;
+	if ( $::lglobal{extpop} ) {
+		$::lglobal{extpop}->deiconify;
+		$::lglobal{extpop}->raise;
+		$::lglobal{extpop}->focus;
 	} else {
-		$::lglobal{xtpop} = $top->Toplevel( -title => 'External programs', );
+		$::lglobal{extpop} = $top->Toplevel( -title => 'External programs', );
 		my $f0 =
-		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0->Label( -text =>
 "You can set up external programs to be called from within guiguts here. Each line of entry boxes represent\n"
 			  . "a menu entry. The left box is the label that will show up under the menu. The right box is the calling parameters.\n"
@@ -2007,7 +2019,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . "\$p = the number of the page that the cursor is currently in.\n"
 			  . "\$t = the currently highlighted text.\n" )->pack;
 		my $f1 =
-		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		for my $menutempvar ( 0 .. $::extops_size-1 ) {
 			$f1->Entry(
 				-width        => 50,
@@ -2034,19 +2046,19 @@ sub externalpopup {    # Set up the external commands menu
 			  );
 		}
 		my $f2 =
-		  $::lglobal{xtpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
 				::savesettings();
 				::menurebuild();
-				$::lglobal{xtpop}->destroy;
-				undef $::lglobal{xtpop};
+				$::lglobal{extpop}->destroy;
+				undef $::lglobal{extpop};
 			},
 			-text  => 'OK',
 			-width => 8
 		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
-		::initialize_popup_with_deletebinding('xtpop');
+		::initialize_popup_with_deletebinding('extpop');
 	}
 }
 
@@ -2155,7 +2167,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		$::lglobal{toptool}->ToolButton(
 			-text    => 'UCS',
 			-font    => $::lglobal{toolfont},
-			-command => [ \&::uchar ],
+			-command => [ \&::utfcharsearchpopup ],
 			-tip     => 'Unicode Character Search'
 		);
 		$::lglobal{toptool}->separator;

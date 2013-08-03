@@ -1066,7 +1066,6 @@ sub searchpopup {
 	} else {
 		$::lglobal{searchpop} = $top->Toplevel;
 		$::lglobal{searchpop}->title('Search & Replace');
-		$::lglobal{searchpop}->minsize( 460, 127 );
 		my $sf1 =
 		  $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $searchlabel =
@@ -1457,6 +1456,10 @@ sub searchpopup {
 				-anchor => 'w'
 			  );
 		}
+		$::lglobal{searchpop}->resizable( 'yes', 'no' );
+		::initialize_popup_without_deletebinding('searchpop');
+		$::lglobal{searchpop}->minsize( 460, 127 );
+		$::lglobal{searchentry}->focus;
 		$::lglobal{searchpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
 				$::lglobal{regrepeat}->cancel;
@@ -1468,10 +1471,6 @@ sub searchpopup {
 				$::scannosearch = 0;    #no longer in a scanno search
 			}
 		);
-		$::lglobal{searchpop}->Icon( -image => $::icon );
-		$::lglobal{searchentry}->focus;
-		$::lglobal{searchpop}->resizable( 'yes', 'no' );
-		$::lglobal{searchpop}->transient($top) if $::stayontop;
 		$::lglobal{searchpop}->Tk::bind(
 			'<Return>' => sub {
 				$::lglobal{searchentry}->see('1.0');
@@ -2046,15 +2045,14 @@ sub orphanedmarkup {
 
 sub searchsize {  # Pop up a window where you can adjust the search history size
 	my $top = $::top;
-	if ( $::lglobal{hssizepop} ) {
-		$::lglobal{hssizepop}->deiconify;
-		$::lglobal{hssizepop}->raise;
+	if ( $::lglobal{srchhistsizepop} ) {
+		$::lglobal{srchhistsizepop}->deiconify;
+		$::lglobal{srchhistsizepop}->raise;
 	} else {
-		$::lglobal{hssizepop} = $top->Toplevel;
-		$::lglobal{hssizepop}->title('Search History Size');
-		$::lglobal{hssizepop}->resizable( 'no', 'no' );
+		$::lglobal{srchhistsizepop} = $top->Toplevel;
+		$::lglobal{srchhistsizepop}->title('Search History Size');
 		my $frame =
-		  $::lglobal{hssizepop}
+		  $::lglobal{srchhistsizepop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		$frame->Label( -text => 'History Size: # of terms to save - ' )
 		  ->pack( -side => 'left' );
@@ -2072,20 +2070,21 @@ sub searchsize {  # Pop up a window where you can adjust the search history size
 			},
 		)->pack( -side => 'left', -fill => 'x' );
 		my $frame2 =
-		  $::lglobal{hssizepop}
+		  $::lglobal{srchhistsizepop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		$frame2->Button(
-			-text    => 'Ok',
+			-text    => 'OK',
 			-width   => 10,
 			-command => sub {
 				::savesettings();
-				$::lglobal{hssizepop}->destroy;
-				undef $::lglobal{hssizepop};
+				$::lglobal{srchhistsizepop}->destroy;
+				undef $::lglobal{srchhistsizepop};
 			}
 		)->pack;
-		::initialize_popup_with_deletebinding('hssizepop');
-		$::lglobal{hssizepop}->raise;
-		$::lglobal{hssizepop}->focus;
+		$::lglobal{srchhistsizepop}->resizable( 'no', 'no' );
+		::initialize_popup_with_deletebinding('srchhistsizepop');
+		$::lglobal{srchhistsizepop}->raise;
+		$::lglobal{srchhistsizepop}->focus;
 	}
 }
 

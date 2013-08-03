@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&latinpopup &utfpopup &utffontinit &utford &uchar &cp1252toUni);
+	  qw(&latinpopup &utfpopup &utffontinit &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
 }
 
 sub pututf {
@@ -194,7 +194,6 @@ sub utfpopup {
 	undef $::lglobal{utfpop};
 	$::lglobal{utfpop} = $top->Toplevel;
 	::initialize_popup_without_deletebinding('utfpop');
-	$::lglobal{utfpop}->geometry('800x320+10+10') unless $::lglobal{utfpop};
 	$blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
 	$::lglobal{utfpop}->title( $block . ': ' . $start . ' - ' . $end );
 	my $cframe = $::lglobal{utfpop}->Frame->pack;
@@ -286,12 +285,12 @@ sub utffontinit {
 	$::lglobal{utffont} = "{$::utffontname} $::utffontsize";
 }
 
-sub uchar {
+sub utfcharsearchpopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	if ( defined $::lglobal{ucharpop} ) {
-		$::lglobal{ucharpop}->deiconify;
-		$::lglobal{ucharpop}->raise;
+	if ( defined $::lglobal{utfsearchpop} ) {
+		$::lglobal{utfsearchpop}->deiconify;
+		$::lglobal{utfsearchpop}->raise;
 	} else {
 		return unless blocks_check();
 		require q(unicore/Blocks.pl);
@@ -302,18 +301,17 @@ sub uchar {
 			my @array = split /\t/, $_;
 			$blocks{ $array[2] } = [ @array[ 0, 1 ] ];
 		}
-		$::lglobal{ucharpop} = $top->Toplevel;
-		$::lglobal{ucharpop}->title('Unicode Character Search');
-		::initialize_popup_with_deletebinding('ucharpop');
-		$::lglobal{ucharpop}->geometry('550x450');
-		my $cframe = $::lglobal{ucharpop}->Frame->pack;
+		$::lglobal{utfsearchpop} = $top->Toplevel;
+		$::lglobal{utfsearchpop}->title('Unicode Character Search');
+		::initialize_popup_with_deletebinding('utfsearchpop');
+		my $cframe = $::lglobal{utfsearchpop}->Frame->pack;
 		my $frame0 =
-		  $::lglobal{ucharpop}
+		  $::lglobal{utfsearchpop}
 		  ->Frame->pack( -side => 'top', -anchor => 'n', -pady => 4 );
 		my $sizelabel;
 		my ( @textchars, @textlabels );
 		my $pane =
-		  $::lglobal{ucharpop}->Scrolled(
+		  $::lglobal{utfsearchpop}->Scrolled(
 										  'Pane',
 										  -background => $::bkgcolor,
 										  -scrollbars => 'se',
@@ -492,22 +490,22 @@ sub utfchar_bind {
 }
 
 # Pop up window to allow entering Unicode characters by ordinal number
-sub utford {
+sub utfcharentrypopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my $ord;
 	my $base = 'dec';
-	if ( $::lglobal{ordpop} ) {
-		$::lglobal{ordpop}->deiconify;
-		$::lglobal{ordpop}->raise;
+	if ( $::lglobal{utfentrypop} ) {
+		$::lglobal{utfentrypop}->deiconify;
+		$::lglobal{utfentrypop}->raise;
 	} else {
-		$::lglobal{ordpop} = $top->Toplevel;
-		$::lglobal{ordpop}->title('Ordinal to Char');
+		$::lglobal{utfentrypop} = $top->Toplevel;
+		$::lglobal{utfentrypop}->title('Ordinal to Char');
 		my $frame =
-		  $::lglobal{ordpop}
+		  $::lglobal{utfentrypop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		my $frame2 =
-		  $::lglobal{ordpop}
+		  $::lglobal{utfentrypop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		$frame->Label( -text => 'Ordinal of char.' )
 		  ->grid( -row => 1, -column => 1 );
@@ -570,7 +568,7 @@ sub utford {
 			},
 		)->grid( -row => 2, -column => 3 );
 		my $frame1 =
-		  $::lglobal{ordpop}
+		  $::lglobal{utfentrypop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
 		my $button = $frame1->Button(
 			-text    => 'Insert',
@@ -584,8 +582,8 @@ sub utford {
 			-text    => 'Close',
 			-width   => 8,
 			-command => sub {
-				$::lglobal{ordpop}->destroy;
-				undef $::lglobal{ordpop};
+				$::lglobal{utfentrypop}->destroy;
+				undef $::lglobal{utfentrypop};
 			},
 		)->grid( -row => 1, -column => 2 );
 		$::lglobal{ordpop}->resizable( 'yes', 'no' );
@@ -597,6 +595,8 @@ sub utford {
 				  ->insert( 'insert', $outentry->get( '1.0', 'end -1c' ) );
 			}
 		); 
+		$::lglobal{utfentrypop}->resizable( 'yes', 'no' );
+		::initialize_popup_with_deletebinding('utfentrypop');
 	}
 }
 

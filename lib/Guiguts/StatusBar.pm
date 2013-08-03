@@ -481,7 +481,7 @@ sub seecurrentimage {
 	my $textwindow = $::textwindow;
 	$::lglobal{pagebutton}->configure( -relief => 'sunken' );
 	my $pagenum = ::get_page_number();
-	if ( defined $::lglobal{pnumpop} ) {
+	if ( defined $::lglobal{pagemarkerpop} ) {
 		$::lglobal{pagenumentry}->delete( '0', 'end' );
 		$::lglobal{pagenumentry}->insert( 'end', "Pg" . $pagenum );
 	}

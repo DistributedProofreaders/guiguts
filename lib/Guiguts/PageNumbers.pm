@@ -37,10 +37,10 @@ sub togglepagenums {
 			}
 		}
 		$textwindow->tagRemove( 'pagenum', '1.0', 'end' );
-		if ( $::lglobal{pnumpop} ) {
-			$::geometryhash{pnumpop} = $::lglobal{pnumpop}->geometry;
-			$::lglobal{pnumpop}->destroy;
-			undef $::lglobal{pnumpop};
+		if ( $::lglobal{pagemarkerpop} ) {
+			$::geometryhash{pagemarkerpop} = $::lglobal{pagemarkerpop}->geometry;
+			$::lglobal{pagemarkerpop}->destroy;
+			undef $::lglobal{pagemarkerpop};
 		}
 	} else {
 		$::lglobal{seepagenums} = 1;
@@ -148,15 +148,15 @@ sub pnumadjust {
 		}
 	}
 	$textwindow->markSet( 'insert', $mark || '1.0' );
-	if ( $::lglobal{pnumpop} ) {
-		$::lglobal{pnumpop}->deiconify;
-		$::lglobal{pnumpop}->raise;
+	if ( $::lglobal{pagemarkerpop} ) {
+		$::lglobal{pagemarkerpop}->deiconify;
+		$::lglobal{pagemarkerpop}->raise;
 		$::lglobal{pagenumentry}->configure( -text => $mark );
 	} else {
-		$::lglobal{pnumpop} = $top->Toplevel;
-		::initialize_popup_without_deletebinding('pnumpop');
-		$::lglobal{pnumpop}->title('Adjust Page Markers');
-		my $frame2 = $::lglobal{pnumpop}->Frame->pack( -pady => 5 );
+		$::lglobal{pagemarkerpop} = $top->Toplevel;
+		::initialize_popup_without_deletebinding('pagemarkerpop');
+		$::lglobal{pagemarkerpop}->title('Adjust Page Markers');
+		my $frame2 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
 		my $upbutton =
 		  $frame2->Button(
 						   -activebackground => $::activecolor,
@@ -193,7 +193,7 @@ sub pnumadjust {
 						   -text             => 'Move Down',
 						   -width            => 10
 		  )->grid( -row => 3, -column => 2 );
-		my $frame3 = $::lglobal{pnumpop}->Frame->pack( -pady => 4 );
+		my $frame3 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 4 );
 		my $prevbutton =
 		  $frame3->Button(
 						   -activebackground => $::activecolor,
@@ -208,7 +208,7 @@ sub pnumadjust {
 						   -text             => 'Next Marker',
 						   -width            => 14
 		  )->grid( -row => 1, -column => 2 );
-		my $frame4 = $::lglobal{pnumpop}->Frame->pack( -pady => 5 );
+		my $frame4 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
 		$frame4->Label( -text => 'Adjust Page Offset', )
 		  ->grid( -row => 1, -column => 1 );
 		$::lglobal{pagerenumoffset} =
@@ -225,7 +225,7 @@ sub pnumadjust {
 						 -text             => 'Renumber',
 						 -width            => 12
 		)->grid( -row => 3, -column => 1, -pady => 3 );
-		my $frame5 = $::lglobal{pnumpop}->Frame->pack( -pady => 5 );
+		my $frame5 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
 		$frame5->Button(
 					   -activebackground => $::activecolor,
 					   -command => sub { $textwindow->bell unless ::pageadd() },
@@ -256,7 +256,7 @@ sub pnumadjust {
 						 -text             => 'Remove',
 						 -width            => 8
 		)->grid( -row => 1, -column => 3 );
-		my $frame6 = $::lglobal{pnumpop}->Frame->pack( -pady => 5 );
+		my $frame6 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
 		$frame6->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -274,24 +274,23 @@ sub pnumadjust {
 			-text  => 'Insert Page Markers',
 			-width => 20,
 		)->grid( -row => 1, -column => 1 );
-		$::lglobal{pnumpop}->bind( $::lglobal{pnumpop}, '<Up>' => \&::pmoveup );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Left>' => \&::pmoveleft );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Right>' => \&::pmoveright );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Down>' => \&::pmovedown );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Prior>' => \&::pgprevious );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Next>' => \&::pgnext );
-		$::lglobal{pnumpop}
-		  ->bind( $::lglobal{pnumpop}, '<Delete>' => \&::pageremove );
-		$::lglobal{pnumpop}->protocol(
+		$::lglobal{pagemarkerpop}->bind( $::lglobal{pagemarkerpop}, '<Up>' => \&::pmoveup );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Left>' => \&::pmoveleft );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Right>' => \&::pmoveright );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Down>' => \&::pmovedown );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Prior>' => \&::pgprevious );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Next>' => \&::pgnext );
+		$::lglobal{pagemarkerpop}
+		  ->bind( $::lglobal{pagemarkerpop}, '<Delete>' => \&::pageremove );
+		$::lglobal{pagemarkerpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
-				#$geometryhash{pnumpop} = $::lglobal{pnumpop}->geometry;
-				$::lglobal{pnumpop}->destroy;
-				undef $::lglobal{pnumpop};
+				$::lglobal{pagemarkerpop}->destroy;
+				undef $::lglobal{pagemarkerpop};
 				::hidepagenums();
 			}
 		);
