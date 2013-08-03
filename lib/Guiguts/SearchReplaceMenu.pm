@@ -1828,13 +1828,25 @@ sub orphanedbrackets {
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => "«|»",
 			-text        => 'French angle quotes « »',
-		)->grid( -row => 2, -column => 2, -pady => 5 );
+		)->grid( -row => 2, -column => 2, -pady => 1, -sticky => 'w' );
 		my $gqusel = $frame3->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => '»|«',
 			-text        => 'German angle quotes » «',
-		)->grid( -row => 3, -column => 2, -pady => 5 );
+		)->grid( -row => 3, -column => 2, -pady => 1, -sticky => 'w' );
+		my $cqsel = $frame3->Radiobutton(
+			-variable    => \$::lglobal{brsel},
+			-selectcolor => $::lglobal{checkcolor},
+			-value       => "\x{201c}|\x{201d}",
+			-text        => "English curly quotes \x{201c} \x{201d}",
+		)->grid( -row => 4, -column => 2, -pady => 1, -sticky => 'w' );
+		my $gcqsel = $frame3->Radiobutton(
+			-variable    => \$::lglobal{brsel},
+			-selectcolor => $::lglobal{checkcolor},
+			-value       => "\x{201e}|\x{201c}",
+			-text        => "German curly quotes \x{201e} \x{201c}",
+		)->grid( -row => 5, -column => 2, -pady => 1, -sticky => 'w' );
 		#		my $allqsel =
 		#		  $frame3->Radiobutton(
 		#								-variable    => \$::lglobal{brsel},
@@ -1950,6 +1962,14 @@ sub orphanedbrackets {
 				last unless (
 					$::lglobal{brbrackets}[0] eq '«'
 					&& $::lglobal{brbrackets}[1] eq '»' );
+			} elsif ( $::lglobal{brsel} eq "\x{201c}|\x{201d}" ) {
+				last unless (
+					$::lglobal{brbrackets}[0] eq "\x{201c}"
+					&& $::lglobal{brbrackets}[1] eq "\x{201d}" );
+			} elsif ( $::lglobal{brsel} eq "\x{201e}|\x{201c}" ) {
+				last unless (
+					$::lglobal{brbrackets}[0] eq "\x{201e}"
+					&& $::lglobal{brbrackets}[1] eq "\x{201c}" );
 			} else {
 			  last unless (
 				   (   ( $::lglobal{brbrackets}[0] =~ m{[\[\(\{<]} )
