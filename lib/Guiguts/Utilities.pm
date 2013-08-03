@@ -871,6 +871,23 @@ sub initialize {
 		);
 	}
 
+	my $textwindow = $::textwindow;
+	$textwindow->tagConfigure( 'footnote', -background => 'cyan' );
+	$textwindow->tagConfigure( 'scannos',  -background => $::highlightcolor );
+	$textwindow->tagConfigure( 'bkmk',     -background => 'green' );
+	$textwindow->tagConfigure( 'table',    -background => '#E7B696' );
+	$textwindow->tagRaise('sel');
+	$textwindow->tagConfigure( 'quotemark', -background => '#CCCCFF' );
+	$textwindow->tagConfigure( 'highlight', -background => 'orange' );
+	$textwindow->tagConfigure( 'linesel',   -background => '#8EFD94' );
+	$textwindow->tagConfigure(
+		'pagenum',
+		-background  => 'yellow',
+		-relief      => 'raised',
+		-borderwidth => 2
+	);
+	$textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
+
 	# Update check needs to be done after readsettings to reset the update clock
 	# when a user has just upgraded
 	%{ $::lglobal{utfblocks} } = (

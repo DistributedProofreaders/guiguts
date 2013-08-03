@@ -14,22 +14,6 @@ sub keybindings {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 
-	# Set up a bunch of events and key bindings for the widget
-	$textwindow->tagConfigure( 'footnote', -background => 'cyan' );
-	$textwindow->tagConfigure( 'scannos',  -background => $::highlightcolor );
-	$textwindow->tagConfigure( 'bkmk',     -background => 'green' );
-	$textwindow->tagConfigure( 'table',    -background => '#E7B696' );
-	$textwindow->tagRaise('sel');
-	$textwindow->tagConfigure( 'quotemark', -background => '#CCCCFF' );
-	$textwindow->tagConfigure( 'highlight', -background => 'orange' );
-	$textwindow->tagConfigure( 'linesel',   -background => '#8EFD94' );
-	$textwindow->tagConfigure(
-		'pagenum',
-		-background  => 'yellow',
-		-relief      => 'raised',
-		-borderwidth => 2
-	);
-	$textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
 	$textwindow->eventAdd( '<<hlquote>>' => '<Control-comma>' );
 	$textwindow->bind( '<<hlquote>>', sub { ::hilite('\'') } );
 	$textwindow->eventAdd( '<<hldquote>>' => '<Control-period>' );
