@@ -322,6 +322,7 @@ sub aspellstart {
 	aspellstop();
 	my @cmd =
 	  ( $::globalspellpath, '-a', '-S', '--sug-mode', $::globalaspellmode, '--rem-filter', 'nroff' );
+	@cmd = ( $::globalspellpath, '-a' ) if $::spellcheckwithenchant;
 	push @cmd, '-d', $::globalspelldictopt if $::globalspelldictopt;
 	$::lglobal{spellpid} = ::open2( \*IN, \*OUT, @cmd );
 	my $line = <IN>;
@@ -442,6 +443,7 @@ sub getmisspelledwords {
 	print $save $section;
 	close $save;
 	my @spellopt = ( "list", "--encoding=utf-8" );
+	@spellopt = ( "-l" ) if $::spellcheckwithenchant;
 	push @spellopt, "-d", $::globalspelldictopt if $::globalspelldictopt;
 	my $runner = ::runner::withfiles( 'checkfil.txt', 'temp.txt' );
 	$runner->run( $::globalspellpath, @spellopt );

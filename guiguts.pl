@@ -173,6 +173,7 @@ our $scrollupdatespd     = 40;
 our $searchendindex      = 'end';
 our $searchstartindex    = '1.0';
 our $multiterm           = 0;
+our $spellcheckwithenchant = 0;
 our $spellindexbkmrk     = q{};
 our $stayontop           = 0;
 our $suspectindex;
