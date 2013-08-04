@@ -110,6 +110,7 @@ sub _butbind {
 	$widget->bind( '<ButtonRelease-1>',
 				   sub { $widget->configure( -relief => 'raised' ) } );
 }
+
 ## Update Last Selection readout in status bar
 sub _updatesel {
 	my $textwindow = shift;
@@ -144,6 +145,7 @@ sub _updatesel {
 	::update_indicators();
 	$textwindow->_lineupdate;
 }
+
 ## Status Bar
 sub buildstatusbar {
 	my $textwindow = $::textwindow;
@@ -637,6 +639,7 @@ sub setlang {
 		$::lglobal{setlangpop}->Popup;
 		$::lglobal{setlangpop}->Subwidget('entry')->focus;
 		$::lglobal{setlangpop}->Subwidget('entry')->selectionRange( 0, 'end' );
+		$::lglobal{setlangpop}->Subwidget('entry')->icursor( 'end' );
 		$::lglobal{setlangpop}->Wait;
 	}
 }
@@ -660,7 +663,7 @@ sub update_proofers_button {
 				'<1>',
 				sub {
 					$::lglobal{proofbutton}->configure( -relief => 'sunken' );
-					showproofers();
+					::showproofers();
 				}
 			);
 			$::lglobal{proofbutton}->bind(
@@ -687,6 +690,7 @@ sub update_proofers_button {
 		}
 	}
 }
+
 ## Make toolbar visible if invisible and vice versa
 sub tglprfbar {
 	my $textwindow = $::textwindow;
@@ -696,9 +700,9 @@ sub tglprfbar {
 			$_->gridForget if defined $_;
 		}
 		$::proofer_frame->packForget;
-		my @geom = split /[x+]/, $top->geometry;
-		$geom[1] -= $::counter_frame->height;
-		$top->geometry("$geom[0]x$geom[1]+$geom[2]+$geom[3]");
+		#my @geom = split /[x+]/, $top->geometry;
+		#$geom[1] -= $::counter_frame->height;
+		#$top->geometry("$geom[0]x$geom[1]+$geom[2]+$geom[3]");
 		$::lglobal{proofbarvisible} = 0;
 	} else {
 		my $pnum = $::lglobal{img_num_label}->cget( -text );
@@ -709,9 +713,9 @@ sub tglprfbar {
 								-anchor => 'sw',
 								-expand => 0
 		);
-		my @geom = split /[x+]/, $top->geometry;
-		$geom[1] += $::counter_frame->height;
-		$top->geometry("$geom[0]x$geom[1]+$geom[2]+$geom[3]");
+		#my @geom = split /[x+]/, $top->geometry;
+		#$geom[1] += $::counter_frame->height;
+		#$top->geometry("$geom[0]x$geom[1]+$geom[2]+$geom[3]");
 		{
 			no warnings 'uninitialized';
 			my ( $pg, undef ) = each %::proofers;
@@ -971,8 +975,6 @@ sub selection {
 	} else {
 		$::lglobal{selectionpop} = $top->Toplevel;
 		$::lglobal{selectionpop}->title('Select Line.Col');
-		::initialize_popup_without_deletebinding('selectionpop');
-		$::lglobal{selectionpop}->resizable( 'no', 'no' );
 		my $frame =
 		  $::lglobal{selectionpop}
 		  ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
@@ -1027,6 +1029,8 @@ sub selection {
 				undef $::lglobal{seleentry};
 			},
 		)->grid( -row => 1, -column => 2 );
+		$::lglobal{selectionpop}->resizable( 'no', 'no' );
+		::initialize_popup_without_deletebinding('selectionpop');
 		$::lglobal{selectionpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
 				$::lglobal{selectionpop}->destroy;
@@ -1103,6 +1107,7 @@ sub gotoline {
 		$::lglobal{gotolinepop}->Popup;
 		$::lglobal{gotolinepop}->Subwidget('entry')->focus;
 		$::lglobal{gotolinepop}->Subwidget('entry')->selectionRange( 0, 'end' );
+		$::lglobal{gotolinepop}->Subwidget('entry')->icursor( 'end' );
 		$::lglobal{gotolinepop}->Wait;
 	}
 }
@@ -1178,7 +1183,9 @@ sub gotopage {
 		$::lglobal{gotopagpop}->Popup;
 		$::lglobal{gotopagpop}->Subwidget('entry')->focus;
 		$::lglobal{gotopagpop}->Subwidget('entry')->selectionRange( 0, 'end' );
+		$::lglobal{gotopagpop}->Subwidget('entry')->icursor( 'end' );
 		$::lglobal{gotopagpop}->Wait;
 	}
 }
+
 1;

@@ -211,7 +211,6 @@ our @joinundolist;
 our @joinredolist;
 our @multidicts = ();
 our @mygcview;
-our @operations;
 our %operationshash;    # New format {operation, time}
 our @pageindex;
 our @recentfile;

@@ -488,7 +488,7 @@ sub separatorpopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	::operationadd('Begin Page Separators Fixup');
-	$::lglobal{pagesepauto} = 1 if $::lglobal{pagesepauto} >= 2;
+	$::lglobal{pagesepauto} = 1 if !defined $::lglobal{pagesepauto} || $::lglobal{pagesepauto} >= 2;
 	if ( defined( $::lglobal{pageseppop} ) ) {
 		$::lglobal{pageseppop}->deiconify;
 		$::lglobal{pageseppop}->raise;

@@ -62,7 +62,8 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 sub file_saveas {
 	my $textwindow = shift;
 	::hidepagenums();
-	my $initialfile = $::lglobal{global_filename} unless ($::lglobal{global_filename} =~ m/No File Loaded/);
+	my $initialfile = '';
+	$initialfile = $::lglobal{global_filename} unless ($::lglobal{global_filename} =~ m/No File Loaded/);
 	$initialfile =~ s|.*/([^/]*)$|$1|;
 	my $name = $textwindow->getSaveFile(
 		-title       => 'Save As',
@@ -152,7 +153,6 @@ sub file_savecopyas {
 sub file_close {
 	my $textwindow = shift;
 	return if ( ::confirmempty() =~ m{cancel}i );
-	::hidepagenums();
 	clearvars($textwindow);
 	::update_indicators();
 	return;
@@ -416,7 +416,6 @@ sub clearvars {
 	%::proofers               = ();
 	%::pagenumbers            = ();
 	%::operationshash         = ();
-	@::operations             = ();
 	@::bookmarks              = ();
 	$::pngspath               = q{};
 	::setedited(0);
@@ -427,10 +426,35 @@ sub clearvars {
 	return;
 }
 
+## Destroy some popups and labels when closing a file
+sub clearpopups {
+	if ( $::lglobal{img_num_label} ) {
+		$::lglobal{img_num_label}->destroy;
+		undef $::lglobal{img_num_label};
+	}
+	if ( $::lglobal{pagebutton} ) {
+		$::lglobal{pagebutton}->destroy;
+		undef $::lglobal{pagebutton};
+	}
+	if ( $::lglobal{previmagebutton} ) {
+		$::lglobal{previmagebutton}->destroy;
+		undef $::lglobal{previmagebutton};
+	}
+	if ( $::lglobal{proofbutton} ) {
+		$::lglobal{proofbutton}->destroy;
+		undef $::lglobal{proofbutton};
+	}
+	::killpopup('footpop');
+	::killpopup('footcheckpop');
+	::killpopup('htmlgenpop');
+	::killpopup('pagelabelpop');
+}
+
 sub savefile {    # Determine which save routine to use and then use it
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	::hidepagenums();
-	if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
+	my $filename = $::lglobal{global_filename};
+	if ( $filename =~ /No File Loaded/ ) {
 		unless ( ::isedited() ) {
 			return;
 		}
@@ -447,30 +471,30 @@ sub savefile {    # Determine which save routine to use and then use it
 			return;
 		}
 	} else {
-		my $ans = !fileisreadonly($::lglobal{global_filename}) || 'Yes' eq $top->messageBox(
+		my $ans = !fileisreadonly($filename) || 'Yes' eq $top->messageBox(
 			-icon    => 'warning',
 			-title   => 'Confirm save?',
 			-type    => 'YesNo',
 			-default => 'no',
 			-message =>
-			  'File '.$::lglobal{global_filename}.' is write-protected. Remove write-protection and save anyway?',
+			  "File $filename is write-protected. Remove write-protection and save anyway?",
 		    );
 		return unless $ans;
 		$::top->Busy( -recurse => 1 );
 		if ($::autobackup) {
-			if ( -e $::lglobal{global_filename} ) {
-				if ( -e "$::lglobal{global_filename}.bk2" ) {
-					unlink "$::lglobal{global_filename}.bk2";
+			if ( -e $filename ) {
+				if ( -e "$filename.bk2" ) {
+					unlink "$filename.bk2";
 				}
-				if ( -e "$::lglobal{global_filename}.bk1" ) {
+				if ( -e "$filename.bk1" ) {
 					rename(
-						"$::lglobal{global_filename}.bk1",
-						"$::lglobal{global_filename}.bk2"
+						"$filename.bk1",
+						"$filename.bk2"
 					);
 				}
 				rename(
-					$::lglobal{global_filename},
-					"$::lglobal{global_filename}.bk1"
+					$filename,
+					"$filename.bk1"
 				);
 			}
 		}
@@ -624,7 +648,7 @@ sub file_guess_page_marks {
 				$line25   = $page25->get;
 				$pagex    = $pagexe->get;
 				$linex    = $linexe->get;
-				unless ( $totpages && $line25 && $line25 && $linex ) {
+				unless ( $totpages && $line25 && $pagex && $linex ) {
 					$top->messageBox(
 						-icon    => 'error',
 						-message => 'Need all values filled in.',
@@ -800,23 +824,9 @@ sub confirmempty {
 	my $textwindow = $::textwindow;
 	my $answer     = confirmdiscard();
 	if ( $answer =~ /no/i ) {
-		if ( $::lglobal{img_num_label} ) {
-			$::lglobal{img_num_label}->destroy;
-			undef $::lglobal{img_num_label};
-		}
-		if ( $::lglobal{pagebutton} ) {
-			$::lglobal{pagebutton}->destroy;
-			undef $::lglobal{pagebutton};
-		}
-		if ( $::lglobal{previmagebutton} ) {
-			$::lglobal{previmagebutton}->destroy;
-			undef $::lglobal{previmagebutton};
-		}
-		if ( $::lglobal{proofbutton} ) {
-			$::lglobal{proofbutton}->destroy;
-			undef $::lglobal{proofbutton};
-		}
+		clearpopups();
 		$textwindow->EmptyDocument;
+		::setedited(0);
 	}
 	return $answer;
 }
@@ -826,46 +836,19 @@ sub openfile {    # and open it
 	my $top        = $::top;
 	my $textwindow = $::textwindow;
 	return if ( $name eq '*empty*' );
-	return if ( confirmempty() =~ /cancel/i );
+	return if ( ::confirmempty() =~ /cancel/i );
 	unless ( -e $name ) {
 		my $dbox = $top->Dialog(
-			-text    => 'Could not find file. Has it been moved or deleted?',
+			-text    => 'Could not find file. Perhaps it has been moved or deleted.',
 			-bitmap  => 'error',
-			-title   => 'Could not find file',
+			-title   => 'File not found',
 			-buttons => ['Ok']
 		);
 		$dbox->Show;
 		return;
 	}
 	clearvars($textwindow);
-	if ( $::lglobal{img_num_label} ) {
-		$::lglobal{img_num_label}->destroy;
-		undef $::lglobal{img_num_label};
-	}
-	if ( $::lglobal{page_label} ) {
-		$::lglobal{page_label}->destroy;
-		undef $::lglobal{page_label};
-	}
-	if ( $::lglobal{pagebutton} ) {
-		$::lglobal{pagebutton}->destroy;
-		undef $::lglobal{pagebutton};
-	}
-	if ( $::lglobal{previmagebutton} ) {
-		$::lglobal{previmagebutton}->destroy;
-		undef $::lglobal{previmagebutton};
-	}
-	if ( $::lglobal{proofbutton} ) {
-		$::lglobal{proofbutton}->destroy;
-		undef $::lglobal{proofbutton};
-	}
-	if ( $::lglobal{footpop} ) {
-		$::lglobal{footpop}->destroy;
-		undef $::lglobal{footpop};
-	}
-	if ( $::lglobal{footcheckpop} ) {
-		$::lglobal{footcheckpop}->destroy;
-		undef $::lglobal{footcheckpop};
-	}
+	clearpopups();
 	my ( $fname, $extension, $filevar );
 	$textwindow->Load($name);
 	( $fname, $::globallastpath, $extension ) = ::fileparse($name);
@@ -901,8 +884,8 @@ sub openfile {    # and open it
 	file_mark_pages() if $::auto_page_marks;
 	::readlabels();
 
-   #push @::operations, ( localtime() . " - Open $::lglobal{global_filename}" );
-   #oppopupdate() if $::lglobal{oppop};
+	::operationadd("Open $::lglobal{global_filename}");
+	::setedited(0);
 	::savesettings();
 	::set_autosave() if $::autosave;
 }

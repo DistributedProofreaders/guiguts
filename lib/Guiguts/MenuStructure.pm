@@ -875,17 +875,13 @@ sub menubuildold {
 			[
 				Button   => 'Convert To Named/Numeric Entities',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::tonamed($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
 				Button   => 'Convert From Named/Numeric Entities',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::fromnamed($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[
@@ -1629,16 +1625,12 @@ sub menubuilddefault {
 			[ 'separator', '' ],
 			[	Button   => 'Convert to ~Entities',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::tonamed($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[	Button   => 'Convert from E~ntities',
 				-command => sub {
-					$textwindow->addGlobStart;
 					::fromnamed($textwindow);
-					$textwindow->addGlobEnd;
 				  }
 			],
 			[	Button   => 'Convert ~Fractions to Entities',

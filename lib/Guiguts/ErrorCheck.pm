@@ -20,7 +20,6 @@ sub errorcheckpop_up {
 	}
 	$::lglobal{errorcheckpop} = $top->Toplevel;
 	$::lglobal{errorcheckpop}->title($errorchecktype);
-	$::lglobal{errorcheckpop}->transient($top) if $::stayontop;
 	my $ptopframe = $::lglobal{errorcheckpop}->Frame->pack;
 	my $opsbutton = $ptopframe->Button(
 		-activebackground => $::activecolor,

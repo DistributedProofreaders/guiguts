@@ -119,7 +119,8 @@ sub gotolabel {
 		$::lglobal{gotolabpop}->Advertise( entry => $entry );
 		$::lglobal{gotolabpop}->Popup;
 		$::lglobal{gotolabpop}->Subwidget('entry')->focus;
-		$::lglobal{gotolabpop}->Subwidget('entry')->selectionRange( 0, 'end' );
+		$::lglobal{gotolabpop}->Subwidget('entry')->selectionRange( 3, 'end' );
+		$::lglobal{gotolabpop}->Subwidget('entry')->icursor( 3 );
 		$::lglobal{gotolabpop}->Wait;
 	}
 }
@@ -237,7 +238,6 @@ sub pnumadjust {
 			-command          => sub {
 				my $insert = $textwindow->index('insert');
 				unless ( ::pageadd() ) {
-					;
 					$::lglobal{pagerenumoffset}
 					  ->configure( -textvariable => '1' );
 					$textwindow->markSet( 'insert', $insert );

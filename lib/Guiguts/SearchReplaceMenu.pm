@@ -1029,7 +1029,7 @@ sub searchoptset {
 	my $opt_count = @opt;
 
 # $::sopt[0] --> 0 = pattern search               1 = whole word search
-# $::sopt[1] --> 0 = case sensitive             1 = case insensitive search
+# $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
 # $::sopt[2] --> 0 = search forwards              1 = search backwards
 # $::sopt[3] --> 0 = normal search term   1 = regex search term - 3 and 0 are mutually exclusive
 # $::sopt[4] --> 1 = start search at beginning
@@ -1212,7 +1212,6 @@ sub searchpopup {
 		$sf12->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				my $temp = $::lglobal{replaceentry}->get( '1.0', '1.end' );
 				replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
 			},
 			-text  => 'Rpl All',
@@ -1625,7 +1624,7 @@ sub find_proofer_comment {
 sub find_asterisks {
 	my $textwindow = $::textwindow;
 	my $pattern    = "(?<!/)\\*(?!/)" ;
-	my $comment    = $textwindow->search( '-regexp', '--',$pattern, "insert" );
+	my $comment    = $textwindow->search( '-regexp', '--', $pattern, "insert" );
 	if ($comment) {
 		my $index = $textwindow->index("$comment +1c");
 		$textwindow->SetCursor($index);
@@ -1643,7 +1642,7 @@ sub find_transliterations {
 	$::lglobal{searchentry}->delete( '1.0', 'end' );
 	$::lglobal{searchentry}->insert( 'end', $pattern );
 	$::lglobal{searchbutton}->invoke;
-	#my $comment    = $textwindow->search( '-regexp', '--',$pattern, "insert" );
+	#my $comment    = $textwindow->search( '-regexp', '--', $pattern, "insert" );
 	#if ($comment) {
 	#	my $index = $textwindow->index("$comment +1c");
 	#	$textwindow->SetCursor($index);
@@ -1762,7 +1761,6 @@ sub nextblock {
 sub orphanedbrackets {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	my $psel;
 	if ( defined( $::lglobal{brkpop} ) ) {
 		$::lglobal{brkpop}->deiconify;
 		$::lglobal{brkpop}->raise;
@@ -1772,12 +1770,13 @@ sub orphanedbrackets {
 		$::lglobal{brkpop}->title('Find orphan brackets');
 		$::lglobal{brkpop}->Label( -text => 'Bracket or Markup Style' )->pack;
 		my $frame = $::lglobal{brkpop}->Frame->pack;
-		$psel = $frame->Radiobutton(
+		my $psel = $frame->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => '[\(\)]',
 			-text        => '(  )',
 		)->grid( -row => 1, -column => 1 );
+		$psel->select;
 		my $ssel = $frame->Radiobutton(
 			-variable    => \$::lglobal{brsel},
 			-selectcolor => $::lglobal{checkcolor},
@@ -1895,7 +1894,6 @@ sub orphanedbrackets {
 			}
 		);
 	}
-	if ($psel) { $psel->select; }
 
 	sub brsearch {
 		my ( $brkresult, $brnextbt ) = @_;
@@ -1944,6 +1942,7 @@ sub orphanedbrackets {
 			$brackets =~ s/\\//g;
 			$brackets = "/$brackets/";
 		}
+		$brackets =~ s/\|/ /;
 		return $brackets;
 	}
 
@@ -2041,6 +2040,7 @@ sub orphanedmarkup {
 	#	$::lglobal{searchentry}->insert( 'end', "\\<(\\w+)>\\n?[^<]+<(?!/\\1>)" );
 	$::lglobal{searchentry}->insert( 'end',
 		"<(?!tb)(\\w+)>(\\n|[^<])+<(?!/\\1>)|<(?!/?(tb|sc|[bfgi])>)" );
+	$::lglobal{searchbutton}->invoke;
 }
 
 sub searchsize {  # Pop up a window where you can adjust the search history size

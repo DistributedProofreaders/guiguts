@@ -2048,7 +2048,7 @@ sub htmlgenpopup {
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f1->Button(
 			-text    => 'Custom Page Labels',
-			-command => sub { pageadjust() },
+			-command => sub { ::pageadjust() },
 		)->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
 		$f1->Button(
 			-activebackground => $::activecolor,
@@ -3760,6 +3760,7 @@ sub fromnamed {
 		while (@ranges) {
 			my $end   = pop @ranges;
 			my $start = pop @ranges;
+			$textwindow->addGlobStart;
 			$textwindow->markSet( 'srchend', $end );
 			my ( $thisblockstart, $length );
 			::named( '&amp;',   '&',  $start, 'srchend' );
@@ -3790,6 +3791,8 @@ sub fromnamed {
 				$textwindow->ntinsert( $thisblockstart, chr($xchar) );
 			}
 			$textwindow->markUnset('srchend');
+			$textwindow->addGlobEnd;
+			$textwindow->markSet( 'insert', $start );
 		}
 	}
 }
@@ -3804,6 +3807,7 @@ sub tonamed {
 		while (@ranges) {
 			my $end   = pop @ranges;
 			my $start = pop @ranges;
+			$textwindow->addGlobStart;
 			$textwindow->markSet( 'srchend', $end );
 			my $thisblockstart;
 			::named( '&(?![\w#])',           '&amp;',   $start, 'srchend' );
@@ -3839,6 +3843,8 @@ sub tonamed {
 				$textwindow->ntinsert( $thisblockstart, "&#$xchar;" );
 			}
 			$textwindow->markUnset('srchend');
+			$textwindow->addGlobEnd;
+			$textwindow->markSet( 'insert', $start );
 		}
 	}
 }

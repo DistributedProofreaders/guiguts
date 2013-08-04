@@ -16,7 +16,7 @@ BEGIN {
 	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
-	  &scrolldismiss &b2scroll);
+	  &scrolldismiss);
 }
 
 sub get_image_file {
@@ -52,6 +52,7 @@ sub openpng {
 	$::lglobal{pageimageviewed} = $pagenum;
 	if ( not $::globalviewerpath ) {
 		::locateExecutable('image viewer', \$::globalviewerpath);
+		return unless $::globalviewerpath;
 	}
 	my $imagefile = ::get_image_file($pagenum);
 	if ( $imagefile && $::globalviewerpath ) {
@@ -145,7 +146,7 @@ sub popscroll {
 		'10'   => 'bottom_side',
 		'11'   => 'bottom_right_corner',
 	);
-	$::lglobal{scroll_id} = $::top->repeat( $::scrollupdatespd, \&::b2scroll );
+	$::lglobal{scroll_id} = $::top->repeat( $::scrollupdatespd, \&b2scroll );
 }
 
 # Command parsing for External command routine
@@ -1315,13 +1316,14 @@ sub initialize_popup_with_deletebinding {
 	initialize_popup_without_deletebinding($popupname);
 	$::lglobal{$popupname}->protocol(
 		'WM_DELETE_WINDOW' => sub {
-			killpopup($popupname);
+			::killpopup($popupname);
 		}
 	);
 }
 
 sub killpopup {
 	my $popupname = shift;
+	return unless $::lglobal{$popupname};
 	$::lglobal{$popupname}->destroy;
 	undef $::lglobal{$popupname};
 }
@@ -1791,12 +1793,12 @@ sub epubmaker {
 			$title =~ s/\n/ /g;
 			$title =~ s/<[^>]*>//g;
 			$title = 'notitle' if ( length($title) < 1 );
-			runner( $pythonpath, $epubmakerpath, "--make", $format,
+			::runner( $pythonpath, $epubmakerpath, "--make", $format,
 				#"--title", "\"$title\"",
 				#"--input-encoding", ( ::currentfileisunicode() ? '"utf8"' : '"Latin1"' ),
 				$rstfilename );
 		} else {
-			runner( $pythonpath, $epubmakerpath, $rstfilename );
+			::runner( $pythonpath, $epubmakerpath, $rstfilename );
 		}
 		chdir $pwd;
 	} else {
@@ -2055,9 +2057,9 @@ sub externalpopup {    # Set up the external commands menu
 				$::lglobal{extpop}->destroy;
 				undef $::lglobal{extpop};
 			},
-			-text  => 'OK',
+			-text  => 'Close',
 			-width => 8
-		)->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
+		)->pack( -side => 'top', -padx => 2, -anchor => 'n' );
 		::initialize_popup_with_deletebinding('extpop');
 	}
 }
@@ -2065,7 +2067,7 @@ sub externalpopup {    # Set up the external commands menu
 sub xtops {    # run an external program through the external commands menu
 	my $index = shift;
 	return unless $::extops[$index]{command};
-	runner( cmdinterp( $::extops[$index]{command} ) );
+	::runner( ::cmdinterp( $::extops[$index]{command} ) );
 }
 
 sub toolbar_toggle {    # Set up / remove the tool bar
@@ -2079,9 +2081,8 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 		  $top->ToolBar( -side => $::toolside, -close => '30' );
 		$::lglobal{toolfont} = $top->Font(
 			-family => 'Times',
-			# -slant  => 'italic',
 			-weight => 'bold',
-			-size   => 9
+			-size   => 10
 		);
 		$::lglobal{toptool}->separator;
 		$::lglobal{toptool}->ToolButton(
@@ -2128,16 +2129,6 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-command => [ \&::searchpopup ],
 			-tip     => 'Search & Replace'
 		);
-		$::lglobal{toptool}->ToolButton(
-			-image   => 'actcheck16',
-			-command => [ \&::spellchecker ],
-			-tip     => 'Spell Check'
-		);
-		$::lglobal{toptool}->ToolButton(
-			-text    => '"arid"',
-			-command => [ \&::stealthscanno ],
-			-tip     => 'Scannos'
-		);
 		$::lglobal{toptool}->separator;
 		$::lglobal{toptool}->ToolButton(
 			-text    => 'WF²',
@@ -2150,6 +2141,16 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-font    => $::lglobal{toolfont},
 			-command => [ \&::gutcheck ],
 			-tip     => 'Gutcheck'
+		);
+		$::lglobal{toptool}->ToolButton(
+			-image   => 'actcheck16',
+			-command => [ \&::spellchecker ],
+			-tip     => 'Spell Check'
+		);
+		$::lglobal{toptool}->ToolButton(
+			-text    => '"arid"',
+			-command => [ \&::stealthscanno ],
+			-tip     => 'Scannos'
 		);
 		$::lglobal{toptool}->separator;
 		$::lglobal{toptool}->ToolButton(
@@ -2308,7 +2309,7 @@ sub viewprojectcomments {
 	my $defaulthandler = $::extops[0]{command};
 	my $commentsfile = $::projectfileslocation.$::projectid.'_comments.html';
 	$defaulthandler =~ s/\$f\$e/$commentsfile/;
-	runner( cmdinterp($defaulthandler) ) if $::projectid;
+	::runner( ::cmdinterp($defaulthandler) ) if $::projectid;
 }
 
 sub viewprojectdiscussion {

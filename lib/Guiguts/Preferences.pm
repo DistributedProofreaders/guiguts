@@ -271,7 +271,7 @@ sub saveinterval {
         $frame->Label( -text => 'Minutes between autosave' )
             ->pack( -side => 'left' );
         my $entry = $frame->Entry(
-            -background   => 'white',
+            -background   => $::bkgcolor,
             -width        => 5,
             -textvariable => \$::autosaveinterval,
             -validate     => 'key',
@@ -339,7 +339,7 @@ sub setcolor {    # Color picking routine
 	return (
 			 $top->chooseColor(
 								-initialcolor => $initial,
-								-title        => 'Choose color'
+								-title        => 'Choose color (may require restart to take effect)'
 			 )
 	);
 }
@@ -392,7 +392,7 @@ sub filePathsPopup {
 		    )->pack( -side => 'right' );
 		$f1->Entry(
 			-textvariable => \$::globalviewerpath,
-			-width   => 60,
+			-width        => 60,
 			-relief       => 'sunken',
 			-background   => $::bkgcolor,
 		    )->pack( -expand => 'y', -fill   => 'x' );

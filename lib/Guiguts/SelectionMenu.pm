@@ -6,7 +6,7 @@ BEGIN {
 	use Exporter();
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
-	@EXPORT = qw(&case &surround &surroundit &flood &floodfill &indent &asciibox &aligntext
+	@EXPORT = qw(&case &surround &surroundit &flood &floodfill &indent
 	  &selectrewrap &wrapper &alignpopup &asciibox_popup &blockrewrap &rcaligntext &tocalignselection);
 }
 
@@ -145,6 +145,7 @@ sub selectrewrap {
 	if ( $range_total == 0 ) {
 		return;
 	} else {
+		$textwindow->addGlobStart;
 		my $end = pop(@ranges);    #get the end index of the selection
 		$start = pop(@ranges);     #get the start index of the selection
 		my @marklist = $textwindow->dump( -mark, $start, $end )
@@ -470,6 +471,7 @@ sub selectrewrap {
 		$textwindow->delete( $thisblockstart, "$thisblockstart lineend" );
 	}
 	$textwindow->see($start);
+	$textwindow->addGlobEnd;
 
 	#$scannos_highlighted = $scannosave;
 	$textwindow->Unbusy( -recurse => 1 );
@@ -664,10 +666,10 @@ sub surround {
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				::surroundit( $surstrt->get, $surend->get,
+				::surroundit( $::lglobal{surstrt}, $::lglobal{surend},
 					$textwindow );
 			},
-			-text  => 'OK',
+			-text  => 'Surround',
 			-width => 16
 		  )->pack(
 			-side   => 'top',
@@ -772,9 +774,7 @@ sub floodfill {
 }
 
 sub indent {
-	::savesettings();
 	my ( $textwindow, $indent ) = @_;
-
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	$::operationinterrupt = 0;
@@ -783,7 +783,7 @@ sub indent {
 	} else {
 		my @selarray;
 		if ( $indent eq 'up' ) { @ranges = reverse @ranges }
-		$::textwindow->addGlobStart;
+		$textwindow->addGlobStart;
 		while (@ranges) {
 			my $end            = pop(@ranges);
 			my $start          = pop(@ranges);
@@ -909,7 +909,7 @@ sub indent {
 			my $start = pop(@selarray);
 			$textwindow->tagAdd( 'sel', $start, $end );
 		}
-		$::textwindow->addGlobEnd;
+		$textwindow->addGlobEnd;
 	}
 }
 
@@ -1050,11 +1050,11 @@ sub asciibox_popup {
 }
 
 sub rcaligntext {
-	::savesettings();
 	my ( $align, $indentval ) = @_;
 	my $textwindow = $::textwindow;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
+	my $optrmargin = $::rmargin - $::rmargindiff;
 	return if ( $range_total == 0 );
 	my ($start, $end) = ::expandselection();
 	my $thisblockstart = "$start.0";
@@ -1066,8 +1066,8 @@ sub rcaligntext {
 			$textwindow->delete( $index, "$index+1c" );
 		}
 		my $line = $textwindow->get($index, "$index lineend");
-		if ( length($line) < $::rmargin){
-			my $paddval = $::rmargin - length($line) + $indentval;
+		if ( length($line) < $optrmargin){
+			my $paddval = $optrmargin - length($line) + $indentval;
 			if ( $align eq 'c' ) { $paddval = $paddval / 2 ; }
 			$textwindow->insert( $index, ' ' x $paddval ) unless $line eq '';
 		}
@@ -1079,8 +1079,8 @@ sub rcaligntext {
 }
 
 sub tocalignselection {
-	::savesettings();
-	my $indentval = @_;
+	my ( $indentval ) = @_;
+	$indentval = 0 unless $indentval;
 	my $textwindow = $::textwindow;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
