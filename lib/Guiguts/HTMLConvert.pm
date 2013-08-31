@@ -3755,46 +3755,43 @@ sub fromnamed {
 	my ($textwindow) = @_;
 	my @ranges       = $textwindow->tagRanges('sel');
 	my $range_total  = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		while (@ranges) {
-			my $end   = pop @ranges;
-			my $start = pop @ranges;
-			$textwindow->addGlobStart;
-			$textwindow->markSet( 'srchend', $end );
-			my ( $thisblockstart, $length );
-			::named( '&amp;',   '&',  $start, 'srchend' );
-			::named( '&quot;',  '"',  $start, 'srchend' );
-			::named( '&mdash;', '--', $start, 'srchend' );
-			::named( ' &gt;',   ' >', $start, 'srchend' );
-			::named( '&lt; ',   '< ', $start, 'srchend' );
-			my $from;
+	return unless $range_total;
+	while (@ranges) {
+		my $end   = pop @ranges;
+		my $start = pop @ranges;
+		$textwindow->addGlobStart;
+		$textwindow->markSet( 'srchend', $end );
+		my ( $thisblockstart, $length );
+		::named( '&amp;',   '&',  $start, 'srchend' );
+		::named( '&quot;',  '"',  $start, 'srchend' );
+		::named( '&mdash;', '--', $start, 'srchend' );
+		::named( ' &gt;',   ' >', $start, 'srchend' );
+		::named( '&lt; ',   '< ', $start, 'srchend' );
+		my $from;
 
-			for ( 160 .. 255 ) {
-				$from = lc sprintf( "%x", $_ );
-				::named( ::entity( '\x' . $from ), chr($_), $start, 'srchend' );
-			}
-			while (
-				$thisblockstart = $textwindow->search(
-					'-regexp',
-					'-count' => \$length,
-					'--', '&#\d+;', $start, $end
-				)
-			  )
-			{
-				my $xchar =
-				  $textwindow->get( $thisblockstart,
-					$thisblockstart . '+' . $length . 'c' );
-				$textwindow->ntdelete( $thisblockstart,
-					$thisblockstart . '+' . $length . 'c' );
-				$xchar =~ s/&#(\d+);/$1/;
-				$textwindow->ntinsert( $thisblockstart, chr($xchar) );
-			}
-			$textwindow->markUnset('srchend');
-			$textwindow->addGlobEnd;
-			$textwindow->markSet( 'insert', $start );
+		for ( 160 .. 255 ) {
+			$from = lc sprintf( "%x", $_ );
+			::named( ::entity( '\x' . $from ), chr($_), $start, 'srchend' );
 		}
+		while (
+			$thisblockstart = $textwindow->search(
+				'-regexp',
+				'-count' => \$length,
+				'--', '&#\d+;', $start, $end
+			)
+		  )
+		{
+			my $xchar =
+			  $textwindow->get( $thisblockstart,
+				$thisblockstart . '+' . $length . 'c' );
+			$textwindow->ntdelete( $thisblockstart,
+				$thisblockstart . '+' . $length . 'c' );
+			$xchar =~ s/&#(\d+);/$1/;
+			$textwindow->ntinsert( $thisblockstart, chr($xchar) );
+		}
+		$textwindow->markUnset('srchend');
+		$textwindow->addGlobEnd;
+		$textwindow->markSet( 'insert', $start );
 	}
 }
 
@@ -3802,51 +3799,48 @@ sub tonamed {
 	my ($textwindow) = @_;
 	my @ranges       = $textwindow->tagRanges('sel');
 	my $range_total  = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		while (@ranges) {
-			my $end   = pop @ranges;
-			my $start = pop @ranges;
-			$textwindow->addGlobStart;
-			$textwindow->markSet( 'srchend', $end );
-			my $thisblockstart;
-			::named( '&(?![\w#])',           '&amp;',   $start, 'srchend' );
-			::named( '&$',                   '&amp;',   $start, 'srchend' );
-			::named( '"',                    '&quot;',  $start, 'srchend' );
-			::named( '(?<=[^-!])--(?=[^>])', '&mdash;', $start, 'srchend' );
-			::named( '(?<=[^-])--$',         '&mdash;', $start, 'srchend' );
-			::named( '^--(?=[^-])',          '&mdash;', $start, 'srchend' );
-			::named( '& ',                   '&amp; ',  $start, 'srchend' );
-			::named( '&c\.',                 '&amp;c.', $start, 'srchend' );
-			::named( ' >',                   ' &gt;',   $start, 'srchend' );
-			::named( '< ',                   '&lt; ',   $start, 'srchend' );
-			my $from;
+	return unless $range_total;
+	while (@ranges) {
+		my $end   = pop @ranges;
+		my $start = pop @ranges;
+		$textwindow->addGlobStart;
+		$textwindow->markSet( 'srchend', $end );
+		my $thisblockstart;
+		::named( '&(?![\w#])',           '&amp;',   $start, 'srchend' );
+		::named( '&$',                   '&amp;',   $start, 'srchend' );
+		::named( '"',                    '&quot;',  $start, 'srchend' );
+		::named( '(?<=[^-!])--(?=[^>])', '&mdash;', $start, 'srchend' );
+		::named( '(?<=[^-])--$',         '&mdash;', $start, 'srchend' );
+		::named( '^--(?=[^-])',          '&mdash;', $start, 'srchend' );
+		::named( '& ',                   '&amp; ',  $start, 'srchend' );
+		::named( '&c\.',                 '&amp;c.', $start, 'srchend' );
+		::named( ' >',                   ' &gt;',   $start, 'srchend' );
+		::named( '< ',                   '&lt; ',   $start, 'srchend' );
+		my $from;
 
-			for ( 128 .. 255 ) {
-				$from = lc sprintf( "%x", $_ );
-				::named(
-					'\x' . $from,
-					::entity( '\x' . $from ),
-					$start, 'srchend'
-				);
-			}
-			while (
-				$thisblockstart = $textwindow->search(
-					'-regexp',             '--',
-					'[\x{100}-\x{65535}]', $start,
-					'srchend'
-				)
-			  )
-			{
-				my $xchar = ord( $textwindow->get($thisblockstart) );
-				$textwindow->ntdelete( $thisblockstart, "$thisblockstart+1c" );
-				$textwindow->ntinsert( $thisblockstart, "&#$xchar;" );
-			}
-			$textwindow->markUnset('srchend');
-			$textwindow->addGlobEnd;
-			$textwindow->markSet( 'insert', $start );
+		for ( 128 .. 255 ) {
+			$from = lc sprintf( "%x", $_ );
+			::named(
+				'\x' . $from,
+				::entity( '\x' . $from ),
+				$start, 'srchend'
+			);
 		}
+		while (
+			$thisblockstart = $textwindow->search(
+				'-regexp',             '--',
+				'[\x{100}-\x{65535}]', $start,
+				'srchend'
+			)
+		  )
+		{
+			my $xchar = ord( $textwindow->get($thisblockstart) );
+			$textwindow->ntdelete( $thisblockstart, "$thisblockstart+1c" );
+			$textwindow->ntinsert( $thisblockstart, "&#$xchar;" );
+		}
+		$textwindow->markUnset('srchend');
+		$textwindow->addGlobEnd;
+		$textwindow->markSet( 'insert', $start );
 	}
 }
 
