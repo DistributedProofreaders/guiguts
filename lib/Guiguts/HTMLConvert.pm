@@ -1677,7 +1677,7 @@ sub htmlimage {
 	$selection = '' unless $selection;
 	my $preservep = '';
 	$preservep = '<p>' if $selection !~ /<\/p>$/;
-	$selection =~ s/<p>\[Illustration:/[Illustration:/;
+	$selection =~ s/<p>\[Illustration/[Illustration/;
 	$selection =~ s/\[Illustration:?\s*(\.*)/$1/;
 	$selection =~ s/\]<\/p>$/]/;
 	$selection =~ s/(\.*)\]$/$1/;
@@ -1901,7 +1901,7 @@ sub htmlimage {
 	}
 	$::lglobal{alttext}->delete( 0, 'end' ) if $::lglobal{alttext};
 	$::lglobal{titltext}->delete( 0, 'end' ) if $::lglobal{titltext};
-	$::lglobal{captiontext}->insert( 'end', "<p>$selection</p>" );
+	$::lglobal{captiontext}->insert( 'end', "<p>$selection</p>" ) if $selection;
 	&thumbnailbrowse();
 }
 
