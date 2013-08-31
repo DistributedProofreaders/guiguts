@@ -26,6 +26,31 @@ on further helper applications.
 
 RELEASE NOTES:
 
+Version 1.0.25.
+- bug fix: newly opened file displays as edited
+- bug fix: gutcheck popup background
+- bug fix: missing had/bad option in gutcheck
+- bug fix: rewrap problems around page markers
+- updated urls to sourceforge trackers
+- updated default indent values
+- bug fix: double </p> at */#/
+- bug fix: orphan brackets accepts mixed French and German guillemets
+- bug fix: no return to GG dir after adding GWL
+- default menu layout updated, old layout left as option
+- unmaintained wizard menu layout removed
+- shortcut keys cleaned up and updated (see Help -> Shortcuts)
+- buggy bookmark shortcuts made opt-in and marked beta
+- some cmd shortcuts added for mac
+- footnote popup layout updated, auto-launch of Check FNs
+- better joining of footnotes
+- better separation of WF and S&R
+- minor update of WF layout and behaviour
+- spellcheck popup layout updated (with a pref for the old one)
+- spellcheck use project language dictionary
+- basic support for enchant (beta)
+- better support for LOTE views in GC
+- clearer warning when Windows Preview bug locks a file
+
 Version 1.0.24.
 - bug fix: auto-run Word Frequency before Stealth Scannos.
 - bug fix: better file name suggestion in save as dialog.
@@ -41,7 +66,6 @@ Version 1.0.23.
 - Operations History now stores January as 01, not 00, etc.
 - HTML generate image captions as div instead of span, enclose in p
 - some tweaking of aspell interaction
-- added some basic mac shortcut keys (Cmd)
 - various minor tweaks and cleanup
 
 Version 1.0.22.
