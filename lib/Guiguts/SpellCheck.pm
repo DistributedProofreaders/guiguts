@@ -532,10 +532,12 @@ sub spelladdgoodwords {
 	if ( $ans =~ /no/i ) {
 		return;
 	}
+	my $pwd = ::getcwd();
 	chdir $::globallastpath;
 	open( DAT, "good_words.txt" ) || die("Could not open good_words.txt!");
 	my @raw_data = <DAT>;
 	close(DAT);
+	chdir $pwd;
 	my $word = q{};
 	foreach my $word (@raw_data) {
 		spellmyaddword( substr( $word, 0, -1 ) );
