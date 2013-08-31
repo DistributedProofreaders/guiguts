@@ -230,7 +230,7 @@ our $convertcharsdisplaysearch;
 
 our ( $txt_conv_bold, $txt_conv_italic, $txt_conv_gesperrt, $txt_conv_font,
 	$txt_conv_sc, $txt_conv_tb )
-  = ( 1, 1, 0, 0, 2, 1 );
+  = ( 1, 1, 0, 0, 0, 1 );
 our ( $bold_char, $italic_char, $gesperrt_char, $font_char, $sc_char )
   = ( '=', '_', '~', '=', '+' );
 
