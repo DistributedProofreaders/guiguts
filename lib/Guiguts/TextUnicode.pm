@@ -21,19 +21,15 @@ sub Load {
 		my $line = <$fh>;
 		utf8::decode($line);
 		$line =~ s/^\x{FEFF}?//;
-
 		#$line = ::eol_convert($line);
 		$line =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
 		#$line = ::eol_whitespace($line);
 		$w->ntinsert( 'end', $line );
 		while (<$fh>) {
 			utf8::decode($_);
 			$_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
 			#$_ = ::eol_convert($_);
 			$_ =~ s/[\t \xA0]+$//;
-
 			#$_ = ::eol_whitespace($_);
 			$w->ntinsert( 'end', $_ );
 			if ( ( $count++ % 1000 ) == 0 ) {
@@ -48,7 +44,14 @@ sub Load {
 		$w->FileName($filename);
 		$w->MainWindow->Unbusy;
 	} else {
-		$w->BackTrace("Cannot open $filename:$!");
+		my $msg = "Cannot open $filename:$!.";
+		$w->messageBox(
+			-icon    => 'warning',
+			-title   => 'Warning',
+			-type    => 'OK',
+			-message => $msg.(OS_Win?" (Are you using Windows Explorer Preview?)":""),
+		);
+		$w->BackTrace($msg);
 	}
 }
 
@@ -106,8 +109,14 @@ sub SaveUTF {
 		$w->FileName($filename);
 		return 1;
 	} else {
-		$w->BackTrace(
-"Cannot save $filename:$!. Text is in the temporary file $tempfilename" );
+		my $msg = "Cannot save $filename:$!. Text is in the temporary file $tempfilename.";
+		$w->messageBox(
+			-icon    => 'warning',
+			-title   => 'Warning',
+			-type    => 'OK',
+			-message => $msg.(OS_Win?" (Are you using Windows Explorer Preview?)":""),
+		);
+		$w->BackTrace($msg);
 		return 0;
 	}
 }
@@ -457,4 +466,5 @@ sub AutoScan {
 	$w->SelectTo( '@' . $Tk::x . ',' . $Tk::y );
 	$w->RepeatId( $w->after( 70, [ 'AutoScan', $w ] ) );
 }
+
 1;
