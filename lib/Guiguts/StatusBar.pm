@@ -433,7 +433,7 @@ sub update_prev_img_button {
 		$::lglobal{previmagebutton} =
 		  $::counter_frame->Label(
 								   -text       => '<',
-								   -width      => 1,
+								   -width      => 2,
 								   -relief     => 'ridge',
 								   -background => 'gray',
 		  )->grid( -row => 1, -column => 3 );
@@ -496,7 +496,7 @@ sub update_next_img_button {
 		$::lglobal{nextimagebutton} =
 		  $::counter_frame->Label(
 								   -text       => '>',
-								   -width      => 1,
+								   -width      => 2,
 								   -relief     => 'ridge',
 								   -background => 'gray',
 		  )->grid( -row => 1, -column => 5 );
