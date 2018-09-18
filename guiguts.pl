@@ -214,7 +214,7 @@ our @mygcview;
 our %operationshash;    # New format {operation, time}
 our @pageindex;
 our @recentfile;
-@recentfile = ('README.txt');
+@recentfile = ('README.md');
 our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search

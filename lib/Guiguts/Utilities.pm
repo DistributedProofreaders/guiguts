@@ -1576,9 +1576,11 @@ sub checkonlineversion {
 		env_proxy  => 1,
 		keep_alive => 1,
 		timeout    => 20,
+		ssl_opts => {
+			verify_hostname => 0,
+		},
 	);
-	my $response = $ua->get('http://sourceforge.net/projects/guiguts/');
-
+	my $response = $ua->get('https://github.com/DistributedProofreaders/guiguts/releases');
 	#working();
 	unless ( $response->content ) {
 		return;
@@ -1637,7 +1639,7 @@ sub checkforupdates {
 		$button_frame->Button(
 			-text    => 'Update',
 			-command => sub {
-				::launchurl( "http://sourceforge.net/projects/guiguts/" );
+				::launchurl( "https://github.com/DistributedProofreaders/guiguts/" );
 				$versionbox->destroy;
 				undef $versionbox;
 			}

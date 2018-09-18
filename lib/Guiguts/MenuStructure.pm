@@ -152,14 +152,11 @@ sub menu_help {
 		  -tearoff => 1,
 		  -menuitems =>
 		  [
-		    [ Button  => 'Report a ~Bug (SF Tracker) [www]',
-		      -command => sub { ::launchurl('http://sourceforge.net/p/guiguts/bugs/'); } 
-		    ],
-		    [ Button  => 'Suggest ~Enhancement (SF Tracker) [www]',
-		      -command => sub { ::launchurl('http://sourceforge.net/p/guiguts/feature-requests/'); } 
+		    [ Button  => 'Report a ~Bug or Suggest Enhancement (Github Issues) [www]',
+		      -command => sub { ::launchurl('https://github.com/DistributedProofreaders/guiguts/issues'); }
 		    ],
 		    [ Button  => 'Suggest Enhancement (DP ~Wiki) [www]',
-		      -command => sub { ::launchurl('http://www.pgdp.net/wiki/Guiguts_Enhancements'); }
+		      -command => sub { ::launchurl('https://www.pgdp.net/wiki/Guiguts_Enhancements'); }
 		    ],
 		  ]
 		],

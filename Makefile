@@ -7,7 +7,7 @@ VERSION=1.0.25
 ZIP=zip -rv9
 
 # files to exclude
-EXCLUDES=.\* \*.zip \*.bat Makefile guiguts setting.rc header.txt footer.txt gg.ico todo.txt COMPILING.txt tools/\* samples/\* tests/\* data/\*
+EXCLUDES=.\* \*.zip \*.bat Makefile guiguts setting.rc header.txt footer.txt gg.ico todo.txt RELEASING.txt tools/\* samples/\* tests/\* data/\*
 
 
 all: win generic
