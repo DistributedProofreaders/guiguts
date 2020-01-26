@@ -589,7 +589,7 @@ sub html_convert_body {
 #   print "int:$intitle:las:$last5[3]:sel:$selection\n";
 			if (
 				(
-					length($selection) 
+					length($selection)
 					&& (   ( !$last5[3] )
 						or ( $last5[3] =~ /<\/?h\d?|<br.*?>|<\/p>|<\/div>/ ) )
 					&& ( $selection !~ /<\/?h\d?|<br.*?>|<\/p>|<\/div>/ )
@@ -702,7 +702,7 @@ sub html_convert_body {
 
 			# collect css to indent poetry; classhash will be added in css
 			$::lglobal{classhash}->{$indent} =
-			    '    .poem span.i' 
+			    '    .poem span.i'
 			  . $indent
 			  . '     {display: block; margin-left: '
 			  . ( $indent / 2 )
@@ -977,7 +977,7 @@ sub html_convert_body {
 					$ital = 0;
 				}
 				$selection =
-				    '<span style="margin-left: ' 
+				    '<span style="margin-left: '
 				  . $indent . 'em;">'
 				  . $selection
 				  . '</span>';
@@ -1031,7 +1031,7 @@ sub html_convert_body {
 			# insert chapter heading unless already a para or heading open
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
-					"<h2><a name=\"" . $aname . "\" id=\"" . $aname . "\">" );
+					"<h2><a id=\"" . $aname . "\" />" );
 				my $linesinheader=1;
 				while (1) {
 					$step++;
@@ -1045,7 +1045,7 @@ sub html_convert_body {
 					} else {
 						# end of header reached
 						$step--;
-						$textwindow->ntinsert( "$step.end", '</a></h2>' );
+						$textwindow->ntinsert( "$step.end", '</h2>' );
 						$linesinheader--;
 						if ($linesinheader>3) {
 							$textwindow->ntinsert( "$step.end", '<Warning: long header>' );
@@ -1061,7 +1061,7 @@ sub html_convert_body {
 				$selection =~ s/<[^>]+>//g;
 				$selection = "<b>$selection</b>";
 				push @contents,
-				    "<a href=\"#" 
+				    "<a href=\"#"
 				  . $aname . "\">"
 				  . $completeheader
 				  . "</a><br />\n";
@@ -1172,18 +1172,18 @@ sub html_convert_footnoteblocks {
 		$textwindow->ntdelete( $thisblockstart, "$thisblockstart+17c" );
 		$textwindow->insert( $thisblockstart,
 			'<div class="footnotes"><h3>FOOTNOTES:</h3>' );
-		# Improved logic for finding end of footnote block: find 
+		# Improved logic for finding end of footnote block: find
 		# the next footnote block
 		my $nextfootnoteblock = $textwindow->search(
 			'-exact', '--', 'FOOTNOTES:', $thisblockstart.'+1l', 'end'
 		);
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock='end';			
+			$nextfootnoteblock='end';
 		}
 		unless ($nextfootnoteblock) {
-			$nextfootnoteblock='end';			
+			$nextfootnoteblock='end';
 		}
-		# find the start of last footnote 
+		# find the start of last footnote
 		my $lastfootnoteinblock = $textwindow->search(
 			'-exact','-backwards', '--', '<div class="footnote">', $nextfootnoteblock
 		);
@@ -1829,19 +1829,19 @@ sub htmlimage {
 					if ( $alignment eq 'center' ) {
 						$textwindow->delete( 'thisblockstart', 'thisblockend' );
 						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figcenter\" style=\"width: " 
+							    "<div class=\"figcenter\" style=\"width: "
 							  . $width
 							  . $closeimg );
 					} elsif ( $alignment eq 'left' ) {
 						$textwindow->delete( 'thisblockstart', 'thisblockend' );
 						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figleft\" style=\"width: " 
+							    "<div class=\"figleft\" style=\"width: "
 							  . $width
 							  . $closeimg );
 					} elsif ( $alignment eq 'right' ) {
 						$textwindow->delete( 'thisblockstart', 'thisblockend' );
 						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figright\" style=\"width: " 
+							    "<div class=\"figright\" style=\"width: "
 							  . $width
 							  . $closeimg );
 					}
@@ -3035,7 +3035,7 @@ sub markup {
 
 sub clearmarkupinselection {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
-	::hidepagenums();	
+	::hidepagenums();
 	my @ranges = $textwindow->tagRanges('sel');
 	unless (@ranges) {
 		push @ranges, $textwindow->index('insert');
