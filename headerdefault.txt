@@ -33,17 +33,17 @@ hr {
     width: 33%;
     margin-top: 2em;
     margin-bottom: 2em;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 33.5%;
+    margin-right: 33.5%;
     clear: both;
 }
 
-hr.tb   {width: 45%;}
-hr.chap {width: 65%}
-hr.full {width: 95%;}
+hr.tb   {width: 45%; margin-left: 27.5%; margin-right: 27.5%;}
+hr.chap {width: 65%; margin-left: 17.5%; margin-right: 17.5%;}
+hr.full {width: 95%; margin-left: 2.5%; margin-right: 2.5%;}
 
-hr.r5  {width: 5%; margin-top: 1em; margin-bottom: 1em;}
-hr.r65 {width: 65%; margin-top: 3em; margin-bottom: 3em;}
+hr.r5  {width: 5%; margin-top: 1em; margin-bottom: 1em; margin-left: 47.5%; margin-right: 47.5%;}
+hr.r65 {width: 65%; margin-top: 3em; margin-bottom: 3em; margin-left: 17.5%; margin-right: 17.5%;}
 
 ul.index { list-style-type: none; }
 li.ifrst { margin-top: 1em; }
@@ -93,18 +93,18 @@ table {
     font-size: smaller;
     color: black;
     background: #eeeeee;
-    border: dashed 1px;
+    border: 1px dashed;
 }
 
-.bb       {border-bottom: solid 2px;}
+.bb       {border-bottom: 2px solid;}
 
-.bl       {border-left: solid 2px;}
+.bl       {border-left: 2px solid;}
 
-.bt       {border-top: solid 2px;}
+.bt       {border-top: 2px solid;}
 
-.br       {border-right: solid 2px;}
+.br       {border-right: 2px solid;}
 
-.bbox     {border: solid 2px;}
+.bbox     {border: 2px solid;}
 
 .center   {text-align: center;}
 
@@ -114,15 +114,15 @@ table {
 
 .u        {text-decoration: underline;}
 
-.gesperrt 
-{ 
-    letter-spacing: 0.2em; 
-    margin-right: -0.2em; 
-} 
+.gesperrt
+{
+    letter-spacing: 0.2em;
+    margin-right: -0.2em;
+}
 
-em.gesperrt 
-{ 
-    font-style: normal; 
+em.gesperrt
+{
+    font-style: normal;
 }
 
 .caption  {font-weight: bold;}
@@ -157,7 +157,7 @@ em.gesperrt
 }
 
 /* Footnotes */
-.footnotes        {border: dashed 1px;}
+.footnotes        {border: 1px dashed;}
 
 .footnote         {margin-left: 10%; margin-right: 10%; font-size: 0.9em;}
 
