@@ -1031,7 +1031,7 @@ sub html_convert_body {
 			# insert chapter heading unless already a para or heading open
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
-					"<h2><a id=\"" . $aname . "\" />" );
+					"<h2 id=\"" . $aname . "\">" );
 				my $linesinheader=1;
 				while (1) {
 					$step++;
