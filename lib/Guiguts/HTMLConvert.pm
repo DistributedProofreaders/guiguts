@@ -1031,7 +1031,7 @@ sub html_convert_body {
 			# insert chapter heading unless already a para or heading open
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
-					"<h2 id=\"" . $aname . "\">" );
+					"<h2 class=\"nobreak\" id=\"" . $aname . "\">" );
 				my $linesinheader=1;
 				while (1) {
 					$step++;
@@ -1121,6 +1121,39 @@ sub html_convert_body {
 	  unless is_paragraph_open( $textwindow, $incontents );
 	$textwindow->insert( $incontents, $contentstext ) if @contents;
 	return;
+}
+
+# Put <div class="chapter"> before, and </div> after h2 elements, including pagenum
+# within the div if it comes up to 5 lines before the h2 and there's no intervening text.
+sub html_convert_chapterdivs {
+	my ($textwindow) = @_;
+	my $searchstart = '1.0';
+	my $h2blockend;
+	# find the end of an h2 element
+	while ( $h2blockend = $textwindow->search( '-exact', '--', '</h2>', $searchstart, 'end' ) )
+	{
+		# find the corresponding start of h2 by searching backwards
+		my $h2blockstart = $textwindow->search( '-exact', '-backwards', '--', '<h2', $h2blockend );
+		if ( $h2blockstart )
+		{
+			# check if there's a pagenum span within the last 5 lines
+			my $pagelength;
+			my $pagestart = $textwindow->search( '-regexp', '-backwards', '-count' => \$pagelength, '--',
+				'<p><span class="pagenum">.+</span></p>', $h2blockstart, $h2blockstart.'-5l' );
+			if ( $pagestart )
+			{
+				# move the start point to before the pagenum unless 
+				# there's text between the end of the pagenum and the start of the h2
+				$h2blockstart = $pagestart
+					unless ( $textwindow->search( '-regexp', '--', '.',
+								$pagestart . '+' . $pagelength . 'c' , $h2blockstart ) );
+			}
+			# insert the end and start of the chapter div
+			$textwindow->ntinsert( $h2blockend . '+5c', "\n</div>" );
+			$textwindow->ntinsert( $h2blockstart, "\n\n<div class=\"chapter\">\n" );
+		}
+		$searchstart = $h2blockend . '+4l'; # ensure we don't find the same </h2 again
+	}
 }
 
 sub html_convert_underscoresmallcaps {
@@ -1971,6 +2004,7 @@ sub htmlautoconvert {
 	html_convert_footnoteblocks($textwindow);
 	html_convert_sidenotes($textwindow);
 	html_convert_pageanchors();
+	html_convert_chapterdivs($textwindow); # after page anchors, so they can be included in div
 	html_convert_utf( $textwindow, $::lglobal{leave_utf},
 		$::lglobal{keep_latin1} );
 	html_wrapup( $textwindow, $headertext, $::lglobal{leave_utf},
