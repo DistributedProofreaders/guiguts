@@ -1154,6 +1154,11 @@ sub html_convert_chapterdivs {
 		}
 		$searchstart = $h2blockend . '+4l'; # ensure we don't find the same </h2 again
 	}
+	#remove excess blank lines between pagenum and h2 elements - leave 1 blank
+	my $selection = $textwindow->get( '1.0', 'end' );
+	$selection =~ s/\n+<h2/\n\n<h2/g;
+	$textwindow->ntdelete( '1.0', 'end' );
+	$textwindow->ntinsert( '1.0', $selection );
 }
 
 sub html_convert_underscoresmallcaps {
