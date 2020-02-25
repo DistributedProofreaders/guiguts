@@ -1032,6 +1032,10 @@ sub html_convert_body {
 			if ( not $selection =~ /<[ph]/ ) {
 				$textwindow->ntinsert( "$step.0",
 					"<h2 class=\"nobreak\" id=\"" . $aname . "\">" );
+				# remove surplus blank lines prior to h2
+				$textwindow->ntdelete( "$step.0-3l", "$step.0" );
+				$step -= 3;
+				
 				my $linesinheader=1;
 				while (1) {
 					$step++;
@@ -1066,12 +1070,12 @@ sub html_convert_body {
 				  . $completeheader
 				  . "</a><br />\n";
 			}
-			$selection .= '<h2>';
+			$selection .= '<h2';
 			$textwindow->see("$step.0");
 			$textwindow->update;
 
 			#open subheading with <p>
-		} elsif ( ( $last5[2] =~ /<h2>/ ) && ($selection) ) {
+		} elsif ( ( $last5[2] =~ /<h2/ ) && ($selection) ) {
 			$textwindow->ntinsert( "$step.0", '<p>' )
 			  unless ( ( $selection =~ /<[pd]/ )
 				|| ( $selection =~ /<[hb]r>/ )
