@@ -331,7 +331,7 @@ sub html_convert_footnotes {
 				'fns' . "$step" . '+'
 				  . ( length( $fnarray->[$step][4] ) + 11 ) . "c"
 			),
-			"$::htmllabels{fnanchafter}</span></a>"
+			"$::htmllabels{fnanchafter}</a>"
 		);
 		$textwindow->ntdelete(
 			'fns' . "$step" . '+'
@@ -341,16 +341,13 @@ sub html_convert_footnotes {
 		);
 		$textwindow->ntinsert(
 			'fns' . "$step" . '+10c',
-			"<div class=\"footnote\"><p><a name=\"$::htmllabels{fnlabel}"
+			"<div class=\"footnote\"><p><a id=\"$::htmllabels{fnlabel}"
 			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
-			  . "\" id=\"$::htmllabels{fnlabel}"
+			  . "\" href=\"#$::htmllabels{fnanchor}"
 			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
-			  . "\"></a><a href=\"#$::htmllabels{fnanchor}"
-			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
-			  . $step
-			  . "\"><span class=\"label\">$::htmllabels{fnanchbefore}"
+			  . "\" class=\"label\">$::htmllabels{fnanchbefore}"
 		);
 		$textwindow->ntdelete( 'fns' . "$step", 'fns' . "$step" . '+10c' );
 		# jump through some hoops to steer clear of page markers
@@ -366,13 +363,10 @@ sub html_convert_footnotes {
 		}
 		$textwindow->ntinsert(
 			'fna' . "$step",
-			"<a name=\"$::htmllabels{fnanchor}"
+			"<a id=\"$::htmllabels{fnanchor}"
 			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
-			  . "\" id=\"$::htmllabels{fnanchor}"
-			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
-			  . $step
-			  . "\"></a><a href=\"#$::htmllabels{fnlabel}"
+			  . "\" href=\"#$::htmllabels{fnlabel}"
 			  . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
 			  . $step
 			  . "\" class=\"fnanchor\">"
@@ -1363,7 +1357,7 @@ sub html_convert_pageanchors {
 							$br = '';    # No page break for exportwithmarkup
 						} else {
 							$pagereference .= "$br"
-							  . "<a name=\"$::htmllabels{pglabel}$_\" id=\"$::htmllabels{pglabel}$_\">$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}</a>";
+							  . "<a id=\"$::htmllabels{pglabel}$_\" />$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
 							$br = "<br />";
 						}
 					}
@@ -1375,7 +1369,7 @@ sub html_convert_pageanchors {
 						$pagereference = "<$mark>";
 					} else {
 						$pagereference =
-"<a name=\"$::htmllabels{pglabel}$num\" id=\"$::htmllabels{pglabel}$num\">$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}</a>";
+							"<a id=\"$::htmllabels{pglabel}$num\" />$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}";
 					}
 				}
 			}
@@ -2201,6 +2195,9 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
+		# Make short footnotes the default, e.g. Footnote_3 rather than Footnote_3_3
+		$shortfootnotes->select;
+		
 		$blockmarkup = $f0->Checkbutton(
 			-variable    => \$::lglobal{cssblockmarkup},
 			-selectcolor => $::lglobal{checkcolor},

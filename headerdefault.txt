@@ -70,6 +70,9 @@ table {
     left: 92%;
     font-size: smaller;
     text-align: right;
+    font-style:normal;
+    font-weight: normal;
+    font-variant: normal;
 } /* page numbers */
 
 .linenum {
