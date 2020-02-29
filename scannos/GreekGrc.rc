@@ -1,0 +1,43 @@
+%::scannoslist = (
+"\x{0386}" => "\x{1FBB}",
+"\x{0388}" => "\x{1FC9}",
+"\x{0389}" => "\x{1FCB}",
+"\x{038A}" => "\x{1FDB}",
+"\x{038C}" => "\x{1FF9}",
+"\x{038E}" => "\x{1FEB}",
+"\x{038F}" => "\x{1FFB}",
+"\x{03AC}" => "\x{1F71}",
+"\x{03AD}" => "\x{1F73}",
+"\x{03AE}" => "\x{1F75}",
+"\x{03AF}" => "\x{1F77}",
+"\x{03CC}" => "\x{1F79}",
+"\x{03CD}" => "\x{1F7B}",
+"\x{03CE}" => "\x{1F7D}",
+"\x{0390}" => "\x{1FD3}",
+"\x{03B0}" => "\x{1FE3}",
+);
+
+# For a hint, use the regex expression EXACTLY as it appears in the %::scannoslist hash
+# but replace the replacement term (heh!) with the hint text. Note: if a single quote
+# appears anywhere in the hint text, you'll need to escape it with a backslash. E.G. isn't -> isn\'t
+# I could have made this more compact by converting the scannoslist hash into a two dimensional
+# hash, but would have sacrificed backward compatibility.
+
+%::reghints = (
+"\x{0386}" => "Alpha-acute",
+"\x{0388}" => "Eta-acute",
+"\x{0389}" => "Epsilon-acute",
+"\x{038A}" => "Iota-acute",
+"\x{038C}" => "Omicron-acute",
+"\x{038E}" => "Upsilon-acute",
+"\x{038F}" => "Omega-acute",
+"\x{03AC}" => "alpha-acute",
+"\x{03AD}" => "eta-acute",
+"\x{03AE}" => "epsilon-acute",
+"\x{03AF}" => "iota-acute",
+"\x{03CC}" => "omicron-acute",
+"\x{03CD}" => "upsilon-acute",
+"\x{03CE}" => "omega-acute",
+"\x{0390}" => "iota_dialytika-acute",
+"\x{03B0}" => "upsilon_dialytika-acute",
+);
