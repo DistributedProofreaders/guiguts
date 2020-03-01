@@ -11,34 +11,28 @@ BEGIN {
 
 sub fromgreektr {
 	my $phrase = shift;
-	$phrase =~ s/\x{03C2}($|\W)/s$1/g;
-	$phrase =~ s/\x{03B8}/th/g;
 	$phrase =~ s/\x{03B3}\x{03B3}/ng/g;
+	$phrase =~ s/\x{0393}\x{0393}/NG/g;
 	$phrase =~ s/\x{03B3}\x{03BA}/nk/g;
-	$phrase =~ s/\x{03B3}\x{03BE}/nx/g;
-	$phrase =~ s/\x{1FE5}/rh/g;
-	$phrase =~ s/\x{03C6}/ph/g;
+	$phrase =~ s/\x{0393}\x{039A}/NK/g;
+	$phrase =~ s/\x{0393}\x{03BE}/nx/g;
+	$phrase =~ s/\x{0393}\x{03BE}/NX/g;
 	$phrase =~ s/\x{03B3}\x{03C7}/nch/g;
-	$phrase =~ s/\x{03C7}/ch/g;
-	$phrase =~ s/\x{03C8}/ps/g;
-	$phrase =~ s/\x{1F01}/ha/g;
-	$phrase =~ s/\x{1F11}/he/g;
-	$phrase =~ s/\x{1F21}/hê/g;
-	$phrase =~ s/\x{1F31}/hi/g;
-	$phrase =~ s/\x{1F41}/ho/g;
-	$phrase =~ s/\x{1F51}/hy/g;
-	$phrase =~ s/\x{1F61}/hô/g;
-	$phrase =~ s/\x{03A7}/Ch/g;
-	$phrase =~ s/\x{0398}/Th/g;
-	$phrase =~ s/\x{03A6}/Ph/g;
-	$phrase =~ s/\x{03A8}/Ps/g;
-	$phrase =~ s/\x{1F09}/Ha/g;
-	$phrase =~ s/\x{1F19}/He/g;
-	$phrase =~ s/\x{1F29}/Hê/g;
-	$phrase =~ s/\x{1F39}/Hi/g;
-	$phrase =~ s/\x{1F49}/Ho/g;
-	$phrase =~ s/\x{1F59}/Hy/g;
-	$phrase =~ s/\x{1F69}/Hô/g;
+	$phrase =~ s/\x{0393}\x{03A7}/NCH/g;
+	$phrase =~ s/\x{1F09}/Ha/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F01}/ha/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F19}/He/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F11}/he/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F29}/Hê/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F21}/hê/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F39}/Hi/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F31}/hi/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F49}/Ho/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F41}/ho/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F59}/Hy/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F51}/hy/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F69}/Hô/g;             #Not needed as already in grkbeta1
+	$phrase =~ s/\x{1F61}/hô/g;             #Not needed as already in grkbeta1
 	$phrase =~ s/\x{0391}/A/g;
 	$phrase =~ s/\x{03B1}/a/g;
 	$phrase =~ s/\x{0392}/B/g;
@@ -53,6 +47,8 @@ sub fromgreektr {
 	$phrase =~ s/\x{03B6}/z/g;
 	$phrase =~ s/\x{0397}/Ê/g;
 	$phrase =~ s/\x{03B7}/ê/g;
+	$phrase =~ s/\x{0398}/Th/g;
+	$phrase =~ s/\x{03B8}/th/g;
 	$phrase =~ s/\x{0399}/I/g;
 	$phrase =~ s/\x{03B9}/i/g;
 	$phrase =~ s/\x{039A}/K/g;
@@ -73,22 +69,40 @@ sub fromgreektr {
 	$phrase =~ s/\x{03C1}/r/g;
 	$phrase =~ s/\x{03A3}/S/g;
 	$phrase =~ s/\x{03C3}/s/g;
+	$phrase =~ s/\x{03C2}/s/g;
 	$phrase =~ s/\x{03A4}/T/g;
 	$phrase =~ s/\x{03C4}/t/g;
-	$phrase =~ s/\x{03A9}/Ô/g;
-	$phrase =~ s/\x{03C9}/ô/g;
-	$phrase =~ s/\x{03A5}(?=\W)/Y/g;
-	$phrase =~ s/\x{03C5}(?=\W)/y/g;
-	$phrase =~ s/(?<=\W)\x{03A5}/U/g;
-	$phrase =~ s/(?<=\W)\x{03C5}/u/g;
-	$phrase =~ s/([AEIOU])\x{03A5}/$1U/g;
-	$phrase =~ s/([AEIOUaeiou])\x{03C5}/$1u/g;
 	$phrase =~ s/\x{03A5}/Y/g;
 	$phrase =~ s/\x{03C5}/y/g;
-	$phrase =~ s/\x{037E}/?/g;
-	$phrase =~ s/\x{0387}/;/g;
+	$phrase =~ s/yi/ui/g;
+	$phrase =~ s/YI/UI/g;
+	$phrase =~ s/Yi/Ui/g;
+	$phrase =~ s/([aeêo])y/$1u/g;
+	$phrase =~ s/([AEÊO])Y/$1U/g;
+	$phrase =~ s/([AEÊO])y/$1u/g;
+	$phrase =~ s/\x{03A6}/Ph/g;
+	$phrase =~ s/\x{03C6}/ph/g;
+	$phrase =~ s/\x{03A7}/Ch/g;
+	$phrase =~ s/\x{03C7}/ch/g;
+	$phrase =~ s/\x{03A8}/Ps/g;
+	$phrase =~ s/\x{03C8}/ps/g;
+	$phrase =~ s/\x{03A9}/Ô/g;
+	$phrase =~ s/\x{03C9}/ô/g;
+	$phrase =~ s/\x{03AA}/Ï/g;
+	$phrase =~ s/\x{03CA}/ï/g;
+	$phrase =~ s/\x{03AB}/Ü/g;
+	$phrase =~ s/\x{03CB}/ü/g;
+	$phrase =~ s/\x{03D8}/J/g;
+	$phrase =~ s/\x{03D9}/j/g;
+	$phrase =~ s/\x{03DC}/W/g;
+	$phrase =~ s/\x{03DD}/w/g;
+	$phrase =~ s/\x{03DE}/Q/g;
+	$phrase =~ s/\x{03DF}/q/g;
+	$phrase =~ s/\x{03E0}/C/g;
+	$phrase =~ s/\x{03E1}/c/g;
+	$phrase =~ s/\x{037E}/?/g;              #¿Not needed? as already in betagreek(b)
+	$phrase =~ s/\x{0387}/;/g;              #¿Not needed? as already in betagreek(b)
 	$phrase =~ s/(\p{Upper}\p{Lower}\p{Upper})/\U$1\E/g;
-	$phrase =~ s/([AEIOUaeiou])y/$1u/g;
 	return $phrase;
 }
 ## Find Greek
@@ -130,7 +144,7 @@ sub greekpopup {
 					  [ 'd',  'cdelta',   'ldelta',   '',          '' ],
 					  [ 'e',  'cepsilon', 'lepsilon', 'chepsilon', 'hepsilon' ],
 					  [ 'z',  'czeta',    'lzeta',    '',          '' ],
-					  [ 'ê', 'ceta',     'leta',     'cheta',     'heta' ],
+					  [ 'ê',  'ceta',     'leta',     'cheta',     'heta' ],
 					  [ 'th', 'ctheta',   'ltheta',   '',          '' ],
 					  [ 'i',  'ciota',    'liota',    'chiota',    'hiota' ],
 					  [ 'k',  'ckappa',   'lkappa',   'nk',        '' ],
@@ -143,59 +157,57 @@ sub greekpopup {
 					  [ 'r',  'crho',     'lrho',     'hrho',      '' ],
 					  [ 's',  'csigma',   'lsigma',   'lsigmae',   '' ],
 					  [ 't',  'ctau',     'ltau',     '',          '' ],
-					  [
-						 '(yu)', 'cupsilon', 'lupsilon', 'chupsilon',
-						 'hupsilon'
-					  ],
-					  [ 'ph',  'cphi',     'lphi',     '',        '' ],
-					  [ 'ch',  'cchi',     'lchi',     'nch',     '' ],
-					  [ 'ps',  'cpsi',     'lpsi',     '',        '' ],
-					  [ 'ô',  'comega',   'lomega',   'chomega', 'homega' ],
-					  [ 'st',  'cstigma',  'lstigma',  '',        '' ],
-					  [ '6',   'cdigamma', 'ldigamma', '',        '' ],
-					  [ '90',  'ckoppa',   'lkoppa',   '',        '' ],
-					  [ '900', 'csampi',   'lsampi',   '',        '' ]
+					  ['(yu)','cupsilon', 'lupsilon', 'chupsilon', 'hupsilon' ],
+					  [ 'ph', 'cphi',     'lphi',     '',          '' ],
+					  [ 'ch', 'cchi',     'lchi',     'nch',       '' ],
+					  [ 'ps', 'cpsi',     'lpsi',     '',          '' ],
+					  [ 'ô',  'comega',   'lomega',   'chomega',   'homega' ],
+					  [ 'st', 'cstigma',  'lstigma',  '',          '' ],
+					  [ 'w',  'cdigamma', 'ldigamma', '',          '' ],      #ATB
+					  [ 'q',  'cqoppa',   'lqoppa',   '',          '' ],      #ATB
+					  [ 'c',  'csampi',   'lsampi',   '',          '' ],      #ATB
+					  [ 'j',  'ckoppa',   'lkoppa',   '',          '' ]       #ATB
 		);
 		%attributes = (
-			'calpha'  => [ 'A',  'Alpha', '&#913;',  "\x{0391}" ],
-			'lalpha'  => [ 'a',  'alpha', '&#945;',  "\x{03B1}" ],
-			'chalpha' => [ 'Ha', 'Alpha', '&#7945;', "\x{1F09}" ],
-			'halpha'  => [ 'ha', 'alpha', '&#7937;', "\x{1F01}" ],
-			'cbeta'   => [ 'B',  'Beta',  '&#914;',  "\x{0392}" ],
-			'lbeta'   => [ 'b',  'beta',  '&#946;',  "\x{03B2}" ],
-			'cgamma'  => [ 'G',  'Gamma', '&#915;',  "\x{0393}" ],
-			'lgamma'  => [ 'g',  'gamma', '&#947;',  "\x{03B3}" ],
-			'ng' => [ 'ng', 'gamma gamma', '&#947;&#947;', "\x{03B3}\x{03B3}" ],
-			'cdelta'    => [ 'D',   'Delta',   '&#916;',  "\x{0394}" ],
-			'ldelta'    => [ 'd',   'delta',   '&#948;',  "\x{03B4}" ],
-			'cepsilon'  => [ 'E',   'Epsilon', '&#917;',  "\x{0395}" ],
-			'lepsilon'  => [ 'e',   'epsilon', '&#949;',  "\x{03B5}" ],
-			'chepsilon' => [ 'He',  'Epsilon', '&#7961;', "\x{1F19}" ],
-			'hepsilon'  => [ 'he',  'epsilon', '&#7953;', "\x{1F11}" ],
-			'czeta'     => [ 'Z',   'Zeta',    '&#918;',  "\x{0396}" ],
-			'lzeta'     => [ 'z',   'zeta',    '&#950;',  "\x{03B6}" ],
+			'calpha'    => [ 'A',  'Alpha',   '&#913;',  "\x{0391}" ],
+			'lalpha'    => [ 'a',  'alpha',   '&#945;',  "\x{03B1}" ],
+			'chalpha'   => [ 'Ha', 'Alpha',   '&#7945;', "\x{1F09}" ],
+			'halpha'    => [ 'ha', 'alpha',   '&#7937;', "\x{1F01}" ],
+			'cbeta'     => [ 'B',  'Beta',    '&#914;',  "\x{0392}" ],
+			'lbeta'     => [ 'b',  'beta',    '&#946;',  "\x{03B2}" ],
+			'cgamma'    => [ 'G',  'Gamma',   '&#915;',  "\x{0393}" ],
+			'lgamma'    => [ 'g',  'gamma',   '&#947;',  "\x{03B3}" ],
+			'ng'        => [ 'ng', 'gamma gamma', '&#947;&#947;', "\x{03B3}\x{03B3}" ],
+			'cdelta'    => [ 'D',  'Delta',   '&#916;',  "\x{0394}" ],
+			'ldelta'    => [ 'd',  'delta',   '&#948;',  "\x{03B4}" ],
+			'cepsilon'  => [ 'E',  'Epsilon', '&#917;',  "\x{0395}" ],
+			'lepsilon'  => [ 'e',  'epsilon', '&#949;',  "\x{03B5}" ],
+			'chepsilon' => [ 'He', 'Epsilon', '&#7961;', "\x{1F19}" ],
+			'hepsilon'  => [ 'he', 'epsilon', '&#7953;', "\x{1F11}" ],
+			'czeta'     => [ 'Z',  'Zeta',    '&#918;',  "\x{0396}" ],
+			'lzeta'     => [ 'z',  'zeta',    '&#950;',  "\x{03B6}" ],
 			'ceta'      => [ 'Ê',  'Eta',     '&#919;',  "\x{0397}" ],
 			'leta'      => [ 'ê',  'eta',     '&#951;',  "\x{03B7}" ],
 			'cheta'     => [ 'Hê', 'Eta',     '&#7977;', "\x{1F29}" ],
 			'heta'      => [ 'hê', 'eta',     '&#7969;', "\x{1F21}" ],
-			'ctheta'    => [ 'Th',  'Theta',   '&#920;',  "\x{0398}" ],
-			'ltheta'    => [ 'th',  'theta',   '&#952;',  "\x{03B8}" ],
-			'ciota'     => [ 'I',   'Iota',    '&#921;',  "\x{0399}" ],
-			'liota'     => [ 'i',   'iota',    '&#953;',  "\x{03B9}" ],
-			'chiota'    => [ 'Hi',  'Iota',    '&#7993;', "\x{1F39}" ],
-			'hiota'     => [ 'hi',  'iota',    '&#7985;', "\x{1F31}" ],
-			'ckappa'    => [ 'K',   'Kappa',   '&#922;',  "\x{039A}" ],
-			'lkappa'    => [ 'k',   'kappa',   '&#954;',  "\x{03BA}" ],
-			'nk' => [ 'nk', 'gamma kappa', '&#947;&#954;', "\x{03B3}\x{03BA}" ],
-			'clambda' => [ 'L', 'Lambda', '&#923;', "\x{039B}" ],
-			'llambda' => [ 'l', 'lambda', '&#955;', "\x{03BB}" ],
-			'cmu'     => [ 'M', 'Mu',     '&#924;', "\x{039C}" ],
-			'lmu'     => [ 'm', 'mu',     '&#956;', "\x{03BC}" ],
-			'cnu'     => [ 'N', 'Nu',     '&#925;', "\x{039D}" ],
-			'lnu'     => [ 'n', 'nu',     '&#957;', "\x{03BD}" ],
-			'cxi'     => [ 'X', 'Xi',     '&#926;', "\x{039E}" ],
-			'lxi'     => [ 'x', 'xi',     '&#958;', "\x{03BE}" ],
-			'nx' => [ 'nx', 'gamma xi', '&#947;&#958;', "\x{03B3}\x{03BE}" ],
+			'ctheta'    => [ 'Th', 'Theta',   '&#920;',  "\x{0398}" ],
+			'ltheta'    => [ 'th', 'theta',   '&#952;',  "\x{03B8}" ],
+			'ciota'     => [ 'I',  'Iota',    '&#921;',  "\x{0399}" ],
+			'liota'     => [ 'i',  'iota',    '&#953;',  "\x{03B9}" ],
+			'chiota'    => [ 'Hi', 'Iota',    '&#7993;', "\x{1F39}" ],
+			'hiota'     => [ 'hi', 'iota',    '&#7985;', "\x{1F31}" ],
+			'ckappa'    => [ 'K',  'Kappa',   '&#922;',  "\x{039A}" ],
+			'lkappa'    => [ 'k',  'kappa',   '&#954;',  "\x{03BA}" ],
+			'nk'        => [ 'nk', 'gamma kappa', '&#947;&#954;', "\x{03B3}\x{03BA}" ],
+			'clambda'   => [ 'L',  'Lambda',  '&#923;', "\x{039B}" ],
+			'llambda'   => [ 'l',  'lambda',  '&#955;', "\x{03BB}" ],
+			'cmu'       => [ 'M',  'Mu',      '&#924;', "\x{039C}" ],
+			'lmu'       => [ 'm',  'mu',      '&#956;', "\x{03BC}" ],
+			'cnu'       => [ 'N',  'Nu',      '&#925;', "\x{039D}" ],
+			'lnu'       => [ 'n',  'nu',      '&#957;', "\x{03BD}" ],
+			'cxi'       => [ 'X',  'Xi',      '&#926;', "\x{039E}" ],
+			'lxi'       => [ 'x',  'xi',      '&#958;', "\x{03BE}" ],
+			'nx'        => [ 'nx', 'gamma xi', '&#947;&#958;', "\x{03B3}\x{03BE}" ],
 			'comicron'  => [ 'O',  'Omicron', '&#927;',  "\x{039F}" ],
 			'lomicron'  => [ 'o',  'omicron', '&#959;',  "\x{03BF}" ],
 			'chomicron' => [ 'Ho', 'Omicron', '&#8009;', "\x{1F49}" ],
@@ -218,22 +230,24 @@ sub greekpopup {
 			'lphi'      => [ 'ph', 'phi',     '&#966;',  "\x{03C6}" ],
 			'cchi'      => [ 'Ch', 'Chi',     '&#935;',  "\x{03A7}" ],
 			'lchi'      => [ 'ch', 'chi',     '&#967;',  "\x{03C7}" ],
-			'nch' => [ 'nch', 'gamma chi', '&#947;&#967;', "\x{03B3}\x{03C7}" ],
-			'cpsi'     => [ 'Ps',  'Psi',     '&#936;',  "\x{03A8}" ],
-			'lpsi'     => [ 'ps',  'psi',     '&#968;',  "\x{03C8}" ],
-			'comega'   => [ 'Ô',  'Omega',   '&#937;',  "\x{03A9}" ],
-			'lomega'   => [ 'ô',  'omega',   '&#969;',  "\x{03C9}" ],
-			'chomega'  => [ 'Hô', 'Omega',   '&#8041;', "\x{1F69}" ],
-			'homega'   => [ 'hô', 'omega',   '&#8033;', "\x{1F61}" ],
-			'cstigma'  => [ 'St',  'Stigma',  '&#986;',  "\x{03DA}" ],
-			'lstigma'  => [ 'st',  'stigma',  '&#987;',  "\x{03DB}" ],
-			'cdigamma' => [ '6',   'Digamma', '&#988;',  "\x{03DC}" ],
-			'ldigamma' => [ '6',   'digamma', '&#989;',  "\x{03DD}" ],
-			'ckoppa'   => [ '9',   'Koppa',   '&#990;',  "\x{03DE}" ],
-			'lkoppa'   => [ '9',   'koppa',   '&#991;',  "\x{03DF}" ],
-			'csampi'   => [ '9',   'Sampi',   '&#992;',  "\x{03E0}" ],
-			'lsampi'   => [ '9',   'sampi',   '&#993;',  "\x{03E1}" ],
-			'oulig' => [ 'ou', 'oulig', '&#959;&#965;', "\x{03BF}\x{03C5}" ]
+			'nch'       => [ 'nch','gamma chi', '&#947;&#967;', "\x{03B3}\x{03C7}" ],
+			'cpsi'      => [ 'Ps', 'Psi',     '&#936;',  "\x{03A8}" ],
+			'lpsi'      => [ 'ps', 'psi',     '&#968;',  "\x{03C8}" ],
+			'comega'    => [ 'Ô',  'Omega',   '&#937;',  "\x{03A9}" ],
+			'lomega'    => [ 'ô',  'omega',   '&#969;',  "\x{03C9}" ],
+			'chomega'   => [ 'Hô', 'Omega',   '&#8041;', "\x{1F69}" ],
+			'homega'    => [ 'hô', 'omega',   '&#8033;', "\x{1F61}" ],
+			'cstigma'   => [ 'St', 'Stigma',  '&#986;',  "\x{03DA}" ],
+			'lstigma'   => [ 'st', 'stigma',  '&#987;',  "\x{03DB}" ],
+			'cdigamma'  => [ 'W',  'Digamma', '&#988;',  "\x{03DC}" ],      #ATB      
+			'ldigamma'  => [ 'w',  'digamma', '&#989;',  "\x{03DD}" ],      #ATB
+			'cqoppa'    => [ 'Q',  'Qoppa',   '&#990;',  "\x{03DE}" ],      #ATB
+			'lqoppa'    => [ 'q',  'qoppa',   '&#991;',  "\x{03DF}" ],      #ATB
+			'csampi'    => [ 'C',  'Sampi',   '&#992;',  "\x{03E0}" ],      #ATB
+			'lsampi'    => [ 'c',  'sampi',   '&#993;',  "\x{03E1}" ],      #ATB
+			'ckoppa'    => [ 'J',  'AKoppa',  '&#984;',  "\x{03D8}" ],      #ATB
+			'lkoppa'    => [ 'j',  'akoppa',  '&#985;',  "\x{03D9}" ],      #ATB
+			'oulig'     => [ 'ou', 'oulig', '&#959;&#965;', "\x{03BF}\x{03C5}" ]
 		);
 		my $grfont = '{Times} 14';
 		for my $image ( keys %attributes ) {
@@ -359,7 +373,7 @@ sub greekpopup {
 					my $selection = $::lglobal{grtext}->get( $start, $end );
 					$::lglobal{grtext}->delete( $start, $end );
 					$::lglobal{grtext}
-					  ->insert( $start, betagreek( 'unicode', $selection ) );
+					  ->insert( $start, bettergreek( 'unicode', $selection ) );     #ATB
 					if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
 						$::lglobal{grtext}->delete( 'end -1c', 'end' );
 					}
@@ -380,7 +394,7 @@ sub greekpopup {
 					my $selection = $::lglobal{grtext}->get( $start, $end );
 					$::lglobal{grtext}->delete( $start, $end );
 					$::lglobal{grtext}
-					  ->insert( $start, betagreek( 'beta', $selection ) );
+					  ->insert( $start, bettergreek( 'beta', $selection ) );        #ATB
 					if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
 						$::lglobal{grtext}->delete( 'end -1c', 'end' );
 					}
@@ -519,13 +533,15 @@ sub greekpopup {
 								 %{ $::lglobal{grkbeta2} },
 								 %{ $::lglobal{grkbeta3} }
 					);
+	  # LHS of table goes into RHS of Character Builder
+	  # RHS of table comes out LHS of Character Builder
 					%hash         = reverse %hash;
 					$hash{'a'}    = "\x{3B1}";
 					$hash{'A'}    = "\x{391}";
 					$hash{'e'}    = "\x{3B5}";
 					$hash{'E'}    = "\x{395}";
-					$hash{"Ê"}   = "\x{397}";
-					$hash{"ê"}   = "\x{3B7}";
+					$hash{"Ê"}    = "\x{397}";
+					$hash{"ê"}    = "\x{3B7}";
 					$hash{'I'}    = "\x{399}";
 					$hash{'i'}    = "\x{3B9}";
 					$hash{'O'}    = "\x{39F}";
@@ -534,8 +550,8 @@ sub greekpopup {
 					$hash{'y'}    = "\x{3C5}";
 					$hash{'U'}    = "\x{3A5}";
 					$hash{'u'}    = "\x{3C5}";
-					$hash{"Ô"}   = "\x{3A9}";
-					$hash{"ô"}   = "\x{3C9}";
+					$hash{"Ô"}    = "\x{3A9}";
+					$hash{"ô"}    = "\x{3C9}";
 					$hash{'R'}    = "\x{3A1}";
 					$hash{'r'}    = "\x{3C1}";
 					$hash{'B'}    = "\x{392}";
@@ -558,8 +574,6 @@ sub greekpopup {
 					$hash{'x'}    = "\x{3BE}";
 					$hash{'P'}    = "\x{3A0}";
 					$hash{'p'}    = "\x{3C0}";
-					$hash{'R'}    = "\x{3A1}";
-					$hash{'r'}    = "\x{3C1}";
 					$hash{'S'}    = "\x{3A3}";
 					$hash{'s'}    = "\x{3C3}";
 					$hash{'s '}   = "\x{3C2}";
@@ -585,19 +599,18 @@ sub greekpopup {
 					$hash{'Th'}   = "\x{0398}";
 					$hash{'Ph'}   = "\x{03A6}";
 					$hash{'Ps'}   = "\x{03A8}";
-					$hash{'e^'}   = "\x{397}";
-					$hash{'E^'}   = "\x{3B7}";
+					$hash{'e^'}   = "\x{3B7}";      #Was "\x{397}";
+					$hash{'E^'}   = "\x{397}";      #Was "\x{3B7}";
 					$hash{'O^'}   = "\x{3A9}";
 					$hash{'o^'}   = "\x{3C9}";
 					$hash{'H'}    = "\x{397}";
 					$hash{'h'}    = "\x{3B7}";
-					$hash{'W'}    = "\x{3A9}";
-					$hash{'w'}    = "\x{3C9}";
+					$hash{'W'}    = "\x{3DC}";      #Was "\x{3A9}";
+					$hash{'w'}    = "\x{3DD}";      #Was "\x{3C9}";
 					$hash{' '}    = ' ';
 					$hash{'u\+'}  = "\x{1FE2}";
 					$hash{'u/+'}  = "\x{1FE3}";
 					$hash{'u~+'}  = "\x{1FE7}";
-					$hash{'u/+'}  = "\x{03B0}";
 					$hash{'u)\\'} = "\x{1F52}";
 					$hash{'u(\\'} = "\x{1F53}";
 					$hash{'u)/'}  = "\x{1F54}";
@@ -815,35 +828,54 @@ sub placechar {
 
 sub togreektr {
 	my $phrase = shift;
-	$phrase =~ s/s($|\W)/\x{03C2}$1/g;
-	$phrase =~ s/th/\x{03B8}/g;
 	$phrase =~ s/nch/\x{03B3}\x{03C7}/g;
+	$phrase =~ s/NCH/\x{0393}\x{03A7}/g;
 	$phrase =~ s/ch/\x{03C7}/g;
+	$phrase =~ s/CH/\x{03A7}/g;
+	$phrase =~ s/Ch/\x{03A7}/g;
+	$phrase =~ s/th/\x{03B8}/g;
+	$phrase =~ s/TH/\x{0398}/g;
+	$phrase =~ s/Th/\x{0398}/g;
 	$phrase =~ s/ph/\x{03C6}/g;
-	$phrase =~ s/CH/\x{03A7}/gi;
-	$phrase =~ s/TH/\x{0398}/gi;
-	$phrase =~ s/PH/\x{03A6}/gi;
+	$phrase =~ s/PH/\x{03A6}/g;
+	$phrase =~ s/Ph/\x{03A6}/g;
 	$phrase =~ s/ng/\x{03B3}\x{03B3}/g;
+	$phrase =~ s/NG/\x{0393}\x{0393}/g;
 	$phrase =~ s/nk/\x{03B3}\x{03BA}/g;
+	$phrase =~ s/NK/\x{0393}\x{039A}/g;
 	$phrase =~ s/nx/\x{03B3}\x{03BE}/g;
+	$phrase =~ s/NX/\x{0393}\x{039E}/g;
 	$phrase =~ s/rh/\x{1FE5}/g;
+	$phrase =~ s/RH/\x{1FEC}/g;
+	$phrase =~ s/Rh/\x{1FEC}/g;
 	$phrase =~ s/ps/\x{03C8}/g;
+	$phrase =~ s/PS/\x{03A8}/g;
+	$phrase =~ s/Ps/\x{03A8}/g;
 	$phrase =~ s/ha/\x{1F01}/g;
 	$phrase =~ s/he/\x{1F11}/g;
 	$phrase =~ s/hê/\x{1F21}/g;
 	$phrase =~ s/hi/\x{1F31}/g;
 	$phrase =~ s/ho/\x{1F41}/g;
 	$phrase =~ s/hy/\x{1F51}/g;
+	$phrase =~ s/hu/\x{1F51}/g;
 	$phrase =~ s/hô/\x{1F61}/g;
+	$phrase =~ s/HA/\x{1F09}/g;
+	$phrase =~ s/HE/\x{1F19}/g;
+	$phrase =~ s/HÊ/\x{1F29}/g;
+	$phrase =~ s/HI/\x{1F39}/g;
+	$phrase =~ s/HO/\x{1F49}/g;
+	$phrase =~ s/HY/\x{1F59}/g;
+	$phrase =~ s/HU/\x{1F59}/g;
+	$phrase =~ s/HÔ/\x{1F69}/g;
+	$phrase =~ s/Ha/\x{1F09}/g;
+	$phrase =~ s/He/\x{1F19}/g;
+	$phrase =~ s/Hê/\x{1F29}/g;
+	$phrase =~ s/Hi/\x{1F39}/g;
+	$phrase =~ s/Ho/\x{1F49}/g;
+	$phrase =~ s/Hy/\x{1F59}/g;
+	$phrase =~ s/Hu/\x{1F59}/g;
+	$phrase =~ s/Hô/\x{1F69}/g;
 	$phrase =~ s/ou/\x{03BF}\x{03C5}/g;
-	$phrase =~ s/PS/\x{03A8}/gi;
-	$phrase =~ s/HA/\x{1F09}/gi;
-	$phrase =~ s/HE/\x{1F19}/gi;
-	$phrase =~ s/HÊ|Hê/\x{1F29}/g;
-	$phrase =~ s/HI/\x{1F39}/gi;
-	$phrase =~ s/HO/\x{1F49}/gi;
-	$phrase =~ s/HY/\x{1F59}/gi;
-	$phrase =~ s/HÔ|Hô/\x{1F69}/g;
 	$phrase =~ s/A/\x{0391}/g;
 	$phrase =~ s/a/\x{03B1}/g;
 	$phrase =~ s/B/\x{0392}/g;
@@ -877,86 +909,120 @@ sub togreektr {
 	$phrase =~ s/R/\x{03A1}/g;
 	$phrase =~ s/r/\x{03C1}/g;
 	$phrase =~ s/S/\x{03A3}/g;
+	$phrase =~ s/s'/\x{03C3}'/g;
+	$phrase =~ s/s(\s|\n|$|\W)/\x{03C2}$1/g;
 	$phrase =~ s/s/\x{03C3}/g;
 	$phrase =~ s/T/\x{03A4}/g;
 	$phrase =~ s/t/\x{03C4}/g;
 	$phrase =~ s/Y/\x{03A5}/g;
 	$phrase =~ s/y/\x{03C5}/g;
-	$phrase =~ s/U/\x{03A5}/g;
-	$phrase =~ s/u/\x{03C5}/g;
+	$phrase =~ s/U/\x{03A5}/g;              #Moved from betagreek-unicode
+	$phrase =~ s/u/\x{03C5}/g;              #Moved from betagreek-unicode
 	$phrase =~ s/Ô/\x{03A9}/g;
 	$phrase =~ s/ô/\x{03C9}/g;
+	$phrase =~ s/Ï/\x{03AA}/g;
+	$phrase =~ s/ï/\x{03CA}/g;
+	$phrase =~ s/Ü/\x{03AB}/g;
+	$phrase =~ s/ü/\x{03CB}/g;
+	$phrase =~ s/ÿ/\x{03CB}/g;
+	$phrase =~ s/J/\x{03D8}/g;
+	$phrase =~ s/j/\x{03D9}/g;
+	$phrase =~ s/W/\x{03DC}/g;
+	$phrase =~ s/w/\x{03DD}/g;
+	$phrase =~ s/Q/\x{03DE}/g;
+	$phrase =~ s/q/\x{03DF}/g;
+	$phrase =~ s/C/\x{03E0}/g;
+	$phrase =~ s/c/\x{03E1}/g;
 	$phrase =~ s/\?/\x{037E}/g;
 	$phrase =~ s/;/\x{0387}/g;
 	return $phrase;
 }
 
+sub bettergreek                                     #ATB
+{                                                   #ATB
+	my ( $direction, $phrase ) = @_;                #ATB
+	my $answer;                                     #ATB
+	$phrase =~ s/\\/\\\\/g;                         #ATB
+	$answer = betagreek( $direction, $phrase );     #ATB
+	$answer =~ s/\\\\/\\/g;                         #ATB
+	return $answer;                                 #ATB
+}                                                   #ATB
+
 sub betagreek {
 	my ( $direction, $phrase ) = @_;
-	if ( $direction eq 'unicode' ) {
-		$phrase =~ s/s(\s|\n|$)/\x{03C2}$1/g;
-		$phrase =~ s/th/\x{03B8}/g;
-		$phrase =~ s/ph/\x{03C6}/g;
-		$phrase =~ s/TH/\x{0398}/gi;
-		$phrase =~ s/PH/\x{03A6}/gi;
-		$phrase =~ s/u\\\+/\x{1FE2}/g;
+	if ( $direction eq 'unicode' ) {      #U/u alternatives to Y/y
+		$phrase =~ s/u\)\//\x{1F54}/g;
+		$phrase =~ s/u~\)/\x{1F56}/g;
+		$phrase =~ s/u\)\\\\/\x{1F52}/g;
+		$phrase =~ s/u\(\//\x{1F55}/g;
+		$phrase =~ s/u~\(/\x{1F57}/g;
+		$phrase =~ s/u\(\\\\/\x{1F53}/g;
 		$phrase =~ s/u\/\+/\x{1FE3}/g;
 		$phrase =~ s/u~\+/\x{1FE7}/g;
-		$phrase =~ s/u\/\+/\x{03B0}/g;
-		$phrase =~ s/u\)\\/\x{1F52}/g;
-		$phrase =~ s/u\(\\/\x{1F53}/g;
-		$phrase =~ s/u\)\//\x{1F54}/g;
-		$phrase =~ s/u\(\//\x{1F55}/g;
-		$phrase =~ s/u~\)/\x{1F56}/g;
-		$phrase =~ s/u~\(/\x{1F57}/g;
-		$phrase =~ s/U\(\\/\x{1F5B}/g;
-		$phrase =~ s/U\(\//\x{1F5D}/g;
-		$phrase =~ s/U~\(/\x{1F5F}/g;
-		$phrase =~ s/u\+/\x{03CB}/g;
-		$phrase =~ s/U\+/\x{03AB}/g;
-		$phrase =~ s/u=/\x{1FE0}/g;
-		$phrase =~ s/u_/\x{1FE1}/g;
-		$phrase =~ s/r\)/\x{1FE4}/g;
-		$phrase =~ s/r\(/\x{1FE5}/g;
-		$phrase =~ s/u~/\x{1FE6}/g;
-		$phrase =~ s/U=/\x{1FE8}/g;
-		$phrase =~ s/U_/\x{1FE9}/g;
-		$phrase =~ s/U\\/\x{1FEA}/g;
-		$phrase =~ s/U\//\x{1FEB}/g;
-		$phrase =~ s/u\\/\x{1F7A}/g;
-		$phrase =~ s/u\//\x{1F7B}/g;
+		$phrase =~ s/u\\\\\+/\x{1FE2}/g;
 		$phrase =~ s/u\)/\x{1F50}/g;
 		$phrase =~ s/u\(/\x{1F51}/g;
+		$phrase =~ s/u\+/\x{03CB}/g;
+		$phrase =~ s/u\//\x{1F7B}/g;
+		$phrase =~ s/u~/\x{1FE6}/g;
+		$phrase =~ s/u\\\\/\x{1F7A}/g;
+		$phrase =~ s/u=/\x{1FE0}/g;
+		$phrase =~ s/u_/\x{1FE1}/g;
+		$phrase =~ s/U\(\//\x{1F5D}/g;
+		$phrase =~ s/U~\(/\x{1F5F}/g;
+		$phrase =~ s/U\(\\\\/\x{1F5B}/g;
 		$phrase =~ s/U\(/\x{1F59}/g;
-		$phrase =~ s/\?/\x{037E}/g;
-		$phrase =~ s/;/\x{0387}/g;
-		my %atebkrg = reverse %{ $::lglobal{grkbeta3} };
+		$phrase =~ s/U\+/\x{03AB}/g;
+		$phrase =~ s/U\//\x{1FEB}/g;
+		$phrase =~ s/U\\\\/\x{1FEA}/g;
+		$phrase =~ s/U=/\x{1FE8}/g;
+		$phrase =~ s/U_/\x{1FE9}/g;
+		$phrase =~ s/ï~/\x{1FD7}/g;
+		$phrase =~ s/ü~/\x{1FE7}/g;
+		$phrase =~ s/ÿ~/\x{1FE7}/g;
+		$phrase =~ s/ï\\\\/\x{1FD2}/g;
+		$phrase =~ s/ü\\\\/\x{1FE2}/g;
+		$phrase =~ s/ÿ\\\\/\x{1FE2}/g;
+		$phrase =~ s/ï\//\x{1FD3}/g;
+		$phrase =~ s/ü\//\x{1FE3}/g;
+		$phrase =~ s/ÿ\//\x{1FE3}/g;
+		$phrase =~ s/Ï/\x{03AA}/g;
+		$phrase =~ s/ï/\x{03CA}/g;
+		$phrase =~ s/Ü/\x{03AB}/g;
+		$phrase =~ s/ü/\x{03CB}/g;
+		$phrase =~ s/ÿ/\x{03CB}/g;
 
-		for ( keys %atebkrg ) {
+		my %atebkrg = reverse %{ $::lglobal{grkbeta3} };
+		for ( keys %atebkrg ) {                         #Triply marked Greek <- Beta
 			$phrase =~ s/\Q$_\E/$atebkrg{$_}/g;
 		}
 		%atebkrg = reverse %{ $::lglobal{grkbeta2} };
-		for ( keys %atebkrg ) {
+		for ( keys %atebkrg ) {                         #Doubly marked Greek <- Beta
 			$phrase =~ s/\Q$_\E/$atebkrg{$_}/g;
 		}
 		%atebkrg = reverse %{ $::lglobal{grkbeta1} };
-		for ( keys %atebkrg ) {
+		for ( keys %atebkrg ) {                         #Singly marked Greek <- Beta
 			$phrase =~ s/\Q$_\E/$atebkrg{$_}/g;
 		}
-		return togreektr($phrase);
-	} else {
-		for ( keys %{ $::lglobal{grkbeta1} } ) {
+		return togreektr($phrase);                      #Un-marked & specials
+	} else {            #to beta
+		for ( keys %{ $::lglobal{grkbeta1} } ) {        #Singly marked Greek -> Beta
 			$phrase =~ s/$_/$::lglobal{grkbeta1}{$_}/g;
 		}
-		for ( keys %{ $::lglobal{grkbeta2} } ) {
+		for ( keys %{ $::lglobal{grkbeta2} } ) {        #Doubly marked Greek -> Beta
 			$phrase =~ s/$_/$::lglobal{grkbeta2}{$_}/g;
 		}
-		for ( keys %{ $::lglobal{grkbeta3} } ) {
+		for ( keys %{ $::lglobal{grkbeta3} } ) {        #Triply marked Greek -> Beta
 			$phrase =~ s/$_/$::lglobal{grkbeta3}{$_}/g;
 		}
+		$phrase =~ s/\x{037E}/?/g;
+		$phrase =~ s/\x{0387}/;/g;
+		$phrase =~ s/\x{0390}/u\/\+/g;                  #ATB
+		$phrase =~ s/\x{03B0}/i\/\+/g;                  #ATB
 		$phrase =~ s/\x{0386}/A\//g;
 		$phrase =~ s/\x{0388}/E\//g;
 		$phrase =~ s/\x{0389}/Ê\//g;
+		$phrase =~ s/\x{038A}/I\//g;                    #ATB
 		$phrase =~ s/\x{038C}/O\//g;
 		$phrase =~ s/\x{038E}/Y\//g;
 		$phrase =~ s/\x{038F}/Ô\//g;
@@ -965,22 +1031,25 @@ sub betagreek {
 		$phrase =~ s/\x{03AE}/ê\//g;
 		$phrase =~ s/\x{03AF}/i\//g;
 		$phrase =~ s/\x{03CC}/o\//g;
-		$phrase =~ s/\x{03CE}/ô\//g;
 		$phrase =~ s/\x{03CD}/y\//g;
-		$phrase =~ s/\x{037E}/?/g;
-		$phrase =~ s/\x{0387}/;/g;
-		return fromgreektr($phrase);
+		$phrase =~ s/\x{03CE}/ô\//g;
+		$phrase =~ s/\x{03DA}/St/g;                     #ATB
+		$phrase =~ s/\x{03DB}/st/g;                     #ATB
+		return fromgreektr($phrase);                    #Un-marked & specials
 	}
 }
 
-sub betaascii {
+
+sub betaascii {                          #Actually it's beta->ANSI
 
 	# Discards the accents
 	my ($phrase) = @_;
 	$phrase =~ s/[\)\/\\\|\~\+=_]//g;
+	$phrase =~ s/R\(/Rh/g;                                  #ATB
 	$phrase =~ s/r\(/rh/g;
-	$phrase =~ s/([AEIOUYÊÔ])\(/H$1/g;
+	$phrase =~ s/([AEIOUYÊÔ])\(/H\L$1\E/g;
 	$phrase =~ s/([aeiouyêô]+)\(/h$1/g;
+	$phrase =~ s/(\p{Upper}\p{Lower}\p{Upper})/\U$1\E/g;    #ATB
 	return $phrase;
 }
 1;
