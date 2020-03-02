@@ -1,0 +1,25 @@
+%::scannoslist = (
+"([\x{003b}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{003b}/\x{037e}/; \$s\\E",
+"([\x{0060}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{0060}/\x{1fef}/; \$s\\E",
+"([\x{00b4}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{00b4}/\x{1ffd}/; \$s\\E",
+"([\x{00b7}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{00b7}/\x{0387}/; \$s\\E",
+"([\x{02b9}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{02b9}/\x{0374}/; \$s\\E",
+"([\x{03b9}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{03b9}/\x{1fbe}/; \$s\\E",
+"([\x{03ce}\x{03cd}\x{03cc}\x{03af}\x{03ae}\x{03ad}\x{03ac}\x{038f}\x{038e}\x{038c}\x{038a}\x{0389}\x{0388}\x{0386}\x{03b0}\x{0390}\x{0385}]+)" => "\\C (my \$s = '\$1') =~ tr/\x{03ce}\x{03cd}\x{03cc}\x{03af}\x{03ae}\x{03ad}\x{03ac}\x{038f}\x{038e}\x{038c}\x{038a}\x{0389}\x{0388}\x{0386}\x{03b0}\x{0390}\x{0385}/\x{1f7d}\x{1f7b}\x{1f79}\x{1f77}\x{1f75}\x{1f73}\x{1f71}\x{1ffb}\x{1feb}\x{1ff9}\x{1fdb}\x{1fcb}\x{1fc9}\x{1fbb}\x{1fe3}\x{1fd3}\x{1fee}/; \$s\\E",
+);
+
+# For a hint, use the regex expression EXACTLY as it appears in the %::scannoslist hash
+# but replace the replacement term (heh!) with the hint text. Note: if a single quote
+# appears anywhere in the hint text, you'll need to escape it with a backslash. E.G. isn't -> isn\'t
+# I could have made this more compact by converting the scannoslist hash into a two dimensional
+# hash, but would have sacrificed backward compatibility.
+
+%::reghints = (
+"([\x{003b}]+)" => "CHECK CAREFULLY--s&r INDIVIDUAL: Semi-colon (GREEK ONLY) -> erotomatikon",
+"([\x{0060}]+)" => "CHECK CAREFULLY--s&r INDIVIDUAL: Grave (GREEK ONLY) -> s/o (Greek) Grave",
+"([\x{00b4}]+)" => "CHECK CAREFULLY--s&r INDIVIDUAL: Acute (GREEK ONLY) -> s/o (Greek) Acute",
+"([\x{00b7}]+)" => "CHECK CAREFULLY--s&r INDIVIDUAL: Middle dot (GREEK ONLY) -> ano teleia",
+"([\x{02b9}]+)" => "CHECK CAREFULLY--s&r INDIVIDUAL: Modifier letter prime (GREEK ONLY) -> Units-marker",
+"([\x{03b9}]+)" => "CHECK *VERY* CAREFULLY--s&r INDIVIDUAL: Greek iota (as STAND-ALONE subscript) -> s/o iota subscript",
+"([\x{03ce}\x{03cd}\x{03cc}\x{03af}\x{03ae}\x{03ad}\x{03ac}\x{038f}\x{038e}\x{038c}\x{038a}\x{0389}\x{0388}\x{0386}\x{03b0}\x{0390}\x{0385}]+)" => "MUST DO--s&r GLOBAL: Modern Tonos to Classical Acute",
+);

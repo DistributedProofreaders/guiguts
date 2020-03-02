@@ -415,16 +415,17 @@ sub regedit {
 		print $reg "\%::scannoslist = (\n";
 		foreach my $word ( sort ( keys %::scannoslist ) ) {
 			my $srch = $word;
-			$srch =~ s/'/\\'/;
+			$srch =~ s/([\'\\])/\\$1/g;
 			my $repl = $::scannoslist{$word};
-			$repl =~ s/'/\\'/;
+			$repl =~ s/([\'\\])/\\$1/g;
 			print $reg "'$srch' => '$repl',\n";
 		}
-		print $reg ");\n\n";
+		print $reg ");\n";
 		print $reg <<'EOF';
+
 # For a hint, use the regex expression EXACTLY as it appears in the %::scannoslist hash
-# but replace the replacement term (heh) with the hint text. Note: if a single quote
-# appears anywhere in the hint text, you'll need to escape it with a backslash. I.E. isn't
+# but replace the replacement term (heh!) with the hint text. Note: if a single quote
+# appears anywhere in the hint text, you'll need to escape it with a backslash. E.G. isn't -> isn\'t
 # I could have made this more compact by converting the scannoslist hash into a two dimensional
 # hash, but would have sacrificed backward compatibility.
 
@@ -432,12 +433,12 @@ EOF
 		print $reg '%::reghints = (' . "\n";
 		foreach my $word ( sort ( keys %::reghints ) ) {
 			my $srch = $word;
-			$srch =~ s/'/\\'/;
+			$srch =~ s/([\'\\])/\\$1/g;
 			my $repl = $::reghints{$word};
-			$repl =~ s/([\\'])/\\$1/;
-			print $reg "'$srch' => '$repl'\n";
+			$repl =~ s/([\'\\])/\\$1/g;
+			print $reg "'$srch' => '$repl',\n";
 		}
-		print $reg ");\n\n";
+		print $reg ");\n";
 		close $reg;
 	}
 }
@@ -460,7 +461,7 @@ sub regadd {
 		badreg();
 		return;
 	}
-	my $rt = $::lglobal{regsearch}->get( '1.0', '1.end' );
+	my $rt = $::lglobal{regreplace}->get( '1.0', '1.end' );
 	my $rh = $::lglobal{reghinted}->get( '1.0', 'end' );
 	$rh =~ s/(?!<\\)'/\\'/;
 	$rh =~ s/\n/ /;
@@ -666,32 +667,58 @@ sub replaceeval {
 	my ( $replaceseg, $seg1, $seg2, $replbuild );
 	my ( $m1, $m2, $m3, $m4, $m5, $m6, $m7, $m8 );
 	my (
-		$cfound,  $lfound,  $ufound, $tfound,
-		$gafound, $gbfound, $gfound, $afound, $rfound
+	     $cfound, $lfound, $ufound, $tfound,
+	     $xfound, $bfound, $gfound, $afound, $rfound
 	);
 
 	#check for control codes before the $1 codes for text found are inserted
-	if ( $replaceterm =~ /\\C/ )  { $cfound  = 1; }
-	if ( $replaceterm =~ /\\L/ )  { $lfound  = 1; }
-	if ( $replaceterm =~ /\\U/ )  { $ufound  = 1; }
-	if ( $replaceterm =~ /\\T/ )  { $tfound  = 1; }
-	if ( $replaceterm =~ /\\GA/ ) { $gafound = 1; }
-	if ( $replaceterm =~ /\\GB/ ) { $gbfound = 1; }
-	if ( $replaceterm =~ /\\G/ )  { $gfound  = 1; }
-	if ( $replaceterm =~ /\\A/ )  { $afound  = 1; }
-	if ( $replaceterm =~ /\\R/ )  { $rfound  = 1; }
+	     $replaceterm =~ s/\\GA/\\GX/g;
+	     $replaceterm =~ s/\\GX/\\X/g;
+	     $replaceterm =~ s/\\GB/\\B/g;
+	     $replaceterm =~ s/\\GG/\\G/g;
+
+	if ( $replaceterm =~ /\\C/ ) { $cfound = 1; } else { $cfound = 0; }
+	if ( $replaceterm =~ /\\L/ ) { $lfound = 1; } else { $lfound = 0; }
+	if ( $replaceterm =~ /\\U/ ) { $ufound = 1; } else { $ufound = 0; }
+	if ( $replaceterm =~ /\\T/ ) { $tfound = 1; } else { $tfound = 0; }
+	if ( $replaceterm =~ /\\X/ ) { $xfound = 1; } else { $xfound = 0; }
+	if ( $replaceterm =~ /\\B/ ) { $bfound = 1; } else { $bfound = 0; }
+	if ( $replaceterm =~ /\\G/ ) { $gfound = 1; } else { $gfound = 0; }
+	if ( $replaceterm =~ /\\A/ ) { $afound = 1; } else { $afound = 0; }
+	if ( $replaceterm =~ /\\R/ ) { $rfound = 1; } else { $rfound = 0; }
 	my $found = $textwindow->get( $::searchstartindex, $::searchendindex );
 	$searchterm =~ s/\Q(?<=\E.*?\)//;
 	$searchterm =~ s/\Q(?=\E.*?\)//;
-	$found      =~ m/$searchterm/m;
-	$m1 = $1;
-	$m2 = $2;
-	$m3 = $3;
-	$m4 = $4;
-	$m5 = $5;
-	$m6 = $6;
-	$m7 = $7;
-	$m8 = $8;
+	if ( $::sopt[1] )
+	{
+		$found      =~ m/$searchterm/mi;
+		$m1 = $1;
+		$m2 = $2;
+		$m3 = $3;
+		$m4 = $4;
+		$m5 = $5;
+		$m6 = $6;
+		$m7 = $7;
+		$m8 = $8;
+	} else {
+		$found      =~ m/$searchterm/m;
+		$m1 = $1;
+		$m2 = $2;
+		$m3 = $3;
+		$m4 = $4;
+		$m5 = $5;
+		$m6 = $6;
+		$m7 = $7;
+		$m8 = $8;
+	}
+	$m1 =~ s/\\/\\\\/g if defined $m1;
+	$m2 =~ s/\\/\\\\/g if defined $m2;
+	$m3 =~ s/\\/\\\\/g if defined $m3;
+	$m4 =~ s/\\/\\\\/g if defined $m4;
+	$m5 =~ s/\\/\\\\/g if defined $m5;
+	$m6 =~ s/\\/\\\\/g if defined $m6;
+	$m7 =~ s/\\/\\\\/g if defined $m7;
+	$m8 =~ s/\\/\\\\/g if defined $m8;
 	$replaceterm =~ s/(?<!\\)\$1/$m1/g if defined $m1;
 	$replaceterm =~ s/(?<!\\)\$2/$m2/g if defined $m2;
 	$replaceterm =~ s/(?<!\\)\$3/$m3/g if defined $m3;
@@ -816,54 +843,55 @@ END
 		$replaceterm = $replbuild;
 		$replbuild   = '';
 	}
-	$replaceterm =~ s/\\n/\n/g;
-	$replaceterm =~ s/\\t/\t/g;
 
-	# \GA runs betaascii
-	if ($gafound) {
-		if ( $replaceterm =~ s/^\\GA// ) {
-			if ( $replaceterm =~ s/\\GA// ) {
-				@replarray = split /\\GA/, $replaceterm;
+#       $replaceterm =~ s/\\n/\n/g;             #backslash enn -> newline    done later
+#       $replaceterm =~ s/\\t/\t/g;             #backslash tee -> tab
+
+	# \X (aka \GA aka \GX) runs betaascii
+	if ($xfound) {
+		if ( $replaceterm =~ s/^\\X// ) {
+			if ( $replaceterm =~ s/\\X// ) {
+				@replarray = split /\\X/, $replaceterm;
 			} else {
 				push @replarray, $replaceterm;
 			}
 		} else {
-			@replarray = split /\\GA/, $replaceterm;
+			@replarray = split /\\X/, $replaceterm;
 			$replbuild = shift @replarray;
 		}
 		while ( $replaceseg = shift @replarray ) {
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-			$replbuild .= ::betaascii($seg1);
+			$replbuild .= Guiguts::Greek::betaascii($seg1); #replacement function
 			$replbuild .= $seg2 if $seg2;
 		}
 		$replaceterm = $replbuild;
 		$replbuild   = '';
 	}
 
-	# \GB runs betagreek
-	if ($gbfound) {
-		if ( $replaceterm =~ s/^\\GB// ) {
-			if ( $replaceterm =~ s/\\GB// ) {
-				@replarray = split /\\GB/, $replaceterm;
+	# \B (aka \GB) runs betagreek beta
+	if ($bfound) {
+		if ( $replaceterm =~ s/^\\B// ) {
+			if ( $replaceterm =~ s/\\B// ) {
+				@replarray = split /\\B/, $replaceterm;
 			} else {
 				push @replarray, $replaceterm;
 			}
 		} else {
-			@replarray = split /\\GB/, $replaceterm;
+			@replarray = split /\\B/, $replaceterm;
 			$replbuild = shift @replarray;
 		}
 		while ( $replaceseg = shift @replarray ) {
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-			$replbuild .= betagreek( 'beta', $seg1 );
+			$replbuild .= Guiguts::Greek::betagreek( 'beta', $seg1 );       #replacement function
 			$replbuild .= $seg2 if $seg2;
 		}
 		$replaceterm = $replbuild;
 		$replbuild   = '';
 	}
 
-	# \G runs betagreek unicode
+	# \G (aka \GG) runs betagreek unicode
 	if ($gfound) {
 		if ( $replaceterm =~ s/^\\G// ) {
 			if ( $replaceterm =~ s/\\G// ) {
@@ -878,7 +906,7 @@ END
 		while ( $replaceseg = shift @replarray ) {
 			$seg1 = $seg2 = '';
 			( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-			$replbuild .= betagreek( 'unicode', $seg1 );
+			$replbuild .= Guiguts::Greek::betagreek( 'unicode', $seg1 );    # replacement function
 			$replbuild .= $seg2 if $seg2;
 		}
 		$replaceterm = $replbuild;
@@ -928,6 +956,29 @@ END
 		}
 		$replaceterm = $replbuild;
 	}
+
+	$replaceterm =~ s/^\\n/\n/ ;                    # No pairs @ string start
+	$replaceterm =~ s/^\\\\\\n/\\\\\n/ ;            # 1 pair @ string start
+	$replaceterm =~ s/^((\\\\)*)\\n/$1\n/ ;         # Multiple pairs @ string start
+	$replaceterm =~ s/\n\\n/\n\n/g;                 # No pairs @ line start
+	$replaceterm =~ s/\n\\\\\\n/\n\\\\\n/g;         # 1 pair @ line start
+	$replaceterm =~ s/\n((\\\\)*)\\n/\n$1\n/g;      # Multiple pairs @ line start
+	$replaceterm =~ s/([^\\])\\n/$1\n/g;            # No pairs in string middle
+	$replaceterm =~ s/([^\\])\\\\\\n/$1\\\\\n/g;    # 1 pair in string middle
+	$replaceterm =~ s/([^\\])((\\\\)*)\\n/$1$2\n/g; # Multiple pairs in string middle
+
+	$replaceterm =~ s/^\\t/\t/ ;                    # Same but now for tab not newline
+	$replaceterm =~ s/^\\\\\\t/\\\\\t/ ;
+	$replaceterm =~ s/^((\\\\)*)\\t/$1\t/ ;
+	$replaceterm =~ s/\n\\t/\n\t/g;
+	$replaceterm =~ s/\n\\\\\\t/\n\\\\\t/g;
+	$replaceterm =~ s/\n((\\\\)*)\\t/\n$1\t/g;
+	$replaceterm =~ s/([^\\])\\t/$1\t/g;
+	$replaceterm =~ s/([^\\])\\\\\\t/$1\\\\\t/g;
+	$replaceterm =~ s/([^\\])((\\\\)*)\\t/$1$2\t/g;
+
+	$replaceterm =~ s/\\\\/\\/g;                    # Ghastly, but it does work!!!
+
 	return $replaceterm;
 }
 
