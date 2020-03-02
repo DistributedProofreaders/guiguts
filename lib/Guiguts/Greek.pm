@@ -163,10 +163,10 @@ sub greekpopup {
 					  [ 'ps', 'cpsi',     'lpsi',     '',          '' ],
 					  [ 'ô',  'comega',   'lomega',   'chomega',   'homega' ],
 					  [ 'st', 'cstigma',  'lstigma',  '',          '' ],
-					  [ 'w',  'cdigamma', 'ldigamma', '',          '' ],      #ATB
-					  [ 'q',  'cqoppa',   'lqoppa',   '',          '' ],      #ATB
-					  [ 'c',  'csampi',   'lsampi',   '',          '' ],      #ATB
-					  [ 'j',  'ckoppa',   'lkoppa',   '',          '' ]       #ATB
+					  [ 'w',  'cdigamma', 'ldigamma', '',          '' ],
+					  [ 'q',  'cqoppa',   'lqoppa',   '',          '' ],
+					  [ 'c',  'csampi',   'lsampi',   '',          '' ],
+					  [ 'j',  'ckoppa',   'lkoppa',   '',          '' ]
 		);
 		%attributes = (
 			'calpha'    => [ 'A',  'Alpha',   '&#913;',  "\x{0391}" ],
@@ -239,14 +239,14 @@ sub greekpopup {
 			'homega'    => [ 'hô', 'omega',   '&#8033;', "\x{1F61}" ],
 			'cstigma'   => [ 'St', 'Stigma',  '&#986;',  "\x{03DA}" ],
 			'lstigma'   => [ 'st', 'stigma',  '&#987;',  "\x{03DB}" ],
-			'cdigamma'  => [ 'W',  'Digamma', '&#988;',  "\x{03DC}" ],      #ATB      
-			'ldigamma'  => [ 'w',  'digamma', '&#989;',  "\x{03DD}" ],      #ATB
-			'cqoppa'    => [ 'Q',  'Qoppa',   '&#990;',  "\x{03DE}" ],      #ATB
-			'lqoppa'    => [ 'q',  'qoppa',   '&#991;',  "\x{03DF}" ],      #ATB
-			'csampi'    => [ 'C',  'Sampi',   '&#992;',  "\x{03E0}" ],      #ATB
-			'lsampi'    => [ 'c',  'sampi',   '&#993;',  "\x{03E1}" ],      #ATB
-			'ckoppa'    => [ 'J',  'AKoppa',  '&#984;',  "\x{03D8}" ],      #ATB
-			'lkoppa'    => [ 'j',  'akoppa',  '&#985;',  "\x{03D9}" ],      #ATB
+			'cdigamma'  => [ 'W',  'Digamma', '&#988;',  "\x{03DC}" ],
+			'ldigamma'  => [ 'w',  'digamma', '&#989;',  "\x{03DD}" ],
+			'cqoppa'    => [ 'Q',  'Qoppa',   '&#990;',  "\x{03DE}" ],
+			'lqoppa'    => [ 'q',  'qoppa',   '&#991;',  "\x{03DF}" ],
+			'csampi'    => [ 'C',  'Sampi',   '&#992;',  "\x{03E0}" ],
+			'lsampi'    => [ 'c',  'sampi',   '&#993;',  "\x{03E1}" ],
+			'ckoppa'    => [ 'J',  'AKoppa',  '&#984;',  "\x{03D8}" ],
+			'lkoppa'    => [ 'j',  'akoppa',  '&#985;',  "\x{03D9}" ],
 			'oulig'     => [ 'ou', 'oulig', '&#959;&#965;', "\x{03BF}\x{03C5}" ]
 		);
 		my $grfont = '{Times} 14';
@@ -373,7 +373,7 @@ sub greekpopup {
 					my $selection = $::lglobal{grtext}->get( $start, $end );
 					$::lglobal{grtext}->delete( $start, $end );
 					$::lglobal{grtext}
-					  ->insert( $start, bettergreek( 'unicode', $selection ) );     #ATB
+					  ->insert( $start, bettergreek( 'unicode', $selection ) );
 					if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
 						$::lglobal{grtext}->delete( 'end -1c', 'end' );
 					}
@@ -394,7 +394,7 @@ sub greekpopup {
 					my $selection = $::lglobal{grtext}->get( $start, $end );
 					$::lglobal{grtext}->delete( $start, $end );
 					$::lglobal{grtext}
-					  ->insert( $start, bettergreek( 'beta', $selection ) );        #ATB
+					  ->insert( $start, bettergreek( 'beta', $selection ) );
 					if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
 						$::lglobal{grtext}->delete( 'end -1c', 'end' );
 					}
@@ -938,15 +938,15 @@ sub togreektr {
 	return $phrase;
 }
 
-sub bettergreek                                     #ATB
-{                                                   #ATB
-	my ( $direction, $phrase ) = @_;                #ATB
-	my $answer;                                     #ATB
-	$phrase =~ s/\\/\\\\/g;                         #ATB
-	$answer = betagreek( $direction, $phrase );     #ATB
-	$answer =~ s/\\\\/\\/g;                         #ATB
-	return $answer;                                 #ATB
-}                                                   #ATB
+sub bettergreek
+{
+	my ( $direction, $phrase ) = @_;
+	my $answer;
+	$phrase =~ s/\\/\\\\/g;
+	$answer = betagreek( $direction, $phrase );
+	$answer =~ s/\\\\/\\/g;
+	return $answer;
+}
 
 sub betagreek {
 	my ( $direction, $phrase ) = @_;
@@ -1017,12 +1017,12 @@ sub betagreek {
 		}
 		$phrase =~ s/\x{037E}/?/g;
 		$phrase =~ s/\x{0387}/;/g;
-		$phrase =~ s/\x{0390}/u\/\+/g;                  #ATB
-		$phrase =~ s/\x{03B0}/i\/\+/g;                  #ATB
+		$phrase =~ s/\x{0390}/u\/\+/g;
+		$phrase =~ s/\x{03B0}/i\/\+/g;
 		$phrase =~ s/\x{0386}/A\//g;
 		$phrase =~ s/\x{0388}/E\//g;
 		$phrase =~ s/\x{0389}/Ê\//g;
-		$phrase =~ s/\x{038A}/I\//g;                    #ATB
+		$phrase =~ s/\x{038A}/I\//g;
 		$phrase =~ s/\x{038C}/O\//g;
 		$phrase =~ s/\x{038E}/Y\//g;
 		$phrase =~ s/\x{038F}/Ô\//g;
@@ -1033,8 +1033,8 @@ sub betagreek {
 		$phrase =~ s/\x{03CC}/o\//g;
 		$phrase =~ s/\x{03CD}/y\//g;
 		$phrase =~ s/\x{03CE}/ô\//g;
-		$phrase =~ s/\x{03DA}/St/g;                     #ATB
-		$phrase =~ s/\x{03DB}/st/g;                     #ATB
+		$phrase =~ s/\x{03DA}/St/g;
+		$phrase =~ s/\x{03DB}/st/g;
 		return fromgreektr($phrase);                    #Un-marked & specials
 	}
 }
@@ -1045,11 +1045,11 @@ sub betaascii {                          #Actually it's beta->ANSI
 	# Discards the accents
 	my ($phrase) = @_;
 	$phrase =~ s/[\)\/\\\|\~\+=_]//g;
-	$phrase =~ s/R\(/Rh/g;                                  #ATB
+	$phrase =~ s/R\(/Rh/g;
 	$phrase =~ s/r\(/rh/g;
 	$phrase =~ s/([AEIOUYÊÔ])\(/H\L$1\E/g;
 	$phrase =~ s/([aeiouyêô]+)\(/h$1/g;
-	$phrase =~ s/(\p{Upper}\p{Lower}\p{Upper})/\U$1\E/g;    #ATB
+	$phrase =~ s/(\p{Upper}\p{Lower}\p{Upper})/\U$1\E/g;
 	return $phrase;
 }
 1;
