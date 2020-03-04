@@ -70,7 +70,7 @@ table {
     left: 92%;
     font-size: smaller;
     text-align: right;
-    font-style:normal;
+    font-style: normal;
     font-weight: normal;
     font-variant: normal;
 } /* page numbers */
@@ -114,9 +114,11 @@ table {
 
 .center   {text-align: center;}
 
-.right   {text-align: right;}
+.right    {text-align: right;}
 
 .smcap    {font-variant: small-caps;}
+
+.allsmcap {font-variant: small-caps; text-transform: lowercase;}
 
 .u        {text-decoration: underline;}
 
