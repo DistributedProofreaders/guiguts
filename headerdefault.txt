@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=BOOKCHARSET" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <title>
-      The Project Gutenberg eBook of TITLE, by AUTHOR.
+      TITLE, by AUTHOR&mdash;A Project Gutenberg eBook
     </title>
     <style type="text/css">
 
