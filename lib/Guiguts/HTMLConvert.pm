@@ -2168,6 +2168,9 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
+		# Preserve utf-8 characters by default, rather than converting to HTML named/numbered entities
+		$utfconvert->select;
+		
 		my $latin1_convert = $f0->Checkbutton(
 			-variable    => \$::lglobal{keep_latin1},
 			-selectcolor => $::lglobal{checkcolor},
@@ -2210,13 +2213,6 @@ sub htmlgenpopup {
 		$blockmarkup = $f0->Checkbutton(
 			-variable    => \$::lglobal{cssblockmarkup},
 			-selectcolor => $::lglobal{checkcolor},
-			-command     => sub {
-				if ( $::lglobal{cssblockmarkup} ) {
-					$blockmarkup->configure( '-text' => 'CSS blockquote' );
-				} else {
-					$blockmarkup->configure( '-text' => 'Std. <blockquote>' );
-				}
-			},
 			-text   => 'CSS blockquote',
 			-anchor => 'w',
 		  )->grid(
@@ -2226,6 +2222,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
+		# By default, use <div> with CSS class rather than HTML <blockquote> element
+		$blockmarkup->select;
 
 		my $f7 =
 		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
