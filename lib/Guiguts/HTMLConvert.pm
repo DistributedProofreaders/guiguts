@@ -1174,7 +1174,16 @@ sub html_convert_underscoresmallcaps {
 		$textwindow->search( '-exact', '--', '<sc>', '1.0', 'end' ) )
 	{
 		$textwindow->ntdelete( $thisblockstart, "$thisblockstart+4c" );
-		$textwindow->ntinsert( $thisblockstart, '<span class="smcap">' );
+		
+		# If text from here to next closing </sc> does not contain
+		# any Unicode lowercase letters, use allsmcap class.
+		my $thisblockend = '1.0';
+		if ( $thisblockend = $textwindow->search( '-exact', '--', '</sc>', $thisblockstart, 'end' ) and
+		     $textwindow->get( "$thisblockstart+1c", $thisblockend ) !~ /\p{Lowercase_Letter}/ ) {
+			$textwindow->ntinsert( $thisblockstart, '<span class="allsmcap">' );
+		} else {
+			$textwindow->ntinsert( $thisblockstart, '<span class="smcap">' );
+		}
 	}
 	while ( $thisblockstart =
 		$textwindow->search( '-exact', '--', '</sc>', '1.0', 'end' ) )
