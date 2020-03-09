@@ -615,15 +615,17 @@ sub html_convert_body {
 		# if in a poetry block
 		if ($poetry) {
 
-			# if end of p/ block, insert closing </div></div>
+			# if end of p/ block, insert closing </div></div></div>
 			if ( $selection =~ /^\x7f*[pP]\/<?/ ) {
 				$poetry    = 0;
-				$selection = '</div></div>';
+				$selection = "  </div>\n</div>\n</div>";
 
-				#delete two characters, insert closing </div></div>
-				#(delete three instead, so a page number doesn't fall inside the closing tag)
+				# delete "p/" characters and 
+				# newline so a page number doesn't fall inside the closing tag
 				$textwindow->ntdelete( "$step.0", "$step.0 +3c" );
+				# add back the deleted newline, and 3 </div>s with 2 more newlines
 				$textwindow->ntinsert( "$step.0 -1c", "\n$selection" );
+				$step += 2; # allow for the two additional newlines 
 				push @last5, $selection;
 				shift @last5 while ( scalar(@last5) > 4 );
 				$ital = 0;
@@ -633,8 +635,8 @@ sub html_convert_body {
 
 			# end of stanza
 			if ( $selection =~ /^$/ ) {
-				$textwindow->ntinsert( "$step.0",
-					'</div><div class="stanza">' );
+				$textwindow->ntinsert( "$step.0", "  </div>\n  <div class=\"stanza\">" );
+				$step++; # allow for the additional newline
 				while (1) {
 					$step++;
 					$selection = $textwindow->get( "$step.0", "$step.end" );
@@ -694,18 +696,18 @@ sub html_convert_body {
 				$ital = 0;
 			}
 
-			# collect css to indent poetry; classhash will be added in css
-			$::lglobal{classhash}->{$indent} =
-			    '    .poem span.i'
-			  . $indent
-			  . '     {display: block; margin-left: '
-			  . ( $indent / 2 )
-			  . 'em; padding-left: 3em; text-indent: -3em;}' . "\n";
+			# Default verse with no extra spaces has 3em padding, and -3em text-indent to 
+			# give hanging indent in case of a continuation line.
+			# Every two spaces causes +1em indent, but continuation lines need to align at 3em,
+			# so, add the half the space indent to -3em to set the em text-indent for each line
+			# For example, if 4 space indent, use 4/2 - 3 = -1em text-indent, i.e.
+			#    .poetry .indent4 {text-indent: -1em;}
 
-			#if ( $indent and ( $indent != 2 ) and ( $indent != 4 ) );
-			# the above assumes the header already has i2 and i4 indent
-			$textwindow->ntinsert( "$step.0",   "<span class=\"i$indent\">" );
-			$textwindow->ntinsert( "$step.end", '<br /></span>' );
+			# Add new CSS to classhash - will be appended later after header
+			$::lglobal{classhash}->{$indent} =
+				".poetry .indent$indent {text-indent: " . ($indent/2-3) . "em;}\n";
+			$textwindow->ntinsert( "$step.0",   "    <div class=\"verse indent$indent\">" );
+			$textwindow->ntinsert( "$step.end", '</div>' );
 			push @last5, $selection;
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
@@ -745,8 +747,9 @@ sub html_convert_body {
 				  );
 			}
 			$textwindow->ntdelete( $step . '.end -2c', $step . '.end' );
-			$selection = '<div class="poem"><div class="stanza">';
+			$selection = "<div class=\"poetry-container\">\n<div class=\"poetry\">\n  <div class=\"stanza\">";
 			$textwindow->ntinsert( $step . '.end', $selection );
+			$step += 2; # allow for the two additional newlines inserted
 			push @last5, $selection;
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
@@ -1657,13 +1660,19 @@ sub html_wrapup {
 	::named ( '><p', ">\n\n<p" ); # improve readability of code
 	::named ( '><hr', ">\n\n<hr" );
 
+	# Output poetry indent CSS.
+	# Find end of CSS, then search back for end of last class definition
+	# Insert classes stored earlier in reverse order, preceded by a comment header
 	$thisblockstart = $textwindow->search( '--', '</style', '1.0', '500.0' );
 	$thisblockstart = '75.0' unless $thisblockstart;
 	$thisblockstart =
 	  $textwindow->search( -backwards, '--', '}', $thisblockstart, '10.0' );
-	for ( reverse( sort( values( %{ $::lglobal{classhash} } ) ) ) ) {
-		$textwindow->ntinsert( $thisblockstart . ' +1l linestart', $_ )
-		  if keys %{ $::lglobal{classhash} };
+	if ( keys %{ $::lglobal{classhash} } ) {
+		$textwindow->ntinsert( $thisblockstart . ' +1l linestart', "\n");
+		for ( reverse( sort( values( %{ $::lglobal{classhash} } ) ) ) ) {
+			$textwindow->ntinsert( $thisblockstart . ' +1l linestart', $_ );
+		}
+		$textwindow->ntinsert( $thisblockstart . ' +1l linestart', "\n/* Poetry indents */\n");
 	}
 	%{ $::lglobal{classhash} } = ();
 	::working();
