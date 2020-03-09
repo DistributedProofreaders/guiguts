@@ -179,15 +179,14 @@ em.gesperrt
 }
 
 /* Poetry */
-.poem {
-    margin-left:10%;
-    margin-right:10%;
-    text-align: left;
-}
-
-.poem br {display: none;}
-
-.poem .stanza {margin: 1em 0em 1em 0em;}
+.poetry-container {text-align: center;}
+.poetry           {text-align: left; margin-left: 5%; margin-right: 5%;}
+/* uncomment the next line for centered poetry in browsers */
+/* .poetry           {display: inline-block;} */
+.poetry .stanza   {margin: 1em auto;}
+.poetry .verse    {text-indent: -3em; padding-left: 3em;}
+/* large inline blocks don't split well on paged devices */
+@media handheld, print { .poetry {display: block;} }
 
 /* Transcriber's notes */
 .transnote {background-color: #E6E6FA;
@@ -196,6 +195,7 @@ em.gesperrt
      padding:0.5em;
      margin-bottom:5em;
      font-family:sans-serif, serif; }
+
     </style>
   </head>
 <body>
