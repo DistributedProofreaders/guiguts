@@ -1369,7 +1369,7 @@ sub html_convert_pageanchors {
 							$br = '';    # No page break for exportwithmarkup
 						} else {
 							$pagereference .= "$br"
-							  . "<a id=\"$::htmllabels{pglabel}$_\" />$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
+							  . "<a id=\"$::htmllabels{pglabel}$_\"></a>$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
 							$br = "<br />";
 						}
 					}
@@ -1381,7 +1381,7 @@ sub html_convert_pageanchors {
 						$pagereference = "<$mark>";
 					} else {
 						$pagereference =
-							"<a id=\"$::htmllabels{pglabel}$num\" />$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}";
+							"<a id=\"$::htmllabels{pglabel}$num\"></a>$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}";
 					}
 				}
 			}
