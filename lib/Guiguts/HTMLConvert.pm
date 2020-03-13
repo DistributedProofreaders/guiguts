@@ -1725,7 +1725,7 @@ sub htmlimage {
 	$selection = $textwindow->get( $thisblockstart, $thisblockend ) if @_;
 	$selection = '' unless $selection;
 	my $preservep = '';
-	$preservep = '<p>' if $selection !~ /<\/p>$/;
+	$preservep = "\n<p>" if $selection !~ /<\/p>$/;
 	$selection =~ s/<p>\[Illustration/[Illustration/;
 	$selection =~ s/\[Illustration:?\s*(\.*)/$1/;
 	$selection =~ s/\]<\/p>$/]/;
@@ -1865,36 +1865,35 @@ sub htmlimage {
 					my $alt = $::lglobal{alttext}->get;
 					$alt =~ s/"/&quot;/g;
 					$alt = " alt=\"$alt\"";
-					$selection = "<div class=\"caption\">$selection</div>\n"
+					$selection = "  <div class=\"caption\">$selection</div>\n"
 					  if $selection;
 					$preservep = '' unless $selection;
 					my $title = $::lglobal{titltext}->get || '';
 					$title =~ s/"/&quot;/g;
 					$title = " title=\"$title\"" if $title;
-					$textwindow->addGlobStart;
-					my $closeimg =
-"px;\">\n<img src=\"$name\" $sizexy$alt$title />\n$selection</div>$preservep";
 
-					if ( $alignment eq 'center' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figcenter\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					} elsif ( $alignment eq 'left' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figleft\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					} elsif ( $alignment eq 'right' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figright\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					}
+					# Use filename as basis for an id for the div
+					# De-accent characters and remove file extension
+					my $idname = ::deaccentdisplay($fname);
+					$idname =~ s/\.[^\.]*$//;
+					# Convert space/punct to underscore, preserving hyphens
+					$idname =~ s/-/\x00/g;
+					$idname =~ s/(\p{White_Space}|\p{Punct})+/_/g;
+					$idname =~ s/\x00/-/g;
+					# Only keep valid id characters
+					$idname =~ s/[^A-Za-z0-9_-]//g;
+
+					# Replace [Illustration] with div, img and caption
+					$textwindow->addGlobStart;
+					$textwindow->delete( 'thisblockstart', 'thisblockend' );
+					$textwindow->insert( 'thisblockstart',
+						    "<div class=\"fig$alignment\" id=\"$idname\" "
+						  . "style=\"width: " . $width . "px;\">\n"
+						  . "  <img src=\"$name\" $sizexy$alt$title />\n"
+						  . "$selection</div>"
+						  . $preservep );
 					$textwindow->addGlobEnd;
+					
 					$::lglobal{htmlthumb}->delete
 					  if $::lglobal{htmlthumb};
 					$::lglobal{htmlthumb}->destroy
