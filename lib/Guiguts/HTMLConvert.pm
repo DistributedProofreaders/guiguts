@@ -1851,6 +1851,7 @@ sub htmlimage {
 					  . $::lglobal{heightent}->get . '"';
 					my $width = $::lglobal{widthent}->get;
 					return unless $name;
+					my ( $fname, $extension );
 					( $fname, $::globalimagepath, $extension ) =
 					  ::fileparse($name);
 					$::globalimagepath = ::os_normal($::globalimagepath);
@@ -1872,16 +1873,9 @@ sub htmlimage {
 					$title =~ s/"/&quot;/g;
 					$title = " title=\"$title\"" if $title;
 
-					# Use filename as basis for an id for the div
-					# De-accent characters and remove file extension
-					my $idname = ::deaccentdisplay($fname);
-					$idname =~ s/\.[^\.]*$//;
-					# Convert space/punct to underscore, preserving hyphens
-					$idname =~ s/-/\x00/g;
-					$idname =~ s/(\p{White_Space}|\p{Punct})+/_/g;
-					$idname =~ s/\x00/-/g;
-					# Only keep valid id characters
-					$idname =~ s/[^A-Za-z0-9_-]//g;
+					# Use filename as basis for an id - remove file extension first
+					$fname =~ s/\.[^\.]*$//;
+					my $idname = makeanchor( ::deaccentdisplay($fname) );
 
 					# Replace [Illustration] with div, img and caption
 					$textwindow->addGlobStart;
