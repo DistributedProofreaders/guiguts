@@ -1725,12 +1725,11 @@ sub htmlimage {
 	$selection = $textwindow->get( $thisblockstart, $thisblockend ) if @_;
 	$selection = '' unless $selection;
 	my $preservep = '';
-	$preservep = '<p>' if $selection !~ /<\/p>$/;
+	$preservep = "\n<p>" if $selection !~ /<\/p>$/;
 	$selection =~ s/<p>\[Illustration/[Illustration/;
 	$selection =~ s/\[Illustration:?\s*(\.*)/$1/;
 	$selection =~ s/\]<\/p>$/]/;
 	$selection =~ s/(\.*)\]$/$1/;
-	my ( $fname, $extension );
 	my $xpad = 0;
 	$::globalimagepath = $::globallastpath
 	  unless $::globalimagepath;
@@ -1851,6 +1850,7 @@ sub htmlimage {
 					  . $::lglobal{heightent}->get . '"';
 					my $width = $::lglobal{widthent}->get;
 					return unless $name;
+					my ( $fname, $extension );
 					( $fname, $::globalimagepath, $extension ) =
 					  ::fileparse($name);
 					$::globalimagepath = ::os_normal($::globalimagepath);
@@ -1865,36 +1865,28 @@ sub htmlimage {
 					my $alt = $::lglobal{alttext}->get;
 					$alt =~ s/"/&quot;/g;
 					$alt = " alt=\"$alt\"";
-					$selection = "<div class=\"caption\">$selection</div>\n"
+					$selection = "  <div class=\"caption\">$selection</div>\n"
 					  if $selection;
 					$preservep = '' unless $selection;
 					my $title = $::lglobal{titltext}->get || '';
 					$title =~ s/"/&quot;/g;
 					$title = " title=\"$title\"" if $title;
-					$textwindow->addGlobStart;
-					my $closeimg =
-"px;\">\n<img src=\"$name\" $sizexy$alt$title />\n$selection</div>$preservep";
 
-					if ( $alignment eq 'center' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figcenter\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					} elsif ( $alignment eq 'left' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figleft\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					} elsif ( $alignment eq 'right' ) {
-						$textwindow->delete( 'thisblockstart', 'thisblockend' );
-						$textwindow->insert( 'thisblockstart',
-							    "<div class=\"figright\" style=\"width: "
-							  . $width
-							  . $closeimg );
-					}
+					# Use filename as basis for an id - remove file extension first
+					$fname =~ s/\.[^\.]*$//;
+					my $idname = makeanchor( ::deaccentdisplay($fname) );
+
+					# Replace [Illustration] with div, img and caption
+					$textwindow->addGlobStart;
+					$textwindow->delete( 'thisblockstart', 'thisblockend' );
+					$textwindow->insert( 'thisblockstart',
+						    "<div class=\"fig$alignment\" id=\"$idname\" "
+						  . "style=\"width: " . $width . "px;\">\n"
+						  . "  <img src=\"$name\" $sizexy$alt$title />\n"
+						  . "$selection</div>"
+						  . $preservep );
 					$textwindow->addGlobEnd;
+					
 					$::lglobal{htmlthumb}->delete
 					  if $::lglobal{htmlthumb};
 					$::lglobal{htmlthumb}->destroy
