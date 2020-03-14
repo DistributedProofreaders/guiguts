@@ -1730,7 +1730,6 @@ sub htmlimage {
 	$selection =~ s/\[Illustration:?\s*(\.*)/$1/;
 	$selection =~ s/\]<\/p>$/]/;
 	$selection =~ s/(\.*)\]$/$1/;
-	my ( $fname, $extension );
 	my $xpad = 0;
 	$::globalimagepath = $::globallastpath
 	  unless $::globalimagepath;
