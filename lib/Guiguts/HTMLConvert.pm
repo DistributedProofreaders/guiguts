@@ -1666,7 +1666,7 @@ sub html_wrapup {
 	$thisblockstart = $textwindow->search( '--', '</style', '1.0', '500.0' );
 	$thisblockstart = '75.0' unless $thisblockstart;
 	$thisblockstart =
-	  $textwindow->search( -backwards, '--', '}', $thisblockstart, '10.0' );
+	  $textwindow->search( '-backwards', '--', '}', $thisblockstart, '10.0' );
 	if ( keys %{ $::lglobal{classhash} } ) {
 		$textwindow->ntinsert( $thisblockstart . ' +1l linestart', "\n");
 		for ( reverse( sort( values( %{ $::lglobal{classhash} } ) ) ) ) {
@@ -1875,16 +1875,52 @@ sub htmlimage {
 					# Use filename as basis for an id - remove file extension first
 					$fname =~ s/\.[^\.]*$//;
 					my $idname = makeanchor( ::deaccentdisplay($fname) );
+					my $classname = 'illow' . $width;
+					my $classreg = '\.illow[0-9]+ {'; # Match any automatically added illow classes
 
 					# Replace [Illustration] with div, img and caption
 					$textwindow->addGlobStart;
 					$textwindow->delete( 'thisblockstart', 'thisblockend' );
 					$textwindow->insert( 'thisblockstart',
-						    "<div class=\"fig$alignment\" id=\"$idname\" "
-						  . "style=\"width: " . $width . "px;\">\n"
+						    "<div class=\"fig$alignment $classname\" id=\"$idname\" >\n"
 						  . "  <img src=\"$name\" $sizexy$alt$title />\n"
 						  . "$selection</div>"
 						  . $preservep );
+						  
+					# Write class into CSS block (sorted in width order) - first find end of CSS
+					my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
+					if ($insertpoint) {
+						my $cssdef = ".$classname {width: " . $width . "px;}";
+						# Unless this class has been added already ...
+						unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
+							# Find end of last class definition in CSS
+							$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
+							if ($insertpoint) {
+								$insertpoint = $insertpoint . ' +1l'; # default position for first ever illow class
+								my $length = 0;
+								my $classpoint = $insertpoint;
+								# Loop back through illow classes to find correct place to insert
+								# If a smaller width is found, insert after it. If not, insert at start of list
+								while (	$classpoint = $textwindow->search( '-backwards', '-regexp',
+											'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
+									$insertpoint = $classpoint; # Potential insert point
+									my $testwidth = $textwindow->get( $classpoint . '+6c', $classpoint . '+' . ($length-2) . 'c' );
+									if ( $testwidth < $width ) {
+										$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
+										last;
+									}
+								}
+								$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
+
+								# Unless it already exists, add heading before first illow class
+								my $heading = '/* Illustration classes */';
+								unless ($textwindow->search( '--', $heading, '10.0', $insertpoint )) {
+									$insertpoint = $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
+									$textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n") if ($insertpoint);
+								}
+							}
+						}
+					}
 					$textwindow->addGlobEnd;
 					
 					$::lglobal{htmlthumb}->delete
