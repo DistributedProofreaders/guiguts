@@ -76,7 +76,7 @@ sub runProgram {
 			$count++;
 			if ( $line =~ /<title>/ ) {
 				$printing = 1;
-				printf LOGFILE ( "%d:1 Confirm title:\n", $count, trim($line) );
+				printf LOGFILE ( "%d:1 Confirm title:\n", $count );
 				#next;
 			}
 			if ($printing) {
@@ -310,7 +310,7 @@ sub runProgram {
 		# strip definition
 		my $ccount = 0;
 		foreach $_ (@css) {
-			s/^(.*?){.*$/$1/;
+			s/^(.*?)\{.*$/$1/;
 			$_ = trim($_);
 			my @sp = split( /,/, $_ );
 			foreach my $t (@sp) {
