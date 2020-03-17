@@ -1293,13 +1293,9 @@ sub distance {
 
 	for ( 1 .. $len1 ) {
 		$d[$_][0] = $_;
-		return $_
-		  if $_ != $len1 && substr( $word1, $_ ) eq substr( $word2, $_ );
 	}
 	for ( 1 .. $len2 ) {
 		$d[0][$_] = $_;
-		return $_
-		  if $_ != $len2 && substr( $word1, $_ ) eq substr( $word2, $_ );
 	}
 	for my $i ( 1 .. $len1 ) {
 		my $w1 = substr( $word1, $i - 1, 1 );
