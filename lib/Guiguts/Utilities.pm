@@ -823,7 +823,7 @@ sub initialize {
 			$::gutcommand,
 			::catfile(
 				$::lglobal{guigutsdirectory}, 'tools',
-				'bookloupe',                   'bookloupe.exe'
+				'bookloupe',                  'bookloupe.exe'
 			)
 		);
 		$::jeebiescommand = ::setdefaultpath(
@@ -871,7 +871,7 @@ sub initialize {
 			$::gutcommand,
 			::catfile(
 				$::lglobal{guigutsdirectory}, 'tools',
-				'bookloupe',                   'bookloupe'
+				'bookloupe',                  'bookloupe'
 			)
 		);
 		$::jeebiescommand = ::setdefaultpath(
@@ -2125,7 +2125,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
 			-text    => 'GC',
 			-font    => $::lglobal{toolfont},
 			-command => [ \&::gutcheck ],
-			-tip     => 'Gutcheck/Bookloupe'
+			-tip     => 'Bookloupe/Gutcheck'
 		);
 		$::lglobal{toptool}->ToolButton(
 			-image   => 'actcheck16',

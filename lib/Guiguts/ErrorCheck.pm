@@ -764,7 +764,7 @@ sub gcviewopts {
 		$::lglobal{gcviewoptspop}->focus;
 	} else {
 		$::lglobal{gcviewoptspop} = $top->Toplevel;
-		$::lglobal{gcviewoptspop}->title('Gutcheck/Bookloupe View Options');
+		$::lglobal{gcviewoptspop}->title('Bookloupe/Gutcheck View Options');
 		my $pframe = $::lglobal{gcviewoptspop}->Frame->pack;
 		$pframe->Label( -text => 'Select option to hide that error.', )->pack;
 		my $pframe1 = $::lglobal{gcviewoptspop}->Frame->pack;
@@ -912,7 +912,7 @@ sub gcheckpop_up {
 		$::lglobal{gclistbox}->delete( '0', 'end' );
 	} else {
 		$::lglobal{gcpop} = $top->Toplevel;
-		$::lglobal{gcpop}->title('Gutcheck/Bookloupe');
+		$::lglobal{gcpop}->title('Bookloupe/Gutcheck');
 		$::lglobal{gcpop}->geometry($::geometry2) if $::geometry2;
 		$::lglobal{gcpop}->transient($top)        if $::stayontop;
 		my $ptopframe = $::lglobal{gcpop}->Frame->pack;
@@ -1045,9 +1045,9 @@ sub gcheckpop_up {
 	unless ( open $results, '<', 'gutrslts.tmp' ) {
 		my $dialog = $top->Dialog(
 			   -text =>
-				 'Could not read results file. Problem with gutcheck/bookloupe.',
+				 'Could not read results file. Problem with Bookloupe/Gutcheck.',
 			   -bitmap  => 'question',
-			   -title   => 'Gutcheck/bookloupe problem',
+			   -title   => 'Bookloupe/Gutcheck problem',
 			   -buttons => [qw/OK/],
 		);
 		$dialog->Show;
@@ -1323,7 +1323,7 @@ sub gutcheck {
 				  . cwd()
 				  . ' directory. Check for write permission or space problems.',
 				-bitmap  => 'question',
-				-title   => 'Gutcheck/Bookloupe problem',
+				-title   => 'Bookloupe/Gutcheck problem',
 				-buttons => [qw/OK/],
 		);
 		$dialog->Show;
@@ -1343,7 +1343,7 @@ sub gutcheck {
 	unless ($::gutcommand) {
 		$::gutcommand =
 		  $textwindow->getOpenFile(-filetypes => $types,
-								   -title => 'Where is the Gutcheck/Bookloupe executable?'
+								   -title => 'Where is the Bookloupe/Gutcheck executable?'
 		  );
 	}
 	return unless $::gutcommand;
@@ -1385,7 +1385,7 @@ sub gcrunopts {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	$::lglobal{gcrunoptspop} =
-	  $top->DialogBox( -title => 'Gutcheck/Bookloupe Run Options', -buttons => ['Close'] );
+	  $top->DialogBox( -title => 'Bookloupe/Gutcheck Run Options', -buttons => ['Close'] );
 	my $gcopt6 =
 	  $::lglobal{gcrunoptspop}->add(
 							   'Checkbutton',

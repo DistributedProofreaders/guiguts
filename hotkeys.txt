@@ -12,7 +12,7 @@ F2 -- column cut
 F3 -- column paste
 
 F5 -- open Word Frequency
-F6 -- run Gutcheck/Bookloupe
+F6 -- run Bookloupe/Gutcheck
 F7 -- spell check selection (or document, if no selection made)
 F8 -- open Stealth Scannos search
 
