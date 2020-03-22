@@ -418,11 +418,11 @@ sub filePathsPopup {
 			-anchor => 'n',
 			-fill   => 'x'
 		);
-		$f3->Label( -text => "Gutcheck:", -width => 22, -anchor => 'w',
+		$f3->Label( -text => "Gutcheck/Bookloupe:", -width => 22, -anchor => 'w',
 		    )->pack( -side => 'left' );
 		$f3->Button(
-			-text    => 'Locate Gutcheck...',
-			-command => sub { ::locateExecutable('Gutcheck', \$::gutcommand); },
+			-text    => 'Locate Gutcheck/Bookloupe...',
+			-command => sub { ::locateExecutable('Gutcheck/Bookloupe', \$::gutcommand); },
 			-width   => 24,
 		    )->pack( -side => 'right' );
 		$f3->Entry(

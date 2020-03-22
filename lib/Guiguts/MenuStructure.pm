@@ -912,7 +912,7 @@ sub menubuildold {
 				  }
 			],
 			[ 'separator', '' ],
-			[ 	Button => 'Run ~Gutcheck...',
+			[ 	Button => 'Run ~Gutcheck/Bookloupe...',
 				-accelerator => 'F6',
 				-command => \&::gutcheck
 			],
@@ -1336,7 +1336,7 @@ sub menubuilddefault {
 				-accelerator => 'F5',
 				-command => \&::wordfrequency,
 			],
-			[ 	Button   => '~Gutcheck...',
+			[ 	Button   => '~Gutcheck/Bookloupe...',
 				-accelerator => 'F6',
 				-command => \&::gutcheck
 			],

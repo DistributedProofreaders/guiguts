@@ -1,0 +1,205 @@
+                           bookloupe test framework
+                           ========================
+
+Running existing testcases
+--------------------------
+
+The test harness (the program that runs a test) is called loupe-test. The
+various testcases are stored in multiple text files, typically with a .tst
+extension.
+
+To run a testcase when all of bookloupe, loupe-test and the testcase file are
+in the current directory simply do something like:
+
+% loupe-test missing-space.tst
+
+from a command prompt. Under MS-Windows, this is called a command window and
+the prompt will normally look slightly different, eg.,
+
+C:\DP> loupe-test missing-space.tst
+
+To run all the tests in the current directory, do something like this:
+
+% loupe-test *.tst
+
+If bookloupe is not in the current directory or you want to run the testsuite
+against gutcheck (the program that bookloupe is based on), then you can set an
+environment variable (BOOKLOUPE) to point at it. For example, on MS-Windows
+you might do:
+
+C:\DP> set BOOKLOUPE=C:\GUTCHECK\GUTCHECK.EXE
+C:\DP> loupe-test *.tst
+
+Writing your own testcases
+--------------------------
+
+Writing a new testcase is pretty painless. Most testcases follow this simple
+pattern:
+
+		┌──────────────────────────────────────────┐
+		│**************** INPUT ****************   │
+		│"Look!John, over there!"                  │
+		│**************** EXPECTED ****************│
+		│                                          │
+		│"Look!John, over there!"                  │
+		│    Line 1 column 6 - Missing space?      │
+		└──────────────────────────────────────────┘
+
+The sixteen asterisks in this example form what is known as the "flag". This
+flag must come before and after all tags (eg., INPUT and EXPECTED). In the
+unlikely event that you need sixteen asterisks at the start of a line of text,
+then simply choose a different flag and use it throughout the file (flags
+can be any sequence of ASCII characters except control codes and space).
+
+Note that the header that bookloupe and gutcheck normally output is not
+included in the expected output. This avoids problems with not knowing
+beforehand the name of the file that bookloupe/gutcheck will be asked to
+look at (and saves typing!). bookloupe (and gutcheck) prints a blank line
+before each warning. These are not part of the header and so do need to
+be included.
+
+To test that bookloupe produces no output, you still need to include
+an EXPECTED tag, just with no text following it. If there is no EXPECTED
+tag, then loupe-test will consider that no expectation exists and won't
+check the output at all.
+
+Non-ASCII testcases
+-------------------
+
+The testcase definitions (the .tst files) are always written in UTF-8
+which is a superset of ASCII. Since gutcheck does not understand UTF-8
+this causes a problem when it is desired to include characters that
+are not in ASCII in a testcase. To solve this problem it is possible
+to specify an encoding to use for the test. It is very important to
+undertand that this specifies the encoding that loupe-test will use to
+talk to bookloupe/gutcheck and _not_ the encoding of the .tst file
+(which remains UTF-8). gutcheck understands Latin-1 (at least to a
+limited extent), the canonical name for which is ISO-8859-1:
+
+      ┌─────────────────────────────────────────────────────────────────┐
+      │**************** ENCODING ****************                       │
+      │ISO-8859-1                                                       │
+      │**************** INPUT ****************                          │
+      │"Hello," he said, "I wanted to bave a tête-à-tête with you."     │
+      │**************** EXPECTED ****************                       │
+      │                                                                 │
+      │"Hello," he said, "I wanted to bave a tête-à-tête with you."     │
+      │    Line 1 column 31 - Query word bave - not reporting duplicates│
+      └─────────────────────────────────────────────────────────────────┘
+
+Embedded linefeeds
+------------------
+
+One of the tests that bookloupe/gutcheck need to do is check that all
+lines are ended with CR NL (as required by PG) rather than the UNIX
+standard NL. loupe-test deliberately ignores the line endings in testcase
+definition files and always uses CR NL. Thus there is needed a means
+to embed a linefeed (aka newline) character into the input to be sent
+to bookloupe/gutcheck to test that it correctly identified the problem.
+loupe-test recognises the unicode symbol for linefeed (U+240A): ␊ which
+can be used for this purpose instead of a normal newline.
+
+Passing command line options
+----------------------------
+
+Some of bookloupe's functionality is only available using command line
+options. loupe-test provides a means of specifying these with the
+OPTIONS tag:
+
+		┌──────────────────────────────────────────┐
+                │**************** OPTIONS **************** │
+                │-m                                        │
+                │-d                                        │
+                │**************** INPUT ****************   │
+                │&ldquo;He went <i>thataway!</i>&rdquo;    │
+                │**************** EXPECTED ****************│
+		└──────────────────────────────────────────┘
+
+Extra input files
+-----------------
+
+Under certain circumstances, bookloupe reads other input files than just
+the ebook. These can be specified in the testcase definition file by
+adding the name of the file to the INPUT tag:
+
+       ┌───────────────────────────────────────────────────────────────┐
+       │**************** OPTIONS ****************                      │
+       │-u                                                             │
+       │**************** INPUT(gutcheck.typ) ****************          │
+       │arid                                                           │
+       │**************** INPUT ****************                        │
+       │I am the very model of a modern Major-General,                 │
+       │I've information vegetable, animal, and mineral,               │
+       │I know the kings of England, arid I quote the fights historical│
+       │From Marathon to Waterloo, in order categorical;               │
+       │I'm very well acquainted, too, with matters mathematical,      │
+       │I understand equations, both the simple and quadratical,       │
+       │About binomial theorem I'm teeming with a lot o' news--        │
+       │With many cheerful facts about the square of the hypotenuse.   │
+       │**************** EXPECTED ****************                     │
+       │                                                               │
+       │I know the kings of England, arid I quote the fights historical│
+       │    Line 3 column 29 - Query possible scanno arid              │
+       └───────────────────────────────────────────────────────────────┘
+
+False-positives
+---------------
+
+Most of the time, the input can be tweaked so that all warnings bookloupe
+reports represent real errors in the text. Sometimes, however, this either
+cannot be done and still test what we need to. In these cases we need a
+means to describe these false-positives (warnings that do not describe
+a real error). This is important so that a later version of bookloupe can
+be improved to not issue the false-positive warning and still pass the
+test. In order to do this, we need to describe the warnings in a more
+structures manner, like this:
+
+       ┌───────────────────────────────────────────────────────────────┐
+       │**************** OPTIONS ****************                      │
+       │-s                                                             │
+       │**************** INPUT ****************                        │
+       │'In a moment,' Peter replied,' I'm just coming.'               │
+       │                                                               │
+       │'Underneath the girls' scarves.                                │
+       │                                                               │
+       │**************** WARNINGS ****************                     │
+       │<expected>                                                     │
+       │  <error>                                                      │
+       │    <at line="1" column="30"/>                                 │
+       │    <text>Wrongspaced singlequotes?</text>                     │
+       │  </error>                                                     │
+       │  <false-positive>                                             │
+       │    <at line="2"/>                                             │
+       │    <text>Mismatched singlequotes?</text>                      │
+       │  </false-positive>                                            │
+       │  <false-negative>                                             │
+       │    <at line="3" column="1"/>                                  │
+       │    <at line="4"/>                                             │
+       │    <text>Mismatched singlequotes?</text>                      │
+       │  </false-negative>                                            │
+       │</expected>                                                    │
+       └───────────────────────────────────────────────────────────────┘
+
+Here, we use the "WARNINGS" tag instead of "EXPECTED" to denote that we
+wish to use structured warnings and the list of warnings is enclosed in
+an <expected> ... </expected> node.
+
+Each warning, or potential warnings is then described using either an
+"error" node (for warnings that represent real errors in the text), a
+"false-positive" node (for warnings that do not represent real errors),
+or a "false-negative" node (for warnings that should be issued, but that
+are not yet detected by bookloupe).
+
+Within each warning node, there are then one or more "at" nodes which
+list the acceptable locations for the warning to be reported at (the
+first listed should be the preferred location) and exactly one "text"
+node which must match the text of the warning issued.
+
+A testcase will pass if all the warnings marked as errors were issued and
+if no warnings were issued that are not listed in one form or another.
+If the testcase passes with an expected failure (ie., issues a warning
+for a false positive or does not issue a warning for a false negative),
+then the test is counted as passed, but a note will be printed describing
+this, eg.:
+
+sample: PASS (with 1 of 1 false positives and 1 of 1 false negatives)

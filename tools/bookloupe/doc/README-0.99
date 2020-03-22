@@ -1,0 +1,24 @@
+RELEASE NOTES FOR GUTCHECK 0.99 20051105
+----------------------------------------
+
+This is the README file for Gutcheck.
+
+Gutcheck is a command-line tool for finding problems in
+files for submission to Project Gutenberg.
+
+You should have received the following files:
+
+    GUTCHECK.EXE    MS-DOS Executable
+    gutcheck.txt    Documentation
+    gutcheck.c      Source code
+    gutcheck.typ    A sample typo file
+    README          This file
+    COPYING         A copy of the GNU GPL licence
+
+This program is free software, without warranty of any kind,
+licensed under the GNU GPL.  A copy of the GNU GPL, entitled
+'COPYING' should be present.  If not, you can find one at 
+http://www.fsf.org.
+
+Gutcheck was written by Jim Tinsley, who can be reached at 
+jtinsley@pobox.com, or via http://gutcheck.sourceforge.net.
