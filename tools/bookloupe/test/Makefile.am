@@ -1,1 +1,0 @@
-SUBDIRS=harness compatibility bookloupe .
