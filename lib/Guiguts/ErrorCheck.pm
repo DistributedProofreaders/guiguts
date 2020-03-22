@@ -764,7 +764,7 @@ sub gcviewopts {
 		$::lglobal{gcviewoptspop}->focus;
 	} else {
 		$::lglobal{gcviewoptspop} = $top->Toplevel;
-		$::lglobal{gcviewoptspop}->title('Gutcheck View Options');
+		$::lglobal{gcviewoptspop}->title('Bookloupe/Gutcheck View Options');
 		my $pframe = $::lglobal{gcviewoptspop}->Frame->pack;
 		$pframe->Label( -text => 'Select option to hide that error.', )->pack;
 		my $pframe1 = $::lglobal{gcviewoptspop}->Frame->pack;
@@ -912,7 +912,7 @@ sub gcheckpop_up {
 		$::lglobal{gclistbox}->delete( '0', 'end' );
 	} else {
 		$::lglobal{gcpop} = $top->Toplevel;
-		$::lglobal{gcpop}->title('Gutcheck');
+		$::lglobal{gcpop}->title('Bookloupe/Gutcheck');
 		$::lglobal{gcpop}->geometry($::geometry2) if $::geometry2;
 		$::lglobal{gcpop}->transient($top)        if $::stayontop;
 		my $ptopframe = $::lglobal{gcpop}->Frame->pack;
@@ -920,7 +920,7 @@ sub gcheckpop_up {
 		  $ptopframe->Button(
 							  -activebackground => $::activecolor,
 							  -command          => sub { ::gutcheck() },
-							  -text             => 'Re-run Gutcheck',
+							  -text             => 'Re-run check',
 							  -width            => 16
 		  )->pack(
 				   -side   => 'left',
@@ -1045,9 +1045,9 @@ sub gcheckpop_up {
 	unless ( open $results, '<', 'gutrslts.tmp' ) {
 		my $dialog = $top->Dialog(
 			   -text =>
-				 'Could not read gutcheck results file. Problem with gutcheck.',
+				 'Could not read results file. Problem with Bookloupe/Gutcheck.',
 			   -bitmap  => 'question',
-			   -title   => 'Gutcheck problem',
+			   -title   => 'Bookloupe/Gutcheck problem',
 			   -buttons => [qw/OK/],
 		);
 		$dialog->Show;
@@ -1300,10 +1300,13 @@ sub gutcheck {
 	}
 
 	#$top->Busy( -recurse => 1 );
-	# FIXME: wide character in print warning next line with unicode
-	# Figure out how to determine encoding. See scratchpad.pl
-	# open my $gc, ">:encoding(UTF-8)", "gutchk.tmp");
-	if ( open my $gc, ">:bytes", 'gutchk.tmp' ) {
+	
+	# Bookloupe is utf-8 friendly, but if still using gutcheck, revert to "bytes" encoding
+	my $encoding = ">:encoding(UTF-8)";
+	if ( $::gutcommand and ::basename($::gutcommand) =~ /gutcheck/ ) {
+		$encoding = ">:bytes";
+	}
+	if ( open my $gc, $encoding, 'gutchk.tmp' ) {
 		my $count = 0;
 		my $index = '1.0';
 		my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
@@ -1320,7 +1323,7 @@ sub gutcheck {
 				  . cwd()
 				  . ' directory. Check for write permission or space problems.',
 				-bitmap  => 'question',
-				-title   => 'Gutcheck problem',
+				-title   => 'Bookloupe/Gutcheck problem',
 				-buttons => [qw/OK/],
 		);
 		$dialog->Show;
@@ -1340,7 +1343,7 @@ sub gutcheck {
 	unless ($::gutcommand) {
 		$::gutcommand =
 		  $textwindow->getOpenFile(-filetypes => $types,
-								   -title => 'Where is the Gutcheck executable?'
+								   -title => 'Where is the Bookloupe/Gutcheck executable?'
 		  );
 	}
 	return unless $::gutcommand;
@@ -1382,7 +1385,7 @@ sub gcrunopts {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	$::lglobal{gcrunoptspop} =
-	  $top->DialogBox( -title => 'Gutcheck Run Options', -buttons => ['Close'] );
+	  $top->DialogBox( -title => 'Bookloupe/Gutcheck Run Options', -buttons => ['Close'] );
 	my $gcopt6 =
 	  $::lglobal{gcrunoptspop}->add(
 							   'Checkbutton',
