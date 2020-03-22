@@ -34,6 +34,6 @@ a recent version, you're probably better off with the generic download.
 ### Other
 
 `guiguts-1.0.nn.zip` is the basic guiguts version with a few helper
-applications; it includes compilable source code for Bookloupe, GutCheck
-and Jeebies. See https://www.pgdp.net/wiki/Guiguts/Install for details
+applications; it includes compilable source code for GutCheck and
+Jeebies. See https://www.pgdp.net/wiki/Guiguts/Install for details
 on further helper applications.
