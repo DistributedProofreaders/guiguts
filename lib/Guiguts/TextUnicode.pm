@@ -185,6 +185,99 @@ sub replacewith {    #One step cut and insert without undo tracking
 	$w->ReplaceSelectionsWith($string);
 }
 
+# Override TextUndo::ReplaceSelectionsWith
+# Default behaviour on text replacement was for all 
+# page markers to move to start of replacement string.
+# 
+# If it finds page markers within the string to be replaced, 
+# this version inserts replacement text in the same proportions
+# between page numbers as the original string was
+sub ReplaceSelectionsWith
+{
+	my ( $w, $new_text ) = @_;
+
+	my @ranges = $w->tagRanges( 'sel' );
+	my $range_total = @ranges;
+
+	# if nothing selected, then ignore
+	return if ($range_total == 0);
+
+	$w->addGlobStart;
+
+	# insert marks where selections are located
+	# marks will move with text even as text is inserted and deleted
+	# in a previous selection.
+	for ( my $i = 0; $i < $range_total; $i++ ) {
+		$w->markSet( 'mark_sel_' . $i => $ranges[$i] );
+	}
+
+	# for every selected mark pair, insert new text and delete old text
+	my ($first, $last);
+	for ( my $i = 0; $i < $range_total; $i = $i + 2 ) {
+		$first = $w->index( 'mark_sel_' . $i );
+		$last = $w->index( 'mark_sel_' . ($i+1) );
+
+		# First pass through page markers to store length of old string
+		# from start to each page marker in @lengths.
+		# In reverse order to avoid a replace affecting positions for the next
+		my @lengths; 
+		my $mark = $last;
+		while ( $mark = $w->markPrevious( $mark ) ) {
+			next unless ( $mark =~ m{Pg(\S+)} ); 		# Only look at page markers
+			last if $w->compare( $mark, '<', $first);	# Stop if before start of old string
+
+			my $fmstring = $w->get( $first, $mark );
+			my $fmlen = length $fmstring;
+			push( @lengths, $fmlen );
+		}
+		
+		if ( !@lengths ) { 	# No page markers, so simply insert new and delete old text
+			$w->insert( $last, $new_text );
+			$w->delete( $first, $last );
+		} else { 			# We found page markers, so need to place text round them
+			# Scale string lengths based on ratio of new and old text lengths
+			my $newlen = length $new_text;
+			my $oldlen = length $w->get( $first, $last );
+			foreach ( @lengths ) {
+				$_ = int($_ * $newlen / $oldlen + 0.5);
+			}
+			unshift( @lengths, $newlen ); # first element is whole length of new string
+			
+			# Second pass through page markers to replace the text in chunks
+			# In reverse order to avoid one replace affecting positions for the next
+			$mark = $last;
+			my $prev = $last;
+			my $idx = 0;
+			while ( $mark = $w->markPrevious( $mark ) ) {
+				next unless ( $mark =~ m{Pg(\S+)} ); 		# Only look at page markers
+				last if $w->compare( $mark, '<', $first);	# Stop if before start of old string
+				next if ( $mark eq $prev ); 				# Skip if we find same position again
+
+				$w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );	# Keep page marker to right of replaced string
+				$w->delete( $mark, $prev );
+				$w->insert( $mark, substr( $new_text, $lengths[$idx+1], $lengths[$idx]-$lengths[$idx+1] ) );
+				$w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );	# Restore page marker behaviour
+				$prev = $mark;
+				++$idx;
+			}
+			# delete final (first) chunk and insert remainder
+			$w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );	# Keep page marker to right of replaced string
+			$w->delete( $first, $prev );
+			$w->insert( $first, substr( $new_text, 0, $lengths[$idx] ) );
+			$w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );	# Restore page marker behaviour
+		}		
+	}
+	
+	# set the insert cursor to the end of the last insertion mark
+	$w->markSet( 'insert', $w->index( 'mark_sel_' . ($range_total-1) ) );
+	# delete the marks
+	for ( my $i = 0; $i < $range_total; $i++ ) {
+		$w->markUnset( 'mark_sel_' . $i );
+	}
+	
+	$w->addGlobEnd;
+}
+
 sub shiftB1_Motion {    # Alternate selection mode, for block selection
 	my ($w) = @_;
 	return unless defined $Tk::mouseMoved;
