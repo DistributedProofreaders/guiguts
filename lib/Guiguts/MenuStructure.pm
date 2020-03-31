@@ -924,6 +924,11 @@ sub menubuildold {
 					unlink 'null' if ( -e 'null' );
 				},
 			],
+			[	Button => 'Load Chec~kfile...',
+				-command => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Load Checkfile' );
+				}
+			],
 			[ 'separator', '' ],
 			[
 				Button   => 'Remove ~End-of-line Spaces',
@@ -1388,6 +1393,11 @@ sub menubuilddefault {
 			],
 			[	Button   => '~Jeebies...',
 				-command => \&::jeebiespop_up
+			],
+			[	Button => 'Load Chec~kfile...',
+				-command => sub {
+					::errorcheckpop_up( $textwindow, $top, 'Load Checkfile' );
+				}
 			],
 			[ 'separator', '' ],
 			[	Button => '~Footnote Fixup...',
