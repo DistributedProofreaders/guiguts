@@ -9,6 +9,10 @@ BEGIN {
 	  qw(&errorcheckpop_up &gcheckpop_up &gutcheck &jeebiespop_up);
 }
 
+# General error check window
+# Handles HTML & CSS Validate, Tidy, Link Check, Epub Friendly,
+# pphtml, pptxt and Load External Checkfile,
+# TODO: Incorporate Gutcheck & Jeebies as well to avoid code duplication and divergence?
 sub errorcheckpop_up {
 	my ( $textwindow, $top, $errorchecktype ) = @_;
 	my ( %errors,     @errorchecklines );
@@ -21,13 +25,15 @@ sub errorcheckpop_up {
 	$::lglobal{errorcheckpop} = $top->Toplevel;
 	$::lglobal{errorcheckpop}->title($errorchecktype);
 	my $ptopframe = $::lglobal{errorcheckpop}->Frame->pack;
+	my $buttonlabel = 'Run Checks';
+	$buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
 	my $opsbutton = $ptopframe->Button(
 		-activebackground => $::activecolor,
 		-command          => sub {
 			errorcheckpop_up( $textwindow, $top, $errorchecktype );
 			unlink 'null' if ( -e 'null' );
 		},
-		-text  => 'Run Checks',
+		-text  => $buttonlabel,
 		-width => 16
 	  )->pack(
 			   -side   => 'left',
@@ -80,27 +86,9 @@ sub errorcheckpop_up {
 	  ->eventAdd( '<<view>>' => '<Button-1>', '<Return>' );
 	$::lglobal{errorchecklistbox}->bind(
 		'<<view>>',
-		sub {         # FIXME: adapt for gutcheck
-			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-			my $line = $::lglobal{errorchecklistbox}->get('active');
-			if ( $line =~ /^line/ ) {
-				$textwindow->see( $::errors{$line} );
-				$textwindow->markSet( 'insert', $::errors{$line} );
-				::update_indicators();
-			} else {
-				if ( $line =~ /^\+(.*):/ ) {    # search on text between + and :
-					my @savesets = @::sopt;
-					::searchoptset(qw/0 x x 0/);
-					::searchfromstartifnew($1);
-					::searchtext($1);
-					::searchoptset(@savesets);
-					$top->raise;
-				}
-			}
-			$textwindow->focus;
-			$::lglobal{errorcheckpop}->raise;
-		}
+		sub { errorcheckview(); }
 	);
+	# buttons 2 & 3 delete the clicked error and select the next error
 	$::lglobal{errorchecklistbox}->eventAdd('<<remove>>' => '<ButtonRelease-2>',
 											'<ButtonRelease-3>' );
 	$::lglobal{errorchecklistbox}->bind(
@@ -124,6 +112,8 @@ sub errorcheckpop_up {
 			$::lglobal{errorchecklistbox}
 			  ->selectionSet( $::lglobal{errorchecklistbox}->index('active') );
 			$::lglobal{errorchecklistbox}->delete('active');
+			$::lglobal{errorchecklistbox}->selectionSet('active');
+			errorcheckview();
 			$::lglobal{errorchecklistbox}->after( $::lglobal{delay} );
 		}
 	);
@@ -155,12 +145,19 @@ sub errorcheckpop_up {
 	}
 	my $unicode = ::currentfileisunicode();
 	foreach my $thiserrorchecktype (@errorchecktypes) {
-		::working($thiserrorchecktype);
-		push @errorchecklines, "Beginning check: " . $thiserrorchecktype;
-		if ( errorcheckrun($thiserrorchecktype) ) {
-			push @errorchecklines, "Failed to run: " . $thiserrorchecktype;
+		my $fname = '';
+		if ( $thiserrorchecktype eq 'Load Checkfile' ) {
+			$fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
+			last if ( not $fname );
+		} else {
+			::working($thiserrorchecktype);
+			push @errorchecklines, "Beginning check: " . $thiserrorchecktype;
+			if ( errorcheckrun($thiserrorchecktype) ) {
+				push @errorchecklines, "Failed to run: " . $thiserrorchecktype;
+			}
+			$fname = "errors.err";
 		}
-		my $fh = FileHandle->new("< errors.err");
+		my $fh = FileHandle->new("< $fname");
 		if ( not defined($fh) ) {
 			my $dialog = $top->Dialog(
 									   -text => 'Could not find '
@@ -272,18 +269,59 @@ sub errorcheckpop_up {
 						$textwindow->markSet( "t$mark", $lincol );
 						$::errors{$line} = "t$mark";
 					}
+				# Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
+				# File may be in HTML format or a text file
+				} elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
+					# if HTML file, ignore the header & footer
+					if ( $line =~ /<body>/ ) { 
+						@errorchecklines = ();
+						next;
+					}
+					last if ( $line =~ /<\/body>/ );
+					# Mark *red text* (used by pptxt)
+					$line =~ s/<span class='red'>([^<]*)<\/span>/*$1*/g;				
+					# Mark >>>inserted<<< and ###deleted### text (used by ppcomp)
+					$line =~ s/<ins>([^<]*)<\/ins>/>>>$1<<</g;				
+					$line =~ s/<del>([^<]*)<\/del>/###$1###/g;				
+					# Remove some unwanted HTML
+					$line =~ s/<\/?span[^>]*>//g;
+					$line =~ s/<\/?a[^>]*>//g;
+					$line =~ s/<\/?pre>//g;
+					$line =~ s/<\/?p[^>]*>//g;
+					$line =~ s/<\/?div[^>]*>//g;
+					$line =~ s/<br[^>]*>/ /g;			# Line break becomes space - can't insert \n
+					$line =~ s/<\/?h[1-6][^>]*>/***/g;	# Put asterisks round headers
+					$line =~ s/<hr[^>]*>/====/g;		# Replace horizontal rules with ====
+					$line =~ s/\&lt;/</g;				# Restore < & > characters
+					$line =~ s/\&gt;/>/g;
+					
+					# if line has a number at the start, assume it is the error line number
+					$::errors{$line} = '';
+					$lincol = '';
+					if ( $line =~ /^\s*\d+/ ) {
+						$line =~ s/^\s*(\d+)/line $1/;
+						$lincol = "$1.0";
+						$mark++;
+						# add a new mark in the main text at the correct point
+						$textwindow->markSet( "t$mark", $lincol );
+						# remember which line goes with which mark
+						$::errors{$line} = "t$mark";
+					}
+					# display all lines, even those without line numbers
+					push @errorchecklines, $line;
 				}
 			}
 		}
 		$fh->close if $fh;
-		unlink 'errors.err';
+		unlink 'errors.err' unless $thiserrorchecktype eq 'Load Checkfile';
 		my $size = @errorchecklines;
 		if ( ( $thiserrorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) )
 		{    # handle errors.err file with zero lines
 			push @errorchecklines,
 "Could not perform validation: install java or use W3C CSS Validation web site.";
 		} else {
-			push @errorchecklines, "Check is complete: " . $thiserrorchecktype;
+			push @errorchecklines, "Check is complete: " . $thiserrorchecktype
+				unless $thiserrorchecktype eq 'Load Checkfile';
 			if ( $thiserrorchecktype eq "W3C Validate" ) {
 				push @errorchecklines,
 				  "Don't forget to do the final validation at http://validator.w3.org";
@@ -294,7 +332,7 @@ sub errorcheckpop_up {
 			}
 			push @errorchecklines, "";
 		}
-		::working();
+		::working() unless $thiserrorchecktype eq 'Load Checkfile';
 	}
 	$::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
 	$::lglobal{errorchecklistbox}->yview( 'scroll', 1, 'units' );
@@ -670,6 +708,31 @@ sub gutcheckview {
 	#leave main text on top    $::lglobal{gcpop}->raise;
 	$::geometry2 = $::lglobal{gcpop}->geometry;
 }
+
+# Equivalent to gutcheckview for the general errors window
+# When user clicks on an error, show the correct place in the main text window
+sub errorcheckview {
+	my $textwindow = $::textwindow;
+	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+	my $line = $::lglobal{errorchecklistbox}->get('active');
+	if ( $line =~ /^line/ ) {	# normally line number of error is shown
+		$textwindow->see( $::errors{$line} );
+		$textwindow->markSet( 'insert', $::errors{$line} );
+		::update_indicators();
+	} else { 					# some tools output error without line number 
+		if ( $line =~ /^\+(.*):/ ) {    # search on text between + and :
+			my @savesets = @::sopt;
+			::searchoptset( qw/0 x x 0/ );
+			::searchfromstartifnew( $1 );
+			::searchtext( $1 );
+			::searchoptset( @savesets );
+			$::top->raise;
+		}
+	}
+	$textwindow->focus;
+	$::lglobal{errorcheckpop}->raise;
+}
+
 
 sub gcwindowpopulate {
 	my $linesref = shift;
