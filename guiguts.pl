@@ -15,6 +15,8 @@
 use strict;
 use warnings;
 
+use lib '.';
+
 #use criticism 'gentle';
 our $VERSION = '1.0.25';
 
@@ -343,7 +345,7 @@ unless ( -e 'header.txt' ) {
 ::checkforupdatesmonthly();
 
 sub dofile {
-	my $filename = "./" . shift;
+	my $filename = shift;
 	return do $filename;
 }
 
