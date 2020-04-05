@@ -343,7 +343,7 @@ unless ( -e 'header.txt' ) {
 ::checkforupdatesmonthly();
 
 sub dofile {
-	my $filename = shift;
+	my $filename = "./" . shift;
 	return do $filename;
 }
 
