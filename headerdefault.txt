@@ -79,6 +79,9 @@ table {
     position: absolute;
     top: auto;
     left: 4%;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
 } /* poetry number */
 
 .blockquot {

@@ -449,7 +449,6 @@ sub html_convert_body {
 	my $thisblank  = q{};
 	my $thisblockend;
 	my $thisblockstart   = '1.0';
-	my $thisend          = q{};
 	my $unindentedpoetry = 0;
 	my @last5            = [ '1', '1', '1', '1', '1', '1' ];
 	my $step             = 1;
@@ -625,7 +624,9 @@ sub html_convert_body {
 				$textwindow->ntdelete( "$step.0", "$step.0 +3c" );
 				# add back the deleted newline, and 3 </div>s with 2 more newlines
 				$textwindow->ntinsert( "$step.0 -1c", "\n$selection" );
-				$step += 2; # allow for the two additional newlines 
+				# allow for the two additional newlines 
+				$step += 2; 
+				$ler += 2;
 				push @last5, $selection;
 				shift @last5 while ( scalar(@last5) > 4 );
 				$ital = 0;
@@ -636,7 +637,9 @@ sub html_convert_body {
 			# end of stanza
 			if ( $selection =~ /^$/ ) {
 				$textwindow->ntinsert( "$step.0", "  </div>\n  <div class=\"stanza\">" );
-				$step++; # allow for the additional newline
+				# allow for the additional newline
+				$step++;
+				$ler++;
 				while (1) {
 					$step++;
 					$selection = $textwindow->get( "$step.0", "$step.end" );
@@ -664,37 +667,9 @@ sub html_convert_body {
 			}    # rewrapped poetry automatically has indent of 4
 			$indent = 0 if ( $indent < 0 );
 
-		   #$indent = 2*int( $indent /2 );    # 2 spaces equals indent by one em
-		   # open and close italics within each line
-			my ( $op, $cl ) = ( 0, 0 );    #open, close italics
-			while ( ( my $temp = index $selection, '<i>', $op ) > 0 ) {
-				$op = $temp + 3;
-			}
-			while ( ( my $temp = index $selection, '</i>', $cl ) > 0 ) {
-				$cl = $temp + 4;
-			}
-
-			# close italics if needed
-			if ( !$cl && $ital ) {
-				$textwindow->ntinsert( "$step.end", '</i>' );
-			}
-			if ( !$op && $ital ) {
-				$textwindow->ntinsert( "$step.0", '<i>' );
-			}
-			if ( $op && $cl && ( $cl < $op ) && $ital ) {
-				$textwindow->ntinsert( "$step.0",   '<i>' );
-				$textwindow->ntinsert( "$step.end", '</i>' );
-			}
-			if ( $op && ( $cl < $op ) && !$ital ) {
-				$textwindow->ntinsert( "$step.end", '</i>' );
-				$ital = 1;
-			}
-			if ( $cl && ( $op < $cl ) && $ital ) {
-				if ($op) {
-					$textwindow->ntinsert( "$step.0", '<i>' );
-				}
-				$ital = 0;
-			}
+			# italic markup cannot span lines, so may need to close & re-open per line
+			$ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
+									$textwindow, $step, $selection, $ital );
 
 			# Default verse with no extra spaces has 3em padding, and -3em text-indent to 
 			# give hanging indent in case of a continuation line.
@@ -720,23 +695,9 @@ sub html_convert_body {
 			$poetryend =
 			  $textwindow->search( '-regexp', '--', '^[pP]/$', $step . '.end',
 				'end' );
+			$ital = 0;
 
-			# determine poetry is not already indented by four spaces
-			if (    # a line beginning with four characters, but not all spaces
-				$poetryend
-				&& (
-					$textwindow->search(
-						'-regexp',         '--',
-						'^(?!\\s{4}).{4}', $step . '.end',
-						$poetryend
-					)
-				)
-			  )
-			{
-				$unindentedpoetry = 1;
-			} else {
-				$unindentedpoetry = 0;
-			}
+			$unindentedpoetry = ispoetryunindented( $textwindow, $step . '.end', $poetryend );
 			if ( ( $last5[2] ) && ( !$last5[3] ) ) {
 
 				# close para
@@ -749,7 +710,9 @@ sub html_convert_body {
 			$textwindow->ntdelete( $step . '.end -2c', $step . '.end' );
 			$selection = "<div class=\"poetry-container\">\n<div class=\"poetry\">\n  <div class=\"stanza\">";
 			$textwindow->ntinsert( $step . '.end', $selection );
-			$step += 2; # allow for the two additional newlines inserted
+			# allow for the two additional newlines inserted
+			$step += 2;
+			$ler += 2;
 			push @last5, $selection;
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
@@ -798,6 +761,7 @@ sub html_convert_body {
 		# list
 		if ( $selection =~ /^\x7f*\/[Ll]/ ) {
 			$listmark = 1;
+			$ital = 0;
 			if ( ( $last5[2] ) && ( !$last5[3] ) ) {
 				insert_paragraph_close( $textwindow, ( $step - 2 ) . ".end" )
 				  unless (
@@ -832,8 +796,10 @@ sub html_convert_body {
 		#close list
 		if ( $selection =~ /^\x7f*[Ll]\// ) {
 			$listmark = 0;
-			$textwindow->ntdelete( "$step.0", "$step.end" );
-			$textwindow->ntinsert( "$step.end", '</ul>' );
+			$ital = 0;
+			# insert first to avoid moving page marker into list
+			$textwindow->ntinsert( "$step.0", '</ul>' );
+			$textwindow->ntdelete( "$step.5", "$step.end" );
 			push @last5, '</ul>';
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
@@ -843,35 +809,13 @@ sub html_convert_body {
 		#in list
 		if ($listmark) {
 			if ( $selection eq '' ) { $step++; next; }
-			$textwindow->ntdelete( "$step.0", "$step.end" );
-			my ( $op, $cl ) = ( 0, 0 );
-			while ( ( my $temp = index $selection, '<i>', $op ) > 0 ) {
-				$op = $temp + 3;
-			}
-			while ( ( my $temp = index $selection, '</i>', $cl ) > 0 ) {
-				$cl = $temp + 4;
-			}
-			if ( !$cl && $ital ) {
-				$selection .= '</i>';
-			}
-			if ( !$op && $ital ) {
-				$selection = '<i>' . $selection;
-			}
-			if ( $op && $cl && ( $cl < $op ) && $ital ) {
-				$selection = '<i>' . $selection;
-				$selection .= '</i>';
-			}
-			if ( $op && ( $cl < $op ) && !$ital ) {
-				$selection .= '</i>';
-				$ital = 1;
-			}
-			if ( $cl && ( $op < $cl ) && $ital ) {
-				if ($op) {
-					$selection = '<i>' . $selection;
-				}
-				$ital = 0;
-			}
-			$textwindow->ntinsert( "$step.0", '<li>' . $selection . '</li>' );
+
+			# italic markup cannot span lines, so may need to close & re-open per line
+			$ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
+									$textwindow, $step, $selection, $ital );
+									
+			$textwindow->ntinsert( "$step.0", '<li>' );
+			$textwindow->ntinsert( "$step.end", '</li>' );
 			push @last5, $selection;
 			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
@@ -898,6 +842,7 @@ sub html_convert_body {
 		#insert close para, open para at /$ or /*
 		if ( $selection =~ /^\x7f*\/[\$\*]/ ) {
 			$inblock = 1;
+			$ital = 0;
 			if ( ( $last5[2] ) && ( !$last5[3] ) ) {
 				insert_paragraph_close( $textwindow, ( $step - 2 ) . '.end' )
 				  unless (
@@ -929,58 +874,24 @@ sub html_convert_body {
 			  );
 		}
 
-		# in block, insert <br />
+		# in block or just an indented line, add margin-left span and <br />
 		if ( $inblock || ( $selection =~ /^\s/ ) ) {
-			if ( $last5[3] ) {
-				if ( $last5[3] =~ /^\S/ ) {
-					$last5[3] .= '<br />';
-					$textwindow->ntdelete( ( $step - 1 ) . '.0',
-						( $step - 1 ) . '.end' );
-					$textwindow->ntinsert( ( $step - 1 ) . '.0', $last5[3] );
-				}
-			}
-			$thisend = $textwindow->index( $step . ".end" );
-			$textwindow->ntinsert( $thisend, '<br />' );
 			if ( $selection =~ /^(\s+)/ ) {
-				$indent = ( length($1) / 2 );
+				$indent = ( length($1) / 2 );	# left margin of 1em for every 2 spaces
 				$selection =~ s/^\s+//;
-				$selection =~ s/  /&nbsp; /g;
-				$selection =~ s/(&nbsp; ){1,}\s?(<span class="linenum">)/ $2/g;
-				my ( $op, $cl ) = ( 0, 0 );
-				while ( ( my $temp = index $selection, '<i>', $op ) > 0 ) {
-					$op = $temp + 3;
-				}
-				while ( ( my $temp = index $selection, '</i>', $cl ) > 0 ) {
-					$cl = $temp + 4;
-				}
-				if ( !$cl && $ital ) {
-					$selection .= '</i>';
-				}
-				if ( !$op && $ital ) {
-					$selection = '<i>' . $selection;
-				}
-				if ( $op && $cl && ( $cl < $op ) && $ital ) {
-					$selection = '<i>' . $selection;
-					$selection .= '</i>';
-				}
-				if ( $op && ( $cl < $op ) && !$ital ) {
-					$selection .= '</i>';
-					$ital = 1;
-				}
-				if ( $cl && ( $op < $cl ) && $ital ) {
-					if ($op) {
-						$selection = '<i>' . $selection;
-					}
-					$ital = 0;
-				}
-				$selection =
-				    '<span style="margin-left: '
-				  . $indent . 'em;">'
-				  . $selection
-				  . '</span>';
-				$textwindow->ntdelete( "$step.0", $thisend );
+				$selection =~ s/  /&nbsp; /g;	# attempt to maintain multiple spaces
+				$textwindow->ntdelete( "$step.0", "$step.end" );
 				$textwindow->ntinsert( "$step.0", $selection );
+
+				# italic markup cannot span lines, so may need to close & re-open per line
+				$ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
+										$textwindow, $step, $selection, $ital );
+
+				$textwindow->ntinsert( "$step.0", '<span style="margin-left: ' . $indent . 'em;">' );
+				$textwindow->ntinsert( "$step.end", '</span>' );
 			}
+			$textwindow->ntinsert( "$step.end", '<br />' );
+			
 			if ( ( $last5[2] ) && ( !$last5[3] ) && ( $selection =~ /\/\*/ ) ) {
 				insert_paragraph_close( $textwindow, ( $step - 2 ) . ".end" )
 				  unless (
@@ -3558,87 +3469,110 @@ sub poetryhtml {
 	::hidepagenums();
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		my $end   = pop(@ranges);
-		my $start = pop(@ranges);
-		my ( $lsr, $lsc, $ler, $lec, $step, $ital );
-		( $lsr, $lsc ) = split /\./, $start;
-		( $ler, $lec ) = split /\./, $end;
-		$step = $lsr;
-		my $selection = $textwindow->get( "$lsr.0", "$lsr.end" );
+	return if ( $range_total == 0 );
+
+	my $end   = pop(@ranges);
+	my $start = pop(@ranges);
+	my ( $lsr, $lsc, $ler, $lec, $step, $ital );
+	( $lsr, $lsc ) = split /\./, $start;
+	( $ler, $lec ) = split /\./, $end;
+	$ital = 0;	# Not in italics at start of poem
+	
+	my $unindentedpoetry = ispoetryunindented( $textwindow, "$lsr.0", "$ler.end" );
+
+	# Find end of existing CSS in case need to insert new classes
+	my $cssend = $textwindow->search( '--', '</style', '1.0', '500.0' );
+	$cssend = $textwindow->search( '-backwards', '--', '}', $cssend, '10.0' ) if $cssend;
+	$cssend = '0.0' unless $cssend;
+	my ($cssendr , $cssendc ) = split /\./, $cssend;
+	$cssendr++;
+	
+	$step = $lsr;
+	while ( $step <= $ler ) {
+		my $selection = $textwindow->get( "$step.0", "$step.end" );
+		# end of stanza
+		if ( $selection =~ /^$/ ) {
+			$textwindow->insert( "$step.0", "  </div>\n  <div class=\"stanza\">" );
+			# allow for the additional newline
+			$step++;
+			$ler++;
+			while (1) {
+				$step++;
+				$selection = $textwindow->get( "$step.0", "$step.end" );
+				last if ( $step ge $ler );
+				next if ( $selection =~ /^$/ );
+				last;
+			}
+		}
 		$selection =~ s/&nbsp;/ /g;
 		$selection =~ s/^(\s+)//;
-		my $indent;
+		my $indent = 0;
 		$indent = length($1) if $1;
-		my $class = '';
-		$class = ( " class=\"i" . ( $indent - 4 ) . '"' ) if ( $indent - 4 );
-
-		if ( length $selection ) {
-			$selection = "<span$class>" . $selection . '<br /></span>';
-		} else {
-			$selection = '';
-		}
-		$textwindow->delete( "$lsr.0", "$lsr.end" );
-		$textwindow->insert( "$lsr.0", $selection );
-		$step++;
-		while ( $step <= $ler ) {
-			$selection = $textwindow->get( "$step.0", "$step.end" );
-			if ( $selection =~ /^$/ ) {
-				$textwindow->insert( "$step.0", '</div><div class="stanza">' );
-				while (1) {
-					$step++;
-					$selection = $textwindow->get( "$step.0", "$step.end" );
-					last if ( $step ge $ler );
-					next if ( $selection =~ /^$/ );
-					last;
-				}
-			}
-			$selection =~ s/&nbsp;/ /g;
-			$selection =~ s/^(\s+)//;
-			$indent = length($1) if $1;
-			$textwindow->delete( "$step.0", "$step.$indent" ) if $indent;
+		$textwindow->delete( "$step.0", "$step.$indent" ) if $indent;
+		unless ($unindentedpoetry) {
 			$indent -= 4;
-			$indent = 0 if ( $indent < 0 );
-			$selection =~ s/^(\s*)//;
-			$selection =~ /(<i>)/g;
-			my $op = $-[-1];
-			$selection =~ s/^(\s*)//;
-			$selection =~ /(<\/i>)/g;
-			my $cl = $-[-1];
+		}    # rewrapped poetry automatically has indent of 4
+		$indent = 0 if ( $indent < 0 );
+		
+		# italic markup cannot span lines, so may need to close & re-open per line
+		$ital = doitalicperline( sub { $textwindow->insert(@_) },
+								$textwindow, $step, $selection, $ital );
+		
+		$textwindow->insert( "$step.0", "    <div class=\"verse indent$indent\">" );
+		$textwindow->insert( "$step.end", '</div>' );
 
-			if ( !$cl && $ital ) {
-				$textwindow->ntinsert( "$step.0 lineend", '</i>' );
-			}
-			if ( !$op && $ital ) {
-				$textwindow->ntinsert( "$step.0", '<i>' );
-			}
-			if ( $op && ( $cl < $op ) && !$ital ) {
-				$textwindow->ntinsert( "$step.end", '</i>' );
-				$ital = 1;
-			}
-			if ( $op && $cl && ( $cl < $op ) && $ital ) {
-				$textwindow->ntinsert( "$step.0", '<i>' );
-				$ital = 0;
-			}
-			if ( ( $op < $cl ) && $ital ) {
-				$textwindow->ntinsert( "$step.0", '<i>' );
-				$ital = 0;
-			}
-			if ($indent) {
-				$textwindow->insert( "$step.0", "<span class=\"i$indent\">" );
-			} else {
-				$textwindow->insert( "$step.0", '<span>' );
-			}
-			$textwindow->insert( "$step.end", '<br /></span>' );
+		# unless this class already defined, add it to end of CSS block
+		my $classdef = ".poetry .indent$indent {text-indent: " . ($indent/2-3) . "em;}";
+		unless ( $textwindow->search( '-backwards', '--', $classdef, "$cssendr.0", '0.0' ) ) {
+			$textwindow->insert( "$cssendr.0", "$classdef\n");
+			# allow for additional line added to top of file
+			$cssendr++;
 			$step++;
+			$ler++;
+			$lsr++;
 		}
-		$selection = "\n</div></div>";
-		$textwindow->insert( "$ler.end", $selection );
-		$textwindow->insert( "$lsr.0",
-			"<div class=\"poem\"><div class=\"stanza\">\n" );
+
+		$step++;
 	}
+
+	$textwindow->insert( "$ler.end", "\n  </div>\n</div>\n</div>" );
+	$textwindow->insert( "$lsr.0",
+		"<div class=\"poetry-container\">\n<div class=\"poetry\">\n  <div class=\"stanza\">\n" );
+}
+
+# determine if poetry is not already indented by four spaces
+sub ispoetryunindented
+{
+	my ( $textwindow, $poetrystart, $poetryend ) = @_;
+	
+	# look for a line beginning with four characters, but not all spaces
+	return ( $poetrystart and $poetryend and
+			 $textwindow->search( '-regexp', '--',
+				'^(?!\\s{4}).{4}', $poetrystart, $poetryend ) );
+}
+
+# If italic markup spans across end of line, we have to close
+# at end of line and re-open at start of next.
+# First argument is temporary sub that calls textwindow->insert/ntinsert
+sub doitalicperline
+{
+	my ( $insertfunc, $textwindow, $step, $selection, $ital ) = @_;
+
+    # Find the last open & close italic markups in the line
+	my ( $op, $cl ) = ( -1, -1 );	# Default to not found
+	$op = $-[$#-] if ( $selection =~ /(<i>)/g );
+	$cl = $-[$#-] if ( $selection =~ /(<\/i>)/g );
+
+	# Add open to start of this line if currently in italic
+	$insertfunc->( "$step.0", '<i>' ) if $ital;
+	# Italic left open by this line if open comes last
+	$ital = 1 if ( $op > $cl );
+	# Italic left closed by this line if close comes last
+	$ital = 0 if ( $cl > $op );
+	# Add close to end of this line if now in italic
+	$insertfunc->( "$step.end", '</i>' ) if $ital;
+	
+	return $ital;	# So calling routine can remember for next line
 }
 
 sub linkpopulate {
