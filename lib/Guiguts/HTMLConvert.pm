@@ -439,6 +439,7 @@ sub html_convert_body {
 	my $indent     = 0;
 	my $intitle    = 0;
 	my $inheader   = 0;
+	my $indexline  = 0;
 	my $ital       = 0;
 	my $listmark   = 0;
 	my $pgoffset   = 0;
@@ -857,6 +858,58 @@ sub html_convert_body {
 			#			$textwindow->replacewith( "$step.0", "$step.end", '<p>' );
 			$textwindow->delete( "$step.0", "$step.end" );
 			insert_paragraph_open( $textwindow, "$step.0" );
+			$step++;
+			next;
+		}
+
+		# Start of index (/I)
+		if ( $selection =~ /^\x7f*\/[Ii]/ ) {
+			$indexline = 1;
+			$textwindow->ntdelete( "$step.0", "$step.end" );
+			$textwindow->ntinsert( "$step.0", '<ul class="index">' );
+
+			# if haven't just finished a heading, paragraph or div, need to close previous paragraph
+			insert_paragraph_close( $textwindow, ( $step - 1 ) . '.end' )
+				if ( $last5[3] and $last5[3] !~ /<\/?h\d?|<br.*?>|<\/p>|<\/div>/ );
+			insert_paragraph_close( $textwindow, ( $step - 2 ) . ".end" )
+				if ( !$last5[3] and $last5[2] and 
+					 $textwindow->get( ( $step - 2 ).'.0', ( $step - 2 ).'.end' ) !~ /<\/p>/ );
+
+			$step++;
+			next;
+		}
+
+		# End of index (I/)
+		if ( $selection =~ /^\x7f*[Ii]\// ) {
+			$indexline = 0;
+			# Insert first to avoid subsequent page marker moving back inside list
+			$textwindow->ntinsert( "$step.0", '</ul>' );
+			$textwindow->ntdelete( "$step.5", "$step.end" );
+			$step++;
+			next;
+		}
+
+		# Inside index
+		if ( $indexline ) {
+			if ( $selection ) {
+				$selection = addpagelinks($selection);
+				# First line or two previous blank lines - new section of index
+				if ( $indexline == 1 or ( !$last5[3] and !$last5[2] ) ) {
+					$selection = '<li class="ifrst">' . $selection . '</li>';
+				# One previous blank line - top-level entry
+				} elsif ( !$last5[3] ) {
+					$selection = '<li class="indx">' . $selection . '</li>';
+				# Indented line - sub entry
+				} elsif ( $selection =~ s/^(\s+)// ) {
+					$indent = int( ( length($1) + 1 ) / 2 );
+					$selection = '<li class="isub' . $indent . '">' . $selection . '</li>';
+				}
+				$textwindow->ntdelete( "$step.0", "$step.end" );
+				$textwindow->ntinsert( "$step.0", $selection );
+				$indexline++;
+			}
+			push @last5, $selection;
+			shift @last5 while ( scalar(@last5) > 4 );
 			$step++;
 			next;
 		}
