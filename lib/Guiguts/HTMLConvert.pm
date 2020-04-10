@@ -2204,6 +2204,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
+		$toc->select;
+
 		my $fractions = $f0->Checkbutton(
 			-variable    => \$::lglobal{autofraction},
 			-selectcolor => $::lglobal{checkcolor},
