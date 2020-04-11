@@ -364,6 +364,7 @@ sub wordfrequency {
 				}
 				$sword =~ s/(\d+)\s+(\S)/$2/;
 				my $snum = $1;
+				$sword = '\\\\' if ( $sword eq '\\' ); # special case of backslash in character count
 				$sword =~ s/\s+\*\*\*\*$//;
 				if ( $sword =~ /\W/ ) {
 					$sword =~ s/\*nbsp\*/\x{A0}/;
