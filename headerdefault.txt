@@ -59,10 +59,13 @@ table {
     margin-left: auto;
     margin-right: auto;
 }
+table.autotable    { border-collapse: collapse; }
+table.autotable td,
+table.autotable th { padding: 4px; }
 
-    .tdl      {text-align: left;}
-    .tdr      {text-align: right;}
-    .tdc      {text-align: center;}
+.tdl      {text-align: left;}
+.tdr      {text-align: right;}
+.tdc      {text-align: center;}
 
 .pagenum { /* uncomment the next line for invisible page numbers */
     /*  visibility: hidden;  */

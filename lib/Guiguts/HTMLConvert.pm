@@ -2618,19 +2618,19 @@ sub htmlmarkpopup {
 			-text        => 'left',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
-			-value       => ' align="left"',
+			-value       => ' class="tdl"',
 		)->grid( -row => 3, -column => 1 );
 		my $censelect = $f4->Radiobutton(
 			-text        => 'center',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
-			-value       => ' align="center"',
+			-value       => ' class="tdc"',
 		)->grid( -row => 3, -column => 2 );
 		my $rghtselect = $f4->Radiobutton(
 			-text        => 'right',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{tablecellalign},
-			-value       => ' align="right"',
+			-value       => ' class="tdr"',
 		)->grid( -row => 3, -column => 3 );
 		$leftselect->select;
 		$unorderselect->select;
@@ -3178,211 +3178,213 @@ sub makeanchor {
 	return $linkname;
 }
 
+# Return the start and end rows of the selected text
+# If end selection is at start of line, return previous row
+sub getselrows {
+	my $textwindow = shift;
+	
+	# get selected range - if none, current insert point is start & end
+	my @ranges = $textwindow->tagRanges('sel');
+	unless (@ranges) {
+		push @ranges, $textwindow->index('insert');
+		push @ranges, $textwindow->index('insert');
+	}
+	# split end & start into row & column
+	my ( $ler, $lec ) = split /\./, pop(@ranges);
+	my ( $lsr, $lsc ) = split /\./, pop(@ranges);
+	# if no text selected on final row, then end at previous row
+	--$ler if ( $lec == 0 and $ler > $lsr );
+	return ( $lsr, $ler );
+}
+
+# Create an index from selected region using <ul> and <li> markup and classes
 sub autoindex {
 	my $textwindow = shift;
 	::hidepagenums();
-	my @ranges = $textwindow->tagRanges('sel');
-	unless (@ranges) {
-		push @ranges, $textwindow->index('insert');
-		push @ranges, $textwindow->index('insert');
-	}
-	my $range_total = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		$textwindow->addGlobStart;
-		my $end       = pop(@ranges);
-		my $start     = pop(@ranges);
-		my $paragraph = 0;
-		my ( $lsr, $lsc ) = split /\./, $start;
-		my ( $ler, $lec ) = split /\./, $end;
-		my $step   = $lsr;
-		my $blanks = 0;
-		my $first  = 1;
-		my $indent = 0;
+	my ( $lsr, $ler ) = getselrows( $textwindow );
+	
+	$textwindow->addGlobStart;
+	my $step   = $lsr;
+	my $blanks = 0;
+	my $first  = 1;
+	my $indent = 0;
 
-		while ( $textwindow->get( "$step.0", "$step.end" ) eq '' ) {
-			$step++;
-		}
-		while ( $step <= $ler ) {
-			my $selection = $textwindow->get( "$step.0", "$step.end" );
-			unless ($selection) { $step++; $blanks++; next }
-			$selection = addpagelinks($selection);
-			if ( $first == 1 ) { $blanks = 2; $first = 0 }
-			if ( $blanks == 2 ) {
-				$selection = '<li class="ifrst">' . $selection . '</li>';
-				$first     = 0;
-			}
-			if ( $blanks == 1 ) {
-				$selection = '<li class="indx">' . $selection . '</li>';
-			}
-			if ( $selection =~ /^(\s+)/ ) {
-				$indent = ( int( ( length($1) + 1 ) / 2 ) );
-				$selection =~ s/^\s+//;
-				$selection =
-				  '<li class="isub' . $indent . '">' . $selection . '</li>';
-			}
-			$textwindow->delete( "$step.0", "$step.end" );
-			$selection =~ s/<li<\/li>//;
-			$textwindow->insert( "$step.0", $selection );
-			$blanks = 0;
-			$step++;
-		}
-		$textwindow->insert( "$ler.end", "</ul>\n" );
-		$textwindow->insert( $start,     '<ul class="index">' );
-		$textwindow->addGlobEnd;
+	while ( $textwindow->get( "$step.0", "$step.end" ) eq '' ) {
+		$step++;
 	}
+	while ( $step <= $ler ) {
+		my $selection = $textwindow->get( "$step.0", "$step.end" );
+		unless ($selection) { $step++; $blanks++; next }
+		$selection = addpagelinks($selection);
+		if ( $first == 1 ) { $blanks = 2; $first = 0 }
+		if ( $blanks == 2 ) {
+			$selection = '<li class="ifrst">' . $selection . '</li>';
+			$first     = 0;
+		}
+		if ( $blanks == 1 ) {
+			$selection = '<li class="indx">' . $selection . '</li>';
+		}
+		if ( $selection =~ /^(\s+)/ ) {
+			$indent = ( int( ( length($1) + 1 ) / 2 ) );
+			$selection =~ s/^\s+//;
+			$selection =
+			  '<li class="isub' . $indent . '">' . $selection . '</li>';
+		}
+		$textwindow->delete( "$step.0", "$step.end" );
+		$selection =~ s/<li<\/li>//;
+		$textwindow->insert( "$step.0", $selection );
+		$blanks = 0;
+		$step++;
+	}
+	$textwindow->insert( "$ler.end", "\n</ul>\n" );
+	$textwindow->insert( "$lsr.0", "<ul class=\"index\">\n" );
+	$textwindow->addGlobEnd;
 }
 
+# Create a list from selected region using basic <ul>/<ol> and <li> markup
 sub autolist {
 	my $textwindow = shift;
 	::hidepagenums();
-	my @ranges = $textwindow->tagRanges('sel');
-	unless (@ranges) {
-		push @ranges, $textwindow->index('insert');
-		push @ranges, $textwindow->index('insert');
-	}
-	my $range_total = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		$textwindow->addGlobStart;
-		my $end       = pop(@ranges);
-		my $start     = pop(@ranges);
-		my $paragraph = 0;
-		if ( $::lglobal{list_multiline} ) {
-			my $selection = $textwindow->get( $start, $end );
-			$selection =~ s/\n +/\n/g;
-			$selection =~ s/\n\n+/\x{8A}/g;
-			my @lrows = split( /\x{8A}/, $selection );
-			for (@lrows) {
-				$_ = '<li>' . $_ . "</li>\n\n";
-			}
-			$selection = "<$::lglobal{liststyle}>\n";
-			for my $lrow (@lrows) {
-				$selection .= $lrow;
-			}
-			$selection =~ s/\n$//;
-			$selection .= '</' . $::lglobal{liststyle} . ">\n";
+	my ( $lsr, $ler ) = getselrows( $textwindow );
 
-			#$selection =~ s/ </</g; # why is this necessary; reported as a bug
-			$textwindow->delete( $start, $end );
-			$textwindow->insert( $start, $selection );
-		} else {
-			my ( $lsr, $lsc ) = split /\./, $start;
-			my ( $ler, $lec ) = split /\./, $end;
-			my $step = $lsr;
-			$step++ while ( $textwindow->get( "$step.0", "$step.end" ) eq '' );
-			while ( $step <= $ler ) {
-				my $selection = $textwindow->get( "$step.0", "$step.end" );
-				unless ($selection) { $step++; next }
+	$textwindow->addGlobStart;
+	# Multiline means list entries are separated by double newlines
+	if ( $::lglobal{list_multiline} ) {
+		my $selection = $textwindow->get( "$lsr.0", "$ler.end" );
+		# Split at double newline
+		$selection =~ s/\n +/\n/g;
+		$selection =~ s/\n\n+/\x{8A}/g;
+		my @lrows = split( /\x{8A}/, $selection );
+		# Recombine with list markup added
+		$selection = "<$::lglobal{liststyle}>";
+		for (@lrows) {
+			$selection .= "\n<li>$_</li>\n";
+		}
+		$selection .= "</$::lglobal{liststyle}>\n";
+
+		$textwindow->delete( "$lsr.0", "$ler.end" );
+		$textwindow->insert( "$lsr.0", $selection );
+		
+	# Not multiline - each line is a list entry, except
+	# <p>...</p> counts as one entry, but <br /> forces a new entry 
+	} else {
+		my $paragraph = 0;
+		my $brflag = 0;
+		my $step = $lsr;
+		while ( $step <= $ler ) {
+			if ( my $selection = $textwindow->get( "$step.0", "$step.end" ) )
+			{
+				# If <br /> at end of previous line, need to restart list entry markup
+				if ( $brflag and $selection !~ /<p>/ ) { # not if about to start paragraph anyway
+					$selection = '<li>' . $selection ;
+				}
+				$brflag = 0;
+				# If <br />, end current list entry and restart another on next line, even if in paragraph
 				if ( $selection =~ s/<br.*?>//g ) {
-					$selection = '<li>' . $selection . '</li>';
+					$selection = $selection . '</li>' unless ( $selection =~ /<\/li>/ );
+					$brflag = 1;
 				}
-				if ( $selection =~ s/<p>/<li>/g )     { $paragraph = 1 }
-				if ( $selection =~ s/<\/p>/<\/li>/g ) { $paragraph = 0 }
-				$textwindow->delete( "$step.0", "$step.end" );
+
+				# If a marked paragraph, just one set of list entry markup round whole paragraph
+				# Otherwise, add list markup round any line that doesn't already have it
+				$paragraph = 1 if ( $selection =~ s/<p>/<li>/g );
 				unless ($paragraph) {
-					unless ( $selection =~ /<li>/ ) {
-						$selection = '<li>' . $selection . '</li>';
-					}
+					$selection = '<li>' . $selection unless ( $selection =~ /<li>/ );
+					$selection = $selection . '</li>' unless ( $selection =~ /<\/li>/ );
 				}
+				$paragraph = 0 if ( $selection =~ s/<\/p>/<\/li>/g );
+				
+				$textwindow->delete( "$step.0", "$step.end" );
 				$selection =~ s/<li><\/li>//;
 				$textwindow->insert( "$step.0", $selection );
-				$step++;
 			}
-			$textwindow->insert( "$ler.end", "</$::lglobal{liststyle}>\n" );
-			$textwindow->insert( $start,     "<$::lglobal{liststyle}>" );
+			$step++;
 		}
-		$textwindow->addGlobEnd;
+		$textwindow->insert( "$ler.end", "\n</$::lglobal{liststyle}>" );
+		$textwindow->insert( "$lsr.0", "<$::lglobal{liststyle}>\n" );
 	}
+	$textwindow->addGlobEnd;
 }
 
+# Create a table from selected region using <table> markup
 sub autotable {
 	my ( $textwindow, $format ) = @_;
 	::hidepagenums();
-	my @cformat;
-	if ($format) {
-		@cformat = split( //, $format );
-	}
-	my @ranges = $textwindow->tagRanges('sel');
-	unless (@ranges) {
-		push @ranges, $textwindow->index('insert');
-		push @ranges, $textwindow->index('insert');
-	}
-	my $range_total = @ranges;
-	if ( $range_total == 0 ) {
-		return;
-	} else {
-		my $table = 1;
-		my $end   = pop(@ranges);
-		my $start = pop(@ranges);
-		my ( @tbl, @trows, @tlines, @twords );
-		my $row = 0;
-		my $selection = $textwindow->get( $start, $end );
-		$selection =~ s/<br.*?>//g;
-		$selection =~ s/<\/?p>//g;
-		$selection =~ s/\n[\s|]+\n/\n\n/g;
-		$selection =~ s/^\n+//;
-		$selection =~ s/\n\n+/\x{8A}/g if $::lglobal{tbl_multiline};
-		@trows = split( /\x{8A}/, $selection ) if $::lglobal{tbl_multiline};
-		$selection =~ s/\n[\s|]*\n/\n/g unless $::lglobal{tbl_multiline};
-		@trows = split( /\n/, $selection ) unless $::lglobal{tbl_multiline};
+	my ( $lsr, $ler ) = getselrows( $textwindow );
 
-		for my $trow (@trows) {
-			@tlines = split( /\n/, $trow );
-			for my $tline (@tlines) {
-				if ( $selection =~ /\|/ ) {
-					@twords = split( /\|/, $tline );
-				} else {
-					@twords = split( /\s\s+/, $tline );
-				}
-				for ( 0 .. $#twords ) {
-					$tbl[$row][$_] .= "$twords[$_] ";
-				}
-			}
-			$row++;
-		}
-		$selection = '';
-		for my $row ( 0 .. $#tbl ) {
-			$selection .= '<tr>';
-			for ( $tbl[$row] ) {
-				my $cellcnt = 0;
-				my $cellalign;
-				while (@$_) {
-					if ( $cformat[$cellcnt] ) {
-						if ( $cformat[$cellcnt] eq '>' ) {
-							$cellalign = ' align="right"';
-						} elsif ( $cformat[$cellcnt] eq '|' ) {
-							$cellalign = ' align="center"';
-						} else {
-							$cellalign = ' align="left"';
-						}
-					} else {
-						$cellalign = $::lglobal{tablecellalign};
-					}
-					++$cellcnt;
-					$selection .= '<td' . $cellalign . '>';
-					$selection .= shift @$_;
-					$selection .= '</td>';
-				}
-			}
-			$selection .= "</tr>\n";
-		}
-		$selection .= '</table></div>';
-		$selection =~ s/<td[^>]+><\/td>//g;
-		$selection =~ s/ +<\//<\//g;
-		$selection =~ s/d> +/d>/g;
-		$selection =~ s/ +/ /g;
-		$textwindow->delete( $start, $end );
-		$textwindow->insert( $start, $selection );
-		$textwindow->insert( $start,
-			    "\n<div class=\"center\">\n"
-			  . '<table border="0" cellpadding="4" cellspacing="0" summary="">'
-			  . "\n" )
-		  if $table;
-		$table = 1;
+	my ( @tbl, @trows, @tlines, @twords );
+	
+	my $selection = $textwindow->get( "$lsr.0", "$ler.end" );
+	$selection =~ s/<br.*?>//g;
+	$selection =~ s/<\/?p>//g;
+	$selection =~ s/\n[\s|]+\n/\n\n/g;
+	$selection =~ s/^\n+//;
+	# Multiline means rows are separated by double newline
+	if ( $::lglobal{tbl_multiline} ) {
+		$selection =~ s/\n\n+/\x{8A}/g;
+		@trows = split( /\x{8A}/, $selection );
+	} else {
+		$selection =~ s/\n[\s|]*\n/\n/g;
+		@trows = split( /\n/, $selection );
 	}
+
+	# Default to split cells at multiple spaces, but use | instead if any in table
+	my $splitregex = qr/\s\s+/;	
+	$splitregex = qr/\|/ if ( $selection =~ /\|/ );	# 
+
+	# For each row in the table...
+	my $row = 0;
+	for my $trow (@trows) {
+		@tlines = split( /\n/, $trow );
+		# For each line in the file... (relevant in multiline case)
+		for my $tline (@tlines) {
+			@twords = split( $splitregex, $tline );
+			# Load into 2D array
+			for ( 0 .. $#twords ) {
+				$tbl[$row][$_] .= "$twords[$_] ";
+			}
+		}
+		$row++;
+	}
+	
+	my @cformat = split( //, $format ) if ( $format );
+	
+	$selection = '<table class="autotable" summary="">' . "\n";
+	# Each row is a <tr>
+	for my $row ( 0 .. $#tbl ) {
+		$selection .= "<tr>\n";
+		# Each element of row is a <td>
+		for ( $tbl[$row] ) {
+			my $cellcnt = 0;
+			my $cellalign;
+			while (@$_) {
+				if ( $cformat[$cellcnt] ) {
+					if ( $cformat[$cellcnt] eq '>' ) {
+						$cellalign = ' class="tdr"';
+					} elsif ( $cformat[$cellcnt] eq '|' ) {
+						$cellalign = ' class="tdc"';
+					} else {
+						$cellalign = ' class="tdl"';
+					}
+				} else {
+					$cellalign = $::lglobal{tablecellalign};
+				}
+				++$cellcnt;
+				$selection .= '<td' . $cellalign . '>' . (shift @$_) . "</td>\n";
+			}
+		}
+		$selection .= "</tr>\n";
+	}
+	$selection .= '</table>';
+	$selection =~ s/<td[^>]+><\/td>//g;
+	$selection =~ s/ +<\//<\//g;
+	$selection =~ s/d> +/d>/g;
+	$selection =~ s/ +/ /g;
+	
+	$textwindow->addGlobStart;
+	$textwindow->delete( "$lsr.0", "$ler.end" );
+	$textwindow->insert( "$lsr.0", $selection );
+	$textwindow->addGlobEnd;
 }
 
 sub orphans {
