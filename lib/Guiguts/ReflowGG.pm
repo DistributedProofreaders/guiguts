@@ -458,9 +458,9 @@ sub process($) {
   # current line is non-poetry
   # remove spaces around dashes:
   $line =~ s/([^-])[ \t]*--[ \t]*([^-])/$1--$2/g unless $gg;
-  # protect ". . ." ellipses:
-  $line =~ s/ \. \. \./\377\.\377\.\377\./g;
-  $line =~ s/\. \. \./\.\377\.\377\./g;
+  # protect ". . ." ellipses by replacing space with unused byte \x9f
+  $line =~ s/ \. \. \./\x9f\.\x9f\.\x9f\./g;
+  $line =~ s/\. \. \./\.\x9f\.\x9f\./g;
   @linewords = split(/\s+/, $line);
   shift(@linewords) if (@linewords && ($linewords[0] eq ""));
   # If last word of previous line ends in a single hyphen,
@@ -521,7 +521,7 @@ sub reflow_para {
   @linkbreak = map { $_ > 0xF0000000 ? -((0xFFFFFFFF - $_) + 1) : $_ + 0 } @linkbreak;
   $lastbreak = shift(@linkbreak);
   compute_output();
-  grep (s/\377/ /g, @output);
+  grep (s/\x9f/ /g, @output);
   print_lines(@output);
   @words = ();
 }
