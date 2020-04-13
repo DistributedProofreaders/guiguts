@@ -10,11 +10,13 @@ BEGIN {
 	  &selectrewrap &wrapper &alignpopup &asciibox_popup &blockrewrap &rcaligntext &tocalignselection);
 }
 
+my $blockwraptypes = quotemeta '#iI'; # Blockquotes & index allow user to specify left/first/right margins
+
 sub wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
-	return $paragraph if ( $paragraph =~ m|^\x7f*[#\*pPlLxXfF]/\x7f*\n\x7f*$|
-			|| $paragraph =~ m|^\x7f*/[#\*pPlLxXfF]\x7f*\n\x7f*$|
-			|| $paragraph =~ m|^\x7f*$| );
+	return $paragraph if ( $paragraph =~ m|^\x7f*[$::allblocktypes]/\x7f*\n\x7f*$|
+			            || $paragraph =~ m|^\x7f*/[$::allblocktypes]\x7f*\n\x7f*$|
+			            || $paragraph =~ m|^\x7f*$| );
 	if ( $::rewrapalgo == 1 ) {
 		return greedy_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 	} elsif ( $::rewrapalgo == 2 ) {
@@ -42,19 +44,20 @@ sub greedy_wrapper {
 	while (@words) {
 		$word = shift @words;
 		next unless defined $word and length $word;
-		if ( $word =~ /\/#/ ) {
-			$firstmargin = $leftmargin = $::blocklmargin;
-			if ( $word =~ /^\x7f*\/#\x8A(\d+)/ )
-			{    #check for block rewrapping with parameter markup
+		if ( $word =~ /\/[$blockwraptypes]/ ) {	# Get margins for blockwrap types
+			$firstmargin = $leftmargin = $::blocklmargin if $word =~ /\/#/; # blockquote has its own default
+			# Check if there are any parameters following blockwrap markup
+			if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)/ )
+			{
 				if ( length $1 ) {
 					$leftmargin  = $1;
 					$firstmargin = $leftmargin;
 				}
 			}
-			if ( $word =~ /^\x7f*\/#\x8A(\d+)?(\.)(\d+)/ ) {
+			if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)?(\.)(\d+)/ ) {
 				if ( length $3 ) { $firstmargin = $3; }
 			}
-			if ( $word =~ /^\x7f*\/#\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+			if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
 				if ($4) { $rightmargin = $4 + 1; } # needs +1 to match $rightmargin++ above
 			}
 			$line =~ s/\s$//;
@@ -66,7 +69,7 @@ sub greedy_wrapper {
 			$line = ' ' x $firstmargin;
 			next;
 		}
-		if ( $word =~ /#\// ) {
+		if ( $word =~ /[$blockwraptypes]\// ) {
 			$line =~ s/ $//;    # remove trailing space
 			$paragraph .= $line . "\n" if $line;
 			$paragraph .= $word . "\n";
@@ -95,9 +98,9 @@ sub greedy_wrapper {
 			last;
 		}
 	}
-	if ( $paragraph =~ /-[#\*]\// )
+	if ( $paragraph =~ /-[$::allblocktypes]\// )
 	{    # Trap bug when there is a hyphen at the end of a block
-		$paragraph =~ s/\n(\S+)-([#\*]\/)/ $1-\n$2/;
+		$paragraph =~ s/\n(\S+)-([$::allblocktypes]\/)/ $1-\n$2/;
 	}
 	return ($paragraph);
 }
@@ -105,9 +108,9 @@ sub greedy_wrapper {
 sub knuth_wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
 	my ( $pre, $post ) = ( '', '' );
-	if    ( $paragraph =~ s|^(\x7f*/#\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
-	elsif ( $paragraph =~ s|^(\x7f*/#)|| ) { $pre = "$1\n"; }
-	if ( $paragraph =~ s|(#/\x7f*)$|| ) { $post = "$1\n"; }
+	if    ( $paragraph =~ s|^(\x7f*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
+	elsif ( $paragraph =~ s|^(\x7f*/[$blockwraptypes])|| ) { $pre = "$1\n"; }
+	if ( $paragraph =~ s|([$blockwraptypes]/\x7f*)$|| ) { $post = "$1\n"; }
 	my $maxwidth = $rightmargin;
 	my $optwidth = $rightmargin - $::rmargindiff;
 	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
@@ -208,26 +211,14 @@ sub selectrewrap {
 		# main while loop
 		while (1) {
 			$indent = $::defaultindent;
-			my $length = 5;
-			$::searchstartindex = $textwindow->search(
-				'-regex', '-forwards',
-				'-count' => \$length,
-				'--', 'x', '1.0', 'end'
-			);
-			my $regex = 'x';
-			$thisblockend =
-			  $textwindow->search( '-regex', $regex, '1.0', 'end' )
-			  ;    #find end of paragraph
 			$thisblockend =
 			  $textwindow->search( '-regex', '--', '^[\x7f]*$', $thisblockstart,
 				$end );    #find end of paragraph
 			# if two start rewrap block markers aren't separated by a blank line, just let it become added
 			$thisblockend = $thisblockstart
 				if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c")
-				        =~ /^\/[\*\$lLpPfFxX]$/ );
+				        =~ /^\/[$::allblocktypes]$/ );
 
-#			  $textwindow->search( '-regex', '--', '^(\x7f)*$', $thisblockstart, #debugger chokes
-#								   $end );    #find end of paragraph
 			if ($thisblockend) {
 				$thisblockend =
 				  $textwindow->index( $thisblockend . ' lineend' );
@@ -253,29 +244,27 @@ sub selectrewrap {
 			$textwindow->see($thisblockend);
 			$textwindow->update;
 
-			#$firstmargin = $leftmargin if $blockwrap;
-			# if selection begins with "/#"
-			if ( $selection =~ /^\x7f*\/\#/ ) {
+			# Check for block types that support blockwrap
+			if ( $selection =~ /^\x7f*\/[$blockwraptypes]/ ) {
 				$::blockwrap = 1;
-				$leftmargin  = $::blocklmargin;
-				$firstmargin = $::blocklmargin;
-				$rightmargin = $::blockrmargin;
-
-				# if there are any parameters /#[n...
-				if ( $selection =~ /^\x7f*\/#\[(\d+)/ )
+				if ( $selection =~ /^\x7f*\/\#/ ) {
+					$leftmargin  = $::blocklmargin;
+					$firstmargin = $::blocklmargin;
+					$rightmargin = $::blockrmargin;
+				}
+				# Check if there are any parameters following blockwrap markup [n...
+				if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)/ )
 				{    #check for block rewrapping with parameter markup
-					if ($1) { $leftmargin = $1 }
+					$leftmargin = $1;
 					$firstmargin = $leftmargin;
 				}
-
-				# if there are any parameters /#[n.n...
-				if ( $selection =~ /^\x7f*\/#\[(\d+)?(\.)(\d+)/ ) {
-					if ( length $3 ) { $firstmargin = $3 }
+				# [n.n...
+				if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
+					$firstmargin = $3;
 				}
-
-				# if there are any parameters /#[n.n,n...
-				if ( $selection =~ /^\x7f*\/#\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
-					if ($4) { $rightmargin = $4 }
+				# [n.n,n...
+				if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+					$rightmargin = $4;
 				}
 			}
 
@@ -415,7 +404,7 @@ sub selectrewrap {
 				$enableindent = 0;
 				$poem         = 0;
 			}
-			if ( $selection =~ /\x7f*#\// ) { $::blockwrap = 0 }
+			if ( $selection =~ /\x7f*[$blockwraptypes]\// ) { $::blockwrap = 0 }
 			last unless $end;
 			$thisblockstart =
 			  $textwindow->index('rewrapend');    #advance to the next paragraph

@@ -90,6 +90,7 @@ use Guiguts::CharacterTools;
 use Guiguts::Utilities;
 use Guiguts::WordFrequency;
 ### Constants
+our $allblocktypes = quotemeta '#$*FfIiLlPpXx';
 our $url_no_proofer  = 'http://www.pgdp.net/phpBB2/privmsg.php?mode=post';
 our $url_yes_proofer = 'http://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
 our $urlprojectpage  = 'http://www.pgdp.net/c/project.php?id=';

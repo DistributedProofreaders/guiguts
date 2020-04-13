@@ -1362,47 +1362,40 @@ sub html_convert_pageanchors {
 				# Otherwise may need to insert elsewhere
 				my $insertpoint = $markindex;
 				my $inserted    = 0;
+				my $inserttext = "<span class=\"pagenum\">$pagereference</span>";
 
-				# logic move page ref if at end of paragraph
-				my $nextpstart =
-				  $textwindow->search( '--', '<p', $markindex, 'end' )
-				  || 'end';
-				my $nextpend =
-				  $textwindow->search( '--', '</p>', $markindex, 'end' )
-				  || 'end';
-				my $inserttext =
-				  "<span class=\"pagenum\">$pagereference</span>";
+				# move page ref if inside end of paragraph to outside
+				my $nextpend = $textwindow->search( '--', '</p>', $markindex, 'end' ) || 'end';
 				if ( $textwindow->compare( $nextpend, '<=', $markindex . '+1c' )
 				  )
 				{
-
-					#move page anchor from end of paragraph
 					$insertpoint = $nextpend . '+4c';
 					$inserttext  = '<p>' . $inserttext . '</p>';
-				}
-				my $pstart =
-				  $textwindow->search( '-backwards', '-exact', '--', '<p',
-					$markindex, '1.0' )
-				  || '1.0';
-				my $pend =
-				  $textwindow->search( '-backwards', '-exact', '--', '</p>',
-					$markindex, '1.0' )
-				  || '1.0';
-				my $sstart =
-				  $textwindow->search( '-backwards', '-exact', '--', '<div ',
-					$markindex, '1.0' )
-				  || '1.0';
-				my $send =
-				  $textwindow->search( '-backwards', '-exact', '--', '</div>',
-					$markindex, '1.0' )    #$pend
-				  || '1.0';                #$pend
-				   # if the previous <p> or <div>is not closed, then wrap in <p>
-				if (
-					not( $textwindow->compare( $pend, '<', $pstart )
-						or ( $textwindow->compare( $send, '<', $sstart ) ) )
-				  )
-				{
-					$inserttext = '<p>' . $inserttext . '</p>';
+				} else {
+					# move page ref forward to just inside <li...> markup if up to 2 characters before it,
+					# i.e. at start of line, or on previous blank line, or two blank lines back
+					my $nextlistart = $textwindow->search( '--', '<li', $markindex, 'end' );
+					if ( $nextlistart and $textwindow->compare( $nextlistart, '<=', $markindex . '+2c' ) ) {
+						my $nextliend = $textwindow->search( '--', '>', $markindex, 'end' );
+						$insertpoint = "$nextliend+1c" if $nextliend;
+					} else {
+						# if neither previous <p> nor previous <div> is open, then wrap in <p>
+						my $pstart =
+						  $textwindow->search( '-backwards', '-exact', '--', '<p', $markindex, '1.0' ) || '1.0';
+						my $pend =
+						  $textwindow->search( '-backwards', '-exact', '--', '</p>', $markindex, '1.0' ) || '1.0';
+						my $sstart =
+						  $textwindow->search( '-backwards', '-exact', '--', '<div ', $markindex, '1.0' ) || '1.0';
+						my $send =
+						  $textwindow->search( '-backwards', '-exact', '--', '</div>', $markindex, '1.0' ) || '1.0';
+						if (
+							not( $textwindow->compare( $pend, '<', $pstart )
+								or ( $textwindow->compare( $send, '<', $sstart ) ) )
+						  )
+						{
+							$inserttext = '<p>' . $inserttext . '</p>';
+						}
+					}
 				}
 
 				# Oops find headers not <hr>
@@ -1418,11 +1411,9 @@ sub html_convert_pageanchors {
 					$insertpoint = $textwindow->index("$hstart-1l lineend");
 				}
 
-				# poetry (but not other kinds of spans)
-				if ( $textwindow->get( "$markindex linestart", "$markindex linestart +14c" )
-				     eq '<span class="i'
-				     && $textwindow->get( "$markindex lineend -7c", "$markindex lineend" )
-				     eq '</span>' ) {
+				# poetry divs - place page ref at end of line to avoid disturbing code layout
+				if ( $textwindow->get( "$markindex linestart", "$markindex lineend" )
+						=~ /\s*<div class="(verse)|(stanza)/ ) {
 					$insertpoint = "$markindex lineend";
 				}
 
