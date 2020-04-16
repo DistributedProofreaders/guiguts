@@ -537,14 +537,14 @@ sub cleanup {
 	while (1) {
 		$::searchstartindex =
 		  $textwindow->search( '-regexp', '--',
-							   '^\/[\*\$#pPfFLlXx]|^[Pp\*\$#fFLlXx]\/',
+							   "^\/[$::allblocktypes]|^[$::allblocktypes]\/",
 							   $::searchstartindex, 'end' );
 		last unless $::searchstartindex;
 		# if a start rewrap block marker is followed by a start rewrap block marker,
 		# also delete the blank line between the two
 		if ( $textwindow->get($::searchstartindex, "$::searchstartindex +1c") eq '/'
 		     && $textwindow->get("$::searchstartindex +3c", "$::searchstartindex +6c")
-		          =~ /\n\/[\*\$#pPfFlLxX]/ ) {
+		          =~ /\n\/[$::allblocktypes]/ ) {
 			$textwindow->delete( "$::searchstartindex -1c",
 							 "$::searchstartindex +5c lineend" );
 		} else {
