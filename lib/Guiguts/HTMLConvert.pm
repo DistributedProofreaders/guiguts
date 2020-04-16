@@ -967,23 +967,6 @@ sub html_convert_body {
 			&& ($selection) )
 		{
 
-			#Find the previous page marker
-			my $hmark = $textwindow->markPrevious( ($step) . '.0' );
-
-			#print $hmark.":hmarkprevious\n";
-			if ($hmark) {
-				my $hmarkindex = $textwindow->index($hmark);
-				my ( $pagemarkline, $pagemarkcol ) = split /\./, $hmarkindex;
-
-# This sets a mark for the horizontal rule at the page marker rather than just before
-# the header.
-				if ( $step - 5 <= $pagemarkline && $::lglobal{pageanch} ) {
-					$textwindow->markSet( "HRULE$pagemarkline", $hmarkindex );
-				} else {
-					$textwindow->insert($step . '.0-1l','<hr class="chap" />');
-				}
-			}
-
 			# make an anchor for autogenerate TOC
 			$aname =~ s/<\/?[hscalup].*?>//g;
 			$aname = makeanchor( ::deaccentdisplay($selection) );
@@ -1113,11 +1096,11 @@ sub html_convert_chapterdivs {
 					unless ( $textwindow->search( '-regexp', '--', '.',
 								$pagestart . '+' . $pagelength . 'c' , $h2blockstart ) );
 			}
-			# insert the end and start of the chapter div
+			# insert the end and start of the chapter div, with a chapter break <hr> before it
 			$textwindow->ntinsert( $h2blockend . '+5c', "\n</div>" );
-			$textwindow->ntinsert( $h2blockstart, "\n\n<div class=\"chapter\">\n" );
+			$textwindow->ntinsert( $h2blockstart, "\n<hr class=\"chap\" />\n\n<div class=\"chapter\">\n" );
 		}
-		$searchstart = $h2blockend . '+4l'; # ensure we don't find the same </h2 again
+		$searchstart = $h2blockend . '+5l'; # ensure we don't find the same </h2 again
 	}
 }
 
@@ -1419,27 +1402,6 @@ sub html_convert_pageanchors {
 
 				$textwindow->ntinsert( $insertpoint, $inserttext )
 				  if $::lglobal{pageanch};
-			}
-		} else {
-			if ( $mark =~ m{HRULE} )
-			{    #place the <hr> for a chapter before the page number
-				my $hrulemarkindex = $textwindow->index($mark);
-				my $pgstart =
-				  $textwindow->search( '-backwards', '--', '<p><span',
-					$hrulemarkindex . '+10c', '1.0' )
-				  || '1.0';
-				if (
-					$textwindow->compare(
-						$hrulemarkindex . '+50c',
-						'>', $pgstart
-					)
-				  )
-				{
-					$textwindow->ntinsert( $pgstart, '<hr class="chap" />' );
-				} else {
-					$textwindow->ntinsert( $hrulemarkindex,
-						'<hr class="chap" />' );
-				}
 			}
 		}
 	}
