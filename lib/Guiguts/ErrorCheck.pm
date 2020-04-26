@@ -703,10 +703,6 @@ sub gutcheckview {
 							 $::gc{$line} . " lineend" );
 		::update_indicators();
 	}
-
-	#don't focus    $textwindow->focus;
-	#leave main text on top    $::lglobal{gcpop}->raise;
-	$::geometry2 = $::lglobal{gcpop}->geometry;
 }
 
 # Equivalent to gutcheckview for the general errors window
@@ -976,7 +972,7 @@ sub gcheckpop_up {
 	} else {
 		$::lglobal{gcpop} = $top->Toplevel;
 		$::lglobal{gcpop}->title('Bookloupe/Gutcheck');
-		$::lglobal{gcpop}->geometry($::geometry2) if $::geometry2;
+		$::lglobal{gcpop}->geometry($::geometryhash{gcpop});
 		$::lglobal{gcpop}->transient($top)        if $::stayontop;
 		my $ptopframe = $::lglobal{gcpop}->Frame->pack;
 		my $opsbutton =
@@ -1050,7 +1046,7 @@ sub gcheckpop_up {
 		$::lglobal{gcpop}->bind(
 			'<Configure>' => sub {
 				$::lglobal{gcpop}->XEvent;
-				$::geometry2 = $::lglobal{gcpop}->geometry;
+				$::geometryhash{gcpop} = $::lglobal{gcpop}->geometry;
 				$::lglobal{geometryupdate} = 1;
 			}
 		);
@@ -1350,7 +1346,7 @@ sub gutcheck {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	no warnings;
-	::operationadd('Gutcheck' );
+	::operationadd('Bookloupe/Gutcheck' );
 	::hidepagenums();
 	my ( $name, $path, $extension, @path );
 	$textwindow->focus;

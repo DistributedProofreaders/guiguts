@@ -653,10 +653,6 @@ sub initialize {
 		chdir $dir if length $dir;
 	}
 
-	# For backward compatibility, carry over old geometry settings
-	unless ($::geometry2) {
-		$::geometry2 = '462x583+684+72';
-	}
 	unless ( $::geometryhash{wfpop} ) {
 		# positionhash stores user's window position
 		# geometryhash stores user's window position and size
@@ -664,38 +660,50 @@ sub initialize {
 		$::geometryhash{alignpop}      = '+338+83';
 		$::geometryhash{asciiboxpop}   = '+358+187';
 		$::positionhash{brkpop}        = '+482+131';
+		$::positionhash{defurlspop}    = '+150+150';
 		$::geometryhash{errorcheckpop} = '+484+72';
+		$::geometryhash{extpop}        = '+120+38';
 		$::positionhash{filepathspop}  = '+55+7';
 		$::positionhash{fixpop}        = '+34+22';
+		$::positionhash{floodpop}      = '+150+150';
 		$::positionhash{fontpop}       = '+10+10';
 		$::geometryhash{footcheckpop}  = '+22+12';
 		$::positionhash{footpop}       = '+255+157';
-		$::geometryhash{gcpop}         = '+224+72';
+		$::geometryhash{gcpop}         = '1000x800+224+72';
 		$::geometryhash{gcrunoptspop}  = '+244+72';
 		$::geometryhash{gcviewoptspop} = '+264+72';
 		$::positionhash{grpop}         = '+144+153';
 		$::positionhash{guesspgmarkerpop}='+10+10';
 		$::geometryhash{hotkeyspop}    = '+144+119';
+		$::positionhash{hilitepop}     = '+150+150';
+		$::positionhash{hintpop}       = '+150+150';
 		$::geometryhash{hpopup}        = '300x400+584+211';
 		$::positionhash{htmlgenpop}    = '+145+37';
 		$::positionhash{htmlimpop}     = '+45+37';
 		$::geometryhash{jeepop}        = '+284+72';
 		$::positionhash{latinpop}      = '+10+10';
+		$::geometryhash{linkpop}       = '+224+72';
 		$::positionhash{marginspop}    = '+145+137';
+		$::positionhash{markpop}       = '+140+93';
+		$::geometryhash{oppop}         = '600x400+50+50';
 		$::geometryhash{pagelabelpop}  = '375x500+20+20';
 		$::positionhash{pagemarkerpop} = '+302+97';
 		$::geometryhash{pagesephelppop}= '+191+132';
 		$::positionhash{pageseppop}    = '+334+176';
+		$::geometryhash{prooferpop}    = '600x400+100+70';
 		$::geometryhash{regexrefpop}   = '+106+72';
 		$::positionhash{searchpop}     = '+10+10';
-		$::positionhash{srchhistsizepop}='+152+97';
+		$::positionhash{selectionpop}  = '+10+10';
 		$::positionhash{spellpopup}    = '+152+97';
+		$::positionhash{srchhistsizepop}='+152+97';
+		$::positionhash{stoppop}       = '+10+10';
+		$::positionhash{surpop}        = '+150+150';
+		$::positionhash{tblfxpop}      = '+120+120';
 		$::positionhash{txtconvpop}    = '+82+131';
 		$::positionhash{utfentrypop}   = '+191+132';
 		$::geometryhash{utfpop}        = '+46+46';
 		$::geometryhash{utfsearchpop}  = '550x450+53+87';
 		$::geometryhash{wfpop}         = '+365+63';
-		$::geometryhash{extpop}        = '+120+38';
 	}
 
 	::readsettings();
@@ -1328,7 +1336,8 @@ sub initialize_popup_without_deletebinding {
 		$::lglobal{$popupname}->bind(
 			'<Configure>' => sub {
 				my $pos = $::lglobal{$popupname}->geometry;
-				$pos =~ s/^[0-9x]*(\+\d+\+\d+)$/$1/;
+				# Extract position coordinates - note negative coords are of form +-nnn
+				$pos =~ s/^[0-9x]*(\+-*\d+\+-*\d+)$/$1/;
 				$::positionhash{$popupname} = $pos; # don't try using ->x and ->y, ->y has a wrong value (at least on mac)
 				$::lglobal{geometryupdate} = 1;
 			}

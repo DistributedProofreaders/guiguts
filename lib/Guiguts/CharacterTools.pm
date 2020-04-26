@@ -586,8 +586,6 @@ sub utfcharentrypopup {
 				undef $::lglobal{utfentrypop};
 			},
 		)->grid( -row => 1, -column => 2 );
-		$::lglobal{ordpop}->resizable( 'yes', 'no' );
-		::initialize_popup_with_deletebinding('ordpop');
 		$inentry->Tk::bind(
 			'<Return>',
 			sub {
