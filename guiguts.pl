@@ -118,7 +118,6 @@ our $failedsearch  = 0;
 our $fontname      = 'Courier New';
 our $fontsize      = 10;
 our $fontweight    = q{};
-our $geometry2     = q{};
 our $geometry;
 our $globalaspellmode   = 'normal';
 our $globalbrowserstart = $ENV{BROWSER};

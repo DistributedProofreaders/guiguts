@@ -2859,7 +2859,7 @@ sub markup {
 				return unless length($selection);
 				$::lglobal{linkpop} = $top->Toplevel;
 				$::lglobal{linkpop}->title('Internal Links');
-				$::lglobal{linkpop}->geometry($::geometry2) if $::geometry2;
+				$::lglobal{linkpop}->geometry($::geometryhash{linkpop});
 				$::lglobal{linkpop}->transient($top)        if $::stayontop;
 				$::lglobal{fnlinks} = 1;
 				my $tframe = $::lglobal{linkpop}->Frame->pack;
@@ -2925,6 +2925,7 @@ sub markup {
 				::drag($linklistbox);
 				$::lglobal{linkpop}->protocol(
 					'WM_DELETE_WINDOW' => sub {
+						$::geometryhash{linkpop} = $::lglobal{linkpop}->geometry;
 						$::lglobal{linkpop}->destroy;
 						undef $::lglobal{linkpop};
 					}
@@ -2936,7 +2937,7 @@ sub markup {
 					'<<trans>>',
 					sub {
 						$name        = $linklistbox->get('active');
-						$::geometry2 = $::lglobal{linkpop}->geometry;
+						$::geometryhash{linkpop} = $::lglobal{linkpop}->geometry;
 						$done        = '</a>';
 						$textwindow->insert( $thisblockend, $done );
 						$done = "<a href=\"" . $name . "\">";
