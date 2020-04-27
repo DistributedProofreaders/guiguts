@@ -669,7 +669,7 @@ sub initialize {
 		$::positionhash{fontpop}       = '+10+10';
 		$::geometryhash{footcheckpop}  = '+22+12';
 		$::positionhash{footpop}       = '+255+157';
-		$::geometryhash{gcpop}         = '1000x800+224+72';
+		$::geometryhash{gcpop}         = '800x600+224+72';
 		$::geometryhash{gcrunoptspop}  = '+244+72';
 		$::geometryhash{gcviewoptspop} = '+264+72';
 		$::positionhash{grpop}         = '+144+153';
