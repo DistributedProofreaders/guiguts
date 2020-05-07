@@ -1231,28 +1231,59 @@ sub searchpopup {
 			-variable => \$::multiterm,
 			-value    => 0,
 			-command  => sub {
-				for ( @multisearch ) {
-					$_->packForget;
+				for ( 0 .. $::multisearchsize-2 ) {
+					$multisearch[$_]->packForget;
 				}
 			},
 		)->grid( -row => 1, -column => 3 );
 		$::lglobal{searchmulti} = $sf10->Radiobutton(
-			-text     => 'multi',
+			-text     => 'multi  ',
 			-variable => \$::multiterm,
 			-value    => 1,
-			-command  => sub {
-				for ( @multisearch ) {
-					$_->pack(
-						-before => $sf5,
-						-side   => 'top',
-						-anchor => 'w',
-						-padx   => 3,
-						-expand => 'y',
-						-fill   => 'x'
-					);
+			-command  => sub { searchshowterms( \@multisearch, 0, $::multisearchsize-2, $sf5 ); },
+		)->grid( -row => 1, -column => 4 );
+		# Button to increment number of multiterms (also switches to multi)
+		# Add frame/field/buttons if necessary
+		$sf10->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				if ( $::multisearchsize < 10 ) { # don't go above 10 in multi-term mode
+					++$::multisearchsize;
+					searchaddterms( \@multisearch, $::multisearchsize-2 );
+				}
+				if ( $::multiterm ) { 	# if already multi, only need to show new term
+					searchshowterms( \@multisearch, $::multisearchsize-2, $::multisearchsize-2, $sf5 );
+				} else {				# need to show all terms and switch to multi
+					searchshowterms( \@multisearch, 0, $::multisearchsize-2, $sf5 );
+					$::lglobal{searchmulti}->select;
+					$::multiterm = 1;
 				}
 			},
-		)->grid( -row => 1, -column => 4 );
+			-text  => '+',
+			-width => 3,
+			-height => 1
+		  )->grid( -row => 1, -column => 5 );
+		# Button to decrement number of multiterms (also switches to multi)
+		# Don't destroy field/buttons, just hide their frame
+		$sf10->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				if ($::multisearchsize > 2) { # don't go below 2 in multi-term mode
+					--$::multisearchsize;
+					# if already multi, only need to hide last term
+					$multisearch[$::multisearchsize-1]->packForget if $::multiterm;
+				}
+				# if not in multi, show all the remaining terms and switch to multi
+				if ( not $::multiterm ) {
+					searchshowterms( \@multisearch, 0, $::multisearchsize-2, $sf5 );
+					$::lglobal{searchmulti}->select;
+					$::multiterm = 1;
+				}
+			},
+			-text  => '-',
+			-width => 3,
+			-height => 1
+		  )->grid( -row => 1, -column => 6 );
 		my $sf12 = $::lglobal{searchpop}->Frame->pack(
 			-side   => 'top',
 			-anchor => 'w',
@@ -1326,77 +1357,11 @@ sub searchpopup {
 			-width  => 9,
 			-height => 15,
 		)->pack( -side => 'right', -anchor => 'w' );
-		for ( 1 .. $::multisearchsize-1 ) {
-			push @multisearch, $::lglobal{searchpop}->Frame;
-			my $replaceentry = "replaceentry$_";
-		$multisearch[$_-1]->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replaceall( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
-			},
-			-text  => 'Rpl All',
-			-width => 5
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$multisearch[$_-1]->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
-				searchtext('');
-			},
-			-text  => 'R & S',
-			-width => 5
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$multisearch[$_-1]->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
-				add_search_history(
-					$::lglobal{$replaceentry}->get( '1.0', '1.end' ),
-					\@::replace_history );
-			},
-			-text  => 'Replace',
-			-width => 6
-		  )->pack(
-			-side   => 'right',
-			-pady   => 1,
-			-padx   => 2,
-			-anchor => 'nw'
-		  );
-		$::lglobal{$replaceentry} = $multisearch[$_-1]->Text(
-			-background => $::bkgcolor,
-			-width      => 60,
-			-height     => 1,
-		  )->pack(
-			-side   => 'right',
-			-anchor => 'w',
-			-padx   => 1,
-			-expand => 'y',
-			-fill   => 'x'
-		  );
-		$multisearch[$_-1]->Button(
-			-activebackground => $::activecolor,
-			-command          => sub {
-				search_history( $::lglobal{$replaceentry},
-					\@::replace_history );
-			},
-			-image  => $::lglobal{hist_img},
-			-width  => 9,
-			-height => 15,
-		)->pack( -side => 'right', -anchor => 'w' );
-		}
+		
+		searchaddterms( \@multisearch, $::multisearchsize-2 );
 		if ($::multiterm) {
-			for ( @multisearch ) {
-				$_->pack(
+			for ( 0 .. $::multisearchsize-2 ) {
+				$multisearch[$_]->pack(
 					-side   => 'top',
 					-anchor => 'w',
 					-padx   => 3,
@@ -1632,6 +1597,98 @@ sub searchpopup {
 		searchtext('');
 	}
 }
+
+# Add frames containing field and buttons for replacement terms
+sub searchaddterms
+{
+	my $msref = shift;				# Array of frames
+	my $termno = shift;				# Highest number frame required
+	my $mslen = @$msref;
+	for ( $mslen .. $termno ) {		# Create as many as needed
+		push @$msref, $::lglobal{searchpop}->Frame;
+		my $replaceentry = "replaceentry" . ($_+1);
+		$msref->[$_]->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				replaceall( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
+			},
+			-text  => 'Rpl All',
+			-width => 5
+		  )->pack(
+			-side   => 'right',
+			-pady   => 1,
+			-padx   => 2,
+			-anchor => 'nw'
+		  );
+		$msref->[$_]->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
+				searchtext('');
+			},
+			-text  => 'R & S',
+			-width => 5
+		  )->pack(
+			-side   => 'right',
+			-pady   => 1,
+			-padx   => 2,
+			-anchor => 'nw'
+		  );
+		$msref->[$_]->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
+				add_search_history(
+					$::lglobal{$replaceentry}->get( '1.0', '1.end' ),
+					\@::replace_history );
+			},
+			-text  => 'Replace',
+			-width => 6
+		  )->pack(
+			-side   => 'right',
+			-pady   => 1,
+			-padx   => 2,
+			-anchor => 'nw'
+		  );
+		$::lglobal{$replaceentry} = $msref->[$_]->Text(
+			-background => $::bkgcolor,
+			-width      => 60,
+			-height     => 1,
+		  )->pack(
+			-side   => 'right',
+			-anchor => 'w',
+			-padx   => 1,
+			-expand => 'y',
+			-fill   => 'x'
+		  );
+		$msref->[$_]->Button(
+			-activebackground => $::activecolor,
+			-command          => sub {
+				search_history( $::lglobal{$replaceentry},
+					\@::replace_history );
+			},
+			-image  => $::lglobal{hist_img},
+			-width  => 9,
+			-height => 15,
+		)->pack( -side => 'right', -anchor => 'w' );
+	}
+}
+
+#
+sub searchshowterms {
+	my ($msref, $start, $end, $before) = @_;
+	for ( $start .. $end ) {
+		$msref->[$_]->pack(
+			-before => $before,
+			-side   => 'top',
+			-anchor => 'w',
+			-padx   => 3,
+			-expand => 'y',
+			-fill   => 'x'
+		);
+	}
+}
+
 
 sub stealthscanno {
 	my $textwindow = $::textwindow;
