@@ -782,24 +782,35 @@ sub initialize {
 	$::lglobal{alignstring}       = '.';
 	$::lglobal{asciijustify}      = 'center';
 	$::lglobal{asciiwidth}        = 64;
+	$::lglobal{autofraction}      = 0;				# HTML convert - 1/2, 1/4, 3/4 to named entities
 	$::lglobal{codewarn}          = 1;
-	$::lglobal{cssblockmarkup}    = 0;
+	$::lglobal{cssblockmarkup}    = 1;				# HTML convert - Use <div>/CSS rather than <blockquote>
 	$::lglobal{delay}             = 50;
 	$::lglobal{footstyle}         = 'end';
 	$::lglobal{ftnoteindexstart}  = '1.0';
 	$::lglobal{groutp}            = 'l';
-	$::lglobal{htmlimgar}         = 1;             #html image aspect ratio
+	# The 4 default replacements below must match one of the radiobutton values in htmlgenpop
+	$::lglobal{html_b}            = '<b>';						# HTML convert - default replacement for <b>
+	$::lglobal{html_f}            = '<span class="antiqua">';	# HTML convert - default replacement for <f>
+	$::lglobal{html_g}            = '<em class="gesperrt">';	# HTML convert - default replacement for <g>
+	$::lglobal{html_i}            = '<i>';						# HTML convert - default replacement for <i>
+	$::lglobal{htmlimgar}         = 1;				# HTML image aspect ratio
 	$::lglobal{isedited}          = 0;
 	$::lglobal{wf_ignore_case}    = 0;
-	$::lglobal{keep_latin1}       = 1;
+	$::lglobal{keep_latin1}       = 1;				# HTML convert - retain Latin1 characters
 	$::lglobal{lastmatchindex}    = '1.0';
 	$::lglobal{lastsearchterm}    = '';
+	$::lglobal{leave_utf}         = 1;				# HTML convert - retain utf8 characters
 	$::lglobal{longordlabel}      = 0;
+	$::lglobal{pageanch}          = 1;				# HTML convert - add page anchors
+	$::lglobal{pagecmt}           = 0;				# HTML convert - page markers as comments
+	$::lglobal{poetrynumbers}     = 0;				# HTML convert - find & format poetry line numbers
 	$::lglobal{proofbarvisible}   = 0;
 	$::lglobal{regaa}             = 0;
 	$::lglobal{runtests}          = 0;
 	$::lglobal{seepagenums}       = 0;
 	$::lglobal{selectionsearch}   = 0;
+	$::lglobal{shorthtmlfootnotes}= 1;				# HTML convert - Footnote_3 rather than Footnote_3_3
 	$::lglobal{showblocksize}     = 1;
 	$::lglobal{showthispageimage} = 0;
 	$::lglobal{spellencoding}     = "iso8859-1";

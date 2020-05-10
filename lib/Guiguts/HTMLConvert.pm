@@ -2027,6 +2027,9 @@ sub thumbnailbrowse {
 	);
 }
 
+# Create the HTML Generator dialog for user to adjust settings then autogenerate HTML
+# Note that the default settings for the Checkbuttons and Radiobuttons are defined by
+# the initial value of the relevant ::lglobal hash element set in sub initialize.
 sub htmlgenpopup {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	::operationadd('Begin HTML Generation');
@@ -2036,12 +2039,10 @@ sub htmlgenpopup {
 		$::lglobal{htmlgenpop}->raise;
 		$::lglobal{htmlgenpop}->focus;
 	} else {
-		my $blockmarkup;
 		$::lglobal{htmlgenpop} = $top->Toplevel;
 		$::lglobal{htmlgenpop}->title('HTML Generator');
 
-		my $f1 =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $f1 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f1->Button(
 			-text    => 'Custom Page Labels',
 			-command => sub { ::pageadjust() },
@@ -2056,8 +2057,7 @@ sub htmlgenpopup {
 		my $ishtml = $textwindow->search( '-nocase', '--', '<html', '1.0' );
 		my ( $htmltitle, $htmlauthor ) = ( '', '' );
 		( $htmltitle, $htmlauthor ) = get_title_author () unless $ishtml;
-		my $f0a =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $f0a = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0a->Label( -text => 'Title:', )
 		  ->grid( -row => 0, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
 		$f0a->Entry(
@@ -2083,9 +2083,9 @@ sub htmlgenpopup {
 			-relief       => 'sunken',
 		)->grid( -row => 2, -column => 1, -pady => 2, -sticky => 'w' );
 
-		my $f0 =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		my $pagecomments = $f0->Checkbutton(
+		my $f0 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		# Page numbers retained as comments rather than spans in HTML
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{pagecmt},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Pg #s as Comments',
@@ -2097,7 +2097,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		my $pageanchors = $f0->Checkbutton(
+		# Add anchor at each page boundary
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{pageanch},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Insert Anchors at Pg #s',
@@ -2109,8 +2110,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		$pageanchors->select;
-		my $utfconvert = $f0->Checkbutton(
+		# Leave utf8 characters rather than convert to numeric entities
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{leave_utf},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Keep UTF-8 Chars',
@@ -2122,10 +2123,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		# Preserve utf-8 characters by default, rather than converting to HTML named/numbered entities
-		$utfconvert->select;
-		
-		my $latin1_convert = $f0->Checkbutton(
+		# Leave Latin-1 characters rather than convert to HTML entities
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{keep_latin1},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Keep Latin-1 Chars',
@@ -2137,7 +2136,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		my $fractions = $f0->Checkbutton(
+		# Automatically convert 1/2, 1/4, 3/4 to named entities
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{autofraction},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Convert Fractions',
@@ -2149,22 +2149,8 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		my $shortfootnotes = $f0->Checkbutton(
-			-variable    => \$::lglobal{shorthtmlfootnotes},
-			-selectcolor => $::lglobal{checkcolor},
-			-text        => 'Short FN Anchors',
-			-anchor      => 'w',
-		  )->grid(
-			-row    => 3,
-			-column => 2,
-			-padx   => 1,
-			-pady   => 2,
-			-sticky => 'w'
-		  );
-		# Make short footnotes the default, e.g. Footnote_3 rather than Footnote_3_3
-		$shortfootnotes->select;
-		
-		$blockmarkup = $f0->Checkbutton(
+		# Use <div> with CSS class rather than HTML <blockquote> element
+		$f0->Checkbutton(
 			-variable    => \$::lglobal{cssblockmarkup},
 			-selectcolor => $::lglobal{checkcolor},
 			-text   => 'CSS blockquote',
@@ -2176,28 +2162,38 @@ sub htmlgenpopup {
 			-pady   => 2,
 			-sticky => 'w'
 		  );
-		# By default, use <div> with CSS class rather than HTML <blockquote> element
-		$blockmarkup->select;
+		# Anchor will be of the form Footnote_3 rather than Footnote_3_3
+		$f0->Checkbutton(
+			-variable    => \$::lglobal{shorthtmlfootnotes},
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Short FN Anchors',
+			-anchor      => 'w',
+		  )->grid(
+			-row    => 3,
+			-column => 2,
+			-padx   => 1,
+			-pady   => 2,
+			-sticky => 'w'
+		  );
 
-		my $f7 =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $f7 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		# Find & format poetry line numbers consisting of digits spaced beyond end of line
 		$f7->Checkbutton(
 			-variable    => \$::lglobal{poetrynumbers},
 			-selectcolor => $::lglobal{checkcolor},
 			-text        => 'Find and Format Poetry Line Numbers'
 		)->grid( -row => 1, -column => 1, -pady => 2 );
 
-		my $f4 =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $f4 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		# HTML to use when converting <i> markup
 		$f4->Label( -text => '<i>:', )
 		  ->grid( -row => 1, -column => 0, -padx => 2, -pady => 2 );
-		my $iselect = $f4->Radiobutton(
+		$f4->Radiobutton(
 			-text        => '<i>',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{html_i},
 			-value       => '<i>',
 		)->grid( -row => 1, -column => 1 );
-		$iselect->select;
 		$f4->Radiobutton(
 			-text        => '<em>',
 			-selectcolor => $::lglobal{checkcolor},
@@ -2216,15 +2212,15 @@ sub htmlgenpopup {
 			-variable    => \$::lglobal{html_i},
 			-value       => '<span class="italic">',
 		)->grid( -row => 1, -column => 4 );
+		# HTML to use when converting <b> markup
 		$f4->Label( -text => '<b>:', )
 		  ->grid( -row => 2, -column => 0, -padx => 2, -pady => 2 );
-		my $bselect = $f4->Radiobutton(
+		$f4->Radiobutton(
 			-text        => '<b>',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{html_b},
 			-value       => '<b>',
 		)->grid( -row => 2, -column => 1 );
-		$bselect->select;
 		$f4->Radiobutton(
 			-text        => '<em>',
 			-selectcolor => $::lglobal{checkcolor},
@@ -2243,6 +2239,7 @@ sub htmlgenpopup {
 			-variable    => \$::lglobal{html_b},
 			-value       => '<span class="bold">',
 		)->grid( -row => 2, -column => 4 );
+		# HTML to use when converting <g> markup
 		$f4->Label( -text => '<g>:', )
 		  ->grid( -row => 3, -column => 0, -padx => 2, -pady => 2 );
 		$f4->Radiobutton(
@@ -2257,19 +2254,19 @@ sub htmlgenpopup {
 			-variable    => \$::lglobal{html_g},
 			-value       => '<em>',
 		)->grid( -row => 3, -column => 2 );
-		my $gselect = $f4->Radiobutton(
+		$f4->Radiobutton(
 			-text        => '<em class>',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{html_g},
 			-value       => '<em class="gesperrt">',
 		)->grid( -row => 3, -column => 3 );
-		$gselect->select;
 		$f4->Radiobutton(
 			-text        => '<span class>',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{html_g},
 			-value       => '<span class="gesperrt">',
 		)->grid( -row => 3, -column => 4 );
+		# HTML to use when converting <f> markup
 		$f4->Label( -text => '<f>:', )
 		  ->grid( -row => 4, -column => 0, -padx => 2, -pady => 2 );
 		$f4->Radiobutton(
@@ -2290,16 +2287,14 @@ sub htmlgenpopup {
 			-variable    => \$::lglobal{html_f},
 			-value       => '<em class="antiqua">',
 		)->grid( -row => 4, -column => 3 );
-		my $fselect = $f4->Radiobutton(
+		$f4->Radiobutton(
 			-text        => '<span class>',
 			-selectcolor => $::lglobal{checkcolor},
 			-variable    => \$::lglobal{html_f},
 			-value       => '<span class="antiqua">',
 		)->grid( -row => 4, -column => 4 );
-		$fselect->select;
 
-		my $f2 =
-		  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		my $f2 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub { htmlautoconvert( $textwindow, $top, $htmltitle, $htmlauthor ) },
@@ -2316,8 +2311,7 @@ sub htmlgenpopup {
 		)->grid( -row => 1, -column => 2, -padx => 5, -pady => 1 );
 
 		if ( $::menulayout eq 'old' ) {
-			my $f8 =
-			  $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+			my $f8 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 			$f8->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {
