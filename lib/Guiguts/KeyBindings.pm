@@ -117,6 +117,7 @@ sub keybindings {
 	}
 
 	$textwindow->bind( 'TextUnicode', '<Control-f>' => \&::searchpopup );
+	$textwindow->bind( 'TextUnicode', '<Control-g>' => \&::gotoline );
 	$textwindow->bind( 'TextUnicode', '<Control-i>' => \&::seecurrentimage );
 	$textwindow->bind( 'TextUnicode', '<Control-p>' => \&::gotopage );
 	$textwindow->bind( 'TextUnicode', '<Control-P>' => \&::gotolabel );
@@ -206,32 +207,6 @@ sub keybindings {
 	$textwindow->bind( 'TextUnicode', '<ButtonRelease-2>',
 		sub { ::popscroll() unless $Tk::mouseMoved } );
 
-	$textwindow->eventAdd( '<<FindNext>>' => '<Control-Key-g>' );
-	$textwindow->eventAdd( '<<FindNextReverse>>' => '<Control-Key-G>' );
-	$textwindow->bind(
-		'<<FindNext>>',
-		sub {
-			if ( $::lglobal{searchpop} ) {
-				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
-				::searchtext($searchterm);
-			} else {
-				::searchpopup();
-			}
-		}
-	);
-	$textwindow->bind(
-		'<<FindNextReverse>>',
-		sub {
-			if ( $::lglobal{searchpop} ) {
-				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
-				$::lglobal{searchop2}->toggle;
-				::searchtext($searchterm);
-				$::lglobal{searchop2}->toggle;
-			} else {
-				::searchpopup();
-			}
-		}
-	);
 
 	if ($::OS_WIN) {
 		$textwindow->bind(

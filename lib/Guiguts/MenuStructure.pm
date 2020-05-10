@@ -648,6 +648,7 @@ sub menubuildold {
 			[
 				'command',
 				'Goto ~Line...',
+			    -accelerator => 'Ctrl+g',
 				-command => sub {
 					::gotoline();
 					::update_indicators();
@@ -1257,6 +1258,7 @@ sub menubuilddefault {
 				  }
 			],
 			[	'command', 'Goto ~Line...',
+				-accelerator => 'Ctrl+g',
 				-command => sub {
 					::gotoline();
 					::update_indicators();
