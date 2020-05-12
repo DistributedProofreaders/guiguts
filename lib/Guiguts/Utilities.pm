@@ -178,14 +178,19 @@ sub cmdinterp {
 			$arg = ::encode( "utf-8", $arg );
 		}
 
-# Pass file to default file handler, $f $d $e give the fully specified path/filename
-		if ( $arg =~ m/\$f|\$d|\$e/ ) {
+		# $f $d $e give filename, directory & extension, so $d$f$e is full pathname
+		# $D is directory without trailing slash (needed by Windows if directory name
+		#    is quoted, otherwise trailing backslash escapes the final quote)
+		if ( $arg =~ m/\$f|\$d|\$D|\$e/ ) {
 			return if nofileloadedwarning();
 			$fname = $::lglobal{global_filename};
 			my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
 			$arg =~ s/\$f/$f/g if $f;
 			$arg =~ s/\$d/$d/g if $d;
 			$arg =~ s/\$e/$e/g if $e;
+			my $dd = $d;
+			$dd =~ s/(.*)[\/\\]$/$1/g;	# remove any trailing slash for $D
+			$arg =~ s/\$D/$dd/g if $dd;
 		}
 
 		# Pass image file to default file handler
@@ -2019,6 +2024,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . "There are a few exposed internal variables you can use to build commands with.\nUse one of these variable to "
 			  . "substitute in the corresponding value.\n\n"
 			  . "\$d = the directory path of the currently open file.\n"
+			  . "\$D = same as \$d but without trailing slash.\n"
 			  . "\$f = the current open file name, without a path or extension.\n"
 			  . "\$e = the extension of the currently open file.\n"
 			  . '(So, to pass the currently open file, use $d$f$e.)' . "\n\n"
