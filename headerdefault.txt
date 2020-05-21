@@ -142,7 +142,13 @@ em.gesperrt
 .caption  {font-weight: bold;}
 
 /* Images */
-.figcenter   {
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.figcenter {
     margin: auto;
     text-align: center;
 }
@@ -162,8 +168,7 @@ em.gesperrt
     float: right;
     clear: right;
     margin-left: 1em;
-    margin-bottom:
-    1em;
+    margin-bottom: 1em;
     margin-top: 1em;
     margin-right: 0;
     padding: 0;
