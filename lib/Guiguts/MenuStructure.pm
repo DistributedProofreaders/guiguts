@@ -592,13 +592,13 @@ sub menubuildold {
 				'command',
 				'Column Cut',
 				-command => sub { ::colcut($textwindow); },
-				-accelerator => 'F1'
+				-accelerator => 'F2'
 			],
 			[
 				'command',
 				'Column Copy',
 				-command => sub { ::colcopy($textwindow); },
-				-accelerator => 'F2'
+				-accelerator => 'F1'
 			],
 			[
 				'command',
@@ -1182,11 +1182,11 @@ sub menubuilddefault {
 			],
 			[ 'separator', '' ],
 			[	'command', 'Column Cut',
-				-accelerator => 'F1',
+				-accelerator => 'F2',
 				-command => sub { ::colcut($textwindow); },
 			],
 			[	'command', 'Column Copy',
-				-accelerator => 'F2',
+				-accelerator => 'F1',
 				-command => sub { ::colcopy($textwindow); },
 			],
 			[	'command', 'Column Paste',
