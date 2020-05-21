@@ -1807,7 +1807,9 @@ sub htmlimage {
 					# Write class into CSS block (sorted in width order) - first find end of CSS
 					my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
 					if ($insertpoint) {
-						my $cssdef = ".$classname {width: " . $width . "px;}";
+						# Max-width in em - assumed to be 16px
+						# Necessary because eBookMaker removes declarations ending in "px" 
+						my $cssdef = ".$classname {max-width: " . ($width/16.0) . "em;}";
 						# Unless this class has been added already ...
 						unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
 							# Find end of last class definition in CSS
