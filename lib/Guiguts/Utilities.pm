@@ -1521,7 +1521,7 @@ sub colcut {
 	my $textwindow = shift;
 	columnizeselection($textwindow);
 	$textwindow->addGlobStart;
-	::textcopy();
+	::cut();
 	$textwindow->addGlobEnd;
 }
 
@@ -1529,7 +1529,7 @@ sub colcopy {
 	my $textwindow = shift;
 	columnizeselection($textwindow);
 	$textwindow->addGlobStart;
-	::cut();
+	::textcopy();
 	$textwindow->addGlobEnd;
 }
 
