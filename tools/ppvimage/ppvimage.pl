@@ -16,9 +16,9 @@ use Tk;
 #       need to deal with the input file encoding. Any unicode in alts
 #       or titles etc will simply pass through as-is to the logfile.
 #
-# last edit: 10/Dec/2012
+# last edit: 23/May/2020
 
-my $vnum  = "1.06";
+my $vnum  = "1.07";
 
 my @book = ();
 my @css = ();
@@ -35,6 +35,11 @@ my $howbig = 0; # for switching definition of "large" between inline and linked 
 my $option = "";
 
 use constant NOLINEINDENT => '           ';
+
+use constant MAXKBINLINE => 256;	# Maximum size of an inline image in KB
+use constant MAXKBLINKED => 1024;	# Maximum size of a linked image in KB
+use constant MINCOVERWD => 625;		# Minimum width of cover image
+use constant MINCOVERHT => 1000;	# Minimum height of cover image
 
 # allow commandline operation sans GUI (thanks Katt83)
 # perl -w ppvimage.pl [-csv] [-terse] [-gg] [-o logfile.txt] filename.html
@@ -194,6 +199,11 @@ sub rev_hist {
   $txt -> insert('end',
   "------------------------------------------------------------------------\n".
   "current version: $vnum\n".
+  "1.07 23/May/2020 (by DP user windymilla)\n".
+  "  update image size limits\n".
+  "    inline images: max 256KB, but no pixel limits\n".
+  "    linked images: max 1024KB, but no pixel limits\n".
+  "    cover image: min 625x1000 pixels, but no max pixel or KB limits\n".
   "1.06 10/Dec/2012\n".
   "  add warnings for unused files in /images folder\n".
   "  loosen input file syntax requirements\n".
@@ -688,12 +698,12 @@ sub imgdimens {
   $size = $size/1024; if ($size < 1) {$size = 1; } # avoid reporting files less than 512 bytes as 0 KB
   my $verylarge = "VERY LARGE";
   if ($howbig) {$verylarge = "LARGE";}
-  if ($size > 200) {
+  if ($size > MAXKBLINKED) {
     if ($gg) {printf LOGFILE "line %-5d",$errline;
       printf LOGFILE "   Filesize: %3u KB ($verylarge)\n", $size; }
     else {printf LOGFILE "  Filesize: %3u KB ($verylarge)\n", $size; }
     }
-  elsif (($howbig == 0) and ($size > 100)) {
+  elsif (($howbig == 0) and ($size > MAXKBINLINE)) {
     if ($gg) {printf LOGFILE "line %-5d",$errline;
       printf LOGFILE "   Filesize: %3u KB (LARGE)\n", $size; }
     else {printf LOGFILE "  Filesize: %3u KB (LARGE)\n", $size; }
@@ -849,6 +859,7 @@ sub unusedimagecheck { # no sensible line numbers so don't use logprint
 
 #######################
 sub checkepubcover {
+  print LOGFILE ("\n---------- checking cover image ----------\n");
   # first see if there's a <link rel="coverpage" in the header
   my $linkrel = "";
   my $sourceline = 0;
@@ -876,7 +887,7 @@ sub checkepubcover {
   else {
     print LOGFILE ("\n\n");
     logprint("NOTE: epub cover will be $imgcover",$imgcoverline,"INFO","\n"," (line $imgcoverline)");
-    # warn if not jpg or bigger than 600x800
+    # warn if not jpg or smaller than 625x1000
     if (not ($imgcover =~ m/\.jpe?g$/)) {
       logprint("WARNING: epub cover should be jpg",$imgcoverline,"KEY","","");
       }
@@ -887,11 +898,8 @@ sub checkepubcover {
           return 0; };
       binmode(IMGFILE);
       ($x,$y) = jpegsize(\*IMGFILE);
-      if (($x > 600) or ($y > 800)) {
-        logprint("  epub cover recommended to be at most 600×800",$imgcoverline,"INFO","","");
-        }
-      if (($x < 500) or ($y < 500)) {
-        logprint("  epub cover recommended to be at least 500 on shorter side",$imgcoverline,"INFO","","");
+      if (($x < MINCOVERWD) or ($y < MINCOVERHT)) {
+        logprint("  WARNING: epub cover should be at least ".MINCOVERWD."x".MINCOVERHT,$imgcoverline,"KEY","","");
         }
       }
     }
