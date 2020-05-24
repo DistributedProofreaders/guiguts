@@ -887,7 +887,7 @@ sub checkepubcover {
   else {
     print LOGFILE ("\n\n");
     logprint("NOTE: epub cover will be $imgcover",$imgcoverline,"INFO","\n"," (line $imgcoverline)");
-    # warn if not jpg or smaller than 625x1000
+    # warn if not jpg or smaller than minimum width & height
     if (not ($imgcover =~ m/\.jpe?g$/)) {
       logprint("WARNING: epub cover should be jpg",$imgcoverline,"KEY","","");
       }
