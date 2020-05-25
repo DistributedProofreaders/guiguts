@@ -138,7 +138,6 @@ our $htmldiventry   = ' class="i2"';
 our $htmlspanentry  = ' class="i2"';
 our $highlightcolor = '#a08dfc';
 our $history_size   = 20;
-our $hotkeybookmarks = 0;
 our $ignoreversions =
   "revision";    #ignore revisions by default but not major or minor versions
 our $ignoreversionnumber    = "";         #ignore a specific version

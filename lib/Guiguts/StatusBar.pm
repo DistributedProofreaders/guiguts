@@ -8,7 +8,7 @@ BEGIN {
 	@ISA = qw(Exporter);
 	@EXPORT =
 	  qw(&update_indicators &_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
-	  &setlang &tglprfbar &showproofers &selection &gotoline &gotopage);
+	  &setlang &tglprfbar &showproofers &selection &gotoline &gotopage &gotolabel);
 }
 
 # Routine to update the status bar when something has changed.
@@ -1090,25 +1090,7 @@ sub gotoline {
 				}
 			}
 		);
-		$::lglobal{gotolinepop}->Icon( -image => $::icon );
-		$::lglobal{gotolinepop}->resizable( 'no', 'no' );
-		$::lglobal{gotolinepop}->Tk::bind(
-			'<Key-KP_Enter>' => sub { $::lglobal{gotolinepop}->Subwidget('B_OK')->invoke; }
-		);
-		my $frame = $::lglobal{gotolinepop}->Frame->pack( -fill => 'x' );
-		$frame->Label( -text => 'Enter Line number: ' )
-		  ->pack( -side => 'left' );
-		my $entry = $frame->Entry(
-								   -background   => $::bkgcolor,
-								   -width        => 25,
-								   -textvariable => \$::lglobal{line_number},
-		)->pack( -side => 'left', -fill => 'x' );
-		$::lglobal{gotolinepop}->Advertise( entry => $entry );
-		$::lglobal{gotolinepop}->Popup;
-		$::lglobal{gotolinepop}->Subwidget('entry')->focus;
-		$::lglobal{gotolinepop}->Subwidget('entry')->selectionRange( 0, 'end' );
-		$::lglobal{gotolinepop}->Subwidget('entry')->icursor( 'end' );
-		$::lglobal{gotolinepop}->Wait;
+		gotocommonsetup( 'gotolinepop', 'line_number', 'Enter line number: ', '' );
 	}
 }
 
@@ -1166,26 +1148,92 @@ sub gotopage {
 				}
 			}
 		);
-		$::lglobal{gotopagpop}->resizable( 'no', 'no' );
-		$::lglobal{gotopagpop}->Icon( -image => $::icon );
-		$::lglobal{gotopagpop}->Tk::bind(
-			'<Key-KP_Enter>' => sub { $::lglobal{gotopagpop}->Subwidget('B_OK')->invoke; }
-		);
-		my $frame = $::lglobal{gotopagpop}->Frame->pack( -fill => 'x' );
-		$frame->Label( -text => 'Enter image number: ' )
-		  ->pack( -side => 'left' );
-		my $entry = $frame->Entry(
-								   -background   => $::bkgcolor,
-								   -width        => 25,
-								   -textvariable => \$::lglobal{lastpage}
-		)->pack( -side => 'left', -fill => 'x' );
-		$::lglobal{gotopagpop}->Advertise( entry => $entry );
-		$::lglobal{gotopagpop}->Popup;
-		$::lglobal{gotopagpop}->Subwidget('entry')->focus;
-		$::lglobal{gotopagpop}->Subwidget('entry')->selectionRange( 0, 'end' );
-		$::lglobal{gotopagpop}->Subwidget('entry')->icursor( 'end' );
-		$::lglobal{gotopagpop}->Wait;
+		gotocommonsetup( 'gotopagpop', 'lastpage', 'Enter image number: ', '' );
 	}
+}
+
+## Pop up a window which will allow jumping directly to a specified page label
+sub gotolabel {
+	my $textwindow = $::textwindow;
+	my $top        = $::top;
+	unless ( defined( $::lglobal{gotolabpop} ) ) {
+		return unless %::pagenumbers;
+		for ( keys(%::pagenumbers) ) {
+			$::lglobal{pagedigits} = ( length($_) - 2 );
+			last;
+		}
+		$::lglobal{gotolabpop} = $top->DialogBox(
+			-buttons => [qw[Ok Cancel]],
+			-title   => 'Goto Page Label',
+			-popover => $top,
+			-command => sub {
+				if ( $_[0] && $_[0] eq 'Ok' ) {
+					my $mark;
+					for ( keys %::pagenumbers ) {
+						if (    $::pagenumbers{$_}{label}
+							 && $::pagenumbers{$_}{label} eq
+							 $::lglobal{lastlabel} )
+						{
+							$mark = $_;
+							last;
+						}
+					}
+					unless ($mark) {
+						$::lglobal{gotolabpop}->bell;
+						$::lglobal{gotolabpop}->destroy;
+						undef $::lglobal{gotolabpop};
+						return;
+					}
+					my $index = $textwindow->index($mark);
+					$textwindow->markSet( 'insert', "$index +1l linestart" );
+					::seeindex('insert -2l', 1);
+					$textwindow->focus;
+					::update_indicators();
+					$::lglobal{gotolabpop}->destroy;
+					undef $::lglobal{gotolabpop};
+				} else {
+					$::lglobal{gotolabpop}->destroy;
+					undef $::lglobal{gotolabpop};
+				}
+			}
+		);
+		gotocommonsetup( 'gotolabpop', 'lastlabel', 'Enter label: ', 'Pg ' );
+	}
+}
+
+# Perform operations common to the "goto" dialogs,
+# including setting Escape key and window manager close button to invoke cancel
+sub gotocommonsetup {
+	my $dlg = shift;		# dialog key in lglobal
+	my $var = shift;		# variable key in lglobal
+	my $prompt = shift;		# prompt for label in dialog
+	my $default = shift;	# default value for label (e.g. "Pg " in gotopage)
+	my $len = length $default;
+	$::lglobal{$dlg}->Icon( -image => $::icon );
+	$::lglobal{$dlg}->resizable( 'no', 'no' );
+	$::lglobal{$dlg}->Tk::bind(
+		'<Key-KP_Enter>' => sub { $::lglobal{$dlg}->Subwidget('B_OK')->invoke; }
+	);
+	$::lglobal{$dlg}->Tk::bind(
+		'<Escape>' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; }
+	);
+	$::lglobal{$dlg}->protocol(
+		'WM_DELETE_WINDOW' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; }
+	);
+	my $frame = $::lglobal{$dlg}->Frame->pack( -fill => 'x' );
+	$frame->Label( -text => $prompt )->pack( -side => 'left' );
+	$::lglobal{$var} = $default unless $::lglobal{$var};
+	my $entry = $frame->Entry(
+							   -background   => $::bkgcolor,
+							   -width        => 25,
+							   -textvariable => \$::lglobal{$var}
+		)->pack( -side => 'left', -fill => 'x' );
+	$::lglobal{$dlg}->Advertise( entry => $entry );
+	$::lglobal{$dlg}->Popup;
+	$::lglobal{$dlg}->Subwidget('entry')->focus;
+	$::lglobal{$dlg}->Subwidget('entry')->selectionRange( $len, 'end' );
+	$::lglobal{$dlg}->Subwidget('entry')->icursor( $len ); # place cursor at end of default text
+	$::lglobal{$dlg}->Wait;
 }
 
 1;

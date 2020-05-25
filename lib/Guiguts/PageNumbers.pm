@@ -7,7 +7,7 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw( &hidepagenums &displaypagenums &togglepagenums &gotolabel
+	  qw( &hidepagenums &displaypagenums &togglepagenums
 	  &pnumadjust &pgnext &pgprevious &pgrenum &pmovedown
 	  &pmoveup &pmoveleft &pmoveright &pageadd &pageremove	);
 }
@@ -59,69 +59,6 @@ sub togglepagenums {
 			}
 		}
 		::pnumadjust();
-	}
-}
-
-## Pop up a window which will allow jumping directly to a specified page
-sub gotolabel {
-	my $textwindow = $::textwindow;
-	my $top        = $::top;
-	unless ( defined( $::lglobal{gotolabpop} ) ) {
-		return unless %::pagenumbers;
-		for ( keys(%::pagenumbers) ) {
-			$::lglobal{pagedigits} = ( length($_) - 2 );
-			last;
-		}
-		$::lglobal{gotolabpop} = $top->DialogBox(
-			-buttons => [qw[Ok Cancel]],
-			-title   => 'Goto Page Label',
-			-popover => $top,
-			-command => sub {
-				if ( $_[0] && $_[0] eq 'Ok' ) {
-					my $mark;
-					for ( keys %::pagenumbers ) {
-						if (    $::pagenumbers{$_}{label}
-							 && $::pagenumbers{$_}{label} eq
-							 $::lglobal{lastlabel} )
-						{
-							$mark = $_;
-							last;
-						}
-					}
-					unless ($mark) {
-						$::lglobal{gotolabpop}->bell;
-						$::lglobal{gotolabpop}->destroy;
-						undef $::lglobal{gotolabpop};
-						return;
-					}
-					my $index = $textwindow->index($mark);
-					$textwindow->markSet( 'insert', "$index +1l linestart" );
-					::seeindex('insert -2l', 1);
-					$textwindow->focus;
-					::update_indicators();
-					$::lglobal{gotolabpop}->destroy;
-					undef $::lglobal{gotolabpop};
-				} else {
-					$::lglobal{gotolabpop}->destroy;
-					undef $::lglobal{gotolabpop};
-				}
-			}
-		);
-		$::lglobal{gotolabpop}->resizable( 'no', 'no' );
-		my $frame = $::lglobal{gotolabpop}->Frame->pack( -fill => 'x' );
-		$frame->Label( -text => 'Enter Label: ' )->pack( -side => 'left' );
-		$::lglobal{lastlabel} = 'Pg ' unless $::lglobal{lastlabel};
-		my $entry = $frame->Entry(
-								   -background   => $::bkgcolor,
-								   -width        => 25,
-								   -textvariable => \$::lglobal{lastlabel}
-		)->pack( -side => 'left', -fill => 'x' );
-		$::lglobal{gotolabpop}->Advertise( entry => $entry );
-		$::lglobal{gotolabpop}->Popup;
-		$::lglobal{gotolabpop}->Subwidget('entry')->focus;
-		$::lglobal{gotolabpop}->Subwidget('entry')->selectionRange( 3, 'end' );
-		$::lglobal{gotolabpop}->Subwidget('entry')->icursor( 3 );
-		$::lglobal{gotolabpop}->Wait;
 	}
 }
 
