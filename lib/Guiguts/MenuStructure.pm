@@ -14,6 +14,7 @@ sub menu_file {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	[
 		[	'command', '~Open...',
+			-accelerator => 'Ctrl+o',
 			-command => sub { ::file_open($textwindow) }
 		],
 		[ 'separator', '' ],
@@ -28,6 +29,7 @@ sub menu_file {
 			-command     => \&::savefile
 		],
 		[	'command', 'Save ~As...',
+			-accelerator => 'Ctrl+Shift+s',
 			-command => sub { ::file_saveas($textwindow) }
 		],
 		[	'command', 'Sa~ve a Copy As...',
@@ -314,13 +316,6 @@ sub menu_preferences {
 					-offvalue   => 0
 				],
 				[
-					Checkbutton => 'Enable Shortcuts for Set Bookmark (beta)',
-					-variable   => \$::hotkeybookmarks,
-					-onvalue    => 1,
-					-offvalue   => 0,
-					-command    => sub { ::keybindings(); ::menurebuild(); ::savesettings(); },
-				],
-				[
 					Checkbutton => 'Use Old Spellcheck Layout',
 					-variable   => \$::oldspellchecklayout,
 					-onvalue    => 1,
@@ -521,7 +516,7 @@ sub menu_bookmarks {
 		map ( [
 				Button       => "Set Bookmark $_",
 				-command     => [ \&::setbookmark, "$_" ],
-				-accelerator => ( $::hotkeybookmarks ? "Ctrl+Shift+$_" : '' ),
+				-accelerator => "Ctrl+Shift+$_"
 			],
 			( 1 .. 5 ) ),
 		[ 'separator', '' ],
@@ -648,6 +643,7 @@ sub menubuildold {
 			[
 				'command',
 				'Goto ~Line...',
+				-accelerator => 'Ctrl+j',
 				-command => sub {
 					::gotoline();
 					::update_indicators();
@@ -813,36 +809,37 @@ sub menubuildold {
 			],
 			[
 				Button   => '~Flood Fill Selection With...',
-				-accelerator => 'Ctrl+o',
+				-accelerator => 'Ctrl+e',
 				-command => sub { ::flood() }
 			],
 			[ 'separator', '' ],
 			[
 				Button   => 'Indent Selection 1',
 				-command => sub {
+				-accelerator => 'Ctrl+m',
 					::indent( $textwindow, 'in' );
 				  }
 			],
 			[
 				Button   => 'Indent Selection 4',
+				-accelerator => 'Ctrl+Alt+m',
 				-command => sub {
 					$textwindow->addGlobStart;
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' ) for ( 1 .. 4 );
 					$textwindow->addGlobEnd;
 				  }
 			],
 			[
 				Button   => 'Indent Selection -1',
+				-accelerator => 'Ctrl+Shift+m',
 				-command => sub {
-					::indent( $textwindow, 'out', $::operationinterrupt );
+					::indent( $textwindow, 'out' );
 				  }
 			],
 			[ 'separator', '' ],
 			[
 				Button   => '~Rewrap Selection',
+				-accelerator => 'Ctrl+w',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::selectrewrap( $textwindow, $::lglobal{seepagenums},
@@ -852,6 +849,7 @@ sub menubuildold {
 			],
 			[
 				Button   => '~Block Rewrap Selection',
+				-accelerator => 'Ctrl+Shift+w',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::blockrewrap();
@@ -1227,7 +1225,7 @@ sub menubuilddefault {
 				-command => \&::surround
 			],
 			[	Button   => 'Fl~ood Fill Selection With...',
-				-accelerator => 'Ctrl+o',
+				-accelerator => 'Ctrl+e',
 				-command => sub { ::flood() }
 			],
 		]
@@ -1250,13 +1248,14 @@ sub menubuilddefault {
 				  }
 			],
 			[	'command', 'Goto Page La~bel...',
-				-accelerator => 'Ctrl+P',
+				-accelerator => 'Ctrl+Shift+p',
 				-command => sub {
 					::gotolabel();
 					::update_indicators();
 				  }
 			],
 			[	'command', 'Goto ~Line...',
+				-accelerator => 'Ctrl+j',
 				-command => sub {
 					::gotoline();
 					::update_indicators();
@@ -1439,6 +1438,7 @@ sub menubuilddefault {
 				  }
 			],
 			[	Button   => '~Rewrap Selection',
+				-accelerator => 'Ctrl+w',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::selectrewrap( $textwindow, $::lglobal{seepagenums},
@@ -1447,6 +1447,7 @@ sub menubuilddefault {
 				  }
 			],
 			[	Button   => '~Block Rewrap Selection',
+				-accelerator => 'Ctrl+Shift+w',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::blockrewrap();
@@ -1564,23 +1565,23 @@ sub menubuilddefault {
 			],
 			[ 'separator', '' ],
 			[	Button   => 'Indent Selection ~1',
+				-accelerator => 'Ctrl+m',
 				-command => sub {
 					::indent( $textwindow, 'in' );
 				  }
 			],
 			[	Button   => 'Indent Selection ~4',
+				-accelerator => 'Ctrl+Alt+m',
 				-command => sub {
 					$textwindow->addGlobStart;
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
-					::indent( $textwindow, 'in' );
+					::indent( $textwindow, 'in' ) for ( 1 .. 4 );
 					$textwindow->addGlobEnd;
 				  }
 			],
 			[	Button   => 'In~dent Selection -1',
+				-accelerator => 'Ctrl+Shift+m',
 				-command => sub {
-					::indent( $textwindow, 'out', $::operationinterrupt );
+					::indent( $textwindow, 'out' );
 				  }
 			],
 			[ 'separator', '' ],

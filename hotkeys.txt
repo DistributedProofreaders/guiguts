@@ -4,7 +4,11 @@ MAIN WINDOW
 <ctrl>+c -- copy or column copy
 <ctrl>+v -- paste
 <ctrl>+a -- select all
+<ctrl>+o -- open file
 <ctrl>+s -- save file
+<ctrl>+<shift>+s -- save as
+<ctrl>+<alt>+r -- open regex quick reference
+<ctrl>+<alt>+s -- open scratchpad.txt
 
 <shift>+mouse drag -- column select
 F1 -- column copy
@@ -17,7 +21,7 @@ F7 -- spell check selection (or document, if no selection made)
 F8 -- open Stealth Scannos search
 
 <ctrl>+z -- undo
-<ctrl>+y -- redo
+<ctrl>+y, <ctrl>+<shift>+z -- redo
 
 <ctrl>+u -- Convert case of selection to upper case
 <ctrl>+l -- Convert case of selection to lower case
@@ -34,9 +38,17 @@ F8 -- open Stealth Scannos search
 <ctrl>+<shift>+g -- continue search in opposite direction
 
 <ctrl>+i -- view current image (as See Img button)
+<ctrl>+j -- go to line
 <ctrl>+p -- go to page
-<ctrl>+P -- go to page label
-<ctrl>+o -- flood fill (if popup is open, otherwise open it)
+<ctrl>+<shift>+p -- go to page label
+
+<ctrl>+w -- rewrap selection
+<ctrl>+<shift>+w -- block rewrap selection
+<ctrl>+m -- indent +1 / move column selection right
+<ctrl>+<shift>+m -- indent -1 / move column selection left
+<ctrl>+<alt>+m -- indent +4
+<ctrl>+<alt>+<shift>+m -- indent -4
+<ctrl>+e -- flood fill (if popup is open, otherwise open it)
 <ctrl>+r -- surround text (if popup is open, otherwise open it)
 
 <ctrl>+Home -- move cursor to the start of the text
@@ -62,9 +74,13 @@ F8 -- open Stealth Scannos search
 <shift>+<ctrl>+up arrow -- adjust selection to the start of the current paragraph
 <shift>+<ctrl>+down arrow -- adjust selection to the start of the next paragraph
 
-<ctrl>+, -- highlight all apostrophes in selection.
-<ctrl>+. -- highlight all double quotes in selection.
-<ctrl>+0 -- remove all highlights.
+<ctrl>+, -- highlight all apostrophes in selection
+<ctrl>+. -- highlight all double quotes in selection
+<ctrl>+<alt>+h -- highlight arbitrary characters in selection
+<ctrl>+0 -- remove all highlights
+
+<ctrl>+1,2,3,4,5 -- go to bookmark 1,2,3,4,5
+<ctrl>+<shift>+1,2,3,4,5 -- set bookmark 1,2,3,4,5
 
 <Insert> -- Toggle insert / overstrike mode
 
@@ -77,6 +93,7 @@ Triple-click left mouse button -- select line
 
 Single click right mouse button -- pop up shortcut to menu bar
 
+<command>+q - quit Guiguts (Mac only)
 
 MENUS (non-Mac)
 
@@ -93,17 +110,17 @@ SEARCH POPUP
 
 PAGE SEPARATOR POPUP
 
-j -- Join Lines - join lines, remove all blank lines, spaces, asterisks and hyphens.
-k -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisks, keep hyphen.
-l -- Blank Line - leave one blank line. Close up any other whitespace. (Paragraph Break)
-t -- New Section - leave two blank lines. Close up any other whitespace. (Section Break)
-h -- New Chapter - leave four blank lines. Close up any other whitespace. (Chapter Break)
-r -- Refresh - search for, highlight and re-center the next page separator.
-u -- Undo - undo the last edit.
-d -- Delete - delete the page separator. Make no other edits.
-v -- View the current page in the image viewer.
-a -- Cycle Automatic modes.
-? -- View hotkey help popup.
+j -- Join Lines - join lines, remove all blank lines, spaces, asterisks and hyphens
+k -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisks, keep hyphen
+l -- Blank Line - leave one blank line. Close up any other whitespace (paragraph break)
+t -- New Section - leave two blank lines. Close up any other whitespace (section break)
+h -- New Chapter - leave four blank lines. Close up any other whitespace (chapter break)
+r -- Refresh - search for, highlight and re-center the next page separator
+u -- Undo - undo the last edit
+d -- Delete - delete the page separator. Make no other edits
+v -- View the current page in the image viewer
+a -- Cycle Automatic modes
+? -- View hotkey help popup
 
 
 SPELL CHECK POPUP
@@ -116,6 +133,6 @@ SPELL CHECK POPUP
 
 ADJUST PAGE MARKERS POPUP
 
-PgDn/PgUp -- move to next/previous page marker.
-Up/Down/Left/Right arrows -- move current page marker up/down/left/right.
+PgDn/PgUp -- move to next/previous page marker
+Up/Down/Left/Right arrows -- move current page marker up/down/left/right
 
