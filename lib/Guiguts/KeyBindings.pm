@@ -166,6 +166,7 @@ sub keybindings {
 				  or warn "Could not create file $!";
 			}
 			::runner('start scratchpad.txt') if $::OS_WIN;
+			::runner('open scratchpad.txt') if $::OS_MAC;
 		} );
 # Help
 	keybind( '<Control-Alt-r>',     sub { ::regexref(); } );
@@ -180,7 +181,18 @@ sub keybindings {
 			$::menubar->Popup( -popover => 'cursor' ) if ($::OS_WIN);
 		} );
 # Extra bindings for Mac
-	keybind( '<Meta-q>',            sub { ::_exit(); } ) if $::OS_MAC;
+	if ( $::OS_MAC ) {
+		keybind( '<Meta-q>',        sub { ::_exit(); } );
+		keybind( '<Meta-s>',        sub { ::savefile(); } );
+		keybind( '<Meta-a>',        sub { $textwindow->selectAll; } );
+		keybind( '<Meta-c>',        sub { ::textcopy(); } );
+		keybind( '<Meta-x>',        sub { ::cut(); } );
+		keybind( '<Meta-v>',        sub { ::paste(); } );
+		keybind( '<Meta-f>',        sub { ::searchpopup(); } );
+		keybind( '<Meta-z>',        undef, '<<Undo>>' );
+		keybind( '<Meta-y>',        undef, '<<Redo>>' );
+	}
+
 # Bookmarks - multiple key-combinations to allow for keyboard differences
 	keybind( '<Control-Shift-exclam>',         sub { ::setbookmark('1'); },	'<<SetBkmk1>>' );
 	keybind( '<Control-Shift-at>',             sub { ::setbookmark('2'); },	'<<SetBkmk2>>' );
@@ -204,7 +216,6 @@ sub keybindings {
 # with <Control-k> bound, so bind <Control-K> to the same event.
 # If key-combination does not end in "-k>" where k is in [a-z], no
 # uppercase binding is added.
-# If on Mac, also add <Meta-k> as alternative to <Control-k>
 #
 # If optional event argument given, link key and event, and bind sub to event.
 #
@@ -219,20 +230,16 @@ sub keybind {
 	my $subr = shift;				# Subroutine to bind to key/event
 	my $event = shift;				# Optional event argument
 	
-	
-	my $mkey = my $ukey = $lkey;
-	$ukey =~ s/-([a-z])>/-\u$1>/;			# Create uppercase version
-	$mkey =~ s/Control/Meta/ if $::OS_MAC;	# Create Mac alternative to Control key
+	my $ukey = $lkey;
+	$ukey =~ s/-([a-z])>/-\u$1>/;	# Create uppercase version
 
 	if ( defined $event ) {
 		$textwindow->eventAdd( $event => $lkey );
 		$textwindow->eventAdd( $event => $ukey ) if $ukey ne $lkey;
-		$textwindow->eventAdd( $event => $mkey ) if $mkey ne $lkey;
 		$textwindow->bind( 'TextUnicode', $event => $subr ) if defined $subr;
 	} elsif ( defined $subr ) {
 		$textwindow->bind( 'TextUnicode', $lkey => $subr );
 		$textwindow->bind( 'TextUnicode', $ukey => $subr ) if $ukey ne $lkey;
-		$textwindow->bind( 'TextUnicode', $mkey => $subr ) if $mkey ne $lkey;
 	} else {
 		print "Undefined arguments to keybind\n";
 	}
