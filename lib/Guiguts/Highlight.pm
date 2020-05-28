@@ -6,7 +6,7 @@ BEGIN {
 	use Exporter();
 	our ( @ISA, @EXPORT );
 	@ISA    = qw(Exporter);
-	@EXPORT = qw(&scannosfile &hilite &hilitepopup &highlight_scannos);
+	@EXPORT = qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos);
 }
 
 # Routine to find highlight word list
@@ -204,9 +204,9 @@ sub hilite {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my $mark       = shift;
-	$::lglobal{hilitemode} = 'exact' unless $::lglobal{hilitemode};
-	$mark = quotemeta($mark)
-	  if $::lglobal{hilitemode} eq 'exact';  # FIXME: uninitialized 'hilitemode'
+	my $matchtype  = shift;
+
+	$mark = quotemeta($mark) if $matchtype eq 'exact';
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	my ( $index, $lastindex );
@@ -219,7 +219,7 @@ sub hilite {
 		my $thisblockstart = $start;
 		$lastindex = $start;
 		my $thisblockend = $end;
-		$textwindow->tagRemove( 'quotemark', '1.0', 'end' );
+		hiliteremove();
 		my $length;
 		while ($lastindex) {
 			$index = $textwindow->search(
@@ -236,6 +236,23 @@ sub hilite {
 	}
 }
 
+# Remove all highlights from file
+sub hiliteremove {
+	my $textwindow = $::textwindow;
+	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+	$textwindow->tagRemove( 'quotemark', '1.0', 'end' ); 
+}
+
+# Highlight straight and curly single quotes in selection
+sub hilitesinglequotes {
+	hilite( '[\'\x{2018}\x{2019}]', 'regex' );
+}
+
+# Highlight straight and curly double quotes in selection
+sub hilitedoublequotes {
+	hilite( '["\x{201c}\x{201d}]', 'regex' );
+}
+
 # Popup for highlighting arbitrary characters in selection
 sub hilitepopup {
 	my $textwindow = $::textwindow;
@@ -249,7 +266,7 @@ sub hilitepopup {
 		$::lglobal{hilitepop} = $top->Toplevel;
 		$::lglobal{hilitepop}->title('Character Highlight');
 		::initialize_popup_with_deletebinding('hilitepop');
-		$::lglobal{hilitemode} = 'exact';
+		my $hilitemode = 'exact';
 		my $f =
 		  $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f->Label( -text => 'Highlight Character(s) or Regex', )
@@ -269,13 +286,13 @@ sub hilitepopup {
 		my $f2 =
 		  $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f2->Radiobutton(
-			-variable    => \$::lglobal{hilitemode},
+			-variable    => \$hilitemode,
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'exact',
 			-text        => 'Exact',
 		)->grid( -row => 0, -column => 1 );
 		$f2->Radiobutton(
-			-variable    => \$::lglobal{hilitemode},
+			-variable    => \$hilitemode,
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'regex',
 			-text        => 'Regex',
@@ -301,15 +318,13 @@ sub hilitepopup {
 		)->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
 		$f3->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { hilite( $entry->get ) },
+			-command          => sub { hilite( $entry->get, $hilitemode ) },
 			-text             => 'Apply Highlights',
 			-width            => 16,
 		)->grid( -row => 2, -column => 1, -padx => 2, -pady => 2 );
 		$f3->Button(
 			-activebackground => $::activecolor,
-			-command          => sub {
-				$textwindow->tagRemove( 'quotemark', '1.0', 'end' );
-			},
+			-command          => \&::hiliteremove,
 			-text  => 'Remove Highlight',
 			-width => 16,
 		)->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
