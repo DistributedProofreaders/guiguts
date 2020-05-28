@@ -747,12 +747,12 @@ sub menubuildold {
 			[ 'separator', '' ],
 			[
 				'command', 'Highlight double quotes in selection',
-				-command     => [ \&::hilite, '"' ],
+				-command     => \&::hilitedoublequotes,
 				-accelerator => 'Ctrl+.'
 			],
 			[
 				'command', 'Highlight single quotes in selection',
-				-command     => [ \&::hilite, '\'' ],
+				-command     => \&::hilitesinglequotes,
 				-accelerator => 'Ctrl+,'
 			],
 			[
@@ -763,10 +763,7 @@ sub menubuildold {
 			[
 				'command',
 				'Remove Highlights',
-				-command => sub {    # FIXME: sub search_rm_hilites
-					$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-					$textwindow->tagRemove( 'quotemark', '1.0', 'end' );
-				},
+				-command     => \&::hiliteremove,
 				-accelerator => 'Ctrl+0'
 			],
 		]
@@ -1312,11 +1309,11 @@ sub menubuilddefault {
 			[ 'separator', '' ],
 			[	'command', 'Highlight ~Double Quotes in Selection',
 				-accelerator => 'Ctrl+.',
-				-command     => [ \&::hilite, '"' ],
+				-command     => \&::hilitedoublequotes,
 			],
 			[	'command', 'Highlight ~Single Quotes in Selection',
 				-accelerator => 'Ctrl+,',
-				-command     => [ \&::hilite, '\'' ],
+				-command     => \&::hilitesinglequotes,
 			],
 			[	'command', '~Highlight Arbitrary Characters in Selection...',
 				-accelerator => 'Ctrl+Alt+h',
@@ -1324,10 +1321,7 @@ sub menubuilddefault {
 			],
 			[	'command', 'Re~move Highlights',
 				-accelerator => 'Ctrl+0',
-				-command => sub {    # FIXME: sub search_rm_hilites
-					$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-					$textwindow->tagRemove( 'quotemark', '1.0', 'end' );
-				},
+				-command     => \&::hiliteremove,
 			],
 		]
 	);

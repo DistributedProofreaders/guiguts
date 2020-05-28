@@ -15,13 +15,10 @@ sub keybindings {
 	my $top        = $::top;
 
 # Highlight
-	keybind( '<Control-comma>',     sub { ::hilite('\''); }, '<<hlquote>>' );
-	keybind( '<Control-period>',    sub { ::hilite('"'); }, '<<hldquote>>' );
+	keybind( '<Control-comma>',     sub { ::hilitesinglequotes(); } );
+	keybind( '<Control-period>',    sub { ::hilitedoublequotes(); } );
 	keybind( '<Control-Alt-h>',     sub { ::hilitepopup(); } );
-	keybind( '<Control-0>',         sub {
-			$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-			$textwindow->tagRemove( 'quotemark', '1.0', 'end' ); 
-		}, '<<hlrem>>' );
+	keybind( '<Control-0>',         sub { ::hiliteremove(); } );
 # File
 	keybind( '<Control-o>',         sub { ::file_open($textwindow); } );
 	keybind( '<Control-s>',         sub { ::savefile(); } );
