@@ -108,9 +108,11 @@ sub greedy_wrapper {
 sub knuth_wrapper {
 	my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
 	my ( $pre, $post ) = ( '', '' );
+	# if open rewrap markup, remove, then prepend once rewrapped
 	if    ( $paragraph =~ s|^(\x7f*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
 	elsif ( $paragraph =~ s|^(\x7f*/[$blockwraptypes])|| ) { $pre = "$1\n"; }
-	if ( $paragraph =~ s|([$blockwraptypes]/\x7f*)$|| ) { $post = "$1\n"; }
+	# if close rewrap markup, remove (including any newline), then append once rewrapped
+	if ( $paragraph =~ s|([$blockwraptypes]/\x7f*)(\n?)$|| ) { $post = "$1$2"; }
 	my $maxwidth = $rightmargin;
 	my $optwidth = $rightmargin - $::rmargindiff;
 	$paragraph =~ s/-\n/-/g unless $rwhyphenspace;
@@ -212,8 +214,8 @@ sub selectrewrap {
 		while (1) {
 			$indent = $::defaultindent;
 			$thisblockend =
-			  $textwindow->search( '-regex', '--', '^[\x7f]*$', $thisblockstart,
-				$end );    #find end of paragraph
+			  $textwindow->search( '-regex', '--', '(^[\x7f]*$)|([' . $blockwraptypes . ']/)',
+			                       $thisblockstart, $end ); # find end of paragraph or end of markup
 			# if two start rewrap block markers aren't separated by a blank line, just let it become added
 			$thisblockend = $thisblockstart
 				if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c")
