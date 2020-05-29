@@ -215,7 +215,7 @@ sub selectrewrap {
 			$indent = $::defaultindent;
 			$thisblockend =
 			  $textwindow->search( '-regex', '--', '(^[\x7f]*$)|([' . $blockwraptypes . ']/)',
-									$thisblockstart, $end );    # find end of paragraph or end of markup
+			                       $thisblockstart, $end ); # find end of paragraph or end of markup
 			# if two start rewrap block markers aren't separated by a blank line, just let it become added
 			$thisblockend = $thisblockstart
 				if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c")
