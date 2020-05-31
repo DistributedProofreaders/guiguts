@@ -733,11 +733,11 @@ sub errorcheckview {
 sub gcwindowpopulate {
 	my $linesref = shift;
 	return unless defined $::lglobal{gcpop};
-	my ( $line, $flag, $count, $start );
+	my $start = 0;
+	my $count = 0;
 	$::lglobal{gclistbox}->delete( '0', 'end' );
 	foreach my $line ( @{$linesref} ) {
-		$flag = 0;
-		$start++ unless ( index( $line, 'Line', 0 ) > 0 );
+		my $flag = 0;
 		next unless defined $::gc{$line};
 		for ( 0 .. $#{ $::lglobal{gcarray} } ) {
 			next unless ( index( $line, $::lglobal{gcarray}->[$_] ) > 0 );
@@ -746,11 +746,15 @@ sub gcwindowpopulate {
 			last;
 		}
 		next if $flag;
-		$count++;
-		$::lglobal{gclistbox}->insert( 'end', $line );
+		unless ( $count == 0 and $line =~ /^\s*$/ ) { # Don't add blank line at top
+			$start++ unless ( index( $line, 'Line', 0 ) > 0 );
+			$count++;
+			$::lglobal{gclistbox}->insert( 'end', $line );
+		}
 	}
 	$count -= $start;
-	$::lglobal{gclistbox}->insert( $start, '', "  --> $count queries.", '' );
+	$::lglobal{gclistbox}->insert( $start, "  --> $count queries.", '' );
+	$::lglobal{gclistbox}->insert( $start, '' ) unless $start == 0; # Don't add blank line at top
 	$::lglobal{gclistbox}->update;
 
 	#$::lglobal{gclistbox}->yview( 'scroll', 1,  'units' );
@@ -1115,9 +1119,13 @@ sub gcheckpop_up {
 	my $mark = 0;
 	%::gc    = ();
 	@gclines = ();
+	my $countblank = 0; # number of blank lines
 	while ( $line = <$results> ) {
 		$line =~ s/^\s//g;
 		chomp $line;
+		# distinguish blank lines by setting them to varying numbers
+		# of spaces, otherwise if user deletes one, it deletes them all
+		$line = ' ' x ++$countblank if ( $line eq '' );
 		$line =~ s/^(File: )gutchk.tmp/$1$::lglobal{global_filename}/g;
 		{
 			no warnings 'uninitialized';
