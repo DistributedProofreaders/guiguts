@@ -108,6 +108,12 @@ sub keybindings {
 				::searchpopup();
 			}
 		}, '<<FindNextReverse>>' );
+	keybind( '<Control-n>',         sub {
+			if ( $::lglobal{searchpop} ) {
+				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+				::countmatches($searchterm);
+			}		
+		} );
 # Navigation
 	keybind( '<Control-i>',         sub { ::seecurrentimage(); } );
 	keybind( '<Control-j>',         sub { ::gotoline(); } );

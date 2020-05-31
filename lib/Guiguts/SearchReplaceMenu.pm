@@ -11,7 +11,7 @@ BEGIN {
 	  &isvalid &swapterms &findascanno &reghint &replaceeval &replace &opstop &replaceall &killstoppop
 	  &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
 	  &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
-	  &loadscannos &replace_incr_counter);
+	  &loadscannos &replace_incr_counter &countmatches);
 }
 
 sub add_search_history {
@@ -30,12 +30,12 @@ sub add_search_history {
 }
 
 sub searchtext {
-	my ($searchterm) = @_;
+	my $searchterm = shift;
+	my $silentmode = shift; # if true, don't update main window, insert position, etc.
 	my $textwindow   = $::textwindow;
 	my $top          = $::top;
 	::hidepagenums();
 
-#print $::sopt[0],$::sopt[1],$::sopt[2],$::sopt[3],$::sopt[4].":sopt\n";
 # $::sopt[0] --> 0 = pattern search               1 = whole word search
 # $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
 # $::sopt[2] --> 0 = search forwards              1 = search backwards
@@ -43,30 +43,29 @@ sub searchtext {
 # $::sopt[4] --> 0 = search from last index       1 = Start from beginning
 #	$::searchstartindex--where the last search for this $searchterm ended
 #   replaced with the insertion point if the user has clicked someplace else
-#print $::sopt[4]."from beginning\n";
 	$searchterm = '' unless defined $searchterm;
 	if ( length($searchterm) ) {    #and not ($searchterm =~ /\W/)
 		::add_search_history( $searchterm, \@::search_history);
 	}
 	$::lglobal{lastsearchterm} = 'stupid variable needs to be initialized'
 	  unless length( $::lglobal{lastsearchterm} );
-	$textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex;
+	$textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex and not $silentmode;
 	my ( $start, $end );
 	my $foundone    = 1;
 	my @ranges      = $textwindow->tagRanges('sel');
 	my $range_total = @ranges;
 	$::searchstartindex = $textwindow->index('insert')
 	  unless $::searchstartindex;
-	my $searchstartingpoint = $textwindow->index('insert');
+	my $searchstartingpoint = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 
 	# this is a search within a selection
 	if ( $range_total == 0 && $::lglobal{selectionsearch} ) {
-		$start = $textwindow->index('insert');
+		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = $::lglobal{selectionsearch};
 
 		# this is a search through the end of the document
 	} elsif ( $range_total == 0 && !$::lglobal{selectionsearch} ) {
-		$start = $textwindow->index('insert');
+		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = 'end';
 		$end   = '1.0' if ( $::sopt[2] );
 	} else {
@@ -90,14 +89,12 @@ sub searchtext {
 		$::lglobal{lastsearchterm} = "resetresetreset";
 	}
 
-	#print "start:$start\n";
 	if ($start) {    # but start is always defined?
 		if ( $::sopt[2] ) {    # if backwards
 			$::searchstartindex = $start;
 		} else {
 			$::searchendindex =
 			  "$start+1c";     #forwards. #unless ( $start eq '1.0' )
-			    #print $::searchstartindex.":".$::searchendindex."4\n";
 		}
 
 		# forward search begin +1c or the next search would find the same match
@@ -130,6 +127,9 @@ sub searchtext {
 		  unless ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) );
 		clearmarks() if ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) );
 	}
+	# may need to clear count label if term has changed
+	countlabelclear( $searchterm ) unless $silentmode;
+
 	$textwindow->tagRemove( 'sel', '1.0', 'end' );
 	my $length = '0';
 	my ($tempindex);
@@ -186,7 +186,6 @@ sub searchtext {
 			if ( $mark =~ /nls\d+q(\d+)/ ) {
 				$length = $1;
 
-				#print $length."1\n";
 				$::searchstartindex = $textwindow->index($mark);
 				last;
 			} else {
@@ -213,7 +212,6 @@ sub searchtext {
 			print "$mode:$direction:$length:$searchterm:$searchstart:$end\n";
 		}
 
-		#print $length."2\n";
 		#finally we actually do some searching
 		if ( $::sopt[1] ) {
 			$::searchstartindex = $textwindow->search(
@@ -221,74 +219,64 @@ sub searchtext {
 				'-count' => \$length,
 				'--', $searchterm, $searchstart, $end
 			);
-
-			#print $length."3\n";
 		} else {
 			$::searchstartindex = $textwindow->search(
 				$mode, $direction,
 				'-count' => \$length,
 				'--', $searchterm, $searchstart, $end
 			);
-
-			#print $length."4\n";
 		}
 	}
 	if ($::searchstartindex) {
 		$tempindex = $::searchstartindex;
 
-		#print $::searchstartindex.":".$::searchendindex."7\n";
 		my ( $row, $col ) = split /\./, $tempindex;
 
-		#print "$row:$col:$length 5\n";
 		$col += $length;
 		$::searchendindex = "$row.$col" if $length;
 
-		#print $::searchstartindex.":".$::searchendindex."3\n";
 		$::searchendindex =
 		  $textwindow->index("$::searchstartindex +${length}c")
 		  if ( $searchterm =~ m/\\n/ );
 
-		#print $::searchstartindex.":".$::searchendindex."2\n";
 		$::searchendindex = $textwindow->index("$::searchstartindex +1c")
 		  unless $length;
 
-		#print $::searchstartindex.":".$::searchendindex."1\n";
-		$textwindow->markSet( 'insert', $::searchstartindex )
-		  if $::searchstartindex;    # position the cursor at the index
-		    #print $::searchstartindex.":".$::searchendindex."\n";
-		$textwindow->tagAdd( 'highlight', $::searchstartindex,
-			$::searchendindex )
-		  if $::searchstartindex;    # highlight the text
-		$textwindow->yviewMoveto(1);
-		$textwindow->see($::searchstartindex)
-		  if ( $::searchendindex && $::sopt[2] )
-		  ;    # scroll text box, if necessary, to make found text visible
-		$textwindow->see($::searchendindex)
-		  if ( $::searchendindex && !$::sopt[2] );
+		unless ( $silentmode ) {
+			$textwindow->markSet( 'insert', $::searchstartindex )
+			  if $::searchstartindex;    # position the cursor at the index
+			$textwindow->tagAdd( 'highlight', $::searchstartindex,
+				$::searchendindex )
+			  if $::searchstartindex;    # highlight the text
+			$textwindow->yviewMoveto(1);
+			$textwindow->see($::searchstartindex)
+			  if ( $::searchendindex && $::sopt[2] )
+			  ;    # scroll text box, if necessary, to make found text visible
+			$textwindow->see($::searchendindex)
+			  if ( $::searchendindex && !$::sopt[2] );
+		}
 		$::searchendindex = $::searchstartindex unless $length;
-
-		#print $::searchstartindex.":".$::searchendindex.":10\n";
 	}
 	unless ($::searchstartindex) {
-
-		#print $::searchstartindex.":".$::searchendindex.":11\n";
 		$foundone = 0;
 		unless ( $::lglobal{selectionsearch} ) { $start = '1.0'; $end = 'end' }
 		if ( $::sopt[2] ) {
 			$::searchstartindex = $end;
 
-			#print $::searchstartindex.":".$::searchendindex.":12\n";
-			$textwindow->markSet( 'insert', $::searchstartindex );
-			$textwindow->see($::searchendindex);
+			unless ( $silentmode ) {
+				$textwindow->markSet( 'insert', $::searchstartindex );
+				$textwindow->see($::searchendindex);
+			}
 		} else {
 			$::searchendindex = $start;
 
-			#print $::searchstartindex.":".$::searchendindex.":13\n";
-			$textwindow->markSet( 'insert', $start );
-			$textwindow->see($start);
+			unless ( $silentmode ) {
+				$textwindow->markSet( 'insert', $start );
+				$textwindow->see($start);
+			}
 		}
 		$::lglobal{selectionsearch} = 0;
-		unless ( $::lglobal{regaa} ) {
+		unless ( $::lglobal{regaa} or $silentmode ) {
 			$textwindow->bell unless $::nobell;
 			$::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
 			$::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
@@ -301,9 +289,57 @@ sub searchtext {
 			}
 		}
 	}
-	::updatesearchlabels();
-	::update_indicators();
+	unless ( $silentmode ) {
+		::updatesearchlabels();
+		::update_indicators();
+	}
 	return $foundone;    # return index of where found text started
+}
+
+# Use searchtext routine to find how many matches in file for search string
+sub countmatches {
+	my ($searchterm) = @_;
+	countlabelclear( $searchterm );
+	return if $searchterm eq '';
+	
+	# save various global variables to restore later
+	# save previous start & end of found text
+	my $savesearchstartindex = $::searchstartindex;
+	$::searchstartindex = '1.0';
+	my $savesearchendindex = $::searchendindex;
+	# save whether searching backwards & set to forwards
+	my $savesopt2 = $::sopt[2];
+	$::sopt[2] = 0;
+	# save whether starting from beginning and set to true
+	my $savesopt4 = $::sopt[4];
+	$::sopt[4] = 1;
+	# save selectionsearch flag and clear it
+	my $saveselectionsearch = $::lglobal{selectionsearch};
+	$::lglobal{selectionsearch} = 0;
+
+	my $count = 0;
+	++$count while searchtext($searchterm, 1); # search silently, counting matches
+	$::lglobal{searchnumlabel}->configure( -text => searchnumtext( $count ) );
+	
+	# restore saved globals
+	$::searchstartindex = $savesearchstartindex;
+	$::searchendindex = $savesearchendindex;
+	$::sopt[2] = $savesopt2;
+	$::sopt[4] = $savesopt4;
+	$::lglobal{selectionsearch} = $saveselectionsearch;
+}
+
+{
+	# remember last term counted / searched
+	my $countlastterm = '';
+	# only need to clear counted label if current term is different
+	sub countlabelclear {
+		my $newterm = shift;
+		if ( $newterm ne $countlastterm ) {
+			$countlastterm = $newterm;
+			$::lglobal{searchnumlabel}->configure( -text => "" );
+		}
+	}
 }
 
 sub search_history {
@@ -602,18 +638,24 @@ sub getmark {
 }
 
 sub updatesearchlabels {
-	if ( $::lglobal{seenwords} && $::lglobal{searchpop} ) {
-		my $replaceterm = $::lglobal{replaceentry}->get( '1.0', '1.end' );
+	if ( $::lglobal{searchpop} ) {
 		my $searchterm1 = $::lglobal{searchentry}->get( '1.0', '1.end' );
-		if ( ( $::lglobal{seenwords}->{$searchterm1} ) && ( $::sopt[0] ) ) {
-			$::lglobal{searchnumlabel}->configure(
-				-text => "Found $::lglobal{seenwords}->{$searchterm1} times." );
-		} elsif ( ( $searchterm1 eq '' ) || ( !$::sopt[0] ) ) {
-			$::lglobal{searchnumlabel}->configure( -text => '' );
-		} else {
-			$::lglobal{searchnumlabel}->configure( -text => 'Not Found.' );
+
+		if ( $searchterm1 eq '' ) {
+			$::lglobal{searchnumlabel}->configure( -text => "" );
+		} elsif ( $::lglobal{seenwords} && $::sopt[0] ) {
+			$::lglobal{searchnumlabel}->configure( -text => 
+				searchnumtext( $::lglobal{seenwords}->{$searchterm1} ) );
 		}
 	}
+}
+
+# Return text for searchnumlabel depending on number of times found.
+sub searchnumtext {
+	my $count = shift;
+	return "Not found" if not $count;
+	return "Found $count " . ( $count == 1 ? "time" : "times" );
+
 }
 
 # calls the replacewith command after calling replaceeval
@@ -1122,9 +1164,17 @@ sub searchpopup {
 		my $searchlabel =
 		  $sf1->Label( -text => 'Search Text', )
 		  ->pack( -side => 'left', -anchor => 'n', -padx => 80 );
+		$sf1->Button(
+			-activebackground => $::activecolor,
+			-command          => sub { countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) ); },
+			-text  => 'Count',
+			-width => 6
+		)->pack( -side => 'right', -anchor => 'e', -padx => 1 , -pady => 1 );
 		$::lglobal{searchnumlabel} = $sf1->Label(
 			-text  => '',
 			-width => 20,
+			-anchor => 'e',
+			-justify => 'right'
 		)->pack( -side => 'right', -anchor => 'e', -padx => 1 );
 		my $sf11 = $::lglobal{searchpop}->Frame->pack(
 			-side   => 'top',
@@ -1529,6 +1579,29 @@ sub searchpopup {
 				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cG" );
 				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 				$textwindow->focus;
+			}
+		);
+		$::lglobal{searchpop}->eventAdd(
+			'<<FindPreve>>' => '<Control-Shift-G>',
+			'<Control-Shift-g>'
+		);
+		$::lglobal{searchentry}->bind(
+			'<<FindPreve>>',
+			sub {
+				$::lglobal{searchentry}->delete('insert -1c')
+				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cG" );
+				$::lglobal{searchop2}->toggle;
+				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+				$::lglobal{searchop2}->toggle;
+				$textwindow->focus;
+			}
+		);
+		$::lglobal{searchpop}->eventAdd( '<<FindCounte>>' => '<Control-N>', '<Control-n>' );
+		$::lglobal{searchentry}->bind( '<<FindCounte>>',
+			sub {
+				$::lglobal{searchentry}->delete('insert -1c')
+				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cN" );
+				countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 			}
 		);
 		$::lglobal{searchentry}->{_MENU_}   = ();
