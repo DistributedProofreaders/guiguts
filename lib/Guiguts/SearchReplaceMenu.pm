@@ -329,7 +329,7 @@ sub countmatches {
 	$::lglobal{selectionsearch} = $saveselectionsearch;
 }
 
-{
+BEGIN { # restrict scope of $countlastterm
 	# remember last term counted / searched
 	my $countlastterm = '';
 	# only need to clear counted label if current term is different
