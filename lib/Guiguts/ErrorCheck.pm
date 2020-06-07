@@ -198,11 +198,6 @@ sub errorcheckpop_up {
 					$line =~ s/(\x0d)$//;
 				}
 
-				# skip some unnecessary lines from W3C Validate for PGTEI
-				if ( $line =~ /^In entity TEI/ ) {
-					next;
-				}
-
 				# Skip verbose informational warnings in Link Check
 				if (     ( not $::verboseerrorchecks )
 					 and ( $thiserrorchecktype eq 'Link Check' )

@@ -970,60 +970,6 @@ sub menubuildold {
 				Button   => 'HTML Auto ~Index (List)',
 				-command => sub { ::autoindex($textwindow) }
 			],
-			[
-				Cascade    => 'PGTEI Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[
-						Button   => 'W3C Validate PGTEI',
-						-command => sub {
-							::errorcheckpop_up( $textwindow, $top,
-								'W3C Validate' );
-						  }
-					],
-					[
-						Button   => 'Gnutenberg Press (HTML only)',
-						-command => sub { ::gnutenberg('html') }
-					],
-					[
-						Button   => 'Gnutenberg Press (Text only)',
-						-command => sub { ::gnutenberg('txt') }
-					],
-					[
-						Button   => 'Gnutenberg Press Online',
-						-command => sub {
-							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online"
-							);
-						  }
-					],
-				]
-			],
-			[
-				Cascade    => 'RST Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[
-						Button   => 'EpubMaker Online',
-						-command => sub {
-							::launchurl ( "http://epubmaker.pglaf.org/" );
-						  }
-					],
-					[
-						Button   => 'EpubMaker (all formats)',
-						-command => sub { ::epubmaker() }
-					],
-					[
-						Button   => 'EpubMaker (HTML only)',
-						-command => sub { ::epubmaker('html') }
-					],
-					[
-						Button   => 'dp2rst Conversion',
-						-command => sub {
-							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
-						  }
-					],
-				]
-			],
 			[ 'separator', '' ],
 			[
 				Button   => 'ASCII Table Special Effects...',
@@ -1457,50 +1403,6 @@ sub menubuilddefault {
 					::cleanup();
 					$textwindow->addGlobEnd;
 				  }
-			],
-			[ 'separator', '' ],
-			[	Cascade    => 'PGTEI Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[	Button   => 'W3C Validate PGTEI',
-						-command => sub {
-							::errorcheckpop_up( $textwindow, $top,
-								'W3C Validate' );
-						  }
-					],
-					[	Button   => 'Gnutenberg Press (HTML only)',
-						-command => sub { ::gnutenberg('html') }
-					],
-					[	Button   => 'Gnutenberg Press (Text only)',
-						-command => sub { ::gnutenberg('txt') }
-					],
-					[	Button   => 'Gnutenberg Press Online',
-						-command => sub {
-							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online" );
-						  }
-					],
-				]
-			],
-			[	Cascade    => 'RST Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[	Button   => 'EpubMaker Online',
-						-command => sub {
-							::launchurl ( "http://epubmaker.pglaf.org/" );
-						  }
-					],
-					[	Button   => 'EpubMaker (all formats)',
-						-command => sub { ::epubmaker() }
-					],
-					[	Button   => 'EpubMaker (HTML only)',
-						-command => sub { ::epubmaker('html') }
-					],
-					[	Button   => 'dp2rst Conversion',
-						-command => sub {
-							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
-						  }
-					],
-				]
 			],
 		]
 	);

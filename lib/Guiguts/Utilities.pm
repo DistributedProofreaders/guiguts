@@ -13,7 +13,7 @@ BEGIN {
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
 	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex
-	  &epubmaker &gnutenberg &sidenotes &poetrynumbers &get_page_number &externalpopup
+	  &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
 	  &scrolldismiss);
@@ -1771,62 +1771,6 @@ sub seeindex {
 		$textwindow->see('end'); # Mark will be centered
 		$textwindow->see($index);
 	}
-}
-
-sub epubmaker {
-	my $format = shift;
-	if ( $::lglobal{global_filename} =~ /(\w+.(rst|htm|html))$/ ) {
-		print "\nBeginning epubmaker\n";
-		print "Files will appear in the directory $::globallastpath.\n";
-		print
-"Running in background with no messages that processing is complete.\n";
-		my $rstfilename = $1;
-		my $pwd         = ::getcwd();
-		chdir $::globallastpath;
-		my $epubmakerpath = ::catfile( $::lglobal{guigutsdirectory},
-			'Python27', 'Scripts', 'epubmaker-script.py' );
-		my $pythonpath =
-		  ::catfile( $::lglobal{guigutsdirectory}, 'Python27', 'python.exe' );
-
-		if ( defined $format
-			and ( ( $format eq 'html' ) or ( $format eq 'epub' ) ) )
-		{
-			my $textwindow = $::textwindow;
-			my $titlestart = $textwindow->search( '-exact', '--', '<h1', '1.0', 'end' );
-			my $titleend = $textwindow->search( '-exact', '--', '</h1>', '1.0', 'end' );
-			my $title = $textwindow->get( $titlestart, $titleend );
-			$title =~ s/\n/ /g;
-			$title =~ s/<[^>]*>//g;
-			$title = 'notitle' if ( length($title) < 1 );
-			::runner( $pythonpath, $epubmakerpath, "--make", $format,
-				#"--title", "\"$title\"",
-				#"--input-encoding", ( ::currentfileisunicode() ? '"utf8"' : '"Latin1"' ),
-				$rstfilename );
-		} else {
-			::runner( $pythonpath, $epubmakerpath, $rstfilename );
-		}
-		chdir $pwd;
-	} else {
-		print "Not an RST or HTML file\n";
-	}
-}
-
-sub gnutenberg {
-	my $format = shift;
-	print "\nBeginning Gnutenberg Press\n";
-	print "Warning: This requires installing perl including LibXML, and \n";
-	print "guiguts must be installed in c:\\guiguts on Windows systems.\n";
-	my $pwd = ::getcwd();
-	chdir $::globallastpath;
-	unless ( -d 'output' ) {
-		mkdir 'output' or die;
-	}
-	my $gnutenbergoutput = ::catfile( $::globallastpath, 'output' );
-	chdir $::gnutenbergdirectory;
-	::runner( "perl", "transform.pl", "-f", $format,
-		$::lglobal{global_filename},
-		"$gnutenbergoutput" );
-	chdir $pwd;
 }
 
 ## Sidenote Fixup

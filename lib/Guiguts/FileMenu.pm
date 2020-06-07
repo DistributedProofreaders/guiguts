@@ -20,7 +20,7 @@ sub file_open {    # Find a text file to open
 	my $types = [
 		[
 			'Text Files',
-			[qw/.txt .text .ggp .htm .html .rst .bk1 .bk2 .xml .tei/]
+			[qw/.txt .text .ggp .htm .html .bk1 .bk2 .xml/]
 		],
 		[ 'All Files', ['*'] ],
 	];
@@ -41,7 +41,7 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 		[
 			'Text Files',
 			[
-				'.txt', '.text', '.ggp', '.htm', '.html', '.rst', '.tei', '.xml'
+				'.txt', '.text', '.ggp', '.htm', '.html', '.xml'
 			]
 		],
 		[ 'All Files', ['*'] ],
