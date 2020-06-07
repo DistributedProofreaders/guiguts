@@ -19,9 +19,8 @@ Note: old binaries are still available from the
 
 ### Window
 
-`guiguts-win-1.0.nn.zip` is the easiest download for Windows users. It
-includes guiguts.pl and supporting files and helper applications,
-including those for working with RST and PGTEI files, excluding image
+`guiguts-win-1.0.nn.zip` is the easiest download for Windows users. It includes
+guiguts.pl and supporting files and helper applications, excluding image
 viewer and spellchecker. It should work out of the box by running
 run_guiguts.bat (it includes copies of perl and Python languages).
 

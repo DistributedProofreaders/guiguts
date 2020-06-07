@@ -182,29 +182,6 @@ sub menu_preferences {
 				],
 				[ 'separator', '' ],
 				[
-					Button   => 'Locate Gnutenberg Press (if self-installed)',
-					-command => sub {
-						my $types;
-						$types = [
-							[ 'Perl file', [ '.pl', ] ],
-							[ 'All Files', ['*'] ],
-						];
-						$::gnutenbergdirectory = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-initialdir => $::gnutenbergdirectory,
-							-title =>
-							  'Where is the Gnutenberg Press (transform.pl)?'
-						);
-						return unless $::gnutenbergdirectory;
-						$::gnutenbergdirectory =
-						  ::os_normal($::gnutenbergdirectory);
-						$::gnutenbergdirectory =
-						  ::dirname($::gnutenbergdirectory);
-						::savesettings();
-					  }
-				],
-				[ 'separator', '' ],
-				[
 					Checkbutton => 'Do W3C Validation Remotely',
 					-variable   => \$::w3cremote,
 					-onvalue    => 1,
@@ -970,60 +947,6 @@ sub menubuildold {
 				Button   => 'HTML Auto ~Index (List)',
 				-command => sub { ::autoindex($textwindow) }
 			],
-			[
-				Cascade    => 'PGTEI Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[
-						Button   => 'W3C Validate PGTEI',
-						-command => sub {
-							::errorcheckpop_up( $textwindow, $top,
-								'W3C Validate' );
-						  }
-					],
-					[
-						Button   => 'Gnutenberg Press (HTML only)',
-						-command => sub { ::gnutenberg('html') }
-					],
-					[
-						Button   => 'Gnutenberg Press (Text only)',
-						-command => sub { ::gnutenberg('txt') }
-					],
-					[
-						Button   => 'Gnutenberg Press Online',
-						-command => sub {
-							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online"
-							);
-						  }
-					],
-				]
-			],
-			[
-				Cascade    => 'RST Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[
-						Button   => 'EpubMaker Online',
-						-command => sub {
-							::launchurl ( "http://epubmaker.pglaf.org/" );
-						  }
-					],
-					[
-						Button   => 'EpubMaker (all formats)',
-						-command => sub { ::epubmaker() }
-					],
-					[
-						Button   => 'EpubMaker (HTML only)',
-						-command => sub { ::epubmaker('html') }
-					],
-					[
-						Button   => 'dp2rst Conversion',
-						-command => sub {
-							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
-						  }
-					],
-				]
-			],
 			[ 'separator', '' ],
 			[
 				Button   => 'ASCII Table Special Effects...',
@@ -1457,50 +1380,6 @@ sub menubuilddefault {
 					::cleanup();
 					$textwindow->addGlobEnd;
 				  }
-			],
-			[ 'separator', '' ],
-			[	Cascade    => 'PGTEI Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[	Button   => 'W3C Validate PGTEI',
-						-command => sub {
-							::errorcheckpop_up( $textwindow, $top,
-								'W3C Validate' );
-						  }
-					],
-					[	Button   => 'Gnutenberg Press (HTML only)',
-						-command => sub { ::gnutenberg('html') }
-					],
-					[	Button   => 'Gnutenberg Press (Text only)',
-						-command => sub { ::gnutenberg('txt') }
-					],
-					[	Button   => 'Gnutenberg Press Online',
-						-command => sub {
-							::launchurl( "http://pgtei.pglaf.org/marcello/0.4/tei-online" );
-						  }
-					],
-				]
-			],
-			[	Cascade    => 'RST Tools',
-				-tearoff   => 1,
-				-menuitems => [
-					[	Button   => 'EpubMaker Online',
-						-command => sub {
-							::launchurl ( "http://epubmaker.pglaf.org/" );
-						  }
-					],
-					[	Button   => 'EpubMaker (all formats)',
-						-command => sub { ::epubmaker() }
-					],
-					[	Button   => 'EpubMaker (HTML only)',
-						-command => sub { ::epubmaker('html') }
-					],
-					[	Button   => 'dp2rst Conversion',
-						-command => sub {
-							::launchurl( "http://www.pgdp.net/wiki/Dp2rst" );
-						  }
-					],
-				]
 			],
 		]
 	);

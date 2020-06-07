@@ -195,7 +195,6 @@ our $jeebiescommand      = '';
 our $tidycommand         = '';
 our $validatecommand     = '';
 our $validatecsscommand  = '';
-our $gnutenbergdirectory = '';
 our %gc;
 our %jeeb;
 our %pagenumbers;
