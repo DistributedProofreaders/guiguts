@@ -182,29 +182,6 @@ sub menu_preferences {
 				],
 				[ 'separator', '' ],
 				[
-					Button   => 'Locate Gnutenberg Press (if self-installed)',
-					-command => sub {
-						my $types;
-						$types = [
-							[ 'Perl file', [ '.pl', ] ],
-							[ 'All Files', ['*'] ],
-						];
-						$::gnutenbergdirectory = $textwindow->getOpenFile(
-							-filetypes  => $types,
-							-initialdir => $::gnutenbergdirectory,
-							-title =>
-							  'Where is the Gnutenberg Press (transform.pl)?'
-						);
-						return unless $::gnutenbergdirectory;
-						$::gnutenbergdirectory =
-						  ::os_normal($::gnutenbergdirectory);
-						$::gnutenbergdirectory =
-						  ::dirname($::gnutenbergdirectory);
-						::savesettings();
-					  }
-				],
-				[ 'separator', '' ],
-				[
 					Checkbutton => 'Do W3C Validation Remotely',
 					-variable   => \$::w3cremote,
 					-onvalue    => 1,

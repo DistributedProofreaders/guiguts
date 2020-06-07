@@ -872,13 +872,6 @@ sub initialize {
 				'tools', 'W3C', 'onsgmls.exe'
 			)
 		);
-		$::gnutenbergdirectory = ::setdefaultpath(
-			$::gnutenbergdirectory,
-			::catfile(
-				$::lglobal{guigutsdirectory},
-				'tools', 'gnutenberg', '0.4'
-			)
-		);
 	} else {
 		my $tmpcommand = substr( qx/which tidy/, 0, -1 ); # strip trailing \n
 		$::tidycommand   = ::setdefaultpath( $::tidycommand, $tmpcommand );
