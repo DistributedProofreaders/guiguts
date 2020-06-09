@@ -61,6 +61,9 @@ use Tk::widgets qw{Balloon
 our $APP_NAME     = 'Guiguts';
 our $window_title = $APP_NAME . '-' . $VERSION;
 our $icondata;
+our $OS_WIN = $^O =~ m{Win};
+our $OS_MAC = $^O =~ m{darwin};
+
 ### Custom Guiguts modules
 use Guiguts::ASCIITables;
 use Guiguts::ErrorCheck;
@@ -89,15 +92,15 @@ use Guiguts::TextUnicode;
 use Guiguts::CharacterTools;
 use Guiguts::Utilities;
 use Guiguts::WordFrequency;
+
 ### Constants
 our $allblocktypes = quotemeta '#$*FfIiLlPpXx';
 our $url_no_proofer  = 'https://www.pgdp.net/phpBB3/ucp.php?i=pm&mode=compose';
 our $url_yes_proofer = 'https://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
 our $urlprojectpage  = 'https://www.pgdp.net/c/project.php?id=';
 our $urlprojectdiscussion = 'https://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
+
 ### Application Globals
-our $OS_WIN = $^O =~ m{Win};
-our $OS_MAC = $^O =~ m{darwin};
 our $activecolor      = '#24baec';    #'#f2f818';
 our $alpha_sort       = 'f';
 our $auto_page_marks  = 1;
@@ -281,6 +284,7 @@ our %lglobal;    # need to document each variable
 # Determine what optional modules are installed
 $lglobal{LevenshteinXS} = eval { require Text::LevenshteinXS; 1; } || 0;
 $lglobal{ImageSize} =  eval { require Image::Size; 1; } || 0;
+$lglobal{Which} =  eval { require File::Which; 1; } || 0;
 
 our $top;
 our $icon;
