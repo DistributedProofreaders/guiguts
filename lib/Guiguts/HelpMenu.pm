@@ -12,13 +12,12 @@ BEGIN {
 sub about_pop_up {
 	my $top        = $::top;
 	my $about_text = <<EOM;
-Guiguts.pl post processing toolkit/interface to gutcheck.
+Guiguts post processing toolkit.
 
-Provides easy to use interface to gutcheck and an array of
-other useful postprocessing functions.
+Provides an easy to use interface to an array of useful post processing
+functions.
 
-This version produced by a number of volunteers.
-See the Thanks.txt file for details.
+This version was produced by a number of volunteers. See THANKS.md for details.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
