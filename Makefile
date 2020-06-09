@@ -6,29 +6,26 @@ VERSION=1.0.25
 # zip utility to use
 ZIP=zip -rv9
 
-# files to exclude
-EXCLUDES=.\* \*.zip \*.bat Makefile guiguts setting.rc header.txt footer.txt gg.ico todo.txt RELEASING.txt tools/\* tests/\* data/\*
+# files to include from the root
+INCLUDES=CHANGELOG.md INSTALL.md LICENSE.txt README.md THANKS.md
 
 
-all: win generic
+all: generic win
 
-
-win:
-	cp other.zip guiguts-win-$(VERSION).zip
-	$(ZIP) guiguts-win-$(VERSION).zip * -x $(EXCLUDES) wordlist/\* scannos/\*
-	$(ZIP) guiguts-win-$(VERSION).zip run_guiguts.bat data/labels_*_default.rc tools/ppvimage/ppvimage.pl
-
+win: generic
+	# until we get tools/ cleaned up, generic and Windows are the same
+	cp guiguts-$(VERSION).zip guiguts-win-$(VERSION).zip
 
 generic:
-	$(ZIP) guiguts-$(VERSION).zip * -x $(EXCLUDES) \*.exe
-	$(ZIP) guiguts-$(VERSION).zip scannos/* wordlist/* -x $(EXCLUDES)
-	$(ZIP) guiguts-$(VERSION).zip data/labels_*_default.rc
-# TODO: bundle bookloupe
-	$(ZIP) guiguts-$(VERSION).zip tools/gutcheck/*.* tools/jeebies/*.* tools/ppvimage/*.* tools/DPCustomMono lib/Tk/Toolbar/tkIcons -x .\* \*.exe
-	$(ZIP) guiguts-$(VERSION).zip tools/W3C/css-validator.jar tools/W3C/lib/*.jar
-	$(ZIP) guiguts-$(VERSION).zip tools/W3C/* -x .\* \*.exe \*.dll
-
+	mkdir guiguts
+	# Start with src/
+	cp -a src/ guiguts
+	# Remove untracked files & directories that might be in src/
+	rm -rf guiguts/tools/ guiguts/header.txt guiguts/settings.rc guiguts/data/labels_en.rc
+	# Copy over tools & includes
+	cp -a tools guiguts
+	cp -a $(INCLUDES) guiguts
+	$(ZIP) guiguts-$(VERSION).zip guiguts
 
 clean:
-	rm -rf guiguts-*.zip
-
+	rm -rf guiguts-*.zip guiguts
