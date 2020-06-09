@@ -712,10 +712,9 @@ sub initialize {
 
 	# Set up Main window size
 	unless ($::geometry) {
-		my $height = $top->screenheight() - 90;
-		my $width  = $top->screenwidth() - 20;
-		$::geometry = $width . "x" . $height . "+0+0";
-		$::geometry = $top->geometry($::geometry);
+		# $top->screenheight() and $top->screenwidth() do unexpected things on
+		# Macs with dual screens, so we simply set a reasonable starting size
+		$::geometry = "800x600+0+0";
 	}
 	$top->geometry($::geometry) if $::geometry;
 	$::text_frame = $top->Frame->pack(
