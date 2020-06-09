@@ -275,16 +275,13 @@ our @extops = (
 	{ 'label' => q{}, 'command' => q{} },
 );
 
-#All local global variables contained in one hash. # now global
+# All local global variables contained in one global hash.
 our %lglobal;    # need to document each variable
-if ( eval { require Text::LevenshteinXS } ) {
-	$lglobal{LevenshteinXS} = 1;
-}
-if ( eval { require Image::Size; 1; } ) {
-	$lglobal{ImageSize} = 1;
-} else {
-	$lglobal{ImageSize} = 0;
-}
+
+# Determine what optional modules are installed
+$lglobal{LevenshteinXS} = eval { require Text::LevenshteinXS; 1; } || 0;
+$lglobal{ImageSize} =  eval { require Image::Size; 1; } || 0;
+
 our $top;
 our $icon;
 our $text_frame;
