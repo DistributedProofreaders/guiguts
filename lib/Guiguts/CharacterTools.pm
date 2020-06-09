@@ -602,25 +602,19 @@ sub blocks_check {
 	my $top = $::top;
 	return 1 if eval { require q(unicore/Blocks.pl) };
 	my $oops = $top->DialogBox(
-		-buttons => [qw[Yes No]],
+		-buttons => [qw[Ok]],
 		-title   => 'Critical files missing.',
-		-popover => $top,
-		-command => sub {
-			if ( $_[0] eq 'Yes' ) {
-				system "perl update_unicore.pl";
-			}
-		}
+		-popover => $top
 	);
 	my $message = <<END;
-Your Perl installation is missing some files\nthat are critical for some Unicode operations.
-Do you want to download/install them?\n(You need to have an active internet connection.)
-If running under Linux or OSX, you will probably need to run the command\n\"sudo perl /[pathto]/guiguts/update_unicore.pl\
-in a terminal window for the updates to be installed correctly.
+Your Perl installation is too old to support Unicode.\n
+Upgrade to a newer version of Perl.
 END
 	$oops->add( 'Label', -text => $message )->pack;
 	$oops->Show;
 	return 0;
 }
+
 ## Convert Windows CP 1252
 sub cp1252toUni {
 	my $textwindow = $::textwindow;
