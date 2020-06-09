@@ -1,5 +1,0 @@
-The following bugs/feature requests have not yet been addressed:
-
-Bugs: https://sourceforge.net/tracker/?limit=25&func=&group_id=209389&atid=1009518&status=1
-
-Features: https://sourceforge.net/tracker/?group_id=209389&atid=1009521&status=1
