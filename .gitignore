@@ -1,6 +1,6 @@
-/setting.rc
-/header.txt
-/data/labels_en.rc
+/src/setting.rc
+/src/header.txt
+/src/data/labels_en.rc
 *.pl~
 *.pm~
 /packup.bat
