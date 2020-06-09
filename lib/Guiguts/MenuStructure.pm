@@ -114,17 +114,17 @@ sub menu_help {
 	my $help_top = [
 		[ Button   => '~Manual [www]',
 			-command => sub {
-				::launchurl( "http://www.pgdp.net/wiki/PPTools/Guiguts" );
+				::launchurl( "https://www.pgdp.net/wiki/PPTools/Guiguts" );
 			  }
 		],
 		[ Button  => 'Guiguts ~Help on DP Forum [www]',
-		  -command => sub { ::launchurl('http://www.pgdp.net/phpBB2/viewtopic.php?t=30324'); }
+		  -command => sub { ::launchurl('https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=11466'); }
 		],
 		[ Button => '~Keyboard Shortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
 		[ Button => 'Re~wrap Markers [www]',
 		  -command => sub {
-			::launchurl( 'http://www.pgdp.net/wiki/PPTools/Guiguts/Rewrapping#Rewrap_Markers' );
+			::launchurl( 'https://www.pgdp.net/wiki/PPTools/Guiguts/Rewrapping#Rewrap_Markers' );
 		  }
 		],
 	];
@@ -139,7 +139,7 @@ sub menu_help {
 		[ 'separator', '' ],
 		[ Button   => 'GG ~PP Process Checklist [www]',
 		  -command => sub {
-			::launchurl( "http://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
+			::launchurl( "https://www.pgdp.net/wiki/Guiguts_PP_Process_Checklist" );
 		  }
 		],
 		[ 'separator', '' ],
