@@ -1,6 +1,7 @@
 package Guiguts::Preferences;
 use strict;
 use warnings;
+use File::Basename;
 
 BEGIN {
 	use Exporter();
@@ -13,9 +14,31 @@ BEGIN {
 
 sub setdefaultpath {
 	my ( $pathname, $path ) = @_;
-	if ($pathname) { return $pathname }
-	if ( ( !$pathname ) && ( -e $path ) ) { return $path; }
+	if ( $pathname ) { return $pathname }
+	if ( -e $path ) { return $path; }
+
+	my ( $basename, $filepath, $suffix) = fileparse($path, (".exe", ".com", ".bat"));
+	my $filename = "$basename$suffix";
+
+	# Does the file exist in the same location without the extension (ala *nix)?
+	if ( -e ::catfile($filepath, $basename) ) {
+		$pathname = ::catfile($filepath, $basename)
+	}
 	else {
+		# Is it on the path somewhere?
+		if ( $::lglobal{Which} ) {
+			# Check both with and without extension
+			$pathname = File::Which::which($filename) ||
+				File::Which::which($basename)
+		} elsif ( ! $::OS_WIN ) {
+			# Only check without extension since we're on *nix
+			$pathname = substr( qx/which $basename/, 0, -1 ); # strip trailing \n
+		}
+	}
+
+	if ($pathname && -x $pathname) {
+		return $pathname;
+	} else {
 		return '';
 	}
 }

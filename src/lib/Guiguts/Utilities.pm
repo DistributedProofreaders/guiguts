@@ -829,70 +829,52 @@ sub initialize {
 	  unless defined $::lglobal{guigutsdirectory};
 	$::scannospath = ::catfile( $::lglobal{guigutsdirectory}, 'scannos' )
 	  unless $::scannospath;
+
+	# Find tool locations. setdefaultpath handles differences in *nix/Windows
+	# executable names and looks on the search path.
 	$::validatecsscommand = ::setdefaultpath(
 		$::validatecsscommand,
 		::catfile(
-			$::lglobal{guigutsdirectory}, 'tools',
-			'W3C',                        'css-validator.jar'
+			$::lglobal{guigutsdirectory},
+			'tools', 'W3C', 'css-validator.jar'
 		)
 	);
-	if ($::OS_WIN) {
-		$::gutcommand = ::setdefaultpath(
-			$::gutcommand,
-			::catfile(
-				$::lglobal{guigutsdirectory}, 'tools',
-				'bookloupe',                  'bookloupe.exe'
-			)
-		);
-		$::jeebiescommand = ::setdefaultpath(
-			$::jeebiescommand,
-			::catfile(
-				$::lglobal{guigutsdirectory}, 'tools',
-				'jeebies',                    'jeebies.exe'
-			)
-		);
-		$::tidycommand = ::setdefaultpath(
-			$::tidycommand,
-			::catfile(
-				$::lglobal{guigutsdirectory},
-				'tools', 'tidy', 'tidy.exe'
-			)
-		);
-		$::globalviewerpath =
-		  ::setdefaultpath( $::globalviewerpath,
-			::catfile( '\Program Files', 'XnView', 'xnview.exe' ) );
-		$::globalspellpath =
-		  ::setdefaultpath( $::globalspellpath,
-			::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
-		$::validatecommand = ::setdefaultpath(
-			$::validatecommand,
-			::catfile(
-				$::lglobal{guigutsdirectory},
-				'tools', 'W3C', 'onsgmls.exe'
-			)
-		);
-	} else {
-		my $tmpcommand = substr( qx/which tidy/, 0, -1 ); # strip trailing \n
-		$::tidycommand   = ::setdefaultpath( $::tidycommand, $tmpcommand );
-		$tmpcommand = substr( qx/which aspell/, 0, -1 );
-		$::globalspellpath = ::setdefaultpath( $::globalspellpath, $tmpcommand );
-		$tmpcommand = substr( qx/which onsgmls/, 0, -1 );
-		$::validatecommand   = ::setdefaultpath( $::validatecommand, $tmpcommand );
-		$::gutcommand = ::setdefaultpath(
-			$::gutcommand,
-			::catfile(
-				$::lglobal{guigutsdirectory}, 'tools',
-				'bookloupe',                  'bookloupe'
-			)
-		);
-		$::jeebiescommand = ::setdefaultpath(
-			$::jeebiescommand,
-			::catfile(
-				$::lglobal{guigutsdirectory},
-				'tools', 'jeebies', 'jeebies'
-			)
-		);
-	}
+	$::gutcommand = ::setdefaultpath(
+		$::gutcommand,
+		::catfile(
+			$::lglobal{guigutsdirectory},
+			'tools', 'bookloupe', 'bookloupe.exe'
+		)
+	);
+	$::jeebiescommand = ::setdefaultpath(
+		$::jeebiescommand,
+		::catfile(
+			$::lglobal{guigutsdirectory},
+			'tools', 'jeebies', 'jeebies.exe'
+		)
+	);
+	$::tidycommand = ::setdefaultpath(
+		$::tidycommand,
+		::catfile(
+			$::lglobal{guigutsdirectory},
+			'tools', 'tidy', 'tidy.exe'
+		)
+	);
+	$::globalviewerpath = ::setdefaultpath(
+		$::globalviewerpath,
+		::catfile( '\Program Files', 'XnView', 'xnview.exe' )
+	);
+	$::globalspellpath = ::setdefaultpath(
+		$::globalspellpath,
+		::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' )
+	);
+	$::validatecommand = ::setdefaultpath(
+		$::validatecommand,
+		::catfile(
+			$::lglobal{guigutsdirectory},
+			'tools', 'W3C', 'onsgmls.exe'
+		)
+	);
 
 	my $textwindow = $::textwindow;
 	$textwindow->tagConfigure( 'footnote', -background => 'cyan' );
