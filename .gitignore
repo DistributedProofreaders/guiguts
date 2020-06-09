@@ -3,6 +3,9 @@
 /src/header.txt
 /src/data/labels_en.rc
 
+# development artifacts
+/src/tools/
+
 # build artifacts
 /guiguts-*.zip
 /guiguts
