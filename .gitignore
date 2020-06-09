@@ -1,9 +1,12 @@
+# program artifacts
 /src/setting.rc
 /src/header.txt
 /src/data/labels_en.rc
+
+# build artifacts
+/guiguts-*.zip
+/guiguts
+
+# temporary files
 *.pl~
 *.pm~
-/packup.bat
-/guiguts-*.zip
-/perl
-/Python27
