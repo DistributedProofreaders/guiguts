@@ -772,7 +772,7 @@ sub replaceeval {
 	$replaceterm =~ s/\\\$/\$/g;
 
 # For an explanation see
-# http://www.pgdp.net/wiki/PPTools/Guiguts/Searching#Replacing_by_Modifying_Quoted_Text
+# https://www.pgdp.net/wiki/PPTools/Guiguts/Searching#Replacing_by_Modifying_Quoted_Text
 # \C indicates perl code to be run
 	if ($cfound) {
 		if ( $::lglobal{codewarn} ) {
