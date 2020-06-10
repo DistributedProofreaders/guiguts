@@ -2,8 +2,10 @@
 /*                                                                       */
 /* jeebies  check for common scannos in a PG candidate file              */
 /*                                                                       */
-/* Version 0.15 (alpha-20051128).                                        */
+/* Version 0.15a (alpha-20091111).                                       */
 /* Copyright 2000-2005 Jim Tinsley <jtinsley@pobox.com>                  */
+/*                                                                       */
+/* Changes to binary search algorithm made by Dan Horwood, October 2009  */
 /*                                                                       */
 /* This program is free software; you can redistribute it and/or modify  */
 /* it under the terms of the GNU General Public License as published by  */
@@ -489,6 +491,7 @@ double binary_search(char *find_this, char *which_array[HE_POINTERS], long array
     long hi, lo, weareat, wewereat;
     char target[MAX_ENTRY_LEN], compare_array[MAX_ENTRY_LEN];
     char *s;
+    int comp_result;
 
     strncpy(target, find_this, sizeof(target));
     for (s = target; *s; s++) {
@@ -498,6 +501,7 @@ double binary_search(char *find_this, char *which_array[HE_POINTERS], long array
     hi = array_size; lo = 0; wewereat = weareat = 0;
 
 binsch:
+    comp_result = 0;
     wewereat = weareat;    
     weareat = (hi + lo) / 2;
     if (wewereat == weareat) return(0.0); // Not found
@@ -506,17 +510,12 @@ binsch:
         if (*s == '|') *s = 1;
         if (*s == 9) *s = 0;
         }
-    switch (strcmp(target, compare_array)) {
-        case 1:
-            lo = weareat;
-            break;
-        case -1:
-            hi = weareat;
-            break;
-        case 0:  // YAY!
-            return(atof(which_array[weareat] + strlen(target)));
-            break;
-        }
+    if ((comp_result = strcmp(target, compare_array)) > 0)
+        lo = weareat;
+    else if (comp_result < 0)
+        hi = weareat;
+    else  // YAY!
+        return(atof(which_array[weareat] + strlen(target)));
     goto binsch;            
             
 
@@ -594,7 +593,7 @@ char *getaword(char *fromline, char *thisword)
     thisword[wordlen] = 0;
     for (i = 1; i < wordlen -1; i++) {
         if (thisword[i] == '.' || thisword[i] == ',') {
-            if (gcisdigit(thisword[i-1]) && gcisdigit(thisword[i-1])) {   /* we have one of the damned things */
+            if (gcisdigit(thisword[i-1]) && gcisdigit(thisword[i+1])) {   /* we have one of the damned things */
                 fromline = s;
                 return(fromline);
                 }
