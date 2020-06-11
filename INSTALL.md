@@ -182,6 +182,7 @@ Homebrew provides some additional helper applications you might find useful:
 brew install aspell
 brew install bookloupe
 brew install tidy-html5
+brew install open-sp
 ```
 
 ## Other

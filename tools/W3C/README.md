@@ -12,3 +12,14 @@ Usage:
 ```
 java -jar css-validator.jar https://www.pgdp.org/c/default.php
 ```
+
+## OpenSP / OpenJade
+
+XHTML validation tool. https://sourceforge.net/projects/openjade/
+
+We only bundle the Windows binaries. Mac users can install it via Homebrew:
+```
+brew install open-sp
+```
+
+Linux users will need to download and install it from source.
