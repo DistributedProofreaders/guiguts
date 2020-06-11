@@ -201,6 +201,13 @@ Guiguts requires the following Perl modules to be installed via CPAN:
 * Tk
 * Tk::ToolBar
 
+The following modules are optional but recommended:
+
+* Text::LevenshteinXS
+* File::Which
+* Image::Size
+* LWP::Protocol::https
+
 The required Perl modules can be installed with the included helper script:
 ```
 perl install_cpan_modules.pl
