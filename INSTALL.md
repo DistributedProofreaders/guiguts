@@ -185,6 +185,8 @@ brew install tidy-html5
 brew install open-sp
 ```
 
+See also the [EBookMaker installation instructions](tools/ebookmaker/README.md).
+
 ## Other
 
 For other platforms, you will need to install Perl and the necessary
