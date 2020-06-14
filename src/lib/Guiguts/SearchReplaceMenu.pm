@@ -337,7 +337,7 @@ BEGIN { # restrict scope of $countlastterm
 		my $newterm = shift;
 		if ( $newterm ne $countlastterm ) {
 			$countlastterm = $newterm;
-			$::lglobal{searchnumlabel}->configure( -text => "" );
+			$::lglobal{searchnumlabel}->configure( -text => "" ) if defined $::lglobal{searchpop};
 		}
 	}
 }
