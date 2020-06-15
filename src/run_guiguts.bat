@@ -9,14 +9,14 @@ set PATH=C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;
 
 REM Add older bundled perl directory to the path at the end as a fall-back
 REM for users who want to try and use it instead of Strawberry Perl.
-set PATH=%PATH%;%cd%\perl;%cd%\perl\lib
+set PATH=%PATH%;%~dp0perl;%~dp0perl\lib
 
 REM Prefix tooling directories
-set PATH=%cd%\tools\kindlegen;%cd%\tools\tidy;%PATH%
+set PATH=%~dp0tools\kindlegen;%~dp0tools\tidy;%PATH%
 
-rem set ASPELL_CONF=conf-dir c:/guiguts/tools/aspell/bin
-
-perl guiguts.pl %1
+REM Find guiguts.pl in same folder as this batch file
+REM Use full pathname of file to be edited
+perl %~dp0guiguts.pl %~f1
 
 REM Restore original path
 set PATH=%OLDPATH%
