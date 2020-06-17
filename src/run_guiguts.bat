@@ -1,6 +1,7 @@
 @echo off
 
 REM Get the Guiguts install directory as the directory containing this batch file
+REM using arcane Windows batch file magic.
 set GG_DIR=%~dp0
 REM Get full pathname of edit file from first argument to batch file
 set ED_FILE=%~f1
@@ -21,7 +22,7 @@ set PATH=%GG_DIR%tools\kindlegen;%GG_DIR%tools\tidy;%PATH%
 
 REM Find guiguts.pl in same folder as this batch file
 REM Use full pathname of file to be edited
-perl %GG_DIR%guiguts.pl %ED_FILE%
+perl "%GG_DIR%guiguts.pl" "%ED_FILE%"
 
 REM Restore original path
 set PATH=%OLDPATH%
