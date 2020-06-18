@@ -13,3 +13,6 @@
 # temporary files
 *.pl~
 *.pm~
+
+# editor backup files
+*.bak
