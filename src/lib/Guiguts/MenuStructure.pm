@@ -512,7 +512,7 @@ sub menu_external {
 				Button   => ($_<9?'~':'').($_==9?'1~0':$_+1).": $::extops[$_]{label}",
 				-command => [ \&::xtops, $_ ]
 			],
-			( 0 .. $::extops_size-1 ) ),
+			( 0 .. $#::extops ) ),
 		[ 'separator', '' ],
 		[
 			Button   => 'Setup ~External Operations...',

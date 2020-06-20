@@ -978,7 +978,7 @@ EOM
 		# otherwise we can't have a default value of 1 without overwriting the user's setting
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
-			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers extops_size failedsearch
+			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers failedsearch
 			font_char fontname fontsize fontweight geometry
 			gesperrt_char globalaspellmode highlightcolor history_size
 			htmldiventry htmlspanentry ignoreversionnumber
@@ -1012,8 +1012,8 @@ EOM
 		print $save_handle (");\n\n");
 		print $save_handle ("\@extops = (\n");
 		for my $index ( 0 .. $#::extops ) {
-			my $label   = ::escape_problems( $::extops[$index]{label} );
-			my $command = ::escape_problems( $::extops[$index]{command} );
+			my $label   = ::escape_problems( $::extops[$index]{label} ) || '';
+			my $command = ::escape_problems( $::extops[$index]{command} ) || '';
 			print $save_handle
 			  "\t{'label' => '$label', 'command' => '$command'},\n";
 		}
