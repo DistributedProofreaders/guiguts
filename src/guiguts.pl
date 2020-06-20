@@ -240,28 +240,28 @@ our @extops = (
 	},
 	{
 		'label'   => 'Onelook.com (several dictionaries)',
-		'command' => "$globalbrowserstart http://www.onelook.com/?w=\$t"
-	},
-	{
-		'label'   => 'Shape Catcher (Unicode character finder)',
-		'command' => "$globalbrowserstart http://shapecatcher.com/"
-	},
-	{
-		'label'   => 'W3C Markup Validation Service',
-		'command' => "$globalbrowserstart http://validator.w3.org/"
-	},
-	{
-		'label' => 'W3C CSS Validation Service',
-		'command' =>
-"$globalbrowserstart http://jigsaw.w3.org/css-validator/#validate_by_upload"
-	},
-	{
-		'label' => 'EBookMaker',
-		'command' => "$globalbrowserstart http://epubmaker.pglaf.org/"
+		'command' => "$globalbrowserstart https://www.onelook.com/?w=\$t"
 	},
 	{
 		'label' => 'Google Books Ngram Viewer',
 		'command' => "$globalbrowserstart https://books.google.com/ngrams/graph?content=\$t"
+	},
+	{
+		'label'   => 'Shape Catcher (Unicode character finder)',
+		'command' => "$globalbrowserstart https://shapecatcher.com/"
+	},
+	{
+		'label'   => 'W3C HTML Validation Service',
+		'command' => "$globalbrowserstart https://validator.w3.org/#validate_by_upload+with_options"
+	},
+	{
+		'label' => 'W3C CSS Validation Service',
+		'command' =>
+"$globalbrowserstart https://jigsaw.w3.org/css-validator/#validate_by_upload+with_options"
+	},
+	{
+		'label' => 'EBookMaker Online',
+		'command' => "$globalbrowserstart http://epubmaker.pglaf.org/"
 	},
 );
 
