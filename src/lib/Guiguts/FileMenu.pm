@@ -937,20 +937,18 @@ sub readsettings {
 		     || $::extops[0]{label} eq 'Pass open file to default handler') {
 			$::extops[0]{label} = 'View in browser';
 		}
-		if ( $::extops[0]{label} =~ m/browser/ ) {
-			$::extops[0]{label} = 'View in browser';
-		}
-		else {
-			if ( $::extops[$::extops_size-1]{label} || $::extops[$::extops_size-1]{command} ) {
-				$::extops_size++;
-			}
-			for ( my $i = $::extops_size-1; $i > 0; --$i ) {
-				$::extops[$i]{label}   = $::extops[$i-1]{label};
-				$::extops[$i]{command} = $::extops[$i-1]{command};
-			}
-			$::extops[0]{label}   = 'View in browser';
-			$::extops[0]{command} = $::globalbrowserstart . ' "$d$f$e"';
-		}
+	}
+
+	# Always force 'View in browser' to be the first entry as other parts
+	# of the code assume this
+	if ( $::extops[0]{label} =~ m/browser/ ) {
+		$::extops[0]{label} = 'View in browser';
+	}
+	else {
+		unshift(@::extops, {
+			'label' => 'View in browser',
+			'command' => $::globalbrowserstart . ' "$d$f$e"',
+		});
 	}
 }
 
