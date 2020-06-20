@@ -127,9 +127,6 @@ our $globalbrowserstart = $ENV{BROWSER};
 if ( !$globalbrowserstart ) { $globalbrowserstart = 'xdg-open'; }
 if ($OS_WIN)                { $globalbrowserstart = 'start'; }
 if ($OS_MAC)                { $globalbrowserstart = 'open'; }
-our $globalfirefoxstart = 'firefox';
-if ($OS_WIN) { $globalfirefoxstart = 'start firefox'; }
-if ($OS_MAC) { $globalfirefoxstart = 'open -a firefox'; }
 our $globalimagepath        = q{};
 our $globallastpath         = q{};
 our $globalspelldictopt     = q{};
@@ -243,20 +240,6 @@ our @extops = (
 		'command' => "$globalbrowserstart \"\$d\$f\$e\""
 	},
 	{
-		'label'   => 'Open current file in Firefox',
-		'command' => "$globalfirefoxstart \"\$d\$f\$e\""
-	},
-	{
-		'label' => "Websters 1913 (Specialist Online Dictionary)",
-		'command' =>
-"$globalbrowserstart http://www.specialist-online-dictionary.com/websters/headword_search.cgi?query=\$t"
-	},
-	{
-		'label' => "Websters 1828 American Dictionary",
-		'command' =>
-		  "$globalbrowserstart http://www.1828-dictionary.com/d/word/\$t"
-	},
-	{
 		'label'   => 'Onelook.com (several dictionaries)',
 		'command' => "$globalbrowserstart http://www.onelook.com/?w=\$t"
 	},
@@ -273,6 +256,15 @@ our @extops = (
 		'command' =>
 "$globalbrowserstart http://jigsaw.w3.org/css-validator/#validate_by_upload"
 	},
+	{
+		'label' => 'EBookMaker',
+		'command' => "$globalbrowserstart http://epubmaker.pglaf.org/"
+	},
+	{
+		'label' => 'Google Books Ngram Viewer',
+		'command' => "$globalbrowserstart https://books.google.com/ngrams/graph?content=\$t"
+	},
+	{ 'label' => q{}, 'command' => q{} },
 	{ 'label' => q{}, 'command' => q{} },
 	{ 'label' => q{}, 'command' => q{} },
 	{ 'label' => q{}, 'command' => q{} },
