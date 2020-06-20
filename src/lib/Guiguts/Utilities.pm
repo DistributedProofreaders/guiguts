@@ -1987,7 +1987,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . "\$t = the currently highlighted text.\n" )->pack;
 		my $f1 =
 		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		for my $menutempvar ( 0 .. $::extops_size-1 ) {
+		for my $menutempvar ( 0 .. ($#::extops < 10 ? 10 : $#::extops) + 1 ) {
 			$f1->Entry(
 				-width        => 50,
 				-background   => $::bkgcolor,
@@ -2017,6 +2017,16 @@ sub externalpopup {    # Set up the external commands menu
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				# remove any empty items in the list by building a fresh one
+				my @new_extops = qw();
+				for my $index ( 0 .. $#::extops ) {
+					if( $::extops[$index]{label} || $::extops[$index]{command} )
+					{
+						push(@new_extops, $::extops[$index]);
+					}
+				}
+				@::extops = @new_extops;
+				# save the settings and rebuild the menu
 				::savesettings();
 				::menurebuild();
 				$::lglobal{extpop}->destroy;

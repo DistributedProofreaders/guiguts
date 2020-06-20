@@ -116,7 +116,6 @@ our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang      = 'en';
 our $defaultindent = 2;
-our $extops_size   = 10;
 our $failedsearch  = 0;
 our $fontname      = 'Courier New';
 our $fontsize      = 10;
@@ -265,10 +264,6 @@ our @extops = (
 		'label' => 'Google Books Ngram Viewer',
 		'command' => "$globalbrowserstart https://books.google.com/ngrams/graph?content=\$t"
 	},
-	{ 'label' => q{}, 'command' => q{} },
-	{ 'label' => q{}, 'command' => q{} },
-	{ 'label' => q{}, 'command' => q{} },
-	{ 'label' => q{}, 'command' => q{} },
 );
 
 # All local global variables contained in one global hash.
