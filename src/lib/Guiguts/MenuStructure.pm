@@ -1572,12 +1572,6 @@ sub menubuilddefault {
 					unlink 'null' if ( -e 'null' );
 				}
 			],
-			[	Button   => 'Check Some Common eP~ub Issues',
-				-command => sub {
-					::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
-					unlink 'null' if ( -e 'null' );
-				}
-			],
 		]
 	);
 

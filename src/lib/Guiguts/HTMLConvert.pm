@@ -2374,15 +2374,6 @@ sub htmlgenpopup {
 				-text  => 'pphtml',
 				-width => 16
 			)->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
-			#			$f8->Button(
-			#				-activebackground => $::activecolor,
-			#				-command          => sub {
-			#					::errorcheckpop_up( $textwindow, $top, 'Epub Friendly' );
-			#					unlink 'null' if ( -e 'null' );
-			#				},
-			#				-text  => 'Epub Friendly',
-			#				-width => 16
-			#			)->grid( -row => 3, -column => 3, -padx => 1, -pady => 2 );
 			$f8->Button(
 				-activebackground => $::activecolor,
 				-command          => sub {

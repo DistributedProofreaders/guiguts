@@ -10,7 +10,7 @@ BEGIN {
 }
 
 # General error check window
-# Handles HTML & CSS Validate, Tidy, Link Check, Epub Friendly,
+# Handles HTML & CSS Validate, Tidy, Link Check
 # pphtml, pptxt and Load External Checkfile,
 # TODO: Incorporate Gutcheck & Jeebies as well to avoid code duplication and divergence?
 sub errorcheckpop_up {
@@ -128,7 +128,6 @@ sub errorcheckpop_up {
 							 'ppvimage',
 							 'Link Check',
 							 'W3C Validate CSS',
-#							 'Epub Friendly',
 							 'pphtml'
 		);
 	} else {
@@ -233,7 +232,6 @@ sub errorcheckpop_up {
 				} elsif (    ( $thiserrorchecktype eq "W3C Validate" )
 						  or ( $thiserrorchecktype eq "W3C Validate Remote" )
 						  or ( $thiserrorchecktype eq "pphtml" )
-						  or ( $thiserrorchecktype eq "Epub Friendly" )
 						  or ( $thiserrorchecktype eq "ppvimage" ) )
 				{
 					$line =~ s/^.*:(\d+:\d+)/line $1/;
@@ -504,9 +502,6 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 	} elsif ( $errorchecktype eq 'pptxt' ) {
 		::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $name, "-o",
 				"errors.err" );
-	} elsif ( $errorchecktype eq 'Epub Friendly' ) {
-		::run( "perl", "lib/ppvchecks/epubfriendly.pl",
-				"-i", $name, "-o", "errors.err" );
 	}
 	$top->Unbusy;
 	unlink $name;
