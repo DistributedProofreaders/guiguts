@@ -1,0 +1,13 @@
+# https://perltidy.github.io/perltidy/perltidy.html
+
+--preserve-line-endings
+--maximum-line-length=100
+--indent-columns=4
+--cuddled-else
+
+--opening-brace-always-on-right
+
+# Accept longer than 100 character lines for comments and long strings
+--no-outdent-long-quotes
+--no-outdent-long-comments
+--ignore-side-comment-lengths

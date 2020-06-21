@@ -26,3 +26,16 @@ If you are upgrading from an earlier version of Guiguts, see
 [UPGRADE.md](UPGRADE.md).
 
 To install Guiguts see [INSTALL.md](INSTALL.md).
+
+## Development
+
+### Code style
+
+Guiguts uses [perltidy](https://metacpan.org/pod/Perl::Tidy) for consistent
+styling using configuration options in `.perltidyrc`. You can install perltidy
+with `cpanm --install --notest Perl::Tidy`.
+
+`format_files.sh` can be used to format one or more files. If used with
+`--check` it will validate that the files match the perltidy format.
+
+This project uses Travis CI to validate formatting for each MR.
