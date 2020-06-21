@@ -12,7 +12,7 @@ BEGIN {
 	  &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
 	  &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
 	  &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
-	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex
+	  &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
 	  &sidenotes &poetrynumbers &get_page_number &externalpopup
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
@@ -832,6 +832,13 @@ sub initialize {
 
 	# Find tool locations. setdefaultpath handles differences in *nix/Windows
 	# executable names and looks on the search path.
+	$::ebookmakercommand = ::setdefaultpath(
+		$::ebookmakercommand,
+		::catfile( 
+			$::lglobal{guigutsdirectory},
+			'tools', 'ebookmaker', 'ebookmaker.exe'
+		)
+	);
 	$::validatecsscommand = ::setdefaultpath(
 		$::validatecsscommand,
 		::catfile(
@@ -1745,6 +1752,29 @@ sub seeindex {
 		$textwindow->see('end'); # Mark will be centered
 		$textwindow->see($index);
 	}
+}
+
+# Run EBookMaker tool on current HTML file to create epub and mobi versions
+sub ebookmaker {
+
+	unless ( $::ebookmakercommand ) {
+		::locateExecutable('EBookMaker', \$::ebookmakercommand);
+		return unless $::ebookmakercommand;
+	}
+
+	my ( $fname, $d, $ext ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+	if ( $ext !~ /^(\.htm|\.html)$/ ) {
+		print "Not an HTML file\n";
+		return;
+	}
+	my $filepath = $::lglobal{global_filename};
+	my $outputdir = $::globallastpath;
+
+	print "\nBeginning ebookmaker\n";
+	print "Files will appear in the directory $::globallastpath.\n";
+	
+	::runner( $::ebookmakercommand, "--verbose", "--max-depth=3", "--make=epub.images", "--make=kindle.images",
+	          "--output-dir=$outputdir.", "--title=$fname", "$filepath" );
 }
 
 ## Sidenote Fixup

@@ -479,7 +479,7 @@ sub filePathsPopup {
 		    )->pack( -side => 'left' );
 		$f5->Button(
 			-text    => 'Locate Tidy...',
-			-command => sub { ::locateExecutable('Tidy', \$::tidycommand); },
+			-command => sub { ::locateExecutable('HTML Tidy', \$::tidycommand); },
 			-width   => 24,
 		    )->pack( -side => 'right' );
 		$f5->Entry(
@@ -492,11 +492,11 @@ sub filePathsPopup {
 			-anchor => 'n',
 			-fill   => 'x'
 		);
-		$f6->Label( -text => "W3C Validator (onsgmls):", -width => 22, -anchor => 'w',
+		$f6->Label( -text => "W3C Validate (onsgmls):", -width => 22, -anchor => 'w',
 		    )->pack( -side => 'left' );
 		$f6->Button(
 			-text    => 'Locate onsgmls...',
-			-command => sub { ::locateExecutable('onsgmls', \$::validatecommand); },
+			-command => sub { ::locateExecutable('W3C Validate (onsgmls)', \$::validatecommand); },
 			-width   => 24,
 		    )->pack( -side => 'right' );
 		$f6->Entry(
@@ -509,15 +509,35 @@ sub filePathsPopup {
 			-anchor => 'n',
 			-fill   => 'x'
 		);
-		$f7->Label( -text => "W3C CSS Validator:", -width => 22, -anchor => 'w',
+		$f7->Label( -text => "W3C Validate CSS:", -width => 22, -anchor => 'w',
 		    )->pack( -side => 'left' );
 		$f7->Button(
 			-text    => 'Locate CSS Validator...',
-			-command => sub { ::locateExecutable('css-validator.js', \$::validatecsscommand); },
+			-command => sub { 
+					my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
+					::locateExecutable('W3C Validate CSS (css-validate.jar)', \$::validatecsscommand, $types);
+				},
 			-width   => 24,
 		    )->pack( -side => 'right' );
 		$f7->Entry(
 			-textvariable => \$::validatecsscommand,
+			-relief       => 'sunken',
+			-background   => $::bkgcolor,
+		    )->pack( -expand => 'y', -fill   => 'x' );
+		my $f8 = $::lglobal{filepathspop}->Frame->pack(
+			-side   => 'top',
+			-anchor => 'n',
+			-fill   => 'x'
+		);
+		$f8->Label( -text => "EBookMaker:", -width => 22, -anchor => 'w',
+		    )->pack( -side => 'left' );
+		$f8->Button(
+			-text    => 'Locate EBookMaker...',
+			-command => sub { ::locateExecutable('ebookmaker.exe', \$::ebookmakercommand); },
+			-width   => 24,
+		    )->pack( -side => 'right' );
+		$f8->Entry(
+			-textvariable => \$::ebookmakercommand,
 			-relief       => 'sunken',
 			-background   => $::bkgcolor,
 		    )->pack( -expand => 'y', -fill   => 'x' );

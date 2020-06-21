@@ -1010,10 +1010,8 @@ sub spelloptions {
 		-text    => 'Locate Aspell Executable',
 		-width   => 24,
 		-command => sub {
-			my $name = $spellop->getOpenFile( -title => 'Aspell executable?' );
-			if ($name) {
-				$::globalspellpath = $name;
-				$::globalspellpath = ::os_normal($::globalspellpath);
+			::locateExecutable('Aspell', \$::globalspellpath);
+			if ( $::globalspellpath ) {
 				$spellpathentry->delete( 0, 'end' );
 				$spellpathentry->insert( 'end', $::globalspellpath );
 				::savesettings();

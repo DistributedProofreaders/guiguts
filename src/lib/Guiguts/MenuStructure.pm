@@ -947,6 +947,10 @@ sub menubuildold {
 				Button   => 'HTML Auto ~Index (List)',
 				-command => sub { ::autoindex($textwindow) }
 			],
+			[
+				Button   => 'EB~ookMaker',
+				-command => sub { ::ebookmaker() }
+			],
 			[ 'separator', '' ],
 			[
 				Button   => 'ASCII Table Special Effects...',
@@ -1571,6 +1575,10 @@ sub menubuilddefault {
 					::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
 					unlink 'null' if ( -e 'null' );
 				}
+			],
+			[
+				Button   => 'EB~ookMaker',
+				-command => sub { ::ebookmaker() }
 			],
 		]
 	);
