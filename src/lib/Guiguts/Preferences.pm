@@ -492,11 +492,11 @@ sub filePathsPopup {
 			-anchor => 'n',
 			-fill   => 'x'
 		);
-		$f6->Label( -text => "W3C Validate (onsgmls):", -width => 22, -anchor => 'w',
+		$f6->Label( -text => "W3C HTML Validator:", -width => 22, -anchor => 'w',
 		    )->pack( -side => 'left' );
 		$f6->Button(
-			-text    => 'Locate onsgmls...',
-			-command => sub { ::locateExecutable('W3C Validate (onsgmls)', \$::validatecommand); },
+			-text    => 'Locate HTML Validator...',
+			-command => sub { ::locateExecutable('W3C HTML Validator (onsgmls)', \$::validatecommand); },
 			-width   => 24,
 		    )->pack( -side => 'right' );
 		$f6->Entry(
@@ -509,13 +509,13 @@ sub filePathsPopup {
 			-anchor => 'n',
 			-fill   => 'x'
 		);
-		$f7->Label( -text => "W3C Validate CSS:", -width => 22, -anchor => 'w',
+		$f7->Label( -text => "W3C CSS Validator:", -width => 22, -anchor => 'w',
 		    )->pack( -side => 'left' );
 		$f7->Button(
 			-text    => 'Locate CSS Validator...',
 			-command => sub { 
 					my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
-					::locateExecutable('W3C Validate CSS (css-validate.jar)', \$::validatecsscommand, $types);
+					::locateExecutable('W3C CSS Validator (css-validate.jar)', \$::validatecsscommand, $types);
 				},
 			-width   => 24,
 		    )->pack( -side => 'right' );

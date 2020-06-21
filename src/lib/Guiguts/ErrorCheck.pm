@@ -366,13 +366,13 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			  and ( $::w3cremote == 0 ) )
 	{
 		unless ( $::validatecommand ) {
-			::locateExecutable( 'W3C Validate (onsgmls)', \$::validatecommand);
+			::locateExecutable( 'W3C HTML Validator (onsgmls)', \$::validatecommand);
 			return 1 unless $::validatecommand;
 		}
 	} elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
 		unless ($::validatecsscommand) {
 			my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
-			::locateExecutable('W3C Validate CSS (css-validate.jar)', \$::validatecsscommand, $types);
+			::locateExecutable('W3C CSS Validator (css-validate.jar)', \$::validatecsscommand, $types);
 			return 1 unless $::validatecsscommand;
 		}
 	}
