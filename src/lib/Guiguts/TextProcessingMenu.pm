@@ -47,7 +47,7 @@ sub text_convert_tb {
 
 sub text_convert_options {
 	my $top = shift;
-	my $options = $top->DialogBox( -title   => "Text Processing Options",
+	my $options = $top->DialogBox( -title   => "Auto-Convert Options",
 								   -buttons => ["OK"], );
 	my $italic_frame =
 	  $options->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
