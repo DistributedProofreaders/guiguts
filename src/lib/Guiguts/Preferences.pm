@@ -161,25 +161,30 @@ sub setmargins {
 							  -to           => 10,
 		  )->pack( -side => 'left' );
 	}
-		::initialize_popup_without_deletebinding('marginspop');
-		$::lglobal{marginspop}->protocol(
-			'WM_DELETE_WINDOW' => sub {
-				$::lglobal{marginspop}->destroy;
-				undef $::lglobal{marginspop};
-				if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) )
-				{
-					$top->messageBox(
-						  -icon    => 'error',
-						  -title   => 'Incorrect margins',
-						  -message => 'The left margin must be smaller than the right margin.',
-						  -type    => 'OK',
-					);
-					setmargins();
-				} else {
-					::savesettings();
-				}
+	my $button_frame =
+	  $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+	my $button_ok = $button_frame->Button(
+		-activebackground => $::activecolor,
+		-text             => 'OK',
+		-command          => sub {
+			$::lglobal{marginspop}->destroy;
+			undef $::lglobal{marginspop};
+			if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) )
+			{
+				$top->messageBox(
+					  -icon    => 'error',
+					  -title   => 'Incorrect margins',
+					  -message => 'The left margin must be smaller than the right margin.',
+					  -type    => 'OK',
+				);
+				setmargins();
+			} else {
+				::savesettings();
 			}
-		);
+		}
+	)->grid( -row => 3, -column => 2, -pady => 5 );
+
+		::initialize_popup_with_deletebinding('marginspop');
 	}
 	$::lglobal{marginspop}->raise;
 	$::lglobal{marginspop}->focus;
