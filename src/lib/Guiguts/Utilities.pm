@@ -2032,7 +2032,7 @@ sub externalpopup {    # Set up the external commands menu
 				$::lglobal{extoptpop}->destroy;
 				undef $::lglobal{extoptpop};
 			},
-			-text  => 'Close',
+			-text  => 'OK',
 			-width => 8
 		)->pack( -side => 'top', -padx => 2, -anchor => 'n' );
 		::initialize_popup_with_deletebinding('extoptpop');
@@ -2262,7 +2262,7 @@ sub getprojectid {
 sub setprojectid {
 	my ( $textwindow, $top ) = ( $::textwindow, $::top );
 	my $projectidpop = $top->DialogBox(
-		-buttons => ['Close'],
+		-buttons => ['OK'],
 		-title   => 'DP Project ID',
 	);
 	$projectidpop->resizable( 'no', 'no' );

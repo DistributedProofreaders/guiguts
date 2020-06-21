@@ -1000,7 +1000,7 @@ sub spelloptions {
 	my $dicts;
 	my $dictlist;
 	my $spellop = $top->DialogBox( -title   => 'Spellcheck Options',
-								   -buttons => ['Close'] );
+								   -buttons => ['OK'] );
 	my $spellpathlabel =
 	  $spellop->add( 'Label', -text => 'Aspell executable file:' )->pack;
 	my $spellpathentry =
