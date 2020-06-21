@@ -17,6 +17,7 @@ BEGIN {
 	  &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
 	  &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
 	  &scrolldismiss);
+
 }
 
 sub get_image_file {
@@ -1772,9 +1773,20 @@ sub ebookmaker {
 
 	print "\nBeginning ebookmaker\n";
 	print "Files will appear in the directory $::globallastpath.\n";
-	
+
+	# EBookMaker needs to use Tidy and Kindlegen, so temporarily append to the path
+	my $tidypath = ::catdir( $::lglobal{guigutsdirectory}, 'tools', 'tidy' );
+	my $kindlegenpath = ::catdir( $::lglobal{guigutsdirectory}, 'tools', 'kindlegen' );
+	# local variable means global value will be restored at end of sub
+	local $ENV{PATH} = pathcatdir( pathcatdir( $ENV{PATH}, $tidypath ), $kindlegenpath );
+
 	::runner( $::ebookmakercommand, "--verbose", "--max-depth=3", "--make=epub.images", "--make=kindle.images",
 	          "--output-dir=$outputdir.", "--title=$fname", "$filepath" );
+}
+
+# Concatenate given directories using OS-specific path separator
+sub pathcatdir {
+	return $_[0] . $Config::Config{path_sep} . $_[1];
 }
 
 ## Sidenote Fixup
