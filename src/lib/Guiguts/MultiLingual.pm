@@ -598,7 +598,7 @@ sub setmultiplelanguages {
 	$::multidicts[0] = $::globalspelldictopt;
 	my $dicts;
 	my $spellop = $top->DialogBox( -title   => 'Multiple language selection',
-								   -buttons => ['Close'] );
+								   -buttons => ['OK'] );
 	$spellop->Icon( -image => $::icon );
 	my $baselanglabel =
 	  $spellop->add( 'Label', -text => 'Base language' )->pack;

@@ -246,7 +246,7 @@ sub fontsize {
 		)->grid( -row => 2, -column => 2, -pady => 5 );
 		my $button_ok = $mframe->Button(
 			-activebackground => $::activecolor,
-			-text             => 'Close',
+			-text             => 'OK',
 			-command          => sub {
 				$::lglobal{fontpop}->destroy;
 				undef $::lglobal{fontpop};
@@ -555,7 +555,7 @@ sub filePathsPopup {
 		    )->pack( -expand => 'y', -fill   => 'x' );
 		$::lglobal{filepathspop}->Button(
 			-activebackground => $::activecolor,
-			-text             => 'Close',
+			-text             => 'OK',
 			-command          => sub {
 				$::lglobal{filepathspop}->destroy;
 				undef $::lglobal{filepathspop};
@@ -614,7 +614,7 @@ sub setDPurls {
 		    )->grid( -row => 4, -column => 1, -pady => 2 );
 		$f0->Button(
 			-activebackground => $::activecolor,
-			-text             => 'Close',
+			-text             => 'OK',
 			-command          => sub {
 				$::lglobal{defurlspop}->destroy;
 				undef $::lglobal{defurlspop};

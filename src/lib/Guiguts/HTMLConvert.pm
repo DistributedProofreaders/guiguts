@@ -1755,7 +1755,7 @@ sub htmlimage {
 		my $f8 =
 		  $::lglobal{htmlimpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f8->Button(
-			-text    => 'Ok',
+			-text    => 'OK',
 			-width   => 10,
 			-command => sub {
 				my $name = $::lglobal{imgname}->get;
@@ -2763,7 +2763,7 @@ sub markup {
 				  ->Frame->pack( -side => 'top', -anchor => 'n' );
 				my $okbut = $linkf3->Button(
 					-activebackground => $::activecolor,
-					-text             => 'Ok',
+					-text             => 'OK',
 					-width            => 16,
 					-command          => sub {
 						$name = $::lglobal{linkentry}->get;

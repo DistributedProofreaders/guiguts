@@ -1400,7 +1400,7 @@ sub gcrunopts {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	$::lglobal{gcrunoptspop} =
-	  $top->DialogBox( -title => 'Bookloupe/Gutcheck Run Options', -buttons => ['Close'] );
+	  $top->DialogBox( -title => 'Bookloupe/Gutcheck Run Options', -buttons => ['OK'] );
 	my $gcopt6 =
 	  $::lglobal{gcrunoptspop}->add(
 							   'Checkbutton',
