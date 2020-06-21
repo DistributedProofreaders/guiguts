@@ -192,12 +192,13 @@ our $vislnnm            = 0;
 our $w3cremote          = 0;
 our $wfstayontop        = 0;
 
-# These are set to the default Windows values in initialize()
+# These are set to the default values in initialize()
 our $gutcommand          = '';
 our $jeebiescommand      = '';
 our $tidycommand         = '';
 our $validatecommand     = '';
 our $validatecsscommand  = '';
+our $ebookmakercommand   = '';
 our %gc;
 our %jeeb;
 our %pagenumbers;

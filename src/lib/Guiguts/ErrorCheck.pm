@@ -357,48 +357,24 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 	::update_indicators();
 	my $title = $top->cget('title');
 	if ( $title =~ /No File Loaded/ ) { ::savefile( $textwindow, $top ) }
-	my $types;
-	if ($::OS_WIN) {
-		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
-	} else {
-		$types = [ [ 'All Files', ['*'] ] ];
-	}
-	if ( $errorchecktype eq 'W3C Validate CSS' ) {
-		$types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
-	}
 	if ( $errorchecktype eq 'HTML Tidy' ) {
-		unless ($::tidycommand) {
-			$::tidycommand =
-			  $textwindow->getOpenFile(
-					-filetypes => $types,
-					-title => "Where is the " . $errorchecktype . " executable?"
-			  );
+		unless ( $::tidycommand ) {
+			::locateExecutable( 'HTML Tidy', \$::tidycommand );
+			return 1 unless $::tidycommand;
 		}
-		return 1 unless $::tidycommand;
-		$::tidycommand = ::os_normal($::tidycommand);
 	} elsif (     ( $errorchecktype eq "W3C Validate" )
 			  and ( $::w3cremote == 0 ) )
 	{
-		unless ($::validatecommand) {
-			$::validatecommand =
-			  $textwindow->getOpenFile(
-					 -filetypes => $types,
-					 -title => 'Where is the W3C Validate (onsgmls) executable?'
-			  );
+		unless ( $::validatecommand ) {
+			::locateExecutable( 'W3C Validate (onsgmls)', \$::validatecommand);
+			return 1 unless $::validatecommand;
 		}
-		return 1 unless $::validatecommand;
-		$::validatecommand = ::os_normal($::validatecommand);
-	} elsif ( $errorchecktype eq 'W3C CSS Validate' ) {
+	} elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
 		unless ($::validatecsscommand) {
-			$::validatecsscommand =
-			  $textwindow->getOpenFile(
-				-filetypes => $types,
-				-title =>
-				  'Where is the W3C Validate CSS (css-validate.jar) executable?'
-			  );
+			my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
+			::locateExecutable('W3C Validate CSS (css-validate.jar)', \$::validatecsscommand, $types);
+			return 1 unless $::validatecsscommand;
 		}
-		return 1 unless $::validatecsscommand;
-		$::validatecsscommand = ::os_normal($::validatecsscommand);
 	}
 	::savesettings();
 	$top->Busy( -recurse => 1 );
@@ -1273,19 +1249,10 @@ sub jeebiesrun {
 	$listbox->delete( '0', 'end' );
 	::savefile() if ( $textwindow->numberChanges );
 	my $title = ::os_normal( $::lglobal{global_filename} );
-	my $types;
-	if ($::OS_WIN) {
-		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
-	} else {
-		$types = [ [ 'All Files', ['*'] ] ];
+	unless ( $::jeebiescommand ) {
+		::locateExecutable('Jeebies', \$::jeebiescommand);
+		return unless $::jeebiescommand;
 	}
-	unless ($::jeebiescommand) {
-		$::jeebiescommand =
-		  $textwindow->getOpenFile( -filetypes => $types,
-									-title => 'Where is the Jeebies executable?'
-		  );
-	}
-	return unless $::jeebiescommand;
 	my $jeebiesoptions = "-$::jeebiesmode" . 'e';
 	$::jeebiescommand = ::os_normal($::jeebiescommand);
 	%::jeeb           = ();
@@ -1391,19 +1358,10 @@ sub gutcheck {
 	$title =~ s/edited - //;
 	$title = ::os_normal($title);
 	( $name, $path, $extension ) = ::fileparse( $title, '\.[^\.]*$' );
-	my $types;
-	if ($::OS_WIN) {
-		$types = [ [ 'Executable', [ '.exe', ] ], [ 'All Files', ['*'] ], ];
-	} else {
-		$types = [ [ 'All Files', ['*'] ] ];
+	unless ( $::gutcommand ) {
+		::locateExecutable('Bookloupe/Gutcheck', \$::gutcommand);
+		return unless $::gutcommand;
 	}
-	unless ($::gutcommand) {
-		$::gutcommand =
-		  $textwindow->getOpenFile(-filetypes => $types,
-								   -title => 'Where is the Bookloupe/Gutcheck executable?'
-		  );
-	}
-	return unless $::gutcommand;
 	my $gutcheckoptions = '-ey'
 	  ;    # e - echo queried line. y - puts errors to stdout instead of stderr.
 	if ( $::gcopt[0] ) { $gutcheckoptions .= 't' }

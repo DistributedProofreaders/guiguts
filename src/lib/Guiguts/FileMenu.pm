@@ -999,7 +999,7 @@ EOM
 		print $save_handle "\n";
 		for (
 			qw/globallastpath globalspellpath globalspelldictopt globalviewerpath globalbrowserstart
-			gutcommand jeebiescommand scannospath tidycommand validatecommand validatecsscommand/
+			gutcommand jeebiescommand scannospath tidycommand validatecommand validatecsscommand ebookmakercommand/
 		  )
 		{
 			if ( eval '$::' . $_ ) {
