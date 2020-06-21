@@ -198,7 +198,7 @@ sub menu_preferences {
 			-tearoff => 1,
 			-menuitems =>
 			  [ # FIXME: sub this and generalize for all occurences in menu code.
-				[ Button => '~Font...', -command => \&::fontsize ],
+				[ Button => 'Set ~Font...', -command => \&::fontsize ],
 				[ 'separator', '' ],
 				[
 					Checkbutton => 'Keep Pop-ups On Top',
@@ -293,7 +293,7 @@ sub menu_preferences {
 					-offvalue   => 0
 				],
 				[
-					Checkbutton => 'Use Old Spellcheck Layout',
+					Checkbutton => 'Use Old Spell Check Layout',
 					-variable   => \$::oldspellchecklayout,
 					-onvalue    => 1,
 					-offvalue   => 0,
@@ -400,7 +400,7 @@ sub menu_preferences {
 					  }
 				],
 				[
-					Button   => 'Auto Save ~Interval...',
+					Button   => 'Set Auto Save ~Interval...',
 					-command => sub {
 						::saveinterval();
 						::savesettings();
@@ -454,7 +454,7 @@ sub menu_preferences {
 					-offvalue   => 0
 				],
 				[
-					Button   => 'Search History Size...',
+					Button   => 'Set Search History Size...',
 					-command => sub {
 						::searchsize();
 						::savesettings();
@@ -462,7 +462,7 @@ sub menu_preferences {
 				],
 				[ 'separator', '' ],
 				[
-					Button   => 'Spellcheck Dictionary Select...',
+					Button   => 'Set Spell Check Options...',
 					-command => sub { ::spelloptions() }
 				],
 				[ 'separator', '' ],
@@ -515,7 +515,7 @@ sub menu_external {
 			( 0 .. $#::extops ) ),
 		[ 'separator', '' ],
 		[
-			Button   => 'Setup ~External Operations...',
+			Button   => 'Set ~External Programs...',
 			-command => \&::externalpopup
 		],
 	];
@@ -1412,7 +1412,7 @@ sub menubuilddefault {
 					$textwindow->addGlobEnd;
 				  }
 			],
-			[	Button   => '~Auto-Conv. Italics, Bold and tb',
+			[	Button   => '~Auto-Convert Italics, Bold and tb',
 				-command => sub {
 					$textwindow->addGlobStart;
 					::text_convert_italic( $textwindow, $::italic_char );

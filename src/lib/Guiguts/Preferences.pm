@@ -51,7 +51,7 @@ sub setmargins {
 		$::lglobal{marginspop}->focus;
 	} else {
 		$::lglobal{marginspop} = $top->Toplevel;
-		$::lglobal{marginspop}->title('Set Margins for Rewrap');
+		$::lglobal{marginspop}->title('Rewrap Margins');
 		$::lglobal{marginspop}->resizable('no', 'no');
 		
 	my $lmframe =
@@ -292,11 +292,11 @@ sub saveinterval {
     }
     else {
         $::lglobal{intervalpop} = $top->Toplevel;
-        $::lglobal{intervalpop}->title('Autosave Interval');
+        $::lglobal{intervalpop}->title('Auto Save Interval');
         $::lglobal{intervalpop}->resizable( 'no', 'no' );
         my $frame = $::lglobal{intervalpop}
             ->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        $frame->Label( -text => 'Minutes between autosave' )
+        $frame->Label( -text => 'Minutes between auto save' )
             ->pack( -side => 'left' );
         my $entry = $frame->Entry(
             -background   => $::bkgcolor,
@@ -405,7 +405,7 @@ sub filePathsPopup {
 		$::lglobal{filepathspop}->focus;
 	} else {
 		$::lglobal{filepathspop} = $top->Toplevel;
-		$::lglobal{filepathspop}->title('Set File Paths');
+		$::lglobal{filepathspop}->title('File Paths');
 		my $f1 = $::lglobal{filepathspop}->Frame->pack(
 			-side   => 'top',
 			-anchor => 'n',
@@ -582,7 +582,7 @@ sub setDPurls {
 		$::lglobal{defurlspop}->focus;
 	} else {
 		$::lglobal{defurlspop} = $top->Toplevel;
-		$::lglobal{defurlspop}->title('URLs');
+		$::lglobal{defurlspop}->title('DP URLs');
 		my $f0 =
 		  $::lglobal{defurlspop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0->Label( -text => "Contact proofer with username:")

@@ -33,7 +33,7 @@ EOM
 		$::lglobal{pagesephelppop}->focus;
 	} else {
 		$::lglobal{pagesephelppop} = $top->Toplevel;
-		$::lglobal{pagesephelppop}->title('Functions and Hotkeys for Page Separator Fixup');
+		$::lglobal{pagesephelppop}->title('Functions and Hotkeys for Fixup Page Separators');
 		::initialize_popup_with_deletebinding('pagesephelppop');
 		$::lglobal{pagesephelppop}->Label(
 			-justify => "left",
@@ -487,7 +487,7 @@ sub redojoin {
 sub separatorpopup {
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
-	::operationadd('Begin Page Separators Fixup');
+	::operationadd('Begin Fixup Page Separators');
 	$::lglobal{pagesepauto} = 1 if !defined $::lglobal{pagesepauto} || $::lglobal{pagesepauto} >= 2;
 	if ( defined( $::lglobal{pageseppop} ) ) {
 		$::lglobal{pageseppop}->deiconify;
@@ -495,7 +495,7 @@ sub separatorpopup {
 		$::lglobal{pageseppop}->focus;
 	} else {
 		$::lglobal{pageseppop} = $top->Toplevel;
-		$::lglobal{pageseppop}->title('Page Separator Fixup');
+		$::lglobal{pageseppop}->title('Fixup Page Separators');
 		my $sf1 =
 		  $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $joinbutton = $sf1->Button(

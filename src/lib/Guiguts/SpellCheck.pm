@@ -999,7 +999,7 @@ sub spelloptions {
 	}
 	my $dicts;
 	my $dictlist;
-	my $spellop = $top->DialogBox( -title   => 'Spellcheck Options',
+	my $spellop = $top->DialogBox( -title   => 'Spell Check Options',
 								   -buttons => ['OK'] );
 	my $spellpathlabel =
 	  $spellop->add( 'Label', -text => 'Aspell executable file:' )->pack;

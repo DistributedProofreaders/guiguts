@@ -1966,7 +1966,7 @@ sub externalpopup {    # Set up the external commands menu
 		$::lglobal{extoptpop}->raise;
 		$::lglobal{extoptpop}->focus;
 	} else {
-		$::lglobal{extoptpop} = $top->Toplevel( -title => 'External programs', );
+		$::lglobal{extoptpop} = $top->Toplevel( -title => 'External Programs', );
 		my $f0 =
 		  $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0->Label( -text =>
