@@ -662,7 +662,7 @@ sub initialize {
 		$::positionhash{brkpop}        = '+482+131';
 		$::positionhash{defurlspop}    = '+150+150';
 		$::geometryhash{errorcheckpop} = '+484+72';
-		$::geometryhash{extpop}        = '+120+38';
+		$::positionhash{extoptpop}     = '+120+38';
 		$::positionhash{filepathspop}  = '+55+7';
 		$::positionhash{fixpop}        = '+34+22';
 		$::positionhash{floodpop}      = '+150+150';
@@ -1919,14 +1919,14 @@ sub externalpopup {    # Set up the external commands menu
 	my $textwindow = $::textwindow;
 	my $top        = $::top;
 	my $menutempvar;
-	if ( $::lglobal{extpop} ) {
-		$::lglobal{extpop}->deiconify;
-		$::lglobal{extpop}->raise;
-		$::lglobal{extpop}->focus;
+	if ( $::lglobal{extoptpop} ) {
+		$::lglobal{extoptpop}->deiconify;
+		$::lglobal{extoptpop}->raise;
+		$::lglobal{extoptpop}->focus;
 	} else {
-		$::lglobal{extpop} = $top->Toplevel( -title => 'External programs', );
+		$::lglobal{extoptpop} = $top->Toplevel( -title => 'External programs', );
 		my $f0 =
-		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f0->Label( -text =>
 "You can set up external programs to be called from within guiguts here. Each line of entry boxes represent\n"
 			  . "a menu entry. The left box is the label that will show up under the menu. The right box is the calling parameters.\n"
@@ -1944,7 +1944,7 @@ sub externalpopup {    # Set up the external commands menu
 			  . "\$p = the number of the page that the cursor is currently in.\n"
 			  . "\$t = the currently highlighted text.\n" )->pack;
 		my $f1 =
-		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		for my $menutempvar ( 0 .. ($#::extops < 10 ? 10 : $#::extops) + 1 ) {
 			$f1->Entry(
 				-width        => 50,
@@ -1971,7 +1971,7 @@ sub externalpopup {    # Set up the external commands menu
 			  );
 		}
 		my $f2 =
-		  $::lglobal{extpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+		  $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 		my $gobut = $f2->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
@@ -1987,13 +1987,13 @@ sub externalpopup {    # Set up the external commands menu
 				# save the settings and rebuild the menu
 				::savesettings();
 				::menurebuild();
-				$::lglobal{extpop}->destroy;
-				undef $::lglobal{extpop};
+				$::lglobal{extoptpop}->destroy;
+				undef $::lglobal{extoptpop};
 			},
 			-text  => 'Close',
 			-width => 8
 		)->pack( -side => 'top', -padx => 2, -anchor => 'n' );
-		::initialize_popup_with_deletebinding('extpop');
+		::initialize_popup_with_deletebinding('extoptpop');
 	}
 }
 
