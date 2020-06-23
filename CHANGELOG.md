@@ -258,5 +258,100 @@ and jeebies directories without the .exe files to the guiguts-n.n.n.zip
 file.
 
 ## Version 1.0.0
-See https://www.pgdp.net/wiki/Guiguts_new_features_and_bug_fixes for a
-description of new features and bug fixes.
+Relative to version 0.2.10, the main changes in version 1.0 are
+
+1. One click installation on Windows and Macintosh/OSX computers with no need
+   to install perl separately (see guiguts-win and guiguts-mac zip files)
+2. Several major new features, including running all HTML checks with one
+   button, side by side viewing of text and images, and support for RST
+   and PGTEI
+3. Fixes to many long-standing bugs
+
+
+### Major New Features
+
+All the HTML checks can be run with a  single click, and the output is
+clickable in most cases. Second, HTML and CSS  validation can now be done on
+your own computer (and PGTEI as well) and there are checks for unused CSS and
+image issues (using the pphtml and ppimage scripts). Third, there is now an
+option to view text and images side-by-side without having to click on "See
+Image" for each page. For instance you move forward or back one page for both
+text and image with the "<" and ">" buttons on the status bar. Also, the Auto
+Show Images option lets you see the image for instance for the page you are
+spellchecking or for each search hit.
+
+### Other New Features
+
+A "View in Browser" and Hyperlink page numbers buttons on the HTML palette,
+tearoff of the Unicode menu, listing small caps in the Word Frequency popup,
+automatic checking for updates (which can be turned off), horizontal rules as
+css, an option if nothing is found to return to the starting point, better
+ability to find executables automatically, GutWrench scanno files are
+included, a warning to use human readable filenames, option to include
+goodwords in spellcheck project dictionary, a text processing menu to ease
+conversion of bold/italics/small caps, the label Image #nnn in Configure Page
+Labels is clickable, added Find Transliterations and Find Orphaned Markup
+(before it only searched for unmatched brackets) to Search menu, Adjust Page
+Markers menu is accessible from the File menu. Most popups now remember if
+they have been moved or resized. Unless the user has previously set the size
+of the main screen, it is maximized (nearly) on the first run. Added to Word
+Frequency buttons to check for ligatures and for an arbitrary regular
+expression. For developers, there are internal improvements, including partial
+refactoring of functionality into perl  modules and a unit testing framework.
+
+### Bug Fixes
+
+Dash or periods in the proofer's name no longer messes up display of proofers
+or removal of page separators. Fixed moving of page markers. The default for
+word search from the Word Frequency menu is now "Whole Word". Unicode menu is
+now broken into two pieces so it does not run off the screen where Mac users
+cannot see it. Also, the Unicode popup has a pulldown list to change UTF
+blocks. Replace All now replaces all and is a factor of 10 faster (but not for
+regexes). Double click in Word Frequency does whole word search by default.
+"--" on a line by itself gets converted to an emdash. Fixed regex editor for
+scannos, Ctrl-S saves the file. There is a much higher likelihood that this
+version generates valid HTML. Page anchors are no longer placed at the end of
+the previous paragraph or before the horizontal rule. Fixed
+misplacement/overlapping of HTML page numbers, superscripts are converted to
+HTML correctly (Philad^a) without curly brackets. Fixed multiple page markers
+at a single location so they do not  overlap but stack vertically like `[Pg
+32]<br />[Pg 33]`. Fixed problem with  moving mark left (entry for initial page
+number was blank) or up (code was  garbled). Fixed bugs with small caps
+conversion; replace all with regex and $1 backreferences, stripping markup
+from captions in HTML. Changing the pngs path saves the .bin file immediately.
+Multi term searching is sticky even after guiguts is closed and reopened.
+Search history keeps track of searches more reliably (but still does not
+include scanno searches). Tk TextEdit's FindAndReplaceAll native function goes
+into an endless loop if the search term is in the replacement term (replace
+"C" with "CC". In such cases, guiguts now reverts to the old very slow method.
+Fixed missing space before close of img tag. Gutcheck or HTML Autogenerate on
+empty window produces a warning. Fixed Export as Prep Text which left the page
+headers if the header did not have enough -'s at the end. In PP HTML, fixed
+0:1 report for double blanks. Project dictionary not ignored on restart even
+if longer than 8 characters. Reversed order of "Title" and "Caption" in HTML
+image popup. Word frequency count is run before any spell check. Toolbar font
+is no longer italic for readability. Default poetry left rewrap margin set to
+4. Fixed case sensitivity of searches from Word Frequency Popup. Made "Stay on
+Top"  preference apply to most popups except Word Frequency. Fixed double
+click search on Word Frequency popup to work for strings with nonalphanumeric
+characters (',-,--) while searching from Character Cnts does not do a whole
+word search. Word search from Word Frequency popup works if the word contains
+an apostrophe. Allow search from Word Frequency popup for expressions with
+regex metacharacters such as `\`. Made default sort order for the word
+frequency list sticky. Made choice of poetry left margin sticky. Made all top
+level menus tearoff. More revisions to accommodate non-numeric page markers.
+Fixed page numbers when pngs begin with a letter such as "a001.png". Leave out
+alt and title tags from `<img ...>` if blank.
+
+### Configuring Side-by-Side Viewing of Text and Images
+
+The side by side image viewing works best if the window for the viewer is
+sized to match the image (in XnView, choose View, Auto Image Size, Fit Image
+to Window) and only one instance of the viewer is allowed to avoid having one
+instance for every page viewed (in XnView, choose Tools, Options, General,
+Only One Instance; in Irfanview Options -> Properties/Setting -> Start/Exit
+Options, or Options -> Properties/Setting -> Misc.1 Check "Only 1 instance of
+IrfanView is active). To page through images, use the "<" and ">" buttons on
+the status bar. To Auto Show Page Images, use the "Auto Img" button on the
+status bar, use the option on the Prefs menu, or checkboxes in the various
+search/spellcheck dialogs.
