@@ -20,4 +20,9 @@ Download Guiguts from the project's
 Older binaries are still available from the deprecated
 [Guiguts project at Sourceforge](https://sourceforge.net/projects/guiguts/files/guiguts/).
 
-See [INSTALL.md](INSTALL.md) for installation instructions.
+## Installation
+
+If you are upgrading from an earlier version of Guiguts, see
+[UPGRADE.md](UPGRADE.md).
+
+To install Guiguts see [INSTALL.md](INSTALL.md).
