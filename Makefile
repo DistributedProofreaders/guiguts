@@ -7,7 +7,7 @@ VERSION=1.0.25
 ZIP=zip -rv9
 
 # files to include from the root
-INCLUDES=CHANGELOG.md INSTALL.md LICENSE.txt README.md THANKS.md
+INCLUDES=CHANGELOG.md INSTALL.md UPGRADE.md LICENSE.txt README.md THANKS.md
 
 
 all: generic

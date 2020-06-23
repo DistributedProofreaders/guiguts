@@ -1,8 +1,7 @@
 # Installation
 
-Upgrading requires a complete reinstall (save `header.txt`, `setting.rc`,
-and any files you wish to keep in the `data/` directory, although in
-theory these should not be overwritten).
+These instructions cover a fresh install of Guiguts. If you are upgrading,
+see [UPGRADE.md](UPGRADE.md) before beginning.
 
 Please direct any help requests to the
 [DP forum Guiguts thread](https://www.pgdp.net/phpBB2/viewtopic.php?t=3075).
