@@ -794,7 +794,10 @@ sub initialize {
 	$::lglobal{html_f}            = '<span class="antiqua">';	# HTML convert - default replacement for <f>
 	$::lglobal{html_g}            = '<em class="gesperrt">';	# HTML convert - default replacement for <g>
 	$::lglobal{html_i}            = '<i>';						# HTML convert - default replacement for <i>
-	$::lglobal{htmlimgar}         = 1;				# HTML image aspect ratio
+	$::lglobal{htmlimgwidthtype}  = '%';			# HTML image width in % or em
+	$::lglobal{htmlimgalignment}  = 'center';		# HTML image alignment
+	$::lglobal{htmlimagesizex}    = 0;				# HTML pixel width of file loaded in image dialog
+	$::lglobal{htmlimagesizey}    = 0;				# HTML pixel height of file loaded in image dialog
 	$::lglobal{isedited}          = 0;
 	$::lglobal{wf_ignore_case}    = 0;
 	$::lglobal{keep_latin1}       = 1;				# HTML convert - retain Latin1 characters
