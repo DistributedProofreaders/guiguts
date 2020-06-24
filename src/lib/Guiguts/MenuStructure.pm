@@ -483,6 +483,12 @@ sub menu_preferences {
 					Button   => 'Set Rewrap ~Margins...',
 					-command => \&::setmargins
 				],
+				[
+					Checkbutton => "Always treat as UTF-8",
+					-variable   => \$::utf8save,
+					-onvalue    => 1,
+					-offvalue   => 0,
+				],
 			  ]
 		]
 	];

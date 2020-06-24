@@ -183,6 +183,7 @@ our $twowordsinhyphencheck = 0;
 our $unicodemenusplit   = 2; # 2 or 3
 our $utffontname        = 'Courier New';
 our $utffontsize        = 14;
+our $utf8save           = 1;	# True = always save utf8, false = only if unicode characters in file
 our $verboseerrorchecks = 0;
 our $vislnnm            = 0;
 our $w3cremote          = 0;
