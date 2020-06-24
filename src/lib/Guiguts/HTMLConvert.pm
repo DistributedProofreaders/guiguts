@@ -2,9 +2,13 @@ package Guiguts::HTMLConvert;
 use strict;
 use warnings;
 
+my $EMPX = 16.0;	# 1em in px assumed to be 16
+my ( $LANDX, $LANDY ) = ( 4, 3 ); # Common aspect ratio of landscape screen
+
 BEGIN {
 	use Exporter();
 	use List::Util qw[min max];
+	use Scalar::Util qw(looks_like_number);
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
@@ -1641,8 +1645,8 @@ sub htmlimage {
 	my $selection;
 	$selection = $textwindow->get( $thisblockstart, $thisblockend ) if @_;
 	$selection = '' unless $selection;
-	my $preservep = '';
-	$preservep = "\n<p>" if $selection !~ /<\/p>$/;
+	$::lglobal{preservep} = '';
+	$::lglobal{preservep} = "\n<p>" if $selection !~ /<\/p>$/;
 	$selection =~ s/<p>\[Illustration/[Illustration/;
 	$selection =~ s/\[Illustration:?\s*(\.*)/$1/;
 	$selection =~ s/\]<\/p>$/]/;
@@ -1650,7 +1654,6 @@ sub htmlimage {
 	my $xpad = 0;
 	$::globalimagepath = $::globallastpath
 	  unless $::globalimagepath;
-	my ($alignment);
 	$::lglobal{htmlorig}  = $top->Photo;
 	$::lglobal{htmlthumb} = $top->Photo;
 
@@ -1688,65 +1691,61 @@ sub htmlimage {
 		my $f51 = $f5->Frame->pack( -side => 'top', -anchor => 'n' );
 		$f51->Label( -text => 'Width' )->pack( -side => 'left' );
 		$::lglobal{widthent} = $f51->Entry(
-			-width    => 10,
+			-width    => 8,
 			-validate => 'all',
 			-vcmd     => sub {
-				return 1 if ( !$::lglobal{ImageSize} );
-				return 1 unless $::lglobal{htmlimgar};
-				return 1 unless ( $_[0] && $_[2] );
-				return 0 unless ( defined $_[1] && $_[1] =~ /\d/ );
-				my ( $sizex, $sizey ) =
-				  Image::Size::imgsize( $::lglobal{imgname}->get );
-				$::lglobal{heightent}->delete( 0, 'end' );
-				$::lglobal{heightent}
-				  ->insert( 'end', ( int( $sizey * ( $_[0] / $sizex ) ) ) );
-				return 1;
-			}
+				my $newval = shift;
+				my $change = shift;
+				my $ok = 1;	# Default to OK for unchanged/empty value
+				
+				# Need to check it's a number if it has changed and is non-empty, 
+				$ok = looks_like_number($newval) if ( $change and $newval );
+				htmlimageupdateheight( $newval ) if $ok;# Update the height field
+				return $ok;
+			},
 		)->pack( -side => 'left' );
 		$f51->Label( -text => 'Height' )->pack( -side => 'left' );
 		$::lglobal{heightent} = $f51->Entry(
-			-width    => 10,
-			-validate => 'all',
-			-vcmd     => sub {
-				return 1 if ( !$::lglobal{ImageSize} );
-				return 1 unless $::lglobal{htmlimgar};
-				return 1 unless ( $_[0] && $_[2] );
-				return 0 unless ( defined $_[1] && $_[1] =~ /\d/ );
-				my ( $sizex, $sizey ) =
-				  Image::Size::imgsize( $::lglobal{imgname}->get );
-				$::lglobal{widthent}->delete( 0, 'end' );
-				$::lglobal{widthent}
-				  ->insert( 'end', ( int( $sizex * ( $_[0] / $sizey ) ) ) );
-				return 1;
-			}
+			-width    => 8,
+			-state    => 'readonly',
+			-textvariable => \$::lglobal{htmlimgheight},
 		)->pack( -side => 'left' );
-		my $ar = $f51->Checkbutton(
-			-text     => 'Maintain AR',
-			-variable => \$::lglobal{htmlimgar},
-			-onvalue  => 1,
-			-offvalue => 0
+		my $percentsel = $f51->Radiobutton(
+			-variable    => \$::lglobal{htmlimgwidthtype},
+			-text        => '%',
+			-selectcolor => $::lglobal{checkcolor},
+			-value       => '%',
+			-command     => sub { htmlimagewidthsetdefault(); }
 		)->pack( -side => 'left' );
-		$ar->select;
+		my $emsel = $f51->Radiobutton(
+			-variable    => \$::lglobal{htmlimgwidthtype},
+			-text        => 'em',
+			-selectcolor => $::lglobal{checkcolor},
+			-value       => 'em',
+			-command     => sub { htmlimagewidthsetdefault(); }
+		)->pack( -side => 'left' );
 		my $f52 = $f5->Frame->pack( -side => 'top', -anchor => 'n' );
 		$::lglobal{htmlimggeom} =
-		  $f52->Label( -text => '' )->pack( -side => 'left' );
+		  $f52->Label( -text => '' )->pack();
+		$::lglobal{htmlimgmaxwidth} =
+		  $f52->Label( -text => '' )->pack();
 		my $f2 =
 		  $::lglobal{htmlimpop}->LabFrame( -label => 'Alignment' )
 		  ->pack( -side => 'top', -anchor => 'n' );
 		$f2->Radiobutton(
-			-variable    => \$alignment,
+			-variable    => \$::lglobal{htmlimgalignment},
 			-text        => 'Left',
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'left',
 		)->grid( -row => 1, -column => 1 );
 		my $censel = $f2->Radiobutton(
-			-variable    => \$alignment,
+			-variable    => \$::lglobal{htmlimgalignment},
 			-text        => 'Center',
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'center',
 		)->grid( -row => 1, -column => 2 );
 		$f2->Radiobutton(
-			-variable    => \$alignment,
+			-variable    => \$::lglobal{htmlimgalignment},
 			-text        => 'Right',
 			-selectcolor => $::lglobal{checkcolor},
 			-value       => 'right',
@@ -1757,114 +1756,7 @@ sub htmlimage {
 		$f8->Button(
 			-text    => 'OK',
 			-width   => 10,
-			-command => sub {
-				my $name = $::lglobal{imgname}->get;
-				if ($name) {
-					my $sizexy =
-					    'width="'
-					  . $::lglobal{widthent}->get
-					  . '" height="'
-					  . $::lglobal{heightent}->get . '"';
-					my $width = $::lglobal{widthent}->get;
-					return unless $name;
-					my ( $fname, $extension );
-					( $fname, $::globalimagepath, $extension ) =
-					  ::fileparse($name);
-					$::globalimagepath = ::os_normal($::globalimagepath);
-					$name =~ s/[\/\\]/\;/g;
-					my $tempname = $::globallastpath;
-					$tempname =~ s/[\/\\]/\;/g;
-					$name     =~ s/$tempname//;
-					$name     =~ s/;/\//g;
-					$alignment = 'center' unless $alignment;
-					$selection = $::lglobal{captiontext}->get;
-					$selection ||= '';
-					my $alt = $::lglobal{alttext}->get;
-					$alt =~ s/"/&quot;/g;
-					$alt = " alt=\"$alt\"";
-					$selection = "  <div class=\"caption\">$selection</div>\n"
-					  if $selection;
-					$preservep = '' unless $selection;
-					my $title = $::lglobal{titltext}->get || '';
-					$title =~ s/"/&quot;/g;
-					$title = " title=\"$title\"" if $title;
-
-					# Use filename as basis for an id - remove file extension first
-					$fname =~ s/\.[^\.]*$//;
-					my $idname = makeanchor( ::deaccentdisplay($fname) );
-					my $classname = 'illow' . $width;
-					my $classreg = '\.illow[0-9]+ {'; # Match any automatically added illow classes
-
-					# Replace [Illustration] with div, img and caption
-					$textwindow->addGlobStart;
-					$textwindow->delete( 'thisblockstart', 'thisblockend' );
-					$textwindow->insert( 'thisblockstart',
-						    "<div class=\"fig$alignment $classname\" id=\"$idname\" >\n"
-						  . "  <img src=\"$name\" $sizexy$alt$title />\n"
-						  . "$selection</div>"
-						  . $preservep );
-						  
-					# Write class into CSS block (sorted in width order) - first find end of CSS
-					my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
-					if ($insertpoint) {
-						# Max-width in em - assumed to be 16px
-						# Necessary because eBookMaker removes declarations ending in "px" 
-						my $cssdef = ".$classname {max-width: " . ($width/16.0) . "em;}";
-						# Unless this class has been added already ...
-						unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
-							# Find end of last class definition in CSS
-							$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
-							if ($insertpoint) {
-								$insertpoint = $insertpoint . ' +1l'; # default position for first ever illow class
-								my $length = 0;
-								my $classpoint = $insertpoint;
-								# Loop back through illow classes to find correct place to insert
-								# If a smaller width is found, insert after it. If not, insert at start of list
-								while (	$classpoint = $textwindow->search( '-backwards', '-regexp',
-											'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
-									$insertpoint = $classpoint; # Potential insert point
-									my $testwidth = $textwindow->get( $classpoint . '+6c', $classpoint . '+' . ($length-2) . 'c' );
-									if ( $testwidth < $width ) {
-										$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
-										last;
-									}
-								}
-								$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
-
-								# Unless it already exists, add heading before first illow class
-								my $heading = '/* Illustration classes */';
-								unless ($textwindow->search( '--', $heading, '10.0', $insertpoint )) {
-									$insertpoint = $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
-									$textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n") if ($insertpoint);
-								}
-							}
-						}
-					}
-					$textwindow->addGlobEnd;
-					
-					$::lglobal{htmlthumb}->delete
-					  if $::lglobal{htmlthumb};
-					$::lglobal{htmlthumb}->destroy
-					  if $::lglobal{htmlthumb};
-					$::lglobal{htmlorig}->delete
-					  if $::lglobal{htmlorig};
-					$::lglobal{htmlorig}->destroy
-					  if $::lglobal{htmlorig};
-					for (
-						$::lglobal{alttext},  $::lglobal{titltext},
-						$::lglobal{widthent}, $::lglobal{heightent},
-						$::lglobal{imagelbl}, $::lglobal{imgname}
-					  )
-					{
-						$_->destroy;
-					}
-					$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-					$::lglobal{htmlimpop}->destroy
-					  if $::lglobal{htmlimpop};
-					undef $::lglobal{htmlimpop}
-					  if $::lglobal{htmlimpop};
-				}
-			}
+			-command => sub { htmlimageok($textwindow); }
 		)->pack;
 		my $f = $::lglobal{htmlimpop}->Frame->pack;
 		$::lglobal{imagelbl} = $f->Label(
@@ -1899,6 +1791,153 @@ sub htmlimage {
 	$::lglobal{titltext}->delete( 0, 'end' ) if $::lglobal{titltext};
 	$::lglobal{captiontext}->insert( 'end', "<p>$selection</p>" ) if $selection;
 	&thumbnailbrowse();
+}
+
+sub htmlimageok {
+	my $textwindow = shift;
+	my $name = $::lglobal{imgname}->get;
+	if ($name) {
+		my $widthcn = my $width = $::lglobal{widthent}->get;
+		$widthcn =~ s/\./_/; # Convert decimal point to underscore for classname
+		return unless $name;
+		my ( $fname, $extension );
+		( $fname, $::globalimagepath, $extension ) =
+		  ::fileparse($name);
+		$::globalimagepath = ::os_normal($::globalimagepath);
+		$name =~ s/[\/\\]/\;/g;
+		my $tempname = $::globallastpath;
+		$tempname =~ s/[\/\\]/\;/g;
+		$name     =~ s/$tempname//;
+		$name     =~ s/;/\//g;
+		my $selection = $::lglobal{captiontext}->get;
+		$selection ||= '';
+		my $alt = $::lglobal{alttext}->get;
+		$alt =~ s/"/&quot;/g;
+		$alt = " alt=\"$alt\"";
+		$selection = "  <div class=\"caption\">$selection</div>\n"
+		  if $selection;
+		$::lglobal{preservep} = '' unless $selection;
+		my $title = $::lglobal{titltext}->get || '';
+		$title =~ s/"/&quot;/g;
+		$title = " title=\"$title\"" if $title;
+
+		# Use filename as basis for an id - remove file extension first
+		$fname =~ s/\.[^\.]*$//;
+		my $idname = makeanchor( ::deaccentdisplay($fname) );
+		my $classname = 'illow' . $widthcn . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' );
+		my $classreg = '\.illow[0-9\.]+[pe]'; # Match any automatically added illow classes
+
+		# Replace [Illustration] with div, img and caption
+		$textwindow->addGlobStart;
+		$textwindow->delete( 'thisblockstart', 'thisblockend' );
+		$textwindow->insert( 'thisblockstart',
+				"<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\" >\n"
+			  . "  <img src=\"$name\" $alt$title />\n"
+			  . "$selection</div>"
+			  . $::lglobal{preservep} );
+			  
+		# Write class into CSS block (sorted) - first find end of CSS
+		my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
+		if ($insertpoint) {
+			my $cssdef = ".$classname {width: " . $widthcn . "$::lglobal{htmlimgwidthtype};}";
+			# Unless this class has been added already ...
+			unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
+				# Find end of last class definition in CSS
+				$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
+				if ($insertpoint) {
+					$insertpoint = $insertpoint . ' +1l'; # default position for first ever illow class
+					my $length = 0;
+					my $classpoint = $insertpoint;
+					# Loop back through illow classes to find correct place to insert
+					# If a smaller width is found, insert after it. If not, insert at start of list
+					while (	$classpoint = $textwindow->search( '-backwards', '-regexp',
+								'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
+						$insertpoint = $classpoint; # Potential insert point
+						my $testcn = $textwindow->get( "$classpoint+1c", "$classpoint+${length}c" );
+						print "$testcn\n";
+						if ( $testcn le $classname ) {
+							$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
+							last;
+						}
+					}
+					$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
+
+					# Unless it already exists, add heading before first illow class
+					my $heading = '/* Illustration classes */';
+					unless ($textwindow->search( '--', $heading, '10.0', $insertpoint )) {
+						$insertpoint = $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
+						$textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n") if ($insertpoint);
+					}
+				}
+			}
+		}
+		$textwindow->addGlobEnd;
+		
+		$::lglobal{htmlthumb}->delete
+		  if $::lglobal{htmlthumb};
+		$::lglobal{htmlthumb}->destroy
+		  if $::lglobal{htmlthumb};
+		$::lglobal{htmlorig}->delete
+		  if $::lglobal{htmlorig};
+		$::lglobal{htmlorig}->destroy
+		  if $::lglobal{htmlorig};
+		for (
+			$::lglobal{alttext},  $::lglobal{titltext},
+			$::lglobal{widthent}, $::lglobal{heightent},
+			$::lglobal{imagelbl}, $::lglobal{imgname}
+		  )
+		{
+			$_->destroy;
+		}
+		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+		$::lglobal{htmlimpop}->destroy
+		  if $::lglobal{htmlimpop};
+		undef $::lglobal{htmlimpop}
+		  if $::lglobal{htmlimpop};
+	}
+}
+
+# Reset the width field to the default for the current type
+sub htmlimagewidthsetdefault {
+	my $sizex;
+	if ( $::lglobal{htmlimgwidthtype} eq '%' ) {
+		$sizex = htmlimagewidthmaxpercent();
+	} else {
+		$sizex = $::lglobal{htmlimagesizex} / $EMPX;
+	}
+	$::lglobal{widthent}->delete( 0, 'end' );
+	$::lglobal{widthent}->insert( 'end', $sizex );
+	htmlimageupdateheight( $sizex );
+	
+	# Tell user maximum % width such that both dimensions will fit a 4:3 screen
+	$::lglobal{htmlimgmaxwidth}->configure( -text =>
+	  ( $::lglobal{htmlimgwidthtype} eq '%' ) ?
+		"Max width to fit $LANDX:$LANDY screen is " . $sizex . "%" : "" );
+}
+
+# Return the maximum percentage width for the current image
+# such that both its width and height will fit a landscape screen
+sub htmlimagewidthmaxpercent {
+	return  min( 100, int( 100.0 * $LANDY / $LANDX *
+	  $::lglobal{htmlimagesizex} / $::lglobal{htmlimagesizey} ) );
+}
+
+# Update the image height field based on the width field, width type (%/em)
+# and aspect ratio of loaded image
+# If using percentage width, then height is not known/displayed
+sub htmlimageupdateheight {
+	my $widthlabel = shift;
+	my $heightlabel = '';
+	if ( looks_like_number($widthlabel) ) {
+		if ( $::lglobal{htmlimgwidthtype} eq '%' ) {
+			$heightlabel = ' --';
+		} else {
+			$heightlabel = $widthlabel * $::lglobal{htmlimagesizey} / $::lglobal{htmlimagesizex}
+				if $::lglobal{htmlimagesizex} and $::lglobal{htmlimagesizey};
+			$heightlabel = sprintf( "%.3f", $heightlabel );
+		}
+	}
+	$::lglobal{htmlimgheight} = $heightlabel;
 }
 
 sub htmlimages {
@@ -1988,17 +2027,20 @@ sub thumbnailbrowse {
 	return unless ($name);
 	my $xythumb = 200;
 	if ( $::lglobal{ImageSize} ) {
-		my ( $sizex, $sizey ) = Image::Size::imgsize($name);
-		$::lglobal{widthent}->delete( 0, 'end' );
-		$::lglobal{heightent}->delete( 0, 'end' );
-		$::lglobal{widthent}->insert( 'end', $sizex );
-		$::lglobal{heightent}->insert( 'end', $sizey );
+		( $::lglobal{htmlimagesizex}, $::lglobal{htmlimagesizey} ) = Image::Size::imgsize($name);
 		$::lglobal{htmlimggeom}
-		  ->configure( -text => "Actual image size: $sizex x $sizey pixels" );
+		  ->configure( -text => "File size: " .
+		                        $::lglobal{htmlimagesizex} / $EMPX . " x " . 
+		                        $::lglobal{htmlimagesizey} / $EMPX . " em " .
+		                        "($::lglobal{htmlimagesizex} x $::lglobal{htmlimagesizey} px)" );
 	} else {
-		$::lglobal{htmlimggeom}
-		  ->configure( -text => "Actual image size: unknown" );
+		$::lglobal{htmlimagesizex} = 0;
+		$::lglobal{htmlimagesizey} = 0;
+		$::lglobal{htmlimggeom}->configure( -text => "File size: unknown" );
+		$::lglobal{htmlimgmaxwidth}->configure( -text => "" );
 	}
+	htmlimagewidthsetdefault();
+
 	$::lglobal{htmlorig}->blank;
 	$::lglobal{htmlthumb}->blank;
 	$::lglobal{imgname}->delete( '0', 'end' );
@@ -2006,11 +2048,11 @@ sub thumbnailbrowse {
 	my ( $fn, $ext );
 	( $fn, $::globalimagepath, $ext ) = ::fileparse( $name, '(?<=\.)[^\.]*$' );
 	$::globalimagepath = ::os_normal($::globalimagepath);
-	$ext =~ s/jpg/jpeg/;
 
 	if ( lc($ext) eq 'gif' ) {
 		$::lglobal{htmlorig}->read( $name, -shrink );
 	} else {
+		$ext =~ s/jpg/jpeg/;
 		$::lglobal{htmlorig}->read( $name, -format => $ext, -shrink );
 	}
 	my $sw = int( ( $::lglobal{htmlorig}->width ) / $xythumb );
@@ -2020,8 +2062,7 @@ sub thumbnailbrowse {
 	}
 	if ( $sw < 2 ) { $sw += 1 }
 	$::lglobal{htmlthumb}
-	  ->copy( $::lglobal{htmlorig}, -subsample => ($sw), -shrink )
-	  ;    #hkm changed textcopy to copy
+	  ->copy( $::lglobal{htmlorig}, -subsample => ($sw), -shrink );
 	$::lglobal{imagelbl}->configure(
 		-image   => $::lglobal{htmlthumb},
 		-text    => 'Thumbnail',

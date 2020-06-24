@@ -145,12 +145,15 @@ em.gesperrt
 
 img {
     max-width: 100%;
+    width: 100%;
     height: auto;
 }
 
 .figcenter {
     margin: auto;
     text-align: center;
+    page-break-inside: avoid;
+    max-width: 100%;
 }
 
 .figleft {
@@ -162,6 +165,8 @@ img {
     margin-right: 1em;
     padding: 0;
     text-align: center;
+    page-break-inside: avoid;
+    max-width: 100%;
 }
 
 .figright {
@@ -173,6 +178,8 @@ img {
     margin-right: 0;
     padding: 0;
     text-align: center;
+    page-break-inside: avoid;
+    max-width: 100%;
 }
 
 /* Footnotes */
