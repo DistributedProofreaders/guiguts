@@ -484,7 +484,7 @@ sub menu_preferences {
 					-command => \&::setmargins
 				],
 				[
-					Checkbutton => "Always treat as UTF-8",
+					Checkbutton => "Always Treat as ~UTF-8",
 					-variable   => \$::utf8save,
 					-onvalue    => 1,
 					-offvalue   => 0,
