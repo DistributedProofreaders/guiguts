@@ -1313,7 +1313,7 @@ sub footnotefind {
 	my ( $bracketndx, $nextbracketndx, $bracketstartndx, $bracketendndx );
 	$::lglobal{ftnoteindexstart} = $textwindow->index('fnindex');
 	$bracketstartndx =
-	  $textwindow->search( '-regexp', '--', '\[[Ff][Oo][Oo][Tt]',
+	  $textwindow->search( '-nocase', '--', '[Footnote',
 						   $::lglobal{ftnoteindexstart}, 'end' );
 	return ( 0, 0 ) unless $bracketstartndx;
 	$bracketndx = "$bracketstartndx+1c";
