@@ -321,15 +321,17 @@ sub _bin_save {
 	}
 	my $bak = "$binname.bak";
 	if ( -e $bak ) {
-		my $perms = ( stat($bak) )[2] & 7777;
+		my $perms = ( stat($bak) )[2] & 0777;
 		unless ( $perms & 300 ) {
 			$perms = $perms | 300;
 			chmod $perms, $bak or warn "Can not back up .bin file: $!\n";
 		}
 		unlink $bak;
 	}
+	my $permsave;
 	if ( -e $binname ) {
-		my $perms = ( stat($binname) )[2] & 7777;
+		my $perms = ( stat($binname) )[2] & 0777;
+		$permsave = $perms;
 		unless ( $perms & 300 ) {
 			$perms = $perms | 300;
 			chmod $perms, $binname
@@ -393,6 +395,7 @@ sub _bin_save {
 "\$scannoslistpath = '@{[::escape_problems(::os_normal($::scannoslistpath))]}';\n\n";
 		print $fh '1;';
 		$fh->close;
+		chmod $permsave, $binname if $permsave;	# copy file permissions if overwriting
 	} else {
 		$top->BackTrace("Cannot open $binname:$!");
 	}
