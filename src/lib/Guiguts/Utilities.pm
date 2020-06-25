@@ -2233,6 +2233,7 @@ sub columnizeselection {
 }
 
 sub currentfileisunicode {
+	return 1 if $::utf8save; # treat as unicode regardless of contents
 	my $textwindow = $::textwindow;
 	return $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
 }
