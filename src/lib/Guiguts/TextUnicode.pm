@@ -100,11 +100,14 @@ sub SaveUTF {
 	}
 	$progress->withdraw if defined $progress;
 	close $tempfh;
+	my $permsave;
 	if ( -e $filename ) {
+		$permsave = ( stat($filename) )[2] & 0777;
 		chmod 0777, $filename;
 		unlink $filename;
 	}
 	if ( rename( $tempfilename, $filename ) ) {
+		chmod $permsave, $filename if $permsave;	# copy file permissions if overwriting
 		#$w->ResetUndo; #serves no purpose to reset undo
 		$w->FileName($filename);
 		return 1;
