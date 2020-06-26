@@ -1824,8 +1824,8 @@ sub htmlimageok {
 		# Use filename as basis for an id - remove file extension first
 		$fname =~ s/\.[^\.]*$//;
 		my $idname = makeanchor( ::deaccentdisplay($fname) );
-		my $classname = 'illow' . $widthcn . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' );
-		my $classreg = '\.illow[0-9\.]+[pe]'; # Match any automatically added illow classes
+		my $classname = 'illow' . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' ) . $widthcn;
+		my $classreg = '\.illow[pe][0-9\.]+'; # Match any automatically added illow classes
 
 		# Replace [Illustration] with div, img and caption
 		$textwindow->addGlobStart;
@@ -1839,7 +1839,7 @@ sub htmlimageok {
 		# Write class into CSS block (sorted) - first find end of CSS
 		my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
 		if ($insertpoint) {
-			my $cssdef = ".$classname {width: " . $widthcn . "$::lglobal{htmlimgwidthtype};}";
+			my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
 			# Unless this class has been added already ...
 			unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
 				# Find end of last class definition in CSS
@@ -1854,7 +1854,6 @@ sub htmlimageok {
 								'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
 						$insertpoint = $classpoint; # Potential insert point
 						my $testcn = $textwindow->get( "$classpoint+1c", "$classpoint+${length}c" );
-						print "$testcn\n";
 						if ( $testcn le $classname ) {
 							$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
 							last;
