@@ -268,7 +268,7 @@ sub reflow_string($@) {
   # We split on newlines and then restore them, being careful
   # not to add an extra newline at the end:
   local @from = split(/\n/, $input, -1);
-  pop(@from) if ($from[$#from] eq "");
+  pop(@from) if ($#from >= 0 and $from[$#from] eq "");
   @from = map { "$_\n" } @from;
   local @to = ();
   process_opts(@opts);
