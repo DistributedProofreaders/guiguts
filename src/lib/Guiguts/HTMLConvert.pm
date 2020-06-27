@@ -1796,104 +1796,102 @@ sub htmlimage {
 sub htmlimageok {
 	my $textwindow = shift;
 	my $name = $::lglobal{imgname}->get;
-	if ($name) {
-		my $widthcn = my $width = $::lglobal{widthent}->get;
-		$widthcn =~ s/\./_/; # Convert decimal point to underscore for classname
-		return unless $name;
-		my ( $fname, $extension );
-		( $fname, $::globalimagepath, $extension ) =
-		  ::fileparse($name);
-		$::globalimagepath = ::os_normal($::globalimagepath);
-		$name =~ s/[\/\\]/\;/g;
-		my $tempname = $::globallastpath;
-		$tempname =~ s/[\/\\]/\;/g;
-		$name     =~ s/$tempname//;
-		$name     =~ s/;/\//g;
-		my $selection = $::lglobal{captiontext}->get;
-		$selection ||= '';
-		my $alt = $::lglobal{alttext}->get;
-		$alt =~ s/"/&quot;/g;
-		$alt = " alt=\"$alt\"";
-		$selection = "  <div class=\"caption\">$selection</div>\n"
-		  if $selection;
-		$::lglobal{preservep} = '' unless $selection;
-		my $title = $::lglobal{titltext}->get || '';
-		$title =~ s/"/&quot;/g;
-		$title = " title=\"$title\"" if $title;
+	return unless $name;
+	my $widthcn = my $width = $::lglobal{widthent}->get;
+	$widthcn =~ s/\./_/; # Convert decimal point to underscore for classname
+	my ( $fname, $extension );
+	( $fname, $::globalimagepath, $extension ) =
+	  ::fileparse($name);
+	$::globalimagepath = ::os_normal($::globalimagepath);
+	$name =~ s/[\/\\]/\;/g;
+	my $tempname = $::globallastpath;
+	$tempname =~ s/[\/\\]/\;/g;
+	$name     =~ s/$tempname//;
+	$name     =~ s/;/\//g;
+	my $selection = $::lglobal{captiontext}->get;
+	$selection ||= '';
+	my $alt = $::lglobal{alttext}->get;
+	$alt =~ s/"/&quot;/g;
+	$alt = " alt=\"$alt\"";
+	$selection = "  <div class=\"caption\">$selection</div>\n"
+	  if $selection;
+	$::lglobal{preservep} = '' unless $selection;
+	my $title = $::lglobal{titltext}->get || '';
+	$title =~ s/"/&quot;/g;
+	$title = " title=\"$title\"" if $title;
 
-		# Use filename as basis for an id - remove file extension first
-		$fname =~ s/\.[^\.]*$//;
-		my $idname = makeanchor( ::deaccentdisplay($fname) );
-		my $classname = 'illow' . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' ) . $widthcn;
-		my $classreg = '\.illow[pe][0-9\.]+'; # Match any automatically added illow classes
+	# Use filename as basis for an id - remove file extension first
+	$fname =~ s/\.[^\.]*$//;
+	my $idname = makeanchor( ::deaccentdisplay($fname) );
+	my $classname = 'illow' . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' ) . $widthcn;
+	my $classreg = '\.illow[pe][0-9\.]+'; # Match any automatically added illow classes
 
-		# Replace [Illustration] with div, img and caption
-		$textwindow->addGlobStart;
-		$textwindow->delete( 'thisblockstart', 'thisblockend' );
-		$textwindow->insert( 'thisblockstart',
-				"<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\" >\n"
-			  . "  <img src=\"$name\" $alt$title />\n"
-			  . "$selection</div>"
-			  . $::lglobal{preservep} );
-			  
-		# Write class into CSS block (sorted) - first find end of CSS
-		my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
-		if ($insertpoint) {
-			my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
-			# Unless this class has been added already ...
-			unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
-				# Find end of last class definition in CSS
-				$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
-				if ($insertpoint) {
-					$insertpoint = $insertpoint . ' +1l'; # default position for first ever illow class
-					my $length = 0;
-					my $classpoint = $insertpoint;
-					# Loop back through illow classes to find correct place to insert
-					# If a smaller width is found, insert after it. If not, insert at start of list
-					while (	$classpoint = $textwindow->search( '-backwards', '-regexp',
-								'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
-						$insertpoint = $classpoint; # Potential insert point
-						my $testcn = $textwindow->get( "$classpoint+1c", "$classpoint+${length}c" );
-						if ( $testcn le $classname ) {
-							$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
-							last;
-						}
+	# Replace [Illustration] with div, img and caption
+	$textwindow->addGlobStart;
+	$textwindow->delete( 'thisblockstart', 'thisblockend' );
+	$textwindow->insert( 'thisblockstart',
+			"<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\" >\n"
+		  . "  <img class=\"w100\" src=\"$name\" $alt$title />\n"
+		  . "$selection</div>"
+		  . $::lglobal{preservep} );
+		  
+	# Write class into CSS block (sorted) - first find end of CSS
+	my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
+	if ($insertpoint) {
+		my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
+		# Unless this class has been added already ...
+		unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
+			# Find end of last class definition in CSS
+			$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
+			if ($insertpoint) {
+				$insertpoint = $insertpoint . ' +1l'; # default position for first ever illow class
+				my $length = 0;
+				my $classpoint = $insertpoint;
+				# Loop back through illow classes to find correct place to insert
+				# If a smaller width is found, insert after it. If not, insert at start of list
+				while (	$classpoint = $textwindow->search( '-backwards', '-regexp',
+							'-count' => \$length, '--', $classreg, $classpoint, '10.0')) {
+					$insertpoint = $classpoint; # Potential insert point
+					my $testcn = $textwindow->get( "$classpoint+1c", "$classpoint+${length}c" );
+					if ( $testcn le $classname ) {
+						$insertpoint = $insertpoint . ' +1l'; # Insert after smaller width
+						last;
 					}
-					$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
+				}
+				$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
 
-					# Unless it already exists, add heading before first illow class
-					my $heading = '/* Illustration classes */';
-					unless ($textwindow->search( '--', $heading, '10.0', $insertpoint )) {
-						$insertpoint = $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
-						$textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n") if ($insertpoint);
-					}
+				# Unless it already exists, add heading before first illow class
+				my $heading = '/* Illustration classes */';
+				unless ($textwindow->search( '--', $heading, '10.0', $insertpoint )) {
+					$insertpoint = $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
+					$textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n") if ($insertpoint);
 				}
 			}
 		}
-		$textwindow->addGlobEnd;
-		
-		$::lglobal{htmlthumb}->delete
-		  if $::lglobal{htmlthumb};
-		$::lglobal{htmlthumb}->destroy
-		  if $::lglobal{htmlthumb};
-		$::lglobal{htmlorig}->delete
-		  if $::lglobal{htmlorig};
-		$::lglobal{htmlorig}->destroy
-		  if $::lglobal{htmlorig};
-		for (
-			$::lglobal{alttext},  $::lglobal{titltext},
-			$::lglobal{widthent}, $::lglobal{heightent},
-			$::lglobal{imagelbl}, $::lglobal{imgname}
-		  )
-		{
-			$_->destroy;
-		}
-		$textwindow->tagRemove( 'highlight', '1.0', 'end' );
-		$::lglobal{htmlimpop}->destroy
-		  if $::lglobal{htmlimpop};
-		undef $::lglobal{htmlimpop}
-		  if $::lglobal{htmlimpop};
 	}
+	$textwindow->addGlobEnd;
+	
+	$::lglobal{htmlthumb}->delete
+	  if $::lglobal{htmlthumb};
+	$::lglobal{htmlthumb}->destroy
+	  if $::lglobal{htmlthumb};
+	$::lglobal{htmlorig}->delete
+	  if $::lglobal{htmlorig};
+	$::lglobal{htmlorig}->destroy
+	  if $::lglobal{htmlorig};
+	for (
+		$::lglobal{alttext},  $::lglobal{titltext},
+		$::lglobal{widthent}, $::lglobal{heightent},
+		$::lglobal{imagelbl}, $::lglobal{imgname}
+	  )
+	{
+		$_->destroy;
+	}
+	$textwindow->tagRemove( 'highlight', '1.0', 'end' );
+	$::lglobal{htmlimpop}->destroy
+	  if $::lglobal{htmlimpop};
+	undef $::lglobal{htmlimpop}
+	  if $::lglobal{htmlimpop};
 }
 
 # Reset the width field to the default for the current type
