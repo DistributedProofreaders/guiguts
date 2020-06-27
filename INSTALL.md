@@ -194,6 +194,30 @@ For other platforms, you will need to install Perl and the necessary
 perl guiguts.pl
 ```
 
+## Using Guiguts from a Git checkout
+
+_This section is for advanced users who want to run the latest in-development
+version of Guiguts and are comfortable with git._
+
+You can run Guiguts directly from the git repo with a few small changes.
+
+1. Clone the [Guiguts repo](https://github.com/DistributedProofreaders/guiguts)
+   somewhere. You'll find the main Guiguts files (`guigut.pl`,
+   `install_cpan_modules.pl`) in `src/`.
+2. Install the necessary system dependencies (perl, perl modules, etc) as
+   specified in the sections above.
+3. Create a fully-populated `src/tools/` directory by copying one from a full
+   release.
+4. (optional) Run Guiguts once from `src/` to create the initial Guiguts data
+   files (`header.txt`, etc). Copy any manual edits you had made to these files
+   into the new versions of the files in `src/` if you want to retain them.
+
+You can now run Guiguts from the `src/` directory.
+
+Git will ignore the `src/tools/` directory as well as the files that Guiguts
+creates allowing you to work with a pristine checkout for pulling updates and
+other git activities.
+
 ## Perl Modules
 
 Guiguts requires the following Perl modules to be installed via CPAN:
