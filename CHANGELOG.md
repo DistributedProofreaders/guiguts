@@ -9,10 +9,10 @@
    - uses CSS classes instead of styles on image divs
    - width of image may be specified in percent or em
    - calculates max width for image to fit portrait or landscape screens
-- /I...I/ or /i...i/ markup is used to generate an index
+- `/I...I/` or `/i...i/` markup is used to generate an index
 - HTML/CSS for chapter headings works well for ePub formats
-- default <hr> CSS defines margins to center correctly in ePub
-- uses id instead of <a> element for anchors where possible
+- default `<hr>` CSS defines margins to center correctly in ePub
+- uses id instead of `<a>` element for anchors where possible
 - uses improved CSS for pagenums within bold/italic/sc markup
 - autotable uses CSS rather than HTML attributes
 - all-small-caps are detected and coded during HTML generation
@@ -41,12 +41,17 @@
 ### Other Changes
 - Tony Browne's regex and Greek patches (aka 1.0.28) are included
 - new Keyboard Shortcuts are included:
-   - ctrl+o - open file; ctrl+shift+s - save as...
-   - ctrl+j - goto line; ctrl+n - count number of search/replace matches
-   - ctrl+w - rewrap selection; ctrl+shift+w - block rewrap selection
-   - ctrl+m - indent +1; ctrl+shift+m -indent -1
-   - ctrl+alt+m -indent +4; ctrl+alt+shift+m - indent -4
-   - ctrl+e instead of ctrl+o - flood fill 
+   - `ctrl+o` - open file
+   - `ctrl+shift+s` - save as...
+   - `ctrl+j` - goto line
+   - `ctrl+n` - count number of search/replace matches
+   - `ctrl+w` - rewrap selection
+   - `ctrl+shift+w` - block rewrap selection
+   - `ctrl+m` - indent +1
+   - `ctrl+shift+m` - indent -1
+   - `ctrl+alt+m` - indent +4
+   - `ctrl+alt+shift+m` - indent -4
+   - `ctrl+e` instead of `ctrl+o` - flood fill
 - highlight quotes now includes curly quotes
 - output from external tools such as online ppcomp, pptext, etc., can be
   loaded into error check dialog and used for navigation
