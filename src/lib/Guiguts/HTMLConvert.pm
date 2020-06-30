@@ -2534,21 +2534,24 @@ sub htmlmarkpopup {
 
 		my $f2 =
 		  $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		my %hbuttons = (
-			'anchor', 'Named anchor',  'img',   'Image',
-			'elink',  'External Link', 'ilink', 'Internal Link'
+		my @hbuttons = (
+			[ 'Internal Link', 'ilink' ],
+			[ 'External Link', 'elink' ],
+			[ 'Named anchor', 'anchor' ],
+			[ 'Image', 'img' ],
 		);
+
 		( $row, $col ) = ( 0, 0 );
-		for ( keys %hbuttons ) {
+		for ( @hbuttons ) {
+			my $marktype = $hbuttons[$col][1];
 			$f2->Button(
 				-activebackground => $::activecolor,
 				-command          => [
 					sub {
-						markup( $textwindow, $top, $_[0] );
-					},
-					$_
+						markup( $textwindow, $top, $marktype );
+					}
 				],
-				-text  => "$hbuttons{$_}",
+				-text  => "$hbuttons[$col][0]",
 				-width => 13
 			  )->grid(
 				-row    => $row,
@@ -2840,19 +2843,15 @@ sub markup {
 			$anchorstartindex = $anchorendindex = '1.0';
 			while (
 				$anchorstartindex = $textwindow->search(
-					'-regexp', '--', '<a (name|id)=[\'"].+?[\'"]',
+					'-regexp', '-count' => \$length, '--', 
+					'(name|id)=[\'"].+?[\'"]',
 					$anchorendindex, 'end'
 				)
 			  )
 			{
-				$anchorendindex =
-				  $textwindow->search( '-regexp', '--', '>', $anchorstartindex,
-					'end' );
-				$string =
-				  $textwindow->get( $anchorstartindex, $anchorendindex );
-				$string =~ s/\n/ /g;
-				$string =~ s/= /=/g;
-				$string =~ m/=["'](.+?)['"]/;
+				$anchorendindex = $textwindow->index( $anchorstartindex. ' +' . $length . 'c' );
+				$string = $textwindow->get( $anchorstartindex, $anchorendindex );
+				$string =~ m/=['"](.+?)['"]/;
 				$match = $1;
 				push @intanchors, '#' . $match;
 				$match2 = $match;
