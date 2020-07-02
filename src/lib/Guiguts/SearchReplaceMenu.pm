@@ -1525,6 +1525,7 @@ sub searchpopup {
 		::initialize_popup_without_deletebinding('searchpop');
 		$::lglobal{searchpop}->minsize( 460, 127 );
 		$::lglobal{searchentry}->focus;
+
 		$::lglobal{searchpop}->protocol(
 			'WM_DELETE_WINDOW' => sub {
 				$::lglobal{regrepeat}->cancel;
@@ -1536,71 +1537,61 @@ sub searchpopup {
 				$::scannosearch = 0;    #no longer in a scanno search
 			}
 		);
-		$::lglobal{searchpop}->Tk::bind(
-			'<Return>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete('1.end');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete('1.end');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				searchtext();
-				$top->raise;
-			}
-		);
-		$::lglobal{searchpop}->Tk::bind(
-			'<Control-f>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				searchtext();
-				$top->raise;
-			}
-		);
-		$::lglobal{searchpop}->Tk::bind(
-			'<Control-F>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				searchtext();
-				$top->raise;
-			}
-		);
-		$::lglobal{searchpop}->eventAdd(
-			'<<FindNexte>>' => '<Control-Key-G>',
-			'<Control-Key-g>'
-		);
-		$::lglobal{searchentry}->bind(
-			'<<FindNexte>>',
+		# Return: find in current direction
+		searchbind( '<Return>',
 			sub {
-				$::lglobal{searchentry}->delete('insert -1c')
-				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cG" );
+				searchtext();
+				$top->raise;
+			}
+		);
+		# Control-Return: find & replace
+		searchbind( '<Control-Return>',
+			sub {
+				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+				searchtext();
+				$top->raise;
+			}
+		);
+		# Shift-Return: replace
+		searchbind( '<Shift-Return>',
+			sub {
+				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+				$top->raise;
+			}
+		);
+		# Control-Shift-Return: replace all
+		searchbind( '<Control-Shift-Return>',
+			sub {
+				replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+				$top->raise;
+			}
+		);
+		# Control-f: find in current direction
+		searchbind( '<Control-f>',
+			sub {
+				searchtext();
+				$top->raise;
+			}
+		);
+		# Control-g: repeat find in current direction
+		searchbind( '<Control-g>',
+			sub {
 				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 				$textwindow->focus;
 			}
 		);
-		$::lglobal{searchpop}->eventAdd(
-			'<<FindPreve>>' => '<Control-Shift-G>',
-			'<Control-Shift-g>'
-		);
-		$::lglobal{searchentry}->bind(
-			'<<FindPreve>>',
+		# Control-Shift-g: repeat find in opposite direction
+		searchbind( '<Control-Shift-g>',
 			sub {
-				$::lglobal{searchentry}->delete('insert -1c')
-				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cG" );
 				$::lglobal{searchop2}->toggle;
 				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 				$::lglobal{searchop2}->toggle;
 				$textwindow->focus;
 			}
 		);
-		$::lglobal{searchpop}->eventAdd( '<<FindCounte>>' => '<Control-N>', '<Control-n>' );
-		$::lglobal{searchentry}->bind( '<<FindCounte>>',
+		# Control-b: count occurrences
+		searchbind( '<Control-b>',
 			sub {
-				$::lglobal{searchentry}->delete('insert -1c')
-				  if ( $::lglobal{searchentry}->get('insert -1c') eq "\cN" );
 				countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 			}
 		);
@@ -1625,50 +1616,34 @@ sub searchpopup {
 				eval " sub { \$::lglobal{hasfocus} = \$::lglobal{replaceentry$_}; } "
 			);
 		}
-		$::lglobal{searchpop}->Tk::bind(
-			'<Control-Return>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete('1.end');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete('1.end');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
-				searchtext();
-				$top->raise;
-			}
-		);
-		$::lglobal{searchpop}->Tk::bind(
-			'<Shift-Return>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete('1.end');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete('1.end');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
-				$top->raise;
-			}
-		);
-		$::lglobal{searchpop}->Tk::bind(
-			'<Control-Shift-Return>' => sub {
-				$::lglobal{searchentry}->see('1.0');
-				$::lglobal{searchentry}->delete('1.end');
-				$::lglobal{searchentry}->delete( '2.0', 'end' );
-				$::lglobal{replaceentry}->see('1.0');
-				$::lglobal{replaceentry}->delete('1.end');
-				$::lglobal{replaceentry}->delete( '2.0', 'end' );
-				replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
-				$top->raise;
-			}
-		);
 	}
 	if ( length $searchterm ) {
 		$::lglobal{searchentry}->delete( '1.0', 'end' );
 		$::lglobal{searchentry}->insert( 'end', $searchterm );
+		# Multiline search string not supported
+		# Todo: consider Entry instead of Text widgets
+		$::lglobal{searchentry}->delete( '1.end', 'end' );
 		$::lglobal{searchentry}->tagAdd( 'sel', '1.0', 'end -1c' );
 		searchtext('');
 	}
+}
+
+# Bind a key-combination to a sub for the S&R dialog
+# Also disable default class behaviour for key on Text widgets
+# (e.g. Ctrl-b does "move left" by default)
+# See KeyBindings.pm for main text window equivalent
+sub searchbind {
+	my $lkey = shift;				# Key-combination (lower-case letter)
+	my $subr = shift;				# Subroutine to bind to key
+
+	my $ukey = $lkey;
+	$ukey =~ s/-([a-z])>/-\u$1>/;	# Create uppercase version
+
+	$::lglobal{searchpop}->bind( $lkey => $subr );
+	$::lglobal{searchpop}->bind( $ukey => $subr ) if $ukey ne $lkey;
+	# Disable default class bindings for Text widgets
+	$::lglobal{searchpop}->MainWindow->bind( "Tk::Text", $lkey, 'NoOp');
+	$::lglobal{searchpop}->MainWindow->bind( "Tk::Text", $ukey, 'NoOp') if $ukey ne $lkey;
 }
 
 # Add frames containing field and buttons for replacement terms

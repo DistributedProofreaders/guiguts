@@ -35,8 +35,8 @@ F8 -- open Stealth Scannos search
 
 <ctrl>+f -- open Search & Replace popup
 <ctrl>+g -- continue search
-<ctrl>+n -- count number of matches
 <ctrl>+<shift>+g -- continue search in opposite direction
+<ctrl>+b -- count number of matches
 
 <ctrl>+i -- view current image (as See Img button)
 <ctrl>+j -- go to line
