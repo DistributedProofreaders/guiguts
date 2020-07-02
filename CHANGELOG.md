@@ -19,7 +19,7 @@
 - HTML title wording puts book title first
 
 ### Improved Search & Replace functionality
-- a Count button (Ctrl+N) counts how many times the current search
+- a Count button (`ctrl+b`) counts how many times the current search
   settings would find a match
 - number of replacement terms can be changed by the user
 - search & replace preserves the position of page markers
@@ -44,7 +44,7 @@
    - `ctrl+o` - open file
    - `ctrl+shift+s` - save as...
    - `ctrl+j` - goto line
-   - `ctrl+n` - count number of search/replace matches
+   - `ctrl+b` - count number of search/replace matches
    - `ctrl+w` - rewrap selection
    - `ctrl+shift+w` - block rewrap selection
    - `ctrl+m` - indent +1
