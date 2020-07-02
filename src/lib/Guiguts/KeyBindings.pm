@@ -108,7 +108,7 @@ sub keybindings {
 				::searchpopup();
 			}
 		}, '<<FindNextReverse>>' );
-	keybind( '<Control-n>',         sub {
+	keybind( '<Control-b>',         sub {
 			if ( $::lglobal{searchpop} ) {
 				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
 				::countmatches($searchterm);
@@ -226,6 +226,9 @@ sub keybindings {
 #	keybind( '<KeyCombo1>', sub { doit(); }, '<<MyEvent>>' );
 #	keybind( '<KeyCombo2>', undef,           '<<MyEvent>>' );
 #
+# Warning: Actually binds event to class TextUnicode rather than the text window
+# instance. Currently the main text window is the only instance anyway.
+# If changed in the future, see comments below about bindtags order.
 
 sub keybind {
 	my $textwindow = $::textwindow;
@@ -247,5 +250,19 @@ sub keybind {
 		print "Undefined arguments to keybind\n";
 	}
 }
+
+# Notes on bindtags order in case of future development:
+#
+# The callback subs executed depend on the bindtags list.
+# Default taglist order for Perl/Tk is class, instance, toplevel, all.
+# (Tcl/Tk default is instance, class, toplevel, all, so beware when reading docs.)
+#
+# A callback can "break" out of the taglist search, so if you want to avoid
+# default class behaviour for a specific widget, but don't want to change
+# it for the whole class, you must reorder the taglist
+# so the instance callback precedes the class one (like Tcl/Tk), e.g.
+#	my @tags = $widget->bindtags;
+#	$widget->bindtags([@tags[1, 0, 2, 3]]);
+# Finish instance callback with $widget->break so class callback won't be called
 
 1;
