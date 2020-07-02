@@ -36,7 +36,7 @@ mac: common
 common: clean
 	mkdir guiguts
 	# Start with src/
-	cp -a src/ guiguts
+	cp -a src/* guiguts
 	# Remove untracked files & directories that might be in src/
 	rm -rf guiguts/tools/ guiguts/header.txt guiguts/setting.rc guiguts/data/labels_en.rc
 	# Copy common tools
