@@ -18,7 +18,8 @@ use warnings;
 use lib '.';
 
 #use criticism 'gentle';
-our $VERSION = '1.0.25';
+our $VERSION = '1.1.0';
+# DON'T FORGET to update the version number in makefile too
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
 our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
