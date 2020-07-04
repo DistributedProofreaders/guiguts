@@ -114,19 +114,14 @@ sub menu_help {
 	my $help_top = [
 		[ Button   => '~Manual [www]',
 			-command => sub {
-				::launchurl( "https://www.pgdp.net/wiki/PPTools/Guiguts" );
+				::launchurl( 'https://www.pgdp.net/wiki/PPTools/Guiguts/Guiguts_1.1_Manual' );
 			  }
 		],
 		[ Button  => 'Guiguts ~Help on DP Forum [www]',
-		  -command => sub { ::launchurl('https://www.pgdp.net/phpBB3/viewtopic.php?f=13&t=11466'); }
+		  -command => sub { ::launchurl('https://www.pgdp.net/phpBB3/viewtopic.php?t=11466'); }
 		],
 		[ Button => '~Keyboard Shortcuts',    -command => \&::hotkeyshelp ],
 		[ Button => '~Regex Quick Reference', -command => \&::regexref ],
-		[ Button => 'Re~wrap Markers [www]',
-		  -command => sub {
-			::launchurl( 'https://www.pgdp.net/wiki/PPTools/Guiguts/Rewrapping#Rewrap_Markers' );
-		  }
-		],
 	];
 	my $character_help = [
 		[ 'separator', '' ],
