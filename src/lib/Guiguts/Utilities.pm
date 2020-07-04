@@ -262,7 +262,12 @@ sub win32_start {
 # Users never need to create a titled DOS window,
 # but they may need to run the 'start' command on files with spaces.
 #
-	@args = ( 'start', '', @args );
+	# If first argument after 'start' has quotes, it is interpreted as a title
+	# for the commmand window. So if a command has spaces in it, and so has
+	# quotes, the command is interpreted as the window title and doesn't execute.
+	# To solve this, add a dummy title argument. Note that it must have spaces
+	# because if it isn't quoted it will be interpreted as the command. Windows!
+	@args = ( 'start', 'Guiguts Command Window', @args );
 	my $cmdline = win32_cmdline(@args);
 	system $cmdline;
 }
