@@ -58,47 +58,37 @@ sub searchtext {
 	  unless $::searchstartindex;
 	my $searchstartingpoint = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 
-	# this is a search within a selection
-	if ( $range_total == 0 && $::lglobal{selectionsearch} ) {
-		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
-		$end   = $::lglobal{selectionsearch};
-
-		# this is a search through the end of the document
-	} elsif ( $range_total == 0 && !$::lglobal{selectionsearch} ) {
-		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
-		$end   = 'end';
-		$end   = '1.0' if ( $::sopt[2] );
-	} else {
+	# this is starting a search within a selection
+	if ( $range_total > 0 ) {
 		$end                        = pop(@ranges);
 		$start                      = pop(@ranges);
 		$::lglobal{selectionsearch} = $end;
+		$::searchstartindex = $end if $::sopt[2];
+	# this is continuing a search within a selection
+	} elsif ( $::lglobal{selectionsearch} ) {
+		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
+		$end   = $::lglobal{selectionsearch};
+
+	# this is a search through end/start of the document
+	} else {
+		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
+		$end   = $::sopt[2] ? '1.0' : 'end';
 	}
+	# this is user requesting Start at Beginning (End if reverse)
 	if ( $::sopt[4] ) {
-		if ( $::sopt[2] ) {
-
-			# search backwards and Start From Beginning so start from the end
-			$start = 'end';
-			$end   = '1.0';
-		} else {
-
-			# search forwards and Start From Beginning so start from the end
-			$start = '1.0';
-			$end   = 'end';
-		}
+		$start = $::sopt[2] ? 'end' : '1.0';
+		$end   = $::sopt[2] ? '1.0' : 'end';
 		$::lglobal{searchop4}->deselect if ( defined $::lglobal{searchpop} );
 		$::lglobal{lastsearchterm} = "resetresetreset";
 	}
 
-	if ($start) {    # but start is always defined?
-		if ( $::sopt[2] ) {    # if backwards
-			$::searchstartindex = $start;
-		} else {
-			$::searchendindex =
-			  "$start+1c";     #forwards. #unless ( $start eq '1.0' )
-		}
-
+	if ( $::sopt[2] ) {    # if backwards
+		$::searchstartindex = $start;
+	} else {
 		# forward search begin +1c or the next search would find the same match
+		$::searchendindex = "$start+1c";
 	}
+		
 	{    # Turn off warnings temporarily since $searchterm is undefined on first
 		    # search
 		no warnings;
@@ -118,11 +108,6 @@ sub searchtext {
 
 	# if this is a new searchterm
 	unless ( $searchterm eq $::lglobal{lastsearchterm} ) {
-		if ( $::sopt[2] ) {
-			( $range_total == 0 )
-			  ? ( $::searchstartindex = 'end' )
-			  : ( $::searchstartindex = $end );
-		}
 		$::lglobal{lastsearchterm} = $searchterm
 		  unless ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) );
 		clearmarks() if ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) );
