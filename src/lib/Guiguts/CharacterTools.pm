@@ -296,6 +296,10 @@ sub utfcharsearchpopup {
 		my $stopit = 0;
 		# get lists of supported blocks and unicode characters at start
 		my %blocks = %{ $::lglobal{utfblocks} };
+		# Add Basic Latin and Latin-1 Supplement blocks
+		$blocks{'Basic Latin'} = [ '0000', '007F' ];
+		$blocks{'Latin-1 Supplement'} = [ '0080', '00FF' ];
+
 		my @lines = split /\n/,  do 'unicore/Name.pl';
 		$::lglobal{utfsearchpop} = $top->Toplevel;
 		$::lglobal{utfsearchpop}->title('Unicode Character Search');
