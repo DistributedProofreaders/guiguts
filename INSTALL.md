@@ -60,7 +60,12 @@ of the path.
 If you have multiple Perl distributions installed you should edit the
 `run_guiguts.bat` file and adjust the PATH to the version you want to run
 Guiguts. The batch file prepends the default Strawberry Perl directories to the
-path and will preferentially use it if available.
+path and will preferentially use it if available. If your setup is complex, it
+may be easiest to clear your path in `run_guiguts.bat` before directories are
+added. To do this, directly below the line which saves your existing path,
+`set OLDPATH=%PATH%`
+add the following line
+`set PATH=`
 
 Other Perl distributions, such as
 [ActiveState Perl](https://www.activestate.com/products/perl/), may be used
@@ -71,6 +76,13 @@ cannot be used with Guiguts.
 The bundled perl interpreter included with Guiguts 1.0.25 may also work but
 is no longer maintained. The bundled perl includes the required modules
 used in 1.0.25 which may not be the full set needed by later versions.
+
+To temporarily use the old perl, copy the `perl` directory from the top
+level of your 1.0.25 installation to the top level of your new installation,
+e.g. copy the `perl` directory from `C:\dp\guiguts\guiguts-win-1.0.25` to
+`C:\dp\guiguts\guiguts-win-1.1.0`. You also need to copy the `Tk` directory
+from the old `lib` directory to the new one, e.g. copy the `Tk` directory from
+`C:\dp\guiguts\guiguts-win-1.0.25\lib` to `C:\dp\guiguts\guiguts-win-1.1.0\lib`
 
 ### Starting Guiguts
 
@@ -105,7 +117,7 @@ Guiguts requires.
 
 Unzip `guiguts-n.n.n.zip` to some location on your computer (double click the
 zip file in Finder or run `unzip guiguts-n.n.n.zip` on the command line). You
-can move the `guiguts` folder it creates to anywhere you want. A common place
+can move the `guiguts` directory it creates to anywhere you want. A common place
 for this is your home directory.
 
 ### XCode Command Line Tools
