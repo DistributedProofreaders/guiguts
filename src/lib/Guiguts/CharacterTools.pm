@@ -292,15 +292,11 @@ sub utfcharsearchpopup {
 		$::lglobal{utfsearchpop}->deiconify;
 		$::lglobal{utfsearchpop}->raise;
 	} else {
-		return unless blocks_check();
-		require q(unicore/Blocks.pl);
 		require q(unicore/Name.pl);
 		my $stopit = 0;
-		my %blocks;
-		for ( split /\n/, do 'unicore/Blocks.pl' ) {
-			my @array = split /\t/, $_;
-			$blocks{ $array[2] } = [ @array[ 0, 1 ] ];
-		}
+		# get lists of supported blocks and unicode characters at start
+		my %blocks = %{ $::lglobal{utfblocks} };
+		my @lines = split /\n/,  do 'unicore/Name.pl';
 		$::lglobal{utfsearchpop} = $top->Toplevel;
 		$::lglobal{utfsearchpop}->title('Unicode Character Search');
 		::initialize_popup_with_deletebinding('utfsearchpop');
@@ -373,20 +369,25 @@ sub utfcharsearchpopup {
 				$stopit = 0;
 				my $row = 0;
 				@textlabels = @textchars = ();
+				# split user entry into individual characteristics
 				my @chars = split /\s+/, uc( $characteristics->get );
-				my @lines = split /\n/,  do 'unicore/Name.pl';
-				while (@lines) {
-					my @items = split /\t+/, shift @lines;
+				# check all the character names
+				for (@lines) {
+					my @items = split /\t+/, $_;
 					my ( $ord, $name ) = ( $items[0], $items[-1] );
 					last if ( hex $ord > 65535 );
 					if ($stopit) { $stopit = 0; last; }
+					# find character names that match all the user's characteristics
 					my $count = 0;
 					for my $char (@chars) {
 						$count++;
-						last unless $name =~ /\b$char\b/;
+						last if $name !~ /\b$char\b/;
+						# if all characteristics have matched then add to list
 						if ( @chars == $count ) {
+							# find which block the character is in
 							my $block = '';
 							for ( keys %blocks ) {
+								next if not $_;
 								if (    hex( $blocks{$_}[0] ) <= hex($ord)
 									 && hex( $blocks{$_}[1] ) >= hex($ord) )
 								{
@@ -394,6 +395,7 @@ sub utfcharsearchpopup {
 									last;
 								}
 							}
+							next if not $block;	# character is not in a known block
 							$textchars[$row] =
 							  $pane->Label(
 											-text       => chr( hex $ord ),
@@ -596,23 +598,6 @@ sub utfcharentrypopup {
 		$::lglobal{utfentrypop}->resizable( 'yes', 'no' );
 		::initialize_popup_with_deletebinding('utfentrypop');
 	}
-}
-
-sub blocks_check {
-	my $top = $::top;
-	return 1 if eval { require q(unicore/Blocks.pl) };
-	my $oops = $top->DialogBox(
-		-buttons => [qw[Ok]],
-		-title   => 'Critical files missing.',
-		-popover => $top
-	);
-	my $message = <<END;
-Your Perl installation is too old to support Unicode.\n
-Upgrade to a newer version of Perl.
-END
-	$oops->add( 'Label', -text => $message )->pack;
-	$oops->Show;
-	return 0;
 }
 
 ## Convert Windows CP 1252
