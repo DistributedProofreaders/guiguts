@@ -77,8 +77,9 @@ The bundled perl interpreter included with Guiguts 1.0.25 may also work but
 is no longer maintained. The bundled perl includes the required modules
 used in 1.0.25 which may not be the full set needed by later versions.
 
-To temporarily use the old perl, copy the `perl` directory from the top
-level of your 1.0.25 installation to the top level of your new installation,
+While not officially supported, if you wish to use the perl included with
+Guiguts 1.0.25, copy the `perl` directory from the top level directory of
+your 1.0.25 installation to the top level of your new installation,
 e.g. copy the `perl` directory from `C:\dp\guiguts\guiguts-win-1.0.25` to
 `C:\dp\guiguts\guiguts-win-1.1.0`. You also need to copy the `Tk` directory
 from the old `lib` directory to the new one, e.g. copy the `Tk` directory from
