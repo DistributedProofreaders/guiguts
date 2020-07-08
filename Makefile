@@ -9,29 +9,20 @@ ZIP=zip -rv9
 # files to include from the root
 INCLUDES=CHANGELOG.md INSTALL.md UPGRADE.md LICENSE.txt README.md THANKS.md
 
+TARGETS= generic win mac
 
-all: generic
+all: 
+	@for os in $(TARGETS); do \
+		echo "# Making $$os"; \
+		$(MAKE) $$os; \
+	done
 
-generic: common
+$(TARGETS): common
 	# Build tools
 	mkdir guiguts/tools
-	./tools/package-tools.sh generic $$(pwd)/guiguts/tools
+	./tools/package-tools.sh $@ $$(pwd)/guiguts/tools
 	# Create final zip
-	$(ZIP) guiguts-$(VERSION).zip guiguts
-
-win: common
-	# Build tools
-	mkdir guiguts/tools
-	./tools/package-tools.sh win $$(pwd)/guiguts/tools
-	# Create final zip
-	$(ZIP) guiguts-win-$(VERSION).zip guiguts
-
-mac: common
-	# Build tools
-	mkdir guiguts/tools
-	./tools/package-tools.sh mac $$(pwd)/guiguts/tools
-	# Create final zip
-	$(ZIP) guiguts-mac-$(VERSION).zip guiguts
+	$(ZIP) guiguts-$@-$(VERSION).zip guiguts
 
 common: clean
 	mkdir guiguts
