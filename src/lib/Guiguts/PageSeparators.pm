@@ -12,20 +12,24 @@ BEGIN {
 sub pageseparatorhelppopup {
 	my $top       = $::top;
 	my $help_text = <<'EOM';
-    Join Lines - join lines removing any spaces, asterisks and hyphens as necessary. - Hotkey j
-    Join, Keep hyphen - join lines removing any spaces and asterisks as necessary. - Hotkey k
-    Blank line - remove spaces as necessary. Keep one blank line. (paragraph break). - Hotkey l
-    New Section - remove spaces as necessary. Keep two blank lines (section break). - Hotkey t
-    New Chapter - remove spaces as necessary. Keep four blank lines (chapter break). - Hotkey h
-    Refresh - search for and center next page separator. - Hotkey r
-    Undo - undo the previous page separator edit. - Hotkey u
-    Redo - redo the latest undo page separator edit. - Hotkey e
-    Delete - delete the page separator. Make no other edits. - Hotkey d
-    Auto Advance - automatically search for and center the next page separator after an edit. - Cycle: a
-    80% Auto - (prev. "full") automatically search for and try (conservatively) to convert the next page separator.
-    99% Auto - automatically search for and try (confidently) to convert the next page separator.
-    View page image - Hotkey v
-    View Page Separator help - Hotkey ?
+
+j -- Join Lines - join lines, remove all blank lines, spaces, asterisks and hyphens
+k -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisks, keep hyphen
+l -- Blank Line - leave one blank line. Close up any other whitespace (paragraph break)
+t -- New Section - leave two blank lines. Close up any other whitespace (section break)
+h -- New Chapter - leave four blank lines. Close up any other whitespace (chapter break)
+d -- Delete - delete the page separator. Make no other edits
+r -- Refresh - search for, highlight and re-center the next page separator
+u -- Undo - undo the last edit
+e -- Redo - redo the last undo
+v -- View - view the current page in the image viewer
+a -- Auto - cycle through the automatic modes (No Auto, Auto-Advance, 80% Auto, 99% Auto)
+? -- Help - show Page Separator Fixup help
+
+Automatic modes
+Auto Advance - automatically search for and center the next page separator after an edit
+80% Auto (previously Full) - automatically search for and try conservatively to convert the next page separator
+99% Auto - automatically search for and try confidently to convert the next page separator
 EOM
 	if ( defined( $::lglobal{pagesephelppop} ) ) {
 		$::lglobal{pagesephelppop}->deiconify;
@@ -33,7 +37,7 @@ EOM
 		$::lglobal{pagesephelppop}->focus;
 	} else {
 		$::lglobal{pagesephelppop} = $top->Toplevel;
-		$::lglobal{pagesephelppop}->title('Functions and Hotkeys for Fixup Page Separators');
+		$::lglobal{pagesephelppop}->title('Keyboard Shortcuts and Functions for Fixup Page Separators');
 		::initialize_popup_with_deletebinding('pagesephelppop');
 		$::lglobal{pagesephelppop}->Label(
 			-justify => "left",
@@ -47,7 +51,7 @@ EOM
 				undef $::lglobal{pagesephelppop};
 			}
 		)->pack;
-		$::lglobal{pagesephelppop}->resizable( 'no', 'no' );
+		$::lglobal{pagesephelppop}->resizable( 'yes', 'yes' );
 	}
 }
 
