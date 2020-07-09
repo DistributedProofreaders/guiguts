@@ -116,8 +116,8 @@ Guiguts requires.
 
 ### Extracting Guiguts
 
-Unzip `guiguts-n.n.n.zip` to some location on your computer (double click the
-zip file in Finder or run `unzip guiguts-n.n.n.zip` on the command line). You
+Unzip `guiguts-mac-n.n.n.zip` to some location on your computer (double click the
+zip file in Finder or run `unzip guiguts-mac-n.n.n.zip` on the command line). You
 can move the `guiguts` directory it creates to anywhere you want. A common place
 for this is your home directory.
 
@@ -202,7 +202,7 @@ See also the [EBookMaker installation instructions](tools/ebookmaker/README.md).
 ## Other
 
 For other platforms, you will need to install Perl and the necessary
-[Perl modules](#perl-modules). Then extract `guiguts-n.n.n.zip` and run
+[Perl modules](#perl-modules). Then extract `guiguts-generic-n.n.n.zip` and run
 ```
 perl guiguts.pl
 ```
