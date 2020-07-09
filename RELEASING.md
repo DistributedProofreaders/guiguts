@@ -12,8 +12,9 @@ Github.
 3. Commit the version update changes and tag the release
    (ie: `git tag r<version>`) and push it up to github
 
-4. From a Linux or MacOS system, confirm that you are working from a clean
-   git checkout. Then build the three releases:
+4. From a Linux or MacOS system, or a Windows system with MinGW installed,
+   confirm that you are working from a clean git checkout. Then build the
+   three releases using `make` or `make all` or
    ```
    make win
    make mac
@@ -21,8 +22,8 @@ Github.
    ```
    This creates three .zip files, one for each platform.
 
-   Be certain to keep the format
-   `guiguts-1.0.0.zip` (version number will vary) in order for
+   Be certain to keep the format `guiguts-platform-1.0.0.zip`
+   (platform and version number will vary) in order for
    the update mechanism to work correctly. Do not include
    `settings.rc` or `header.txt` as these may have been modified
    by the user and will be created if they do not exist.
