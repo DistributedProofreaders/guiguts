@@ -116,12 +116,13 @@ k -- Join, Keep Hyphen - join lines, remove all blank lines, spaces and asterisk
 l -- Blank Line - leave one blank line. Close up any other whitespace (paragraph break)
 t -- New Section - leave two blank lines. Close up any other whitespace (section break)
 h -- New Chapter - leave four blank lines. Close up any other whitespace (chapter break)
+d -- Delete - delete the page separator. Make no other edits
 r -- Refresh - search for, highlight and re-center the next page separator
 u -- Undo - undo the last edit
-d -- Delete - delete the page separator. Make no other edits
-v -- View the current page in the image viewer
-a -- Cycle Automatic modes
-? -- View hotkey help popup
+e -- Redo - redo the last undo
+v -- View - view the current page in the image viewer
+a -- Auto - cycle through the automatic modes (No Auto, Auto Advance, 80% Auto, 99% Auto)
+? -- Help - show Page Separator Fixup help
 
 
 SPELL CHECK POPUP
