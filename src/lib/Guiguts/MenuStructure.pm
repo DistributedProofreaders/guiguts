@@ -178,6 +178,7 @@ sub menu_preferences {
 				[ 'separator', '' ],
 				[
 					Checkbutton => 'Do W3C Validation Remotely',
+					-command    => \&::menurebuild,
 					-variable   => \$::w3cremote,
 					-onvalue    => 1,
 					-offvalue   => 0

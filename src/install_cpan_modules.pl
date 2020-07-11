@@ -10,6 +10,9 @@ my @modules = (
     "File::Which",
     "Image::Size",
     "LWP::Protocol::https",  # needed for update checking
+	# Required for remote HTML validation
+	"WebService::Validator::HTML::W3C",
+	"XML::XPath",
 );
 
 foreach my $module (@modules) {
