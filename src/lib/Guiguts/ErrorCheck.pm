@@ -442,11 +442,30 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			if ( open my $td, '>', "errors.err" ) {
 				if ( $validator->is_valid ) {
 				} else {
-					foreach my $error ( @{ $validator->errors } ) {
-						printf $td (
-									 "W3C:validate.tmp:%s:%s:Eremote:%s\n",
-									 $error->line, $error->col, $error->msg
-						);
+					my $errors = $validator->errors();
+					my $warnings = $validator->warnings();
+					my $warnidx = 0;
+					# print all the errors and warnings in correct line order
+					foreach my $error ( @$errors ) {
+						# print any warnings that should come before the next error
+						while ( $warnidx < @$warnings ) {
+							my $warn = $warnings->[$warnidx];
+							last if $warn->line > $error->line or
+						            $warn->line == $error->line and $warn->col > $error->line;
+							printf $td ( "%s:%s:W: %s\n",
+										 $warn->line, $warn->col, $warn->msg );
+							++$warnidx;
+						}
+						# print next error
+						printf $td ( "%s:%s:E: %s\n",
+									 $error->line, $error->col, $error->msg );
+					}
+					# print any remaining warnings beyond the last error
+					while ( $warnidx < @$warnings ) {
+						my $warn = $warnings->[$warnidx];
+						printf $td ( "%s:%s:W: %s\n",
+									 $warn->line, $warn->col, $warn->msg );
+						++$warnidx;
 					}
 					print $td "Remote response complete";
 				}
@@ -454,8 +473,8 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			}
 		} else {
 			if ( open my $td, '>', "errors.err" ) {
-				print $td
-'Could not contact remote validator; try using local validator onsgmls.';
+				print $td $validator->validator_error() . "\n";
+				print $td "Try using local validator onsgmls\n";
 				close $td;
 			}
 		}

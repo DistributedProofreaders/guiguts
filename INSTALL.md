@@ -239,12 +239,16 @@ Guiguts requires the following Perl modules to be installed via CPAN:
 * Tk
 * Tk::ToolBar
 
-The following modules are optional but recommended:
+The following modules are optional but recommended in order to provide
+all available functionality, such as auto-generating HTML image sizes, 
+online HTML validation, checking for updates, etc:
 
 * Text::LevenshteinXS
 * File::Which
 * Image::Size
 * LWP::Protocol::https
+* WebService::Validator::HTML::W3C
+* XML::XPath
 
 The required Perl modules can be installed with the included helper script:
 ```
