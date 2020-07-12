@@ -1053,10 +1053,14 @@ sub replaceall {
 		my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
 		$::lglobal{lastsearchterm} = '';
 
-		# if not a search across line boundary
-		# and not a search within a selection do a speedy FindAndReplaceAll
-		unless ( ( $::sopt[3] ) or ((isvalid($searchterm)) && ( $replacement =~ $searchterm) ) )
-		{    #( $searchterm =~ m/\\n/ ) &&
+		# if not a regex search
+		# and replacement does not contain searchterm, including case insensitive format
+		# (to avoid an infinite loop bug in TextEdit's FindAndReplaceAll function)
+		# do a speedy FindAndReplaceAll
+		unless ( ( $::sopt[3] ) or
+		         ( isvalid($searchterm) and $replacement =~ $searchterm ) or
+		         ( isvalid($searchterm) and $::sopt[1] and $replacement =~ /$searchterm/i ) )
+		{
 			my $exactsearch = $searchterm;
 
 			# escape metacharacters for whole word matching
