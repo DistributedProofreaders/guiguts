@@ -859,6 +859,7 @@ sub openfile {    # and open it
 	$::globallastpath           = ::os_normal($::globallastpath);
 	$name                       = ::os_normal($name);
 	$::lglobal{global_filename} = $name;
+	$::projectid = '';	# Clear project id from previous file - get new one later
 	my $binname = getbinname();
 
 	unless ( -e $binname ) {    #for backward compatibility
@@ -872,6 +873,8 @@ sub openfile {    # and open it
 	} else {
 		print "No bin file found, generating default bin file.\n";
 	}
+	# If no bin file, or bin file didn't have a project id,
+	# try to get one from the local project comments filename.
 	::getprojectid() unless $::projectid;
 	_recentupdate($name);
 	unless ( -e $::pngspath ) {
