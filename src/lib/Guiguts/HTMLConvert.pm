@@ -1584,7 +1584,7 @@ sub html_wrapup {
 	# Output poetry indent CSS.
 	# Find end of CSS, then search back for end of last class definition
 	# Insert classes stored earlier in reverse order, preceded by a comment header
-	$thisblockstart = $textwindow->search( '--', '</style', '1.0', '500.0' );
+	$thisblockstart = $textwindow->search( '--', '</style', '1.0', 'end' );
 	$thisblockstart = '75.0' unless $thisblockstart;
 	$thisblockstart =
 	  $textwindow->search( '-backwards', '--', '}', $thisblockstart, '10.0' );
@@ -3514,9 +3514,9 @@ sub poetryhtml {
 	my $unindentedpoetry = ispoetryunindented( $textwindow, "$lsr.0", "$ler.end" );
 
 	# Find end of existing CSS in case need to insert new classes
-	my $cssend = $textwindow->search( '--', '</style', '1.0', '500.0' );
+	my $cssend = $textwindow->search( '--', '</style', '1.0', 'end' );
 	$cssend = $textwindow->search( '-backwards', '--', '}', $cssend, '10.0' ) if $cssend;
-	$cssend = '0.0' unless $cssend;
+	$cssend = '75.0' unless $cssend;
 	my ($cssendr , $cssendc ) = split /\./, $cssend;
 	$cssendr++;
 	
