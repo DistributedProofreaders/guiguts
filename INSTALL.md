@@ -13,7 +13,8 @@ See also https://www.pgdp.net/wiki/PPTools/Guiguts/Install
 Using Guiguts on Windows requires installing the following pieces:
 
 * Guiguts
-* Perl & [Perl modules](#perl-modules)
+* Perl
+* [Perl modules](#perl-modules)
 
 These instructions walk you through using
 [Strawberry Perl](http://strawberryperl.com/). Strawberry Perl is the
@@ -21,33 +22,48 @@ recommended Perl interpreter as that is what the developers have tested, it
 supports the latest version of Perl, and includes all necessary Perl modules.
 It can coexist along side other interpreters.
 
-_If you have an existing Perl distribution installed (aside from the one that
-was bundled in older versions of Guiguts) that you do not want to uninstall,
-see [Other Perl distributions](#other-perl-distributions) before beginning._
+_If you have an existing Perl distribution installed (including if you are
+hoping to use the Perl distributed with a previous Guiguts release),
+read [Other Perl distributions](#other-perl-distributions) before following
+the Recommended installation procedure below, as it describes edits you may
+need to make if not using the standard setup. If following the standard
+procedure below, there is no need to remove your old version of Guiguts - it
+should continue to use its own bundled Perl._
 
-### Extracting Guiguts
+### Recommended installation procedure
 
-Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double click
-the zip file in Explorer). A common place for this is `c:\guiguts` although
-it can be placed anywhere.
+Unless you are confident with editing `.bat` files and altering the system
+PATH variable, please use the recommended instructions and directory names
+below. 
 
-### Strawberry Perl & Perl modules
+_Note that you must do step 6, even if you have done it previously, as
+the version of Guiguts you are installing may require additional Perl modules
+to any previous versions._
 
-Download and install [Strawberry Perl](http://strawberryperl.com/). Installing
-it in the default location, `c:\Strawberry`, is recommended but not required.
+1. Download the latest `guiguts-win-n.n.n.zip` from the
+   [Guiguts releases](https://github.com/DistributedProofreaders/guiguts/releases) page.
+2. Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double click
+   the zip file). A common place for this is `c:\guiguts` although it can be placed
+   anywhere.
+3. Download [Strawberry Perl](http://strawberryperl.com/).
+4. Double click the downloaded file to install Strawberry Perl. It is
+   recommended that you install in the default folder `c:\Strawberry`.
+5. Using File Explorer, navigate to the `guiguts` folder you unzipped earlier.
+6. Double click the file `install_cpan_modules.pl`. This should display a command
+   window listing the Perl modules as it installs them. Note that this can take
+   several minutes to complete.
+7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts should
+   start up and be ready for use.
+8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
+   wiki page for information on installing the Aspell spell checker and an image
+   viewer to display scans and edit images.
 
-After Strawberry Perl is installed, we need to install all the necessary
-[Perl modules](#perl-modules). This is most easily done by opening a command
-line window and running the helper script included with Guiguts:
 
-```
-cd c:\guiguts
-perl install_cpan_modules.pl
-```
+### Other Perl distributions
 
-#### Other Perl distributions
-
-_This section is for advanced users and most Guiguts Windows users can skip it._
+_This section is for advanced users only. Most Guiguts Windows users should follow the
+[Recommended installation procedure](#recommended-installation-procedure) above and
+can skip this section._
 
 When installing the Perl modules, either with the helper script or manually
 running `cpanm`, ensure that the Strawberry Perl versions of `perl` and `cpanm`
@@ -85,17 +101,6 @@ e.g. copy the `perl` directory from `C:\dp\guiguts\guiguts-win-1.0.25` to
 from the old `lib` directory to the new one, e.g. copy the `Tk` directory from
 `C:\dp\guiguts\guiguts-win-1.0.25\lib` to `C:\dp\guiguts\guiguts-win-1.1.0\lib`
 
-### Starting Guiguts
-
-Start Guiguts with:
-```
-run_guiguts.bat
-```
-
-### Helper applications
-
-You will also need to install helper applications to view images and to
-spell check.
 
 ## MacOS
 
