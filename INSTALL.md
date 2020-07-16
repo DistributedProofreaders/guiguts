@@ -22,20 +22,26 @@ recommended Perl interpreter as that is what the developers have tested, it
 supports the latest version of Perl, and includes all necessary Perl modules.
 It can coexist along side other interpreters.
 
-_If you have an existing Perl distribution installed (aside from the one that
-was bundled in older versions of Guiguts) that you do not want to uninstall,
-see [Other Perl distributions](#other-perl-distributions) before beginning._
+_If you have an existing Perl distribution installed (including if you are
+hoping to use the Perl distributed with a previous Guiguts release),
+read [Other Perl distributions](#other-perl-distributions) before following
+the Recommended installation procedure below, as it describes edits you may
+need to make if not using the standard setup. If following the standard
+procedure below, there is no need to remove your old version of Guiguts - it
+should continue to use its own bundled Perl._
 
 ### Recommended installation procedure
 
 Unless you are confident with editing `.bat` files and altering the system
-PATH variable, please use the recommended instructions below. 
+PATH variable, please use the recommended instructions and directory names
+below. 
 
 _Note that you must do step 6, even if you have done it previously, as
 the version of Guiguts you are installing may require additional Perl modules
 to any previous versions._
 
-1. Download [Guiguts](https://github.com/DistributedProofreaders/guiguts/releases).
+1. Download the latest `guiguts-win-n.n.n.zip` from the
+   [Guiguts releases](https://github.com/DistributedProofreaders/guiguts/releases) page.
 2. Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double click
    the zip file). A common place for this is `c:\guiguts` although it can be placed
    anywhere.
