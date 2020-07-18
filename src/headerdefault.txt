@@ -7,6 +7,7 @@
     <title>
       TITLE, by AUTHOR&mdash;A Project Gutenberg eBook
     </title>
+    <link rel="coverpage" href="images/cover.jpg" />
     <style type="text/css">
 
 body {
