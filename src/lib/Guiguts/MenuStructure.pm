@@ -485,6 +485,12 @@ sub menu_preferences {
 					-onvalue    => 1,
 					-offvalue   => 0,
 				],
+				[
+					Checkbutton => "CSS Validation Level 2.1",
+					-variable   => \$::lglobal{cssvalidationlevel},
+					-onvalue    => 'css21',
+					-offvalue   => 'css3',
+				],
 			  ]
 		]
 	];

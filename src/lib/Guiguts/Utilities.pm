@@ -371,28 +371,35 @@ sub runner {
 	return;
 }
 
-# Run external program, with stdin and/or stdout redirected to temporary files
+# Run external program, with stdin, stdout and/or stderr redirected to temporary files
+# stdout and stderr can be redirected to the same file
 {
 
 	package runner;
 
+# Specify file to redirect output to, and optionally same/different file for errors
 	sub tofile {
-		my ($outfile) = @_;
-		withfiles( undef, $outfile );
+		withfiles( undef, @_ );
 	}
 
+# Specify files to redirect input, output and errors to
+# Output and error can be redirected to the same file
 	sub withfiles {
-		my ( $infile, $outfile ) = @_;
+		my ( $infile, $outfile, $errfile ) = @_;
 		bless {
 			infile  => $infile,
 			outfile => $outfile,
+			errfile => $errfile,
 		  },
 		  'runner';
 	}
 
+# Run the given command, redirecting stdin, stdout and/or stderr to files set up
+# using tofile or withfiles
 	sub run {
 		my ( $self, @args ) = @_;
-		my ( $oldstdout, $oldstdin );
+		# Take copies of existing file descriptors 
+		my ( $oldstdout, $oldstdin, $oldstderr );
 		unless ( open $oldstdin, '<&', \*STDIN ) {
 			warn "Failed to save stdin: $!";
 			return -1;
@@ -401,6 +408,11 @@ sub runner {
 			warn "Failed to save stdout: $!";
 			return -1;
 		}
+		unless ( open $oldstderr, '>&', \*STDERR ) {
+			warn "Failed to save stderr: $!";
+			return -1;
+		}
+		# Redirect any that have been set up
 		if ( defined $self->{infile} ) {
 			unless ( open STDIN, '<', $self->{infile} ) {
 				warn "Failed to open '$self->{infile}': $!";
@@ -410,20 +422,43 @@ sub runner {
 		if ( defined $self->{outfile} ) {
 			unless ( open STDOUT, '>', $self->{outfile} ) {
 				warn "Failed to open '$self->{outfile}' for writing: $!";
-
-				# Don't bother to restore STDIN here.
-				return -1;
+				return -1;	# Don't bother to restore STDIN here.
 			}
 		}
+		if ( defined $self->{errfile} ) {
+			# Check if redirecting both output & error to same file
+			if ( defined $self->{outfile} and $self->{errfile} eq $self->{outfile} ) {
+				unless ( open STDERR, '>&', \*STDOUT ) {
+					warn "Failed to redirect stderr to stdout: $!";
+					return -1;	# Don't bother to restore STDIN here.
+				}
+			} else {
+				unless ( open STDERR, '>', $self->{errfile} ) {
+					warn "Failed to open '$self->{errfile}' for writing: $!";
+					return -1;	# Don't bother to restore STDIN here.
+				}
+			}
+		}
+		# Run the command
 		::run(@args);
+		#Restore the file descriptors
+		close( STDERR );
+		unless ( open STDERR, '>&', $oldstderr ) {
+			warn "Failed to restore stderr: $!";
+		}
+		close( $oldstderr );
+		close( STDOUT );
 		unless ( open STDOUT, '>&', $oldstdout ) {
 			warn "Failed to restore stdout: $!";
 		}
-
+		close( $oldstdout );
 		# We restore STDIN here, just because perl warns about it otherwise.
+		close( STDIN );
 		unless ( open STDIN, '<&', $oldstdin ) {
 			warn "Failed to restore stdin: $!";
 		}
+		close( $oldstdin );
+		# Return any error from the external program
 		return $?;
 	}
 }
@@ -790,6 +825,7 @@ sub initialize {
 	$::lglobal{autofraction}      = 0;				# HTML convert - 1/2, 1/4, 3/4 to named entities
 	$::lglobal{codewarn}          = 1;
 	$::lglobal{cssblockmarkup}    = 1;				# HTML convert - Use <div>/CSS rather than <blockquote>
+	$::lglobal{cssvalidationlevel}= 'css3';			# CSS level checked by validator (css3 or css21)
 	$::lglobal{delay}             = 50;
 	$::lglobal{footstyle}         = 'end';
 	$::lglobal{ftnoteindexstart}  = '1.0';

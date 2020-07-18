@@ -186,7 +186,7 @@ sub errorcheckpop_up {
 				if (
 					( $line =~ /^\s*$/i
 					)    # skip some unnecessary lines from W3C Validate CSS
-					or ( $line =~ /^{output/i )
+					or ( $line =~ /^{output/i and not $::verboseerrorchecks )
 					or ( $line =~ /^W3C/i )
 					or ( $line =~ /^URI/i )
 				  )
@@ -479,8 +479,8 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 			}
 		}
 	} elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
-		my $runner = ::runner::tofile("errors.err");
-		$runner->run( "java", "-jar", $::validatecsscommand, "file:$name" );
+		my $runner = ::runner::tofile( "errors.err", "errors.err" ); # stdout & stderr
+		$runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::lglobal{cssvalidationlevel}", "file:$name" );
 	} elsif ( $errorchecktype eq 'pphtml' ) {
 		::run( "perl", "lib/ppvchecks/pphtml.pl", "-i", $name, "-o",
 				"errors.err" );
