@@ -17,12 +17,13 @@ sub scannosfile {
 	$::scannoslistpath = ::os_normal($::scannoslistpath);
 	if ($::debug) { print "sub scannosfile1\n"; }
 	my $types = [ [ 'Text file', [ '.txt', ] ], [ 'All Files', ['*'] ], ];
-	$::scannoslist = $top->getOpenFile(
+	my $scannosfile = $top->getOpenFile(
 		-title      => 'List of words to highlight?',
 		-filetypes  => $types,
 		-initialdir => $::scannoslistpath
 	);
-	if ($::scannoslist) {
+	if ($scannosfile) {
+		$::scannoslist = $scannosfile;
 		my ( $name, $path, $extension ) =
 		  ::fileparse( $::scannoslist, '\.[^\.]*$' );
 		$::scannoslistpath = $path;
@@ -32,9 +33,9 @@ sub scannosfile {
 		::highlight_scannos() if ($::scannos_highlighted);
 		%{ $::lglobal{wordlist} } = ();
 		::highlight_scannos();
+		read_word_list();
 	}
 	if ($::debug) { print "sub scannosfile2:" . $::scannoslist . "\n"; }
-	read_word_list();
 	return;
 }
 ##routine to automatically highlight words in the text
