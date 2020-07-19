@@ -58,23 +58,23 @@ sub searchtext {
 	  unless $::searchstartindex;
 	my $searchstartingpoint = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 
-	my $stepforward = '';
+	my $stepforward = '+1c'; # to avoid next search finding same match
 	# this is starting a search within a selection
 	if ( $range_total > 0 ) {
 		$end                        = pop(@ranges);
 		$start                      = pop(@ranges);
 		$::lglobal{selectionsearch} = $end;
 		$::searchstartindex = $end if $::sopt[2];
+		# don't skip first character if counting in selection or may miss first occurrence
+		$stepforward = '' if $silentmode;
 	# this is continuing a search within a selection
 	} elsif ( $::lglobal{selectionsearch} ) {
 		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = $::lglobal{selectionsearch};
-		$stepforward = '+1c'; # to avoid next search finding same match
 	# this is a search through end/start of the document
 	} else {
 		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = $::sopt[2] ? '1.0' : 'end';
-		$stepforward = '+1c'; # to avoid next search finding same match
 	}
 	# this is user requesting Start at Beginning (End if reverse)
 	if ( $::sopt[4] ) {
