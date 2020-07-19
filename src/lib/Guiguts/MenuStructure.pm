@@ -145,17 +145,8 @@ sub menu_help {
 			Button   => 'Check for ~Updates',
 			-command => sub { ::checkforupdates(0) }
 		],
-		[ Cascade => '~Bugs and Enhancements',
-		  -tearoff => 1,
-		  -menuitems =>
-		  [
-		    [ Button  => 'Report a ~Bug or Suggest Enhancement (Github Issues) [www]',
-		      -command => sub { ::launchurl('https://github.com/DistributedProofreaders/guiguts/issues'); }
-		    ],
-		    [ Button  => 'Suggest Enhancement (DP ~Wiki) [www]',
-		      -command => sub { ::launchurl('https://www.pgdp.net/wiki/Guiguts_Enhancements'); }
-		    ],
-		  ]
+		[ Button  => 'Report ~Bug or Suggest Enhancement (DP Wiki) [www]',
+		  -command => sub { ::launchurl('https://www.pgdp.net/wiki/Guiguts_Bugs_and_Enhancements'); }
 		],
 	];
 	push (@$help_top, @$character_help) if $::menulayout eq 'old';
