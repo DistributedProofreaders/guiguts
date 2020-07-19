@@ -58,6 +58,7 @@ sub searchtext {
 	  unless $::searchstartindex;
 	my $searchstartingpoint = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 
+	my $stepforward = '';
 	# this is starting a search within a selection
 	if ( $range_total > 0 ) {
 		$end                        = pop(@ranges);
@@ -68,11 +69,12 @@ sub searchtext {
 	} elsif ( $::lglobal{selectionsearch} ) {
 		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = $::lglobal{selectionsearch};
-
+		$stepforward = '+1c'; # to avoid next search finding same match
 	# this is a search through end/start of the document
 	} else {
 		$start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
 		$end   = $::sopt[2] ? '1.0' : 'end';
+		$stepforward = '+1c'; # to avoid next search finding same match
 	}
 	# this is user requesting Start at Beginning (End if reverse)
 	if ( $::sopt[4] ) {
@@ -85,8 +87,8 @@ sub searchtext {
 	if ( $::sopt[2] ) {    # if backwards
 		$::searchstartindex = $start;
 	} else {
-		# forward search begin +1c or the next search would find the same match
-		$::searchendindex = "$start+1c";
+		# continued forward search begins +1c or next search would find the same match
+		$::searchendindex = $start . $stepforward;
 	}
 		
 	{    # Turn off warnings temporarily since $searchterm is undefined on first
@@ -288,6 +290,9 @@ sub countmatches {
 	return if $searchterm eq '';
 	
 	# save various global variables to restore later
+	# save selection range
+	my $textwindow = $::textwindow;
+	my @ranges = $textwindow->tagRanges('sel');
 	# save previous start & end of found text
 	my $savesearchstartindex = $::searchstartindex;
 	$::searchstartindex = '1.0';
@@ -295,9 +300,6 @@ sub countmatches {
 	# save whether searching backwards & set to forwards
 	my $savesopt2 = $::sopt[2];
 	$::sopt[2] = 0;
-	# save whether starting from beginning and set to true
-	my $savesopt4 = $::sopt[4];
-	$::sopt[4] = 1;
 	# save selectionsearch flag and clear it
 	my $saveselectionsearch = $::lglobal{selectionsearch};
 	$::lglobal{selectionsearch} = 0;
@@ -310,8 +312,9 @@ sub countmatches {
 	$::searchstartindex = $savesearchstartindex;
 	$::searchendindex = $savesearchendindex;
 	$::sopt[2] = $savesopt2;
-	$::sopt[4] = $savesopt4;
 	$::lglobal{selectionsearch} = $saveselectionsearch;
+	# restore selection range if there was one before counting
+	$textwindow->tagAdd( 'sel', shift(@ranges), shift(@ranges) ) if @ranges > 0;
 }
 
 BEGIN { # restrict scope of $countlastterm
