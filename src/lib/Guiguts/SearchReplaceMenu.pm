@@ -431,7 +431,7 @@ sub regedit {
 		( $::reghints{ $::lglobal{searchentry}->get( '1.0', '1.end' ) } ) )
 	  if $::reghints{ $::lglobal{searchentry}->get( '1.0', '1.end' ) };
 	my $button = $editor->Show;
-	if ( $button =~ /save/i ) {
+	if ( defined $button and $button =~ /save/i ) {
 		open my $reg, ">", "$::lglobal{scannosfilename}";
 		print $reg "\%::scannoslist = (\n";
 		foreach my $word ( sort ( keys %::scannoslist ) ) {

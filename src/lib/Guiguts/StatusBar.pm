@@ -616,7 +616,7 @@ sub setlang {
 			-title   => 'Set language',
 			-popover => $top,
 			-command => sub {
-				if ( $_[0] eq 'OK' ) {
+				if ( defined $_[0] and $_[0] eq 'OK' ) {
 					::setedited(1);
 					$::booklang = $::lglobal{booklang};
 					update_lang_button();
@@ -1066,8 +1066,7 @@ sub gotoline {
 			-title   => 'Go To Line Number',
 			-popover => $top,
 			-command => sub {
-				no warnings 'uninitialized';
-				if ( $_[0] eq 'OK' ) {
+				if ( defined $_[0] and $_[0] eq 'OK' ) {
 					$::lglobal{line_number} =~ s/[\D.]//g;
 					my ( $last_line, $junk ) =
 					  split( /\./, $textwindow->index('end') );

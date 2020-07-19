@@ -846,6 +846,7 @@ sub ital_adjust {
 	my $top = $::top;
 	return if $::lglobal{markuppop};
 	$::lglobal{markuppop} = $top->Toplevel( -title => 'Word count threshold', );
+	::initialize_popup_with_deletebinding('markuppop');
 	my $f0 =
 	  $::lglobal{markuppop}->Frame->pack( -side => 'top', -anchor => 'n' );
 	$f0->Label( -text =>
