@@ -198,7 +198,10 @@ sub file_import_preptext {
 	::file_mark_pages() if ( $::auto_page_marks );
 	my $tmppath = $::globallastpath;
 	$tmppath =~ s|[^/\\]*[/\\]$||; # go one dir level up
-	$tmppath = ::catfile( $tmppath, $::defaultpngspath, '');
+	$tmppath = ::catdir( $tmppath, $::defaultpngspath );
+	# ensure trailing slash
+	my $slash = $::OS_WIN ? "\\" : "/";
+	$tmppath .= $slash unless substr( $tmppath, -1 ) eq $slash;
 	$::pngspath = $tmppath if ( -e $tmppath );
 	$top->Unbusy( -recurse => 1 );
 	return;
