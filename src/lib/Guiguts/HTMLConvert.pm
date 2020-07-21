@@ -1729,6 +1729,12 @@ sub htmlimage {
 		  $f52->Label( -text => '' )->pack();
 		$::lglobal{htmlimgmaxwidth} =
 		  $f52->Label( -text => '' )->pack();
+		$f52->Checkbutton(
+			-variable    => \$::epubpercentoverride,
+			-selectcolor => $::lglobal{checkcolor},
+			-text        => 'Override % with 100% in epub',
+			-anchor      => 'w',
+		  )->pack();
 		my $f2 =
 		  $::lglobal{htmlimpop}->LabFrame( -label => 'Alignment' )
 		  ->pack( -side => 'top', -anchor => 'n' );
@@ -1829,8 +1835,12 @@ sub htmlimageok {
 	# Replace [Illustration] with div, img and caption
 	$textwindow->addGlobStart;
 	$textwindow->delete( 'thisblockstart', 'thisblockend' );
+	# Never want image size to exceed its natural size
+	my $maxwidth = $::lglobal{htmlimagesizex} / $EMPX;
 	$textwindow->insert( 'thisblockstart',
-			"<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\" >\n"
+		    "<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\""
+		    . ( $::lglobal{htmlimgwidthtype} eq '%' ?
+				" style=\"max-width: ${maxwidth}em;\">\n" : ">\n" )
 		  . "  <img class=\"w100\" src=\"$name\" $alt$title />\n"
 		  . "$selection</div>"
 		  . $::lglobal{preservep} );
@@ -1839,8 +1849,15 @@ sub htmlimageok {
 	my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
 	if ($insertpoint) {
 		my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
-		# Unless this class has been added already ...
-		unless ($textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
+		# If % width and override flag set, then also add CSS to override width to 100% for epub
+		my $cssovr = ( $::lglobal{htmlimgwidthtype} eq '%' and $::epubpercentoverride ) ?
+			"    \@media handheld { .$classname {width: 100%;} }" : "";
+		# If this class has been added already, write it again (override may have changed)
+		if ( my $samepoint = $textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' )) {
+			$textwindow->ntdelete( $samepoint . ' linestart', $samepoint . ' lineend');
+			$textwindow->ntinsert( $samepoint . ' linestart', $cssdef . $cssovr );
+		# Otherwise, find correct place to insert line
+		} else {
 			# Find end of last class definition in CSS
 			$insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
 			if ($insertpoint) {
@@ -1858,7 +1875,7 @@ sub htmlimageok {
 						last;
 					}
 				}
-				$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . "\n");
+				$textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . $cssovr . "\n");
 
 				# Unless it already exists, add heading before first illow class
 				my $heading = '/* Illustration classes */';
