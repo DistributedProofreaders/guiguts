@@ -117,6 +117,7 @@ our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang      = 'en';
 our $defaultindent = 2;
+our $epubpercentoverride = 1;	# True = override % img widths to 100% for epubs
 our $failedsearch  = 0;
 our $fontname      = 'Courier New';
 our $fontsize      = 10;

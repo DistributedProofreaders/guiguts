@@ -987,7 +987,7 @@ EOM
 		# otherwise we can't have a default value of 1 without overwriting the user's setting
 		for (
 			qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
-			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers failedsearch
+			blocklmargin blockrmargin bold_char defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
 			font_char fontname fontsize fontweight geometry
 			gesperrt_char globalaspellmode highlightcolor history_size
 			htmldiventry htmlspanentry ignoreversionnumber
