@@ -1701,6 +1701,11 @@ sub searchaddterms
 			-expand => 'y',
 			-fill   => 'x'
 		  );
+		$::lglobal{$replaceentry}->{_MENU_} = ();
+		$::lglobal{$replaceentry}->bind(
+			'<FocusIn>',
+			eval " sub { \$::lglobal{hasfocus} = \$::lglobal{$replaceentry}; } "
+		);
 		$msref->[$_]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
