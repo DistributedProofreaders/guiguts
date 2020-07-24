@@ -1502,12 +1502,16 @@ sub jeebiespop_up {
 		my $ptopframe = $::lglobal{jeepop}->Frame->pack;
 		$ptopframe->Label( -text => 'Search mode:', )
 		  ->pack( -side => 'left', -padx => 2 );
-		my %rbutton = ( 'Paranoid', 'p', 'Normal', '', 'Tolerant', 't' );
-		for ( keys %rbutton ) {
+		my @rbutton = ( 
+			[ 'Paranoid', 'p' ],
+			[ 'Normal', '' ],
+			[ 'Tolerant', 't' ],
+		);
+		for ( @rbutton ) {
 			$ptopframe->Radiobutton(
-									 -text     => $_,
+									 -text     => $_->[0],
 									 -variable => \$::jeebiesmode,
-									 -value    => $rbutton{$_},
+									 -value    => $_->[1],
 									 -command  => \&saveset,
 			)->pack( -side => 'left', -padx => 2 );
 		}
