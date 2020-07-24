@@ -24,40 +24,26 @@ sub tablefx {
 		$::lglobal{tblfxpop}->title('ASCII Table Special Effects');
 		my $f0 =
 		  $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-		my %tb_buttons = (
-			'Table Select'   => sub { tblselect() },
-			'Table Deselect' => sub {
+		my @tb_buttons = (
+			[ 'Table Select',         sub { tblselect() } ],
+			[ 'Table Deselect',       sub {
 				$textwindow->tagRemove( 'table',   '1.0', 'end' );
 				$textwindow->tagRemove( 'linesel', '1.0', 'end' );
 				$textwindow->markUnset( 'tblstart', 'tblend' );
 				undef $::lglobal{selectedline};
-			},
-			'Insert Vertical Line' => sub {
-				insertline('i');
-			},
-			'Add Vertical Line' => sub {
-				insertline('a');
-			},
-			'Space Out Table' => sub {
-				tblspace();
-			},
-			'Auto Columns' => sub {
-				tblautoc();
-			},
-			'Compress Table' => sub {
-				tblcompress();
-			},
-			'Select Prev Line' => sub {
-				tlineselect('p');
-			},
-			'Select Next Line' => sub {
-				tlineselect('n');
-			},
-			'Line Deselect' => sub {
+			} ],
+			[ 'Insert Vertical Line', sub { insertline('i'); } ],
+			[ 'Add Vertical Line',    sub { insertline('a'); } ],
+			[ 'Space Out Table',      sub { tblspace(); } ],
+			[ 'Auto Columns',         sub { tblautoc(); } ],
+			[ 'Compress Table',       sub { tblcompress(); } ],
+			[ 'Select Prev Line',     sub { tlineselect('p'); } ],
+			[ 'Select Next Line',     sub { tlineselect('n'); } ],
+			[ 'Line Deselect',        sub {
 				$textwindow->tagRemove( 'linesel', '1.0', 'end' );
 				undef $::lglobal{selectedline};
-			},
-			'Delete Sel. Line' => sub {
+			} ],
+			[ 'Delete Sel. Line',     sub {
 				my @ranges      = $textwindow->tagRanges('linesel');
 				my $range_total = @ranges;
 				$::operationinterrupt = 0;
@@ -76,19 +62,17 @@ sub tablefx {
 				$textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
 				$textwindow->tagRemove( 'linesel', '1.0', 'end' );
 				$textwindow->addGlobEnd;
-			},
-			'Remove Sel. Line' => sub {
-				tlineremove();
-			},
+			} ],
+			[ 'Remove Sel. Line',     sub { tlineremove(); } ],
 		);
 		my ( $inc, $row, $col ) = ( 0, 0, 0 );
-		for ( keys %tb_buttons ) {
+		for ( @tb_buttons ) {
 			$row = int( $inc / 4 );
 			$col = $inc % 4;
 			$f0->Button(
 						 -activebackground => $::activecolor,
-						 -command          => $tb_buttons{$_},
-						 -text             => $_,
+						 -command          => $tb_buttons[$inc][1],
+						 -text             => $tb_buttons[$inc][0],
 						 -width            => 16
 			  )->grid(
 					   -row    => $row,
