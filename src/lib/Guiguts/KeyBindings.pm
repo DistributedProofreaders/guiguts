@@ -92,6 +92,7 @@ sub keybindings {
 	keybind( '<Control-f>',         sub { ::searchpopup(); } );
 	keybind( '<Control-g>',         sub {
 			if ( $::lglobal{searchpop} ) {
+				::update_sr_histories();
 				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
 				::searchtext($searchterm);
 			} else {
@@ -100,6 +101,7 @@ sub keybindings {
 		}, '<<FindNext>>' );
 	keybind( '<Control-Shift-g>',   sub {
 			if ( $::lglobal{searchpop} ) {
+				::update_sr_histories();
 				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
 				$::lglobal{searchop2}->toggle;
 				::searchtext($searchterm);
@@ -110,6 +112,7 @@ sub keybindings {
 		}, '<<FindNextReverse>>' );
 	keybind( '<Control-b>',         sub {
 			if ( $::lglobal{searchpop} ) {
+				::update_sr_histories();
 				my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
 				::countmatches($searchterm);
 			}		

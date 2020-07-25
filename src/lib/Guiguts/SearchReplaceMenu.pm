@@ -7,18 +7,29 @@ BEGIN {
 	our ( @ISA, @EXPORT );
 	@ISA = qw(Exporter);
 	@EXPORT =
-	  qw(&add_search_history &searchtext &search_history &reg_check &getnextscanno &updatesearchlabels
+	  qw(&update_sr_histories &add_search_history &searchtext &search_history &reg_check &getnextscanno &updatesearchlabels
 	  &isvalid &swapterms &findascanno &reghint &replaceeval &replace &opstop &replaceall &killstoppop
 	  &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
 	  &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
 	  &loadscannos &replace_incr_counter &countmatches);
 }
 
+# Update both the search and replace histories from their dialog fields
+sub update_sr_histories {
+	add_search_history(
+		$::lglobal{searchentry}->get( '1.0', '1.end' ),
+		\@::search_history);
+	add_search_history(
+		$::lglobal{replaceentry}->get( '1.0', '1.end' ),
+		\@::replace_history);
+}
+
+# Add given term to either the search or replace history
 sub add_search_history {
-	if ($::scannosearch) {
-		return;    # do not add to search history during a scannos check
-	}
 	my ( $term, $history_array_ref) = @_;
+	# do not add during a scannos check nor if term is empty string
+	return if $::scannosearch or $term eq '';
+	
 	my @temparray = @$history_array_ref;
 	@$history_array_ref = ();
 	push @$history_array_ref, $term;
@@ -44,9 +55,6 @@ sub searchtext {
 #	$::searchstartindex--where the last search for this $searchterm ended
 #   replaced with the insertion point if the user has clicked someplace else
 	$searchterm = '' unless defined $searchterm;
-	if ( length($searchterm) ) {    #and not ($searchterm =~ /\W/)
-		::add_search_history( $searchterm, \@::search_history);
-	}
 	$::lglobal{lastsearchterm} = 'stupid variable needs to be initialized'
 	  unless length( $::lglobal{lastsearchterm} );
 	$textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex and not $silentmode;
@@ -90,17 +98,10 @@ sub searchtext {
 		# continued forward search begins +1c or next search would find the same match
 		$::searchendindex = $start . $stepforward;
 	}
-		
-	{    # Turn off warnings temporarily since $searchterm is undefined on first
-		    # search
-		no warnings;
-		unless ( length($searchterm) ) {
-			$searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
-			::add_search_history( $searchterm, \@::search_history);
-		}
-	}    # warnings back on; keep this bracket
+
+	# use the string in the dialog search field unless one was passed in as an argument
+	$searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' ) unless ( $searchterm );
 	return ('') unless length($searchterm);
-	#::operationadd( "Search for " . $searchterm );
 	if ( $::sopt[3] ) {
 		unless ( ::isvalid($searchterm) ) {
 			badreg();
@@ -1158,7 +1159,10 @@ sub searchpopup {
 		  ->pack( -side => 'left', -anchor => 'n', -padx => 80 );
 		$sf1->Button(
 			-activebackground => $::activecolor,
-			-command          => sub { countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) ); },
+			-command          => sub {
+				update_sr_histories();
+				countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+			},
 			-text  => 'Count',
 			-width => 6
 		)->pack( -side => 'right', -anchor => 'e', -padx => 1 , -pady => 1 );
@@ -1188,9 +1192,7 @@ sub searchpopup {
 		$::lglobal{searchbutton} = $sf11->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
-				add_search_history(
-					$::lglobal{searchentry}->get( '1.0', '1.end' ),
-					\@::search_history);
+				update_sr_histories();
 				searchtext('');
 			},
 			-text  => 'Search',
@@ -1336,6 +1338,7 @@ sub searchpopup {
 		$sf12->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
 			},
 			-text  => 'Rpl All',
@@ -1349,10 +1352,8 @@ sub searchpopup {
 		$sf12->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
-				add_search_history(
-					$::lglobal{searchentry}->get( '1.0', '1.end' ),
-					\@::search_history);
 				searchtext('');
 			},
 			-text  => 'R & S',
@@ -1366,10 +1367,8 @@ sub searchpopup {
 		$sf12->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
-				add_search_history(
-					$::lglobal{replaceentry}->get( '1.0', '1.end' ),
-					\@::replace_history);
 			},
 			-text  => 'Replace',
 			-width => 6
@@ -1532,6 +1531,7 @@ sub searchpopup {
 		# Return: find in current direction
 		searchbind( '<Return>',
 			sub {
+				update_sr_histories();
 				searchtext();
 				$top->raise;
 			}
@@ -1539,6 +1539,7 @@ sub searchpopup {
 		# Control-Return: find & replace
 		searchbind( '<Control-Return>',
 			sub {
+				update_sr_histories();
 				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
 				searchtext();
 				$top->raise;
@@ -1547,6 +1548,7 @@ sub searchpopup {
 		# Shift-Return: replace
 		searchbind( '<Shift-Return>',
 			sub {
+				update_sr_histories();
 				replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
 				$top->raise;
 			}
@@ -1554,6 +1556,7 @@ sub searchpopup {
 		# Control-Shift-Return: replace all
 		searchbind( '<Control-Shift-Return>',
 			sub {
+				update_sr_histories();
 				replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
 				$top->raise;
 			}
@@ -1561,6 +1564,7 @@ sub searchpopup {
 		# Control-f: find in current direction
 		searchbind( '<Control-f>',
 			sub {
+				update_sr_histories();
 				searchtext();
 				$top->raise;
 			}
@@ -1568,6 +1572,7 @@ sub searchpopup {
 		# Control-g: repeat find in current direction
 		searchbind( '<Control-g>',
 			sub {
+				update_sr_histories();
 				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 				$textwindow->focus;
 			}
@@ -1575,6 +1580,7 @@ sub searchpopup {
 		# Control-Shift-g: repeat find in opposite direction
 		searchbind( '<Control-Shift-g>',
 			sub {
+				update_sr_histories();
 				$::lglobal{searchop2}->toggle;
 				searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 				$::lglobal{searchop2}->toggle;
@@ -1584,6 +1590,7 @@ sub searchpopup {
 		# Control-b: count occurrences
 		searchbind( '<Control-b>',
 			sub {
+				update_sr_histories();
 				countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
 			}
 		);
@@ -1616,6 +1623,7 @@ sub searchpopup {
 		# Todo: consider Entry instead of Text widgets
 		$::lglobal{searchentry}->delete( '1.end', 'end' );
 		$::lglobal{searchentry}->tagAdd( 'sel', '1.0', 'end -1c' );
+		update_sr_histories();
 		searchtext('');
 	}
 }
@@ -1650,6 +1658,7 @@ sub searchaddterms
 		$msref->[$_]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replaceall( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 			},
 			-text  => 'Rpl All',
@@ -1663,6 +1672,7 @@ sub searchaddterms
 		$msref->[$_]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 				searchtext('');
 			},
@@ -1677,6 +1687,7 @@ sub searchaddterms
 		$msref->[$_]->Button(
 			-activebackground => $::activecolor,
 			-command          => sub {
+				update_sr_histories();
 				replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
 				add_search_history(
 					$::lglobal{$replaceentry}->get( '1.0', '1.end' ),
