@@ -42,7 +42,7 @@
 - Jeebies tool is updated to latest version (0.15a - 2009)
 - ppvimage tool is updated to match new image size guidance
 - local CSS validation tool is updated to validate CSS3 or CSS2.1
-- DPCustomMono2 font replaced with instructions on getting DPSansMono
+- `DPCustomMono2` font replaced with instructions on getting `DP Sans Mono`
 - git checkout can be used as a live release (developers/testers)
 
 ### Other Changes
