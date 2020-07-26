@@ -9,6 +9,8 @@
    - uses CSS classes instead of styles on image divs
    - width of image may be specified in percent or em
    - calculates max width for image to fit portrait or landscape screens
+   - restricts max width to image's natural size
+   - optional override for percent width to 100% on handheld devices
 - `/I...I/` or `/i...i/` markup is used to generate an index
 - HTML/CSS for chapter headings works well for ePub formats
 - default `<hr>` CSS defines margins to center correctly in ePub
@@ -17,12 +19,15 @@
 - autotable uses CSS rather than HTML attributes
 - all-small-caps are detected and coded during HTML generation
 - HTML title wording puts book title first
+- HTML header updated with code for including cover
 
 ### Improved Search & Replace functionality
 - a Count button (`ctrl+b`) counts how many times the current search
   settings would find a match
 - number of replacement terms can be changed by the user
 - search & replace preserves the position of page markers
+- search & replace histories are now updated by all search, replace
+  and count operations
 
 ### Better utf-8 support
 - bookloupe tool is used as a replacement for gutcheck by default
@@ -36,6 +41,8 @@
 - includes latest version of EBookMaker, runnable from HTML menu
 - Jeebies tool is updated to latest version (0.15a - 2009)
 - ppvimage tool is updated to match new image size guidance
+- local CSS validation tool is updated to validate CSS3 or CSS2.1
+- `DPCustomMono2` font replaced with instructions on getting `DP Sans Mono`
 - git checkout can be used as a live release (developers/testers)
 
 ### Other Changes
