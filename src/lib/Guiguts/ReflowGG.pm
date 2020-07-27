@@ -14,7 +14,10 @@ BEGIN {
 
 # ReflowGG based on Text::Reflow, with some modifications,
 # especially for the way we want to handle dashes.
-# http://cpan.uwinnipeg.ca/htdocs/Text-Reflow/Text/Reflow.pm.html
+# https://metacpan.org/pod/Text::Reflow
+# Subsequently modified further to pass arguments as Perl arrays
+# rather than converting to hex with pack & unpack (the original
+# had to be able to pass arguments to a C XSUB).
 
 # Original Reflow script written by Michael Larsen, larsen@edu.upenn.math
 # Modified by Martin Ward, martin@gkc.org.uk
@@ -34,35 +37,28 @@ BEGIN {
 #
 
 # This is the perl version of the C function reflow_trial
-# If the C XSUB doesn't work, comment out the line
-# bootstrap Text::Reflow $VERSION;
-# above, and take the _ from the front of this perl version:
 
-sub _reflow_trial($$$$$$$$$$) {
+sub reflow_trial($$$$$$$$$$) {
   my ($optimum, $maximum, $wordcount,
       $penaltylimit, $semantic, $shortlast,
-      $word_len, $space_len, $extra, $result) = @_;
+      $word_len, $space_len, $extra, $best_linkbreak) = @_;
   my ($lastbreak, @linkbreak);
   my ($j, $k, $interval, $penalty, @totalpenalty, $bestsofar);
-  my (@best_linkbreak, $best_lastbreak, $opt);
-  my @optimum	= unpack("N*", pack("H*", $optimum));
-  my @word_len	= unpack("N*", pack("H*", $word_len));
-  my @space_len	= unpack("N*", pack("H*", $space_len));
-  my @extra	= unpack("N*", pack("H*", $extra));
+  my ($best_lastbreak, $opt);
   my $best = $penaltylimit * 21;
-  foreach $opt (@optimum) {
+  foreach $opt (@$optimum) {
     @linkbreak = ();
     for ($j = 0; $j < $wordcount; $j++) {  # Optimize preceding break
       $interval = 0;
       $totalpenalty[$j] = $penaltylimit * 2;
       for ($k = $j; $k >= 0; $k--) {
-	$interval += $word_len[$k];
+	$interval += $word_len->[$k];
 	last if (($k < $j) && (($interval > $opt + 10)
 				|| ($interval >= $maximum)));
 	$penalty = ($interval - $opt) * ($interval - $opt);
-	$interval += $space_len[$k];
+	$interval += $space_len->[$k];
 	$penalty += $totalpenalty[$k-1] if ($k > 0);
-	$penalty -= ($extra[$j] * $semantic)/2;
+	$penalty -= ($extra->[$j] * $semantic)/2;
 	if ($penalty < $totalpenalty[$j]) {
 	  $totalpenalty[$j] = $penalty;
 	  $linkbreak[$j] = $k-1;
@@ -75,14 +71,14 @@ sub _reflow_trial($$$$$$$$$$) {
     # Pick a break for the last line which gives
     # the least penalties for previous lines:
     for ($k = $wordcount-2; $k >= -1; $k--) {      # Break after k?
-      $interval += $word_len[$k+1];
+      $interval += $word_len->[$k+1];
       last if (($interval > $opt + 10) || ($interval > $maximum));
       if ($interval > $opt) {  # Don't make last line too long
 	$penalty = ($interval - $opt) * ($interval - $opt);
       } else {
 	$penalty = 0;
       }
-      $interval += $space_len[$k+1];
+      $interval += $space_len->[$k+1];
       $penalty += $totalpenalty[$k] if ($k >= 0);
       $penalty += $shortlast * $semantic if ($wordcount - $k - 1 <= 2);
       if ($penalty <= $bestsofar) {
@@ -93,13 +89,11 @@ sub _reflow_trial($$$$$$$$$$) {
     # Save these breaks if they are an improvement:
     if ($bestsofar < $best) {
       $best_lastbreak = $lastbreak;
-      @best_linkbreak = @linkbreak;
+      @$best_linkbreak = @linkbreak;
       $best = $bestsofar;
     }
   } # Next $opt
-  # Return the best breaks:
-  $result = unpack("H*", pack("N*", ($best_lastbreak, @best_linkbreak)));
-  return($result);
+  return($best_lastbreak);
 }
 
 
@@ -507,19 +501,13 @@ sub reflow_para {
   reflow_penalties();
   $lastbreak = 0;
   $linkbreak[$wordcount] = 0;
-  # Create space for the result:
-  my $result = " " x (($wordcount + 2) * 8);
-  $result = _reflow_trial(unpack("H*", pack("N*", @$optimum)),
+  $lastbreak = reflow_trial( $optimum,
 			 $maximum, $wordcount,
 			 $penaltylimit, $semantic, $shortlast,
-			 unpack("H*", pack("N*", @word_len)),
-			 unpack("H*", pack("N*", @space_len)),
-			 unpack("H*", pack("N*", @extra)),
-			 $result);
-  @linkbreak = unpack("N*", pack("H*", $result));
-  # Convert @linkbreak from unsigned to signed:
-  @linkbreak = map { $_ > 0xF0000000 ? -((0xFFFFFFFF - $_) + 1) : $_ + 0 } @linkbreak;
-  $lastbreak = shift(@linkbreak);
+			 \@word_len,
+			 \@space_len,
+			 \@extra,
+			 \@linkbreak);
   compute_output();
   grep (s/\x9f/ /g, @output);
   print_lines(@output);
