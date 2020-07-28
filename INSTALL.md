@@ -52,6 +52,10 @@ to any previous versions._
 6. Double click the file `install_cpan_modules.pl`. This should display a command
    window listing the Perl modules as it installs them. Note that this can take
    several minutes to complete.
+   (If instead, Windows says it does not know how to run that file, then right-click
+   `install_cpan_modules.pl`, and choose `Open with`. Then choose `More apps`,
+   scroll to the bottom then choose `Look for another app on this PC`, navigate to
+   `c:\Strawberry\perl\bin` and choose `perl.exe`.)
 7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts should
    start up and be ready for use.
 8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
