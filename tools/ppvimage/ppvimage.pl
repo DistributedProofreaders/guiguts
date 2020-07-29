@@ -16,7 +16,7 @@ use Tk;
 #       need to deal with the input file encoding. Any unicode in alts
 #       or titles etc will simply pass through as-is to the logfile.
 #
-# last edit: 23/May/2020
+# last edit: 29/July/2020
 
 my $vnum  = "1.07";
 
@@ -38,7 +38,7 @@ use constant NOLINEINDENT => '           ';
 
 use constant MAXKBINLINE => 256;	# Maximum size of an inline image in KB
 use constant MAXKBLINKED => 1024;	# Maximum size of a linked image in KB
-use constant MINCOVERWD => 625;		# Minimum width of cover image
+use constant MINCOVERWD => 650;		# Minimum width of cover image
 use constant MINCOVERHT => 1000;	# Minimum height of cover image
 
 # allow commandline operation sans GUI (thanks Katt83)
