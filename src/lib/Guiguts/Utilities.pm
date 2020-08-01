@@ -825,7 +825,6 @@ sub initialize {
 	$::lglobal{autofraction}      = 0;				# HTML convert - 1/2, 1/4, 3/4 to named entities
 	$::lglobal{codewarn}          = 1;
 	$::lglobal{cssblockmarkup}    = 1;				# HTML convert - Use <div>/CSS rather than <blockquote>
-	$::lglobal{cssvalidationlevel}= 'css3';			# CSS level checked by validator (css3 or css21)
 	$::lglobal{delay}             = 50;
 	$::lglobal{footstyle}         = 'end';
 	$::lglobal{ftnoteindexstart}  = '1.0';

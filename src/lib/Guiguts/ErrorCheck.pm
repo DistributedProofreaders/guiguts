@@ -480,7 +480,7 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
 		}
 	} elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
 		my $runner = ::runner::tofile( "errors.err", "errors.err" ); # stdout & stderr
-		$runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::lglobal{cssvalidationlevel}", "file:$name" );
+		$runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel", "file:$name" );
 	} elsif ( $errorchecktype eq 'pphtml' ) {
 		::run( "perl", "lib/ppvchecks/pphtml.pl", "-i", $name, "-o",
 				"errors.err" );
