@@ -1512,7 +1512,7 @@ sub jeebiespop_up {
 									 -text     => $_->[0],
 									 -variable => \$::jeebiesmode,
 									 -value    => $_->[1],
-									 -command  => \&saveset,
+									 -command  => \&::savesettings,
 			)->pack( -side => 'left', -padx => 2 );
 		}
 		$ptopframe->Button(
