@@ -116,6 +116,7 @@ our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang      = 'en';
+our $cssvalidationlevel = 'css3';	# CSS level checked by validator (css3 or css21)
 our $defaultindent = 2;
 our $epubpercentoverride = 1;	# True = override % img widths to 100% for epubs
 our $failedsearch  = 0;
