@@ -78,6 +78,7 @@
 - right-clicking in gutcheck error dialog could corrupt error listing
 - file permissions now retained on file save
 - `[foot` caused footnote code to fail
+- adding good words to project dictionary failed under Linux
 
 ## Version 1.0.25
 - bug fix: newly opened file displays as edited
