@@ -1,0 +1,8 @@
+language: perl
+perl:
+  - "5.30"
+install:
+  - cpanm --quiet --installdeps --notest --with-develop .
+script:
+  # do format linting
+  - ./format_files.sh --check
