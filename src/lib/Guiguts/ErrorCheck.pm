@@ -168,6 +168,12 @@ sub errorcheckpop_up {
 			);
 			$dialog->Show;
 		} else {
+			# CSS validator reports line numbers from start of style block, so need to adjust
+			my $lineadjust = 0;
+			if ( $thiserrorchecktype eq 'W3C Validate CSS' and
+				 $lineadjust = $textwindow->search( '--', '<style', '1.0', 'end' ) ) {
+				$lineadjust =~ s/\..*//; # strip column from 'row.column'
+			}
 			while ( $line = <$fh> ) {
 				utf8::decode($line) if $unicode;
 				$line =~ s/^\s//g;
@@ -251,13 +257,17 @@ sub errorcheckpop_up {
 						  or ( $thiserrorchecktype eq "Link Check" )
 						  or ( $thiserrorchecktype eq "pptxt" ) )
 				{
-					$line =~ s/Line : (\d+)/line $1:1/;
+					# Format line number, adjusting for start line of style block if CSS check
+					if ( $line =~ /Line : (\d+)/ ) {
+						my $lineno = $1;
+						$lineno += $lineadjust if $thiserrorchecktype eq "W3C Validate CSS";
+						$line =~ s/Line : (\d+)/line ${lineno}:1/;
+					}
 					push @errorchecklines, $line;
 					$::errors{$line} = '';
 					$lincol = '';
 					if ( $line =~ /line (\d+):(\d+)/ ) {
-						my $plusone = $1 + 1;
-						$lincol = "$plusone.$2";
+						$lincol = "$1.$2";
 						$mark++;
 						$textwindow->markSet( "t$mark", $lincol );
 						$::errors{$line} = "t$mark";
