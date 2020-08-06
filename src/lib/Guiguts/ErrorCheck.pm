@@ -257,10 +257,9 @@ sub errorcheckpop_up {
 						  or ( $thiserrorchecktype eq "Link Check" )
 						  or ( $thiserrorchecktype eq "pptxt" ) )
 				{
-					# Format line number, adjusting for start line of style block if CSS check
+					# Format line number, adjusting for tool's idea of start line
 					if ( $line =~ /Line : (\d+)/ ) {
-						my $lineno = $1;
-						$lineno += $lineadjust if $thiserrorchecktype eq "W3C Validate CSS";
+						my $lineno = $1 + $lineadjust;
 						$line =~ s/Line : (\d+)/line ${lineno}:1/;
 					}
 					push @errorchecklines, $line;
