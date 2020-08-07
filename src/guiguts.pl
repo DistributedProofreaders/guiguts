@@ -19,10 +19,11 @@ use lib '.';
 
 #use criticism 'gentle';
 our $VERSION = '1.1.0';
+
 # DON'T FORGET to update the version number in makefile too
 
 # To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
-our $debug = 0; # turn on to report debug messages. Do not commit with $debug on
+our $debug = 0;    # turn on to report debug messages. Do not commit with $debug on
 use FindBin;
 use lib $FindBin::Bin . "/lib";
 
@@ -95,10 +96,10 @@ use Guiguts::Utilities;
 use Guiguts::WordFrequency;
 
 ### Constants
-our $allblocktypes = quotemeta '#$*FfIiLlPpXx';
-our $url_no_proofer  = 'https://www.pgdp.net/phpBB3/ucp.php?i=pm&mode=compose';
-our $url_yes_proofer = 'https://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
-our $urlprojectpage  = 'https://www.pgdp.net/c/project.php?id=';
+our $allblocktypes        = quotemeta '#$*FfIiLlPpXx';
+our $url_no_proofer       = 'https://www.pgdp.net/phpBB3/ucp.php?i=pm&mode=compose';
+our $url_yes_proofer      = 'https://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
+our $urlprojectpage       = 'https://www.pgdp.net/c/project.php?id=';
 our $urlprojectdiscussion = 'https://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
 
 ### Application Globals
@@ -115,14 +116,14 @@ our $blocklmargin     = 1;
 our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
-our $booklang      = 'en';
-our $cssvalidationlevel = 'css3';	# CSS level checked by validator (css3 or css21)
-our $defaultindent = 2;
-our $epubpercentoverride = 1;	# True = override % img widths to 100% for epubs
-our $failedsearch  = 0;
-our $fontname      = 'Courier New';
-our $fontsize      = 10;
-our $fontweight    = q{};
+our $booklang            = 'en';
+our $cssvalidationlevel  = 'css3';          # CSS level checked by validator (css3 or css21)
+our $defaultindent       = 2;
+our $epubpercentoverride = 1;               # True = override % img widths to 100% for epubs
+our $failedsearch        = 0;
+our $fontname            = 'Courier New';
+our $fontsize            = 10;
+our $fontweight          = q{};
 our $geometry;
 our $globalaspellmode   = 'normal';
 our $globalbrowserstart = $ENV{BROWSER};
@@ -136,13 +137,12 @@ our $globalspellpath        = q{};
 our $globalviewerpath       = q{};
 our $globalprojectdirectory = q{};
 our @gsopt;
-our $htmldiventry   = ' class="i2"';
-our $htmlspanentry  = ' class="i2"';
-our $highlightcolor = '#a08dfc';
-our $history_size   = 20;
-our $ignoreversions =
-  "revision";    #ignore revisions by default but not major or minor versions
-our $ignoreversionnumber    = "";         #ignore a specific version
+our $htmldiventry           = ' class="i2"';
+our $htmlspanentry          = ' class="i2"';
+our $highlightcolor         = '#a08dfc';
+our $history_size           = 20;
+our $ignoreversions         = "revision";      #ignore revisions by default but not major or minor versions
+our $ignoreversionnumber    = "";              #ignore a specific version
 our $jeebiesmode            = 'p';
 our $lastversioncheck       = time();
 our $lastversionrun         = $VERSION;
@@ -156,49 +156,49 @@ our $notoolbar              = 0;
 our $intelligentWF          = 0;
 our $oldspellchecklayout    = 0;
 our $operationinterrupt;
-our $defaultpngspath     = ::os_normal('pngs/');
-our $pngspath            = q{};
-our $projectid           = q{};
-our $projectfileslocation= '';
-our $recentfile_size     = 9;
-our $regexpentry         = q();
-our $rewrapalgo          = 2;
-our $rmargin             = 72;
-our $rmargindiff         = 1;
-our $rwhyphenspace       = 1;
-our $scannos_highlighted = 0;
-our $scannoslist         = q{wordlist/en-common.txt};
-our $scannoslistpath     = q{wordlist};
-our $scannospath         = q{};
-our $scannosearch        = 0;
-our $scrollupdatespd     = 40;
-our $searchendindex      = 'end';
-our $searchstartindex    = '1.0';
-our $multiterm           = 0;
+our $defaultpngspath       = ::os_normal('pngs/');
+our $pngspath              = q{};
+our $projectid             = q{};
+our $projectfileslocation  = '';
+our $recentfile_size       = 9;
+our $regexpentry           = q();
+our $rewrapalgo            = 2;
+our $rmargin               = 72;
+our $rmargindiff           = 1;
+our $rwhyphenspace         = 1;
+our $scannos_highlighted   = 0;
+our $scannoslist           = q{wordlist/en-common.txt};
+our $scannoslistpath       = q{wordlist};
+our $scannospath           = q{};
+our $scannosearch          = 0;
+our $scrollupdatespd       = 40;
+our $searchendindex        = 'end';
+our $searchstartindex      = '1.0';
+our $multiterm             = 0;
 our $spellcheckwithenchant = 0;
-our $spellindexbkmrk     = q{};
-our $stayontop           = 0;
+our $spellindexbkmrk       = q{};
+our $stayontop             = 0;
 our $suspectindex;
-our $toolside           = 'bottom';
-our $menulayout         = 'default';
-our $trackoperations    = 0;	# Default to off (tracking triggers edited flag)
+our $toolside              = 'bottom';
+our $menulayout            = 'default';
+our $trackoperations       = 0;               # Default to off (tracking triggers edited flag)
 our $twowordsinhyphencheck = 0;
-our $unicodemenusplit   = 2; # 2 or 3
-our $utffontname        = 'Courier New';
-our $utffontsize        = 14;
-our $utf8save           = 1;	# True = always save utf8, false = only if unicode characters in file
-our $verboseerrorchecks = 0;
-our $vislnnm            = 0;
-our $w3cremote          = 0;
-our $wfstayontop        = 0;
+our $unicodemenusplit      = 2;               # 2 or 3
+our $utffontname           = 'Courier New';
+our $utffontsize           = 14;
+our $utf8save              = 1;               # True = always save utf8, false = only if unicode characters in file
+our $verboseerrorchecks    = 0;
+our $vislnnm               = 0;
+our $w3cremote             = 0;
+our $wfstayontop           = 0;
 
 # These are set to the default values in initialize()
-our $gutcommand          = '';
-our $jeebiescommand      = '';
-our $tidycommand         = '';
-our $validatecommand     = '';
-our $validatecsscommand  = '';
-our $ebookmakercommand   = '';
+our $gutcommand         = '';
+our $jeebiescommand     = '';
+our $tidycommand        = '';
+our $validatecommand    = '';
+our $validatecsscommand = '';
+our $ebookmakercommand  = '';
 our %gc;
 our %jeeb;
 our %pagenumbers;
@@ -210,7 +210,7 @@ our %geometryhash;    #Geometry of some windows in one hash.
 $geometryhash{wfpop} = q{};
 our %positionhash;    #Position of other windows in one hash.
 our @bookmarks = ( 0, 0, 0, 0, 0, 0 );
-our @gcopt = ( 0, 0, 0, 0, 0, 0, 1, 0, 1 );
+our @gcopt     = ( 0, 0, 0, 0, 0, 0, 1, 0, 1 );
 our @joinundolist;
 our @joinredolist;
 our @multidicts = ();
@@ -232,42 +232,43 @@ our $convertcharssinglereplace;
 our $convertcharsmultisearch;
 our $convertcharsdisplaysearch;
 
-our ( $txt_conv_bold, $txt_conv_italic, $txt_conv_gesperrt, $txt_conv_font,
-	$txt_conv_sc, $txt_conv_tb )
-  = ( 1, 1, 0, 0, 0, 1 );
-our ( $bold_char, $italic_char, $gesperrt_char, $font_char, $sc_char )
-  = ( '=', '_', '~', '=', '+' );
+our (
+    $txt_conv_bold, $txt_conv_italic, $txt_conv_gesperrt,
+    $txt_conv_font, $txt_conv_sc,     $txt_conv_tb
+) = ( 1, 1, 0, 0, 0, 1 );
+our ( $bold_char, $italic_char, $gesperrt_char, $font_char, $sc_char ) =
+  ( '=', '_', '~', '=', '+' );
 
 our @extops = (
-	{
-		'label'   => 'View in browser',
-		'command' => "$globalbrowserstart \"\$d\$f\$e\""
-	},
-	{
-		'label'   => 'Onelook.com (several dictionaries)',
-		'command' => "$globalbrowserstart https://www.onelook.com/?w=\$t"
-	},
-	{
-		'label' => 'Google Books Ngram Viewer',
-		'command' => "$globalbrowserstart https://books.google.com/ngrams/graph?content=\$t"
-	},
-	{
-		'label'   => 'Shape Catcher (Unicode character finder)',
-		'command' => "$globalbrowserstart https://shapecatcher.com/"
-	},
-	{
-		'label'   => 'W3C HTML Validation Service',
-		'command' => "$globalbrowserstart https://validator.w3.org/#validate_by_upload+with_options"
-	},
-	{
-		'label' => 'W3C CSS Validation Service',
-		'command' =>
-"$globalbrowserstart https://jigsaw.w3.org/css-validator/#validate_by_upload+with_options"
-	},
-	{
-		'label' => 'EBookMaker Online',
-		'command' => "$globalbrowserstart http://epubmaker.pglaf.org/"
-	},
+    {
+        'label'   => 'View in browser',
+        'command' => "$globalbrowserstart \"\$d\$f\$e\""
+    },
+    {
+        'label'   => 'Onelook.com (several dictionaries)',
+        'command' => "$globalbrowserstart https://www.onelook.com/?w=\$t"
+    },
+    {
+        'label'   => 'Google Books Ngram Viewer',
+        'command' => "$globalbrowserstart https://books.google.com/ngrams/graph?content=\$t"
+    },
+    {
+        'label'   => 'Shape Catcher (Unicode character finder)',
+        'command' => "$globalbrowserstart https://shapecatcher.com/"
+    },
+    {
+        'label'   => 'W3C HTML Validation Service',
+        'command' => "$globalbrowserstart https://validator.w3.org/#validate_by_upload+with_options"
+    },
+    {
+        'label' => 'W3C CSS Validation Service',
+        'command' =>
+          "$globalbrowserstart https://jigsaw.w3.org/css-validator/#validate_by_upload+with_options"
+    },
+    {
+        'label'   => 'EBookMaker Online',
+        'command' => "$globalbrowserstart http://epubmaker.pglaf.org/"
+    },
 );
 
 # All local global variables contained in one global hash.
@@ -275,8 +276,8 @@ our %lglobal;    # need to document each variable
 
 # Determine what optional modules are installed
 $lglobal{LevenshteinXS} = eval { require Text::LevenshteinXS; 1; } || 0;
-$lglobal{ImageSize} =  eval { require Image::Size; 1; } || 0;
-$lglobal{Which} =  eval { require File::Which; 1; } || 0;
+$lglobal{ImageSize}     = eval { require Image::Size;         1; } || 0;
+$lglobal{Which}         = eval { require File::Which;         1; } || 0;
 
 our $top;
 our $icon;
@@ -306,24 +307,24 @@ toolbar_toggle();
 $top->geometry($geometry) if $geometry;
 ( $lglobal{global_filename} ) = @ARGV;
 die "ERROR: too many files specified. \n" if ( @ARGV > 1 );
+
 if (    ( $lglobal{global_filename} )
-	and ( $lglobal{global_filename} eq 'runtests' ) )
-{
-	$lglobal{runtests} = 1;
+    and ( $lglobal{global_filename} eq 'runtests' ) ) {
+    $lglobal{runtests} = 1;
 }
 if (@ARGV) {
-	$lglobal{global_filename} = shift @ARGV;
-	if ( $lglobal{global_filename} =~ /^0(\d)$/ ) {
-		$lglobal{global_filename} = $::recentfile[$1-1];
-	}
-	if ( -e $lglobal{global_filename} ) {
-		my $userfn = $lglobal{global_filename};
-		$top->update;
-		$lglobal{global_filename} = $userfn;
-		openfile( $lglobal{global_filename} );
-	}
+    $lglobal{global_filename} = shift @ARGV;
+    if ( $lglobal{global_filename} =~ /^0(\d)$/ ) {
+        $lglobal{global_filename} = $::recentfile[ $1 - 1 ];
+    }
+    if ( -e $lglobal{global_filename} ) {
+        my $userfn = $lglobal{global_filename};
+        $top->update;
+        $lglobal{global_filename} = $userfn;
+        openfile( $lglobal{global_filename} );
+    }
 } else {
-	$lglobal{global_filename} = 'No File Loaded';
+    $lglobal{global_filename} = 'No File Loaded';
 }
 set_autosave() if $autosave;
 $textwindow->CallNextGUICallback;
@@ -331,24 +332,24 @@ $top->repeat( 200, sub { _updatesel($textwindow) } );
 
 # Ready to enter main loop
 unless ( -e 'header.txt' ) {
-	::copy( 'headerdefault.txt', 'header.txt' );
+    ::copy( 'headerdefault.txt', 'header.txt' );
 }
 ::checkforupdatesmonthly();
 
 sub dofile {
-	my $filename = shift;
-	return do $filename;
+    my $filename = shift;
+    return do $filename;
 }
 
 sub evalstring {
-	my $string = shift;
-	return eval($string);
+    my $string = shift;
+    return eval($string);
 }
 
 if ( $lglobal{runtests} ) {
-	runtests();
+    runtests();
 } else {
-	print
-"Guiguts $VERSION: If you have any problems, please include any error messages that appear here with your bug report.\n";
-	MainLoop;
+    print
+      "Guiguts $VERSION: If you have any problems, please include any error messages that appear here with your bug report.\n";
+    MainLoop;
 }
