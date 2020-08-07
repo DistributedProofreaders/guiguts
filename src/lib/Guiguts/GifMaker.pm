@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use MIME::Base64 qw();
 
-
 #####################################################################################
 #                                                                                   #
 #       Welcome, friend!                                                            #
@@ -24,7 +23,6 @@ use MIME::Base64 qw();
 #       Tony Browne                                                                 #
 #                                                                                   #
 #####################################################################################
-
 
 #####################################################################################
 #                                                                                   #
@@ -62,7 +60,6 @@ use MIME::Base64 qw();
 #close $giff;
 #####################################################################################
 
-
 #####################################################################################
 #                                                                                   #
 #       b)      To convert an existing gif file into a base64 string:               #
@@ -86,48 +83,44 @@ use MIME::Base64 qw();
 #close FILE;
 #####################################################################################
 
+sub enkode_base64 {
+    use integer;
 
+    my $eol = "\n";
+    my $ins = shift;
+    my $res = pack( "u", $ins );
+    $res =~ s/^.//mg;
+    $res =~ s/\n//g;
 
-sub enkode_base64
-{
-	use integer;
-
-	my $eol = "\n";
-	my $ins = shift;
-	my $res = pack("u", $ins);
-	$res =~ s/^.//mg;
-	$res =~ s/\n//g;
-
-	$res =~ tr|` -_|AA-Za-z0-9+/|;
-	my $padding = (3 - length($ins) % 3) % 3;
-	$res =~ s/.{$padding}$/'=' x $padding/e if $padding;
-	if (length $eol) {
-		$res =~ s/(.{1,76})/$1$eol/g;
-	}
-	return $res;
+    $res =~ tr|` -_|AA-Za-z0-9+/|;
+    my $padding = ( 3 - length($ins) % 3 ) % 3;
+    $res =~ s/.{$padding}$/'=' x $padding/e if $padding;
+    if ( length $eol ) {
+        $res =~ s/(.{1,76})/$1$eol/g;
+    }
+    return $res;
 }
 
-sub dekode_base64
-{
-	use integer;
+sub dekode_base64 {
+    use integer;
 
-	my $str = shift;
-	$str =~ tr|A-Za-z0-9+=/||cd;
-	$str =~ s/=+$//;
-	$str =~ tr|A-Za-z0-9+/| -_|;
-	return "" unless length $str;
+    my $str = shift;
+    $str =~ tr|A-Za-z0-9+=/||cd;
+    $str =~ s/=+$//;
+    $str =~ tr|A-Za-z0-9+/| -_|;
+    return "" unless length $str;
 
-	my $uustr = '';
-	my ($i, $l);
-	$l = length($str) - 60;
-	for ($i = 0; $i <= $l; $i += 60) {
-		$uustr .= "M" . substr($str, $i, 60);
-	}
-	$str = substr($str, $i);
-	if ($str ne "") {
-		$uustr .= chr(32 + length($str)*3/4) . $str;
-	}
-	return unpack ("u", $uustr);
+    my $uustr = '';
+    my ( $i, $l );
+    $l = length($str) - 60;
+    for ( $i = 0 ; $i <= $l ; $i += 60 ) {
+        $uustr .= "M" . substr( $str, $i, 60 );
+    }
+    $str = substr( $str, $i );
+    if ( $str ne "" ) {
+        $uustr .= chr( 32 + length($str) * 3 / 4 ) . $str;
+    }
+    return unpack( "u", $uustr );
 }
 
 1;
