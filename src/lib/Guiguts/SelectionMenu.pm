@@ -474,61 +474,68 @@ sub aligntext {
     }
 }
 
+# Draws an ascii box around selected lines of text, with at least one space between
+# box and text (unless lines are too long, when no space is added)
+# Text is wrapped before boxing unless $asciinowrap is true
+# $asciiwidth is width of box, including box lines
+# $ascii array contains box characters to use for tl,top,tr,l,unused,r,bl,bot,br
+# Text can be left, right or center justified based on $asciijustify
 sub asciibox {
-    my ( $textwindow, $asciiwrap, $asciiwidth, $ascii, $asciijustify ) = @_;
+    my ( $textwindow, $asciinowrap, $asciiwidth, $ascii, $asciijustify ) = @_;
+
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
-    if ( $range_total == 0 ) {
-        return;
-    } else {
-        my ( $linenum, $line, $sr, $sc, $er, $ec, $lspaces, $rspaces );
-        my $end   = pop(@ranges);
-        my $start = pop(@ranges);
-        $textwindow->markSet( 'asciistart', $start );
-        $textwindow->markSet( 'asciiend',   $end );
-        my $saveleft  = $::lmargin;
-        my $saveright = $::rmargin;
-        $textwindow->addGlobStart;
-        $::lmargin = 0;
-        $::rmargin = ( $asciiwidth - 4 );
-        ::selectrewrap() unless $asciiwrap;
-        $::lmargin = $saveleft;
-        $::rmargin = $saveright;
-        $textwindow->insert( 'asciistart',
-            ${$ascii}[0] . ( ${$ascii}[1] x ( $asciiwidth - 2 ) ) . ${$ascii}[2] . "\n" );
-        $textwindow->insert( 'asciiend',
-            "\n" . ${$ascii}[6] . ( ${$ascii}[7] x ( $asciiwidth - 2 ) ) . ${$ascii}[8] . "\n" );
-        $start = $textwindow->index('asciistart');
-        $end   = $textwindow->index('asciiend');
-        ( $sr, $sc ) = split /\./, $start;
-        ( $er, $ec ) = split /\./, $end;
+    return if $range_total == 0 or $asciiwidth < 5;
 
-        for my $linenum ( $sr .. $er - 2 ) {
-            $line = $textwindow->get( "$linenum.0", "$linenum.end" );
-            $line =~ s/^\s*//;
-            $line =~ s/\s*$//;
-            if ( $asciijustify eq 'left' ) {
-                $lspaces = 1;
-                $rspaces = ( $asciiwidth - 3 ) - length($line);
-            } elsif ( $asciijustify eq 'center' ) {
-                $lspaces = ( $asciiwidth - 2 ) - length($line);
-                if ( $lspaces % 2 ) {
-                    $rspaces = ( $lspaces / 2 ) + .5;
-                    $lspaces = $rspaces - 1;
-                } else {
-                    $rspaces = $lspaces / 2;
-                    $lspaces = $rspaces;
-                }
-            } elsif ( $asciijustify eq 'right' ) {
-                $rspaces = 1;
-                $lspaces = ( $asciiwidth - 3 ) - length($line);
-            }
-            $line = ${$ascii}[3] . ( ' ' x $lspaces ) . $line . ( ' ' x $rspaces ) . ${$ascii}[5];
-            $textwindow->delete( "$linenum.0", "$linenum.end" );
-            $textwindow->insert( "$linenum.0", $line );
-        }
-        $textwindow->addGlobEnd;
+    $textwindow->addGlobStart;
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+
+    # If wrapping, temporarily set global margins to width of text in box
+    # Also need to mark and re-find end of text because it will move
+    unless ($asciinowrap) {
+        local $::lmargin = 0;
+        local $::rmargin = ( $asciiwidth - 4 );
+        $textwindow->markSet( 'asciiend', $end );
+        ::selectrewrap();
+        $end = $textwindow->index('asciiend-1l lineend');
     }
+
+    # Insert bottom line, then top line
+    $textwindow->insert( $end,
+        "\n" . ${$ascii}[6] . ( ${$ascii}[7] x ( $asciiwidth - 2 ) ) . ${$ascii}[8] );
+    $textwindow->insert( $start,
+        ${$ascii}[0] . ( ${$ascii}[1] x ( $asciiwidth - 2 ) ) . ${$ascii}[2] . "\n" );
+
+    # For each line of text, justify and add the left/right box lines
+    my ( $sr, $sc ) = split /\./, $start;
+    my ( $er, $ec ) = split /\./, $end;
+    for my $linenum ( $sr + 1 .. $er + 1 ) {
+
+        # Trim any existing leading/trailing spaces from current line
+        my $line = $textwindow->get( "$linenum.0", "$linenum.end" );
+        $line =~ s/^\s+|\s+$//g;
+
+        # Calculate number of spaces needed on left/right
+        my $nspaces = $asciiwidth - 2 - length($line);
+        my $lspaces;
+        if ( $asciijustify eq 'left' ) {
+            $lspaces = 1;    # one space on left
+        } elsif ( $asciijustify eq 'right' ) {
+            $lspaces = $nspaces - 1;    # one space on right
+        } else {
+            $lspaces = int( $nspaces / 2 );    # share spaces left/right
+        }
+        $lspaces = 0 if $lspaces < 0;
+        my $rspaces = $nspaces - $lspaces;
+        $rspaces = 0 if $rspaces < 0;
+
+        # Replace the line with the new boxed and padded version
+        $line = ${$ascii}[3] . ( ' ' x $lspaces ) . $line . ( ' ' x $rspaces ) . ${$ascii}[5];
+        $textwindow->delete( "$linenum.0", "$linenum.end" );
+        $textwindow->insert( "$linenum.0", $line );
+    }
+    $textwindow->addGlobEnd;
 }
 
 sub case {
@@ -936,17 +943,15 @@ sub asciibox_popup {
             -value       => 'right',
         )->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
         my $asciiw = $f1->Checkbutton(
-            -variable    => \$::lglobal{asciiwrap},
+            -variable    => \$::lglobal{asciinowrap},
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Don\'t Rewrap'
         )->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
         my $gobut = $f1->Button(
             -activebackground => $::activecolor,
             -command          => sub {
-                asciibox(
-                    $textwindow,       $::lglobal{asciiwrap}, $::lglobal{asciiwidth},
-                    $::lglobal{ascii}, $::lglobal{asciijustify}
-                );
+                asciibox( $textwindow, $::lglobal{asciinowrap}, $::lglobal{asciiwidth},
+                    $::lglobal{ascii}, $::lglobal{asciijustify} );
             },
             -text  => 'Draw Box',
             -width => 16
