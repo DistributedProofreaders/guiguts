@@ -78,7 +78,7 @@ sub errorcheckpop_up {
 
     ::drag( $::lglobal{errorchecklistbox} );
     ::BindMouseWheel( $::lglobal{errorchecklistbox} );
-    $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<Button-1>', '<Return>' );
+    $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
     $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview(); } );
 
     # buttons 2 & 3 delete the clicked error and select the next error
@@ -1016,7 +1016,7 @@ sub gcheckpop_up {
         );
         $::lglobal{gcpop}->Icon( -image => $::icon );
         ::BindMouseWheel( $::lglobal{gclistbox} );
-        $::lglobal{gclistbox}->eventAdd( '<<view>>' => '<Button-1>', '<Return>' );
+        $::lglobal{gclistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
         $::lglobal{gclistbox}->bind( '<<view>>', sub { gutcheckview() } );
         $::lglobal{gcpop}->bind(
             '<Configure>' => sub {
@@ -1463,7 +1463,7 @@ sub jeebiespop_up {
         );
         ::drag( $::lglobal{jelistbox} );
         ::BindMouseWheel( $::lglobal{jelistbox} );
-        $::lglobal{jelistbox}->eventAdd( '<<jview>>' => '<Button-1>', '<Return>' );
+        $::lglobal{jelistbox}->eventAdd( '<<jview>>' => '<ButtonRelease-1>', '<Return>' );
         $::lglobal{jelistbox}->bind( '<<jview>>', sub { jeebiesview() } );
         $::lglobal{jelistbox}->eventAdd(
             '<<jremove>>' => '<ButtonRelease-2>',
