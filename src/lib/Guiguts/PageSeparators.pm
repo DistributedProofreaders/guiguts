@@ -456,6 +456,7 @@ sub undojoin {
         return;
     }
     my $joinundo = pop @::joinundolist;
+    return unless $joinundo;
     push @::joinredolist, $joinundo;
     $textwindow->undo for ( 0 .. $joinundo );
     refreshpageseparator();
@@ -470,6 +471,7 @@ sub redojoin {
         return;
     }
     my $joinredo = pop @::joinredolist;
+    return unless $joinredo;
     push @::joinundolist, $joinredo;
     $textwindow->redo for ( 0 .. $joinredo );
 
