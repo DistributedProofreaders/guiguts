@@ -304,12 +304,12 @@ void procfile(char *filename)
         }
 
     if (total_he == 0 && total_be > 0) {
-        printf("   --> Odd file. There are %ld \"be\"s and no \"he\"s.\n\n", total_be, total_he);
+        printf("   --> Odd file. There are %ld \"be\"s and no \"he\"s.\n\n", total_be);
         this_file_he_be_ratio = 1000.0;
         }
 
     if (total_he > 0 && total_be == 0) {
-        printf("   --> Odd file. There are %ld \"he\"s and no \"be\"s.\n\n", total_he, total_be);
+        printf("   --> Odd file. There are %ld \"he\"s and no \"be\"s.\n\n", total_he);
         this_file_he_be_ratio = 1.0/1000.0;
         }
         
