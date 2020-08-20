@@ -299,8 +299,7 @@ sub html_cleanup_markers {
 
 sub html_convert_footnotes {
     my ( $textwindow, $fnarray ) = @_;
-    my $thisblank = q{};
-    my $step      = 0;
+    my $step = 0;
     ::working('Converting Footnotes');
     ::footnotefixup();
     ::getlz();
@@ -318,8 +317,7 @@ sub html_convert_footnotes {
         next unless $fnarray->[$step][3];
         $textwindow->ntdelete( 'fne' . "$step" . '-1c', 'fne' . "$step" );
 
-        #print $step. ":step\n";
-        $textwindow->ntinsert( 'fne' . "$step", '</p></div>' );
+        $textwindow->ntinsert( 'fne' . "$step", "\n\n</div>" );
         $textwindow->ntinsert(
             ( 'fns' . "$step" . '+' . ( length( $fnarray->[$step][4] ) + 11 ) . "c" ),
             "$::htmllabels{fnanchafter}</a>" );
@@ -329,7 +327,7 @@ sub html_convert_footnotes {
         );
         $textwindow->ntinsert(
             'fns' . "$step" . '+10c',
-            "<div class=\"footnote\"><p><a id=\"$::htmllabels{fnlabel}"
+            "<div class=\"footnote\">\n\n<a id=\"$::htmllabels{fnlabel}"
               . ( $::lglobal{shorthtmlfootnotes} ? '' : $fnarray->[$step][4] . '_' )
               . $step
               . "\" href=\"#$::htmllabels{fnanchor}"
@@ -360,11 +358,6 @@ sub html_convert_footnotes {
               . $step
               . "\" class=\"fnanchor\">"
         ) if ( $fnarray->[$step][3] );
-
-        while ( $thisblank =
-            $textwindow->search( '-regexp', '--', '^$', 'fns' . "$step", "fne" . "$step" ) ) {
-            $textwindow->ntinsert( $thisblank, "</p>\n<p>" );
-        }
     }
     return;
 }
@@ -989,36 +982,36 @@ sub html_convert_body {
             #open subheading with <p>
         } elsif ( ( $last5[2] =~ /<h2/ ) && ($selection) ) {
             $textwindow->ntinsert( "$step.0", '<p>' )
-              unless ( ( $selection =~ /<[pd]/ )
-                || ( $selection =~ /<[hb]r>/ )
+              unless ( ( $selection =~ /<\/*[phd]/ )
+                || ( $selection =~ /<[hb]r/ )
                 || ($inblock) );
 
             #open with para if blank line then nonblank line
         } elsif ( ( $last5[2] ) && ( !$last5[3] ) && ($selection) ) {
             $textwindow->ntinsert( "$step.0", '<p>' )
-              unless ( ( $selection =~ /<[phd]/ )
-                || ( $selection =~ /<[hb]r>/ )
+              unless ( ( $selection =~ /<\/*[phd]/ )
+                || ( $selection =~ /<[hb]r/ )
                 || ($inblock) );
 
-            #open with para if blank line then two nonblank lines
+            #open with para if two blank lines then nonblank line
         } elsif ( ( $last5[1] )
             && ( !$last5[2] )
             && ( !$last5[3] )
             && ($selection) ) {
             $textwindow->ntinsert( "$step.0", '<p>' )
-              unless ( ( $selection =~ /<[phd]/ )
-                || ( $selection =~ /<[hb]r>/ )
+              unless ( ( $selection =~ /<\/*[phd]/ )
+                || ( $selection =~ /<[hb]r/ )
                 || ($inblock) );
 
-            #open with para if blank line then three nonblank lines
+            #open with para if three blank lines then nonblank line
         } elsif ( ( $last5[0] )
             && ( !$last5[1] )
             && ( !$last5[2] )
             && ( !$last5[3] )
             && ($selection) ) {    #start of new paragraph unless line contains <p, <h, <d, <hr, or <br
             $textwindow->ntinsert( "$step.0", '<p>' )
-              unless ( ( $selection =~ /<[phd]/ )
-                || ( $selection =~ /<[hb]r>/ )
+              unless ( ( $selection =~ /<\/*[phd]/ )
+                || ( $selection =~ /<[hb]r/ )
                 || ($inblock) );
         }
         push @last5, $selection;
