@@ -293,7 +293,7 @@ void procfile(char *filename)
 
     if (total_he == 0 && total_be == 0) {
         printf("   --> Odd file. There are neither \"he\"s nor \"be\"s. Abandoning.\n\n");
-        exit(1);
+        exit(0);
         }
 
     if (total_he > 0 && total_be > 0) {
