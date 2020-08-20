@@ -813,6 +813,7 @@ sub gcviewopts {
         for ( 0 .. $#{ $::lglobal{gcarray} } ) {
             $gccol         = int( $_ / $gcrows );
             $gcrow         = $_ % $gcrows;
+            $::gsopt[$_]   = 0 unless defined $::gsopt[$_];
             $gsoptions[$_] = $pframe1->Checkbutton(
                 -variable    => \$::gsopt[$_],
                 -command     => sub { gcwindowpopulate($linesref) },
