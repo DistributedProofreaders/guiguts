@@ -441,27 +441,16 @@ sub clearpopups {
     ::killpopup('pagelabelpop');
 }
 
-sub savefile {    # Determine which save routine to use and then use it
+# Save the currently loaded file
+sub savefile {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
-    ::hidepagenums();
     my $filename = $::lglobal{global_filename};
+
+    # If no filename, do "Save As".
     if ( $filename =~ /No File Loaded/ ) {
-        unless ( ::isedited() ) {
-            return;
-        }
-        my ($name);
-        $name = $textwindow->getSaveFile(
-            -title      => 'Save As',
-            -initialdir => $::globallastpath
-        );
-        if ( defined($name) and length($name) ) {
-            $textwindow->SaveUTF($name);
-            $name = ::os_normal($name);
-            ::_recentupdate($name);
-        } else {
-            return;
-        }
+        file_saveas($textwindow);
     } else {
+        ::hidepagenums();
         my $ans = !fileisreadonly($filename) || 'Yes' eq $top->messageBox(
             -icon    => 'warning',
             -title   => 'Confirm save?',
@@ -485,12 +474,12 @@ sub savefile {    # Determine which save routine to use and then use it
         }
         $textwindow->SaveUTF;
         $::top->Unbusy( -recurse => 1 );
+        $textwindow->ResetUndo;    #necessary to reset edited flag
+        ::_bin_save();
+        ::setedited(0);
+        ::set_autosave() if $::autosave;
+        ::update_indicators();
     }
-    $textwindow->ResetUndo;    #necessary to reset edited flag
-    ::_bin_save();
-    ::setedited(0);
-    ::set_autosave() if $::autosave;
-    ::update_indicators();
 }
 
 sub fileisreadonly {
