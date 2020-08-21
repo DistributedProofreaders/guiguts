@@ -3876,27 +3876,29 @@ sub pageadjust {
             -text    => 'Recalculate',
             -width   => 15,
             -command => sub {
-                my ( $index, $label );
+                my $index = 1;
                 my $style = 'Arabic';
                 for my $page (@pages) {
                     my ($num) = $page =~ /Pg(\S+)/;
                     if ( $pagetrack{$num}[4]->cget( -text ) eq 'Start @' ) {
-                        $index = $pagetrack{$num}[5]->get;
+                        my $start = $pagetrack{$num}[5]->get;
+                        $index = $start unless $start eq '';
                     }
                     if ( $pagetrack{$num}[3]->cget( -text ) eq 'Arabic' ) {
                         $style = 'Arabic';
                     } elsif ( $pagetrack{$num}[3]->cget( -text ) eq 'Roman' ) {
                         $style = 'Roman';
                     }
-                    if ( $style eq 'Roman' ) {
-                        $label = lc( ::roman($index) );
-                    } else {
-                        $label = $index;
-                        $label =~ s/^0+// if $label and length $label;
-                    }
                     if ( $pagetrack{$num}[4]->cget( -text ) eq 'No Count' ) {
                         $pagetrack{$num}[2]->configure( -text => '' );
                     } else {
+                        my $label;
+                        if ( $style eq 'Roman' ) {
+                            $label = lc( ::roman($index) or '' );    # blank if roman can't convert
+                        } else {
+                            $label = $index;
+                            $label =~ s/^0+// if $label and length $label;
+                        }
                         $pagetrack{$num}[2]->configure( -text => "Pg $label" );
                         $index++;
                     }
