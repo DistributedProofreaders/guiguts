@@ -85,12 +85,13 @@ sub html_convert_ampersands {
 # double hyphens go to character entity ref. FIXME: Add option for real emdash.
 sub html_convert_emdashes {
     ::working("Converting Emdashes");
-    ::named( '(?<=[^-!])--(?=[^>])', '&mdash;' );
-    ::named( '(?<=[^<])!--(?=[^>])', '!&mdash;' );
-    ::named( '(?<=[^-])--$',         '&mdash;' );
-    ::named( '^--(?=[^-])',          '&mdash;' );
-    ::named( '^--$',                 '&mdash;' );
-    ::named( "\x{A0}",               '&nbsp;' );
+
+    # Avoid converting double hyphens in HTML comments <!--  -->
+    # Probably not strictly necessary, since no HTML comments in the file at this time
+    # Use negative lookbehind for "<!" and negative lookahead for ">"
+    ::named( '(?<!<!)--(?!>)', '&mdash;' );
+
+    ::named( "\x{A0}", '&nbsp;' );
     return;
 }
 
