@@ -2155,7 +2155,7 @@ sub toggle_autosave {
             -activebackground => 'SystemButtonFace'
         ) unless $::notoolbar;
     }
-    ::save_settings();
+    ::savesettings();
 }
 
 # expand current selection to span entire lines
