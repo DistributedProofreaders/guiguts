@@ -1028,7 +1028,8 @@ sub initialize {
         #'Tibetan' => ['0F00', '0FFF'],
         'Unified Canadian Aboriginal Syllabics' => [ '1400', '167F' ],
 
-        #'Variation Selectors' => ['FE00', 'FE0F'],
+        'Variation Selectors' => [ 'FE00', 'FE0F' ],
+
         #'Yi Radicals' => ['A490', 'A4CF'],
         #'Yi Syllables' => ['A000', 'A48F'],
         #'Yijing Hexagram Symbols' => ['4DC0', '4DFF'],

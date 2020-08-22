@@ -1718,11 +1718,8 @@ sub unicodemenu {
                     ],
                     map ( [
                             Button       => "$utfsorthash{$_}",
-                            -columnbreak => (
-                                ( $::unicodemenusplit == 3 && ( $_ eq '0D80' || $_ eq '2300' ) )
-                                  || ( $::unicodemenusplit == 2 && $_ eq '1740' ) ? 1 : 0
-                            ),
-                            -command => [
+                            -columnbreak => ( ( $_ eq '0D80' || $_ eq '2300' ) ? 1 : 0 ),
+                            -command     => [
                                 \&::utfpopup,
                                 $utfsorthash{$_},
                                 $::lglobal{utfblocks}{ $utfsorthash{$_} }[0],
@@ -1731,7 +1728,7 @@ sub unicodemenu {
                             -accelerator => $::lglobal{utfblocks}{ $utfsorthash{$_} }[0] . ' - '
                               . $::lglobal{utfblocks}{ $utfsorthash{$_} }[1]
                         ],
-                        ( sort ( keys %utfsorthash ) )[ 0 .. 67 ] ),
+                        ( sort ( keys %utfsorthash ) ) ),
                 ],
             );
         } else {
@@ -1745,21 +1742,15 @@ sub unicodemenu {
                     ],
                     map ( [
                             Button       => "$_",
-                            -columnbreak => (
-                                (
-                                    $::unicodemenusplit == 3
-                                      && ( $_ eq 'Ethiopic' || $_ eq 'Mongolian' )
-                                )
-                                  || ( $::unicodemenusplit == 2 && $_ eq 'Lao' ) ? 1 : 0
-                            ),
-                            -command => [
+                            -columnbreak => ( ( $_ eq 'Ethiopic' || $_ eq 'Mongolian' ) ? 1 : 0 ),
+                            -command     => [
                                 \&::utfpopup,                 $_,
                                 $::lglobal{utfblocks}{$_}[0], $::lglobal{utfblocks}{$_}[1]
                             ],
                             -accelerator => $::lglobal{utfblocks}{$_}[0] . ' - '
                               . $::lglobal{utfblocks}{$_}[1]
                         ],
-                        ( sort ( keys %{ $::lglobal{utfblocks} } ) )[ 0 .. 67 ] ),
+                        ( sort ( keys %{ $::lglobal{utfblocks} } ) ) ),
                 ],
             );
         }
