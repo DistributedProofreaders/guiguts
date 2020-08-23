@@ -922,6 +922,9 @@ sub readsettings {
             }
         );
     }
+
+    # Correct previous bug which stored bad value in $::ignoreversions
+    $::ignoreversions = "revisions" if $::ignoreversions eq "revision";
 }
 
 ## Save setting.rc file

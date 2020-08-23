@@ -135,11 +135,9 @@ sub menu_help {
         [ 'separator', '' ],
         [ Button => '~About Guiguts',     -command => sub { ::about_pop_up($top) } ],
         [ Button => 'Software ~Versions', -command => [ \&::showversion ] ],
-
-        # FIXME: Disable update check until it works - so? does it now?
         [
             Button   => 'Check for ~Updates',
-            -command => sub { ::checkforupdates(0) }
+            -command => sub { ::checkforupdates("now") }
         ],
         [
             Button => 'Report ~Bug or Suggest Enhancement (DP Wiki) [www]',
