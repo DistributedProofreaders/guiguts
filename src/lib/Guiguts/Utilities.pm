@@ -1609,7 +1609,7 @@ sub checkforupdates {
         );
         return;
     }
-    $::lastversioncheck = time(); # Reset time ready for next monthly check
+    $::lastversioncheck = time();    # Reset time ready for next monthly check
 
     # Monthly checks exit silently if user has ignored this version
     # or if the new version isn't a significant enough update
@@ -1715,24 +1715,24 @@ sub checkforupdates {
 # On a monthly basis, check to see if this is the most recent version
 sub checkforupdatesmonthly {
     my $top = $::top;
-    
-    return if $::ignoreversions eq "major"; # Ignoring major revisions means never check
-    
+
+    return if $::ignoreversions eq "major";    # Ignoring major revisions means never check
+
     # Is it 30 days since last check?
     return if time() - $::lastversioncheck < 30 * 24 * 60 * 60;
     $::lastversioncheck = time();
-    
+
     my $updateanswer = $top->Dialog(
         -title          => 'Check for Updates',
         -text           => 'Would you like to check for updates?',
         -buttons        => [ 'OK', 'Later', 'Don\'t Ask' ],
         -default_button => 'OK'
     )->Show();
-    
+
     checkforupdates("monthly") if $updateanswer eq 'OK';
-    
+
     $::ignoreversions = "major" if $updateanswer eq 'Don\'t Ask';
-    
+
     ::savesettings();
 }
 
