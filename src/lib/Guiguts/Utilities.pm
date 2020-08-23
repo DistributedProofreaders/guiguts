@@ -919,8 +919,6 @@ sub initialize {
     );
     $textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
 
-    # Update check needs to be done after readsettings to reset the update clock
-    # when a user has just upgraded
     %{ $::lglobal{utfblocks} } = (
         'Alphabetic Presentation Forms' => [ 'FB00', 'FB4F' ],
         'Arabic Presentation Forms-A'   => [ 'FB50', 'FDCF' ],    #Really FDFF but there are illegal characters in fdc0-fdff
