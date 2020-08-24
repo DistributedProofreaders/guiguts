@@ -750,6 +750,7 @@ sub initialize {
         $::positionhash{utfentrypop}      = '+191+132';
         $::geometryhash{utfpop}           = '+46+46';
         $::geometryhash{utfsearchpop}     = '550x450+53+87';
+        $::geometryhash{versionbox}       = '300x250+80+80';
         $::geometryhash{wfpop}            = '+365+63';
     }
 
@@ -918,8 +919,6 @@ sub initialize {
     );
     $textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
 
-    # Update check needs to be done after readsettings to reset the update clock
-    # when a user has just upgraded
     %{ $::lglobal{utfblocks} } = (
         'Alphabetic Presentation Forms' => [ 'FB00', 'FB4F' ],
         'Arabic Presentation Forms-A'   => [ 'FB50', 'FDCF' ],    #Really FDFF but there are illegal characters in fdc0-fdff
@@ -1588,94 +1587,18 @@ sub checkonlineversion {
 sub checkforupdates {
     my $top          = $::top;
     my $monthlycheck = shift;
-    if ( ( $monthlycheck eq "monthly" ) and ( $::ignoreversions eq "major" ) ) {
-        return;
-    }
-    my $onlineversion;
-    ::working('Checking For Updates');
-    $onlineversion = checkonlineversion();
-    ::working();
-    if ($onlineversion) {
-        if ( $monthlycheck eq "monthly" ) {
-            if (    # ( $onlineversion eq "$::VERSION" ) or
-                ( $onlineversion eq $::ignoreversionnumber )
-            ) {
-                return;
-            }
-            my ( $onlinemajorversion, $onlineminorversion, $onlinerevision ) =
-              split( /\./, $onlineversion );
-            my ( $currentmajorversion, $currentminorversion, $currentrevision ) =
-              split( /\./, $::VERSION );
-            if (    ( $onlinemajorversion == $currentmajorversion )
-                and ( $::ignoreversions eq "minor" ) ) {
-                return;
-            }
-            if (    ( $onlineminorversion == $currentminorversion )
-                and ( $::ignoreversions eq "revisions" ) ) {
-                return;
-            }
-        }
-        my ( $dbox, $answer );
-        my $versionpopmessage;
-        my $versionbox = $top->Toplevel;
-        $versionbox->Icon( -image => $::icon );
-        $versionbox->title('Check for updates');
-        $versionbox->focusForce;
-        my $dialog_frame = $versionbox->Frame()->pack( -side => "top", -pady => 10 );
-        $dialog_frame->Label( -text =>
-              "The latest version available online is $onlineversion, and your version is $::VERSION."
-        )->pack( -side => "top" );
-        my $button_frame = $dialog_frame->Frame()->pack( -side => "top" );
-        $button_frame->Button(
-            -text    => 'Update',
-            -command => sub {
-                ::launchurl("https://github.com/DistributedProofreaders/guiguts/");
-                $versionbox->destroy;
-                undef $versionbox;
-            }
-        )->pack( -side => 'left', -pady => 8, -padx => 5 );
-        $button_frame->Button(
-            -text    => 'Ignore This Version',
-            -command => sub {
 
-                #print $::ignoreversionnumber;
-                $::ignoreversionnumber = $onlineversion;
-                ::savesettings();
-                $versionbox->destroy;
-                undef $versionbox;
-            }
-        )->pack( -side => 'left', -pady => 8, -padx => 5 );
-        $button_frame->Button(
-            -text    => 'Remind Me',
-            -command => sub {
-                $versionbox->destroy;
-                undef $versionbox;
-                return;
-            }
-        )->pack( -side => 'left', -pady => 8, -padx => 5 );
-        $dialog_frame->Label( -text => $versionpopmessage )->pack( -side => "top" );
-        my $radio_frame = $versionbox->Frame()->pack( -side => "top", -pady => 10 );
-        $radio_frame->Radiobutton(
-            -text     => "Do Not Check Again",
-            -value    => "major",
-            -variable => \$::ignoreversions
-        )->pack( -side => "left" );
-        $radio_frame->Radiobutton(
-            -text     => "Ignore Minor Versions",
-            -value    => "minor",
-            -variable => \$::ignoreversions
-        )->pack( -side => "left" );
-        $radio_frame->Radiobutton(
-            -text     => "Ignore Revisions",
-            -value    => "revisions",
-            -variable => \$::ignoreversions
-        )->pack( -side => "left" );
-        $radio_frame->Radiobutton(
-            -text     => "Check for Revisions",
-            -value    => "none",
-            -variable => \$::ignoreversions
-        )->pack( -side => "left" );
-    } else {
+    # Monthly checks exit silently if user ignoring major (i.e. all) versions
+    return if $monthlycheck eq "monthly" and $::ignoreversions eq "major";
+
+    # In case dialog already popped, don't leave up out-of-date info
+    ::killpopup('versionbox');
+
+    # Find the latest version available
+    ::working('Checking For Updates');
+    my $onlineversion = checkonlineversion();
+    ::working();
+    unless ($onlineversion) {
         $top->messageBox(
             -icon    => 'error',
             -message => 'Could not determine latest version online.',
@@ -1684,33 +1607,131 @@ sub checkforupdates {
         );
         return;
     }
+    $::lastversioncheck = time();    # Reset time ready for next monthly check
+
+    # Monthly checks exit silently if user has ignored this version
+    # or if the new version isn't a significant enough update
+    if ( $monthlycheck eq "monthly" ) {
+        return if $onlineversion eq $::ignoreversionnumber;
+        my ( $onlinemajorversion, $onlineminorversion, $onlinerevision ) =
+          split( /\./, $onlineversion );
+        my ( $currentmajorversion, $currentminorversion, $currentrevision ) =
+          split( /\./, $::VERSION );
+        return
+          if $onlinemajorversion == $currentmajorversion
+          and $::ignoreversions eq "minor";
+        return
+              if $onlinemajorversion == $currentmajorversion
+          and $onlineminorversion == $currentminorversion
+          and $::ignoreversions eq "revisions";
+    }
+
+    # Create dialog
+    $::lglobal{versionbox} = $top->Toplevel;
+    $::lglobal{versionbox}->title('Check for Updates');
+    $::lglobal{versionbox}->resizable( 'no', 'no' );
+    ::initialize_popup_with_deletebinding('versionbox');
+
+    # Status frame has version information
+    my $status_frame =
+      $::lglobal{versionbox}->LabFrame( -label => 'Status' )->pack( -side => "top" );
+    my $version_frame = $status_frame->Frame()->pack( -side => "top" );
+    $version_frame->Label( -text => "Your current version is $::VERSION" )
+      ->pack( -side => "top", -anchor => "e" );
+    $version_frame->Label( -text => "Latest version online is $onlineversion" )
+      ->pack( -side => "top", -anchor => "e" );
+
+    # If current version is up to date, no need for the update buttons, just a message
+    if ( $onlineversion eq $::VERSION ) {
+        $status_frame->Label( -text => "Your version is up to date!" )
+          ->pack( -side => "top", -pady => 5 );
+    } else {
+        my $button_frame = $::lglobal{versionbox}->Frame()->pack( -side => "top" );
+
+        # Update - take the user to the releases page
+        $button_frame->Button(
+            -text    => 'Update Now',
+            -command => sub {
+                ::launchurl("https://github.com/DistributedProofreaders/guiguts/releases");
+                ::killpopup('versionbox');
+            }
+        )->pack( -side => 'left', -pady => 5, -padx => 5 );
+
+        # Ignore - remember this version number and ignore in monthly update checks
+        $button_frame->Button(
+            -text    => 'Ignore This Version',
+            -command => sub {
+                $::ignoreversionnumber = $onlineversion;
+                ::savesettings();
+                ::killpopup('versionbox');
+            }
+        )->pack( -side => 'left', -pady => 5, -padx => 5 );
+
+        # Remind - do nothing now - next monthly update check will happen as usual
+        $button_frame->Button(
+            -text    => 'Remind Me Later',
+            -command => sub {
+                ::killpopup('versionbox');
+            }
+        )->pack( -side => 'left', -pady => 5, -padx => 5 );
+    }
+
+    # Options for monthly update checks
+    my $radio_frame =
+      $::lglobal{versionbox}->LabFrame( -label => 'Monthly Update Checks' )
+      ->pack( -side => "top", -padx => 5 );
+    $radio_frame->Radiobutton(
+        -text     => "Do Not Check Monthly",
+        -value    => "major",
+        -variable => \$::ignoreversions
+    )->pack( -side => "top", -anchor => "w" );
+    $radio_frame->Radiobutton(
+        -text     => "Ignore Minor Versions, e.g. 1.2.0 --> 1.3.0",
+        -value    => "minor",
+        -variable => \$::ignoreversions
+    )->pack( -side => "top", -anchor => "w" );
+    $radio_frame->Radiobutton(
+        -text     => "Ignore Revisions, e.g. 1.2.3 --> 1.2.4",
+        -value    => "revisions",
+        -variable => \$::ignoreversions
+    )->pack( -side => "top", -anchor => "w" );
+    $radio_frame->Radiobutton(
+        -text     => "Include All Updates",
+        -value    => "none",
+        -variable => \$::ignoreversions
+    )->pack( -side => "top", -anchor => "w" );
+
+    # OK- just dismisses dialog
+    $::lglobal{versionbox}->Button(
+        -text    => 'OK',
+        -command => sub {
+            ::killpopup('versionbox');
+        }
+    )->pack( -side => 'top', -pady => 2 );
 }
 
 # On a monthly basis, check to see if this is the most recent version
 sub checkforupdatesmonthly {
     my $top = $::top;
-    if (    ( $::ignoreversions ne "major" )
-        and ( time() - $::lastversioncheck > 2592000 ) ) {
-        $::lastversioncheck = time();
-        my $updateanswer = $top->Dialog(
-            -title          => 'Check for Updates',
-            -font           => $::lglobal{font},
-            -text           => 'Would you like to check for updates?',
-            -buttons        => [ 'Ok', 'Later', 'Don\'t Ask' ],
-            -default_button => 'Ok'
-        )->Show();
-        if ( $updateanswer eq 'Ok' ) {
-            checkforupdates("monthly");
-            return;
-        }
-        if ( $updateanswer eq 'Later' ) {
-            return;
-        }
-        if ( $updateanswer eq 'Do Not Ask Again' ) {
-            $::ignoreversions = "major";
-            return;
-        }
-    }
+
+    return if $::ignoreversions eq "major";    # Ignoring major revisions means never check
+
+    # Is it 30 days since last check?
+    return if time() - $::lastversioncheck < 30 * 24 * 60 * 60;
+    $::lastversioncheck = time();
+
+    my $updateanswer = $top->Dialog(
+        -title          => 'Check for Updates',
+        -text           => 'Would you like to check for updates?',
+        -buttons        => [ 'OK', 'Later', 'Don\'t Ask' ],
+        -default_button => 'OK'
+    )->Show();
+
+    checkforupdates("monthly") if $updateanswer eq 'OK';
+
+    $::ignoreversions = "major" if $updateanswer eq 'Don\'t Ask';
+
+    ::savesettings();
 }
 
 ### Bookmarks
