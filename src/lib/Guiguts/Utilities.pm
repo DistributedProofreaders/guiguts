@@ -750,7 +750,7 @@ sub initialize {
         $::positionhash{utfentrypop}      = '+191+132';
         $::geometryhash{utfpop}           = '+46+46';
         $::geometryhash{utfsearchpop}     = '550x450+53+87';
-        $::positionhash{versionbox}       = '+80+80';
+        $::geometryhash{versionbox}       = '300x250+80+80';
         $::geometryhash{wfpop}            = '+365+63';
     }
 
