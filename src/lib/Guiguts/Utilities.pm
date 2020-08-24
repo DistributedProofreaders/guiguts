@@ -750,8 +750,8 @@ sub initialize {
         $::positionhash{utfentrypop}      = '+191+132';
         $::geometryhash{utfpop}           = '+46+46';
         $::geometryhash{utfsearchpop}     = '550x450+53+87';
-        $::geometryhash{wfpop}            = '+365+63';
         $::positionhash{versionbox}       = '+80+80';
+        $::geometryhash{wfpop}            = '+365+63';
     }
 
     ::readsettings();
@@ -1629,13 +1629,12 @@ sub checkforupdates {
     # Create dialog
     $::lglobal{versionbox} = $top->Toplevel;
     $::lglobal{versionbox}->title('Check for Updates');
+    $::lglobal{versionbox}->resizable( 'no', 'no' );
     ::initialize_popup_with_deletebinding('versionbox');
-    my $dialog_frame =
-      $::lglobal{versionbox}->Frame()->pack( -side => "top", -padx => 5, -pady => 5 );
 
     # Status frame has version information
     my $status_frame =
-      $dialog_frame->LabFrame( -label => 'Status' )->pack( -side => "top", -fill => "x" );
+      $::lglobal{versionbox}->LabFrame( -label => 'Status' )->pack( -side => "top" );
     my $version_frame = $status_frame->Frame()->pack( -side => "top" );
     $version_frame->Label( -text => "Your current version is $::VERSION" )
       ->pack( -side => "top", -anchor => "e" );
@@ -1647,7 +1646,7 @@ sub checkforupdates {
         $status_frame->Label( -text => "Your version is up to date!" )
           ->pack( -side => "top", -pady => 5 );
     } else {
-        my $button_frame = $dialog_frame->Frame()->pack( -side => "top" );
+        my $button_frame = $::lglobal{versionbox}->Frame()->pack( -side => "top" );
 
         # Update - take the user to the releases page
         $button_frame->Button(
@@ -1679,7 +1678,8 @@ sub checkforupdates {
 
     # Options for monthly update checks
     my $radio_frame =
-      $dialog_frame->LabFrame( -label => 'Monthly Update Checks' )->pack( -side => "top" );
+      $::lglobal{versionbox}->LabFrame( -label => 'Monthly Update Checks' )
+      ->pack( -side => "top", -padx => 5 );
     $radio_frame->Radiobutton(
         -text     => "Do Not Check Monthly",
         -value    => "major",
@@ -1702,7 +1702,7 @@ sub checkforupdates {
     )->pack( -side => "top", -anchor => "w" );
 
     # OK- just dismisses dialog
-    $dialog_frame->Button(
+    $::lglobal{versionbox}->Button(
         -text    => 'OK',
         -command => sub {
             ::killpopup('versionbox');
