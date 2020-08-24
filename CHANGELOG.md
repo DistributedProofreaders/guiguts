@@ -1,5 +1,27 @@
 # Changelog
 
+## Version 1.1.1
+
+### Changes
+- Variation Selectors Unicode block is now available. These combining
+  characters are generally not visible, but are in order VS1 to VS16.
+  Hovering over the small squares or spaces where the characters are
+  should also show you which is which. 
+- Improvements made to Check for Updates dialog
+
+### Bug Fixes
+- Bundled CSS validator reported wrong line numbers
+- Draw ascii boxes failed when text was rewrapped
+- Clicking in an error list window jumped to previous error's line number
+- Undo/redo in Page Separator dialog sometimes output error messages
+- Poetry in footnotes was enclosed in `<p>` markup during HTML generation
+- Save My View in Bookloupe View Options output error messages
+- Three or more hyphens at start/end of line not converted to HTML emdashes
+- `Save` did not prompt for a filename if file was unnamed and not edited
+- Enable/disable Autosave output error messages
+- `No count` pages in Roman style gave errors in Configure Page Labels
+- Incorrect error message displayed when running Jeebies on file without he/be
+
 ## Version 1.1.0
 
 ### Improved HTML generation
