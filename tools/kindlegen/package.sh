@@ -11,13 +11,17 @@ mkdir $DEST
 cp README.md $DEST
 
 if [[ $OS == "win" ]]; then
-    URL=http://kindlegen.s3.amazonaws.com/kindlegen_win32_v2_9.zip
+    URL=https://github.com/DistributedProofreaders/guiguts/releases/download/r1.1.0/guiguts-win-1.1.0.zip
+    BINARY=kindlegen.exe
 elif [[ $OS == "mac" ]]; then
-    URL=http://kindlegen.s3.amazonaws.com/KindleGen_Mac_i386_v2_9.zip
+    URL=https://github.com/DistributedProofreaders/guiguts/releases/download/r1.1.0/guiguts-mac-1.1.0.zip
+    BINARY=kindlegen
 fi
 
 if [[ $URL != "" ]]; then
-    curl -L -o kindlegen.zip $URL
-    unzip kindlegen.zip -d $DEST
-    rm -rf kindlegen.zip
+    curl -L -o guiguts.zip $URL
+    unzip guiguts.zip guiguts/tools/kindlegen/$BINARY -d .
+    cp guiguts/tools/kindlegen/$BINARY $DEST
+    rm -rf guiguts
+    rm -rf guiguts.zip
 fi

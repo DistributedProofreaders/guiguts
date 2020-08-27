@@ -6,17 +6,21 @@ or EPUB. KindleGen converts this source content to a single file which supports
 both KF8 and Mobi formats enabling publishers to create great-looking books
 that work on all Kindle devices and apps.
 
-https://www.amazon.com/gp/feature.html?docId=1000765211
+Before mid-August 2020 Amazon included kindlegen as a stand-alone download. They
+have since removed that and are instructing people to install the Kindle
+Previewer.
+
+https://www.amazon.com/gp/feature.html?docId=1000765261
 
 ## Packaging
 
-We include the full kindlegen package contents extracted as a convenience to
-the user.
+We ship the older kindlegen binaries included with Guiguts 1.1.0 as a
+convenience to the user. Future Guiguts versions will require the user to
+download and install the Kindle Previewer.
 
 ### MacOS
 
-As of 2020-06-17 the MacOS version of KindleGen at the link above is 32-bit
-only, meaning it will not work on Catalina.
+The MacOS version of KindleGen is 32-bit only and it will not work on Catalina.
 
 You will get the following error if you try to run this version of `kindlegen`
 on Catalina or later:
