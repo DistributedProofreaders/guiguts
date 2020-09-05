@@ -2134,14 +2134,14 @@ sub orphanedbrackets {
                            ( $::lglobal{brbrackets}[0] =~ m{[\[\(\{<]} )
                         && ( $::lglobal{brbrackets}[1] =~ m{[\]\)\}>]} )
                     )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/\*} )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^\x7f*\*/} ) )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/\$} )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^\x7f*\$/} ) )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/[p]}i )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^\x7f*[p]/}i ) )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^\x7f*/#} )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^\x7f*#/} ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/\*} )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^\*/} ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/\$} )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^\$/} ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/[p]}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^[p]/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/#} )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^#/} ) )
                   );
             }
             shift @{ $::lglobal{brbrackets} };

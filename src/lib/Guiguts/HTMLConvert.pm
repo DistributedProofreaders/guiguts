@@ -587,7 +587,7 @@ sub html_convert_body {
         if ($poetry) {
 
             # if end of p/ block, insert closing </div></div></div>
-            if ( $selection =~ /^\x7f*[pP]\/<?/ ) {
+            if ( $selection =~ /^[pP]\/<?/ ) {
                 $poetry    = 0;
                 $selection = "  </div>\n</div>\n</div>";
 
@@ -663,7 +663,7 @@ sub html_convert_body {
         }
 
         # open poetry, if beginning /p
-        if ( $selection =~ /^\x7f*\/[pP]$/ ) {
+        if ( $selection =~ /^\/[pP]$/ ) {
             $poetry    = 1;
             $poetryend = $textwindow->search( '-regexp', '--', '^[pP]/$', $step . '.end', 'end' );
             $ital      = 0;
@@ -691,7 +691,7 @@ sub html_convert_body {
         }
 
         # in blockquote /#
-        if ( $selection =~ /^\x7f*\/\#/ ) {
+        if ( $selection =~ /^\/\#/ ) {
             $blkquot = 1;
             push @last5, $selection;
             shift @last5 while ( scalar(@last5) > 4 );
@@ -723,7 +723,7 @@ sub html_convert_body {
         }
 
         # list
-        if ( $selection =~ /^\x7f*\/[Ll]/ ) {
+        if ( $selection =~ /^\/[Ll]/ ) {
             $listmark = 1;
             $ital     = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
@@ -744,7 +744,7 @@ sub html_convert_body {
         }
 
         # close blockquote #/
-        if ( $selection =~ /^\x7f*\#\// ) {
+        if ( $selection =~ /^\#\// ) {
             $blkquot = 0;
             my $blkclosecopy = $blkclose;
             $blkclosecopy =~ s|</p>||
@@ -757,7 +757,7 @@ sub html_convert_body {
         }
 
         #close list
-        if ( $selection =~ /^\x7f*[Ll]\// ) {
+        if ( $selection =~ /^[Ll]\// ) {
             $listmark = 0;
             $ital     = 0;
 
@@ -795,7 +795,7 @@ sub html_convert_body {
         }
 
         # close para at $/ or */
-        if ( $selection =~ /^\x7f*[\$\*]\// ) {
+        if ( $selection =~ /^[\$\*]\// ) {
             $inblock = 0;
             $ital    = 0;
             $textwindow->replacewith( "$step.0", "$step.end", '</p>' );
@@ -804,7 +804,7 @@ sub html_convert_body {
         }
 
         #insert close para, open para at /$ or /*
-        if ( $selection =~ /^\x7f*\/[\$\*]/ ) {
+        if ( $selection =~ /^\/[\$\*]/ ) {
             $inblock = 1;
             $ital    = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
@@ -825,7 +825,7 @@ sub html_convert_body {
         }
 
         # Start of index (/I)
-        if ( $selection =~ /^\x7f*\/[Ii]/ ) {
+        if ( $selection =~ /^\/[Ii]/ ) {
             $indexline = 1;
             $textwindow->ntdelete( "$step.0", "$step.end" );
             $textwindow->ntinsert( "$step.0", '<ul class="index">' );
@@ -843,7 +843,7 @@ sub html_convert_body {
         }
 
         # End of index (I/)
-        if ( $selection =~ /^\x7f*[Ii]\// ) {
+        if ( $selection =~ /^[Ii]\// ) {
             $indexline = 0;
 
             # Insert first to avoid subsequent page marker moving back inside list
