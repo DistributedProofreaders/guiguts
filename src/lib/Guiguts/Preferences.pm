@@ -144,23 +144,21 @@ sub setmargins {
             -to           => 120,
         )->pack( -side => 'left' );
 
-        if ( $::rewrapalgo == 2 ) {
-            my $rmdiffframe =
-              $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
-            my $rmdifflabel = $rmdiffframe->Label(
-                -width => 25,
-                -text  => 'Right Margin Max.-Opt. Diff.',
-            )->pack( -side => 'left' );
-            my $rmdiffentry = $rmdiffframe->Spinbox(
-                -width        => 6,
-                -background   => $::bkgcolor,
-                -relief       => 'sunken',
-                -textvariable => \$::rmargindiff,
-                -increment    => 1,
-                -from         => 0,
-                -to           => 10,
-            )->pack( -side => 'left' );
-        }
+        my $rmdiffframe =
+          $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
+        my $rmdifflabel = $rmdiffframe->Label(
+            -width => 25,
+            -text  => 'Right Margin Max.-Opt. Diff.',
+        )->pack( -side => 'left' );
+        my $rmdiffentry = $rmdiffframe->Spinbox(
+            -width        => 6,
+            -background   => $::bkgcolor,
+            -relief       => 'sunken',
+            -textvariable => \$::rmargindiff,
+            -increment    => 1,
+            -from         => 0,
+            -to           => 10,
+        )->pack( -side => 'left' );
         my $button_frame =
           $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
         my $button_ok = $button_frame->Button(

@@ -21,91 +21,7 @@ sub wrapper {
       if ( $paragraph =~ m|^$TEMPPAGEMARK*[$::allblocktypes]/$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
         || $paragraph =~ m|^$TEMPPAGEMARK*/[$::allblocktypes]$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
         || $paragraph =~ m|^$TEMPPAGEMARK*$| );
-    if ( $::rewrapalgo == 1 ) {
-        return greedy_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph,
-            $rwhyphenspace );
-    } elsif ( $::rewrapalgo == 2 ) {
-        return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
-    }
-}
-
-sub greedy_wrapper {
-    my @words         = ();
-    my $word          = '';
-    my $line          = '';
-    my $leftmargin    = shift;
-    my $firstmargin   = shift;
-    my $rightmargin   = shift;
-    my $paragraph     = shift;
-    my $rwhyphenspace = shift;
-    $rightmargin++;
-    $paragraph =~ s/-\n/-/g unless $rwhyphenspace;
-    $paragraph =~ s/\n/ /g;
-    return ("\n") unless ($paragraph);
-    @words     = split /\s+/, $paragraph;
-    $paragraph = '';
-    $line      = ' ' x $firstmargin;
-
-    while (@words) {
-        $word = shift @words;
-        next unless defined $word and length $word;
-        if ( $word =~ /\/[$blockwraptypes]/ ) {    # Get margins for blockwrap types
-            $firstmargin = $leftmargin = $::blocklmargin if $word =~ /\/#/;    # blockquote has its own default
-                                                                               # Check if there are any parameters following blockwrap markup
-            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)/ ) {
-                if ( length $1 ) {
-                    $leftmargin  = $1;
-                    $firstmargin = $leftmargin;
-                }
-            }
-            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)?(\.)(\d+)/ ) {
-                if ( length $3 ) { $firstmargin = $3; }
-            }
-            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
-                if ($4) { $rightmargin = $4 + 1; }                             # needs +1 to match $rightmargin++ above
-            }
-            $line =~ s/\s$//;
-            if ( $line =~ /\S/ ) {
-                $paragraph .= $line . "\n" . $word . "\n";
-            } else {
-                $paragraph .= $word . "\n";
-            }
-            $line = ' ' x $firstmargin;
-            next;
-        }
-        if ( $word =~ /[$blockwraptypes]\// ) {
-            $line =~ s/ $//;                                                   # remove trailing space
-            $paragraph .= $line . "\n" if $line;
-            $paragraph .= $word . "\n";
-            $leftmargin = $::lmargin - 1;
-            $line       = '';
-            next;
-        }
-        my $thisline = $line . $word;
-        $thisline =~ s/<\/?[^>]+?>//g;                                         #ignore HTML markup when rewrapping
-        if ( length($thisline) < $rightmargin ) {
-            $line .= $word . ' ';
-        } else {
-            if ( $line =~ /\S/ ) {
-                $line =~ s/\s$//;
-                $paragraph .= $line . "\n";
-                $line = ' ' x $leftmargin;
-                $line .= $word . ' ';
-            } else {
-                $paragraph .= $line . $word . "\n";
-                $line = ' ' x $leftmargin;
-            }
-        }
-        unless ( scalar(@words) ) {
-            $line =~ s/\s$//;
-            $paragraph .= "$line\n";
-            last;
-        }
-    }
-    if ( $paragraph =~ /-[$::allblocktypes]\// ) {    # Trap bug when there is a hyphen at the end of a block
-        $paragraph =~ s/\n(\S+)-([$::allblocktypes]\/)/ $1-\n$2/;
-    }
-    return ($paragraph);
+    return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 }
 
 sub knuth_wrapper {
@@ -353,14 +269,6 @@ sub selectrewrap {
                         $inblock      = 0;
                     }
                 } else {
-                    $selection =~ s/<i>/\x8d/g;     #convert some characters that will interfere with rewrap
-                    $selection =~ s/<\/i>/\x8e/g;
-                    if ( $::rewrapalgo == 1 ) {
-                        $selection =~ s/\[/\x8A/g;
-                        $selection =~ s/\]/\x9A/g;
-                        $selection =~ s/\(/\x9d/g;
-                        $selection =~ s/\)/\x98/g;
-                    }
                     if ($::blockwrap) {
                         $rewrapped = wrapper(
                             $leftmargin, $firstmargin, $rightmargin,
@@ -369,14 +277,6 @@ sub selectrewrap {
                     } else {    #rewrap the paragraph
                         $rewrapped = wrapper( $::lmargin, $::lmargin, $::rmargin,
                             $selection, $::rwhyphenspace );
-                    }
-                    $rewrapped =~ s/\x8d/<i>/g;     #convert the characters back
-                    $rewrapped =~ s/\x8e/<\/i>/g;
-                    if ( $::rewrapalgo == 1 ) {
-                        $rewrapped =~ s/\x8A/\[/g;
-                        $rewrapped =~ s/\x9A/\]/g;
-                        $rewrapped =~ s/\x98/\)/g;
-                        $rewrapped =~ s/\x9d/\(/g;
                     }
                     $textwindow->delete( $thisblockstart, $thisblockend );    #delete the original paragraph
                     $textwindow->insert( $thisblockstart, $rewrapped );       #insert the rewrapped paragraph

@@ -960,7 +960,7 @@ EOM
             htmldiventry htmlspanentry ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin
             multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar oldspellchecklayout poetrylmargin projectfileslocation
-            recentfile_size rewrapalgo rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted spellcheckwithenchant stayontop toolside
+            recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted spellcheckwithenchant stayontop toolside
             trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
             twowordsinhyphencheck utf8save utffontname utffontsize
             url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
