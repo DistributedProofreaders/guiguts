@@ -12,12 +12,15 @@ BEGIN {
 
 my $blockwraptypes = quotemeta '#iI';    # Blockquotes & index allow user to specify left/first/right margins
 
+# "Delete" character is inserted to flag mark positions during wrapping
+my $TEMPPAGEMARK = "\x7f";
+
 sub wrapper {
     my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
     return $paragraph
-      if ( $paragraph =~ m|^\x7f*[$::allblocktypes]/\x7f*\n\x7f*$|
-        || $paragraph =~ m|^\x7f*/[$::allblocktypes]\x7f*\n\x7f*$|
-        || $paragraph =~ m|^\x7f*$| );
+      if ( $paragraph =~ m|^$TEMPPAGEMARK*[$::allblocktypes]/$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
+        || $paragraph =~ m|^$TEMPPAGEMARK*/[$::allblocktypes]$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
+        || $paragraph =~ m|^$TEMPPAGEMARK*$| );
     if ( $::rewrapalgo == 1 ) {
         return greedy_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph,
             $rwhyphenspace );
@@ -49,16 +52,16 @@ sub greedy_wrapper {
         if ( $word =~ /\/[$blockwraptypes]/ ) {    # Get margins for blockwrap types
             $firstmargin = $leftmargin = $::blocklmargin if $word =~ /\/#/;    # blockquote has its own default
                                                                                # Check if there are any parameters following blockwrap markup
-            if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)/ ) {
+            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)/ ) {
                 if ( length $1 ) {
                     $leftmargin  = $1;
                     $firstmargin = $leftmargin;
                 }
             }
-            if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)?(\.)(\d+)/ ) {
+            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)?(\.)(\d+)/ ) {
                 if ( length $3 ) { $firstmargin = $3; }
             }
-            if ( $word =~ /^\x7f*\/[$blockwraptypes]\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+            if ( $word =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\x8A(\d+)?(\.)?(\d+)?,(\d+)/ ) {
                 if ($4) { $rightmargin = $4 + 1; }                             # needs +1 to match $rightmargin++ above
             }
             $line =~ s/\s$//;
@@ -110,11 +113,11 @@ sub knuth_wrapper {
     my ( $pre, $post ) = ( '', '' );
 
     # if open rewrap markup, remove, then prepend once rewrapped
-    if    ( $paragraph =~ s|^(\x7f*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
-    elsif ( $paragraph =~ s|^(\x7f*/[$blockwraptypes])|| )             { $pre = "$1\n"; }
+    if    ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
+    elsif ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes])|| )             { $pre = "$1\n"; }
 
     # if close rewrap markup, remove (including any newline), then append once rewrapped
-    if ( $paragraph =~ s|([$blockwraptypes]/\x7f*)(\n?)$|| ) { $post = "$1$2"; }
+    if ( $paragraph =~ s|([$blockwraptypes]/$TEMPPAGEMARK*)(\n?)$|| ) { $post = "$1$2"; }
     my $maxwidth = $rightmargin;
     my $optwidth = $rightmargin - $::rmargindiff;
     $paragraph =~ s/-\n/-/g unless $rwhyphenspace;
@@ -165,15 +168,15 @@ sub selectrewrap {
             $markname  = shift @marklist;
             $markindex = shift @marklist;
             if ( $markname =~ /Pg\S+/ ) {
-                $textwindow->insert( $markindex, "\x7f" );          #mark the page breaks for rewrapping
+                $textwindow->insert( $markindex, $TEMPPAGEMARK );    #mark the page breaks for rewrapping
                 push @savelist, $markname;
             }
         }
-        while ( $textwindow->get($start) =~ /^\s*\n/ ) {            #if the selection starts on a blank line
-            $start = $textwindow->index("$start+1c")                #advance the selection start until it isn't.
+        while ( $textwindow->get($start) =~ /^\s*\n/ ) {             #if the selection starts on a blank line
+            $start = $textwindow->index("$start+1c")                 #advance the selection start until it isn't.
         }
-        while ( $textwindow->get("$end+1c") =~ /^\s*\n/ ) {         #if the selection ends at the end of a line but not over it
-            $end = $textwindow->index("$end+1c")                    #advance the selection end until it does. (traps odd spaces
+        while ( $textwindow->get("$end+1c") =~ /^\s*\n/ ) {          #if the selection ends at the end of a line but not over it
+            $end = $textwindow->index("$end+1c")                     #advance the selection end until it does. (traps odd spaces
         }    #at paragraph end bug)
         $thisblockstart = $start;
         my $thisblockend   = $end;
@@ -211,7 +214,8 @@ sub selectrewrap {
         while (1) {
             $indent = $::defaultindent;
             $thisblockend =
-              $textwindow->search( '-regex', '--', '(^[\x7f]*$)|([' . $blockwraptypes . ']/)',
+              $textwindow->search( '-regex', '--',
+                '(^[$TEMPPAGEMARK]*$)|([' . $blockwraptypes . ']/)',
                 $thisblockstart, $end );                     # find end of paragraph or end of markup
                                                              # if two start rewrap block markers aren't separated by a blank line, just let it become added
             $thisblockend = $thisblockstart
@@ -242,41 +246,41 @@ sub selectrewrap {
             $textwindow->update;
 
             # Check for block types that support blockwrap
-            if ( $selection =~ /^\x7f*\/[$blockwraptypes]/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
                 $::blockwrap = 1;
-                if ( $selection =~ /^\x7f*\/\#/ ) {
+                if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {
                     $leftmargin  = $::blocklmargin;
                     $firstmargin = $::blocklmargin;
                     $rightmargin = $::blockrmargin;
                 }
 
                 # Check if there are any parameters following blockwrap markup [n...
-                if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
+                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
                     $leftmargin  = $1;
                     $firstmargin = $leftmargin;
                 }
 
                 # [n.n...
-                if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
+                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
                     $firstmargin = $3;
                 }
 
                 # [n.n,n...
-                if ( $selection =~ /^\x7f*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
                     $rightmargin = $4;
                 }
             }
 
             # if selection is /*, /L, or /l
-            if ( $selection =~ /^\x7f*\/[\*Ll]/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[\*Ll]/ ) {
                 $inblock      = 1;
                 $enableindent = 1;
             }    #check for no rewrap markup
                  # if there are any parameters /*[n
-            if ( $selection =~ /^\x7f*\/\*\[(\d+)/ ) { $indent = $1 }
+            if ( $selection =~ /^$TEMPPAGEMARK*\/\*\[(\d+)/ ) { $indent = $1 }
 
             # if selection begins /p or /P
-            if ( $selection =~ /^\x7f*\/[pP]/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[pP]/ ) {
                 $inblock      = 1;
                 $enableindent = 1;
                 $poem         = 1;
@@ -284,18 +288,18 @@ sub selectrewrap {
             }
 
             # if selection begins /x or /X or /$
-            if ( $selection =~ /^\x7f*\/[Xx\$]/ ) { $inblock = 1 }
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[Xx\$]/ ) { $inblock = 1 }
 
             # if selection begins /f or /F
-            if ( $selection =~ /^\x7f*\/[fF]/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[fF]/ ) {
                 $inblock = 1;
             }
-            $textwindow->markSet( 'rewrapend', $thisblockend );    #Set a mark at the end of the text so it can be found after rewrap
-            unless ( $selection =~ /^\x7f*\s*?(\*\s*){4}\*/ ) {    #skip rewrap if paragraph is a thought break
+            $textwindow->markSet( 'rewrapend', $thisblockend );             #Set a mark at the end of the text so it can be found after rewrap
+            unless ( $selection =~ /^$TEMPPAGEMARK*\s*?(\*\s*){4}\*/ ) {    #skip rewrap if paragraph is a thought break
                 if ($inblock) {
                     if ($enableindent) {
                         $indentblockend = $textwindow->search( '-regex', '--',
-                            '^\x7f*[pP\*Ll]\/', $thisblockstart, $end );
+                            '^$TEMPPAGEMARK*[pP\*Ll]\/', $thisblockstart, $end );
                         $indentblockend = $indentblockend || $end;
                         $textwindow->markSet( 'rewrapend', $indentblockend );
                         unless ($offset) { $offset = 0 }
@@ -323,8 +327,8 @@ sub selectrewrap {
                         for my $line ( $sr .. $er - 1 ) {
                             $textline = $textwindow->get( "$line.0", "$line.end" );
                             next
-                              if ( ( $textline =~ /^\x7f*\/[pP\*Ll]/ )
-                                || ( $textline =~ /^\x7f*[pP\*LlFf]\// ) );
+                              if ( ( $textline =~ /^$TEMPPAGEMARK*\/[pP\*Ll]/ )
+                                || ( $textline =~ /^$TEMPPAGEMARK*[pP\*LlFf]\// ) );
                             if ( $enableindent and $fblock == 0 ) {
                                 $textwindow->insert( "$line.0", ( ' ' x $indent ) )
                                   if ( $indent > 0 );
@@ -380,14 +384,14 @@ sub selectrewrap {
                     $end = shift @endtemp;
                 }
             }
-            if ( $selection =~ /^\x7f*[XxFf\$]\//m ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$]\//m ) {
                 $inblock      = 0;
                 $indent       = 0;
                 $offset       = 0;
                 $enableindent = 0;
                 $poem         = 0;
             }
-            if ( $selection =~ /\x7f*[$blockwraptypes]\// ) { $::blockwrap = 0 }
+            if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
             last unless $end;
             $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
             $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
@@ -411,24 +415,26 @@ sub selectrewrap {
         $textwindow->focus;
         $textwindow->update;
         $textwindow->Busy( -recurse => 1 );
-        if (@savelist) {                                                       #if there are saved page markers
-            while (@savelist) {                                                #reinsert them
-                $markname  = shift @savelist;
-                $markindex = $textwindow->search( '-regex', '--', '\x7f', '1.0', 'end' );
-                $textwindow->delete($markindex);                               #then remove the page markers
-                $textwindow->markSet( $markname, $markindex );
-                $textwindow->markGravity( $markname, 'left' );
-            }
+
+        #if there are saved page markers, remove the temporary markers and reinsert the saved ones
+        while (@savelist) {
+            $markname  = shift @savelist;
+            $markindex = $textwindow->search( '-regex', '--', $TEMPPAGEMARK, '1.0', 'end' );
+            $textwindow->delete($markindex);
+            $textwindow->markSet( $markname, $markindex );
+            $textwindow->markGravity( $markname, 'left' );
         }
-        if ( $start eq '1.0' ) {                                               #reinsert deleted top line if it was removed
-            if ( $toplineblank == 1 ) {                                        #(kinda half assed but it works)
+        if ( $start eq '1.0' ) {    #reinsert deleted top line if it was removed
+            if ( $toplineblank == 1 ) {    #(kinda half assed but it works)
                 $textwindow->insert( '1.0', "\n" );
             }
         }
         $textwindow->tagRemove( 'blockend', '1.0', 'end' );
     }
+
+    # If line consists solely of whitespace, empty it
     while (1) {
-        $thisblockstart = $textwindow->search( '-regexp', '--', '^[\x7f\s]+$', '1.0', 'end' );
+        $thisblockstart = $textwindow->search( '-regexp', '--', '^\s+$', '1.0', 'end' );
         last unless $thisblockstart;
         $textwindow->delete( $thisblockstart, "$thisblockstart lineend" );
     }
