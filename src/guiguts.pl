@@ -162,7 +162,6 @@ our $projectid             = q{};
 our $projectfileslocation  = '';
 our $recentfile_size       = 9;
 our $regexpentry           = q();
-our $rewrapalgo            = 2;
 our $rmargin               = 72;
 our $rmargindiff           = 1;
 our $rwhyphenspace         = 1;
