@@ -7,9 +7,8 @@ use Getopt::Long;
 # pphtml.pl
 # command line version of pphtml.pl
 # author: Roger Frank (DP:rfrank)
-# last edit: 03-Sep-2009 10:53 PM
 
-my $vnum = "1.14";
+my $vnum = "1.15";
 
 my @book         = ();
 my @css          = ();
@@ -336,7 +335,7 @@ sub runProgram {
             }
         }
 
-        foreach my $cssused ( keys %classes_used ) {
+        foreach my $cssused ( sort keys %classes_used ) {
             my $found = 0;
             foreach my $cssdef (@css) {
                 $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
