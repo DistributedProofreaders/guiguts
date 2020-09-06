@@ -215,7 +215,7 @@ sub selectrewrap {
                 if ($inblock) {
                     if ($enableindent) {
                         $indentblockend = $textwindow->search( '-regex', '--',
-                            '^$TEMPPAGEMARK*[pP\*Ll]\/', $thisblockstart, $end );
+                            "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
                         $indentblockend = $indentblockend || $end;
                         $textwindow->markSet( 'rewrapend', $indentblockend );
                         unless ($offset) { $offset = 0 }
