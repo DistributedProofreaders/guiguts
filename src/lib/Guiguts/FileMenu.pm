@@ -8,7 +8,7 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
-      &_flash_save &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
+      &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
       &file_import_markup &operationadd &isedited &setedited);
 }
@@ -50,93 +50,72 @@ sub file_include {    # FIXME: Should include even if no file loaded.
 }
 
 sub file_saveas {
-    my $textwindow = shift;
-    ::hidepagenums();
-    my $initialfile = '';
-    $initialfile = $::lglobal{global_filename}
-      unless ( $::lglobal{global_filename} =~ m/No File Loaded/ );
-    $initialfile =~ s|.*/([^/]*)$|$1|;
-    my $name = $textwindow->getSaveFile(
-        -title       => 'Save As',
-        -initialdir  => $::globallastpath,
-        -initialfile => $initialfile,
-    );
-    if ( defined($name) and length($name) ) {
-        $::top->Busy( -recurse => 1 );
-        my $binname = $name;
-        $binname =~ s/\.[^\.]*?$/\.bin/;
-        if ( $binname eq $name ) { $binname .= '.bin' }
-        if ( -e $binname ) {
-            my $warning = $::top->Dialog(    # FIXME: heredoc
-                -text => "WARNING! A file already exists that will use the same .bin filename.\n"
-                  . "It is highly recommended that a different file name is chosen to avoid\n"
-                  . "corrupting the .bin files.\n\n Are you sure you want to continue?",
-                -title          => 'Bin File Collision!',
-                -bitmap         => 'warning',
-                -buttons        => [qw/Continue Cancel/],
-                -default_button => qw/Cancel/,
-            );
-            my $answer = $warning->Show;
-            return unless ( $answer eq 'Continue' );
+
+    # Block/local ensures global is safely saved & restored
+    {    # Don't want to autosave mid-save
+        local $::autosave = 0;
+        ::reset_autosave();
+
+        my $textwindow = shift;
+        ::hidepagenums();
+        my $initialfile = '';
+        $initialfile = $::lglobal{global_filename}
+          unless ( $::lglobal{global_filename} =~ m/No File Loaded/ );
+        $initialfile =~ s|.*/([^/]*)$|$1|;
+        my $name = $textwindow->getSaveFile(
+            -title       => 'Save As',
+            -initialdir  => $::globallastpath,
+            -initialfile => $initialfile,
+        );
+
+        if ( defined($name) and length($name) ) {
+            $::top->Busy( -recurse => 1 );
+            $textwindow->SaveUTF($name);
+            my ( $fname, $extension, $filevar );
+            ( $fname, $::globallastpath, $extension ) = ::fileparse($name);
+            $::globallastpath = ::os_normal($::globallastpath);
+            $name             = ::os_normal($name);
+            $textwindow->FileName($name);
+            $::lglobal{global_filename} = $name;
+            _bin_save();
+            ::_recentupdate($name);
+            $::top->Unbusy( -recurse => 1 );
+            $textwindow->ResetUndo;    #necessary to reset edited flag
+            ::setedited(0);
+            ::update_indicators();
         }
-        $textwindow->SaveUTF($name);
-        my ( $fname, $extension, $filevar );
-        ( $fname, $::globallastpath, $extension ) = ::fileparse($name);
-        $::globallastpath = ::os_normal($::globallastpath);
-        $name             = ::os_normal($name);
-        $textwindow->FileName($name);
-        $::lglobal{global_filename} = $name;
-        _bin_save();
-        ::_recentupdate($name);
-        $::top->Unbusy( -recurse => 1 );
-    } else {
-        return;
-    }
-    $textwindow->ResetUndo;    #necessary to reset edited flag
-    ::setedited(0);
-    ::update_indicators();
-    return;
+    }    # End of block restores autosave setting
+    ::reset_autosave();
 }
 
 sub file_savecopyas {
-    my $textwindow = shift;
-    ::hidepagenums();
-    my $name = $textwindow->getSaveFile(
-        -title       => 'Save As',
-        -initialdir  => $::globallastpath,
-        -initialfile => $::lglobal{global_filename},
-    );
-    if ( defined($name) and length($name) ) {
-        $::top->Busy( -recurse => 1 );
-        my $binname = $name;
-        $binname =~ s/\.[^\.]*?$/\.bin/;
-        if ( $binname eq $name ) { $binname .= '.bin' }
-        if ( -e $binname ) {
-            my $warning = $::top->Dialog(    # FIXME: heredoc
-                -text => "WARNING! A file already exists that will use the same .bin filename.\n"
-                  . "It is highly recommended that a different file name is chosen to avoid\n"
-                  . "corrupting the .bin files.\n\n Are you sure you want to continue?",
-                -title          => 'Bin File Collision!',
-                -bitmap         => 'warning',
-                -buttons        => [qw/Continue Cancel/],
-                -default_button => qw/Cancel/,
-            );
-            my $answer = $warning->Show;
-            return unless ( $answer eq 'Continue' );
+
+    # Block/local ensures global is safely saved & restored
+    {    # Don't want to autosave mid-save
+        local $::autosave = 0;
+        ::reset_autosave();
+
+        my $textwindow = shift;
+        ::hidepagenums();
+        my $name = $textwindow->getSaveFile(
+            -title       => 'Save As',
+            -initialdir  => $::globallastpath,
+            -initialfile => $::lglobal{global_filename},
+        );
+        if ( defined($name) and length($name) ) {
+            $::top->Busy( -recurse => 1 );
+            $textwindow->SaveUTF($name);
+            $name = ::os_normal($name);
+            my $oldfilename = $::lglobal{global_filename};
+            $::lglobal{global_filename} = $name;    # first do a bin_save, then restore the file name
+            _bin_save();
+            $::lglobal{global_filename} = $oldfilename;
+            $textwindow->FileName($oldfilename);
+            ::_recentupdate($name);
+            $::top->Unbusy( -recurse => 1 );
         }
-        $textwindow->SaveUTF($name);
-        $name = ::os_normal($name);
-        my $oldfilename = $::lglobal{global_filename};
-        $::lglobal{global_filename} = $name;    # first do a bin_save, then restore the file name
-        _bin_save();
-        $::lglobal{global_filename} = $oldfilename;
-        $textwindow->FileName($oldfilename);
-        ::_recentupdate($name);
-        $::top->Unbusy( -recurse => 1 );
-    } else {
-        return;
-    }
-    return;
+    }    # End of block restores autosave setting
+    ::reset_autosave();
 }
 
 sub file_close {
@@ -267,26 +246,6 @@ sub file_export_preptext {
         }
     }
     $top->Unbusy( -recurse => 1 );
-    return;
-}
-
-sub _flash_save {
-    $::lglobal{saveflashingid} = $::top->repeat(
-        500,
-        sub {
-            if ( $::lglobal{savetool}->cget('-background') eq 'yellow' ) {
-                $::lglobal{savetool}->configure(
-                    -background       => 'green',
-                    -activebackground => 'green'
-                ) unless $::notoolbar;
-            } else {
-                $::lglobal{savetool}->configure(
-                    -background       => 'yellow',
-                    -activebackground => 'yellow'
-                ) if ( $::textwindow->numberChanges and ( !$::notoolbar ) );
-            }
-        }
-    );
     return;
 }
 
@@ -443,43 +402,56 @@ sub clearpopups {
 
 # Save the currently loaded file
 sub savefile {
-    my ( $textwindow, $top ) = ( $::textwindow, $::top );
-    my $filename = $::lglobal{global_filename};
 
-    # If no filename, do "Save As".
-    if ( $filename =~ /No File Loaded/ ) {
-        file_saveas($textwindow);
-    } else {
-        ::hidepagenums();
-        my $ans = !fileisreadonly($filename) || 'Yes' eq $top->messageBox(
-            -icon    => 'warning',
-            -title   => 'Confirm save?',
-            -type    => 'YesNo',
-            -default => 'no',
-            -message =>
-              "File $filename is write-protected. Remove write-protection and save anyway?",
-        );
-        return unless $ans;
-        $::top->Busy( -recurse => 1 );
-        if ($::autobackup) {
-            if ( -e $filename ) {
-                if ( -e "$filename.bk2" ) {
-                    unlink "$filename.bk2";
+    # Block/local ensures global is safely saved & restored
+    {    # Don't want to autosave mid-save
+        local $::autosave = 0;
+        ::reset_autosave();
+
+        my ( $textwindow, $top ) = ( $::textwindow, $::top );
+        my $filename = $::lglobal{global_filename};
+
+        # If no filename, do "Save As".
+        if ( $filename =~ /No File Loaded/ ) {
+            file_saveas($textwindow);
+        } else {
+            ::hidepagenums();
+            if (
+                !fileisreadonly($filename)
+                or 'Yes' eq $top->messageBox(
+                    -icon    => 'warning',
+                    -title   => 'Confirm save?',
+                    -type    => 'YesNo',
+                    -default => 'no',
+                    -message =>
+                      "File $filename is write-protected. Remove write-protection and save anyway?",
+                )
+            ) {
+                $::top->Busy( -recurse => 1 );
+                if ($::autobackup) {
+                    if ( -e $filename ) {
+                        print "$filename\n";
+                        if ( -e "$filename.bk2" ) {
+                            unlink "$filename.bk2";
+                        }
+                        if ( -e "$filename.bk1" ) {
+                            rename( "$filename.bk1", "$filename.bk2" );
+                        }
+                        rename( $filename, "$filename.bk1" );
+                    }
                 }
-                if ( -e "$filename.bk1" ) {
-                    rename( "$filename.bk1", "$filename.bk2" );
-                }
-                rename( $filename, "$filename.bk1" );
+                $textwindow->SaveUTF;
+                $::top->Unbusy( -recurse => 1 );
+                $textwindow->ResetUndo;    #necessary to reset edited flag
+                ::_bin_save();
+                ::setedited(0);
+                ::reset_autosave();
+                ::update_indicators();
             }
         }
-        $textwindow->SaveUTF;
-        $::top->Unbusy( -recurse => 1 );
-        $textwindow->ResetUndo;    #necessary to reset edited flag
-        ::_bin_save();
-        ::setedited(0);
-        ::set_autosave() if $::autosave;
-        ::update_indicators();
-    }
+
+    }    # End of block restores autosave setting
+    ::reset_autosave();
 }
 
 sub fileisreadonly {
@@ -856,7 +828,7 @@ sub openfile {    # and open it
     ::operationadd("Open $::lglobal{global_filename}");
     ::setedited(0);
     ::savesettings();
-    ::set_autosave() if $::autosave;
+    ::reset_autosave();
 }
 
 sub readsettings {

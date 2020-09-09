@@ -14,7 +14,7 @@ BEGIN {
       &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
       &sidenotes &poetrynumbers &get_page_number &externalpopup
-      &xtops &toolbar_toggle &toggle_autosave &killpopup &expandselection &currentfileisunicode &currentfileislatin1
+      &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss);
 
@@ -2055,12 +2055,16 @@ sub toolbar_toggle {    # Set up / remove the tool bar
             -command => [ \&::savefile ],
             -tip     => 'Save',
         );
-        $::lglobal{savetool}->bind( '<3>', sub { ::set_autosave() } );
+
+        # Mouse-3 just resets the autosave timers
+        $::lglobal{savetool}->bind( '<3>', sub { ::reset_autosave() } );
+
+        # Shift-Mouse-3 toggles the autosave setting
         $::lglobal{savetool}->bind(
             '<Shift-3>',
             sub {
                 $::autosave = !$::autosave;
-                toggle_autosave();
+                ::reset_autosave();
             }
         );
         $::lglobal{toptool}->ToolButton(
@@ -2158,24 +2162,6 @@ sub toolbar_toggle {    # Set up / remove the tool bar
             -command => [ \&::footnotepop ],
             -tip     => 'Footnote Fixup'
         );
-    }
-    ::savesettings();
-}
-
-sub toggle_autosave {
-    if ($::autosave) {
-        ::set_autosave();
-    } else {
-        $::lglobal{autosaveid}->cancel;
-        undef $::lglobal{autosaveid};
-        $::lglobal{saveflashid}->cancel;
-        undef $::lglobal{saveflashid};
-        $::lglobal{saveflashingid}->cancel if $::lglobal{saveflashingid};
-        undef $::lglobal{saveflashingid};
-        $::lglobal{savetool}->configure(
-            -background       => 'SystemButtonFace',
-            -activebackground => 'SystemButtonFace'
-        ) unless $::notoolbar;
     }
     ::savesettings();
 }

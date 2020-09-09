@@ -324,7 +324,7 @@ if (@ARGV) {
 } else {
     $lglobal{global_filename} = 'No File Loaded';
 }
-set_autosave() if $autosave;
+::reset_autosave();
 $textwindow->CallNextGUICallback;
 $top->repeat( 200, sub { _updatesel($textwindow) } );
 

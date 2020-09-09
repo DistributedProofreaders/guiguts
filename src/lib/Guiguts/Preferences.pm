@@ -7,8 +7,8 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&setdefaultpath &setmargins &fontsize &setpngspath &set_autosave
-      &autosaveinterval &saveinterval &setcolor &locateExecutable &filePathsPopup &setDPurls );
+    @EXPORT = qw(&setdefaultpath &setmargins &fontsize &setpngspath
+      &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls );
 }
 
 sub setdefaultpath {
@@ -326,31 +326,71 @@ sub saveinterval {
     }
 }
 
-sub set_autosave {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    $::lglobal{autosaveid}->cancel     if $::lglobal{autosaveid};
-    $::lglobal{saveflashid}->cancel    if $::lglobal{saveflashid};
-    $::lglobal{saveflashingid}->cancel if $::lglobal{saveflashingid};
-    $::lglobal{autosaveid} = $top->repeat(
-        ( $::autosaveinterval * 60000 ),
-        sub {
-            ::savefile()
-              if ::isedited()
-              and $::lglobal{global_filename} !~ /No File Loaded/;
-        }
-    );
-    $::lglobal{saveflashid} = $top->after(
-        ( $::autosaveinterval * 60000 - 10000 ),
-        sub {
-            ::_flash_save($textwindow)
-              if $::lglobal{global_filename} !~ /No File Loaded/;
-        }
-    );
-    $::lglobal{savetool}->configure( -background => 'green', -activebackground => 'green' )
-      unless $::notoolbar;
+# If autosave is on, then reset the timers
+# If autosave is off, then ensure timers are cancelled
+sub reset_autosave {
 
-    #$::autosaveinterval = time;
+    # Start by cancelling the timers if they are running
+    $::lglobal{autosaveid}->cancel if $::lglobal{autosaveid};
+    undef $::lglobal{autosaveid};
+    $::lglobal{saveflashid}->cancel if $::lglobal{saveflashid};
+    undef $::lglobal{saveflashid};
+    $::lglobal{saveflashingid}->cancel if $::lglobal{saveflashingid};
+    undef $::lglobal{saveflashingid};
+
+    # If autosave is on, then (re-)start the timers
+    if ($::autosave) {
+        my $top = $::top;
+
+        # Timer to do an autosave
+        $::lglobal{autosaveid} = $top->repeat(
+            $::autosaveinterval * 60000,
+            sub {
+                ::savefile()
+                  if ::isedited()
+                  and $::lglobal{global_filename} !~ /No File Loaded/;
+            }
+        );
+
+        # Timer for when to start flash warning 10 seconds before autosave
+        $::lglobal{saveflashid} = $top->after(
+            $::autosaveinterval * 60000 - 10000,
+            sub {
+                my $textwindow = $::textwindow;
+                flash_autosave($textwindow)
+                  if $::lglobal{global_filename} !~ /No File Loaded/;
+            }
+        );
+    }
+
+    # Ensure the icon is the right color
+    $::lglobal{savetool}->configure(
+        -background       => $::autosave ? 'green' : 'SystemButtonFace',
+        -activebackground => $::autosave ? 'green' : 'SystemButtonFace'
+    ) unless $::notoolbar;
+
+    ::savesettings();
+}
+
+# Set a timer to flash the save icon green/yellow to warn autosave is imminent
+sub flash_autosave {
+    $::lglobal{saveflashingid} = $::top->repeat(
+        500,
+        sub {
+            my $textwindow = $::textwindow;
+            if ( $::lglobal{savetool}->cget('-background') eq 'yellow' ) {
+                $::lglobal{savetool}->configure(
+                    -background       => 'green',
+                    -activebackground => 'green'
+                ) unless $::notoolbar;
+            } else {
+                $::lglobal{savetool}->configure(
+                    -background       => 'yellow',
+                    -activebackground => 'yellow'
+                ) if ( $textwindow->numberChanges and ( !$::notoolbar ) );
+            }
+        }
+    );
 }
 
 sub setcolor {    # Color picking routine
