@@ -375,7 +375,7 @@ sub menu_preferences {
                     Checkbutton => 'Enable ~Auto Save',
                     -variable   => \$::autosave,
                     -command    => sub {
-                        ::toggle_autosave();
+                        ::reset_autosave();
                         ::savesettings();
                     }
                 ],
@@ -384,7 +384,7 @@ sub menu_preferences {
                     -command => sub {
                         ::saveinterval();
                         ::savesettings();
-                        ::set_autosave() if $::autosave;
+                        ::reset_autosave();
                     }
                 ],
                 [
