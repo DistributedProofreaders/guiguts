@@ -31,7 +31,6 @@ sub errorcheckpop_up {
         -activebackground => $::activecolor,
         -command          => sub {
             errorcheckpop_up( $textwindow, $top, $errorchecktype );
-            unlink 'null' if ( -e 'null' );
         },
         -text  => $buttonlabel,
         -width => 16
@@ -416,9 +415,9 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
     }
     if ( $errorchecktype eq 'HTML Tidy' ) {
         if ($unicode) {
-            ::run( $::tidycommand, "-f", "errors.err", "-o", "null", "-utf8", $name );
+            ::run( $::tidycommand, "-f", "errors.err", "-e", "-utf8", $name );
         } else {
-            ::run( $::tidycommand, "-f", "errors.err", "-o", "null", $name );
+            ::run( $::tidycommand, "-f", "errors.err", "-e", $name );
         }
     } elsif ( $errorchecktype eq 'W3C Validate' ) {
         if ( $::w3cremote == 0 ) {

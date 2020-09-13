@@ -2330,7 +2330,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'Link Check' );
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'Link Check',
                 -width => 16
@@ -2339,7 +2338,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'ppvimage',
                 -width => 16
@@ -2348,7 +2346,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'HTML Tidy' );
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'HTML Tidy',
                 -width => 16
@@ -2361,7 +2358,6 @@ sub htmlgenpopup {
                     } else {
                         ::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
                     }
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'W3C Validate HTML',
                 -width => 16
@@ -2370,7 +2366,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'W3C Validate CSS' );    #validatecssrun('');
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'W3C Validate CSS',
                 -width => 16
@@ -2379,7 +2374,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'pphtml' );
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'pphtml',
                 -width => 16
@@ -2388,7 +2382,6 @@ sub htmlgenpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'Check All' );
-                    unlink 'null' if ( -e 'null' );
                 },
                 -text  => 'Check All',
                 -width => 16

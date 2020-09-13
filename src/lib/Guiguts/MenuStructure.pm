@@ -871,7 +871,6 @@ sub menubuildold {
                 Button   => 'pptxt...',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'pptxt' );
-                    unlink 'null' if ( -e 'null' );
                 },
             ],
             [
@@ -1557,7 +1556,6 @@ sub menubuilddefault {
                 Button   => 'PPt~xt...',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'pptxt' );
-                    unlink 'null' if ( -e 'null' );
                 },
             ],
         ]
@@ -1618,14 +1616,12 @@ sub menubuilddefault {
                     } else {
                         ::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
                     }
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [
                 Button   => '~CSS Validator',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'W3C Validate CSS' );
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [ 'separator', '' ],
@@ -1633,28 +1629,24 @@ sub menubuilddefault {
                 Button   => 'HTML ~Link Checker',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'Link Check' );
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [
                 Button   => 'HTML ~Tidy',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'HTML Tidy' );
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [
                 Button   => '~PPhtml',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'pphtml' );
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [
                 Button   => 'PPV~image',
                 -command => sub {
                     ::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
-                    unlink 'null' if ( -e 'null' );
                 }
             ],
             [

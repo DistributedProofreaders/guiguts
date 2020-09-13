@@ -63,8 +63,6 @@ sub runtests {
       if ok( File::Compare::compare_text( $LFNAME, 'tests/errorcheckbaseline.txt' ) == 0,
         "Check All successful" );
 
-    unlink 'null' if ( -e 'null' );    # Remove temporary "Tidy" output file.
-
     # Open/close README - allow for development system run from src subdirectory
     ok( ( -e "../README.md" or -e "README.md" ), "README.md exists" );
 
