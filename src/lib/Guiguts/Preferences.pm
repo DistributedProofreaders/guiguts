@@ -363,10 +363,14 @@ sub reset_autosave {
         );
     }
 
+    # Save icon's default background color so it can be restored when turning off autosave
+    $::lglobal{savetoolcolor} = $::lglobal{savetool}->cget('-background')
+      if not $::lglobal{savetoolcolor};
+
     # Ensure the icon is the right color
     $::lglobal{savetool}->configure(
-        -background       => $::autosave ? 'green' : 'SystemButtonFace',
-        -activebackground => $::autosave ? 'green' : 'SystemButtonFace'
+        -background       => $::autosave ? 'green' : $::lglobal{savetoolcolor},
+        -activebackground => $::autosave ? 'green' : $::lglobal{savetoolcolor}
     ) unless $::notoolbar;
 
     ::savesettings();
