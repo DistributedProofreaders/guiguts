@@ -6,24 +6,27 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&errorcheckpop_up &gcheckpop_up &gutcheck &jeebiespop_up);
+    @EXPORT = qw(&errorcheckpop_up);
 }
 
 # General error check window
-# Handles HTML & CSS Validate, Tidy, Link Check
+# Handles Gutcheck, Jeebies, HTML & CSS Validate, Tidy, Link Check
 # pphtml, pptxt and Load External Checkfile,
-# TODO: Incorporate Gutcheck & Jeebies as well to avoid code duplication and divergence?
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( %errors,     @errorchecklines );
     my ( $line,       $lincol );
     ::hidepagenums();
+
+    # Destroy and start afresh if already popped
     if ( $::lglobal{errorcheckpop} ) {
         $::lglobal{errorcheckpop}->destroy;
         undef $::lglobal{errorcheckpop};
     }
     $::lglobal{errorcheckpop} = $top->Toplevel;
     $::lglobal{errorcheckpop}->title($errorchecktype);
+
+    # All types have a button to re-run the check
     my $ptopframe   = $::lglobal{errorcheckpop}->Frame->pack;
     my $buttonlabel = 'Run Checks';
     $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
@@ -37,11 +40,12 @@ sub errorcheckpop_up {
     )->pack(
         -side   => 'left',
         -pady   => 10,
-        -padx   => 2,
+        -padx   => 20,
         -anchor => 'n'
     );
 
     # Add verbose checkbox only for certain error check types
+    # Note Bookloupe/Gutcheck have their own (always on) verbose flag
     if (   ( $errorchecktype eq 'Check All' )
         or ( $errorchecktype eq 'Link Check' )
         or ( $errorchecktype eq 'W3C Validate CSS' )
@@ -57,7 +61,45 @@ sub errorcheckpop_up {
             -padx   => 2,
             -anchor => 'n'
         );
+
+        # Bookloupe/Gutcheck have buttons to change Run Options and View Options
+    } elsif ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+        my $opsbutton2 = $ptopframe->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { gcrunopts() },
+            -text             => 'Run Options',
+            -width            => 16
+        )->pack(
+            -side   => 'left',
+            -pady   => 10,
+            -padx   => 2,
+            -anchor => 'n'
+        );
+        my $opsbutton3 = $ptopframe->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { gcviewopts( \@errorchecklines ) },
+            -text             => 'View Options',
+            -width            => 16
+        )->pack(
+            -side   => 'left',
+            -pady   => 10,
+            -padx   => 2,
+            -anchor => 'n'
+        );
+    } elsif ( $errorchecktype eq 'Jeebies' ) {
+        $ptopframe->Label( -text => 'Search mode:', )->pack( -side => 'left', -padx => 2 );
+        my @rbutton = ( [ 'Paranoid', 'p' ], [ 'Normal', '' ], [ 'Tolerant', 't' ], );
+        for (@rbutton) {
+            $ptopframe->Radiobutton(
+                -text     => $_->[0],
+                -variable => \$::jeebiesmode,
+                -value    => $_->[1],
+                -command  => \&::savesettings,
+            )->pack( -side => 'left', -padx => 2 );
+        }
     }
+
+    # Scrolled listbox to display the errors
     my $pframe = $::lglobal{errorcheckpop}->Frame->pack( -fill => 'both', -expand => 'both', );
     $::lglobal{errorchecklistbox} = $pframe->Scrolled(
         'Listbox',
@@ -73,14 +115,29 @@ sub errorcheckpop_up {
         -padx   => 2,
         -pady   => 2
     );
-    ::initialize_popup_with_deletebinding('errorcheckpop');
+
+    # Create the dialog - it has a customised delete binding which clears the error marks
+    # and destroys the run/view options dialogs as well
+    ::initialize_popup_without_deletebinding('errorcheckpop');
+    $::lglobal{errorcheckpop}->protocol(
+        'WM_DELETE_WINDOW' => sub {
+            ::killpopup('errorcheckpop');
+            $textwindow->markUnset($_) for values %::errors;
+            if ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+                ::killpopup('gcviewoptspop');
+                ::killpopup('gcrunoptspop');
+            }
+        }
+    );
 
     ::drag( $::lglobal{errorchecklistbox} );
     ::BindMouseWheel( $::lglobal{errorchecklistbox} );
+
+    # button 1 views the error
     $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
     $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview(); } );
 
-    # buttons 2 & 3 delete the clicked error and select the next error
+    # buttons 2 & 3 remove the clicked error and view the next error
     $::lglobal{errorchecklistbox}->eventAdd(
         '<<remove>>' => '<ButtonRelease-2>',
         '<ButtonRelease-3>'
@@ -88,23 +145,11 @@ sub errorcheckpop_up {
     $::lglobal{errorchecklistbox}->bind(
         '<<remove>>',
         sub {
-            $::lglobal{errorchecklistbox}->activate(
-                $::lglobal{errorchecklistbox}->index(
-                    '@'
-                      . (
-                        $::lglobal{errorchecklistbox}->pointerx -
-                          $::lglobal{errorchecklistbox}->rootx
-                      )
-                      . ','
-                      . (
-                        $::lglobal{errorchecklistbox}->pointery -
-                          $::lglobal{errorchecklistbox}->rooty
-                      )
-                )
-            );
+            my $xx = $::lglobal{errorchecklistbox}->pointerx - $::lglobal{errorchecklistbox}->rootx;
+            my $yy = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
+            my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
+            $::lglobal{errorchecklistbox}->activate($idx);
             $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
-            $::lglobal{errorchecklistbox}
-              ->selectionSet( $::lglobal{errorchecklistbox}->index('active') );
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
             errorcheckview();
@@ -114,8 +159,8 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->update;
 
     # End presentation; begin logic
-    my (@errorchecktypes);    # Multiple errorchecktypes in one popup
-    if ( $errorchecktype eq 'Check All' ) {
+    my (@errorchecktypes);                     # Multiple errorchecktypes in one popup
+    if ( $errorchecktype eq 'Check All' ) {    # Means all HTML checks
         @errorchecktypes =
           ( 'W3C Validate', 'HTML Tidy', 'ppvimage', 'Link Check', 'W3C Validate CSS', 'pphtml' );
     } else {
@@ -133,11 +178,11 @@ sub errorcheckpop_up {
     my $unicode = ::currentfileisunicode();
     foreach my $thiserrorchecktype (@errorchecktypes) {
         my $fname = '';
+        ::working($thiserrorchecktype);
         if ( $thiserrorchecktype eq 'Load Checkfile' ) {
             $fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
             last if ( not $fname );
         } else {
-            ::working($thiserrorchecktype);
             push @errorchecklines, "Beginning check: " . $thiserrorchecktype;
             if ( errorcheckrun($thiserrorchecktype) ) {
                 push @errorchecklines, "Failed to run: " . $thiserrorchecktype;
@@ -153,153 +198,204 @@ sub errorcheckpop_up {
                 -buttons => [qw/OK/],
             );
             $dialog->Show;
-        } else {
+            next;
+        }
 
-            # CSS validator reports line numbers from start of style block, so need to adjust
-            my $lineadjust = 0;
-            if (    $thiserrorchecktype eq 'W3C Validate CSS'
-                and $lineadjust = $textwindow->search( '--', '<style', '1.0', 'end' ) ) {
-                $lineadjust =~ s/\..*//;    # strip column from 'row.column'
+        # CSS validator reports line numbers from start of style block, so need to adjust
+        my $lineadjust = 0;
+        if (    $thiserrorchecktype eq 'W3C Validate CSS'
+            and $lineadjust = $textwindow->search( '--', '<style', '1.0', 'end' ) ) {
+            $lineadjust =~ s/\..*//;    # strip column from 'row.column'
+        }
+
+        my $countblank = 0;             # number of blank lines
+        while ( $line = <$fh> ) {
+            utf8::decode($line) if $unicode;
+            $line =~ s/^\s//g;
+            chomp $line;
+
+            # distinguish blank lines by setting them to varying numbers
+            # of spaces, otherwise if user deletes one, it deletes them all
+            $line = ' ' x ++$countblank if ( $line eq '' );
+
+            # Skip rest of CSS
+            if (
+                    ( not $::verboseerrorchecks )
+                and ( $thiserrorchecktype eq 'W3C Validate CSS' )
+                and (  ( $line =~ /^To show your readers/i )
+                    or ( $line =~ /^Valid CSS Information/i ) )
+            ) {
+                last;
             }
-            while ( $line = <$fh> ) {
-                utf8::decode($line) if $unicode;
-                $line =~ s/^\s//g;
-                chomp $line;
+            if (
+                ( $line    =~ /^\s*$/i )                                    # skip some unnecessary lines from W3C Validate CSS
+                or ( $line =~ /^{output/i and not $::verboseerrorchecks )
+                or ( $line =~ /^W3C/i )
+                or ( $line =~ /^URI/i )
+            ) {
+                next;
+            }
+            if ( !$::OS_WIN && $thiserrorchecktype eq 'W3C Validate CSS' ) {
+                $line =~ s/(\x0d)$//;
+            }
 
-                # Skip rest of CSS
-                if (
-                        ( not $::verboseerrorchecks )
-                    and ( $thiserrorchecktype eq 'W3C Validate CSS' )
-                    and (  ( $line =~ /^To show your readers/i )
-                        or ( $line =~ /^Valid CSS Information/i ) )
-                ) {
-                    last;
-                }
-                if (
-                    ( $line    =~ /^\s*$/i )                                    # skip some unnecessary lines from W3C Validate CSS
-                    or ( $line =~ /^{output/i and not $::verboseerrorchecks )
-                    or ( $line =~ /^W3C/i )
-                    or ( $line =~ /^URI/i )
-                ) {
+            # Skip verbose informational warnings in Link Check
+            if (    ( not $::verboseerrorchecks )
+                and ( $thiserrorchecktype eq 'Link Check' )
+                and ( $line =~ /^Link statistics/i ) ) {
+                last;
+            }
+            if ( $thiserrorchecktype eq 'pphtml' ) {
+                if ( $line =~ /^-/i ) {    # skip lines beginning with '-'
                     next;
                 }
-                if ( !$::OS_WIN && $thiserrorchecktype eq 'W3C Validate CSS' ) {
-                    $line =~ s/(\x0d)$//;
-                }
-
-                # Skip verbose informational warnings in Link Check
-                if (    ( not $::verboseerrorchecks )
-                    and ( $thiserrorchecktype eq 'Link Check' )
-                    and ( $line =~ /^Link statistics/i ) ) {
+                if ( ( not $::verboseerrorchecks )
+                    and $line =~ /^Verbose checks/i ) {    # stop with verbose specials check
                     last;
                 }
-                if ( $thiserrorchecktype eq 'pphtml' ) {
-                    if ( $line =~ /^-/i ) {    # skip lines beginning with '-'
-                        next;
-                    }
-                    if ( ( not $::verboseerrorchecks )
-                        and $line =~ /^Verbose checks/i ) {    # stop with verbose specials check
-                        last;
-                    }
-                }
-                no warnings 'uninitialized';
-                if ( $thiserrorchecktype eq 'HTML Tidy' ) {
-                    if (    ( $line =~ /^[lI\d]/ )
-                        and ( $line ne $errorchecklines[-1] ) ) {
-                        push @errorchecklines, $line;
-                        $::errors{$line} = '';
-                        $lincol = '';
-                        if ( $line =~ /^line (\d+) column (\d+)/i ) {
-                            $lincol = "$1.$2";
-                            $mark++;
-                            $textwindow->markSet( "t$mark", $lincol );
-                            $::errors{$line} = "t$mark";
-                        }
-                    }
-                } elsif ( ( $thiserrorchecktype eq "W3C Validate" )
-                    or ( $thiserrorchecktype eq "W3C Validate Remote" )
-                    or ( $thiserrorchecktype eq "pphtml" )
-                    or ( $thiserrorchecktype eq "ppvimage" ) ) {
-                    $line =~ s/^.*:(\d+:\d+)/line $1/;
-                    $line =~ s/^(\d+:\d+)/line $1/;
-                    $line =~ s/^(line \d+) /$1:1/;
-                    $::errors{$line} = '';
-                    $lincol = '';
-                    if ( $line =~ /line (\d+):(\d+)/ ) {
-                        $lincol = "$1.$2";
-                        $lincol =~ s/\.0/\.1/;    # change column zero to column 1
-                        $mark++;
-                        $textwindow->markSet( "t$mark", $lincol );
-                        $::errors{$line} = "t$mark";
-                    }
-                    push @errorchecklines, $line unless $line eq '';
-                } elsif ( ( $thiserrorchecktype eq "W3C Validate CSS" )
-                    or ( $thiserrorchecktype eq "Link Check" )
-                    or ( $thiserrorchecktype eq "pptxt" ) ) {
-
-                    # Format line number, adjusting for tool's idea of start line
-                    if ( $line =~ /Line : (\d+)/ ) {
-                        my $lineno = $1 + $lineadjust;
-                        $line =~ s/Line : (\d+)/line ${lineno}:1/;
-                    }
+            }
+            no warnings 'uninitialized';
+            if ( $thiserrorchecktype eq 'HTML Tidy' ) {
+                if (    ( $line =~ /^[lI\d]/ )
+                    and ( $line ne $errorchecklines[-1] ) ) {
                     push @errorchecklines, $line;
                     $::errors{$line} = '';
                     $lincol = '';
-                    if ( $line =~ /line (\d+):(\d+)/ ) {
+                    if ( $line =~ /^line (\d+) column (\d+)/i ) {
                         $lincol = "$1.$2";
                         $mark++;
                         $textwindow->markSet( "t$mark", $lincol );
                         $::errors{$line} = "t$mark";
                     }
-
-                    # Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
-                    # File may be in HTML format or a text file
-                } elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
-
-                    # if HTML file, ignore the header & footer
-                    if ( $line =~ /<body>/ ) {
-                        @errorchecklines = ();
-                        next;
-                    }
-                    last if ( $line =~ /<\/body>/ );
-
-                    # Mark *red text* (used by pptxt)
-                    $line =~ s/<span class='red'>([^<]*)<\/span>/*$1*/g;
-
-                    # Mark >>>inserted<<< and ###deleted### text (used by ppcomp)
-                    $line =~ s/<ins>([^<]*)<\/ins>/>>>$1<<</g;
-                    $line =~ s/<del>([^<]*)<\/del>/###$1###/g;
-
-                    # Remove some unwanted HTML
-                    $line =~ s/<\/?span[^>]*>//g;
-                    $line =~ s/<\/?a[^>]*>//g;
-                    $line =~ s/<\/?pre>//g;
-                    $line =~ s/<\/?p[^>]*>//g;
-                    $line =~ s/<\/?div[^>]*>//g;
-                    $line =~ s/<br[^>]*>/ /g;             # Line break becomes space - can't insert \n
-                    $line =~ s/<\/?h[1-6][^>]*>/***/g;    # Put asterisks round headers
-                    $line =~ s/<hr[^>]*>/====/g;          # Replace horizontal rules with ====
-                    $line =~ s/\&lt;/</g;                 # Restore < & > characters
-                    $line =~ s/\&gt;/>/g;
-
-                    # if line has a number at the start, assume it is the error line number
-                    $::errors{$line} = '';
-                    $lincol = '';
-                    if ( $line =~ /^\s*\d+/ ) {
-                        $line =~ s/^\s*(\d+)/line $1/;
-                        $lincol = "$1.0";
-                        $mark++;
-
-                        # add a new mark in the main text at the correct point
-                        $textwindow->markSet( "t$mark", $lincol );
-
-                        # remember which line goes with which mark
-                        $::errors{$line} = "t$mark";
-                    }
-
-                    # display all lines, even those without line numbers
-                    push @errorchecklines, $line;
                 }
+            } elsif ( ( $thiserrorchecktype eq "W3C Validate" )
+                or ( $thiserrorchecktype eq "W3C Validate Remote" )
+                or ( $thiserrorchecktype eq "pphtml" )
+                or ( $thiserrorchecktype eq "ppvimage" ) ) {
+                $line =~ s/^.*:(\d+:\d+)/line $1/;
+                $line =~ s/^(\d+:\d+)/line $1/;
+                $line =~ s/^(line \d+) /$1:1/;
+                $::errors{$line} = '';
+                $lincol = '';
+                if ( $line =~ /line (\d+):(\d+)/ ) {
+                    $lincol = "$1.$2";
+                    $lincol =~ s/\.0/\.1/;    # change column zero to column 1
+                    $mark++;
+                    $textwindow->markSet( "t$mark", $lincol );
+                    $::errors{$line} = "t$mark";
+                }
+                push @errorchecklines, $line unless $line eq '';
+            } elsif ( ( $thiserrorchecktype eq "W3C Validate CSS" )
+                or ( $thiserrorchecktype eq "Link Check" )
+                or ( $thiserrorchecktype eq "pptxt" ) ) {
+
+                # Format line number, adjusting for tool's idea of start line
+                if ( $line =~ /Line : (\d+)/ ) {
+                    my $lineno = $1 + $lineadjust;
+                    $line =~ s/Line : (\d+)/line ${lineno}:1/;
+                }
+                push @errorchecklines, $line;
+                $::errors{$line} = '';
+                $lincol = '';
+                if ( $line =~ /line (\d+):(\d+)/ ) {
+                    $lincol = "$1.$2";
+                    $mark++;
+                    $textwindow->markSet( "t$mark", $lincol );
+                    $::errors{$line} = "t$mark";
+                }
+
+                # Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
+                # File may be in HTML format or a text file
+            } elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
+
+                # if HTML file, ignore the header & footer
+                if ( $line =~ /<body>/ ) {
+                    @errorchecklines = ();
+                    next;
+                }
+                last if ( $line =~ /<\/body>/ );
+
+                # Mark *red text* (used by pptxt)
+                $line =~ s/<span class='red'>([^<]*)<\/span>/*$1*/g;
+
+                # Mark >>>inserted<<< and ###deleted### text (used by ppcomp)
+                $line =~ s/<ins>([^<]*)<\/ins>/>>>$1<<</g;
+                $line =~ s/<del>([^<]*)<\/del>/###$1###/g;
+
+                # Remove some unwanted HTML
+                $line =~ s/<\/?span[^>]*>//g;
+                $line =~ s/<\/?a[^>]*>//g;
+                $line =~ s/<\/?pre>//g;
+                $line =~ s/<\/?p[^>]*>//g;
+                $line =~ s/<\/?div[^>]*>//g;
+                $line =~ s/<br[^>]*>/ /g;             # Line break becomes space - can't insert \n
+                $line =~ s/<\/?h[1-6][^>]*>/***/g;    # Put asterisks round headers
+                $line =~ s/<hr[^>]*>/====/g;          # Replace horizontal rules with ====
+                $line =~ s/\&lt;/</g;                 # Restore < & > characters
+                $line =~ s/\&gt;/>/g;
+
+                # if line has a number at the start, assume it is the error line number
+                $::errors{$line} = '';
+                $lincol = '';
+                if ( $line =~ /^\s*\d+/ ) {
+                    $line =~ s/^\s*(\d+)/line $1/;
+                    $lincol = "$1.0";
+                    $mark++;
+
+                    # add a new mark in the main text at the correct point
+                    $textwindow->markSet( "t$mark", $lincol );
+
+                    # remember which line goes with which mark
+                    $::errors{$line} = "t$mark";
+                }
+
+                # display all lines, even those without line numbers
+                push @errorchecklines, $line;
+            } elsif ( $thiserrorchecktype eq "Bookloupe/Gutcheck" ) {
+                next if $line =~ /^File: /;
+                $::errors{$line} = '';
+                $lincol = '';
+                if ( $line =~ /Line (\d+) column (\d+)/ ) {
+                    my $linnum = $1;
+                    my $colnum = $2;
+
+                    # Adjust column number to start from 0
+                    $colnum-- unless ( $line =~ /Long|Short|digit|space|bracket\?/ );
+                    $lincol = "$linnum.$colnum";
+                    $line =~ s/ *Line \d+ column \d+/line $linnum:$colnum/;
+                } elsif ( $line =~ /Line (\d+)/ ) {
+                    $lincol = "$1.0";
+                    $line =~ s/ *Line (\d+)/line $1:0/;
+                }
+                if ( $lincol ne '' ) {
+                    $mark++;
+                    $textwindow->markSet( "t$mark", $lincol );
+                    $::errors{$line} = "t$mark";
+                }
+
+                push @errorchecklines, $line;
+            } elsif ( $thiserrorchecktype eq "Jeebies" ) {
+                $::errors{$line} = '';
+                $lincol = '';
+                if ( $line =~ /Line (\d+) column (\d+)/ ) {
+                    my $linnum = $1;
+                    my $colnum = $2;
+                    $lincol = "$linnum.$colnum";
+                    if ( $line =~ /Query phrase "([^"]+)"/ ) {
+                        my $len = length($1) + 1;
+                        $lincol = $textwindow->index( $lincol . " -${len}c" );
+                    }
+                    $line =~ s/ *Line \d+ column \d+/line $linnum:$colnum/;
+                } elsif ( $line =~ /Line (\d+)/ ) {
+                    $lincol = "$1.0";
+                    $line =~ s/ *Line (\d+)/line $1:0/;
+                }
+                if ( $lincol ne '' ) {
+                    $mark++;
+                    $textwindow->markSet( "t$mark", $lincol );
+                    $::errors{$line} = "t$mark";
+                }
+                push @errorchecklines, $line;
             }
         }
         $fh->close if $fh;
@@ -308,22 +404,26 @@ sub errorcheckpop_up {
         if ( ( $thiserrorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
             push @errorchecklines,
               "Could not perform validation: install java or use W3C CSS Validation web site.";
-        } else {
-            push @errorchecklines, "Check is complete: " . $thiserrorchecktype
-              unless $thiserrorchecktype eq 'Load Checkfile';
-            if ( $thiserrorchecktype eq "W3C Validate" ) {
-                push @errorchecklines,
-                  "Don't forget to do the final validation at http://validator.w3.org";
-            }
-            if ( $thiserrorchecktype eq "W3C Validate CSS" ) {
-                push @errorchecklines,
-                  "Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
-            }
-            push @errorchecklines, "";
+            next;
         }
-        ::working() unless $thiserrorchecktype eq 'Load Checkfile';
+        push @errorchecklines, "Check is complete: " . $thiserrorchecktype
+          unless $thiserrorchecktype eq 'Load Checkfile';
+        if ( $thiserrorchecktype eq "W3C Validate" ) {
+            push @errorchecklines,
+              "Don't forget to do the final validation at http://validator.w3.org";
+        }
+        if ( $thiserrorchecktype eq "W3C Validate CSS" ) {
+            push @errorchecklines,
+              "Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
+        }
+        push @errorchecklines, "";
     }
-    $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
+    ::working();
+    if ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+        gcwindowpopulate( \@errorchecklines );
+    } else {
+        $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
+    }
     $::lglobal{errorchecklistbox}->yview( 'scroll', 1, 'units' );
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->yview( 'scroll', -1, 'units' );
@@ -331,8 +431,7 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->raise;
 }
 
-sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
-                       #my ( $textwindow, $top, $errorchecktype ) = @_;
+sub errorcheckrun {    # Runs error checks
     my $errorchecktype = shift;
     my $textwindow     = $::textwindow;
     my $top            = $::top;
@@ -409,9 +508,6 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
         );
         $dialog->Show;
         return;
-    }
-    if ( $::lglobal{errorcheckpop} ) {
-        $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     }
     if ( $errorchecktype eq 'HTML Tidy' ) {
         if ($unicode) {
@@ -494,6 +590,10 @@ sub errorcheckrun {    # Runs Tidy, W3C Validate, and other error checks
         }
     } elsif ( $errorchecktype eq 'pptxt' ) {
         ::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $name, "-o", "errors.err" );
+    } elsif ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+        gutcheckrun();
+    } elsif ( $errorchecktype eq 'Jeebies' ) {
+        jeebiesrun();
     }
     $top->Unbusy;
     unlink $name;
@@ -668,32 +768,33 @@ sub linkcheckrun {
     close $logfile;
 }
 
-sub gutcheckview {
-    my $textwindow = $::textwindow;
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-    my $line = $::lglobal{gclistbox}->get('active');
-    if ( $line and $::gc{$line} and $line =~ /Line/ ) {
-        $textwindow->see('end');
-        $textwindow->see( $::gc{$line} );
-        $textwindow->markSet( 'insert', $::gc{$line} );
-
-        # Highlight pretty close to GC error (2 chars before just in case error is at end of line)
-        $textwindow->tagAdd( 'highlight', $::gc{$line} . "- 2c", $::gc{$line} . " lineend" );
-        ::update_indicators();
-    }
-}
-
-# Equivalent to gutcheckview for the general errors window
-# When user clicks on an error, show the correct place in the main text window
+# When user clicks on an error, show and highlight the correct place in the main text window
 sub errorcheckview {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     my $line = $::lglobal{errorchecklistbox}->get('active');
+    return if not defined $line;
     if ( $line =~ /^line/ ) {    # normally line number of error is shown
         $textwindow->see( $::errors{$line} );
         $textwindow->markSet( 'insert', $::errors{$line} );
+
+        # Highlight from error to end of line
+        my $start = $::errors{$line};
+        my $end   = $::errors{$line} . " lineend";
+
+        # Ensure at least 1 character is highlighted
+        if ( $textwindow->index($start) == $textwindow->index($end) ) {
+
+            # if empty line, select whole line
+            if ( $textwindow->index($start) == $textwindow->index( $start . " linestart" ) ) {
+                $end = $start . " +1l";
+            } else {    # error is at end of non-empty line
+                $start .= "- 1c";
+            }
+        }
+        $textwindow->tagAdd( 'highlight', $start, $end );
         ::update_indicators();
-    } else {                     # some tools output error without line number
+    } else {    # some tools output error without line number
         if ( $line =~ /^\+(.*):/ ) {    # search on text between + and :
             my @savesets = @::sopt;
             ::searchoptset(qw/0 x x 0/);
@@ -709,13 +810,13 @@ sub errorcheckview {
 
 sub gcwindowpopulate {
     my $linesref = shift;
-    return unless defined $::lglobal{gcpop};
+    return unless defined $::lglobal{errorcheckpop};
     my $start = 0;
     my $count = 0;
-    $::lglobal{gclistbox}->delete( '0', 'end' );
+    $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     foreach my $line ( @{$linesref} ) {
         my $flag = 0;
-        next unless defined $::gc{$line};
+        next unless defined $::errors{$line};
         for ( 0 .. $#{ $::lglobal{gcarray} } ) {
             next unless ( index( $line, $::lglobal{gcarray}->[$_] ) > 0 );
             $::gsopt[$_] = 0 unless defined $::gsopt[$_];
@@ -724,18 +825,21 @@ sub gcwindowpopulate {
         }
         next if $flag;
         unless ( $count == 0 and $line =~ /^\s*$/ ) {    # Don't add blank line at top
-            $start++ unless ( index( $line, 'Line', 0 ) > 0 );
+            $start++ unless ( index( $line, 'line', 0 ) == 0 );
             $count++;
-            $::lglobal{gclistbox}->insert( 'end', $line );
+            $::lglobal{errorchecklistbox}->insert( 'end', $line );
         }
     }
     $count -= $start;
-    $::lglobal{gclistbox}->insert( $start, "  --> $count queries.", '' );
-    $::lglobal{gclistbox}->insert( $start, '' ) unless $start == 0;    # Don't add blank line at top
-    $::lglobal{gclistbox}->update;
+    $::lglobal{errorchecklistbox}->insert( $start, "  --> $count queries.", '' );
+    $::lglobal{errorchecklistbox}->insert( $start, '' );
 
-    #$::lglobal{gclistbox}->yview( 'scroll', 1,  'units' );
-    #    $::lglobal{gclistbox}->yview( 'scroll', -1, 'units' );
+    # Add start/end messages
+    my $command =
+      ( $::gutcommand and ::basename($::gutcommand) =~ /gutcheck/ ) ? "Gutcheck" : "Bookloupe";
+    $::lglobal{errorchecklistbox}->insert( 0,     "Beginning check: $command" );
+    $::lglobal{errorchecklistbox}->insert( "end", "Check is complete: $command" );
+    $::lglobal{errorchecklistbox}->update;
 }
 
 sub gcviewopts {
@@ -941,268 +1045,9 @@ sub gcviewopts {
     }
 }
 
-sub gcheckpop_up {
-    my $top        = $::top;
-    my $textwindow = $::textwindow;
-    my @gclines;
-    my ( $line, $linenum, $colnum, $lincol, $word );
-    ::hidepagenums();
-    if ( $::lglobal{gcpop} ) {
-        $::lglobal{gcpop}->deiconify;
-        $::lglobal{gclistbox}->delete( '0', 'end' );
-    } else {
-        $::lglobal{gcpop} = $top->Toplevel;
-        $::lglobal{gcpop}->title('Bookloupe/Gutcheck');
-        $::lglobal{gcpop}->geometry( $::geometryhash{gcpop} );
-        $::lglobal{gcpop}->transient($top) if $::stayontop;
-        my $ptopframe = $::lglobal{gcpop}->Frame->pack;
-        my $opsbutton = $ptopframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { ::gutcheck() },
-            -text             => 'Re-run check',
-            -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 80,
-            -anchor => 'n'
-        );
-        my $opsbutton2 = $ptopframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { gcrunopts() },
-            -text             => 'GC Run Options',
-            -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
-        my $opsbutton3 = $ptopframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { gcviewopts( \@gclines ) },
-            -text             => 'GC View Options',
-            -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
-        my $pframe = $::lglobal{gcpop}->Frame->pack( -fill => 'both', -expand => 'both', );
-        $::lglobal{gclistbox} = $pframe->Scrolled(
-            'Listbox',
-            -scrollbars  => 'se',
-            -background  => $::bkgcolor,
-            -font        => $::lglobal{font},
-            -selectmode  => 'single',
-            -activestyle => 'none',
-        )->pack(
-            -anchor => 'nw',
-            -fill   => 'both',
-            -expand => 'both',
-            -padx   => 2,
-            -pady   => 2
-        );
-        ::drag( $::lglobal{gclistbox} );
-        $::lglobal{gcpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                $::lglobal{gcviewoptspop}->iconify if defined $::lglobal{gcviewoptspop};
-                $::lglobal{gcpop}->destroy;
-                undef $::lglobal{gcpop};
-                $textwindow->markUnset($_) for values %::gc;
-                unlink 'gutreslts.tmp';
-            }
-        );
-        $::lglobal{gcpop}->Icon( -image => $::icon );
-        ::BindMouseWheel( $::lglobal{gclistbox} );
-        $::lglobal{gclistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
-        $::lglobal{gclistbox}->bind( '<<view>>', sub { gutcheckview() } );
-        $::lglobal{gcpop}->bind(
-            '<Configure>' => sub {
-                $::lglobal{gcpop}->XEvent;
-                $::geometryhash{gcpop}     = $::lglobal{gcpop}->geometry;
-                $::lglobal{geometryupdate} = 1;
-            }
-        );
-        $::lglobal{gclistbox}->eventAdd(
-            '<<remove>>' => '<ButtonRelease-2>',
-            '<ButtonRelease-3>'
-        );
-        $::lglobal{gclistbox}->bind(
-            '<<remove>>',
-            sub {
-                $::lglobal{gclistbox}->activate(
-                    $::lglobal{gclistbox}->index(
-                            '@'
-                          . ( $::lglobal{gclistbox}->pointerx - $::lglobal{gclistbox}->rootx )
-                          . ','
-                          . ( $::lglobal{gclistbox}->pointery - $::lglobal{gclistbox}->rooty )
-                    )
-                );
-                $textwindow->markUnset( $::gc{ $::lglobal{gclistbox}->get('active') } );
-                undef $::gc{ $::lglobal{gclistbox}->get('active') };
-                $::lglobal{gclistbox}->delete('active');
-                $::lglobal{gclistbox}->selectionClear( '0', 'end' );
-                $::lglobal{gclistbox}->selectionSet('active');
-                gutcheckview();
-                $::lglobal{gclistbox}->after( $::lglobal{delay} );
-            }
-        );
-        $::lglobal{gclistbox}->bind(
-            '<Button-3>',
-            sub {
-                $::lglobal{gclistbox}->activate(
-                    $::lglobal{gclistbox}->index(
-                            '@'
-                          . ( $::lglobal{gclistbox}->pointerx - $::lglobal{gclistbox}->rootx )
-                          . ','
-                          . ( $::lglobal{gclistbox}->pointery - $::lglobal{gclistbox}->rooty )
-                    )
-                );
-            }
-        );
-    }
-    $::lglobal{gclistbox}->focus;
-    my $results;
-    unless ( open $results, '<', 'gutrslts.tmp' ) {
-        my $dialog = $top->Dialog(
-            -text    => 'Could not read results file. Problem with Bookloupe/Gutcheck.',
-            -bitmap  => 'question',
-            -title   => 'Bookloupe/Gutcheck problem',
-            -buttons => [qw/OK/],
-        );
-        $dialog->Show;
-        return;
-    }
-    my $mark = 0;
-    %::gc    = ();
-    @gclines = ();
-    my $countblank = 0;    # number of blank lines
-    while ( $line = <$results> ) {
-        $line =~ s/^\s//g;
-        chomp $line;
-
-        # distinguish blank lines by setting them to varying numbers
-        # of spaces, otherwise if user deletes one, it deletes them all
-        $line = ' ' x ++$countblank if ( $line eq '' );
-        $line =~ s/^(File: )gutchk.tmp/$1$::lglobal{global_filename}/g;
-        {
-            no warnings 'uninitialized';
-            next if $line eq $gclines[-1];
-        }
-        push @gclines, $line;
-        $::gc{$line} = '';
-        $colnum      = '0';
-        $lincol      = '';
-        if ( $line =~ /Line (\d+)/ ) {
-            $linenum = $1;
-            if ( $line =~ /Line \d+ column (\d+)/ ) {
-                $colnum = $1;
-                $colnum--
-                  unless ( $line =~ /Long|Short|digit|space|bracket\?/ );
-                my $tempvar = $textwindow->get( "$linenum.0", "$linenum.$colnum" );
-                while ( $tempvar =~ s/<[ib]>// ) {
-                    $tempvar .= $textwindow->get( "$linenum.$colnum", "$linenum.$colnum +3c" );
-                    $colnum += 3;
-                }
-                while ( $tempvar =~ s/<\/[ib]>// ) {
-                    $tempvar .= $textwindow->get( "$linenum.$colnum", "$linenum.$colnum +4c" );
-                    $colnum += 4;
-                }
-            } else {
-                if ( $line =~ /Query digit in ([\w\d]+)/ ) {
-                    $word   = $1;
-                    $lincol = $textwindow->search( '--', $word, "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Query standalone (\d)/ ) {
-                    $word = '(?<=\D)' . $1 . '(?=\D)';
-                    $lincol =
-                      $textwindow->search( '-regexp', '--', $word, "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Asterisk?/ ) {
-                    $lincol = $textwindow->search( '--', '*', "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Hyphen at end of line?/ ) {
-                    $lincol =
-                      $textwindow->search( '-regexp', '--', '-$', "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Non-ASCII character (\d+)/ ) {
-                    $word   = chr($1);
-                    $lincol = $textwindow->search( $word, "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /dash\?/ ) {
-                    $lincol = $textwindow->search( '-regexp', '--', '-- | --| -|- ',
-                        "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /HTML symbol/ ) {
-                    $lincol =
-                      $textwindow->search( '-regexp', '--', '&', "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /HTML Tag/ ) {
-                    $lincol =
-                      $textwindow->search( '-regexp', '--', '<', "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Query word ([\p{Alnum}']+)/ ) {
-                    $word = $1;
-                    if ( $word =~ /[\xA0-\xFF]/ ) {
-                        $lincol =
-                          $textwindow->search( '-regexp', '--',
-                            '(?<!\p{Alnum})' . $word . '(?!\p{Alnum})',
-                            "$linenum.0", "$linenum.0 +1l" );
-                    } elsif ( $word eq 'i' ) {
-                        $lincol = $textwindow->search(
-                            '-regexp',              '--',
-                            ' ' . $word . '[^a-z]', "$linenum.0",
-                            "$linenum.0 +1l"
-                        );
-                        $lincol =
-                          $textwindow->search( '-regexp', '--',
-                            '[^A-Za-z0-9<\/]' . $word . '[^A-Za-z0-9>]',
-                            "$linenum.0", "$linenum.0 +1l" )
-                          unless $lincol;
-                        $lincol = $textwindow->index("$lincol +1c")
-                          if ($lincol);
-                    } else {
-                        $lincol = $textwindow->search(
-                            '-regexp', '--', '\b' . $word . '\b', "$linenum.0",
-                            "$linenum.0 +1l"
-                        );
-                    }
-                }
-                if ( $line =~ /Query had\/bad/ ) {
-                    $lincol = $textwindow->search( '-regexp', '--', '(?<= )[bh]ad\W',
-                        "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Query he\/be/ ) {
-                    $lincol = $textwindow->search( '-regexp', '--', '(?<= )[bh]e\W',
-                        "$linenum.0", "$linenum.0 +1l" );
-                }
-                if ( $line =~ /Query hut\/but/ ) {
-                    $lincol = $textwindow->search( '-regexp', '--', '(?<= )[bh]ut\W',
-                        "$linenum.0", "$linenum.0 +1l" );
-                }
-            }
-            $mark++;
-            if ($lincol) {
-                $textwindow->markSet( "g$mark", $lincol );
-            } else {
-                $colnum = '0' unless $colnum;
-                $textwindow->markSet( "g$mark", "$linenum.$colnum" );
-            }
-            $::gc{$line} = "g$mark";
-        }
-    }
-    close $results;
-    unlink 'gutrslts.tmp';
-    gcwindowpopulate( \@gclines );
-}
-
 sub jeebiesrun {
-    my $listbox    = shift;
     my $top        = $::top;
     my $textwindow = $::textwindow;
-    $listbox->delete( '0', 'end' );
     ::savefile() if ( $textwindow->numberChanges );
     my $title = ::os_normal( $::lglobal{global_filename} );
     unless ($::jeebiescommand) {
@@ -1211,64 +1056,21 @@ sub jeebiesrun {
     }
     my $jeebiesoptions = "-$::jeebiesmode" . 'e';
     $::jeebiescommand = ::os_normal($::jeebiescommand);
-    %::jeeb           = ();
     my $mark = 0;
     $top->Busy( -recurse => 1 );
-    $listbox->insert( 'end', '---------------- Please wait: Processing. ----------------' );
-    $listbox->update;
-    my $runner = runner::tofile('results.tmp');
+    my $runner = runner::tofile('errors.err');
     $runner->run( $::jeebiescommand, $jeebiesoptions, $title );
 
-    if ( not $? ) {
-        open my $fh, '<', 'results.tmp';
-        while ( my $line = <$fh> ) {
-            $line =~ s/\n//;
-            $line =~ s/^\s+/  /;
-            if ($line) {
-                $::jeeb{$line} = '';
-                my ( $linenum, $colnum );
-                $linenum = $1 if ( $line =~ /Line (\d+)/ );
-                $colnum  = $1 if ( $line =~ /Line \d+ column (\d+)/ );
-                $mark++ if $linenum;
-                $textwindow->markSet( "j$mark", "$linenum.$colnum" )
-                  if $linenum;
-                $::jeeb{$line} = "j$mark";
-                $listbox->insert( 'end', $line );
-            }
-        }
-    } else {
-        warn "Unable to run Jeebies. $!";
-    }
-    unlink 'results.tmp';
-    $listbox->delete('0');
-    $listbox->insert( 2, "  --> $mark queries." );
     $top->Unbusy( -recurse => 1 );
 }
 
-sub jeebiesview {
-    my $textwindow = $::textwindow;
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-    my $line = $::lglobal{jelistbox}->get('active');
-    return unless $line;
-    if ( $line =~ /Line/ ) {
-        $textwindow->see('end');
-        $textwindow->see( $::jeeb{$line} );
-        $textwindow->markSet( 'insert', $::jeeb{$line} );
-        ::update_indicators();
-    }
-    $textwindow->focus;
-    $::lglobal{jeepop}->raise;
-    $::geometryhash{jeepop} = $::lglobal{jeepop}->geometry;
-}
-
-## Gutcheck
-sub gutcheck {
+## Run bookloupe/gutcheck
+sub gutcheckrun {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     no warnings;
     ::operationadd('Bookloupe/Gutcheck');
     ::hidepagenums();
-    my ( $name, $path, $extension, @path );
     $textwindow->focus;
     ::update_indicators();
     my $title = $top->cget('title');
@@ -1278,17 +1080,14 @@ sub gutcheck {
         return;
     }
 
-    #$top->Busy( -recurse => 1 );
-
     # Bookloupe is utf-8 friendly, but if still using gutcheck, revert to "bytes" encoding
     my $encoding = ">:encoding(UTF-8)";
     if ( $::gutcommand and ::basename($::gutcommand) =~ /gutcheck/ ) {
         $encoding = ">:bytes";
     }
     if ( open my $gc, $encoding, 'gutchk.tmp' ) {
-        my $count   = 0;
-        my $index   = '1.0';
-        my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
+        my $count = 0;
+        my $index = '1.0';
         while ( $textwindow->compare( $index, '<', 'end' ) ) {
             my $end = $textwindow->index("$index  lineend +1c");
             print $gc $textwindow->get( $index, $end );
@@ -1308,45 +1107,26 @@ sub gutcheck {
         $dialog->Show;
         return;
     }
-    $title =~ s/$::window_title - //;    #FIXME: sub this out; this and next in the tidy code
-    $title =~ s/edited - //;
-    $title = ::os_normal($title);
-    ( $name, $path, $extension ) = ::fileparse( $title, '\.[^\.]*$' );
     unless ($::gutcommand) {
         ::locateExecutable( 'Bookloupe/Gutcheck', \$::gutcommand );
         return unless $::gutcommand;
     }
-    my $gutcheckoptions = '-ey';         # e - echo queried line. y - puts errors to stdout instead of stderr.
-    if ( $::gcopt[0] ) { $gutcheckoptions .= 't' }
-    ;                                    # Check common typos
-    if ( $::gcopt[1] ) { $gutcheckoptions .= 'x' }
-    ;                                    # "Trust no one" Paranoid mode. Queries everything
-    if ( $::gcopt[2] ) { $gutcheckoptions .= 'p' }
-    ;                                    # Require closure of quotes on every paragraph
-    if ( $::gcopt[3] ) { $gutcheckoptions .= 's' }
-    ;                                    # Force checking for matched pairs of single quotes
-    if ( $::gcopt[4] ) { $gutcheckoptions .= 'm' }
-    ;                                    # Ignore markup in < >
-    if ( $::gcopt[5] ) { $gutcheckoptions .= 'l' }
-    ;                                    # Line end checking - defaults on
-    if ( $::gcopt[6] ) { $gutcheckoptions .= 'v' }
-    ;                                    # Verbose - list EVERYTHING!
-    if ( $::gcopt[7] ) { $gutcheckoptions .= 'u' }
-    ;                                    # Use file of User-defined Typos
-    if ( $::gcopt[8] ) { $gutcheckoptions .= 'd' }
-    ;                                    # Ignore DP style page separators
+    my $gutcheckoptions = '-ey';    # e - echo queried line. y - puts errors to stdout instead of stderr.
+    $gutcheckoptions .= 't' if $::gcopt[0];    # Check common typos
+    $gutcheckoptions .= 'x' if $::gcopt[1];    # "Trust no one" Paranoid mode. Queries everything
+    $gutcheckoptions .= 'p' if $::gcopt[2];    # Require closure of quotes on every paragraph
+    $gutcheckoptions .= 's' if $::gcopt[3];    # Force checking for matched pairs of single quotes
+    $gutcheckoptions .= 'm' if $::gcopt[4];    # Ignore markup in < >
+    $gutcheckoptions .= 'l' if $::gcopt[5];    # Line end checking - defaults on
+    $gutcheckoptions .= 'v' if $::gcopt[6];    # Verbose - list EVERYTHING!
+    $gutcheckoptions .= 'u' if $::gcopt[7];    # Use file of User-defined Typos
+    $gutcheckoptions .= 'd' if $::gcopt[8];    # Ignore DP style page separators
     $::gutcommand = ::os_normal($::gutcommand);
     ::savesettings();
 
-    if ( $::lglobal{gcpop} ) {
-        $::lglobal{gclistbox}->delete( '0', 'end' );
-    }
-    my $runner = ::runner::tofile('gutrslts.tmp');
+    my $runner = ::runner::tofile('errors.err');
     $runner->run( $::gutcommand, $gutcheckoptions, 'gutchk.tmp' );
-
-    #$top->Unbusy;
     unlink 'gutchk.tmp';
-    gcheckpop_up();
 }
 
 sub gcrunopts {
@@ -1413,82 +1193,4 @@ sub gcrunopts {
     ::savesettings();
 }
 
-sub jeebiespop_up {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    my @jlines;
-    ::hidepagenums();
-    if ( $::lglobal{jeepop} ) {
-        $::lglobal{jeepop}->deiconify;
-    } else {
-        $::lglobal{jeepop} = $top->Toplevel;
-        $::lglobal{jeepop}->title('Jeebies');
-        ::initialize_popup_with_deletebinding('jeepop');
-        my $ptopframe = $::lglobal{jeepop}->Frame->pack;
-        $ptopframe->Label( -text => 'Search mode:', )->pack( -side => 'left', -padx => 2 );
-        my @rbutton = ( [ 'Paranoid', 'p' ], [ 'Normal', '' ], [ 'Tolerant', 't' ], );
-        for (@rbutton) {
-            $ptopframe->Radiobutton(
-                -text     => $_->[0],
-                -variable => \$::jeebiesmode,
-                -value    => $_->[1],
-                -command  => \&::savesettings,
-            )->pack( -side => 'left', -padx => 2 );
-        }
-        $ptopframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { jeebiesrun( $::lglobal{jelistbox} ) },
-            -text             => 'Re-run Jeebies',
-            -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
-        my $pframe = $::lglobal{jeepop}->Frame->pack( -fill => 'both', -expand => 'both', );
-        $::lglobal{jelistbox} = $pframe->Scrolled(
-            'Listbox',
-            -scrollbars  => 'se',
-            -background  => $::bkgcolor,
-            -font        => $::lglobal{font},
-            -selectmode  => 'single',
-            -activestyle => 'none',
-        )->pack(
-            -anchor => 'nw',
-            -fill   => 'both',
-            -expand => 'both',
-            -padx   => 2,
-            -pady   => 2
-        );
-        ::drag( $::lglobal{jelistbox} );
-        ::BindMouseWheel( $::lglobal{jelistbox} );
-        $::lglobal{jelistbox}->eventAdd( '<<jview>>' => '<ButtonRelease-1>', '<Return>' );
-        $::lglobal{jelistbox}->bind( '<<jview>>', sub { jeebiesview() } );
-        $::lglobal{jelistbox}->eventAdd(
-            '<<jremove>>' => '<ButtonRelease-2>',
-            '<ButtonRelease-3>'
-        );
-        $::lglobal{jelistbox}->bind(
-            '<<jremove>>',
-            sub {
-                $::lglobal{jelistbox}->activate(
-                    $::lglobal{jelistbox}->index(
-                            '@'
-                          . ( $::lglobal{jelistbox}->pointerx - $::lglobal{jelistbox}->rootx )
-                          . ','
-                          . ( $::lglobal{jelistbox}->pointery - $::lglobal{jelistbox}->rooty )
-                    )
-                );
-                undef $::gc{ $::lglobal{jelistbox}->get('active') };
-                $::lglobal{jelistbox}->delete('active');
-                jeebiesview();
-                $::lglobal{jelistbox}->selectionClear( '0', 'end' );
-                $::lglobal{jelistbox}->selectionSet('active');
-                $::lglobal{jelistbox}->after( $::lglobal{delay} );
-            }
-        );
-        jeebiesrun( $::lglobal{jelistbox} );
-    }
-}
 1;

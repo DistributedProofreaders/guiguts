@@ -716,7 +716,6 @@ sub initialize {
         $::positionhash{fontpop}          = '+10+10';
         $::geometryhash{footcheckpop}     = '+22+12';
         $::positionhash{footpop}          = '+255+157';
-        $::geometryhash{gcpop}            = '800x600+224+72';
         $::geometryhash{gcrunoptspop}     = '+244+72';
         $::geometryhash{gcviewoptspop}    = '+264+72';
         $::positionhash{grpop}            = '+144+153';
@@ -727,7 +726,6 @@ sub initialize {
         $::geometryhash{hpopup}           = '300x400+584+211';
         $::positionhash{htmlgenpop}       = '+145+37';
         $::positionhash{htmlimpop}        = '+45+37';
-        $::geometryhash{jeepop}           = '+284+72';
         $::positionhash{latinpop}         = '+10+10';
         $::geometryhash{linkpop}          = '+224+72';
         $::positionhash{marginspop}       = '+145+137';
@@ -2103,7 +2101,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
         $::lglobal{toptool}->ToolButton(
             -text    => 'GC',
             -font    => $::lglobal{toolfont},
-            -command => [ \&::gutcheck ],
+            -command => [ sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); } ],
             -tip     => 'Bookloupe/Gutcheck'
         );
         $::lglobal{toptool}->ToolButton(
