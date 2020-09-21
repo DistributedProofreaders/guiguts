@@ -18,14 +18,6 @@ sub runtests {
 
     use Test::More;
 
-    #use File::Compare qw(compare_text);
-
-    # Avoid tests being affected by user's settings
-    if ( -e "setting.rc" ) {
-        unlink 'setting.old';
-        rename( "setting.rc", "setting.old" );
-    }
-
     ok( 1 == 1, "Dummy test 1==1" );
 
     ok( ::roman(22) eq 'XXII', "roman(22)==XXII" );
@@ -142,12 +134,6 @@ sub runtests {
     ok( 1 == 1, "This is the last test" );
 
     done_testing();
-
-    # Restore user's settings
-    if ( -e "setting.old" ) {
-        unlink 'setting.rc';
-        rename( "setting.old", "setting.rc" );
-    }
 
     exit;
 }
