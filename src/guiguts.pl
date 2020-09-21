@@ -283,6 +283,11 @@ our $proofer_frame;
 our $text_font;
 our $textwindow;
 our $menubar;
+
+# Need to set $lglobal{runtests} before calling initialize(),
+# otherwise it will load setting.rc which could influence the test results.
+$lglobal{runtests} = ( @ARGV == 1 and $ARGV[0] eq 'runtests' );
+
 initialize();    # Initialize a bunch of vars that need it.
 
 # Set up language-dependent labels and sorting (default English)
@@ -301,13 +306,9 @@ $lglobal{hasfocus} = $textwindow;
 $textwindow->focus;
 toolbar_toggle();
 $top->geometry($geometry) if $geometry;
-( $lglobal{global_filename} ) = @ARGV;
+
 die "ERROR: too many files specified. \n" if ( @ARGV > 1 );
 
-if (    ( $lglobal{global_filename} )
-    and ( $lglobal{global_filename} eq 'runtests' ) ) {
-    $lglobal{runtests} = 1;
-}
 if (@ARGV) {
     $lglobal{global_filename} = shift @ARGV;
     if ( $lglobal{global_filename} =~ /^0(\d)$/ ) {

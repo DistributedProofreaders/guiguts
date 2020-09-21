@@ -857,7 +857,6 @@ sub initialize {
     $::lglobal{poetrynumbers}      = 0;                           # HTML convert - find & format poetry line numbers
     $::lglobal{proofbarvisible}    = 0;
     $::lglobal{regaa}              = 0;
-    $::lglobal{runtests}           = 0;
     $::lglobal{seepagenums}        = 0;
     $::lglobal{selectionsearch}    = 0;
     $::lglobal{shorthtmlfootnotes} = 1;                           # HTML convert - Footnote_3 rather than Footnote_3_3

@@ -832,6 +832,8 @@ sub openfile {    # and open it
 }
 
 sub readsettings {
+    return if $::lglobal{runtests};    # don't want tests to be affected by a saved setting.rc file
+
     if ( -e 'setting.rc' ) {
         unless ( my $return = ::dofile('setting.rc') ) {
             open my $file, "<", "setting.rc"
@@ -901,6 +903,8 @@ sub readsettings {
 
 ## Save setting.rc file
 sub savesettings {
+    return if $::lglobal{runtests};    # don't want setting.rc file to be overwritten during tests
+
     my $top = $::top;
 
     #print time()."savesettings\n";

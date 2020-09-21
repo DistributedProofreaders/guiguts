@@ -31,7 +31,7 @@ Check is complete: Link Check
 Beginning check: W3C Validate CSS
 Sorry! We found the following errors (1)
 line 13:1 body
-      (Value Error : margin-left ([error]box.html#propdef-margin-left))
+      (Value Error : margin-left (nullbox.html#propdef-margin-left))
       Parse Error
 Check is complete: W3C Validate CSS
 Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/
