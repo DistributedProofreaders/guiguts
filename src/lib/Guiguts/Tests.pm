@@ -46,14 +46,44 @@ sub runtests {
 
     ok( 1 == do { 1 }, "do block" );
 
+    ok( -e "tests/textcheck.txt", "tests/textcheck.txt exists" );
+
+    ok( 1 == do { ::openfile("tests/textcheck.txt"); 1 }, "openfile on tests/textcheck.txt" );
+
+    # Test bookloupe/gutcheck
+    ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' );
+    my $LFNAME = "tests/blgccheckresults.txt";
+    open my $logfile, ">", $LFNAME
+      or die "Unable to open $LFNAME for writing\n";
+    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
+        print $logfile "$_\n";
+    }
+    close $logfile;
+    unlink $LFNAME
+      if ok( File::Compare::compare_text( $LFNAME, 'tests/blgccheckbaseline.txt' ) == 0,
+        "Bookloupe/Gutcheck successful" );
+
+    # Test jeebies
+    ::errorcheckpop_up( $textwindow, $top, 'Jeebies' );
+    $LFNAME = "tests/jeebiescheckresults.txt";
+    open $logfile, ">", $LFNAME
+      or die "Unable to open $LFNAME for writing\n";
+    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
+        print $logfile "$_\n";
+    }
+    close $logfile;
+    unlink $LFNAME
+      if ok( File::Compare::compare_text( $LFNAME, 'tests/jeebiescheckbaseline.txt' ) == 0,
+        "Jeebies successful" );
+
     ok( -e "tests/errorcheck.html", "tests/errorcheck.html exists" );
 
     ok( 1 == do { ::openfile("tests/errorcheck.html"); 1 }, "openfile on tests/errorcheck.html" );
 
     # Test of all HTML checks
     ::errorcheckpop_up( $textwindow, $top, 'Check All' );
-    my $LFNAME = "tests/errorcheckresults.txt";
-    open my $logfile, ">", $LFNAME
+    $LFNAME = "tests/errorcheckresults.txt";
+    open $logfile, ">", $LFNAME
       or die "Unable to open $LFNAME for writing\n";
     for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
         print $logfile "$_\n";

@@ -1,0 +1,10 @@
+Beginning check: Jeebies
+File: tests\textcheck.txt
+  --> There are 214 "be"s and 142 "he"s. Calibrating...
+line 1535:23 - Query phrase "still be asked" 
+line 1890:48 - Query phrase "and be prepared" 
+line 1924:68 - Query phrase "and be prepared" 
+line 6430:15 - Query phrase "now be sent" 
+line 6435:25 - Query phrase "sometimes be sent" 
+Check is complete: Jeebies
+

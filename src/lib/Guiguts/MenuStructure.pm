@@ -864,9 +864,12 @@ sub menubuildold {
             [
                 Button       => 'Run Bookloupe/~Gutcheck...',
                 -accelerator => 'F6',
-                -command     => \&::gutcheck
+                -command => sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); }
             ],
-            [ Button => 'Run ~Jeebies...', -command => \&::jeebiespop_up ],
+            [
+                Button   => 'Run ~Jeebies...',
+                -command => sub { ::errorcheckpop_up( $textwindow, $top, 'Jeebies' ); }
+            ],
             [
                 Button   => 'pptxt...',
                 -command => sub {
@@ -1286,7 +1289,7 @@ sub menubuilddefault {
             [
                 Button       => 'Bookloupe/~Gutcheck...',
                 -accelerator => 'F6',
-                -command     => \&::gutcheck
+                -command => sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); }
             ],
             [
                 Button   => 'Basic Fi~xup...',
@@ -1347,8 +1350,10 @@ sub menubuilddefault {
                 -command     => \&::stealthscanno
             ],
             [
-                Button   => '~Jeebies...',
-                -command => \&::jeebiespop_up
+                Button   => 'Run ~Jeebies...',
+                -command => sub {
+                    ::errorcheckpop_up( $textwindow, $top, 'Jeebies' );
+                }
             ],
             [
                 Button   => 'Load Chec~kfile...',

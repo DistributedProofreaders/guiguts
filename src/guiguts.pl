@@ -197,8 +197,6 @@ our $tidycommand        = '';
 our $validatecommand    = '';
 our $validatecsscommand = '';
 our $ebookmakercommand  = '';
-our %gc;
-our %jeeb;
 our %pagenumbers;
 our %projectdict;
 our %proofers;

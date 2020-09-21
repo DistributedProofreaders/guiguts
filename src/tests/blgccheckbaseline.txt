@@ -1,0 +1,5597 @@
+Beginning check: Bookloupe
+  --> 1694 lines in this file contain '.,'. Not reporting them.
+  --> 515 lines in this file contain forward slashes. Not reporting them.
+  --> 27 lines in this file contain unpunctuated endquotes. Not reporting them.
+  --> 543 lines in this file contain standalone 0s and 1s. Not reporting them.
+  --> 26 lines in this file are VERY long!
+  --> There are a lot of foreign letters here. Not reporting them.
+  *** Verbose output is ON -- you asked for it! ***
+
+  --> 5585 queries.
+
+line 14:38 - Double punctuation?
+line 16:25 - Non-ASCII character 183
+line 21:31 - Non-ASCII character 183
+line 22:31 - Non-ASCII character 183
+line 29:0 - Mismatched square brackets?
+line 30:51 - Query word ph
+line 30:54 - Query word sc
+line 32:42 - Double punctuation?
+line 32:48 - Double punctuation?
+line 34:0 - Mismatched square brackets?
+line 58:38 - Double punctuation?
+line 78:13 - Query digit in M2ARCH
+line 78:41 - Query standalone 1
+line 88:10 - Query standalone 1
+line 145:30 - endquote missing punctuation?
+line 161:33 - endquote missing punctuation?
+line 163:36 - endquote missing punctuation?
+line 176:43 - Double punctuation?
+line 176:49 - Double punctuation?
+line 199:25 - Query standalone 1
+line 259:62 - Query standalone 1
+line 278:36 - Query word s
+line 283:13 - Query standalone 1
+line 375:16 - Query word m
+line 388:49 - Query standalone 1
+line 389:51 - Wrongspaced quotes?
+line 389:49 - Spaced doublequote?
+line 389:55 - Spaced quote?
+line 390:51 - Wrongspaced quotes?
+line 390:49 - Spaced doublequote?
+line 390:55 - Spaced quote?
+line 391:51 - Wrongspaced quotes?
+line 391:49 - Spaced doublequote?
+line 391:55 - Spaced quote?
+line 397:51 - Wrongspaced quotes?
+line 397:49 - Spaced doublequote?
+line 397:55 - Spaced quote?
+line 398:51 - Wrongspaced quotes?
+line 398:49 - Spaced doublequote?
+line 398:55 - Spaced quote?
+line 404:51 - Wrongspaced quotes?
+line 404:49 - Spaced doublequote?
+line 404:55 - Spaced quote?
+line 405:51 - Wrongspaced quotes?
+line 405:49 - Spaced doublequote?
+line 405:55 - Spaced quote?
+line 410:51 - Wrongspaced quotes?
+line 410:49 - Spaced doublequote?
+line 410:55 - Spaced quote?
+line 411:51 - Wrongspaced quotes?
+line 411:49 - Spaced doublequote?
+line 411:55 - Spaced quote?
+line 412:51 - Wrongspaced quotes?
+line 412:49 - Spaced doublequote?
+line 412:55 - Spaced quote?
+line 413:26 - Double punctuation?
+line 425:62 - Query word au
+line 428:59 - Query word au
+line 455:41 - endquote missing punctuation?
+line 479:24 - Query standalone 1
+line 522:34 - Query standalone 1
+line 531:13 - Non-ASCII character 244
+line 554:9 - Query standalone 1
+line 565:24 - Query standalone 1
+line 573:44 - Query standalone 1
+line 592:32 - Non-ASCII character 232
+line 604:10 - Non-ASCII character 226
+line 626:39 - Double punctuation?
+line 627:11 - Double punctuation?
+line 634:49 - Wrongspaced quotes?
+line 634:47 - Spaced doublequote?
+line 634:54 - Spaced quote?
+line 635:49 - Wrongspaced quotes?
+line 635:47 - Spaced doublequote?
+line 635:54 - Spaced quote?
+line 636:49 - Wrongspaced quotes?
+line 636:47 - Spaced doublequote?
+line 636:54 - Spaced quote?
+line 637:49 - Wrongspaced quotes?
+line 637:47 - Spaced doublequote?
+line 637:54 - Spaced quote?
+line 639:49 - Wrongspaced quotes?
+line 639:47 - Spaced doublequote?
+line 639:54 - Spaced quote?
+line 640:49 - Wrongspaced quotes?
+line 640:47 - Spaced doublequote?
+line 640:54 - Spaced quote?
+line 641:49 - Wrongspaced quotes?
+line 641:47 - Spaced doublequote?
+line 641:54 - Spaced quote?
+line 642:49 - Wrongspaced quotes?
+line 642:47 - Spaced doublequote?
+line 642:54 - Spaced quote?
+line 644:49 - Wrongspaced quotes?
+line 644:47 - Spaced doublequote?
+line 644:54 - Spaced quote?
+line 645:49 - Wrongspaced quotes?
+line 645:47 - Spaced doublequote?
+line 645:54 - Spaced quote?
+line 646:49 - Wrongspaced quotes?
+line 646:47 - Spaced doublequote?
+line 646:54 - Spaced quote?
+line 647:49 - Wrongspaced quotes?
+line 647:47 - Spaced doublequote?
+line 647:54 - Spaced quote?
+line 649:49 - Wrongspaced quotes?
+line 649:47 - Spaced doublequote?
+line 649:54 - Spaced quote?
+line 650:9 - Extra period?
+line 650:49 - Wrongspaced quotes?
+line 650:47 - Spaced doublequote?
+line 650:54 - Spaced quote?
+line 651:49 - Wrongspaced quotes?
+line 651:47 - Spaced doublequote?
+line 651:54 - Spaced quote?
+line 652:49 - Wrongspaced quotes?
+line 652:47 - Spaced doublequote?
+line 652:54 - Spaced quote?
+line 653:49 - Wrongspaced quotes?
+line 653:47 - Spaced doublequote?
+line 653:54 - Spaced quote?
+line 668:8 - Query word au
+line 702:62 - Query word au
+line 711:46 - Double punctuation?
+line 726:5 - Double punctuation?
+line 782:28 - Non-ASCII character 233
+line 799:33 - Double punctuation?
+line 801:52 - Query standalone 1
+line 802:51 - Wrongspaced quotes?
+line 802:49 - Spaced doublequote?
+line 802:58 - Spaced quote?
+line 803:9 - Extra period?
+line 803:51 - Wrongspaced quotes?
+line 803:49 - Spaced doublequote?
+line 803:58 - Spaced quote?
+line 804:51 - Wrongspaced quotes?
+line 804:49 - Spaced doublequote?
+line 804:58 - Spaced quote?
+line 805:51 - Wrongspaced quotes?
+line 805:49 - Spaced doublequote?
+line 805:58 - Spaced quote?
+line 806:51 - Wrongspaced quotes?
+line 806:49 - Spaced doublequote?
+line 806:58 - Spaced quote?
+line 808:51 - Wrongspaced quotes?
+line 808:49 - Spaced doublequote?
+line 808:58 - Spaced quote?
+line 809:51 - Wrongspaced quotes?
+line 809:49 - Spaced doublequote?
+line 809:58 - Spaced quote?
+line 810:51 - Wrongspaced quotes?
+line 810:49 - Spaced doublequote?
+line 810:58 - Spaced quote?
+line 811:51 - Wrongspaced quotes?
+line 811:49 - Spaced doublequote?
+line 811:58 - Spaced quote?
+line 813:51 - Wrongspaced quotes?
+line 813:49 - Spaced doublequote?
+line 813:58 - Spaced quote?
+line 814:13 - Extra period?
+line 814:51 - Wrongspaced quotes?
+line 814:49 - Spaced doublequote?
+line 814:58 - Spaced quote?
+line 815:51 - Wrongspaced quotes?
+line 815:49 - Spaced doublequote?
+line 815:58 - Spaced quote?
+line 817:51 - Wrongspaced quotes?
+line 817:49 - Spaced doublequote?
+line 817:58 - Spaced quote?
+line 818:51 - Wrongspaced quotes?
+line 818:49 - Spaced doublequote?
+line 818:58 - Spaced quote?
+line 819:51 - Wrongspaced quotes?
+line 819:49 - Spaced doublequote?
+line 819:58 - Spaced quote?
+line 820:51 - Wrongspaced quotes?
+line 820:49 - Spaced doublequote?
+line 820:58 - Spaced quote?
+line 821:51 - Wrongspaced quotes?
+line 821:49 - Spaced doublequote?
+line 821:58 - Spaced quote?
+line 822:8 - Extra period?
+line 822:17 - Extra period?
+line 831:29 - Query standalone 1
+line 835:62 - Double punctuation?
+line 846:11 - Query word au
+line 848:51 - Query word au
+line 862:6 - Query word au
+line 863:5 - Query word s
+line 866:64 - Query word s
+line 871:17 - Double punctuation?
+line 887:6 - Non-ASCII character 226
+line 901:0 - Query word McK
+line 925:8 - Extra period?
+line 929:54 - Query standalone 1
+line 930:53 - Wrongspaced quotes?
+line 930:51 - Spaced doublequote?
+line 930:60 - Spaced quote?
+line 931:53 - Wrongspaced quotes?
+line 931:51 - Spaced doublequote?
+line 931:60 - Spaced quote?
+line 933:53 - Wrongspaced quotes?
+line 933:51 - Spaced doublequote?
+line 933:60 - Spaced quote?
+line 934:53 - Wrongspaced quotes?
+line 934:51 - Spaced doublequote?
+line 934:60 - Spaced quote?
+line 936:53 - Wrongspaced quotes?
+line 936:51 - Spaced doublequote?
+line 936:60 - Spaced quote?
+line 937:53 - Wrongspaced quotes?
+line 937:51 - Spaced doublequote?
+line 937:60 - Spaced quote?
+line 939:53 - Wrongspaced quotes?
+line 939:51 - Spaced doublequote?
+line 939:60 - Spaced quote?
+line 940:53 - Wrongspaced quotes?
+line 940:51 - Spaced doublequote?
+line 940:60 - Spaced quote?
+line 942:8 - Extra period?
+line 955:15 - endquote missing punctuation?
+line 956:7 - Non-ASCII character 232
+line 994:54 - Double punctuation?
+line 1004:18 - Double punctuation?
+line 1015:33 - Query standalone 1
+line 1020:27 - Query standalone 1
+line 1026:25 - Non-ASCII character 233
+line 1042:46 - endquote missing punctuation?
+line 1072:48 - Query standalone 1
+line 1073:47 - Wrongspaced quotes?
+line 1073:45 - Spaced doublequote?
+line 1073:54 - Spaced quote?
+line 1074:47 - Wrongspaced quotes?
+line 1074:45 - Spaced doublequote?
+line 1074:54 - Spaced quote?
+line 1075:47 - Wrongspaced quotes?
+line 1075:45 - Spaced doublequote?
+line 1075:54 - Spaced quote?
+line 1076:47 - Wrongspaced quotes?
+line 1076:45 - Spaced doublequote?
+line 1076:54 - Spaced quote?
+line 1078:9 - Extra period?
+line 1078:47 - Wrongspaced quotes?
+line 1078:45 - Spaced doublequote?
+line 1078:54 - Spaced quote?
+line 1079:47 - Wrongspaced quotes?
+line 1079:45 - Spaced doublequote?
+line 1079:54 - Spaced quote?
+line 1080:47 - Wrongspaced quotes?
+line 1080:45 - Spaced doublequote?
+line 1080:54 - Spaced quote?
+line 1082:47 - Wrongspaced quotes?
+line 1082:45 - Spaced doublequote?
+line 1082:54 - Spaced quote?
+line 1083:9 - Extra period?
+line 1083:47 - Wrongspaced quotes?
+line 1083:45 - Spaced doublequote?
+line 1083:54 - Spaced quote?
+line 1084:47 - Wrongspaced quotes?
+line 1084:45 - Spaced doublequote?
+line 1084:54 - Spaced quote?
+line 1086:47 - Wrongspaced quotes?
+line 1086:45 - Spaced doublequote?
+line 1086:54 - Spaced quote?
+line 1087:47 - Wrongspaced quotes?
+line 1087:45 - Spaced doublequote?
+line 1087:54 - Spaced quote?
+line 1088:47 - Wrongspaced quotes?
+line 1088:45 - Spaced doublequote?
+line 1088:54 - Spaced quote?
+line 1089:47 - Wrongspaced quotes?
+line 1089:45 - Spaced doublequote?
+line 1089:54 - Spaced quote?
+line 1090:26 - Double punctuation?
+line 1095:22 - endquote missing punctuation?
+line 1116:18 - Query standalone 1
+line 1131:11 - Non-ASCII character 233
+line 1145:46 - Query standalone 1
+line 1146:45 - Wrongspaced quotes?
+line 1146:43 - Spaced doublequote?
+line 1146:52 - Spaced quote?
+line 1147:45 - Wrongspaced quotes?
+line 1147:43 - Spaced doublequote?
+line 1147:52 - Spaced quote?
+line 1149:9 - Extra period?
+line 1149:45 - Wrongspaced quotes?
+line 1149:43 - Spaced doublequote?
+line 1149:52 - Spaced quote?
+line 1150:45 - Wrongspaced quotes?
+line 1150:43 - Spaced doublequote?
+line 1150:52 - Spaced quote?
+line 1152:45 - Wrongspaced quotes?
+line 1152:43 - Spaced doublequote?
+line 1152:52 - Spaced quote?
+line 1153:45 - Wrongspaced quotes?
+line 1153:43 - Spaced doublequote?
+line 1153:52 - Spaced quote?
+line 1155:45 - Wrongspaced quotes?
+line 1155:43 - Spaced doublequote?
+line 1155:52 - Spaced quote?
+line 1156:45 - Wrongspaced quotes?
+line 1156:43 - Spaced doublequote?
+line 1156:52 - Spaced quote?
+line 1157:26 - Double punctuation?
+line 1159:28 - Double punctuation?
+line 1161:24 - Query standalone 1
+line 1211:35 - Query standalone 1
+line 1225:43 - Double punctuation?
+line 1231:59 - Query standalone 1
+line 1246:24 - Double punctuation?
+line 1291:34 - Double punctuation?
+line 1299:12 - Query standalone 1
+line 1327:0 - Mismatched square brackets?
+line 1330:0 - Mismatched square brackets?
+line 1401:55 - endquote missing punctuation?
+line 1443:14 - Query standalone 1
+line 1448:56 - Query standalone 1
+line 1452:16 - Non-ASCII character 234
+line 1462:50 - Wrongspaced quotes?
+line 1462:49 - Spaced quote?
+line 1463:26 - Double punctuation?
+line 1463:49 - Spaced quote?
+line 1464:50 - Wrongspaced quotes?
+line 1464:49 - Spaced quote?
+line 1465:49 - Spaced quote?
+line 1467:50 - Wrongspaced quotes?
+line 1467:49 - Spaced quote?
+line 1468:49 - Spaced quote?
+line 1470:50 - Wrongspaced quotes?
+line 1470:48 - Spaced doublequote?
+line 1470:59 - Spaced quote?
+line 1471:9 - Extra period?
+line 1471:50 - Wrongspaced quotes?
+line 1471:48 - Spaced doublequote?
+line 1471:59 - Spaced quote?
+line 1472:50 - Wrongspaced quotes?
+line 1472:48 - Spaced doublequote?
+line 1472:59 - Spaced quote?
+line 1473:50 - Wrongspaced quotes?
+line 1473:48 - Spaced doublequote?
+line 1473:59 - Spaced quote?
+line 1474:50 - Wrongspaced quotes?
+line 1474:48 - Spaced doublequote?
+line 1474:59 - Spaced quote?
+line 1475:50 - Wrongspaced quotes?
+line 1475:48 - Spaced doublequote?
+line 1475:59 - Spaced quote?
+line 1487:64 - Forward slash?
+line 1489:60 - Forward slash?
+line 1489:0 - Query word i
+line 1489:56 - Query digit in 31D
+line 1489:59 - Query word i
+line 1489:63 - Query digit in 211.A.
+line 1489:53 - HTML Tag? <i> 
+line 1518:0 - Begins with punctuation?
+line 1520:0 - Begins with punctuation?
+line 1525:47 - Double punctuation?
+line 1549:49 - Non-ASCII character 234
+line 1552:19 - Double punctuation?
+line 1552:27 - Double punctuation?
+line 1570:0 - Mismatched square brackets?
+line 1571:16 - Extra period?
+line 1571:16 - Query word ph
+line 1571:20 - Query word sc
+line 1575:0 - Mismatched square brackets?
+line 1583:7 - Non-ASCII character 234
+line 1649:28 - Query standalone 1
+line 1683:8 - Extra period?
+line 1683:45 - Query standalone 1
+line 1684:45 - Wrongspaced quotes?
+line 1684:43 - Spaced doublequote?
+line 1684:50 - Spaced quote?
+line 1686:45 - Wrongspaced quotes?
+line 1686:43 - Spaced doublequote?
+line 1686:50 - Spaced quote?
+line 1699:3 - Double punctuation?
+line 1720:8 - Extra period?
+line 1720:49 - Query standalone 1
+line 1721:49 - Wrongspaced quotes?
+line 1721:47 - Spaced doublequote?
+line 1721:53 - Spaced quote?
+line 1722:49 - Wrongspaced quotes?
+line 1722:47 - Spaced doublequote?
+line 1722:53 - Spaced quote?
+line 1723:49 - Wrongspaced quotes?
+line 1723:47 - Spaced doublequote?
+line 1723:53 - Spaced quote?
+line 1724:49 - Wrongspaced quotes?
+line 1724:47 - Spaced doublequote?
+line 1724:53 - Spaced quote?
+line 1725:49 - Wrongspaced quotes?
+line 1725:47 - Spaced doublequote?
+line 1725:53 - Spaced quote?
+line 1726:13 - Extra period?
+line 1726:49 - Wrongspaced quotes?
+line 1726:47 - Spaced doublequote?
+line 1726:53 - Spaced quote?
+line 1727:8 - Extra period?
+line 1728:49 - Wrongspaced quotes?
+line 1728:47 - Spaced doublequote?
+line 1728:53 - Spaced quote?
+line 1729:49 - Wrongspaced quotes?
+line 1729:47 - Spaced doublequote?
+line 1729:53 - Spaced quote?
+line 1730:49 - Wrongspaced quotes?
+line 1730:47 - Spaced doublequote?
+line 1730:53 - Spaced quote?
+line 1731:49 - Wrongspaced quotes?
+line 1731:47 - Spaced doublequote?
+line 1731:53 - Spaced quote?
+line 1732:49 - Wrongspaced quotes?
+line 1732:47 - Spaced doublequote?
+line 1732:53 - Spaced quote?
+line 1733:26 - Double punctuation?
+line 1734:8 - Extra period?
+line 1766:51 - Query standalone 1
+line 1767:51 - Wrongspaced quotes?
+line 1767:49 - Spaced doublequote?
+line 1767:60 - Spaced quote?
+line 1768:51 - Wrongspaced quotes?
+line 1768:49 - Spaced doublequote?
+line 1768:60 - Spaced quote?
+line 1769:51 - Wrongspaced quotes?
+line 1769:49 - Spaced doublequote?
+line 1769:60 - Spaced quote?
+line 1770:51 - Wrongspaced quotes?
+line 1770:49 - Spaced doublequote?
+line 1770:60 - Spaced quote?
+line 1771:8 - Extra period?
+line 1772:51 - Wrongspaced quotes?
+line 1772:49 - Spaced doublequote?
+line 1772:60 - Spaced quote?
+line 1773:51 - Wrongspaced quotes?
+line 1773:49 - Spaced doublequote?
+line 1773:60 - Spaced quote?
+line 1774:51 - Wrongspaced quotes?
+line 1774:49 - Spaced doublequote?
+line 1774:60 - Spaced quote?
+line 1775:51 - Wrongspaced quotes?
+line 1775:49 - Spaced doublequote?
+line 1775:60 - Spaced quote?
+line 1776:51 - Wrongspaced quotes?
+line 1776:49 - Spaced doublequote?
+line 1776:60 - Spaced quote?
+line 1777:51 - Wrongspaced quotes?
+line 1777:49 - Spaced doublequote?
+line 1777:60 - Spaced quote?
+line 1778:26 - Double punctuation?
+line 1779:8 - Extra period?
+line 1782:1 - Non-ISO-8859 character 339
+line 1784:30 - Non-ASCII character 244
+line 1787:52 - Non-ISO-8859 character 339
+line 1790:57 - Double punctuation?
+line 1795:37 - Non-ISO-8859 character 339
+line 1801:37 - Double punctuation?
+line 1818:33 - Non-ASCII character 226
+line 1946:60 - endquote missing punctuation?
+line 2031:39 - Double punctuation?
+line 2032:11 - Double punctuation?
+line 2039:49 - Wrongspaced quotes?
+line 2039:47 - Spaced doublequote?
+line 2039:53 - Spaced quote?
+line 2040:49 - Wrongspaced quotes?
+line 2040:47 - Spaced doublequote?
+line 2040:53 - Spaced quote?
+line 2041:49 - Wrongspaced quotes?
+line 2041:47 - Spaced doublequote?
+line 2041:53 - Spaced quote?
+line 2042:49 - Wrongspaced quotes?
+line 2042:47 - Spaced doublequote?
+line 2042:53 - Spaced quote?
+line 2044:49 - Wrongspaced quotes?
+line 2044:47 - Spaced doublequote?
+line 2044:53 - Spaced quote?
+line 2045:49 - Wrongspaced quotes?
+line 2045:47 - Spaced doublequote?
+line 2045:53 - Spaced quote?
+line 2047:49 - Wrongspaced quotes?
+line 2047:47 - Spaced doublequote?
+line 2047:53 - Spaced quote?
+line 2048:49 - Wrongspaced quotes?
+line 2048:47 - Spaced doublequote?
+line 2048:53 - Spaced quote?
+line 2049:49 - Wrongspaced quotes?
+line 2049:47 - Spaced doublequote?
+line 2049:53 - Spaced quote?
+line 2051:9 - Extra period?
+line 2051:49 - Wrongspaced quotes?
+line 2051:47 - Spaced doublequote?
+line 2051:53 - Spaced quote?
+line 2052:49 - Wrongspaced quotes?
+line 2052:47 - Spaced doublequote?
+line 2052:53 - Spaced quote?
+line 2053:49 - Wrongspaced quotes?
+line 2053:47 - Spaced doublequote?
+line 2053:53 - Spaced quote?
+line 2054:49 - Wrongspaced quotes?
+line 2054:47 - Spaced doublequote?
+line 2054:53 - Spaced quote?
+line 2055:49 - Wrongspaced quotes?
+line 2055:47 - Spaced doublequote?
+line 2055:53 - Spaced quote?
+line 2081:49 - Query word au
+line 2095:16 - Query word au
+line 2145:49 - Wrongspaced quotes?
+line 2145:47 - Spaced doublequote?
+line 2145:53 - Spaced quote?
+line 2146:49 - Wrongspaced quotes?
+line 2146:47 - Spaced doublequote?
+line 2146:53 - Spaced quote?
+line 2147:49 - Wrongspaced quotes?
+line 2147:47 - Spaced doublequote?
+line 2147:53 - Spaced quote?
+line 2149:49 - Wrongspaced quotes?
+line 2149:47 - Spaced doublequote?
+line 2149:53 - Spaced quote?
+line 2150:49 - Wrongspaced quotes?
+line 2150:47 - Spaced doublequote?
+line 2150:53 - Spaced quote?
+line 2152:49 - Wrongspaced quotes?
+line 2152:47 - Spaced doublequote?
+line 2152:53 - Spaced quote?
+line 2153:49 - Wrongspaced quotes?
+line 2153:47 - Spaced doublequote?
+line 2153:53 - Spaced quote?
+line 2155:49 - Wrongspaced quotes?
+line 2155:47 - Spaced doublequote?
+line 2155:53 - Spaced quote?
+line 2156:49 - Wrongspaced quotes?
+line 2156:47 - Spaced doublequote?
+line 2156:53 - Spaced quote?
+line 2157:49 - Wrongspaced quotes?
+line 2157:47 - Spaced doublequote?
+line 2157:53 - Spaced quote?
+line 2170:37 - Non-ASCII character 233
+line 2209:10 - Non-ASCII character 233
+line 2211:0 - Non-ASCII character 233
+line 2239:66 - Double punctuation?
+line 2247:3 - Double punctuation?
+line 2298:8 - Double punctuation?
+line 2311:17 - Double punctuation?
+line 2335:33 - Query standalone 1
+line 2355:55 - Non-ISO-8859 character 339
+line 2368:27 - Query word au
+line 2379:14 - Query word FitzH
+line 2384:8 - Extra period?
+line 2384:37 - Double punctuation?
+line 2387:54 - Query standalone 1
+line 2388:54 - Wrongspaced quotes?
+line 2388:52 - Spaced doublequote?
+line 2388:59 - Spaced quote?
+line 2389:54 - Wrongspaced quotes?
+line 2389:52 - Spaced doublequote?
+line 2389:59 - Spaced quote?
+line 2390:54 - Wrongspaced quotes?
+line 2390:52 - Spaced doublequote?
+line 2390:59 - Spaced quote?
+line 2391:54 - Wrongspaced quotes?
+line 2391:52 - Spaced doublequote?
+line 2391:59 - Spaced quote?
+line 2393:54 - Wrongspaced quotes?
+line 2393:52 - Spaced doublequote?
+line 2393:59 - Spaced quote?
+line 2394:54 - Wrongspaced quotes?
+line 2394:52 - Spaced doublequote?
+line 2394:59 - Spaced quote?
+line 2396:54 - Wrongspaced quotes?
+line 2396:52 - Spaced doublequote?
+line 2396:59 - Spaced quote?
+line 2397:54 - Wrongspaced quotes?
+line 2397:52 - Spaced doublequote?
+line 2397:59 - Spaced quote?
+line 2398:54 - Wrongspaced quotes?
+line 2398:52 - Spaced doublequote?
+line 2398:59 - Spaced quote?
+line 2399:13 - Extra period?
+line 2399:54 - Wrongspaced quotes?
+line 2399:52 - Spaced doublequote?
+line 2399:59 - Spaced quote?
+line 2401:54 - Wrongspaced quotes?
+line 2401:52 - Spaced doublequote?
+line 2401:59 - Spaced quote?
+line 2402:12 - Query word McK
+line 2402:54 - Wrongspaced quotes?
+line 2402:52 - Spaced doublequote?
+line 2402:59 - Spaced quote?
+line 2403:54 - Wrongspaced quotes?
+line 2403:52 - Spaced doublequote?
+line 2403:59 - Spaced quote?
+line 2404:54 - Wrongspaced quotes?
+line 2404:52 - Spaced doublequote?
+line 2404:59 - Spaced quote?
+line 2405:8 - Extra period?
+line 2461:3 - Double punctuation?
+line 2509:50 - Query standalone 1
+line 2510:12 - Query word McK
+line 2510:51 - Wrongspaced quotes?
+line 2510:49 - Spaced doublequote?
+line 2510:56 - Spaced quote?
+line 2511:51 - Wrongspaced quotes?
+line 2511:49 - Spaced doublequote?
+line 2511:56 - Spaced quote?
+line 2513:51 - Wrongspaced quotes?
+line 2513:49 - Spaced doublequote?
+line 2513:56 - Spaced quote?
+line 2514:51 - Wrongspaced quotes?
+line 2514:49 - Spaced doublequote?
+line 2514:56 - Spaced quote?
+line 2516:51 - Wrongspaced quotes?
+line 2516:49 - Spaced doublequote?
+line 2516:56 - Spaced quote?
+line 2517:51 - Wrongspaced quotes?
+line 2517:49 - Spaced doublequote?
+line 2517:56 - Spaced quote?
+line 2518:51 - Wrongspaced quotes?
+line 2518:49 - Spaced doublequote?
+line 2518:56 - Spaced quote?
+line 2520:51 - Wrongspaced quotes?
+line 2520:49 - Spaced doublequote?
+line 2520:56 - Spaced quote?
+line 2536:69 - Double punctuation?
+line 2541:30 - Query standalone 1
+line 2549:22 - Double punctuation?
+line 2565:49 - Query standalone 1
+line 2567:13 - Query standalone 1
+line 2596:37 - Query word s
+line 2616:32 - Query standalone 1
+line 2687:45 - Wrongspaced quotes?
+line 2687:44 - Spaced quote?
+line 2688:44 - Spaced quote?
+line 2689:45 - Wrongspaced quotes?
+line 2689:44 - Spaced quote?
+line 2690:44 - Spaced quote?
+line 2691:45 - Wrongspaced quotes?
+line 2691:44 - Spaced quote?
+line 2694:12 - Query word McK
+line 2694:44 - Spaced quote?
+line 2695:45 - Wrongspaced quotes?
+line 2695:44 - Spaced quote?
+line 2696:44 - Spaced quote?
+line 2697:45 - Wrongspaced quotes?
+line 2697:44 - Spaced quote?
+line 2698:0 - Mismatched quotes
+line 2714:8 - Extra period?
+line 2719:53 - Query standalone 1
+line 2720:54 - Wrongspaced quotes?
+line 2720:52 - Spaced doublequote?
+line 2720:59 - Spaced quote?
+line 2721:54 - Wrongspaced quotes?
+line 2721:52 - Spaced doublequote?
+line 2721:59 - Spaced quote?
+line 2722:54 - Wrongspaced quotes?
+line 2722:52 - Spaced doublequote?
+line 2722:59 - Spaced quote?
+line 2723:54 - Wrongspaced quotes?
+line 2723:52 - Spaced doublequote?
+line 2723:59 - Spaced quote?
+line 2725:54 - Wrongspaced quotes?
+line 2725:52 - Spaced doublequote?
+line 2725:59 - Spaced quote?
+line 2726:54 - Wrongspaced quotes?
+line 2726:52 - Spaced doublequote?
+line 2726:59 - Spaced quote?
+line 2727:54 - Wrongspaced quotes?
+line 2727:52 - Spaced doublequote?
+line 2727:59 - Spaced quote?
+line 2728:54 - Wrongspaced quotes?
+line 2728:52 - Spaced doublequote?
+line 2728:59 - Spaced quote?
+line 2729:54 - Wrongspaced quotes?
+line 2729:52 - Spaced doublequote?
+line 2729:59 - Spaced quote?
+line 2730:54 - Wrongspaced quotes?
+line 2730:52 - Spaced doublequote?
+line 2730:59 - Spaced quote?
+line 2732:54 - Wrongspaced quotes?
+line 2732:52 - Spaced doublequote?
+line 2732:59 - Spaced quote?
+line 2733:54 - Wrongspaced quotes?
+line 2733:52 - Spaced doublequote?
+line 2733:59 - Spaced quote?
+line 2734:54 - Wrongspaced quotes?
+line 2734:52 - Spaced doublequote?
+line 2734:59 - Spaced quote?
+line 2735:54 - Wrongspaced quotes?
+line 2735:52 - Spaced doublequote?
+line 2735:59 - Spaced quote?
+line 2736:54 - Wrongspaced quotes?
+line 2736:52 - Spaced doublequote?
+line 2736:59 - Spaced quote?
+line 2738:54 - Wrongspaced quotes?
+line 2738:52 - Spaced doublequote?
+line 2738:59 - Spaced quote?
+line 2739:54 - Wrongspaced quotes?
+line 2739:52 - Spaced doublequote?
+line 2739:59 - Spaced quote?
+line 2740:54 - Wrongspaced quotes?
+line 2740:52 - Spaced doublequote?
+line 2740:59 - Spaced quote?
+line 2741:54 - Wrongspaced quotes?
+line 2741:52 - Spaced doublequote?
+line 2741:59 - Spaced quote?
+line 2742:54 - Wrongspaced quotes?
+line 2742:52 - Spaced doublequote?
+line 2742:59 - Spaced quote?
+line 2744:8 - Extra period?
+line 2807:7 - Non-ASCII character 233
+line 2825:34 - endquote missing punctuation?
+line 2842:54 - Query standalone 1
+line 2843:54 - Wrongspaced quotes?
+line 2843:52 - Spaced doublequote?
+line 2843:60 - Spaced quote?
+line 2844:54 - Wrongspaced quotes?
+line 2844:52 - Spaced doublequote?
+line 2844:60 - Spaced quote?
+line 2845:54 - Wrongspaced quotes?
+line 2845:52 - Spaced doublequote?
+line 2845:60 - Spaced quote?
+line 2847:54 - Wrongspaced quotes?
+line 2847:52 - Spaced doublequote?
+line 2847:60 - Spaced quote?
+line 2848:54 - Wrongspaced quotes?
+line 2848:52 - Spaced doublequote?
+line 2848:60 - Spaced quote?
+line 2850:54 - Wrongspaced quotes?
+line 2850:52 - Spaced doublequote?
+line 2850:60 - Spaced quote?
+line 2851:54 - Wrongspaced quotes?
+line 2851:52 - Spaced doublequote?
+line 2851:60 - Spaced quote?
+line 2853:54 - Wrongspaced quotes?
+line 2853:52 - Spaced doublequote?
+line 2853:60 - Spaced quote?
+line 2854:54 - Wrongspaced quotes?
+line 2854:52 - Spaced doublequote?
+line 2854:60 - Spaced quote?
+line 2855:54 - Wrongspaced quotes?
+line 2855:52 - Spaced doublequote?
+line 2855:60 - Spaced quote?
+line 2857:8 - Extra period?
+line 2870:53 - Double punctuation?
+line 2878:67 - Query standalone 1
+line 2896:45 - Query standalone 1
+line 2923:63 - Double punctuation?
+line 2935:60 - Query standalone 1
+line 2939:34 - Query standalone 1
+line 2946:25 - Query standalone 1
+line 2950:61 - Query standalone 1
+line 2962:37 - Query standalone 1
+line 2974:38 - Query standalone 1
+line 2992:0 - Mismatched square brackets?
+line 2993:59 - Query word ph
+line 2993:62 - Query word sc
+line 2997:0 - Mismatched square brackets?
+line 3020:59 - Double punctuation?
+line 3027:13 - Non-ASCII character 189
+line 3046:24 - Query word Bn
+line 3053:38 - Query word Bn
+line 3055:32 - Query word Bn
+line 3059:32 - Query word Bns
+line 3060:24 - Query word Bn
+line 3064:14 - Spaced em-dash?
+line 3066:23 - Extra period?
+line 3066:40 - Query word Bn
+line 3067:38 - Extra period?
+line 3068:12 - Query word Bn
+line 3074:9 - Extra period?
+line 3075:27 - Query word Bn
+line 3075:45 - Query word Bn
+line 3075:39 - Double punctuation?
+line 3075:57 - Double punctuation?
+line 3076:0 - Query word Bn
+line 3077:50 - endquote missing punctuation?
+line 3101:8 - Wrongspaced quotes?
+line 3101:6 - Spaced doublequote?
+line 3102:44 - Query word Bn
+line 3104:0 - Mismatched quotes
+line 3108:54 - Double punctuation?
+line 3200:2 - Paragraph starts with lower-case
+line 3204:2 - Paragraph starts with lower-case
+line 3204:60 - Non-ISO-8859 character 339
+line 3208:2 - Paragraph starts with lower-case
+line 3230:33 - Double punctuation?
+line 3236:12 - Non-ASCII character 232
+line 3237:41 - Non-ASCII character 232
+line 3255:58 - Non-ASCII character 232
+line 3256:46 - Non-ASCII character 232
+line 3266:51 - Double punctuation?
+line 3274:26 - Double punctuation?
+line 3289:14 - Non-ASCII character 232
+line 3313:15 - Non-ASCII character 232
+line 3349:38 - Non-ISO-8859 character 339
+line 3378:67 - Double punctuation?
+line 3399:29 - Double punctuation?
+line 3402:0 - Mismatched square brackets?
+line 3409:0 - Mismatched square brackets?
+line 3424:39 - Double punctuation?
+line 3425:11 - Double punctuation?
+line 3429:51 - Wrongspaced quotes?
+line 3429:49 - Spaced doublequote?
+line 3429:56 - Spaced quote?
+line 3431:51 - Wrongspaced quotes?
+line 3431:49 - Spaced doublequote?
+line 3431:56 - Spaced quote?
+line 3432:51 - Wrongspaced quotes?
+line 3432:49 - Spaced doublequote?
+line 3432:56 - Spaced quote?
+line 3434:51 - Wrongspaced quotes?
+line 3434:49 - Spaced doublequote?
+line 3434:56 - Spaced quote?
+line 3435:51 - Wrongspaced quotes?
+line 3435:49 - Spaced doublequote?
+line 3435:56 - Spaced quote?
+line 3437:51 - Wrongspaced quotes?
+line 3437:49 - Spaced doublequote?
+line 3437:56 - Spaced quote?
+line 3438:51 - Wrongspaced quotes?
+line 3438:49 - Spaced doublequote?
+line 3438:56 - Spaced quote?
+line 3440:8 - Extra period?
+line 3450:52 - Forward slash?
+line 3468:36 - Non-ASCII character 233
+line 3504:69 - Double punctuation?
+line 3505:58 - Non-ASCII character 232
+line 3515:51 - Non-ASCII character 232
+line 3515:67 - Double punctuation?
+line 3525:40 - Non-ASCII character 232
+line 3527:61 - Non-ASCII character 232
+line 3541:31 - Non-ISO-8859 character 339
+line 3580:34 - Non-ASCII character 233
+line 3595:34 - Non-ISO-8859 character 339
+line 3606:47 - Non-ISO-8859 character 339
+line 3640:43 - Double punctuation?
+line 3663:14 - Query word FitzH
+line 3665:13 - Extra period?
+line 3666:53 - Query standalone 1
+line 3667:53 - Wrongspaced quotes?
+line 3667:51 - Spaced doublequote?
+line 3667:59 - Spaced quote?
+line 3668:53 - Wrongspaced quotes?
+line 3668:51 - Spaced doublequote?
+line 3668:59 - Spaced quote?
+line 3670:53 - Wrongspaced quotes?
+line 3670:51 - Spaced doublequote?
+line 3670:59 - Spaced quote?
+line 3671:53 - Wrongspaced quotes?
+line 3671:51 - Spaced doublequote?
+line 3671:59 - Spaced quote?
+line 3673:53 - Wrongspaced quotes?
+line 3673:51 - Spaced doublequote?
+line 3673:59 - Spaced quote?
+line 3674:53 - Wrongspaced quotes?
+line 3674:51 - Spaced doublequote?
+line 3674:59 - Spaced quote?
+line 3676:53 - Wrongspaced quotes?
+line 3676:51 - Spaced doublequote?
+line 3676:59 - Spaced quote?
+line 3677:53 - Wrongspaced quotes?
+line 3677:51 - Spaced doublequote?
+line 3677:59 - Spaced quote?
+line 3695:30 - Non-ASCII character 232
+line 3698:7 - Non-ASCII character 232
+line 3704:51 - Query standalone 1
+line 3716:8 - Double punctuation?
+line 3729:36 - Non-ASCII character 232
+line 3731:53 - Non-ASCII character 232
+line 3748:12 - Non-ASCII character 232
+line 3771:13 - Query standalone 1
+line 3785:3 - Query standalone 1
+line 3789:7 - Double punctuation?
+line 3795:25 - Query standalone 1
+line 3826:35 - Query standalone 1
+line 3847:42 - Query word s
+line 3849:67 - Query standalone 1
+line 3869:23 - Non-ASCII character 233
+line 3883:11 - Query standalone 1
+line 3894:16 - Query standalone 1
+line 3900:13 - Query standalone 1
+line 3927:53 - Query standalone 1
+line 3928:54 - Wrongspaced quotes?
+line 3928:52 - Spaced doublequote?
+line 3928:59 - Spaced quote?
+line 3929:54 - Wrongspaced quotes?
+line 3929:52 - Spaced doublequote?
+line 3929:59 - Spaced quote?
+line 3931:54 - Wrongspaced quotes?
+line 3931:52 - Spaced doublequote?
+line 3931:59 - Spaced quote?
+line 3932:54 - Wrongspaced quotes?
+line 3932:52 - Spaced doublequote?
+line 3932:59 - Spaced quote?
+line 3933:54 - Wrongspaced quotes?
+line 3933:52 - Spaced doublequote?
+line 3933:59 - Spaced quote?
+line 3935:54 - Wrongspaced quotes?
+line 3935:52 - Spaced doublequote?
+line 3935:59 - Spaced quote?
+line 3936:54 - Wrongspaced quotes?
+line 3936:52 - Spaced doublequote?
+line 3936:59 - Spaced quote?
+line 3938:54 - Wrongspaced quotes?
+line 3938:52 - Spaced doublequote?
+line 3938:59 - Spaced quote?
+line 3939:54 - Wrongspaced quotes?
+line 3939:52 - Spaced doublequote?
+line 3939:59 - Spaced quote?
+line 3940:54 - Wrongspaced quotes?
+line 3940:52 - Spaced doublequote?
+line 3940:59 - Spaced quote?
+line 3948:46 - Non-ASCII character 233
+line 4034:67 - Non-ASCII character 232
+line 4043:1 - Query standalone 1
+line 4101:46 - Query standalone 1
+line 4101:51 - Double punctuation?
+line 4142:37 - Non-ASCII character 232
+line 4143:26 - Non-ASCII character 232
+line 4144:32 - Non-ASCII character 233
+line 4154:49 - Wrongspaced quotes?
+line 4154:47 - Spaced doublequote?
+line 4154:55 - Spaced quote?
+line 4156:49 - Wrongspaced quotes?
+line 4156:47 - Spaced doublequote?
+line 4156:55 - Spaced quote?
+line 4157:49 - Wrongspaced quotes?
+line 4157:47 - Spaced doublequote?
+line 4157:55 - Spaced quote?
+line 4159:49 - Wrongspaced quotes?
+line 4159:47 - Spaced doublequote?
+line 4159:55 - Spaced quote?
+line 4161:49 - Wrongspaced quotes?
+line 4161:47 - Spaced doublequote?
+line 4161:55 - Spaced quote?
+line 4162:49 - Wrongspaced quotes?
+line 4162:47 - Spaced doublequote?
+line 4162:55 - Spaced quote?
+line 4164:8 - Extra period?
+line 4167:0 - Mismatched square brackets?
+line 4172:0 - Mismatched square brackets?
+line 4175:39 - Query standalone 1
+line 4175:44 - Double punctuation?
+line 4176:29 - Non-ASCII character 233
+line 4191:3 - Non-ASCII character 233
+line 4194:11 - Non-ASCII character 233
+line 4195:25 - Query word au
+line 4226:9 - Non-ASCII character 183
+line 4279:27 - Non-ASCII character 233
+line 4311:46 - Non-ASCII character 233
+line 4314:61 - Non-ASCII character 232
+line 4317:58 - Double punctuation?
+line 4330:49 - Wrongspaced quotes?
+line 4330:47 - Spaced doublequote?
+line 4330:55 - Spaced quote?
+line 4331:49 - Wrongspaced quotes?
+line 4331:47 - Spaced doublequote?
+line 4331:55 - Spaced quote?
+line 4333:49 - Wrongspaced quotes?
+line 4333:47 - Spaced doublequote?
+line 4333:55 - Spaced quote?
+line 4334:49 - Wrongspaced quotes?
+line 4334:47 - Spaced doublequote?
+line 4334:55 - Spaced quote?
+line 4336:49 - Wrongspaced quotes?
+line 4336:47 - Spaced doublequote?
+line 4336:55 - Spaced quote?
+line 4337:49 - Wrongspaced quotes?
+line 4337:47 - Spaced doublequote?
+line 4337:55 - Spaced quote?
+line 4338:49 - Wrongspaced quotes?
+line 4338:47 - Spaced doublequote?
+line 4338:55 - Spaced quote?
+line 4340:49 - Wrongspaced quotes?
+line 4340:47 - Spaced doublequote?
+line 4340:55 - Spaced quote?
+line 4341:49 - Wrongspaced quotes?
+line 4341:47 - Spaced doublequote?
+line 4341:55 - Spaced quote?
+line 4343:8 - Extra period?
+line 4416:0 - Mismatched square brackets?
+line 4417:49 - Query word ph
+line 4417:52 - Query word sc
+line 4421:0 - Mismatched square brackets?
+line 4428:31 - Query word s
+line 4447:44 - Query word Lt
+line 4448:55 - Query word Gds
+line 4464:14 - Double punctuation?
+line 4471:40 - Query standalone 1
+line 4472:41 - Wrongspaced quotes?
+line 4472:39 - Spaced doublequote?
+line 4472:46 - Spaced quote?
+line 4473:41 - Wrongspaced quotes?
+line 4473:39 - Spaced doublequote?
+line 4473:46 - Spaced quote?
+line 4475:41 - Wrongspaced quotes?
+line 4475:39 - Spaced doublequote?
+line 4475:46 - Spaced quote?
+line 4476:41 - Wrongspaced quotes?
+line 4476:39 - Spaced doublequote?
+line 4476:46 - Spaced quote?
+line 4478:41 - Wrongspaced quotes?
+line 4478:39 - Spaced doublequote?
+line 4478:46 - Spaced quote?
+line 4479:41 - Wrongspaced quotes?
+line 4479:39 - Spaced doublequote?
+line 4479:46 - Spaced quote?
+line 4481:41 - Wrongspaced quotes?
+line 4481:39 - Spaced doublequote?
+line 4481:46 - Spaced quote?
+line 4482:41 - Wrongspaced quotes?
+line 4482:39 - Spaced doublequote?
+line 4482:46 - Spaced quote?
+line 4487:5 - Non-ASCII character 232
+line 4493:46 - Non-ASCII character 232
+line 4512:3 - Query standalone 1
+line 4518:37 - Non-ASCII character 232
+line 4521:40 - Non-ASCII character 232
+line 4529:53 - endquote missing punctuation?
+line 4545:3 - Query standalone 1
+line 4556:48 - Non-ASCII character 233
+line 4557:6 - Non-ASCII character 232
+line 4564:42 - Query standalone 1
+line 4565:43 - Wrongspaced quotes?
+line 4565:41 - Spaced doublequote?
+line 4565:48 - Spaced quote?
+line 4566:43 - Wrongspaced quotes?
+line 4566:41 - Spaced doublequote?
+line 4566:48 - Spaced quote?
+line 4568:43 - Wrongspaced quotes?
+line 4568:41 - Spaced doublequote?
+line 4568:48 - Spaced quote?
+line 4569:43 - Wrongspaced quotes?
+line 4569:41 - Spaced doublequote?
+line 4569:48 - Spaced quote?
+line 4571:43 - Wrongspaced quotes?
+line 4571:41 - Spaced doublequote?
+line 4571:48 - Spaced quote?
+line 4572:43 - Wrongspaced quotes?
+line 4572:41 - Spaced doublequote?
+line 4572:48 - Spaced quote?
+line 4574:43 - Wrongspaced quotes?
+line 4574:41 - Spaced doublequote?
+line 4574:48 - Spaced quote?
+line 4575:43 - Wrongspaced quotes?
+line 4575:41 - Spaced doublequote?
+line 4575:48 - Spaced quote?
+line 4590:49 - Non-ISO-8859 character 339
+line 4597:49 - Double punctuation?
+line 4600:13 - Query standalone 1
+line 4608:19 - Double punctuation?
+line 4616:13 - Query standalone 1
+line 4618:56 - Query standalone 1
+line 4627:24 - Query standalone 1
+line 4633:38 - endquote missing punctuation?
+line 4641:19 - Query standalone 1
+line 4648:20 - Non-ASCII character 233
+line 4659:56 - Non-ASCII character 232
+line 4659:44 - endquote missing punctuation?
+line 4672:36 - Non-ASCII character 232
+line 4684:54 - Query standalone 1
+line 4685:55 - Wrongspaced quotes?
+line 4685:53 - Spaced doublequote?
+line 4685:60 - Spaced quote?
+line 4686:55 - Wrongspaced quotes?
+line 4686:53 - Spaced doublequote?
+line 4686:60 - Spaced quote?
+line 4688:55 - Wrongspaced quotes?
+line 4688:53 - Spaced doublequote?
+line 4688:60 - Spaced quote?
+line 4689:55 - Wrongspaced quotes?
+line 4689:53 - Spaced doublequote?
+line 4689:60 - Spaced quote?
+line 4691:55 - Wrongspaced quotes?
+line 4691:53 - Spaced doublequote?
+line 4691:60 - Spaced quote?
+line 4693:55 - Wrongspaced quotes?
+line 4693:53 - Spaced doublequote?
+line 4693:60 - Spaced quote?
+line 4694:55 - Wrongspaced quotes?
+line 4694:53 - Spaced doublequote?
+line 4694:60 - Spaced quote?
+line 4695:55 - Wrongspaced quotes?
+line 4695:53 - Spaced doublequote?
+line 4695:60 - Spaced quote?
+line 4697:8 - Extra period?
+line 4710:34 - Query standalone 1
+line 4835:0 - Mismatched square brackets?
+line 4842:0 - Mismatched square brackets?
+line 4912:37 - Query word au
+line 4932:31 - Double punctuation?
+line 4952:52 - Double punctuation?
+line 4953:40 - Double punctuation?
+line 5024:54 - Wrongspaced quotes?
+line 5024:52 - Spaced doublequote?
+line 5024:60 - Spaced quote?
+line 5025:54 - Wrongspaced quotes?
+line 5025:52 - Spaced doublequote?
+line 5025:59 - Spaced quote?
+line 5027:54 - Wrongspaced quotes?
+line 5027:52 - Spaced doublequote?
+line 5027:59 - Spaced quote?
+line 5028:54 - Wrongspaced quotes?
+line 5028:52 - Spaced doublequote?
+line 5028:59 - Spaced quote?
+line 5030:54 - Wrongspaced quotes?
+line 5030:52 - Spaced doublequote?
+line 5030:59 - Spaced quote?
+line 5031:54 - Wrongspaced quotes?
+line 5031:52 - Spaced doublequote?
+line 5031:59 - Spaced quote?
+line 5033:54 - Wrongspaced quotes?
+line 5033:52 - Spaced doublequote?
+line 5033:59 - Spaced quote?
+line 5034:54 - Wrongspaced quotes?
+line 5034:52 - Spaced doublequote?
+line 5034:59 - Spaced quote?
+line 5036:8 - Extra period?
+line 5049:10 - Forward slash?
+line 5118:28 - Query word au
+line 5137:25 - Non-ASCII character 226
+line 5139:13 - Non-ASCII character 226
+line 5146:33 - Non-ASCII character 226
+line 5151:17 - Non-ASCII character 226
+line 5152:54 - Non-ASCII character 226
+line 5216:0 - Mismatched square brackets?
+line 5217:12 - Query standalone 1
+line 5221:0 - Mismatched square brackets?
+line 5232:49 - Query standalone 1
+line 5233:50 - Wrongspaced quotes?
+line 5233:48 - Spaced doublequote?
+line 5233:55 - Spaced quote?
+line 5235:50 - Wrongspaced quotes?
+line 5235:48 - Spaced doublequote?
+line 5235:55 - Spaced quote?
+line 5237:50 - Wrongspaced quotes?
+line 5237:48 - Spaced doublequote?
+line 5237:55 - Spaced quote?
+line 5238:50 - Wrongspaced quotes?
+line 5238:48 - Spaced doublequote?
+line 5238:55 - Spaced quote?
+line 5240:50 - Wrongspaced quotes?
+line 5240:48 - Spaced doublequote?
+line 5240:55 - Spaced quote?
+line 5258:19 - Query standalone 1
+line 5310:13 - Query standalone 1
+line 5317:22 - Query standalone 1
+line 5343:53 - Query standalone 1
+line 5344:54 - Wrongspaced quotes?
+line 5344:52 - Spaced doublequote?
+line 5344:59 - Spaced quote?
+line 5345:54 - Wrongspaced quotes?
+line 5345:52 - Spaced doublequote?
+line 5345:59 - Spaced quote?
+line 5347:54 - Wrongspaced quotes?
+line 5347:52 - Spaced doublequote?
+line 5347:59 - Spaced quote?
+line 5348:54 - Wrongspaced quotes?
+line 5348:52 - Spaced doublequote?
+line 5348:59 - Spaced quote?
+line 5350:54 - Wrongspaced quotes?
+line 5350:52 - Spaced doublequote?
+line 5350:59 - Spaced quote?
+line 5351:54 - Wrongspaced quotes?
+line 5351:52 - Spaced doublequote?
+line 5351:59 - Spaced quote?
+line 5353:54 - Wrongspaced quotes?
+line 5353:52 - Spaced doublequote?
+line 5353:59 - Spaced quote?
+line 5355:8 - Extra period?
+line 5388:8 - Query standalone 1
+line 5410:43 - Non-ASCII character 183
+line 5411:1 - Query standalone 1
+line 5416:29 - Query standalone 1
+line 5417:11 - Query standalone 1
+line 5468:3 - Query standalone 1
+line 5478:6 - Double punctuation?
+line 5481:14 - Query standalone 1
+line 5513:59 - Double punctuation?
+line 5532:3 - Double punctuation?
+line 5598:6 - Wrongspaced quotes?
+line 5598:4 - Spaced doublequote?
+line 5598:15 - Spaced doublequote?
+line 5599:28 - Query word au
+line 5599:6 - Wrongspaced quotes?
+line 5599:4 - Spaced doublequote?
+line 5599:15 - Spaced doublequote?
+line 5600:20 - Non-ASCII character 226
+line 5600:6 - Wrongspaced quotes?
+line 5600:4 - Spaced doublequote?
+line 5600:15 - Spaced doublequote?
+line 5601:6 - Wrongspaced quotes?
+line 5601:4 - Spaced doublequote?
+line 5601:15 - Spaced doublequote?
+line 5602:6 - Wrongspaced quotes?
+line 5602:4 - Spaced doublequote?
+line 5602:15 - Spaced doublequote?
+line 5603:21 - Query word Huy
+line 5603:6 - Wrongspaced quotes?
+line 5603:4 - Spaced doublequote?
+line 5603:15 - Spaced doublequote?
+line 5604:17 - Wrongspaced quotes?
+line 5604:15 - Spaced doublequote?
+line 5605:17 - Wrongspaced quotes?
+line 5605:4 - Spaced doublequote?
+line 5605:15 - Spaced doublequote?
+line 5606:17 - Wrongspaced quotes?
+line 5606:4 - Spaced doublequote?
+line 5606:15 - Spaced doublequote?
+line 5607:17 - Wrongspaced quotes?
+line 5607:4 - Spaced doublequote?
+line 5607:15 - Spaced doublequote?
+line 5608:17 - Wrongspaced quotes?
+line 5608:4 - Spaced doublequote?
+line 5608:15 - Spaced doublequote?
+line 5609:19 - Non-ASCII character 252
+line 5609:17 - Wrongspaced quotes?
+line 5609:4 - Spaced doublequote?
+line 5609:15 - Spaced doublequote?
+line 5610:17 - Wrongspaced quotes?
+line 5610:4 - Spaced doublequote?
+line 5610:15 - Spaced doublequote?
+line 5611:19 - Non-ASCII character 246
+line 5611:17 - Wrongspaced quotes?
+line 5611:4 - Spaced doublequote?
+line 5611:15 - Spaced doublequote?
+line 5612:17 - Wrongspaced quotes?
+line 5612:4 - Spaced doublequote?
+line 5612:15 - Spaced doublequote?
+line 5613:17 - Wrongspaced quotes?
+line 5613:4 - Spaced doublequote?
+line 5613:15 - Spaced doublequote?
+line 5614:17 - Wrongspaced quotes?
+line 5614:4 - Spaced doublequote?
+line 5614:15 - Spaced doublequote?
+line 5615:17 - Wrongspaced quotes?
+line 5615:4 - Spaced doublequote?
+line 5615:15 - Spaced doublequote?
+line 5616:0 - Mismatched quotes
+line 5623:25 - Query word au
+line 5624:6 - Wrongspaced quotes?
+line 5624:4 - Spaced doublequote?
+line 5624:15 - Spaced doublequote?
+line 5625:6 - Wrongspaced quotes?
+line 5625:4 - Spaced doublequote?
+line 5625:15 - Spaced doublequote?
+line 5626:6 - Wrongspaced quotes?
+line 5626:4 - Spaced doublequote?
+line 5626:15 - Spaced doublequote?
+line 5627:6 - Wrongspaced quotes?
+line 5627:4 - Spaced doublequote?
+line 5627:15 - Spaced doublequote?
+line 5628:22 - Non-ASCII character 233
+line 5628:17 - Wrongspaced quotes?
+line 5628:15 - Spaced doublequote?
+line 5629:17 - Wrongspaced quotes?
+line 5629:4 - Spaced doublequote?
+line 5629:15 - Spaced doublequote?
+line 5630:17 - Wrongspaced quotes?
+line 5630:4 - Spaced doublequote?
+line 5630:15 - Spaced doublequote?
+line 5631:17 - Wrongspaced quotes?
+line 5631:4 - Spaced doublequote?
+line 5631:15 - Spaced doublequote?
+line 5632:19 - Non-ASCII character 252
+line 5632:17 - Wrongspaced quotes?
+line 5632:4 - Spaced doublequote?
+line 5632:15 - Spaced doublequote?
+line 5633:17 - Wrongspaced quotes?
+line 5633:4 - Spaced doublequote?
+line 5633:15 - Spaced doublequote?
+line 5634:17 - Wrongspaced quotes?
+line 5634:4 - Spaced doublequote?
+line 5634:15 - Spaced doublequote?
+line 5635:17 - Wrongspaced quotes?
+line 5635:4 - Spaced doublequote?
+line 5635:15 - Spaced doublequote?
+line 5636:17 - Wrongspaced quotes?
+line 5636:4 - Spaced doublequote?
+line 5636:15 - Spaced doublequote?
+line 5637:17 - Wrongspaced quotes?
+line 5637:4 - Spaced doublequote?
+line 5637:15 - Spaced doublequote?
+line 5638:17 - Wrongspaced quotes?
+line 5638:4 - Spaced doublequote?
+line 5638:15 - Spaced doublequote?
+line 5639:0 - Mismatched quotes
+line 5647:33 - Non-ASCII character 232
+line 5647:6 - Wrongspaced quotes?
+line 5647:4 - Spaced doublequote?
+line 5647:15 - Spaced doublequote?
+line 5648:6 - Wrongspaced quotes?
+line 5648:4 - Spaced doublequote?
+line 5648:15 - Spaced doublequote?
+line 5649:6 - Wrongspaced quotes?
+line 5649:4 - Spaced doublequote?
+line 5649:15 - Spaced doublequote?
+line 5650:6 - Wrongspaced quotes?
+line 5650:4 - Spaced doublequote?
+line 5650:15 - Spaced doublequote?
+line 5651:6 - Wrongspaced quotes?
+line 5651:4 - Spaced doublequote?
+line 5651:15 - Spaced doublequote?
+line 5652:17 - Wrongspaced quotes?
+line 5652:15 - Spaced doublequote?
+line 5653:17 - Wrongspaced quotes?
+line 5653:4 - Spaced doublequote?
+line 5653:15 - Spaced doublequote?
+line 5654:17 - Wrongspaced quotes?
+line 5654:4 - Spaced doublequote?
+line 5654:15 - Spaced doublequote?
+line 5655:17 - Wrongspaced quotes?
+line 5655:4 - Spaced doublequote?
+line 5655:15 - Spaced doublequote?
+line 5656:17 - Wrongspaced quotes?
+line 5656:4 - Spaced doublequote?
+line 5656:15 - Spaced doublequote?
+line 5657:17 - Wrongspaced quotes?
+line 5657:4 - Spaced doublequote?
+line 5657:15 - Spaced doublequote?
+line 5658:17 - Wrongspaced quotes?
+line 5658:4 - Spaced doublequote?
+line 5658:15 - Spaced doublequote?
+line 5659:17 - Wrongspaced quotes?
+line 5659:4 - Spaced doublequote?
+line 5659:15 - Spaced doublequote?
+line 5660:0 - Mismatched quotes
+line 5667:6 - Wrongspaced quotes?
+line 5667:4 - Spaced doublequote?
+line 5668:28 - Query word au
+line 5668:17 - Wrongspaced quotes?
+line 5668:4 - Spaced doublequote?
+line 5668:15 - Spaced doublequote?
+line 5669:20 - Non-ASCII character 226
+line 5669:17 - Wrongspaced quotes?
+line 5669:4 - Spaced doublequote?
+line 5669:15 - Spaced doublequote?
+line 5670:17 - Wrongspaced quotes?
+line 5670:4 - Spaced doublequote?
+line 5670:15 - Spaced doublequote?
+line 5671:17 - Wrongspaced quotes?
+line 5671:4 - Spaced doublequote?
+line 5671:15 - Spaced doublequote?
+line 5672:17 - Wrongspaced quotes?
+line 5672:4 - Spaced doublequote?
+line 5672:15 - Spaced doublequote?
+line 5673:15 - Spaced doublequote?
+line 5674:6 - Wrongspaced quotes?
+line 5674:4 - Spaced doublequote?
+line 5674:15 - Spaced doublequote?
+line 5675:23 - Non-ASCII character 232
+line 5675:6 - Wrongspaced quotes?
+line 5675:4 - Spaced doublequote?
+line 5675:15 - Spaced doublequote?
+line 5676:6 - Wrongspaced quotes?
+line 5676:4 - Spaced doublequote?
+line 5676:15 - Spaced doublequote?
+line 5677:6 - Wrongspaced quotes?
+line 5677:4 - Spaced doublequote?
+line 5677:15 - Spaced doublequote?
+line 5678:19 - Non-ASCII character 252
+line 5678:6 - Wrongspaced quotes?
+line 5678:4 - Spaced doublequote?
+line 5678:15 - Spaced doublequote?
+line 5679:6 - Wrongspaced quotes?
+line 5679:4 - Spaced doublequote?
+line 5679:15 - Spaced doublequote?
+line 5680:6 - Wrongspaced quotes?
+line 5680:4 - Spaced doublequote?
+line 5680:15 - Spaced doublequote?
+line 5681:6 - Wrongspaced quotes?
+line 5681:4 - Spaced doublequote?
+line 5681:15 - Spaced doublequote?
+line 5682:6 - Wrongspaced quotes?
+line 5682:4 - Spaced doublequote?
+line 5682:15 - Spaced doublequote?
+line 5683:6 - Wrongspaced quotes?
+line 5683:4 - Spaced doublequote?
+line 5683:15 - Spaced doublequote?
+line 5684:6 - Wrongspaced quotes?
+line 5684:4 - Spaced doublequote?
+line 5684:15 - Spaced doublequote?
+line 5705:18 - Query word s
+line 5707:19 - Double punctuation?
+line 5708:3 - Double punctuation?
+line 5708:38 - Double punctuation?
+line 5708:44 - Double punctuation?
+line 5709:32 - Double punctuation?
+line 5731:17 - Double punctuation?
+line 5882:0 - Mismatched square brackets?
+line 5883:33 - Extra period?
+line 5883:65 - Query word ph
+line 5883:68 - Query word sc
+line 5887:0 - Mismatched square brackets?
+line 5916:1 - Query standalone 1
+line 6032:51 - Query word s
+line 6047:18 - Query word s
+line 6050:65 - Query word s
+line 6051:26 - endquote missing punctuation?
+line 6093:31 - Double punctuation?
+line 6094:31 - Double punctuation?
+line 6099:21 - Double punctuation?
+line 6106:29 - Query word FitzH
+line 6115:35 - Double punctuation?
+line 6188:15 - Double punctuation?
+line 6252:39 - Non-ASCII character 163
+line 6257:5 - Non-ASCII character 233
+line 6268:43 - Non-ASCII character 234
+line 6285:32 - endquote missing punctuation?
+line 6339:18 - Non-ASCII character 163
+line 6389:21 - endquote missing punctuation?
+line 6436:47 - Query digit in S.W.7.
+line 6443:1 - Query standalone 1
+line 6445:6 - Non-ASCII character 163
+line 6446:33 - Query standalone 1
+line 6449:6 - Query standalone 1
+line 6452:25 - Non-ASCII character 189
+line 6467:5 - Paragraph starts with lower-case
+line 6468:21 - Non-ASCII character 163
+line 6469:41 - Non-ASCII character 163
+line 6477:5 - Paragraph starts with lower-case
+line 6482:5 - Paragraph starts with lower-case
+line 6504:14 - Query standalone 1
+line 6549:60 - Double punctuation?
+line 6550:32 - Double punctuation?
+line 6586:64 - Double punctuation?
+line 6587:47 - Query digit in S.W.19.
+line 6625:47 - Non-ASCII character 163
+line 6626:9 - Non-ASCII character 163
+line 6632:26 - Query word s
+line 6650:34 - Double punctuation?
+line 6697:44 - endquote missing punctuation?
+line 6703:21 - endquote missing punctuation?
+line 6711:35 - endquote missing punctuation?
+line 6805:33 - Spaced em-dash?
+line 6805:35 - Spaced em-dash?
+line 6824:6 - endquote missing punctuation?
+line 6832:21 - endquote missing punctuation?
+line 6837:52 - Forward slash?
+line 6837:63 - Query standalone 1
+line 6855:64 - Forward slash?
+line 6855:21 - Double punctuation?
+line 6860:32 - Forward slash?
+line 6861:65 - Forward slash?
+line 6862:65 - Forward slash?
+line 6862:1 - Query standalone 1
+line 6863:1 - Query standalone 1
+line 6863:19 - Double punctuation?
+line 6863:44 - Double punctuation?
+line 6864:39 - Forward slash?
+line 6865:65 - Forward slash?
+line 6865:23 - Double punctuation?
+line 6866:65 - Forward slash?
+line 6866:22 - Double punctuation?
+line 6871:65 - Forward slash?
+line 6872:64 - Forward slash?
+line 6872:1 - Query standalone 1
+line 6873:65 - Forward slash?
+line 6873:39 - Query standalone 1
+line 6874:65 - Forward slash?
+line 6874:1 - Query standalone 1
+line 6875:64 - Forward slash?
+line 6876:64 - Forward slash?
+line 6877:41 - Forward slash?
+line 6877:1 - Query standalone 1
+line 6877:47 - Query standalone 1
+line 6877:20 - Double punctuation?
+line 6878:52 - Forward slash?
+line 6878:31 - Double punctuation?
+line 6879:33 - Double punctuation?
+line 6880:65 - Forward slash?
+line 6881:64 - Forward slash?
+line 6881:1 - Query standalone 1
+line 6882:1 - Query standalone 1
+line 6882:39 - Double punctuation?
+line 6883:22 - Forward slash?
+line 6883:29 - Query standalone 1
+line 6888:33 - Forward slash?
+line 6888:1 - Query standalone 1
+line 6888:34 - Query standalone 1
+line 6889:50 - Forward slash?
+line 6889:31 - Double punctuation?
+line 6891:22 - Forward slash?
+line 6892:41 - Forward slash?
+line 6892:47 - Query standalone 1
+line 6892:23 - Double punctuation?
+line 6893:65 - Forward slash?
+line 6894:65 - Forward slash?
+line 6895:37 - Forward slash?
+line 6895:19 - Double punctuation?
+line 6896:64 - Forward slash?
+line 6896:31 - Double punctuation?
+line 6897:50 - Forward slash?
+line 6898:65 - Forward slash?
+line 6898:1 - Query standalone 1
+line 6899:36 - Forward slash?
+line 6900:65 - Forward slash?
+line 6900:1 - Query standalone 1
+line 6900:25 - Double punctuation?
+line 6901:45 - Forward slash?
+line 6901:32 - Extra period?
+line 6901:46 - Query standalone 1
+line 6901:66 - Query standalone 1
+line 6901:25 - Double punctuation?
+line 6902:5 - Forward slash?
+line 6902:1 - Query standalone 1
+line 6903:50 - Forward slash?
+line 6903:29 - Double punctuation?
+line 6904:65 - Forward slash?
+line 6904:1 - Query standalone 1
+line 6905:43 - Forward slash?
+line 6905:21 - Double punctuation?
+line 6906:42 - Extra period?
+line 6906:35 - Double punctuation?
+line 6907:13 - Forward slash?
+line 6908:42 - Forward slash?
+line 6909:34 - Forward slash?
+line 6909:7 - Query word MacDougall
+line 6909:33 - Query standalone 1
+line 6909:40 - Query standalone 1
+line 6910:37 - Forward slash?
+line 6911:32 - Forward slash?
+line 6911:1 - Query standalone 1
+line 6912:34 - Forward slash?
+line 6913:64 - Forward slash?
+line 6914:37 - Forward slash?
+line 6915:34 - Forward slash?
+line 6916:64 - Forward slash?
+line 6916:30 - Query standalone 1
+line 6916:23 - Double punctuation?
+line 6917:32 - Double punctuation?
+line 6917:39 - Double punctuation?
+line 6917:47 - Double punctuation?
+line 6918:65 - Forward slash?
+line 6919:64 - Forward slash?
+line 6920:64 - Forward slash?
+line 6921:64 - Forward slash?
+line 6921:1 - Query standalone 1
+line 6922:40 - Forward slash?
+line 6922:1 - Query standalone 1
+line 6923:38 - Forward slash?
+line 6923:1 - Query standalone 1
+line 6924:65 - Forward slash?
+line 6924:29 - Double punctuation?
+line 6925:44 - Forward slash?
+line 6926:65 - Forward slash?
+line 6927:38 - Forward slash?
+line 6928:64 - Forward slash?
+line 6929:65 - Forward slash?
+line 6930:64 - Forward slash?
+line 6930:1 - Query standalone 1
+line 6935:65 - Forward slash?
+line 6936:64 - Forward slash?
+line 6937:64 - Forward slash?
+line 6937:1 - Query standalone 1
+line 6938:65 - Forward slash?
+line 6939:64 - Forward slash?
+line 6939:1 - Query standalone 1
+line 6940:65 - Forward slash?
+line 6940:1 - Query standalone 1
+line 6940:24 - Double punctuation?
+line 6941:64 - Forward slash?
+line 6942:65 - Forward slash?
+line 6942:1 - Query standalone 1
+line 6942:19 - Double punctuation?
+line 6943:64 - Forward slash?
+line 6943:1 - Query standalone 1
+line 6943:27 - Query standalone 1
+line 6944:64 - Forward slash?
+line 6944:36 - Query standalone 1
+line 6945:64 - Forward slash?
+line 6945:27 - Double punctuation?
+line 6946:42 - Forward slash?
+line 6946:1 - Query standalone 1
+line 6946:23 - Double punctuation?
+line 6947:65 - Forward slash?
+line 6948:65 - Forward slash?
+line 6949:65 - Forward slash?
+line 6949:1 - Query standalone 1
+line 6950:36 - Forward slash?
+line 6950:1 - Query standalone 1
+line 6951:14 - Non-ISO-8859 character 339
+line 6951:65 - Forward slash?
+line 6952:64 - Forward slash?
+line 6952:1 - Query standalone 1
+line 6953:65 - Forward slash?
+line 6954:34 - Forward slash?
+line 6955:65 - Forward slash?
+line 6955:1 - Query standalone 1
+line 6956:65 - Forward slash?
+line 6957:65 - Forward slash?
+line 6958:38 - Forward slash?
+line 6959:36 - Forward slash?
+line 6959:1 - Query standalone 1
+line 6960:65 - Forward slash?
+line 6961:64 - Forward slash?
+line 6962:65 - Forward slash?
+line 6962:25 - Query standalone 1
+line 6963:65 - Forward slash?
+line 6964:65 - Forward slash?
+line 6964:1 - Query standalone 1
+line 6965:65 - Forward slash?
+line 6965:1 - Query standalone 1
+line 6966:65 - Forward slash?
+line 6967:65 - Forward slash?
+line 6967:66 - Query standalone 1
+line 6968:65 - Forward slash?
+line 6968:33 - Double punctuation?
+line 6969:65 - Forward slash?
+line 6970:65 - Forward slash?
+line 6970:34 - Double punctuation?
+line 6971:29 - Forward slash?
+line 6971:1 - Query standalone 1
+line 6972:65 - Forward slash?
+line 6973:65 - Forward slash?
+line 6973:19 - Double punctuation?
+line 6974:65 - Forward slash?
+line 6974:7 - Query word MacLear
+line 6974:25 - Double punctuation?
+line 6975:65 - Forward slash?
+line 6975:28 - Query standalone 1
+line 6976:65 - Forward slash?
+line 6977:64 - Forward slash?
+line 6978:64 - Forward slash?
+line 6979:65 - Forward slash?
+line 6979:1 - Query standalone 1
+line 6980:37 - Forward slash?
+line 6981:34 - Forward slash?
+line 6982:32 - Forward slash?
+line 6983:65 - Forward slash?
+line 6983:30 - Double punctuation?
+line 6984:41 - Forward slash?
+line 6984:22 - Double punctuation?
+line 6985:65 - Forward slash?
+line 6986:36 - Forward slash?
+line 6986:37 - Query standalone 1
+line 6987:65 - Forward slash?
+line 6987:20 - Double punctuation?
+line 6987:26 - Double punctuation?
+line 6988:64 - Forward slash?
+line 6989:33 - Forward slash?
+line 6990:39 - Forward slash?
+line 6991:64 - Forward slash?
+line 6992:36 - Forward slash?
+line 6993:65 - Forward slash?
+line 6994:64 - Forward slash?
+line 6995:38 - Forward slash?
+line 6995:44 - Query standalone 1
+line 6996:65 - Forward slash?
+line 6997:40 - Forward slash?
+line 6998:64 - Forward slash?
+line 6999:64 - Forward slash?
+line 6999:1 - Query standalone 1
+line 7000:65 - Forward slash?
+line 7001:65 - Forward slash?
+line 7002:65 - Forward slash?
+line 7003:35 - Forward slash?
+line 7004:65 - Forward slash?
+line 7009:64 - Forward slash?
+line 7010:64 - Forward slash?
+line 7010:1 - Query standalone 1
+line 7011:64 - Forward slash?
+line 7011:1 - Query standalone 1
+line 7012:65 - Forward slash?
+line 7013:35 - Forward slash?
+line 7014:65 - Forward slash?
+line 7014:21 - Query standalone 1
+line 7015:65 - Forward slash?
+line 7016:65 - Forward slash?
+line 7016:1 - Query standalone 1
+line 7017:64 - Forward slash?
+line 7018:65 - Forward slash?
+line 7019:65 - Forward slash?
+line 7019:1 - Query standalone 1
+line 7020:65 - Forward slash?
+line 7021:65 - Forward slash?
+line 7021:66 - Query standalone 1
+line 7022:65 - Forward slash?
+line 7022:1 - Query standalone 1
+line 7023:65 - Forward slash?
+line 7023:21 - Query standalone 1
+line 7024:65 - Forward slash?
+line 7024:1 - Query standalone 1
+line 7025:64 - Forward slash?
+line 7025:1 - Query standalone 1
+line 7026:65 - Forward slash?
+line 7026:1 - Query standalone 1
+line 7027:34 - Forward slash?
+line 7028:65 - Forward slash?
+line 7029:33 - Forward slash?
+line 7030:65 - Forward slash?
+line 7030:1 - Query standalone 1
+line 7030:66 - Query standalone 1
+line 7031:65 - Forward slash?
+line 7032:64 - Forward slash?
+line 7032:22 - Query standalone 1
+line 7033:65 - Forward slash?
+line 7033:1 - Query standalone 1
+line 7034:65 - Forward slash?
+line 7035:65 - Forward slash?
+line 7036:32 - Forward slash?
+line 7036:1 - Query standalone 1
+line 7037:65 - Forward slash?
+line 7037:66 - Query standalone 1
+line 7038:65 - Forward slash?
+line 7039:65 - Forward slash?
+line 7039:1 - Query standalone 1
+line 7040:65 - Forward slash?
+line 7041:48 - Forward slash?
+line 7041:1 - Query standalone 1
+line 7042:65 - Forward slash?
+line 7042:1 - Query standalone 1
+line 7043:64 - Forward slash?
+line 7044:64 - Forward slash?
+line 7044:22 - Double punctuation?
+line 7045:64 - Forward slash?
+line 7045:1 - Query standalone 1
+line 7046:65 - Forward slash?
+line 7046:1 - Query standalone 1
+line 7046:29 - Query word FitzG
+line 7047:64 - Forward slash?
+line 7047:29 - Query standalone 1
+line 7047:22 - Double punctuation?
+line 7048:65 - Forward slash?
+line 7048:1 - Query standalone 1
+line 7049:38 - Forward slash?
+line 7049:1 - Query standalone 1
+line 7050:31 - Forward slash?
+line 7051:31 - Forward slash?
+line 7052:65 - Forward slash?
+line 7052:1 - Query standalone 1
+line 7053:65 - Forward slash?
+line 7054:64 - Forward slash?
+line 7054:29 - Query standalone 1
+line 7054:22 - Double punctuation?
+line 7055:65 - Forward slash?
+line 7055:22 - Double punctuation?
+line 7056:38 - Forward slash?
+line 7056:1 - Query standalone 1
+line 7057:64 - Forward slash?
+line 7057:1 - Query standalone 1
+line 7057:21 - Double punctuation?
+line 7058:65 - Forward slash?
+line 7058:66 - Query standalone 1
+line 7059:34 - Forward slash?
+line 7060:64 - Forward slash?
+line 7061:65 - Forward slash?
+line 7061:1 - Query standalone 1
+line 7062:65 - Forward slash?
+line 7062:1 - Query standalone 1
+line 7063:64 - Forward slash?
+line 7064:64 - Forward slash?
+line 7065:64 - Forward slash?
+line 7066:64 - Forward slash?
+line 7066:23 - Query standalone 1
+line 7067:64 - Forward slash?
+line 7067:1 - Query standalone 1
+line 7068:65 - Forward slash?
+line 7069:65 - Forward slash?
+line 7070:38 - Forward slash?
+line 7071:65 - Forward slash?
+line 7071:1 - Query standalone 1
+line 7072:64 - Forward slash?
+line 7073:65 - Forward slash?
+line 7073:1 - Query standalone 1
+line 7074:64 - Forward slash?
+line 7074:1 - Query standalone 1
+line 7075:35 - Forward slash?
+line 7076:50 - Forward slash?
+line 7077:30 - Forward slash?
+line 7078:65 - Forward slash?
+line 7079:65 - Forward slash?
+line 7080:65 - Forward slash?
+line 7080:1 - Query standalone 1
+line 7081:64 - Forward slash?
+line 7081:1 - Query standalone 1
+line 7082:65 - Forward slash?
+line 7082:1 - Query standalone 1
+line 7083:65 - Forward slash?
+line 7084:65 - Forward slash?
+line 7085:64 - Forward slash?
+line 7086:64 - Forward slash?
+line 7087:65 - Forward slash?
+line 7094:22 - Query word s
+line 7094:32 - Query word s
+line 7103:20 - Double punctuation?
+line 7117:18 - Double punctuation?
+line 7118:19 - Double punctuation?
+line 7120:19 - Double punctuation?
+line 7133:24 - Double punctuation?
+line 7138:23 - Double punctuation?
+line 7157:24 - Double punctuation?
+line 7159:22 - Double punctuation?
+line 7166:20 - Double punctuation?
+line 7177:23 - Double punctuation?
+line 7177:31 - Double punctuation?
+line 7192:22 - Double punctuation?
+line 7209:25 - Double punctuation?
+line 7212:23 - Double punctuation?
+line 7221:20 - Double punctuation?
+line 7223:22 - Double punctuation?
+line 7224:19 - Double punctuation?
+line 7231:22 - Double punctuation?
+line 7233:18 - Double punctuation?
+line 7233:26 - Double punctuation?
+line 7241:22 - Double punctuation?
+line 7252:23 - Double punctuation?
+line 7252:29 - Double punctuation?
+line 7252:37 - Double punctuation?
+line 7269:21 - Double punctuation?
+line 7274:20 - Double punctuation?
+line 7274:28 - Double punctuation?
+line 7285:20 - Double punctuation?
+line 7288:26 - Double punctuation?
+line 7291:22 - Double punctuation?
+line 7293:26 - Double punctuation?
+line 7312:19 - Double punctuation?
+line 7314:12 - Non-ASCII character 230
+line 7316:24 - Double punctuation?
+line 7320:21 - Double punctuation?
+line 7367:19 - Double punctuation?
+line 7371:19 - Double punctuation?
+line 7374:9 - Query word McCulloch
+line 7375:9 - Query word McDowell
+line 7376:9 - Query word McKanna
+line 7380:19 - Double punctuation?
+line 7394:21 - Double punctuation?
+line 7407:19 - Double punctuation?
+line 7417:24 - Double punctuation?
+line 7418:26 - Double punctuation?
+line 7431:19 - Double punctuation?
+line 7432:18 - Double punctuation?
+line 7433:24 - Double punctuation?
+line 7438:22 - Double punctuation?
+line 7443:20 - Double punctuation?
+line 7456:19 - Double punctuation?
+line 7462:24 - Double punctuation?
+line 7478:21 - Double punctuation?
+line 7483:9 - Query word McGrath
+line 7487:24 - Double punctuation?
+line 7494:22 - Double punctuation?
+line 7500:20 - Double punctuation?
+line 7520:23 - Query punctuation after a?
+line 7576:26 - Double punctuation?
+line 7637:21 - Double punctuation?
+line 7647:22 - Double punctuation?
+line 7717:21 - Double punctuation?
+line 7775:21 - Double punctuation?
+line 7785:21 - Double punctuation?
+line 7786:9 - Query word McGuinness
+line 7787:9 - Query word McHale
+line 7788:9 - Query word McKenna
+line 7789:9 - Query word McLellan
+line 7806:25 - Double punctuation?
+line 7823:25 - Double punctuation?
+line 7824:18 - Double punctuation?
+line 7896:22 - Double punctuation?
+line 7905:20 - Double punctuation?
+line 7908:26 - Double punctuation?
+line 7910:19 - Double punctuation?
+line 7925:19 - Double punctuation?
+line 7928:22 - Double punctuation?
+line 7941:23 - Double punctuation?
+line 7950:20 - Double punctuation?
+line 7961:20 - Double punctuation?
+line 7986:18 - Double punctuation?
+line 7989:21 - Double punctuation?
+line 7997:26 - Double punctuation?
+line 8064:22 - Double punctuation?
+line 8111:24 - Double punctuation?
+line 8197:20 - Double punctuation?
+line 8243:9 - Query word Bave
+line 8381:9 - Query word Boultbee
+line 8521:18 - Double punctuation?
+line 8626:20 - Double punctuation?
+line 8703:22 - Double punctuation?
+line 8895:24 - Double punctuation?
+line 9059:22 - Double punctuation?
+line 9109:16 - Query punctuation after every?
+line 9139:23 - Double punctuation?
+line 9150:23 - Double punctuation?
+line 9258:21 - Double punctuation?
+line 9417:20 - Double punctuation?
+line 9752:20 - Double punctuation?
+line 9877:19 - Double punctuation?
+line 9889:19 - Double punctuation?
+line 10138:9 - Query word McAllister
+line 10139:9 - Query word McArdle
+line 10140:9 - Query word McCabe
+line 10141:9 - Query word McCarthy
+line 10142:9 - Query word McDonald
+line 10143:9 - Query word McDonald
+line 10144:9 - Query word McGann
+line 10145:9 - Query word McGillivray
+line 10146:9 - Query word McGinn
+line 10146:20 - Double punctuation?
+line 10147:9 - Query word McIlwain
+line 10148:9 - Query word McKevitt
+line 10150:9 - Query word McKnight
+line 10151:9 - Query word McNeil
+line 10152:9 - Query word McPhie
+line 10153:9 - Query word McManus
+line 10154:9 - Query word McQuaigue
+line 10155:9 - Query word McShane
+line 10274:24 - Double punctuation?
+line 10313:23 - Double punctuation?
+line 10368:20 - Double punctuation?
+line 10421:21 - Double punctuation?
+line 10489:23 - Double punctuation?
+line 10588:24 - Double punctuation?
+line 10595:24 - Double punctuation?
+line 10616:27 - Double punctuation?
+line 10803:22 - Double punctuation?
+line 10858:22 - Double punctuation?
+line 10877:16 - Query word Wm
+line 10900:24 - Double punctuation?
+line 11048:25 - Double punctuation?
+line 11082:22 - Double punctuation?
+line 11229:25 - Double punctuation?
+line 11421:23 - Double punctuation?
+line 11691:64 - Forward slash?
+line 11691:28 - Double punctuation?
+line 11691:34 - Double punctuation?
+line 11696:64 - Forward slash?
+line 11696:35 - Query standalone 1
+line 11697:59 - Forward slash?
+line 11698:65 - Forward slash?
+line 11698:21 - Double punctuation?
+line 11698:27 - Double punctuation?
+line 11699:64 - Forward slash?
+line 11699:22 - Double punctuation?
+line 11699:28 - Double punctuation?
+line 11699:36 - Double punctuation?
+line 11700:65 - Forward slash?
+line 11700:22 - Double punctuation?
+line 11700:28 - Double punctuation?
+line 11700:36 - Double punctuation?
+line 11700:44 - Double punctuation?
+line 11700:52 - Double punctuation?
+line 11701:0 - Mismatched curly brackets?
+line 11705:65 - Forward slash?
+line 11705:45 - Query standalone 1
+line 11705:22 - Double punctuation?
+line 11705:28 - Double punctuation?
+line 11705:36 - Double punctuation?
+line 11706:1 - Query standalone 1
+line 11706:30 - Query word Bt
+line 11706:22 - Double punctuation?
+line 11707:65 - Forward slash?
+line 11708:1 - Query standalone 1
+line 11708:17 - Double punctuation?
+line 11708:25 - Double punctuation?
+line 11709:64 - Forward slash?
+line 11714:23 - Double punctuation?
+line 11714:29 - Double punctuation?
+line 11715:65 - Forward slash?
+line 11720:65 - Forward slash?
+line 11720:23 - Double punctuation?
+line 11720:31 - Double punctuation?
+line 11721:64 - Forward slash?
+line 11721:1 - Query standalone 1
+line 11721:33 - Query word Bt
+line 11721:25 - Double punctuation?
+line 11722:64 - Forward slash?
+line 11722:29 - Double punctuation?
+line 11723:64 - Forward slash?
+line 11723:28 - Query word Bt
+line 11723:22 - Double punctuation?
+line 11724:64 - Forward slash?
+line 11725:39 - Query word Bt
+line 11725:31 - Double punctuation?
+line 11725:39 - Double punctuation?
+line 11726:64 - Forward slash?
+line 11727:30 - Double punctuation?
+line 11727:38 - Double punctuation?
+line 11728:65 - Forward slash?
+line 11728:0 - Query word Bt
+line 11729:65 - Forward slash?
+line 11729:35 - Query word Bt
+line 11729:27 - Double punctuation?
+line 11730:65 - Forward slash?
+line 11731:0 - Query word s
+line 11731:18 - Double punctuation?
+line 11731:26 - Double punctuation?
+line 11731:34 - Double punctuation?
+line 11732:65 - Forward slash?
+line 11732:0 - Query word Bt
+line 11733:0 - Mismatched curly brackets?
+line 11737:64 - Forward slash?
+line 11737:1 - Query standalone 1
+line 11738:64 - Forward slash?
+line 11738:1 - Query standalone 1
+line 11738:30 - Double punctuation?
+line 11738:38 - Double punctuation?
+line 11739:65 - Forward slash?
+line 11740:65 - Forward slash?
+line 11740:1 - Query standalone 1
+line 11740:26 - Double punctuation?
+line 11741:65 - Forward slash?
+line 11741:22 - Double punctuation?
+line 11742:64 - Forward slash?
+line 11743:65 - Forward slash?
+line 11743:22 - Double punctuation?
+line 11744:65 - Forward slash?
+line 11745:64 - Forward slash?
+line 11746:64 - Forward slash?
+line 11747:5 - Forward slash?
+line 11748:65 - Forward slash?
+line 11749:64 - Forward slash?
+line 11750:64 - Forward slash?
+line 11750:1 - Query standalone 1
+line 11750:36 - Double punctuation?
+line 11751:64 - Forward slash?
+line 11752:65 - Forward slash?
+line 11752:1 - Query standalone 1
+line 11752:33 - Query word Bt
+line 11752:27 - Double punctuation?
+line 11753:64 - Forward slash?
+line 11754:5 - Forward slash?
+line 11754:6 - Query standalone 1
+line 11754:45 - Query standalone 1
+line 11754:28 - Double punctuation?
+line 11754:44 - Double punctuation?
+line 11755:65 - Forward slash?
+line 11755:30 - Query word Bt
+line 11755:16 - Double punctuation?
+line 11755:24 - Double punctuation?
+line 11756:65 - Forward slash?
+line 11757:65 - Forward slash?
+line 11758:65 - Forward slash?
+line 11759:65 - Forward slash?
+line 11759:23 - Double punctuation?
+line 11760:65 - Forward slash?
+line 11760:30 - Query word FitzH
+line 11760:37 - Double punctuation?
+line 11760:45 - Double punctuation?
+line 11761:65 - Forward slash?
+line 11762:65 - Forward slash?
+line 11762:21 - Double punctuation?
+line 11763:64 - Forward slash?
+line 11764:64 - Forward slash?
+line 11764:1 - Query standalone 1
+line 11765:65 - Forward slash?
+line 11765:1 - Query standalone 1
+line 11765:27 - Double punctuation?
+line 11765:35 - Double punctuation?
+line 11766:64 - Forward slash?
+line 11766:1 - Query standalone 1
+line 11766:22 - Double punctuation?
+line 11767:65 - Forward slash?
+line 11767:27 - Double punctuation?
+line 11768:65 - Forward slash?
+line 11769:65 - Forward slash?
+line 11769:23 - Double punctuation?
+line 11770:65 - Forward slash?
+line 11771:65 - Forward slash?
+line 11771:1 - Query standalone 1
+line 11771:28 - Double punctuation?
+line 11772:64 - Forward slash?
+line 11773:65 - Forward slash?
+line 11773:28 - Query standalone 1
+line 11774:64 - Forward slash?
+line 11774:21 - Double punctuation?
+line 11775:65 - Forward slash?
+line 11775:1 - Query standalone 1
+line 11775:25 - Double punctuation?
+line 11776:64 - Forward slash?
+line 11776:1 - Query standalone 1
+line 11777:64 - Forward slash?
+line 11777:1 - Query standalone 1
+line 11778:65 - Forward slash?
+line 11778:21 - Double punctuation?
+line 11779:64 - Forward slash?
+line 11779:23 - Double punctuation?
+line 11780:65 - Forward slash?
+line 11781:65 - Forward slash?
+line 11781:25 - Double punctuation?
+line 11782:64 - Forward slash?
+line 11783:65 - Forward slash?
+line 11784:5 - Forward slash?
+line 11784:32 - Double punctuation?
+line 11785:65 - Forward slash?
+line 11786:65 - Forward slash?
+line 11786:1 - Query standalone 1
+line 11786:25 - Double punctuation?
+line 11787:64 - Forward slash?
+line 11787:1 - Query standalone 1
+line 11787:27 - Double punctuation?
+line 11788:65 - Forward slash?
+line 11788:21 - Double punctuation?
+line 11789:64 - Forward slash?
+line 11789:1 - Query standalone 1
+line 11790:5 - Forward slash?
+line 11790:24 - Double punctuation?
+line 11791:64 - Forward slash?
+line 11792:64 - Forward slash?
+line 11792:1 - Query standalone 1
+line 11793:65 - Forward slash?
+line 11793:21 - Double punctuation?
+line 11794:65 - Forward slash?
+line 11795:0 - Mismatched curly brackets?
+line 11799:65 - Forward slash?
+line 11800:64 - Forward slash?
+line 11800:1 - Query standalone 1
+line 11801:64 - Forward slash?
+line 11801:28 - Query standalone 1
+line 11801:21 - Double punctuation?
+line 11802:65 - Forward slash?
+line 11803:64 - Forward slash?
+line 11803:23 - Double punctuation?
+line 11804:65 - Forward slash?
+line 11805:64 - Forward slash?
+line 11805:33 - Double punctuation?
+line 11806:64 - Forward slash?
+line 11806:33 - Double punctuation?
+line 11807:65 - Forward slash?
+line 11808:65 - Forward slash?
+line 11809:64 - Forward slash?
+line 11810:65 - Forward slash?
+line 11810:17 - Double punctuation?
+line 11811:65 - Forward slash?
+line 11812:65 - Forward slash?
+line 11813:65 - Forward slash?
+line 11813:21 - Double punctuation?
+line 11814:64 - Forward slash?
+line 11814:1 - Query standalone 1
+line 11814:23 - Double punctuation?
+line 11815:64 - Forward slash?
+line 11815:1 - Query standalone 1
+line 11816:65 - Forward slash?
+line 11817:65 - Forward slash?
+line 11818:65 - Forward slash?
+line 11819:65 - Forward slash?
+line 11819:1 - Query standalone 1
+line 11820:65 - Forward slash?
+line 11821:65 - Forward slash?
+line 11822:65 - Forward slash?
+line 11822:1 - Query standalone 1
+line 11822:20 - Double punctuation?
+line 11823:64 - Forward slash?
+line 11824:65 - Forward slash?
+line 11824:25 - Double punctuation?
+line 11825:64 - Forward slash?
+line 11825:24 - Double punctuation?
+line 11826:65 - Forward slash?
+line 11827:65 - Forward slash?
+line 11828:65 - Forward slash?
+line 11829:65 - Forward slash?
+line 11830:65 - Forward slash?
+line 11830:1 - Query standalone 1
+line 11830:23 - Double punctuation?
+line 11831:65 - Forward slash?
+line 11832:65 - Forward slash?
+line 11833:65 - Forward slash?
+line 11833:1 - Query standalone 1
+line 11833:30 - Double punctuation?
+line 11834:64 - Forward slash?
+line 11834:44 - Query standalone 1
+line 11834:24 - Double punctuation?
+line 11835:65 - Forward slash?
+line 11835:22 - Double punctuation?
+line 11836:64 - Forward slash?
+line 11836:17 - Double punctuation?
+line 11837:64 - Forward slash?
+line 11838:65 - Forward slash?
+line 11839:65 - Forward slash?
+line 11840:64 - Forward slash?
+line 11840:1 - Query standalone 1
+line 11840:23 - Query standalone 1
+line 11841:65 - Forward slash?
+line 11842:31 - Double punctuation?
+line 11842:45 - Double punctuation?
+line 11843:65 - Forward slash?
+line 11844:65 - Forward slash?
+line 11844:24 - Double punctuation?
+line 11845:65 - Forward slash?
+line 11846:65 - Forward slash?
+line 11847:65 - Forward slash?
+line 11847:21 - Double punctuation?
+line 11848:65 - Forward slash?
+line 11848:66 - Query standalone 1
+line 11849:64 - Forward slash?
+line 11849:23 - Query standalone 1
+line 11850:65 - Forward slash?
+line 11850:1 - Query standalone 1
+line 11851:65 - Forward slash?
+line 11851:26 - Double punctuation?
+line 11852:64 - Forward slash?
+line 11852:1 - Query standalone 1
+line 11853:65 - Forward slash?
+line 11853:1 - Query standalone 1
+line 11854:65 - Forward slash?
+line 11854:22 - Double punctuation?
+line 11855:65 - Forward slash?
+line 11856:65 - Forward slash?
+line 11857:65 - Forward slash?
+line 11858:64 - Forward slash?
+line 11858:25 - Double punctuation?
+line 11859:65 - Forward slash?
+line 11860:64 - Forward slash?
+line 11861:64 - Forward slash?
+line 11861:28 - Double punctuation?
+line 11862:65 - Forward slash?
+line 11863:65 - Forward slash?
+line 11863:1 - Query standalone 1
+line 11864:65 - Forward slash?
+line 11864:1 - Query standalone 1
+line 11865:65 - Forward slash?
+line 11865:23 - Double punctuation?
+line 11866:65 - Forward slash?
+line 11866:1 - Query standalone 1
+line 11866:25 - Double punctuation?
+line 11867:65 - Forward slash?
+line 11868:64 - Forward slash?
+line 11869:64 - Forward slash?
+line 11869:21 - Double punctuation?
+line 11870:64 - Forward slash?
+line 11870:1 - Query standalone 1
+line 11871:64 - Forward slash?
+line 11872:65 - Forward slash?
+line 11872:1 - Query standalone 1
+line 11873:65 - Forward slash?
+line 11873:20 - Double punctuation?
+line 11874:65 - Forward slash?
+line 11875:65 - Forward slash?
+line 11875:1 - Query standalone 1
+line 11876:67 - Forward slash?
+line 11876:19 - Double punctuation?
+line 11877:64 - Forward slash?
+line 11877:25 - Double punctuation?
+line 11878:65 - Forward slash?
+line 11879:64 - Forward slash?
+line 11879:51 - Query standalone 1
+line 11879:31 - Double punctuation?
+line 11880:65 - Forward slash?
+line 11880:1 - Query standalone 1
+line 11880:26 - Double punctuation?
+line 11881:65 - Forward slash?
+line 11881:1 - Query standalone 1
+line 11882:65 - Forward slash?
+line 11883:65 - Forward slash?
+line 11884:65 - Forward slash?
+line 11885:65 - Forward slash?
+line 11886:65 - Forward slash?
+line 11887:64 - Forward slash?
+line 11887:23 - Double punctuation?
+line 11888:65 - Forward slash?
+line 11889:64 - Forward slash?
+line 11890:65 - Forward slash?
+line 11890:48 - Query standalone 1
+line 11890:41 - Double punctuation?
+line 11891:64 - Forward slash?
+line 11892:65 - Forward slash?
+line 11892:27 - Double punctuation?
+line 11893:64 - Forward slash?
+line 11893:19 - Double punctuation?
+line 11894:65 - Forward slash?
+line 11895:65 - Forward slash?
+line 11896:65 - Forward slash?
+line 11897:65 - Forward slash?
+line 11897:18 - Query word McK
+line 11897:23 - Double punctuation?
+line 11898:65 - Forward slash?
+line 11899:65 - Forward slash?
+line 11899:1 - Query standalone 1
+line 11900:65 - Forward slash?
+line 11901:64 - Forward slash?
+line 11901:1 - Query standalone 1
+line 11902:65 - Forward slash?
+line 11902:22 - Double punctuation?
+line 11903:65 - Forward slash?
+line 11903:22 - Double punctuation?
+line 11904:65 - Forward slash?
+line 11904:1 - Query standalone 1
+line 11905:64 - Forward slash?
+line 11905:40 - Query standalone 1
+line 11905:33 - Double punctuation?
+line 11906:65 - Forward slash?
+line 11907:65 - Forward slash?
+line 11907:66 - Query standalone 1
+line 11908:65 - Forward slash?
+line 11908:1 - Query standalone 1
+line 11909:64 - Forward slash?
+line 11910:65 - Forward slash?
+line 11910:1 - Query standalone 1
+line 11910:21 - Double punctuation?
+line 11911:65 - Forward slash?
+line 11912:65 - Forward slash?
+line 11913:65 - Forward slash?
+line 11914:65 - Forward slash?
+line 11915:64 - Forward slash?
+line 11915:22 - Query standalone 1
+line 11916:65 - Forward slash?
+line 11917:65 - Forward slash?
+line 11917:27 - Double punctuation?
+line 11918:65 - Forward slash?
+line 11918:32 - Double punctuation?
+line 11919:65 - Forward slash?
+line 11919:22 - Double punctuation?
+line 11920:65 - Forward slash?
+line 11921:65 - Forward slash?
+line 11921:1 - Query standalone 1
+line 11922:64 - Forward slash?
+line 11922:19 - Double punctuation?
+line 11923:65 - Forward slash?
+line 11924:64 - Forward slash?
+line 11924:20 - Double punctuation?
+line 11925:65 - Forward slash?
+line 11925:28 - Double punctuation?
+line 11926:65 - Forward slash?
+line 11927:64 - Forward slash?
+line 11928:64 - Forward slash?
+line 11928:1 - Query standalone 1
+line 11929:65 - Forward slash?
+line 11929:1 - Query standalone 1
+line 11930:65 - Forward slash?
+line 11931:65 - Forward slash?
+line 11932:65 - Forward slash?
+line 11933:65 - Forward slash?
+line 11933:19 - Double punctuation?
+line 11934:65 - Forward slash?
+line 11935:64 - Forward slash?
+line 11936:65 - Forward slash?
+line 11936:66 - Query standalone 1
+line 11937:65 - Forward slash?
+line 11938:65 - Forward slash?
+line 11938:25 - Double punctuation?
+line 11939:65 - Forward slash?
+line 11940:65 - Forward slash?
+line 11941:65 - Forward slash?
+line 11942:65 - Forward slash?
+line 11942:66 - Query standalone 1
+line 11943:65 - Forward slash?
+line 11943:1 - Query standalone 1
+line 11944:64 - Forward slash?
+line 11945:65 - Forward slash?
+line 11945:1 - Query standalone 1
+line 11946:64 - Forward slash?
+line 11946:31 - Double punctuation?
+line 11947:65 - Forward slash?
+line 11948:65 - Forward slash?
+line 11948:1 - Query standalone 1
+line 11949:65 - Forward slash?
+line 11950:65 - Forward slash?
+line 11950:1 - Query standalone 1
+line 11951:65 - Forward slash?
+line 11952:65 - Forward slash?
+line 11952:20 - Double punctuation?
+line 11953:65 - Forward slash?
+line 11954:64 - Forward slash?
+line 11955:65 - Forward slash?
+line 11955:1 - Query standalone 1
+line 11955:20 - Double punctuation?
+line 11956:65 - Forward slash?
+line 11957:64 - Forward slash?
+line 11958:65 - Forward slash?
+line 11959:65 - Forward slash?
+line 11959:1 - Query standalone 1
+line 11960:65 - Forward slash?
+line 11961:65 - Forward slash?
+line 11962:65 - Forward slash?
+line 11962:1 - Query standalone 1
+line 11963:64 - Forward slash?
+line 11964:65 - Forward slash?
+line 11965:65 - Forward slash?
+line 11966:65 - Forward slash?
+line 11967:65 - Forward slash?
+line 11968:64 - Forward slash?
+line 11968:21 - Double punctuation?
+line 11969:65 - Forward slash?
+line 11969:1 - Query standalone 1
+line 11970:65 - Forward slash?
+line 11970:1 - Query standalone 1
+line 11971:5 - Forward slash?
+line 11972:65 - Forward slash?
+line 11973:64 - Forward slash?
+line 11973:25 - Query standalone 1
+line 11974:65 - Forward slash?
+line 11974:1 - Query standalone 1
+line 11974:21 - Double punctuation?
+line 11975:65 - Forward slash?
+line 11976:65 - Forward slash?
+line 11976:1 - Query standalone 1
+line 11977:64 - Forward slash?
+line 11977:21 - Double punctuation?
+line 11978:65 - Forward slash?
+line 11978:1 - Query standalone 1
+line 11979:65 - Forward slash?
+line 11979:19 - Double punctuation?
+line 11980:65 - Forward slash?
+line 11980:1 - Query standalone 1
+line 11980:25 - Double punctuation?
+line 11981:65 - Forward slash?
+line 11982:65 - Forward slash?
+line 11982:22 - Double punctuation?
+line 11983:65 - Forward slash?
+line 11983:1 - Query standalone 1
+line 11984:65 - Forward slash?
+line 11985:64 - Forward slash?
+line 11986:65 - Forward slash?
+line 11987:65 - Forward slash?
+line 11987:24 - Double punctuation?
+line 11988:0 - Mismatched curly brackets?
+line 11992:65 - Forward slash?
+line 11993:65 - Forward slash?
+line 11994:65 - Forward slash?
+line 11994:1 - Query standalone 1
+line 11995:65 - Forward slash?
+line 11995:1 - Query standalone 1
+line 11996:65 - Forward slash?
+line 11997:65 - Forward slash?
+line 11997:1 - Query standalone 1
+line 11998:65 - Forward slash?
+line 11999:64 - Forward slash?
+line 11999:1 - Query standalone 1
+line 11999:21 - Double punctuation?
+line 12000:65 - Forward slash?
+line 12001:65 - Forward slash?
+line 12001:1 - Query standalone 1
+line 12002:64 - Forward slash?
+line 12003:65 - Forward slash?
+line 12004:65 - Forward slash?
+line 12005:65 - Forward slash?
+line 12006:65 - Forward slash?
+line 12007:64 - Forward slash?
+line 12007:1 - Query standalone 1
+line 12007:19 - Double punctuation?
+line 12008:65 - Forward slash?
+line 12009:65 - Forward slash?
+line 12009:1 - Query standalone 1
+line 12010:64 - Forward slash?
+line 12010:24 - Query standalone 1
+line 12011:65 - Forward slash?
+line 12012:65 - Forward slash?
+line 12013:65 - Forward slash?
+line 12013:1 - Query standalone 1
+line 12014:65 - Forward slash?
+line 12015:65 - Forward slash?
+line 12016:65 - Forward slash?
+line 12016:1 - Query standalone 1
+line 12017:65 - Forward slash?
+line 12017:1 - Query standalone 1
+line 12018:65 - Forward slash?
+line 12019:65 - Forward slash?
+line 12020:65 - Forward slash?
+line 12020:1 - Query standalone 1
+line 12021:64 - Forward slash?
+line 12022:65 - Forward slash?
+line 12023:0 - Mismatched curly brackets?
+line 12027:64 - Forward slash?
+line 12027:1 - Query standalone 1
+line 12027:17 - Double punctuation?
+line 12032:64 - Forward slash?
+line 12033:65 - Forward slash?
+line 12033:18 - Query word FitzG
+line 12065:18 - Query word Bt
+line 12065:56 - Double punctuation?
+line 12065:64 - Double punctuation?
+line 12066:18 - Double punctuation?
+line 12067:15 - Double punctuation?
+line 12072:23 - Double punctuation?
+line 12072:40 - Double punctuation?
+line 12077:38 - Double punctuation?
+line 12077:44 - Double punctuation?
+line 12078:20 - Double punctuation?
+line 12078:33 - Double punctuation?
+line 12079:20 - Double punctuation?
+line 12079:27 - Double punctuation?
+line 12079:40 - Double punctuation?
+line 12079:50 - Double punctuation?
+line 12079:58 - Double punctuation?
+line 12084:23 - Double punctuation?
+line 12085:33 - Double punctuation?
+line 12086:15 - Query word Bt
+line 12086:15 - Double punctuation?
+line 12086:25 - Double punctuation?
+line 12087:16 - Double punctuation?
+line 12087:28 - Double punctuation?
+line 12088:17 - Query word Bt
+line 12088:17 - Double punctuation?
+line 12089:38 - Double punctuation?
+line 12090:12 - Double punctuation?
+line 12090:29 - Double punctuation?
+line 12091:29 - Query word Bt
+line 12091:29 - Double punctuation?
+line 12091:39 - Double punctuation?
+line 12092:18 - Query word Bt
+line 12092:18 - Double punctuation?
+line 12093:18 - Double punctuation?
+line 12093:36 - Double punctuation?
+line 12093:44 - Double punctuation?
+line 12094:19 - Query word Bt
+line 12094:19 - Double punctuation?
+line 12094:56 - Double punctuation?
+line 12094:64 - Double punctuation?
+line 12096:17 - Query word Bt
+line 12096:17 - Double punctuation?
+line 12096:54 - Double punctuation?
+line 12097:23 - Double punctuation?
+line 12097:35 - Double punctuation?
+line 12098:17 - Query word Bt
+line 12098:17 - Double punctuation?
+line 12098:61 - Double punctuation?
+line 12098:69 - Double punctuation?
+line 12104:58 - Double punctuation?
+line 12104:66 - Double punctuation?
+line 12106:30 - Double punctuation?
+line 12106:36 - Double punctuation?
+line 12111:31 - Double punctuation?
+line 12112:20 - Double punctuation?
+line 12112:33 - Double punctuation?
+line 12113:20 - Double punctuation?
+line 12113:33 - Double punctuation?
+line 12113:41 - Double punctuation?
+line 12113:49 - Double punctuation?
+line 12114:23 - Double punctuation?
+line 12114:34 - Double punctuation?
+line 12114:40 - Double punctuation?
+line 12119:28 - Double punctuation?
+line 12120:15 - Double punctuation?
+line 12120:32 - Double punctuation?
+line 12120:38 - Double punctuation?
+line 12121:22 - Double punctuation?
+line 12121:40 - Double punctuation?
+line 12121:48 - Double punctuation?
+line 12122:17 - Query word Bt
+line 12122:17 - Double punctuation?
+line 12123:38 - Double punctuation?
+line 12124:12 - Double punctuation?
+line 12124:25 - Double punctuation?
+line 12125:30 - Query word Bt
+line 12125:23 - Double punctuation?
+line 12126:22 - Double punctuation?
+line 12126:39 - Double punctuation?
+line 12127:29 - Query word Bt
+line 12127:29 - Double punctuation?
+line 12127:64 - Double punctuation?
+line 12129:18 - Double punctuation?
+line 12129:37 - Double punctuation?
+line 12129:45 - Double punctuation?
+line 12130:18 - Double punctuation?
+line 12131:18 - Double punctuation?
+line 12131:35 - Double punctuation?
+line 12131:41 - Double punctuation?
+line 12132:18 - Query word Bt
+line 12132:18 - Double punctuation?
+line 12133:18 - Double punctuation?
+line 12135:19 - Query word Bt
+line 12135:19 - Double punctuation?
+line 12135:54 - Double punctuation?
+line 12135:62 - Double punctuation?
+line 12136:18 - Double punctuation?
+line 12137:25 - Double punctuation?
+line 12138:20 - Double punctuation?
+line 12139:17 - Double punctuation?
+line 12139:32 - Double punctuation?
+line 12139:40 - Double punctuation?
+line 12140:25 - Query word Bt
+line 12140:30 - Query word Lt
+line 12140:25 - Double punctuation?
+line 12141:18 - Double punctuation?
+line 12142:22 - Query word Bt
+line 12142:27 - Query word Lt
+line 12142:22 - Double punctuation?
+line 12143:22 - Double punctuation?
+line 12143:41 - Double punctuation?
+line 12144:22 - Double punctuation?
+line 12145:17 - Query word Bt
+line 12145:17 - Double punctuation?
+line 12145:59 - Double punctuation?
+line 12145:67 - Double punctuation?
+line 12147:21 - Query word Bt
+line 12147:13 - Double punctuation?
+line 12152:25 - Double punctuation?
+line 12152:32 - Double punctuation?
+line 12153:21 - Double punctuation?
+line 12154:16 - Double punctuation?
+line 12156:18 - Double punctuation?
+line 12157:18 - Double punctuation?
+line 12158:20 - Double punctuation?
+line 12159:15 - Query word Bt
+line 12159:15 - Double punctuation?
+line 12159:25 - Double punctuation?
+line 12160:16 - Double punctuation?
+line 12161:22 - Double punctuation?
+line 12161:40 - Double punctuation?
+line 12161:48 - Double punctuation?
+line 12162:12 - Double punctuation?
+line 12163:43 - Double punctuation?
+line 12164:35 - Double punctuation?
+line 12165:16 - Double punctuation?
+line 12166:20 - Double punctuation?
+line 12167:23 - Double punctuation?
+line 12168:16 - Double punctuation?
+line 12169:23 - Double punctuation?
+line 12170:29 - Query word Bt
+line 12170:29 - Double punctuation?
+line 12170:39 - Double punctuation?
+line 12171:16 - Double punctuation?
+line 12172:23 - Query word Bt
+line 12172:61 - Double punctuation?
+line 12173:24 - Double punctuation?
+line 12175:11 - Double punctuation?
+line 12176:18 - Double punctuation?
+line 12176:37 - Double punctuation?
+line 12177:23 - Double punctuation?
+line 12177:30 - Double punctuation?
+line 12178:18 - Double punctuation?
+line 12179:25 - Query word FitzH
+line 12179:32 - Double punctuation?
+line 12180:20 - Double punctuation?
+line 12181:22 - Double punctuation?
+line 12182:32 - Double punctuation?
+line 12182:39 - Double punctuation?
+line 12183:26 - Double punctuation?
+line 12184:14 - Double punctuation?
+line 12184:22 - Double punctuation?
+line 12185:22 - Double punctuation?
+line 12186:22 - Double punctuation?
+line 12187:16 - Double punctuation?
+line 12189:20 - Double punctuation?
+line 12190:16 - Double punctuation?
+line 12191:24 - Double punctuation?
+line 12192:17 - Double punctuation?
+line 12193:15 - Double punctuation?
+line 12194:18 - Double punctuation?
+line 12195:24 - Double punctuation?
+line 12196:15 - Double punctuation?
+line 12197:20 - Double punctuation?
+line 12198:17 - Query word Bt
+line 12198:17 - Double punctuation?
+line 12199:18 - Double punctuation?
+line 12200:26 - Query word Bt
+line 12200:26 - Double punctuation?
+line 12201:25 - Query word Bt
+line 12201:25 - Double punctuation?
+line 12202:30 - Query word Bt
+line 12202:22 - Double punctuation?
+line 12203:14 - Double punctuation?
+line 12203:21 - Double punctuation?
+line 12204:15 - Double punctuation?
+line 12204:22 - Double punctuation?
+line 12205:18 - Double punctuation?
+line 12206:15 - Double punctuation?
+line 12207:24 - Double punctuation?
+line 12208:22 - Double punctuation?
+line 12209:23 - Double punctuation?
+line 12210:21 - Query word Bt
+line 12210:13 - Double punctuation?
+line 12210:46 - Double punctuation?
+line 12211:19 - Double punctuation?
+line 12212:20 - Double punctuation?
+line 12217:21 - Double punctuation?
+line 12218:29 - Query word Bt
+line 12218:29 - Double punctuation?
+line 12218:68 - Double punctuation?
+line 12219:11 - Double punctuation?
+line 12221:30 - Query word Bt
+line 12221:22 - Double punctuation?
+line 12221:46 - Double punctuation?
+line 12222:22 - Double punctuation?
+line 12227:30 - Query word Bt
+line 12227:23 - Double punctuation?
+line 12227:30 - Double punctuation?
+line 12227:47 - Double punctuation?
+line 12228:29 - Query word Bt
+line 12228:29 - Double punctuation?
+line 12228:68 - Double punctuation?
+line 12229:11 - Double punctuation?
+line 12230:22 - Double punctuation?
+line 12235:16 - Double punctuation?
+line 12236:29 - Extra period?
+line 12236:17 - Double punctuation?
+line 12237:18 - Double punctuation?
+line 12239:28 - Double punctuation?
+line 12240:14 - Double punctuation?
+line 12241:22 - Double punctuation?
+line 12242:12 - Double punctuation?
+line 12243:24 - Double punctuation?
+line 12244:19 - Double punctuation?
+line 12245:26 - Double punctuation?
+line 12246:26 - Double punctuation?
+line 12247:18 - Double punctuation?
+line 12248:21 - Double punctuation?
+line 12249:17 - Double punctuation?
+line 12250:17 - Double punctuation?
+line 12251:15 - Double punctuation?
+line 12252:29 - Query word Gds
+line 12252:15 - Double punctuation?
+line 12252:38 - Double punctuation?
+line 12253:18 - Double punctuation?
+line 12254:17 - Double punctuation?
+line 12255:18 - Double punctuation?
+line 12256:14 - Double punctuation?
+line 12257:19 - Double punctuation?
+line 12258:20 - Double punctuation?
+line 12259:18 - Double punctuation?
+line 12260:14 - Double punctuation?
+line 12261:16 - Double punctuation?
+line 12262:19 - Double punctuation?
+line 12263:15 - Double punctuation?
+line 12264:25 - Double punctuation?
+line 12265:19 - Double punctuation?
+line 12266:17 - Double punctuation?
+line 12267:18 - Double punctuation?
+line 12268:17 - Double punctuation?
+line 12269:16 - Double punctuation?
+line 12270:35 - Double punctuation?
+line 12271:19 - Double punctuation?
+line 12272:16 - Double punctuation?
+line 12273:17 - Double punctuation?
+line 12274:16 - Double punctuation?
+line 12275:21 - Double punctuation?
+line 12276:20 - Double punctuation?
+line 12277:17 - Double punctuation?
+line 12278:17 - Double punctuation?
+line 12279:20 - Double punctuation?
+line 12280:19 - Double punctuation?
+line 12281:15 - Double punctuation?
+line 12282:21 - Double punctuation?
+line 12283:20 - Double punctuation?
+line 12283:27 - Double punctuation?
+line 12284:21 - Double punctuation?
+line 12285:21 - Double punctuation?
+line 12286:16 - Double punctuation?
+line 12287:18 - Double punctuation?
+line 12288:20 - Double punctuation?
+line 12289:16 - Double punctuation?
+line 12290:16 - Double punctuation?
+line 12291:18 - Query word Bt
+line 12291:56 - Double punctuation?
+line 12292:15 - Double punctuation?
+line 12293:18 - Double punctuation?
+line 12293:37 - Double punctuation?
+line 12294:16 - Double punctuation?
+line 12295:17 - Double punctuation?
+line 12296:15 - Double punctuation?
+line 12297:14 - Double punctuation?
+line 12298:20 - Double punctuation?
+line 12299:25 - Query word FitzH
+line 12299:32 - Double punctuation?
+line 12300:25 - Double punctuation?
+line 12301:26 - Double punctuation?
+line 12302:21 - Double punctuation?
+line 12303:17 - Double punctuation?
+line 12304:20 - Double punctuation?
+line 12305:26 - Double punctuation?
+line 12306:18 - Double punctuation?
+line 12307:14 - Double punctuation?
+line 12308:14 - Double punctuation?
+line 12309:17 - Double punctuation?
+line 12310:16 - Double punctuation?
+line 12311:14 - Double punctuation?
+line 12312:13 - Query word McK
+line 12312:18 - Double punctuation?
+line 12313:15 - Double punctuation?
+line 12314:22 - Double punctuation?
+line 12315:26 - Double punctuation?
+line 12316:17 - Double punctuation?
+line 12317:17 - Double punctuation?
+line 12318:17 - Double punctuation?
+line 12319:22 - Query word McW
+line 12319:27 - Double punctuation?
+line 12320:28 - Double punctuation?
+line 12321:25 - Double punctuation?
+line 12322:16 - Double punctuation?
+line 12323:17 - Double punctuation?
+line 12323:30 - Double punctuation?
+line 12324:16 - Double punctuation?
+line 12325:20 - Double punctuation?
+line 12326:22 - Double punctuation?
+line 12327:27 - Double punctuation?
+line 12328:16 - Double punctuation?
+line 12329:19 - Double punctuation?
+line 12330:14 - Double punctuation?
+line 12331:15 - Double punctuation?
+line 12332:23 - Double punctuation?
+line 12333:16 - Double punctuation?
+line 12334:17 - Double punctuation?
+line 12335:17 - Double punctuation?
+line 12336:19 - Double punctuation?
+line 12337:25 - Double punctuation?
+line 12338:23 - Double punctuation?
+line 12339:17 - Double punctuation?
+line 12340:28 - Double punctuation?
+line 12341:14 - Double punctuation?
+line 12342:17 - Double punctuation?
+line 12343:20 - Double punctuation?
+line 12344:22 - Double punctuation?
+line 12345:16 - Double punctuation?
+line 12346:20 - Double punctuation?
+line 12347:26 - Double punctuation?
+line 12348:15 - Double punctuation?
+line 12348:22 - Double punctuation?
+line 12349:17 - Double punctuation?
+line 12350:20 - Double punctuation?
+line 12351:17 - Double punctuation?
+line 12352:24 - Double punctuation?
+line 12353:15 - Double punctuation?
+line 12354:16 - Double punctuation?
+line 12355:27 - Double punctuation?
+line 12357:20 - Double punctuation?
+line 12358:20 - Double punctuation?
+line 12359:24 - Extra period?
+line 12359:12 - Double punctuation?
+line 12360:16 - Double punctuation?
+line 12361:22 - Double punctuation?
+line 12362:18 - Double punctuation?
+line 12363:20 - Double punctuation?
+line 12364:16 - Double punctuation?
+line 12365:21 - Extra period?
+line 12365:14 - Double punctuation?
+line 12366:57 - Double punctuation?
+line 12366:67 - Double punctuation?
+line 12368:19 - Double punctuation?
+line 12369:16 - Double punctuation?
+line 12370:21 - Double punctuation?
+line 12371:14 - Double punctuation?
+line 12372:17 - Double punctuation?
+line 12373:16 - Double punctuation?
+line 12374:21 - Double punctuation?
+line 12375:19 - Double punctuation?
+line 12380:18 - Double punctuation?
+line 12381:19 - Double punctuation?
+line 12382:18 - Double punctuation?
+line 12383:23 - Double punctuation?
+line 12384:15 - Double punctuation?
+line 12384:43 - Double punctuation?
+line 12385:20 - Double punctuation?
+line 12385:27 - Double punctuation?
+line 12386:16 - Double punctuation?
+line 12391:19 - Double punctuation?
+line 12396:57 - Double punctuation?
+line 12396:63 - Double punctuation?
+line 12402:17 - Double punctuation?
+line 12402:32 - Double punctuation?
+line 12402:38 - Double punctuation?
+line 12403:23 - Double punctuation?
+line 12408:18 - Double punctuation?
+line 12409:28 - Query word Bt
+line 12409:21 - Double punctuation?
+line 12409:28 - Double punctuation?
+line 12410:20 - Double punctuation?
+line 12410:47 - Double punctuation?
+line 12410:53 - Double punctuation?
+line 12411:19 - Double punctuation?
+line 12411:32 - Double punctuation?
+line 12412:41 - Query word Bt
+line 12412:24 - Double punctuation?
+line 12413:25 - Query word Bt
+line 12413:17 - Double punctuation?
+line 12413:66 - Double punctuation?
+line 12414:11 - Double punctuation?
+line 12414:19 - Double punctuation?
+line 12419:39 - Double punctuation?
+line 12420:17 - Double punctuation?
+line 12421:17 - Double punctuation?
+line 12422:17 - Double punctuation?
+line 12423:19 - Double punctuation?
+line 12424:17 - Double punctuation?
+line 12425:15 - Double punctuation?
+line 12426:18 - Double punctuation?
+line 12427:14 - Double punctuation?
+line 12427:43 - Double punctuation?
+line 12429:16 - Double punctuation?
+line 12430:21 - Double punctuation?
+line 12430:28 - Double punctuation?
+line 12435:14 - Double punctuation?
+line 12443:58 - Double punctuation?
+line 12443:66 - Double punctuation?
+line 12444:51 - Double punctuation?
+line 12444:59 - Double punctuation?
+line 12445:27 - Double punctuation?
+line 12445:35 - Double punctuation?
+line 12445:43 - Double punctuation?
+line 12450:51 - Double punctuation?
+line 12450:59 - Double punctuation?
+line 12451:30 - Query word Bt
+line 12451:30 - Double punctuation?
+line 12451:70 - Double punctuation?
+line 12452:9 - Double punctuation?
+line 12453:45 - Double punctuation?
+line 12453:62 - Double punctuation?
+line 12453:68 - Double punctuation?
+line 12454:11 - Double punctuation?
+line 12455:20 - Query word Bt
+line 12455:20 - Double punctuation?
+line 12455:55 - Double punctuation?
+line 12455:67 - Double punctuation?
+line 12456:11 - Double punctuation?
+line 12456:19 - Double punctuation?
+line 12457:47 - Double punctuation?
+line 12457:53 - Double punctuation?
+line 12462:27 - Double punctuation?
+line 12462:33 - Double punctuation?
+line 12463:48 - Double punctuation?
+line 12464:60 - Double punctuation?
+line 12464:66 - Double punctuation?
+line 12466:12 - Query word Bt
+line 12466:53 - Double punctuation?
+line 12466:59 - Double punctuation?
+line 12467:45 - Double punctuation?
+line 12467:57 - Double punctuation?
+line 12467:65 - Double punctuation?
+line 12468:11 - Double punctuation?
+line 12475:48 - Double punctuation?
+line 12475:54 - Double punctuation?
+line 12475:62 - Double punctuation?
+line 12480:47 - Double punctuation?
+line 12480:55 - Double punctuation?
+line 12480:63 - Double punctuation?
+line 12481:58 - Double punctuation?
+line 12482:46 - Double punctuation?
+line 12483:43 - Double punctuation?
+line 12483:49 - Double punctuation?
+line 12484:43 - Double punctuation?
+line 12485:32 - Double punctuation?
+line 12486:50 - Double punctuation?
+line 12487:28 - Double punctuation?
+line 12488:19 - Double punctuation?
+line 12488:27 - Double punctuation?
+line 12488:35 - Double punctuation?
+line 12489:28 - Double punctuation?
+line 12489:36 - Double punctuation?
+line 12494:53 - Double punctuation?
+line 12494:61 - Double punctuation?
+line 12495:24 - Double punctuation?
+line 12496:54 - Double punctuation?
+line 12497:43 - Double punctuation?
+line 12497:49 - Double punctuation?
+line 12497:57 - Double punctuation?
+line 12497:65 - Double punctuation?
+line 12504:21 - Double punctuation?
+line 12506:44 - Double punctuation?
+line 12507:29 - Double punctuation?
+line 12507:47 - Double punctuation?
+line 12507:55 - Double punctuation?
+line 12508:11 - Double punctuation?
+line 12510:31 - Double punctuation?
+line 12510:39 - Double punctuation?
+line 12516:47 - Double punctuation?
+line 12518:27 - Double punctuation?
+line 12520:20 - Double punctuation?
+line 12521:21 - Double punctuation?
+line 12522:47 - Double punctuation?
+line 12523:21 - Double punctuation?
+line 12529:47 - Double punctuation?
+line 12533:42 - Double punctuation?
+line 12535:38 - Double punctuation?
+line 12559:1 - Query standalone 1
+line 12560:1 - Query standalone 1
+line 12560:28 - Query word Cpl
+line 12567:32 - Query word Clk
+line 12576:1 - Query standalone 1
+line 12580:57 - Extra period?
+line 12580:61 - Query word Rgt
+line 12581:63 - Query word Bn
+line 12584:0 - Mismatched curly brackets?
+line 12596:32 - Query word Cpl
+line 12597:40 - Forward slash?
+line 12597:17 - Double punctuation?
+line 12601:32 - Query word Cpl
+line 12602:32 - Query word Cpl
+line 12604:21 - Double punctuation?
+line 12605:1 - Query standalone 1
+line 12606:1 - Query standalone 1
+line 12608:1 - Query standalone 1
+line 12609:23 - Double punctuation?
+line 12615:1 - Query standalone 1
+line 12617:1 - Query standalone 1
+line 12617:19 - Double punctuation?
+line 12618:59 - Query word Rgt
+line 12624:32 - Query word Cpl
+line 12624:19 - Double punctuation?
+line 12628:32 - Query word Cpl
+line 12629:32 - Query word Cpl
+line 12630:1 - Query standalone 1
+line 12634:1 - Query standalone 1
+line 12634:32 - Query word Cpl
+line 12635:32 - Query word Cpl
+line 12637:1 - Query standalone 1
+line 12638:32 - Query word Cpl
+line 12640:22 - Double punctuation?
+line 12642:1 - Query standalone 1
+line 12643:32 - Query word Cpl
+line 12648:1 - Query standalone 1
+line 12648:32 - Query word Cpl
+line 12649:32 - Query word Cpl
+line 12651:1 - Query standalone 1
+line 12656:32 - Query word Cpl
+line 12660:32 - Query word Cpl
+line 12661:1 - Query standalone 1
+line 12662:1 - Query standalone 1
+line 12662:32 - Query word Cpl
+line 12664:1 - Query standalone 1
+line 12665:1 - Query standalone 1
+line 12666:1 - Query standalone 1
+line 12667:1 - Query standalone 1
+line 12670:1 - Query standalone 1
+line 12671:1 - Query standalone 1
+line 12675:1 - Query standalone 1
+line 12676:32 - Query word Cpl
+line 12677:1 - Query standalone 1
+line 12678:20 - Double punctuation?
+line 12680:1 - Query standalone 1
+line 12681:32 - Query word Cpl
+line 12683:17 - Double punctuation?
+line 12684:1 - Query standalone 1
+line 12685:1 - Query standalone 1
+line 12686:7 - Query word McCaffrey
+line 12687:7 - Query word McCune
+line 12688:7 - Query word McDonnell
+line 12688:32 - Query word Cpl
+line 12688:59 - Query word Gds
+line 12691:1 - Query standalone 1
+line 12692:1 - Query standalone 1
+line 12693:32 - Query word Cpl
+line 12698:32 - Query word Cpl
+line 12699:1 - Query standalone 1
+line 12701:32 - Query word Cpl
+line 12703:32 - Query word Cpl
+line 12704:1 - Query standalone 1
+line 12707:1 - Query standalone 1
+line 12707:20 - Double punctuation?
+line 12708:1 - Query standalone 1
+line 12712:32 - Query word Cpl
+line 12715:1 - Query standalone 1
+line 12715:32 - Query word Cpl
+line 12717:35 - Query word Cpl
+line 12722:1 - Query standalone 1
+line 12723:1 - Query standalone 1
+line 12723:32 - Query word Cpl
+line 12725:18 - Double punctuation?
+line 12729:32 - Query word Cpl
+line 12731:59 - Query word Gds
+line 12733:32 - Query word Cpl
+line 12740:32 - Query word Cpl
+line 12741:1 - Query standalone 1
+line 12743:32 - Query word Cpl
+line 12744:20 - Double punctuation?
+line 12745:1 - Query standalone 1
+line 12749:57 - Extra period?
+line 12749:61 - Query word Rgt
+line 12750:1 - Query standalone 1
+line 12750:18 - Double punctuation?
+line 12752:32 - Query word Cpl
+line 12762:32 - Query word Cpl
+line 12767:1 - Query standalone 1
+line 12768:1 - Query standalone 1
+line 12770:1 - Query standalone 1
+line 12773:32 - Query word Cpl
+line 12774:32 - Query word Cpl
+line 12774:63 - Query word Gds
+line 12780:1 - Query standalone 1
+line 12782:1 - Query standalone 1
+line 12784:1 - Query standalone 1
+line 12784:32 - Query word Cpl
+line 12785:1 - Query standalone 1
+line 12789:32 - Query word Cpl
+line 12791:1 - Query standalone 1
+line 12792:32 - Query word Cpl
+line 12795:1 - Query standalone 1
+line 12801:32 - Query word Cpl
+line 12803:32 - Query word Cpl
+line 12805:1 - Query standalone 1
+line 12809:1 - Query standalone 1
+line 12810:1 - Query standalone 1
+line 12812:1 - Query standalone 1
+line 12812:32 - Query word Cpl
+line 12819:32 - Query word Cpl
+line 12821:32 - Query word Cpl
+line 12825:1 - Query standalone 1
+line 12826:1 - Query standalone 1
+line 12827:19 - Double punctuation?
+line 12829:1 - Query standalone 1
+line 12830:32 - Query word Cpl
+line 12832:1 - Query standalone 1
+line 12837:32 - Query word Cpl
+line 12840:1 - Query standalone 1
+line 12843:1 - Query standalone 1
+line 12847:1 - Query standalone 1
+line 12848:1 - Query standalone 1
+line 12850:1 - Query standalone 1
+line 12850:32 - Query word Cpl
+line 12853:1 - Query standalone 1
+line 12854:1 - Query standalone 1
+line 12855:1 - Query standalone 1
+line 12856:1 - Query standalone 1
+line 12858:1 - Query standalone 1
+line 12860:1 - Query standalone 1
+line 12864:1 - Query standalone 1
+line 12865:1 - Query standalone 1
+line 12866:32 - Query word Cpl
+line 12872:1 - Query standalone 1
+line 12877:1 - Query standalone 1
+line 12880:32 - Query word Cpl
+line 12881:32 - Query word Cpl
+line 12882:32 - Query word Cpl
+line 12883:1 - Query standalone 1
+line 12884:1 - Query standalone 1
+line 12886:1 - Query standalone 1
+line 12893:32 - Query word Cpl
+line 12896:35 - Query word Cpl
+line 12897:1 - Query standalone 1
+line 12898:32 - Query word Cpl
+line 12899:1 - Query standalone 1
+line 12900:24 - Query word Cpl
+line 12903:1 - Query standalone 1
+line 12904:1 - Query standalone 1
+line 12906:1 - Query standalone 1
+line 12911:32 - Query word Cpl
+line 12912:32 - Query word Cpl
+line 12923:32 - Query word Cpl
+line 12927:1 - Query standalone 1
+line 12928:1 - Query standalone 1
+line 12930:1 - Query standalone 1
+line 12932:32 - Query word Cpl
+line 12937:1 - Query standalone 1
+line 12938:1 - Query standalone 1
+line 12938:32 - Query word Cpl
+line 12939:32 - Query word Cpl
+line 12943:1 - Query standalone 1
+line 12944:32 - Query word Cpl
+line 12947:1 - Query standalone 1
+line 12953:32 - Query word Cpl
+line 12955:1 - Query standalone 1
+line 12960:1 - Query standalone 1
+line 12966:32 - Query word Cpl
+line 12968:1 - Query standalone 1
+line 12968:32 - Query word Cpl
+line 12969:32 - Query word Cpl
+line 12970:32 - Query word Cpl
+line 12974:1 - Query standalone 1
+line 12979:32 - Query word Cpl
+line 12982:1 - Query standalone 1
+line 12983:1 - Query standalone 1
+line 12984:1 - Query standalone 1
+line 12990:1 - Query standalone 1
+line 12991:32 - Query word Cpl
+line 12992:32 - Query word Cpl
+line 12993:32 - Query word Cpl
+line 12996:1 - Query standalone 1
+line 12998:1 - Query standalone 1
+line 13000:32 - Query word Cpl
+line 13001:1 - Query standalone 1
+line 13004:1 - Query standalone 1
+line 13007:19 - Double punctuation?
+line 13009:32 - Query word Cpl
+line 13012:1 - Query standalone 1
+line 13012:32 - Query word Cpl
+line 13013:32 - Query word Cpl
+line 13017:32 - Query word Cpl
+line 13019:32 - Query word Cpl
+line 13020:32 - Query word Cpl
+line 13022:1 - Query standalone 1
+line 13024:32 - Query word Cpl
+line 13025:32 - Query word Cpl
+line 13031:32 - Query word Cpl
+line 13035:32 - Query word Cpl
+line 13038:1 - Query standalone 1
+line 13039:1 - Query standalone 1
+line 13040:1 - Query standalone 1
+line 13041:1 - Query standalone 1
+line 13041:18 - Double punctuation?
+line 13042:1 - Query standalone 1
+line 13043:1 - Query standalone 1
+line 13044:32 - Query word Cpl
+line 13045:1 - Query standalone 1
+line 13046:1 - Query standalone 1
+line 13046:32 - Query word Cpl
+line 13048:1 - Query standalone 1
+line 13050:32 - Query word Cpl
+line 13051:1 - Query standalone 1
+line 13053:32 - Query word Cpl
+line 13056:1 - Query standalone 1
+line 13057:1 - Query standalone 1
+line 13058:32 - Query word Cpl
+line 13060:1 - Query standalone 1
+line 13061:1 - Query standalone 1
+line 13063:1 - Query standalone 1
+line 13064:1 - Query standalone 1
+line 13065:32 - Query word Cpl
+line 13066:32 - Query word Cpl
+line 13067:1 - Query standalone 1
+line 13069:1 - Query standalone 1
+line 13069:32 - Query word Cpl
+line 13072:32 - Query word Cpl
+line 13075:1 - Query standalone 1
+line 13077:1 - Query standalone 1
+line 13082:1 - Query standalone 1
+line 13083:32 - Query word Cpl
+line 13085:1 - Query standalone 1
+line 13087:32 - Query word Cpl
+line 13088:1 - Query standalone 1
+line 13088:32 - Query word Cpl
+line 13089:1 - Query standalone 1
+line 13094:32 - Query word Cpl
+line 13095:1 - Query standalone 1
+line 13096:32 - Query word Cpl
+line 13099:1 - Query standalone 1
+line 13101:32 - Query word Cpl
+line 13105:1 - Query standalone 1
+line 13105:35 - Query word Cpl
+line 13106:1 - Query standalone 1
+line 13111:1 - Query standalone 1
+line 13111:7 - Query word McCarrick
+line 13112:7 - Query word McEvoy
+line 13113:1 - Query standalone 1
+line 13113:7 - Query word McGuin
+line 13114:1 - Query standalone 1
+line 13115:1 - Query standalone 1
+line 13115:7 - Query word McIntosh
+line 13116:32 - Query word Cpl
+line 13118:54 - Double punctuation?
+line 13119:1 - Query standalone 1
+line 13127:32 - Query word Cpl
+line 13128:1 - Query standalone 1
+line 13133:1 - Query standalone 1
+line 13134:1 - Query standalone 1
+line 13135:1 - Query standalone 1
+line 13135:32 - Query word Cpl
+line 13143:1 - Query standalone 1
+line 13144:1 - Query standalone 1
+line 13146:32 - Query word Cpl
+line 13147:1 - Query standalone 1
+line 13148:32 - Query word Cpl
+line 13151:32 - Query word Cpl
+line 13155:1 - Query standalone 1
+line 13157:32 - Query word Cpl
+line 13159:1 - Query standalone 1
+line 13163:1 - Query standalone 1
+line 13168:32 - Query word Cpl
+line 13170:1 - Query standalone 1
+line 13171:1 - Query standalone 1
+line 13174:32 - Query word Cpl
+line 13175:1 - Query standalone 1
+line 13176:1 - Query standalone 1
+line 13179:32 - Query word Cpl
+line 13185:32 - Query word Cpl
+line 13186:32 - Query word Cpl
+line 13187:32 - Query word Cpl
+line 13188:1 - Query standalone 1
+line 13188:32 - Query word Cpl
+line 13190:1 - Query standalone 1
+line 13192:1 - Query standalone 1
+line 13196:1 - Query standalone 1
+line 13197:1 - Query standalone 1
+line 13200:1 - Query standalone 1
+line 13201:1 - Query standalone 1
+line 13208:1 - Query standalone 1
+line 13212:1 - Query standalone 1
+line 13212:32 - Query word Cpl
+line 13213:1 - Query standalone 1
+line 13216:32 - Query word Cpl
+line 13220:1 - Query standalone 1
+line 13220:32 - Query word Cpl
+line 13221:32 - Query word Cpl
+line 13224:32 - Query word Cpl
+line 13225:1 - Query standalone 1
+line 13227:32 - Query word Cpl
+line 13228:32 - Query word Cpl
+line 13229:32 - Query word Cpl
+line 13231:32 - Query word Cpl
+line 13237:32 - Query word Cpl
+line 13239:1 - Query standalone 1
+line 13244:32 - Query word Cpl
+line 13249:55 - Double punctuation?
+line 13252:1 - Query standalone 1
+line 13253:32 - Query word Cpl
+line 13255:1 - Query standalone 1
+line 13259:32 - Query word Cpl
+line 13259:65 - Double punctuation?
+line 13263:32 - Query word Cpl
+line 13264:55 - Double punctuation?
+line 13267:32 - Query word Cpl
+line 13268:1 - Query standalone 1
+line 13272:32 - Query word Cpl
+line 13273:32 - Query word Cpl
+line 13274:1 - Query standalone 1
+line 13276:1 - Query standalone 1
+line 13276:32 - Query word Cpl
+line 13278:32 - Query word Cpl
+line 13280:1 - Query standalone 1
+line 13283:1 - Query standalone 1
+line 13284:1 - Query standalone 1
+line 13285:1 - Query standalone 1
+line 13285:32 - Query word Cpl
+line 13286:55 - Double punctuation?
+line 13287:1 - Query standalone 1
+line 13293:32 - Query word Cpl
+line 13293:65 - Double punctuation?
+line 13294:60 - Double punctuation?
+line 13297:32 - Query word Cpl
+line 13298:1 - Query standalone 1
+line 13303:32 - Query word Cpl
+line 13305:32 - Query word Cpl
+line 13307:1 - Query standalone 1
+line 13308:32 - Query word Cpl
+line 13310:32 - Query word Cpl
+line 13313:65 - Double punctuation?
+line 13315:32 - Query word Cpl
+line 13320:32 - Query word Cpl
+line 13323:1 - Query standalone 1
+line 13323:32 - Query word Cpl
+line 13328:1 - Query standalone 1
+line 13329:1 - Query standalone 1
+line 13330:1 - Query standalone 1
+line 13330:32 - Query word Cpl
+line 13333:1 - Query standalone 1
+line 13337:32 - Query word Cpl
+line 13339:1 - Query standalone 1
+line 13341:18 - Double punctuation?
+line 13342:35 - Query word Cpl
+line 13343:1 - Query standalone 1
+line 13345:1 - Query standalone 1
+line 13353:35 - Query word Cpl
+line 13354:1 - Query standalone 1
+line 13357:1 - Query standalone 1
+line 13357:32 - Query word Cpl
+line 13359:1 - Query standalone 1
+line 13366:32 - Query word Cpl
+line 13367:32 - Query word Cpl
+line 13368:1 - Query standalone 1
+line 13369:32 - Query word Cpl
+line 13370:32 - Query word Cpl
+line 13372:32 - Query word Cpl
+line 13374:1 - Query standalone 1
+line 13377:32 - Query word Cpl
+line 13382:1 - Query standalone 1
+line 13387:35 - Query word Cpl
+line 13388:1 - Query standalone 1
+line 13389:1 - Query standalone 1
+line 13390:1 - Query standalone 1
+line 13398:1 - Query standalone 1
+line 13399:1 - Query standalone 1
+line 13400:1 - Query standalone 1
+line 13401:1 - Query standalone 1
+line 13403:32 - Query word Cpl
+line 13405:1 - Query standalone 1
+line 13406:1 - Query standalone 1
+line 13408:1 - Query standalone 1
+line 13409:1 - Query standalone 1
+line 13418:1 - Query standalone 1
+line 13418:17 - Double punctuation?
+line 13420:32 - Query word Cpl
+line 13423:1 - Query standalone 1
+line 13424:1 - Query standalone 1
+line 13426:1 - Query standalone 1
+line 13427:1 - Query standalone 1
+line 13429:35 - Query word Cpl
+line 13430:35 - Query word Cpl
+line 13432:35 - Query word Cpl
+line 13436:32 - Query word Cpl
+line 13437:1 - Query standalone 1
+line 13441:1 - Query standalone 1
+line 13445:47 - endquote missing punctuation?
+line 13451:1 - Query standalone 1
+line 13452:1 - Query standalone 1
+line 13454:1 - Query standalone 1
+line 13457:1 - Query standalone 1
+line 13461:1 - Query standalone 1
+line 13467:1 - Query standalone 1
+line 13483:1 - Query standalone 1
+line 13483:7 - Query word McDonald
+line 13492:1 - Query standalone 1
+line 13493:21 - Double punctuation?
+line 13497:1 - Query standalone 1
+line 13500:1 - Query standalone 1
+line 13503:1 - Query standalone 1
+line 13507:1 - Query standalone 1
+line 13512:36 - Query word Dmr
+line 13515:36 - endquote missing punctuation?
+line 13517:32 - Query word Cpl
+line 13521:37 - endquote missing punctuation?
+line 13523:1 - Query standalone 1
+line 13530:46 - endquote missing punctuation?
+line 13535:17 - Double punctuation?
+line 13535:48 - Double punctuation?
+line 13536:27 - Double punctuation?
+line 13537:23 - Double punctuation?
+line 13538:14 - Double punctuation?
+line 13539:32 - Query word Bt
+line 13539:25 - Double punctuation?
+line 13539:52 - Double punctuation?
+line 13541:20 - Double punctuation?
+line 13542:21 - Double punctuation?
+line 13542:61 - Double punctuation?
+line 13544:35 - Query word Bt
+line 13544:28 - Double punctuation?
+line 13545:26 - Double punctuation?
+line 13547:16 - Double punctuation?
+line 13548:21 - Double punctuation?
+line 13548:34 - Double punctuation?
+line 13549:23 - Double punctuation?
+line 13550:17 - Double punctuation?
+line 13550:25 - Double punctuation?
+line 13551:21 - Double punctuation?
+line 13552:28 - Double punctuation?
+line 13552:41 - Double punctuation?
+line 13552:49 - Double punctuation?
+line 13553:18 - Double punctuation?
+line 13553:26 - Double punctuation?
+line 13554:33 - Double punctuation?
+line 13555:20 - Double punctuation?
+line 13556:30 - Double punctuation?
+line 13556:36 - Double punctuation?
+line 13556:46 - Double punctuation?
+line 13556:54 - Double punctuation?
+line 13558:24 - Double punctuation?
+line 13558:42 - Double punctuation?
+line 13559:22 - Double punctuation?
+line 13559:29 - Double punctuation?
+line 13560:28 - Query word Bt
+line 13560:20 - Double punctuation?
+line 13560:37 - Double punctuation?
+line 13560:47 - Double punctuation?
+line 13562:20 - Double punctuation?
+line 13562:27 - Double punctuation?
+line 13563:32 - Double punctuation?
+line 13563:42 - Double punctuation?
+line 13564:28 - Query word Bt
+line 13564:15 - Double punctuation?
+line 13564:45 - Double punctuation?
+line 13565:15 - Double punctuation?
+line 13565:23 - Double punctuation?
+line 13566:15 - Double punctuation?
+line 13567:18 - Double punctuation?
+line 13568:30 - Query word Bt
+line 13568:22 - Double punctuation?
+line 13569:11 - Double punctuation?
+line 13569:19 - Double punctuation?
+line 13570:15 - Double punctuation?
+line 13571:22 - Double punctuation?
+line 13572:16 - Double punctuation?
+line 13572:28 - Double punctuation?
+line 13573:16 - Double punctuation?
+line 13573:28 - Double punctuation?
+line 13573:34 - Double punctuation?
+line 13574:17 - Query word Bt
+line 13574:17 - Double punctuation?
+line 13575:19 - Double punctuation?
+line 13575:27 - Double punctuation?
+line 13576:18 - Double punctuation?
+line 13576:26 - Double punctuation?
+line 13577:12 - Double punctuation?
+line 13577:20 - Double punctuation?
+line 13578:17 - Double punctuation?
+line 13578:25 - Double punctuation?
+line 13579:17 - Double punctuation?
+line 13580:38 - Double punctuation?
+line 13580:46 - Double punctuation?
+line 13581:24 - Double punctuation?
+line 13582:26 - Double punctuation?
+line 13582:68 - Double punctuation?
+line 13584:18 - Double punctuation?
+line 13585:20 - Double punctuation?
+line 13585:33 - Double punctuation?
+line 13585:41 - Double punctuation?
+line 13586:16 - Double punctuation?
+line 13586:51 - Double punctuation?
+line 13587:30 - Double punctuation?
+line 13588:20 - Double punctuation?
+line 13588:27 - Double punctuation?
+line 13589:20 - Double punctuation?
+line 13589:28 - Double punctuation?
+line 13590:17 - Double punctuation?
+line 13591:15 - Double punctuation?
+line 13592:12 - Double punctuation?
+line 13592:29 - Double punctuation?
+line 13593:23 - Double punctuation?
+line 13593:31 - Double punctuation?
+line 13594:16 - Double punctuation?
+line 13594:23 - Double punctuation?
+line 13595:20 - Double punctuation?
+line 13595:33 - Double punctuation?
+line 13595:41 - Double punctuation?
+line 13595:51 - Double punctuation?
+line 13595:59 - Double punctuation?
+line 13597:28 - Query word Bt
+line 13597:21 - Double punctuation?
+line 13598:21 - Double punctuation?
+line 13599:23 - Double punctuation?
+line 13600:21 - Double punctuation?
+line 13601:19 - Double punctuation?
+line 13602:22 - Double punctuation?
+line 13602:39 - Double punctuation?
+line 13602:47 - Double punctuation?
+line 13603:42 - Query word Bt
+line 13603:29 - Double punctuation?
+line 13603:59 - Double punctuation?
+line 13603:67 - Double punctuation?
+line 13605:16 - Double punctuation?
+line 13605:23 - Double punctuation?
+line 13606:20 - Double punctuation?
+line 13606:41 - Double punctuation?
+line 13606:49 - Double punctuation?
+line 13608:20 - Double punctuation?
+line 13608:32 - Double punctuation?
+line 13608:42 - Double punctuation?
+line 13608:48 - Double punctuation?
+line 13608:56 - Double punctuation?
+line 13608:64 - Double punctuation?
+line 13609:7 - Query word s
+line 13610:18 - Double punctuation?
+line 13611:24 - Double punctuation?
+line 13611:57 - Double punctuation?
+line 13611:65 - Double punctuation?
+line 13613:28 - Double punctuation?
+line 13614:23 - Query word Bt
+line 13614:41 - Double punctuation?
+line 13614:49 - Double punctuation?
+line 13615:24 - Double punctuation?
+line 13615:31 - Double punctuation?
+line 13616:19 - Double punctuation?
+line 13617:17 - Double punctuation?
+line 13618:18 - Double punctuation?
+line 13619:11 - Double punctuation?
+line 13619:18 - Double punctuation?
+line 13620:18 - Double punctuation?
+line 13620:54 - Double punctuation?
+line 13620:62 - Double punctuation?
+line 13622:16 - Double punctuation?
+line 13623:15 - Double punctuation?
+line 13623:23 - Double punctuation?
+line 13624:14 - Double punctuation?
+line 13624:22 - Double punctuation?
+line 13625:23 - Double punctuation?
+line 13625:30 - Double punctuation?
+line 13625:38 - Double punctuation?
+line 13626:18 - Double punctuation?
+line 13626:30 - Double punctuation?
+line 13626:38 - Double punctuation?
+line 13627:25 - Query word FitzH
+line 13627:32 - Double punctuation?
+line 13627:47 - Double punctuation?
+line 13628:18 - Double punctuation?
+line 13628:24 - Double punctuation?
+line 13628:39 - Double punctuation?
+line 13628:45 - Double punctuation?
+line 13629:14 - Double punctuation?
+line 13630:20 - Double punctuation?
+line 13631:27 - Double punctuation?
+line 13632:32 - Double punctuation?
+line 13632:39 - Double punctuation?
+line 13633:19 - Double punctuation?
+line 13633:32 - Double punctuation?
+line 13633:40 - Double punctuation?
+line 13634:14 - Double punctuation?
+line 13634:22 - Double punctuation?
+line 13634:30 - Double punctuation?
+line 13635:30 - Double punctuation?
+line 13636:14 - Double punctuation?
+line 13638:22 - Double punctuation?
+line 13638:30 - Double punctuation?
+line 13639:16 - Double punctuation?
+line 13639:23 - Double punctuation?
+line 13640:17 - Double punctuation?
+line 13641:31 - Query word Bt
+line 13641:18 - Double punctuation?
+line 13641:31 - Double punctuation?
+line 13641:66 - Double punctuation?
+line 13643:27 - Double punctuation?
+line 13643:53 - Double punctuation?
+line 13645:30 - Double punctuation?
+line 13645:38 - Double punctuation?
+line 13645:46 - Double punctuation?
+line 13646:14 - Double punctuation?
+line 13647:22 - Double punctuation?
+line 13647:35 - Double punctuation?
+line 13647:43 - Double punctuation?
+line 13648:21 - Double punctuation?
+line 13648:28 - Double punctuation?
+line 13648:40 - Double punctuation?
+line 13648:46 - Double punctuation?
+line 13649:26 - Double punctuation?
+line 13649:34 - Double punctuation?
+line 13650:14 - Double punctuation?
+line 13650:21 - Double punctuation?
+line 13651:16 - Double punctuation?
+line 13651:28 - Double punctuation?
+line 13652:41 - Double punctuation?
+line 13653:28 - Query word Bt
+line 13653:20 - Double punctuation?
+line 13653:44 - Double punctuation?
+line 13654:19 - Double punctuation?
+line 13654:26 - Double punctuation?
+line 13655:17 - Double punctuation?
+line 13655:24 - Double punctuation?
+line 13655:30 - Double punctuation?
+line 13656:17 - Double punctuation?
+line 13656:25 - Double punctuation?
+line 13657:16 - Double punctuation?
+line 13657:29 - Double punctuation?
+line 13657:39 - Double punctuation?
+line 13657:47 - Double punctuation?
+line 13658:18 - Double punctuation?
+line 13658:58 - Double punctuation?
+line 13658:66 - Double punctuation?
+line 13660:15 - Double punctuation?
+line 13661:14 - Double punctuation?
+line 13661:32 - Double punctuation?
+line 13661:38 - Double punctuation?
+line 13661:46 - Double punctuation?
+line 13661:54 - Double punctuation?
+line 13663:17 - Double punctuation?
+line 13663:30 - Double punctuation?
+line 13663:38 - Double punctuation?
+line 13664:16 - Double punctuation?
+line 13664:46 - Double punctuation?
+line 13665:24 - Double punctuation?
+line 13667:13 - Double punctuation?
+line 13668:17 - Double punctuation?
+line 13669:15 - Double punctuation?
+line 13669:44 - Double punctuation?
+line 13671:18 - Double punctuation?
+line 13672:24 - Double punctuation?
+line 13674:15 - Double punctuation?
+line 13675:24 - Double punctuation?
+line 13675:61 - Double punctuation?
+line 13676:18 - Double punctuation?
+line 13676:31 - Double punctuation?
+line 13676:37 - Double punctuation?
+line 13676:45 - Double punctuation?
+line 13678:21 - Double punctuation?
+line 13679:15 - Double punctuation?
+line 13680:14 - Double punctuation?
+line 13681:14 - Double punctuation?
+line 13682:20 - Double punctuation?
+line 13683:17 - Query word Bt
+line 13683:17 - Double punctuation?
+line 13683:52 - Double punctuation?
+line 13683:60 - Double punctuation?
+line 13685:25 - Query word Bt
+line 13685:17 - Double punctuation?
+line 13686:24 - Query word Bt
+line 13686:17 - Double punctuation?
+line 13686:24 - Double punctuation?
+line 13687:22 - Double punctuation?
+line 13687:35 - Double punctuation?
+line 13688:12 - Query word Rt
+line 13688:34 - Query word Bt
+line 13688:34 - Double punctuation?
+line 13688:51 - Double punctuation?
+line 13688:59 - Double punctuation?
+line 13689:19 - Double punctuation?
+line 13690:22 - Double punctuation?
+line 13691:20 - Double punctuation?
+line 13692:20 - Double punctuation?
+line 13693:25 - Query word Bt
+line 13693:18 - Double punctuation?
+line 13693:25 - Double punctuation?
+line 13694:19 - Double punctuation?
+line 13695:16 - Double punctuation?
+line 13695:23 - Double punctuation?
+line 13696:20 - Double punctuation?
+line 13696:28 - Double punctuation?
+line 13697:18 - Double punctuation?
+line 13698:27 - Double punctuation?
+line 13698:39 - Double punctuation?
+line 13698:49 - Double punctuation?
+line 13698:55 - Double punctuation?
+line 13700:25 - Double punctuation?
+line 13700:59 - Double punctuation?
+line 13702:20 - Double punctuation?
+line 13703:19 - Double punctuation?
+line 13703:42 - Double punctuation?
+line 13703:50 - Double punctuation?
+line 13704:29 - Double punctuation?
+line 13705:21 - Double punctuation?
+line 13706:34 - Query word Bt
+line 13706:26 - Double punctuation?
+line 13706:50 - Double punctuation?
+line 13707:17 - Double punctuation?
+line 13707:23 - Double punctuation?
+line 13707:29 - Double punctuation?
+line 13707:37 - Double punctuation?
+line 13708:25 - Double punctuation?
+line 13708:38 - Double punctuation?
+line 13708:46 - Double punctuation?
+line 13709:14 - Double punctuation?
+line 13709:29 - Double punctuation?
+line 13709:37 - Double punctuation?
+line 13710:30 - Query word Bt
+line 13710:22 - Double punctuation?
+line 13711:15 - Double punctuation?
+line 13711:22 - Double punctuation?
+line 13711:30 - Double punctuation?
+line 13712:15 - Double punctuation?
+line 13713:18 - Double punctuation?
+line 13714:27 - Double punctuation?
+line 13714:34 - Double punctuation?
+line 13715:52 - Double punctuation?
+line 13716:22 - Query word Bt
+line 13716:22 - Double punctuation?
+line 13716:66 - Double punctuation?
+line 13718:15 - Double punctuation?
+line 13719:22 - Double punctuation?
+line 13719:41 - Double punctuation?
+line 13719:47 - Double punctuation?
+line 13720:24 - Double punctuation?
+line 13720:44 - Double punctuation?
+line 13721:21 - Double punctuation?
+line 13722:19 - Double punctuation?
+line 13723:15 - Double punctuation?
+line 13724:26 - Query word Bt
+line 13724:19 - Double punctuation?
+line 13725:12 - Double punctuation?
+line 13726:22 - Double punctuation?
+line 13726:56 - Double punctuation?
+line 13728:22 - Double punctuation?
+line 13728:29 - Double punctuation?
+line 13729:17 - Double punctuation?
+line 13729:30 - Double punctuation?
+line 13730:17 - Query word Bt
+line 13730:17 - Double punctuation?
+line 13730:59 - Double punctuation?
+line 13730:67 - Double punctuation?
+line 13731:11 - Double punctuation?
+line 13731:19 - Double punctuation?
+line 13732:15 - Query word Bt
+line 13732:15 - Double punctuation?
+line 13733:16 - Double punctuation?
+line 13734:23 - Double punctuation?
+line 13735:20 - Double punctuation?
+line 13735:28 - Double punctuation?
+line 13736:21 - Query word Bt
+line 13736:13 - Double punctuation?
+line 13736:46 - Double punctuation?
+line 13736:54 - Double punctuation?
+line 13738:16 - Double punctuation?
+line 13739:20 - Double punctuation?
+line 13740:45 - Double punctuation?
+line 13740:55 - Double punctuation?
+line 13740:63 - Double punctuation?
+line 13742:19 - Double punctuation?
+line 13744:21 - Extra period?
+line 13744:14 - Double punctuation?
+line 13745:19 - Double punctuation?
+line 13745:32 - Double punctuation?
+line 13746:27 - Double punctuation?
+line 13746:34 - Double punctuation?
+line 13747:18 - Double punctuation?
+line 13748:34 - Double punctuation?
+line 13749:21 - Double punctuation?
+line 13749:54 - Double punctuation?
+line 13750:21 - Double punctuation?
+line 13751:20 - Double punctuation?
+line 13751:27 - Double punctuation?
+line 13752:23 - Query word Bt
+line 13752:15 - Double punctuation?
+line 13753:12 - Double punctuation?
+line 13754:20 - Double punctuation?
+line 13755:15 - Query word Bt
+line 13755:15 - Double punctuation?
+line 13756:29 - Double punctuation?
+line 13757:14 - Double punctuation?
+line 13769:1 - Query standalone 1
+line 13777:58 - Double punctuation?
+line 13784:1 - Query standalone 1
+line 13787:1 - Query standalone 1
+line 13787:31 - Query word Cpl
+line 13788:1 - Query standalone 1
+line 13790:1 - Query standalone 1
+line 13790:31 - Query word Cpl
+line 13804:31 - Query word Cpl
+line 13810:1 - Query standalone 1
+line 13813:1 - Query standalone 1
+line 13814:1 - Query standalone 1
+line 13823:1 - Query standalone 1
+line 13826:1 - Query standalone 1
+line 13827:1 - Query standalone 1
+line 13830:31 - Query word Cpl
+line 13832:1 - Query standalone 1
+line 13833:1 - Query standalone 1
+line 13834:1 - Query standalone 1
+line 13835:31 - Query word Cpl
+line 13843:1 - Query standalone 1
+line 13843:31 - Query word Cpl
+line 13844:7 - Query word McDonald
+line 13844:31 - Query word Cpl
+line 13844:61 - Query word Gds
+line 13845:20 - Double punctuation?
+line 13848:1 - Query standalone 1
+line 13849:31 - Query word Cpl
+line 13852:1 - Query standalone 1
+line 13853:51 - Query word Hdqrs
+line 13853:63 - Query word Gds
+line 13857:31 - Query word Cpl
+line 13861:31 - Query word Cpl
+line 13863:1 - Query standalone 1
+line 13868:1 - Query standalone 1
+line 13870:1 - Query standalone 1
+line 13872:1 - Query standalone 1
+line 13875:1 - Query standalone 1
+line 13877:31 - Query word Cpl
+line 13878:1 - Query standalone 1
+line 13880:31 - Query word Cpl
+line 13883:1 - Query standalone 1
+line 13885:31 - Query word Cpl
+line 13885:51 - Query word Hdqrs
+line 13886:1 - Query standalone 1
+line 13887:31 - Query word Cpl
+line 13889:1 - Query standalone 1
+line 13891:31 - Query word Cpl
+line 13893:31 - Query word Cpl
+line 13898:1 - Query standalone 1
+line 13899:31 - Query word Cpl
+line 13900:1 - Query standalone 1
+line 13902:31 - Query word Cpl
+line 13914:40 - endquote missing punctuation?
+line 13919:1 - Query standalone 1
+line 13920:31 - Query word Cpl
+line 13923:1 - Query standalone 1
+line 13924:31 - Query word Cpl
+line 13928:1 - Query standalone 1
+line 13930:1 - Query standalone 1
+line 13930:51 - Query word Hdqrs
+line 13930:63 - Query word Gds
+line 13932:1 - Query standalone 1
+line 13933:1 - Query standalone 1
+line 13934:1 - Query standalone 1
+line 13934:31 - Query word Cpl
+line 13936:31 - Query word Cpl
+line 13940:31 - Query word Cpl
+line 13942:1 - Query standalone 1
+line 13943:31 - Query word Cpl
+line 13949:55 - Query word Gds
+line 13949:64 - Double punctuation?
+line 13958:1 - Query standalone 1
+line 13961:31 - Query word Cpl
+line 13962:31 - Query word Cpl
+line 13968:7 - Query word McCune
+line 13969:1 - Query standalone 1
+line 13969:7 - Query word McGinn
+line 13979:31 - Query word Cpl
+line 13980:1 - Query standalone 1
+line 13980:31 - Query word Cpl
+line 13981:1 - Query standalone 1
+line 13984:31 - Query word Cpl
+line 13984:60 - Query word Gds
+line 13991:56 - Query word Gds
+line 13992:62 - Double punctuation?
+line 13993:57 - Query word Gds
+line 13997:1 - Query standalone 1
+line 13998:31 - Query word Cpl
+line 13999:1 - Query standalone 1
+line 14013:81 - Long line 81
+line 14013:4 - Spaced em-dash?
+line 14014:81 - Long line 81
+line 14014:8 - Spaced dash?
+line 14015:16 - Extra period?
+line 14016:81 - Long line 81
+line 14016:4 - Spaced em-dash?
+line 14017:81 - Long line 81
+line 14017:67 - Double punctuation?
+line 14019:81 - Long line 81
+line 14019:66 - Double punctuation?
+line 14023:82 - Long line 82
+line 14024:81 - Long line 81
+line 14024:67 - Double punctuation?
+line 14025:83 - Long line 83
+line 14031:66 - Double punctuation?
+line 14035:67 - Double punctuation?
+line 14037:79 - Long line 79
+line 14039:66 - Double punctuation?
+line 14041:81 - Long line 81
+line 14042:81 - Long line 81
+line 14044:67 - Double punctuation?
+line 14045:76 - Long line 76
+line 14045:67 - Double punctuation?
+line 14046:83 - Long line 83
+line 14046:66 - Extra period?
+line 14046:71 - Query word Qrmr
+line 14046:76 - Double punctuation?
+line 14048:83 - Long line 83
+line 14048:66 - Extra period?
+line 14048:71 - Query word Qrmr
+line 14048:76 - Double punctuation?
+line 14051:1 - Query standalone 1
+line 14051:67 - Double punctuation?
+line 14056:81 - Long line 81
+line 14058:82 - Long line 82
+line 14058:67 - Double punctuation?
+line 14058:75 - Double punctuation?
+line 14059:81 - Long line 81
+line 14059:66 - Double punctuation?
+line 14059:74 - Double punctuation?
+line 14060:66 - Double punctuation?
+line 14061:80 - Long line 80
+line 14061:73 - Double punctuation?
+line 14062:80 - Long line 80
+line 14062:73 - Double punctuation?
+line 14066:79 - Long line 79
+line 14066:72 - Double punctuation?
+line 14068:79 - Long line 79
+line 14068:1 - Query standalone 1
+line 14070:79 - Long line 79
+line 14072:77 - Long line 77
+line 14074:1 - Query standalone 1
+line 14076:82 - Long line 82
+line 14079:77 - Long line 77
+line 14079:66 - Extra period?
+line 14079:71 - Query word Qrmr
+line 14081:81 - Long line 81
+line 14081:1 - Query standalone 1
+line 14081:72 - Double punctuation?
+line 14082:79 - Long line 79
+line 14082:1 - Query standalone 1
+line 14082:20 - Query word Cpl
+line 14084:81 - Long line 81
+line 14084:1 - Query standalone 1
+line 14084:66 - Double punctuation?
+line 14086:81 - Long line 81
+line 14086:1 - Query standalone 1
+line 14088:1 - Query standalone 1
+line 14090:20 - Query word Cpl
+line 14091:1 - Query standalone 1
+line 14091:72 - Double punctuation?
+line 14092:67 - Double punctuation?
+line 14093:41 - Query word Gds
+line 14093:67 - Double punctuation?
+line 14099:81 - Long line 81
+line 14103:81 - Long line 81
+line 14105:81 - Long line 81
+line 14107:67 - Double punctuation?
+line 14109:77 - Long line 77
+line 14109:72 - Extra period?
+line 14110:67 - Double punctuation?
+line 14111:79 - Long line 79
+line 14114:76 - Long line 76
+line 14114:67 - Double punctuation?
+line 14116:82 - Long line 82
+line 14116:67 - Double punctuation?
+line 14116:80 - Double punctuation?
+line 14117:66 - Double punctuation?
+line 14118:81 - Long line 81
+line 14120:76 - Long line 76
+line 14120:1 - Query standalone 1
+line 14120:74 - Double punctuation?
+line 14121:76 - Long line 76
+line 14125:1 - Query standalone 1
+line 14129:80 - Long line 80
+line 14129:20 - Query word Cpl
+line 14130:76 - Long line 76
+line 14133:77 - Long line 77
+line 14133:71 - Query word Qrmr
+line 14141:20 - Query word Cpl
+line 14143:81 - Long line 81
+line 14145:65 - Double punctuation?
+line 14146:77 - Long line 77
+line 14146:72 - Extra period?
+line 14146:20 - Query word Cpl
+line 14147:67 - Double punctuation?
+line 14160:81 - Long line 81
+line 14160:66 - Query word Qrmr
+line 14160:72 - Double punctuation?
+line 14162:1 - Query standalone 1
+line 14163:1 - Query standalone 1
+line 14167:80 - Long line 80
+line 14167:4 - Spaced em-dash?
+line 14177:4 - Spaced em-dash?
+line 14179:3 - Spaced dash?
+line 14179:59 - Query word Qrmrs
+line 14180:4 - Spaced em-dash?
+line 14182:4 - Spaced em-dash?
+line 14189:4 - Spaced em-dash?
+line 14191:4 - Spaced em-dash?
+line 14193:4 - Spaced em-dash?
+line 14201:15 - Double punctuation?
+line 14203:20 - Double punctuation?
+line 14205:16 - Double punctuation?
+line 14205:22 - Double punctuation?
+line 14208:31 - Query word i
+line 14208:17 - Double punctuation?
+line 14208:23 - Double punctuation?
+line 14208:31 - Double punctuation?
+line 14211:18 - Double punctuation?
+line 14211:24 - Double punctuation?
+line 14214:15 - Double punctuation?
+line 14216:18 - Double punctuation?
+line 14218:34 - Query word i
+line 14218:28 - Double punctuation?
+line 14218:34 - Double punctuation?
+line 14221:34 - Query word i
+line 14221:28 - Double punctuation?
+line 14221:34 - Double punctuation?
+line 14223:14 - Double punctuation?
+line 14223:20 - Double punctuation?
+line 14225:35 - Query word i
+line 14225:18 - Double punctuation?
+line 14229:16 - Query word i
+line 14229:16 - Double punctuation?
+line 14231:22 - Double punctuation?
+line 14231:28 - Double punctuation?
+line 14233:18 - Double punctuation?
+line 14235:24 - Query word i
+line 14235:18 - Double punctuation?
+line 14235:24 - Double punctuation?
+line 14237:11 - Double punctuation?
+line 14239:14 - Query word i
+line 14239:14 - Double punctuation?
+line 14241:18 - Double punctuation?
+line 14243:15 - Double punctuation?
+line 14245:27 - Double punctuation?
+line 14247:17 - Double punctuation?
+line 14247:24 - Double punctuation?
+line 14249:12 - Query word i
+line 14252:17 - Double punctuation?
+line 14254:12 - Query word i
+line 14254:12 - Double punctuation?
+line 14256:18 - Query word i
+line 14256:12 - Double punctuation?
+line 14256:18 - Double punctuation?
+line 14259:16 - Double punctuation?
+line 14261:15 - Query word i
+line 14261:15 - Double punctuation?
+line 14263:19 - Query word i
+line 14263:19 - Double punctuation?
+line 14265:17 - Query word i
+line 14265:17 - Double punctuation?
+line 14267:40 - Query word i
+line 14267:26 - Double punctuation?
+line 14267:32 - Double punctuation?
+line 14267:40 - Double punctuation?
+line 14270:24 - Double punctuation?
+line 14270:32 - Double punctuation?
+line 14275:14 - Query word i
+line 14275:14 - Double punctuation?
+line 14277:41 - Query word i
+line 14277:25 - Double punctuation?
+line 14277:33 - Double punctuation?
+line 14277:41 - Double punctuation?
+line 14280:15 - Double punctuation?
+line 14283:20 - Double punctuation?
+line 14285:21 - Query word i
+line 14285:21 - Double punctuation?
+line 14287:29 - Query word i
+line 14287:21 - Double punctuation?
+line 14287:29 - Double punctuation?
+line 14293:15 - Query word i
+line 14293:15 - Double punctuation?
+line 14295:14 - Double punctuation?
+line 14297:16 - Double punctuation?
+line 14299:13 - Double punctuation?
+line 14301:28 - Query word i
+line 14301:28 - Double punctuation?
+line 14304:47 - Query word i
+line 14304:47 - Double punctuation?
+line 14306:48 - Query word i
+line 14306:19 - Double punctuation?
+line 14306:27 - Double punctuation?
+line 14308:32 - Query word i
+line 14308:26 - Double punctuation?
+line 14308:32 - Double punctuation?
+line 14310:32 - Query word i
+line 14310:26 - Double punctuation?
+line 14310:32 - Double punctuation?
+line 14313:25 - Double punctuation?
+line 14313:33 - Double punctuation?
+line 14313:41 - Double punctuation?
+line 14315:17 - Double punctuation?
+line 14317:17 - Double punctuation?
+line 14319:16 - Double punctuation?
+line 14319:24 - Double punctuation?
+line 14322:38 - Query word i
+line 14326:19 - Double punctuation?
+line 14328:15 - Query word i
+line 14328:15 - Double punctuation?
+line 14330:36 - Query word i
+line 14330:14 - Double punctuation?
+line 14332:16 - Double punctuation?
+line 14334:18 - Double punctuation?
+line 14336:18 - Double punctuation?
+line 14336:24 - Double punctuation?
+line 14339:15 - Double punctuation?
+line 14341:15 - Double punctuation?
+line 14343:21 - Double punctuation?
+line 14343:27 - Double punctuation?
+line 14346:21 - Double punctuation?
+line 14346:29 - Double punctuation?
+line 14346:37 - Double punctuation?
+line 14348:14 - Double punctuation?
+line 14350:11 - Double punctuation?
+line 14352:21 - Double punctuation?
+line 14354:38 - Query word i
+line 14354:30 - Double punctuation?
+line 14354:38 - Double punctuation?
+line 14356:30 - Double punctuation?
+line 14359:18 - Double punctuation?
+line 14361:47 - Query word i
+line 14361:39 - Double punctuation?
+line 14361:47 - Double punctuation?
+line 14364:15 - Double punctuation?
+line 14366:37 - Query word i
+line 14368:23 - Query word i
+line 14368:23 - Double punctuation?
+line 14370:24 - Double punctuation?
+line 14372:18 - Query word i
+line 14374:20 - Double punctuation?
+line 14376:20 - Query word i
+line 14376:20 - Double punctuation?
+line 14379:16 - Double punctuation?
+line 14381:19 - Query word i
+line 14383:17 - Double punctuation?
+line 14383:23 - Double punctuation?
+line 14385:20 - Query word i
+line 14385:20 - Double punctuation?
+line 14387:15 - Double punctuation?
+line 14387:22 - Double punctuation?
+line 14389:17 - Double punctuation?
+line 14389:23 - Double punctuation?
+line 14392:23 - Query word i
+line 14392:17 - Double punctuation?
+line 14392:23 - Double punctuation?
+line 14395:37 - Query word i
+line 14397:40 - Query word i
+line 14399:15 - Double punctuation?
+line 14399:21 - Double punctuation?
+line 14401:15 - Double punctuation?
+line 14403:29 - Query word i
+line 14403:21 - Double punctuation?
+line 14403:29 - Double punctuation?
+line 14407:15 - Double punctuation?
+line 14407:21 - Double punctuation?
+line 14409:35 - Query word i
+line 14409:17 - Double punctuation?
+line 14411:17 - Double punctuation?
+line 14413:32 - Query word i
+line 14413:18 - Double punctuation?
+line 14413:26 - Double punctuation?
+line 14413:32 - Double punctuation?
+line 14416:18 - Double punctuation?
+line 14418:21 - Query word i
+line 14418:21 - Double punctuation?
+line 14420:15 - Double punctuation?
+line 14422:17 - Double punctuation?
+line 14422:23 - Double punctuation?
+line 14425:18 - Double punctuation?
+line 14425:24 - Double punctuation?
+line 14428:13 - Double punctuation?
+line 14430:17 - Query word i
+line 14430:17 - Double punctuation?
+line 14432:38 - Query word i
+line 14434:14 - Double punctuation?
+line 14436:16 - Query word i
+line 14436:16 - Double punctuation?
+line 14438:17 - Query word i
+line 14438:17 - Double punctuation?
+line 14440:24 - Double punctuation?
+line 14440:36 - Double punctuation?
+line 14443:32 - Query word i
+line 14443:14 - Double punctuation?
+line 14445:15 - Double punctuation?
+line 14445:21 - Double punctuation?
+line 14447:14 - Double punctuation?
+line 14447:20 - Double punctuation?
+line 14451:14 - Double punctuation?
+line 14453:19 - Double punctuation?
+line 14455:28 - Double punctuation?
+line 14455:40 - Double punctuation?
+line 14458:18 - Double punctuation?
+line 14460:18 - Double punctuation?
+line 14460:31 - Double punctuation?
+line 14460:37 - Double punctuation?
+line 14460:45 - Double punctuation?
+line 14463:18 - Double punctuation?
+line 14463:26 - Double punctuation?
+line 14466:41 - Query word i
+line 14466:16 - Double punctuation?
+line 14466:27 - Double punctuation?
+line 14466:33 - Double punctuation?
+line 14466:41 - Double punctuation?
+line 14470:36 - Double punctuation?
+line 14473:20 - Double punctuation?
+line 14473:28 - Double punctuation?
+line 14476:16 - Double punctuation?
+line 14478:19 - Double punctuation?
+line 14478:25 - Double punctuation?
+line 14481:16 - Query word i
+line 14481:16 - Double punctuation?
+line 14483:16 - Double punctuation?
+line 14486:19 - Query word i
+line 14486:19 - Double punctuation?
+line 14488:19 - Query word i
+line 14488:19 - Double punctuation?
+line 14491:15 - Query word i
+line 14491:15 - Double punctuation?
+line 14493:16 - Double punctuation?
+line 14495:40 - Query word i
+line 14495:12 - Double punctuation?
+line 14498:55 - Query word i
+line 14498:23 - Double punctuation?
+line 14498:29 - Double punctuation?
+line 14498:37 - Double punctuation?
+line 14498:47 - Double punctuation?
+line 14498:55 - Double punctuation?
+line 14506:30 - Query word i
+line 14506:22 - Double punctuation?
+line 14506:30 - Double punctuation?
+line 14510:24 - Double punctuation?
+line 14510:36 - Double punctuation?
+line 14510:44 - Double punctuation?
+line 14512:18 - Double punctuation?
+line 14514:20 - Double punctuation?
+line 14514:30 - Double punctuation?
+line 14514:38 - Double punctuation?
+line 14516:15 - Query word i
+line 14516:15 - Double punctuation?
+line 14518:26 - Query word i
+line 14518:20 - Double punctuation?
+line 14518:26 - Double punctuation?
+line 14520:19 - Double punctuation?
+line 14522:21 - Double punctuation?
+line 14524:18 - Double punctuation?
+line 14524:24 - Double punctuation?
+line 14527:16 - Double punctuation?
+line 14529:17 - Double punctuation?
+line 14531:14 - Double punctuation?
+line 14533:20 - Query word i
+line 14533:14 - Double punctuation?
+line 14533:20 - Double punctuation?
+line 14537:17 - Double punctuation?
+line 14539:24 - Query word i
+line 14539:24 - Double punctuation?
+line 14541:32 - Double punctuation?
+line 14541:42 - Double punctuation?
+line 14541:52 - Double punctuation?
+line 14543:16 - Double punctuation?
+line 14545:19 - Query word i
+line 14545:19 - Double punctuation?
+line 14547:33 - Query word i
+line 14547:26 - Double punctuation?
+line 14547:33 - Double punctuation?
+line 14549:13 - Query word Rt
+line 14549:31 - Query word i
+line 14551:16 - Double punctuation?
+line 14551:22 - Double punctuation?
+line 14553:19 - Double punctuation?
+line 14553:25 - Double punctuation?
+line 14556:15 - Double punctuation?
+line 14556:21 - Double punctuation?
+line 14556:29 - Double punctuation?
+line 14558:21 - Query word i
+line 14558:15 - Double punctuation?
+line 14558:21 - Double punctuation?
+line 14560:15 - Query word i
+line 14560:15 - Double punctuation?
+line 14563:26 - Double punctuation?
+line 14567:16 - Double punctuation?
+line 14569:18 - Query word i
+line 14569:18 - Double punctuation?
+line 14571:20 - Double punctuation?
+line 14573:46 - Query word i
+line 14573:22 - Double punctuation?
+line 14573:30 - Double punctuation?
+line 14573:38 - Double punctuation?
+line 14573:46 - Double punctuation?
+line 14578:15 - Query word i
+line 14578:15 - Double punctuation?
+line 14581:19 - Double punctuation?
+line 14583:19 - Query word i
+line 14585:48 - Query word i
+line 14588:19 - Double punctuation?
+line 14590:23 - Query word i
+line 14590:23 - Double punctuation?
+line 14592:16 - Double punctuation?
+line 14592:24 - Double punctuation?
+line 14594:20 - Double punctuation?
+line 14596:16 - Double punctuation?
+line 14596:28 - Double punctuation?
+line 14596:34 - Double punctuation?
+line 14596:42 - Double punctuation?
+line 14598:25 - Double punctuation?
+line 14598:31 - Double punctuation?
+line 14600:16 - Double punctuation?
+line 14602:43 - Query word i
+line 14602:17 - Double punctuation?
+line 14602:29 - Double punctuation?
+line 14602:35 - Double punctuation?
+line 14602:43 - Double punctuation?
+line 14606:17 - Query word i
+line 14606:17 - Double punctuation?
+line 14608:25 - Query word i
+line 14608:19 - Double punctuation?
+line 14608:25 - Double punctuation?
+line 14612:17 - Double punctuation?
+line 14612:23 - Double punctuation?
+line 14615:24 - Query word i
+line 14615:18 - Double punctuation?
+line 14615:24 - Double punctuation?
+line 14618:26 - Query word i
+line 14618:18 - Double punctuation?
+line 14618:26 - Double punctuation?
+line 14621:19 - Double punctuation?
+line 14623:22 - Double punctuation?
+line 14625:13 - Double punctuation?
+line 14627:19 - Query word i
+line 14627:19 - Double punctuation?
+line 14629:12 - Double punctuation?
+line 14629:20 - Double punctuation?
+line 14631:23 - Query word i
+line 14631:17 - Double punctuation?
+line 14631:23 - Double punctuation?
+line 14634:23 - Query word i
+line 14638:17 - Double punctuation?
+line 14640:15 - Query word i
+line 14640:15 - Double punctuation?
+line 14642:59 - Query word i
+line 14642:37 - Double punctuation?
+line 14642:43 - Double punctuation?
+line 14642:51 - Double punctuation?
+line 14642:59 - Double punctuation?
+line 14649:40 - Query word i
+line 14649:18 - Double punctuation?
+line 14651:18 - Query word i
+line 14651:18 - Double punctuation?
+line 14653:23 - Query word i
+line 14653:23 - Double punctuation?
+line 14656:15 - Query word i
+line 14656:15 - Double punctuation?
+line 14658:17 - Double punctuation?
+line 14660:22 - Query word i
+line 14660:16 - Double punctuation?
+line 14660:22 - Double punctuation?
+line 14663:22 - Query word i
+line 14663:22 - Double punctuation?
+line 14665:24 - Query word i
+line 14665:24 - Double punctuation?
+line 14669:41 - Query word i
+line 14671:21 - Query word i
+line 14673:24 - Double punctuation?
+line 14673:30 - Double punctuation?
+line 14675:44 - Query word i
+line 14677:18 - Query word i
+line 14677:18 - Double punctuation?
+line 14680:23 - Query word i
+line 14680:23 - Double punctuation?
+line 14682:18 - Double punctuation?
+line 14685:44 - Query word i
+line 14687:51 - Query word i
+line 14687:20 - Double punctuation?
+line 14687:33 - Double punctuation?
+line 14687:41 - Double punctuation?
+line 14687:51 - Double punctuation?
+line 14690:39 - Query word i
+line 14690:13 - Double punctuation?
+line 14692:23 - Double punctuation?
+line 14694:14 - Double punctuation?
+line 14696:19 - Double punctuation?
+line 14698:19 - Double punctuation?
+line 14698:25 - Double punctuation?
+line 14701:16 - Double punctuation?
+line 14701:22 - Double punctuation?
+line 14703:27 - Double punctuation?
+line 14706:25 - Double punctuation?
+line 14706:38 - Double punctuation?
+line 14708:16 - Double punctuation?
+line 14710:15 - Query word i
+line 14710:15 - Double punctuation?
+line 14712:17 - Double punctuation?
+line 14712:23 - Double punctuation?
+line 14715:18 - Query word i
+line 14717:23 - Double punctuation?
+line 14719:18 - Query word i
+line 14719:18 - Double punctuation?
+line 14721:28 - Query word i
+line 14721:28 - Double punctuation?
+line 14723:9 - Non-ISO-8859 character 339
+line 14723:18 - Query word i
+line 14723:18 - Double punctuation?
+line 14725:19 - Query word i
+line 14725:19 - Double punctuation?
+line 14727:16 - Double punctuation?
+line 14727:24 - Double punctuation?
+line 14727:30 - Double punctuation?
+line 14729:21 - Double punctuation?
+line 14731:33 - Query word i
+line 14731:33 - Double punctuation?
+line 14733:30 - Query word i
+line 14733:30 - Double punctuation?
+line 14736:20 - Query word i
+line 14736:20 - Double punctuation?
+line 14739:21 - Double punctuation?
+line 14739:27 - Double punctuation?
+line 14742:28 - Query word i
+line 14742:20 - Double punctuation?
+line 14742:28 - Double punctuation?
+line 14745:26 - Query word i
+line 14745:20 - Double punctuation?
+line 14745:26 - Double punctuation?
+line 14748:17 - Query word i
+line 14748:17 - Double punctuation?
+line 14751:21 - Double punctuation?
+line 14751:34 - Double punctuation?
+line 14753:32 - Query word i
+line 14753:25 - Double punctuation?
+line 14753:32 - Double punctuation?
+line 14756:22 - Query word i
+line 14756:22 - Double punctuation?
+line 14758:39 - Double punctuation?
+line 14760:16 - Double punctuation?
+line 14762:16 - Double punctuation?
+line 14764:18 - Double punctuation?
+line 14766:15 - Double punctuation?
+line 14768:16 - Query word i
+line 14768:16 - Double punctuation?
+line 14770:13 - Double punctuation?
+line 14772:17 - Double punctuation?
+line 14772:23 - Double punctuation?
+line 14776:34 - Query word i
+line 14776:12 - Double punctuation?
+line 14776:18 - Double punctuation?
+line 14776:26 - Double punctuation?
+line 14776:34 - Double punctuation?
+line 14779:15 - Double punctuation?
+line 14781:14 - Double punctuation?
+line 14783:18 - Double punctuation?
+line 14785:31 - Query word i
+line 14785:23 - Double punctuation?
+line 14785:31 - Double punctuation?
+line 14788:20 - Query word i
+line 14788:20 - Double punctuation?
+line 14790:19 - Query word i
+line 14790:19 - Double punctuation?
+line 14793:41 - Query word i
+line 14793:14 - Double punctuation?
+line 14795:23 - Double punctuation?
+line 14797:16 - Double punctuation?
+line 14799:16 - Double punctuation?
+line 14799:24 - Double punctuation?
+line 14801:17 - Double punctuation?
+line 14801:23 - Double punctuation?
+line 14803:26 - Query word i
+line 14803:20 - Double punctuation?
+line 14803:26 - Double punctuation?
+line 14805:20 - Double punctuation?
+line 14807:15 - Double punctuation?
+line 14809:19 - Query word i
+line 14809:19 - Double punctuation?
+line 14812:15 - Double punctuation?
+line 14814:22 - Query word i
+line 14814:14 - Double punctuation?
+line 14814:22 - Double punctuation?
+line 14817:19 - Double punctuation?
+line 14817:25 - Double punctuation?
+line 14819:15 - Double punctuation?
+line 14819:21 - Double punctuation?
+line 14822:21 - Double punctuation?
+line 14822:27 - Double punctuation?
+line 14824:26 - Query word i
+line 14824:15 - Double punctuation?
+line 14824:26 - Double punctuation?
+line 14830:20 - Double punctuation?
+line 14830:27 - Double punctuation?
+line 14830:40 - Double punctuation?
+line 14830:48 - Double punctuation?
+line 14830:58 - Double punctuation?
+line 14830:66 - Double punctuation?
+line 14831:11 - Query word i
+line 14831:11 - Double punctuation?
+line 14835:33 - Query word i
+line 14835:20 - Double punctuation?
+line 14835:27 - Double punctuation?
+line 14835:33 - Double punctuation?
+line 14838:37 - Double punctuation?
+line 14840:15 - Double punctuation?
+line 14842:14 - Double punctuation?
+line 14844:27 - Query word i
+line 14844:21 - Double punctuation?
+line 14844:27 - Double punctuation?
+line 14847:27 - Query word i
+line 14847:21 - Double punctuation?
+line 14847:27 - Double punctuation?
+line 14850:21 - Query word i
+line 14850:21 - Double punctuation?
+line 14853:15 - Double punctuation?
+line 14855:0 - Query word FitzClarence
+line 14855:37 - Query word i
+line 14855:19 - Double punctuation?
+line 14855:31 - Double punctuation?
+line 14855:37 - Double punctuation?
+line 14857:23 - Double punctuation?
+line 14857:31 - Double punctuation?
+line 14860:15 - Double punctuation?
+line 14862:18 - Query word i
+line 14862:18 - Double punctuation?
+line 14864:16 - Double punctuation?
+line 14866:19 - Double punctuation?
+line 14868:17 - Query word i
+line 14870:20 - Double punctuation?
+line 14870:32 - Double punctuation?
+line 14873:16 - Double punctuation?
+line 14877:31 - Query word i
+line 14879:17 - Double punctuation?
+line 14881:16 - Query word i
+line 14881:16 - Double punctuation?
+line 14883:35 - Query word i
+line 14885:28 - Query word i
+line 14887:21 - Double punctuation?
+line 14889:16 - Double punctuation?
+line 14891:21 - Double punctuation?
+line 14893:35 - Query word i
+line 14897:15 - Double punctuation?
+line 14899:18 - Double punctuation?
+line 14899:24 - Double punctuation?
+line 14899:32 - Double punctuation?
+line 14899:40 - Double punctuation?
+line 14901:24 - Query word i
+line 14901:18 - Double punctuation?
+line 14901:24 - Double punctuation?
+line 14906:17 - Double punctuation?
+line 14908:20 - Double punctuation?
+line 14908:26 - Double punctuation?
+line 14910:13 - Double punctuation?
+line 14910:21 - Double punctuation?
+line 14912:22 - Double punctuation?
+line 14912:30 - Double punctuation?
+line 14912:38 - Double punctuation?
+line 14914:19 - Double punctuation?
+line 14916:29 - Double punctuation?
+line 14916:35 - Double punctuation?
+line 14916:43 - Double punctuation?
+line 14916:51 - Double punctuation?
+line 14919:15 - Double punctuation?
+line 14921:30 - Query word i
+line 14921:30 - Double punctuation?
+line 14923:19 - Double punctuation?
+line 14925:24 - Query word i
+line 14925:12 - Double punctuation?
+line 14929:24 - Query word i
+line 14929:16 - Double punctuation?
+line 14929:24 - Double punctuation?
+line 14932:16 - Double punctuation?
+line 14932:22 - Double punctuation?
+line 14934:35 - Query word i
+line 14936:16 - Double punctuation?
+line 14938:18 - Double punctuation?
+line 14940:17 - Double punctuation?
+line 14944:33 - Query word i
+line 14946:22 - Double punctuation?
+line 14946:30 - Double punctuation?
+line 14946:38 - Double punctuation?
+line 14948:20 - Double punctuation?
+line 14948:31 - Double punctuation?
+line 14948:37 - Double punctuation?
+line 14948:45 - Double punctuation?
+line 14948:53 - Double punctuation?
+line 14950:18 - Query word i
+line 14950:18 - Double punctuation?
+line 14953:16 - Double punctuation?
+line 14955:16 - Double punctuation?
+line 14955:22 - Double punctuation?
+line 14957:16 - Double punctuation?
+line 14959:24 - Double punctuation?
+line 14959:30 - Double punctuation?
+line 14959:38 - Double punctuation?
+line 14959:46 - Double punctuation?
+line 14961:28 - Query word i
+line 14961:28 - Double punctuation?
+line 14965:26 - Double punctuation?
+line 14967:46 - Query word i
+line 14967:23 - Double punctuation?
+line 14967:32 - Double punctuation?
+line 14967:40 - Double punctuation?
+line 14967:46 - Double punctuation?
+line 14973:17 - Query word i
+line 14973:17 - Double punctuation?
+line 14976:17 - Query word i
+line 14976:17 - Double punctuation?
+line 14978:32 - Query word i
+line 14978:24 - Double punctuation?
+line 14978:32 - Double punctuation?
+line 14981:15 - Query word i
+line 14981:15 - Double punctuation?
+line 14983:25 - Query word i
+line 14983:12 - Double punctuation?
+line 14983:25 - Double punctuation?
+line 14985:15 - Double punctuation?
+line 14987:16 - Query word i
+line 14987:16 - Double punctuation?
+line 14989:19 - Query word i
+line 14989:19 - Double punctuation?
+line 14991:16 - Query word i
+line 14991:16 - Double punctuation?
+line 14993:12 - Double punctuation?
+line 14995:35 - Query word i
+line 14995:18 - Double punctuation?
+line 14998:15 - Double punctuation?
+line 14998:21 - Double punctuation?
+line 15001:22 - Double punctuation?
+line 15003:19 - Double punctuation?
+line 15005:15 - Double punctuation?
+line 15007:17 - Double punctuation?
+line 15007:25 - Double punctuation?
+line 15009:26 - Double punctuation?
+line 15011:15 - Double punctuation?
+line 15011:22 - Double punctuation?
+line 15014:26 - Query word i
+line 15014:18 - Double punctuation?
+line 15014:26 - Double punctuation?
+line 15017:19 - Query word i
+line 15017:11 - Double punctuation?
+line 15017:19 - Double punctuation?
+line 15019:40 - Query word i
+line 15019:18 - Double punctuation?
+line 15019:26 - Double punctuation?
+line 15019:34 - Double punctuation?
+line 15019:40 - Double punctuation?
+line 15022:32 - Query word i
+line 15024:22 - Query word i
+line 15024:16 - Double punctuation?
+line 15024:22 - Double punctuation?
+line 15027:13 - Query word FitzG
+line 15027:23 - Double punctuation?
+line 15029:17 - Double punctuation?
+line 15029:23 - Double punctuation?
+line 15031:35 - Query word i
+line 15031:27 - Double punctuation?
+line 15031:35 - Double punctuation?
+line 15034:12 - Double punctuation?
+line 15037:15 - Double punctuation?
+line 15037:21 - Double punctuation?
+line 15039:36 - Query word i
+line 15044:22 - Query word i
+line 15044:22 - Double punctuation?
+line 15046:17 - Double punctuation?
+line 15048:14 - Double punctuation?
+line 15048:20 - Double punctuation?
+line 15050:14 - Double punctuation?
+line 15052:16 - Double punctuation?
+line 15054:16 - Double punctuation?
+line 15056:40 - Query word i
+line 15058:22 - Query word i
+line 15058:22 - Double punctuation?
+line 15060:39 - Query word i
+line 15060:23 - Double punctuation?
+line 15060:31 - Double punctuation?
+line 15060:39 - Double punctuation?
+line 15063:34 - Query word i
+line 15063:18 - Double punctuation?
+line 15063:26 - Double punctuation?
+line 15063:34 - Double punctuation?
+line 15067:24 - Query word FitzG
+line 15067:31 - Double punctuation?
+line 15071:20 - Double punctuation?
+line 15071:27 - Double punctuation?
+line 15073:17 - Double punctuation?
+line 15075:20 - Double punctuation?
+line 15075:26 - Double punctuation?
+line 15077:24 - Double punctuation?
+line 15077:30 - Double punctuation?
+line 15079:25 - Query word FitzH
+line 15079:46 - Query word i
+line 15079:32 - Double punctuation?
+line 15079:40 - Double punctuation?
+line 15079:46 - Double punctuation?
+line 15084:26 - Double punctuation?
+line 15084:32 - Double punctuation?
+line 15089:20 - Double punctuation?
+line 15091:18 - Double punctuation?
+line 15091:26 - Double punctuation?
+line 15091:34 - Double punctuation?
+line 15091:40 - Double punctuation?
+line 15091:50 - Double punctuation?
+line 15093:16 - Double punctuation?
+line 15097:19 - Double punctuation?
+line 15100:20 - Query word i
+line 15100:20 - Double punctuation?
+line 15103:13 - Query word i
+line 15103:13 - Double punctuation?
+line 15105:13 - Query word i
+line 15105:13 - Double punctuation?
+line 15107:21 - Double punctuation?
+line 15107:27 - Double punctuation?
+line 15110:30 - Query word i
+line 15112:21 - Double punctuation?
+line 15114:22 - Query word i
+line 15116:18 - Double punctuation?
+line 15118:17 - Double punctuation?
+line 15118:23 - Double punctuation?
+line 15121:16 - Double punctuation?
+line 15123:19 - Double punctuation?
+line 15125:14 - Query word i
+line 15125:14 - Double punctuation?
+line 15127:28 - Query word i
+line 15127:20 - Double punctuation?
+line 15127:28 - Double punctuation?
+line 15129:20 - Double punctuation?
+line 15129:26 - Double punctuation?
+line 15131:37 - Query word i
+line 15131:31 - Double punctuation?
+line 15131:37 - Double punctuation?
+line 15134:27 - Double punctuation?
+line 15134:35 - Double punctuation?
+line 15136:47 - Query word i
+line 15136:32 - Double punctuation?
+line 15136:39 - Double punctuation?
+line 15136:47 - Double punctuation?
+line 15138:16 - Double punctuation?
+line 15140:17 - Double punctuation?
+line 15140:29 - Double punctuation?
+line 15142:26 - Double punctuation?
+line 15142:34 - Double punctuation?
+line 15144:38 - Query word i
+line 15144:18 - Double punctuation?
+line 15144:30 - Double punctuation?
+line 15144:38 - Double punctuation?
+line 15148:20 - Double punctuation?
+line 15148:26 - Double punctuation?
+line 15150:19 - Query word i
+line 15150:19 - Double punctuation?
+line 15152:19 - Double punctuation?
+line 15154:24 - Query word i
+line 15154:18 - Double punctuation?
+line 15154:24 - Double punctuation?
+line 15157:12 - Query word i
+line 15157:12 - Double punctuation?
+line 15159:18 - Query word i
+line 15159:18 - Double punctuation?
+line 15162:18 - Non-ASCII character 183
+line 15164:19 - Double punctuation?
+line 15164:27 - Double punctuation?
+line 15164:35 - Double punctuation?
+line 15166:14 - Double punctuation?
+line 15166:22 - Double punctuation?
+line 15166:28 - Double punctuation?
+line 15169:17 - Double punctuation?
+line 15171:19 - Double punctuation?
+line 15173:22 - Double punctuation?
+line 15173:33 - Double punctuation?
+line 15175:25 - Double punctuation?
+line 15177:20 - Query word i
+line 15177:14 - Double punctuation?
+line 15177:20 - Double punctuation?
+line 15179:14 - Query word i
+line 15179:14 - Double punctuation?
+line 15181:30 - Query word i
+line 15181:22 - Double punctuation?
+line 15181:30 - Double punctuation?
+line 15184:19 - Query word i
+line 15184:19 - Double punctuation?
+line 15186:37 - Query word i
+line 15186:27 - Double punctuation?
+line 15186:37 - Double punctuation?
+line 15188:23 - Double punctuation?
+line 15190:18 - Double punctuation?
+line 15192:21 - Query word i
+line 15192:15 - Double punctuation?
+line 15192:21 - Double punctuation?
+line 15194:34 - Query word i
+line 15194:27 - Double punctuation?
+line 15194:34 - Double punctuation?
+line 15197:36 - Query word i
+line 15197:19 - Double punctuation?
+line 15199:17 - Double punctuation?
+line 15199:23 - Double punctuation?
+line 15202:17 - Double punctuation?
+line 15202:25 - Double punctuation?
+line 15204:27 - Query word i
+line 15206:13 - Double punctuation?
+line 15208:22 - Query word i
+line 15208:16 - Double punctuation?
+line 15208:22 - Double punctuation?
+line 15211:16 - Double punctuation?
+line 15214:25 - Double punctuation?
+line 15216:17 - Query word i
+line 15216:17 - Double punctuation?
+line 15219:13 - Query word i
+line 15219:13 - Double punctuation?
+line 15221:22 - Double punctuation?
+line 15223:14 - Double punctuation?
+line 15223:20 - Double punctuation?
+line 15226:16 - Query word i
+line 15226:16 - Double punctuation?
+line 15230:17 - Double punctuation?
+line 15232:37 - Query word i
+line 15232:17 - Double punctuation?
+line 15232:29 - Double punctuation?
+line 15232:37 - Double punctuation?
+line 15234:15 - Double punctuation?
+line 15236:32 - Query word i
+line 15236:18 - Double punctuation?
+line 15236:24 - Double punctuation?
+line 15236:32 - Double punctuation?
+line 15241:16 - Double punctuation?
+line 15243:13 - Query word McK
+line 15243:24 - Query word i
+line 15243:18 - Double punctuation?
+line 15243:24 - Double punctuation?
+line 15246:19 - Query word i
+line 15248:20 - Double punctuation?
+line 15250:18 - Double punctuation?
+line 15252:25 - Double punctuation?
+line 15254:27 - Double punctuation?
+line 15256:15 - Double punctuation?
+line 15258:15 - Double punctuation?
+line 15263:17 - Double punctuation?
+line 15265:15 - Double punctuation?
+line 15265:21 - Double punctuation?
+line 15268:31 - Query word i
+line 15270:20 - Double punctuation?
+line 15272:18 - Double punctuation?
+line 15274:26 - Query word i
+line 15274:26 - Double punctuation?
+line 15276:11 - Double punctuation?
+line 15278:30 - Double punctuation?
+line 15278:38 - Double punctuation?
+line 15278:46 - Double punctuation?
+line 15283:14 - Double punctuation?
+line 15285:17 - Query word i
+line 15285:17 - Double punctuation?
+line 15287:36 - Query word i
+line 15287:22 - Double punctuation?
+line 15287:30 - Double punctuation?
+line 15287:36 - Double punctuation?
+line 15290:21 - Double punctuation?
+line 15290:28 - Double punctuation?
+line 15290:39 - Double punctuation?
+line 15290:45 - Double punctuation?
+line 15290:53 - Double punctuation?
+line 15292:34 - Query word i
+line 15295:35 - Query word i
+line 15295:29 - Double punctuation?
+line 15295:35 - Double punctuation?
+line 15298:16 - Double punctuation?
+line 15300:17 - Double punctuation?
+line 15300:23 - Double punctuation?
+line 15304:23 - Query word i
+line 15304:17 - Double punctuation?
+line 15304:23 - Double punctuation?
+line 15307:42 - Query word i
+line 15307:14 - Double punctuation?
+line 15309:16 - Double punctuation?
+line 15309:24 - Double punctuation?
+line 15311:21 - Query word i
+line 15311:21 - Double punctuation?
+line 15313:14 - Query word i
+line 15313:14 - Double punctuation?
+line 15315:17 - Double punctuation?
+line 15317:30 - Query word i
+line 15317:30 - Double punctuation?
+line 15322:17 - Query word i
+line 15322:17 - Double punctuation?
+line 15324:23 - Query word i
+line 15324:17 - Double punctuation?
+line 15324:23 - Double punctuation?
+line 15328:26 - Query word i
+line 15328:14 - Double punctuation?
+line 15328:26 - Double punctuation?
+line 15330:18 - Double punctuation?
+line 15332:18 - Double punctuation?
+line 15334:18 - Double punctuation?
+line 15336:13 - Double punctuation?
+line 15338:22 - Query word McW
+line 15338:27 - Double punctuation?
+line 15338:33 - Double punctuation?
+line 15341:28 - Double punctuation?
+line 15341:34 - Double punctuation?
+line 15344:16 - Query word i
+line 15344:16 - Double punctuation?
+line 15347:28 - Query word i
+line 15347:20 - Double punctuation?
+line 15347:28 - Double punctuation?
+line 15349:23 - Query word i
+line 15349:23 - Double punctuation?
+line 15351:12 - Query word i
+line 15351:12 - Double punctuation?
+line 15353:19 - Double punctuation?
+line 15353:27 - Double punctuation?
+line 15355:31 - Query word i
+line 15355:25 - Double punctuation?
+line 15355:31 - Double punctuation?
+line 15357:17 - Double punctuation?
+line 15357:24 - Double punctuation?
+line 15359:17 - Double punctuation?
+line 15359:25 - Double punctuation?
+line 15361:27 - Double punctuation?
+line 15361:34 - Double punctuation?
+line 15363:26 - Double punctuation?
+line 15367:14 - Double punctuation?
+line 15369:16 - Double punctuation?
+line 15369:23 - Double punctuation?
+line 15369:31 - Double punctuation?
+line 15371:15 - Double punctuation?
+line 15373:18 - Double punctuation?
+line 15373:30 - Double punctuation?
+line 15373:36 - Double punctuation?
+line 15373:44 - Double punctuation?
+line 15373:52 - Double punctuation?
+line 15375:16 - Double punctuation?
+line 15375:29 - Double punctuation?
+line 15375:39 - Double punctuation?
+line 15375:47 - Double punctuation?
+line 15375:55 - Double punctuation?
+line 15378:15 - Double punctuation?
+line 15381:18 - Query word i
+line 15381:18 - Double punctuation?
+line 15383:43 - Query word i
+line 15383:19 - Double punctuation?
+line 15383:27 - Double punctuation?
+line 15383:35 - Double punctuation?
+line 15383:43 - Double punctuation?
+line 15386:16 - Double punctuation?
+line 15388:16 - Double punctuation?
+line 15390:33 - Query word i
+line 15390:15 - Double punctuation?
+line 15392:20 - Query word i
+line 15392:20 - Double punctuation?
+line 15394:14 - Double punctuation?
+line 15396:14 - Double punctuation?
+line 15398:22 - Query word i
+line 15398:16 - Double punctuation?
+line 15398:22 - Double punctuation?
+line 15401:29 - Query word i
+line 15401:17 - Double punctuation?
+line 15401:29 - Double punctuation?
+line 15403:25 - Double punctuation?
+line 15405:13 - Query word i
+line 15405:13 - Double punctuation?
+line 15407:16 - Double punctuation?
+line 15409:22 - Query word i
+line 15409:22 - Double punctuation?
+line 15411:31 - Query word i
+line 15411:17 - Double punctuation?
+line 15411:25 - Double punctuation?
+line 15411:31 - Double punctuation?
+line 15414:14 - Double punctuation?
+line 15416:29 - Double punctuation?
+line 15416:35 - Double punctuation?
+line 15418:30 - Query word i
+line 15418:16 - Double punctuation?
+line 15418:24 - Double punctuation?
+line 15418:30 - Double punctuation?
+line 15422:19 - Double punctuation?
+line 15424:16 - Double punctuation?
+line 15426:0 - Query word MacDougall
+line 15426:17 - Query word i
+line 15426:17 - Double punctuation?
+line 15428:26 - Query word i
+line 15432:19 - Query word i
+line 15432:19 - Double punctuation?
+line 15434:22 - Query word i
+line 15434:22 - Double punctuation?
+line 15436:23 - Double punctuation?
+line 15436:29 - Double punctuation?
+line 15436:37 - Double punctuation?
+line 15436:45 - Double punctuation?
+line 15436:55 - Double punctuation?
+line 15438:0 - Query word MacLear
+line 15438:20 - Double punctuation?
+line 15438:26 - Double punctuation?
+line 15440:0 - Query word MacMahon
+line 15440:17 - Double punctuation?
+line 15442:19 - Query word i
+line 15442:19 - Double punctuation?
+line 15445:16 - Double punctuation?
+line 15447:18 - Double punctuation?
+line 15451:15 - Double punctuation?
+line 15453:43 - Query word i
+line 15453:35 - Double punctuation?
+line 15453:43 - Double punctuation?
+line 15458:14 - Query word i
+line 15458:14 - Double punctuation?
+line 15460:19 - Double punctuation?
+line 15462:22 - Double punctuation?
+line 15462:28 - Double punctuation?
+line 15465:22 - Query word i
+line 15465:22 - Double punctuation?
+line 15469:18 - Query word i
+line 15469:18 - Double punctuation?
+line 15471:22 - Double punctuation?
+line 15471:28 - Double punctuation?
+line 15473:22 - Double punctuation?
+line 15475:13 - Double punctuation?
+line 15477:36 - Query word i
+line 15477:18 - Double punctuation?
+line 15477:30 - Double punctuation?
+line 15477:36 - Double punctuation?
+line 15480:16 - Double punctuation?
+line 15480:22 - Double punctuation?
+line 15482:17 - Query word i
+line 15482:17 - Double punctuation?
+line 15484:17 - Double punctuation?
+line 15486:17 - Query word i
+line 15486:17 - Double punctuation?
+line 15488:14 - Double punctuation?
+line 15490:16 - Double punctuation?
+line 15492:33 - Query word i
+line 15492:27 - Double punctuation?
+line 15492:33 - Double punctuation?
+line 15495:13 - Query word i
+line 15495:13 - Double punctuation?
+line 15497:16 - Double punctuation?
+line 15499:22 - Query word i
+line 15499:22 - Double punctuation?
+line 15501:25 - Query word i
+line 15501:17 - Double punctuation?
+line 15501:25 - Double punctuation?
+line 15506:31 - Query word i
+line 15506:15 - Double punctuation?
+line 15506:23 - Double punctuation?
+line 15506:31 - Double punctuation?
+line 15509:22 - Query word i
+line 15509:16 - Double punctuation?
+line 15509:22 - Double punctuation?
+line 15512:30 - Query word i
+line 15512:30 - Double punctuation?
+line 15515:29 - Query word i
+line 15515:16 - Double punctuation?
+line 15515:29 - Double punctuation?
+line 15517:25 - Double punctuation?
+line 15519:36 - Double punctuation?
+line 15519:44 - Double punctuation?
+line 15521:19 - Double punctuation?
+line 15521:25 - Double punctuation?
+line 15524:21 - Query word i
+line 15524:21 - Double punctuation?
+line 15526:16 - Double punctuation?
+line 15528:39 - Query word i
+line 15528:18 - Double punctuation?
+line 15530:26 - Query word i
+line 15530:18 - Double punctuation?
+line 15530:26 - Double punctuation?
+line 15534:17 - Query word i
+line 15534:17 - Double punctuation?
+line 15536:15 - Query word i
+line 15536:15 - Double punctuation?
+line 15538:17 - Double punctuation?
+line 15538:23 - Double punctuation?
+line 15540:19 - Query word i
+line 15540:19 - Double punctuation?
+line 15542:32 - Query word i
+line 15542:24 - Double punctuation?
+line 15542:32 - Double punctuation?
+line 15548:15 - Query word i
+line 15548:15 - Double punctuation?
+line 15550:30 - Query word i
+line 15550:23 - Double punctuation?
+line 15550:30 - Double punctuation?
+line 15553:19 - Double punctuation?
+line 15555:14 - Double punctuation?
+line 15555:20 - Double punctuation?
+line 15558:15 - Double punctuation?
+line 15560:22 - Query word i
+line 15560:22 - Double punctuation?
+line 15563:15 - Double punctuation?
+line 15563:21 - Double punctuation?
+line 15565:19 - Query word i
+line 15565:19 - Double punctuation?
+line 15567:23 - Double punctuation?
+line 15567:29 - Double punctuation?
+line 15570:15 - Double punctuation?
+line 15572:16 - Double punctuation?
+line 15572:22 - Double punctuation?
+line 15575:19 - Double punctuation?
+line 15577:23 - Query word i
+line 15577:15 - Double punctuation?
+line 15577:23 - Double punctuation?
+line 15580:16 - Double punctuation?
+line 15582:15 - Query word i
+line 15582:15 - Double punctuation?
+line 15584:15 - Double punctuation?
+line 15586:34 - Double punctuation?
+line 15589:28 - Query word i
+line 15589:16 - Double punctuation?
+line 15589:28 - Double punctuation?
+line 15591:19 - Query word i
+line 15591:19 - Double punctuation?
+line 15596:14 - Double punctuation?
+line 15598:16 - Double punctuation?
+line 15600:19 - Query word i
+line 15600:19 - Double punctuation?
+line 15602:16 - Double punctuation?
+line 15604:16 - Double punctuation?
+line 15606:16 - Double punctuation?
+line 15606:28 - Double punctuation?
+line 15608:17 - Double punctuation?
+line 15608:23 - Double punctuation?
+line 15611:17 - Double punctuation?
+line 15611:23 - Double punctuation?
+line 15614:18 - Query word i
+line 15614:18 - Double punctuation?
+line 15616:24 - Double punctuation?
+line 15618:18 - Double punctuation?
+line 15618:30 - Double punctuation?
+line 15618:36 - Double punctuation?
+line 15621:16 - Query word i
+line 15621:16 - Double punctuation?
+line 15623:19 - Double punctuation?
+line 15623:25 - Double punctuation?
+line 15626:18 - Double punctuation?
+line 15628:16 - Query word i
+line 15628:16 - Double punctuation?
+line 15630:21 - Double punctuation?
+line 15632:16 - Query word i
+line 15632:16 - Double punctuation?
+line 15635:19 - Query standalone 1
+line 15635:13 - Double punctuation?
+line 15637:20 - Query word i
+line 15637:20 - Double punctuation?
+line 15640:31 - Query word i
+line 15640:25 - Double punctuation?
+line 15640:31 - Double punctuation?
+line 15643:25 - Query word i
+line 15645:18 - Double punctuation?
+line 15645:24 - Double punctuation?
+line 15645:30 - Double punctuation?
+line 15648:15 - Double punctuation?
+line 15650:17 - Double punctuation?
+line 15650:23 - Double punctuation?
+line 15653:15 - Double punctuation?
+line 15655:26 - Double punctuation?
+line 15657:42 - Query word i
+line 15657:27 - Double punctuation?
+line 15657:34 - Double punctuation?
+line 15657:42 - Double punctuation?
+line 15659:32 - Query word i
+line 15661:16 - Double punctuation?
+line 15663:17 - Double punctuation?
+line 15665:28 - Double punctuation?
+line 15665:34 - Double punctuation?
+line 15668:15 - Double punctuation?
+line 15670:18 - Double punctuation?
+line 15672:17 - Double punctuation?
+line 15674:20 - Query word i
+line 15674:14 - Double punctuation?
+line 15674:20 - Double punctuation?
+line 15677:14 - Query word i
+line 15677:14 - Double punctuation?
+line 15681:28 - Query word i
+line 15681:20 - Double punctuation?
+line 15681:28 - Double punctuation?
+line 15684:51 - Query word i
+line 15684:17 - Double punctuation?
+line 15684:29 - Double punctuation?
+line 15684:35 - Double punctuation?
+line 15684:43 - Double punctuation?
+line 15684:51 - Double punctuation?
+line 15687:29 - Query word i
+line 15687:12 - Double punctuation?
+line 15689:18 - Double punctuation?
+line 15691:22 - Double punctuation?
+line 15691:28 - Double punctuation?
+line 15694:19 - Query word i
+line 15694:19 - Double punctuation?
+line 15696:30 - Query word i
+line 15696:30 - Double punctuation?
+line 15698:23 - Query word i
+line 15698:17 - Double punctuation?
+line 15698:23 - Double punctuation?
+line 15701:25 - Query word i
+line 15701:17 - Double punctuation?
+line 15701:25 - Double punctuation?
+line 15706:19 - Double punctuation?
+line 15709:23 - Query word i
+line 15709:17 - Double punctuation?
+line 15709:23 - Double punctuation?
+line 15713:23 - Query word i
+line 15713:23 - Double punctuation?
+line 15715:34 - Query word i
+line 15715:26 - Double punctuation?
+line 15715:34 - Double punctuation?
+line 15718:12 - Query word Rt
+line 15718:34 - Double punctuation?
+line 15718:42 - Double punctuation?
+line 15718:52 - Double punctuation?
+line 15720:18 - Query word i
+line 15720:18 - Double punctuation?
+line 15722:27 - Query word i
+line 15722:15 - Double punctuation?
+line 15722:27 - Double punctuation?
+line 15725:18 - Double punctuation?
+line 15728:19 - Query word i
+line 15728:19 - Double punctuation?
+line 15731:16 - Query word i
+line 15731:16 - Double punctuation?
+line 15733:22 - Double punctuation?
+line 15735:15 - Double punctuation?
+line 15735:21 - Double punctuation?
+line 15735:27 - Double punctuation?
+line 15739:32 - Query word i
+line 15739:19 - Double punctuation?
+line 15739:32 - Double punctuation?
+line 15742:20 - Query word i
+line 15742:20 - Double punctuation?
+line 15745:22 - Double punctuation?
+line 15747:20 - Double punctuation?
+line 15747:25 - Double punctuation?
+line 15749:26 - Query word i
+line 15749:18 - Double punctuation?
+line 15749:26 - Double punctuation?
+line 15754:33 - Query word i
+line 15754:20 - Double punctuation?
+line 15754:33 - Double punctuation?
+line 15757:13 - Query word i
+line 15757:13 - Double punctuation?
+line 15761:19 - Double punctuation?
+line 15764:20 - Double punctuation?
+line 15766:28 - Query word i
+line 15766:22 - Double punctuation?
+line 15766:28 - Double punctuation?
+line 15769:40 - Query word i
+line 15771:22 - Query word i
+line 15771:16 - Double punctuation?
+line 15771:22 - Double punctuation?
+line 15775:19 - Query word i
+line 15775:19 - Double punctuation?
+line 15777:26 - Query word i
+line 15777:20 - Double punctuation?
+line 15777:26 - Double punctuation?
+line 15782:15 - Double punctuation?
+line 15784:24 - Double punctuation?
+line 15786:15 - Double punctuation?
+line 15788:18 - Double punctuation?
+line 15788:26 - Double punctuation?
+line 15792:18 - Double punctuation?
+line 15794:32 - Query word i
+line 15796:26 - Query word i
+line 15796:18 - Double punctuation?
+line 15796:26 - Double punctuation?
+line 15799:16 - Query word i
+line 15799:16 - Double punctuation?
+line 15801:63 - Query word i
+line 15801:27 - Double punctuation?
+line 15801:39 - Double punctuation?
+line 15801:49 - Double punctuation?
+line 15801:55 - Double punctuation?
+line 15801:63 - Double punctuation?
+line 15804:20 - Query word i
+line 15804:20 - Double punctuation?
+line 15806:25 - Double punctuation?
+line 15806:33 - Double punctuation?
+line 15806:41 - Double punctuation?
+line 15808:20 - Double punctuation?
+line 15811:19 - Query word i
+line 15811:19 - Double punctuation?
+line 15814:30 - Double punctuation?
+line 15814:38 - Double punctuation?
+line 15814:44 - Double punctuation?
+line 15816:24 - Double punctuation?
+line 15818:19 - Query word i
+line 15818:19 - Double punctuation?
+line 15820:21 - Query word i
+line 15820:21 - Double punctuation?
+line 15823:19 - Double punctuation?
+line 15825:16 - Query word i
+line 15825:16 - Double punctuation?
+line 15827:22 - Query word i
+line 15827:22 - Double punctuation?
+line 15829:34 - Query word i
+line 15829:26 - Double punctuation?
+line 15829:34 - Double punctuation?
+line 15831:59 - Query word i
+line 15831:17 - Double punctuation?
+line 15831:29 - Double punctuation?
+line 15831:37 - Double punctuation?
+line 15831:43 - Double punctuation?
+line 15831:51 - Double punctuation?
+line 15831:59 - Double punctuation?
+line 15834:20 - Double punctuation?
+line 15836:23 - Double punctuation?
+line 15838:26 - Double punctuation?
+line 15838:32 - Double punctuation?
+line 15841:25 - Double punctuation?
+line 15841:37 - Double punctuation?
+line 15841:45 - Double punctuation?
+line 15841:53 - Double punctuation?
+line 15845:14 - Double punctuation?
+line 15845:22 - Double punctuation?
+line 15845:30 - Double punctuation?
+line 15845:38 - Double punctuation?
+line 15847:17 - Double punctuation?
+line 15849:42 - Query word i
+line 15849:22 - Double punctuation?
+line 15849:34 - Double punctuation?
+line 15849:42 - Double punctuation?
+line 15854:18 - Query word i
+line 15854:18 - Double punctuation?
+line 15856:16 - Double punctuation?
+line 15858:19 - Double punctuation?
+line 15860:17 - Query word i
+line 15860:17 - Double punctuation?
+line 15862:17 - Query word i
+line 15862:17 - Double punctuation?
+line 15864:15 - Double punctuation?
+line 15864:23 - Double punctuation?
+line 15864:29 - Double punctuation?
+line 15866:14 - Double punctuation?
+line 15868:17 - Double punctuation?
+line 15870:16 - Query word i
+line 15870:16 - Double punctuation?
+line 15872:17 - Double punctuation?
+line 15872:23 - Double punctuation?
+line 15875:20 - Double punctuation?
+line 15875:26 - Double punctuation?
+line 15878:32 - Query word i
+line 15878:32 - Double punctuation?
+line 15880:20 - Query word i
+line 15880:20 - Double punctuation?
+line 15882:18 - Query word i
+line 15882:18 - Double punctuation?
+line 15884:17 - Double punctuation?
+line 15884:29 - Double punctuation?
+line 15887:24 - Query word i
+line 15887:24 - Double punctuation?
+line 15890:30 - Query word i
+line 15890:24 - Double punctuation?
+line 15890:30 - Double punctuation?
+line 15896:21 - Query word i
+line 15896:15 - Double punctuation?
+line 15896:21 - Double punctuation?
+line 15899:15 - Double punctuation?
+line 15901:17 - Double punctuation?
+line 15903:15 - Double punctuation?
+line 15905:15 - Double punctuation?
+line 15908:18 - Double punctuation?
+line 15910:12 - Double punctuation?
+line 15912:26 - Query word i
+line 15912:18 - Double punctuation?
+line 15912:26 - Double punctuation?
+line 15917:34 - Query word i
+line 15917:34 - Double punctuation?
+line 15919:21 - Query word i
+line 15919:15 - Double punctuation?
+line 15919:21 - Double punctuation?
+line 15921:18 - Double punctuation?
+line 15923:21 - Query word i
+line 15923:21 - Double punctuation?
+line 15925:15 - Query word i
+line 15925:15 - Double punctuation?
+line 15927:22 - Query word i
+line 15927:16 - Double punctuation?
+line 15927:22 - Double punctuation?
+line 15931:33 - Query word i
+line 15931:27 - Double punctuation?
+line 15931:33 - Double punctuation?
+line 15934:18 - Double punctuation?
+line 15936:31 - Query word i
+line 15936:25 - Double punctuation?
+line 15936:31 - Double punctuation?
+line 15938:23 - Query word i
+line 15938:23 - Double punctuation?
+line 15941:22 - Double punctuation?
+line 15941:34 - Double punctuation?
+line 15941:42 - Double punctuation?
+line 15941:50 - Double punctuation?
+line 15944:22 - Query word i
+line 15944:22 - Double punctuation?
+line 15947:15 - Double punctuation?
+line 15947:23 - Double punctuation?
+line 15950:20 - Query word i
+line 15950:20 - Double punctuation?
+line 15952:20 - Query word i
+line 15952:20 - Double punctuation?
+line 15954:36 - Query word i
+line 15954:14 - Double punctuation?
+line 15956:17 - Query word i
+line 15956:17 - Double punctuation?
+line 15958:17 - Double punctuation?
+line 15960:20 - Query word i
+line 15960:20 - Double punctuation?
+line 15965:18 - Double punctuation?
+line 15967:16 - Query word i
+line 15967:16 - Double punctuation?
+line 15969:17 - Query word i
+line 15969:17 - Double punctuation?
+line 15971:24 - Query word i
+line 15971:24 - Double punctuation?
+line 15973:19 - Double punctuation?
+line 15975:46 - Query word i
+line 15975:22 - Double punctuation?
+line 15975:32 - Double punctuation?
+line 15975:38 - Double punctuation?
+line 15975:46 - Double punctuation?
+line 15979:24 - Double punctuation?
+line 15979:32 - Double punctuation?
+line 15981:21 - Query word i
+line 15981:21 - Double punctuation?
+line 15983:19 - Double punctuation?
+line 15985:19 - Query word i
+line 15985:19 - Double punctuation?
+line 15987:16 - Double punctuation?
+line 15989:15 - Query word i
+line 15989:15 - Double punctuation?
+line 15991:18 - Query word i
+line 15991:18 - Double punctuation?
+line 15993:21 - Query word i
+line 15993:21 - Double punctuation?
+line 15995:19 - Query word i
+line 15995:19 - Double punctuation?
+line 15998:12 - Double punctuation?
+line 16000:14 - Double punctuation?
+line 16002:32 - Double punctuation?
+line 16004:16 - Double punctuation?
+line 16006:18 - Query word i
+line 16006:12 - Double punctuation?
+line 16006:18 - Double punctuation?
+line 16009:22 - Query word i
+line 16009:22 - Double punctuation?
+line 16011:14 - Double punctuation?
+line 16013:19 - Double punctuation?
+line 16015:16 - Query word i
+line 16015:16 - Double punctuation?
+line 16019:38 - Query word i
+line 16019:22 - Double punctuation?
+line 16019:30 - Double punctuation?
+line 16019:38 - Double punctuation?
+line 16024:22 - Query word i
+line 16024:22 - Double punctuation?
+line 16027:16 - Double punctuation?
+line 16027:22 - Double punctuation?
+line 16029:20 - Double punctuation?
+line 16031:13 - Double punctuation?
+line 16033:29 - Query word i
+line 16033:17 - Double punctuation?
+line 16033:29 - Double punctuation?
+line 16035:16 - Double punctuation?
+line 16037:25 - Double punctuation?
+line 16039:32 - Query word i
+line 16041:17 - Query word i
+line 16041:17 - Double punctuation?
+line 16043:20 - Double punctuation?
+line 16045:16 - Double punctuation?
+line 16047:36 - Query word i
+line 16047:36 - Double punctuation?
+line 16049:18 - Query word i
+line 16049:18 - Double punctuation?
+line 16051:28 - Query word i
+line 16051:22 - Double punctuation?
+line 16051:28 - Double punctuation?
+line 16054:17 - Double punctuation?
+line 16054:25 - Double punctuation?
+line 16056:17 - Double punctuation?
+line 16056:29 - Double punctuation?
+line 16056:35 - Double punctuation?
+line 16056:43 - Double punctuation?
+line 16056:51 - Double punctuation?
+line 16056:59 - Double punctuation?
+line 16056:67 - Double punctuation?
+line 16057:0 - Query word i
+line 16061:15 - Double punctuation?
+line 16061:21 - Double punctuation?
+line 16063:18 - Double punctuation?
+line 16063:24 - Double punctuation?
+line 16066:19 - Query word i
+line 16066:19 - Double punctuation?
+line 16068:17 - Query word i
+line 16068:17 - Double punctuation?
+line 16070:17 - Double punctuation?
+line 16072:16 - Query word i
+line 16072:16 - Double punctuation?
+line 16075:15 - Query word i
+line 16075:15 - Double punctuation?
+line 16077:31 - Query word i
+line 16077:23 - Double punctuation?
+line 16077:31 - Double punctuation?
+line 16080:19 - Double punctuation?
+line 16082:20 - Double punctuation?
+line 16084:23 - Double punctuation?
+line 16086:26 - Query word i
+line 16086:20 - Double punctuation?
+line 16086:26 - Double punctuation?
+line 16089:20 - Query word i
+line 16089:20 - Double punctuation?
+line 16093:16 - Double punctuation?
+line 16093:22 - Double punctuation?
+line 16096:16 - Query word i
+line 16096:16 - Double punctuation?
+line 16100:24 - Query word i
+line 16100:24 - Double punctuation?
+line 16102:24 - Query word i
+line 16102:16 - Double punctuation?
+line 16102:24 - Double punctuation?
+line 16104:13 - Double punctuation?
+line 16104:21 - Double punctuation?
+line 16104:29 - Double punctuation?
+line 16104:37 - Double punctuation?
+line 16107:20 - Query word i
+line 16107:20 - Double punctuation?
+line 16109:14 - Query word i
+line 16109:14 - Double punctuation?
+line 16111:60 - Query word i
+line 16111:36 - Double punctuation?
+line 16111:46 - Double punctuation?
+line 16111:54 - Double punctuation?
+line 16111:60 - Double punctuation?
+line 16115:15 - Double punctuation?
+line 16117:25 - Query word i
+line 16117:19 - Double punctuation?
+line 16117:25 - Double punctuation?
+line 16121:20 - Double punctuation?
+line 16121:32 - Double punctuation?
+line 16121:40 - Double punctuation?
+line 16121:48 - Double punctuation?
+line 16123:22 - Query word i
+line 16123:16 - Double punctuation?
+line 16123:22 - Double punctuation?
+line 16125:20 - Query word i
+line 16125:14 - Double punctuation?
+line 16125:20 - Double punctuation?
+line 16128:17 - Double punctuation?
+line 16130:21 - Double punctuation?
+line 16132:17 - Double punctuation?
+line 16134:13 - Query word i
+line 16134:13 - Double punctuation?
+line 16136:14 - Query word i
+line 16136:14 - Double punctuation?
+line 16138:22 - Query word i
+line 16138:22 - Double punctuation?
+line 16140:19 - Double punctuation?
+line 16142:16 - Query word i
+line 16142:16 - Double punctuation?
+line 16144:34 - Query word i
+line 16146:30 - Query word i
+line 16146:12 - Double punctuation?
+line 16146:24 - Double punctuation?
+line 16146:30 - Double punctuation?
+line 16148:19 - Double punctuation?
+line 16148:27 - Double punctuation?
+line 16150:16 - Double punctuation?
+line 16152:16 - Double punctuation?
+line 16154:27 - Double punctuation?
+line 16154:34 - Double punctuation?
+line 16154:42 - Double punctuation?
+line 16156:23 - Double punctuation?
+line 16158:18 - Query word i
+line 16158:18 - Double punctuation?
+line 16160:42 - Query word i
+line 16160:34 - Double punctuation?
+line 16160:42 - Double punctuation?
+line 16163:21 - Double punctuation?
+line 16163:28 - Double punctuation?
+line 16165:21 - Query word i
+line 16165:21 - Double punctuation?
+line 16167:15 - Double punctuation?
+line 16169:14 - Double punctuation?
+line 16169:20 - Double punctuation?
+line 16172:25 - Query word i
+line 16172:25 - Double punctuation?
+line 16174:28 - Query word i
+line 16174:20 - Double punctuation?
+line 16174:28 - Double punctuation?
+line 16178:15 - Double punctuation?
+line 16180:12 - Double punctuation?
+line 16182:19 - Double punctuation?
+line 16184:20 - Query word i
+line 16184:20 - Double punctuation?
+line 16187:17 - Double punctuation?
+line 16187:23 - Double punctuation?
+line 16190:13 - Query word i
+line 16190:13 - Double punctuation?
+line 16192:16 - Query word i
+line 16192:16 - Double punctuation?
+line 16195:15 - Double punctuation?
+line 16197:18 - Query word i
+line 16197:18 - Double punctuation?
+line 16199:22 - Double punctuation?
+line 16201:18 - Query word i
+line 16201:18 - Double punctuation?
+line 16204:15 - Query word i
+line 16204:15 - Double punctuation?
+line 16206:30 - Double punctuation?
+line 16206:36 - Double punctuation?
+line 16208:22 - Double punctuation?
+line 16210:39 - Query word i
+line 16210:13 - Double punctuation?
+line 16212:22 - Query word i
+line 16212:16 - Double punctuation?
+line 16212:22 - Double punctuation?
+line 16215:16 - Double punctuation?
+line 16217:19 - Double punctuation?
+line 16219:18 - Double punctuation?
+line 16222:14 - Double punctuation?
+line 16224:27 - Query word i
+line 16224:21 - Double punctuation?
+line 16224:27 - Double punctuation?
+line 16227:38 - Query word i
+line 16229:17 - Query word i
+line 16229:17 - Double punctuation?
+line 16231:17 - Double punctuation?
+line 16234:19 - Double punctuation?
+line 16236:19 - Double punctuation?
+line 16236:25 - Double punctuation?
+line 16239:18 - Query word i
+line 16239:18 - Double punctuation?
+line 16242:23 - Double punctuation?
+line 16244:15 - Query word i
+line 16244:15 - Double punctuation?
+Check is complete: Bookloupe
