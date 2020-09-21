@@ -1,3 +1,4 @@
+Beginning check: Bookloupe
   --> 1694 lines in this file contain '.,'. Not reporting them.
   --> 515 lines in this file contain forward slashes. Not reporting them.
   --> 27 lines in this file contain unpunctuated endquotes. Not reporting them.
@@ -5593,3 +5594,4 @@ line 16239:18 - Double punctuation?
 line 16242:23 - Double punctuation?
 line 16244:15 - Query word i
 line 16244:15 - Double punctuation?
+Check is complete: Bookloupe

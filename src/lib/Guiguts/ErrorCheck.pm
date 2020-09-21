@@ -219,22 +219,21 @@ sub errorcheckpop_up {
             $line = ' ' x ++$countblank if ( $line eq '' );
 
             # Skip rest of CSS
-            if (
-                    ( not $::verboseerrorchecks )
-                and ( $thiserrorchecktype eq 'W3C Validate CSS' )
-                and (  ( $line =~ /^To show your readers/i )
-                    or ( $line =~ /^Valid CSS Information/i ) )
-            ) {
-                last;
-            }
-            if (
-                ( $line    =~ /^\s*$/i )                                    # skip some unnecessary lines from W3C Validate CSS
-                or ( $line =~ /^{output/i and not $::verboseerrorchecks )
-                or ( $line =~ /^W3C/i )
-                or ( $line =~ /^URI/i )
-            ) {
-                next;
-            }
+            last
+              if $thiserrorchecktype eq 'W3C Validate CSS'
+              and not $::verboseerrorchecks
+              and (( $line =~ /^To show your readers/i )
+                or ( $line =~ /^Valid CSS Information/i ) );
+
+            # skip blank lines
+            next if $line =~ /^\s*$/i;
+
+            # skip some unnecessary lines from W3C Validate CSS
+            next
+              if $line =~ /^{output/i and not $::verboseerrorchecks
+              or $line =~ /^W3C/i
+              or $line =~ /^URI/i;
+
             if ( !$::OS_WIN && $thiserrorchecktype eq 'W3C Validate CSS' ) {
                 $line =~ s/(\x0d)$//;
             }
