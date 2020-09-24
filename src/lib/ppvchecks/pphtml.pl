@@ -73,12 +73,12 @@ sub runProgram {
             $count++;
             if ( $line =~ /<title>/ ) {
                 $printing = 1;
-                printf LOGFILE ( "%d:1 Confirm title:\n", $count );
+                printf LOGFILE ( "%d:0 Confirm title:\n", $count );
 
                 #next;
             }
             if ($printing) {
-                printf LOGFILE ( "%d:1 %s\n", $count, trim($line) );
+                printf LOGFILE ( "%d:0 %s\n", $count, trim($line) );
             }
             if ( $line =~ /<\/title>/ ) {
                 $printing = 0;
@@ -96,55 +96,55 @@ sub runProgram {
         foreach my $line (@book) {
             $count = $count + 1;
             if ( $line =~ /\[Illustration/ ) {
-                printf LOGFILE ( "%d:1 Unconverted illustration: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Unconverted illustration: %s\n", $count, $line );
             }
             if ( $line =~ /<table/
                 and ( ( $line !~ /summary/ ) or ( $line =~ /summary=""/ ) ) ) {
-                printf LOGFILE ( "%d:1 Missing table summary: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Missing table summary: %s\n", $count, $line );
             }
             if ( $line =~ /Blank Page/ ) {
-                printf LOGFILE ( "%d:1 Blank page\n", $count );
+                printf LOGFILE ( "%d:0 Blank page\n", $count );
             }
             if ( $line =~ /\[[o|a]e\]/ ) {
-                printf LOGFILE ( "%d:1 Unconverted lig: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Unconverted lig: %s\n", $count, $line );
             }
             if ( $line =~ /hr style/ ) {
-                printf LOGFILE ( "%d:1 Unconverted HR: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Unconverted HR: %s\n", $count, $line );
             }
             if ( $line =~ /\S\/>/ ) {
-                printf LOGFILE ( "%d:1 Closing tag: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Closing tag: %s\n", $count, $line );
             }
             if ( $line =~ /&amp;amp/ ) {
-                printf LOGFILE ( "%d:1 Ampersand: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Ampersand: %s\n", $count, $line );
             }
             if ( $line =~ /<p>\./ ) {
-                printf LOGFILE ( "%d:1 Possible PPG command: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Possible PPG command: %s\n", $count, $line );
             }
             if ( $line =~ /\`/ ) {
-                printf LOGFILE ( "%d:1 Tick-mark check: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Tick-mark check: %s\n", $count, $line );
             }
             if ( $line =~ /[^=]''/ ) {
-                printf LOGFILE ( "%d:1 Quote problem: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Quote problem: %s\n", $count, $line );
             }
             if ( $line =~ /\&#8216;\s/ ) {
-                printf LOGFILE ( "%d:1 Left single quote followed by whitespace: %s\n", $count,
+                printf LOGFILE ( "%d:0 Left single quote followed by whitespace: %s\n", $count,
                     $line );
             }
             if ( $line =~ /\&#8220;\s/ ) {
-                printf LOGFILE ( "%d:1 Left double quote followed by whitespace: %s\n", $count,
+                printf LOGFILE ( "%d:0 Left double quote followed by whitespace: %s\n", $count,
                     $line );
             }
             if ( $line =~ /^\&#8221;/ ) {
-                printf LOGFILE ( "%d:1 Right double quote at start of line: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Right double quote at start of line: %s\n", $count, $line );
             }
             if ( $line =~ /<p>\&#8221;/ ) {
-                printf LOGFILE ( "%d:1 Right double quote at start of line: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Right double quote at start of line: %s\n", $count, $line );
             }
             if ( $line =~ /\&#8220;$/ ) {
-                printf LOGFILE ( "%d:1 Left double quote at end of line: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Left double quote at end of line: %s\n", $count, $line );
             }
             if ( $line =~ /\&#8220;<\/p>/ ) {
-                printf LOGFILE ( "%d:1 Left double quote at end of line: %s\n", $count, $line );
+                printf LOGFILE ( "%d:0 Left double quote at end of line: %s\n", $count, $line );
             }
         }
 
@@ -160,7 +160,7 @@ sub runProgram {
                 printf LOGFILE ( "  %s\n", $line );
             }
             if ( $lastline =~ /^$/ and $line =~ /^$/ ) {
-                printf LOGFILE ( "%d:1 Double-blank\n", $count );
+                printf LOGFILE ( "%d:0 Double-blank\n", $count );
             }
             $lastline = $line;
         }

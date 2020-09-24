@@ -1,20 +1,20 @@
 Beginning check: W3C Validate
-line 23:7:E: end tag for element "p" which is not open
-line 26:64:E: document type does not allow element "img" here; missing one of "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "address", "fieldset", "ins", "del" start-tag
+23:7 :E: end tag for element "p" which is not open
+26:64 :E: document type does not allow element "img" here; missing one of "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "address", "fieldset", "ins", "del" start-tag
 Check is complete: W3C Validate
 Don't forget to do the final validation at http://validator.w3.org
 
 Beginning check: HTML Tidy
-line 23 column 5 - Warning: inserting implicit <p>
-line 23 column 5 - Warning: trimming empty <p>
+23:5 - Warning: inserting implicit <p>
+23:5 - Warning: trimming empty <p>
 Info: Doctype given is "-//W3C//DTD XHTML 1.0 Strict//EN"
 Info: Document content looks like XHTML 1.0 Transitional
 Check is complete: HTML Tidy
 
 Beginning check: ppvimage
 ---------- checking <img> images ----------
-line 26:1   Image: images/t.jpg
-line 26:1     image file images/t.jpg not found
+26:0 Image: images/t.jpg
+26:0 image file images/t.jpg not found
 ---------- checking css background images ----------
 ---------- checking linked images ----------
 ---------- checking cover image ----------
@@ -30,20 +30,20 @@ Check is complete: Link Check
 
 Beginning check: W3C Validate CSS
 Sorry! We found the following errors (1)
-line 13:1 body
+13:0 body
       (Value Error : margin-left (nullbox.html#propdef-margin-left))
       Parse Error
 Check is complete: W3C Validate CSS
 Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/
 
 Beginning check: pphtml
-line 7:1 Confirm title:
-line 7:1 <title>
-line 8:1 The Project Gutenberg eBook of The Streets Of Ascalon, by Robert W. Chambers.
-line 9:1 </title>
+7:0 Confirm title:
+7:0 <title>
+8:0 The Project Gutenberg eBook of The Streets Of Ascalon, by Robert W. Chambers.
+9:0 </title>
 +unusedcss: CSS possibly not used
 +h1: CSS possibly not defined
 +pagenum: CSS possibly not defined
-line 27:1 Unconverted illustration: <p>[Illustration: "She excused the witness and turned her back to the
+27:0 Unconverted illustration: <p>[Illustration: "She excused the witness and turned her back to the
 Check is complete: pphtml
 

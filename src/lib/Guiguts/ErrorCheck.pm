@@ -189,6 +189,8 @@ sub errorcheckpop_up {
             }
             $fname = "errors.err";
         }
+
+        # Open error file
         my $fh = FileHandle->new("< $fname");
         if ( not defined($fh) ) {
             my $dialog = $top->Dialog(
@@ -209,9 +211,14 @@ sub errorcheckpop_up {
         }
 
         my $countblank = 0;             # number of blank lines
+
+        # Read and process one line at a time
         while ( $line = <$fh> ) {
             utf8::decode($line) if $unicode;
+
+            # Remove leading space and end-of-line characters
             $line =~ s/^\s//g;
+            $line =~ s/(\x0d)$//;
             chomp $line;
 
             # distinguish blank lines by setting them to varying numbers
@@ -226,17 +233,13 @@ sub errorcheckpop_up {
                 or ( $line =~ /^Valid CSS Information/i ) );
 
             # skip blank lines
-            next if $line =~ /^\s*$/i;
+            next if $line =~ /^\s*$/;
 
             # skip some unnecessary lines from W3C Validate CSS
             next
               if $line =~ /^{output/i and not $::verboseerrorchecks
               or $line =~ /^W3C/i
               or $line =~ /^URI/i;
-
-            if ( !$::OS_WIN && $thiserrorchecktype eq 'W3C Validate CSS' ) {
-                $line =~ s/(\x0d)$//;
-            }
 
             # Skip verbose informational warnings in Link Check
             if (    ( not $::verboseerrorchecks )
@@ -253,61 +256,34 @@ sub errorcheckpop_up {
                     last;
                 }
             }
-            no warnings 'uninitialized';
+
+            my $columnadjust = 0;
+            $::errors{$line} = '';
             if ( $thiserrorchecktype eq 'HTML Tidy' ) {
-                if (    ( $line =~ /^[lI\d]/ )
-                    and ( $line ne $errorchecklines[-1] ) ) {
-                    push @errorchecklines, $line;
-                    $::errors{$line} = '';
-                    $lincol = '';
-                    if ( $line =~ /^line (\d+) column (\d+)/i ) {
-                        $lincol = "$1.$2";
-                        $mark++;
-                        $textwindow->markSet( "t$mark", $lincol );
-                        $::errors{$line} = "t$mark";
-                    }
-                }
+                last
+                  if $line =~ /^No warning or errors were found/
+                  or $line =~ /^Tidy found/;
+                $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
+
             } elsif ( ( $thiserrorchecktype eq "W3C Validate" )
                 or ( $thiserrorchecktype eq "W3C Validate Remote" )
                 or ( $thiserrorchecktype eq "pphtml" )
                 or ( $thiserrorchecktype eq "ppvimage" ) ) {
-                $line =~ s/^.*:(\d+:\d+)/line $1/;
-                $line =~ s/^(\d+:\d+)/line $1/;
-                $line =~ s/^(line \d+) /$1:1/;
-                $::errors{$line} = '';
-                $lincol = '';
-                if ( $line =~ /line (\d+):(\d+)/ ) {
-                    $lincol = "$1.$2";
-                    $lincol =~ s/\.0/\.1/;    # change column zero to column 1
-                    $mark++;
-                    $textwindow->markSet( "t$mark", $lincol );
-                    $::errors{$line} = "t$mark";
-                }
-                push @errorchecklines, $line unless $line eq '';
+                $line =~ s/^.*:(\d+):(\d+)\s*/$1:$2 /;
+                $line =~ s/^\s*line (\d+)\s*/$1:0 /;
+
             } elsif ( ( $thiserrorchecktype eq "W3C Validate CSS" )
                 or ( $thiserrorchecktype eq "Link Check" )
                 or ( $thiserrorchecktype eq "pptxt" ) ) {
+                $line =~ s/^\s*line (\d+)\s*/$1:0 /;
+                $line =~ s/^\s*Line : (\d+)\s*/$1:0 /;
 
-                # Format line number, adjusting for tool's idea of start line
-                if ( $line =~ /Line : (\d+)/ ) {
-                    my $lineno = $1 + $lineadjust;
-                    $line =~ s/Line : (\d+)/line ${lineno}:1/;
-                }
-                push @errorchecklines, $line;
-                $::errors{$line} = '';
-                $lincol = '';
-                if ( $line =~ /line (\d+):(\d+)/ ) {
-                    $lincol = "$1.$2";
-                    $mark++;
-                    $textwindow->markSet( "t$mark", $lincol );
-                    $::errors{$line} = "t$mark";
-                }
+            } elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
 
                 # Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
                 # File may be in HTML format or a text file
-            } elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
 
-                # if HTML file, ignore the header & footer
+                # Ignore HTML header & footer
                 if ( $line =~ /<body>/ ) {
                     @errorchecklines = ();
                     next;
@@ -334,68 +310,48 @@ sub errorcheckpop_up {
                 $line =~ s/\&gt;/>/g;
 
                 # if line has a number at the start, assume it is the error line number
-                $::errors{$line} = '';
-                $lincol = '';
-                if ( $line =~ /^\s*\d+/ ) {
-                    $line =~ s/^\s*(\d+)/line $1/;
-                    $lincol = "$1.0";
-                    $mark++;
+                $line =~ s/^\s*(\d+)\s*/$1:0 /;
 
-                    # add a new mark in the main text at the correct point
-                    $textwindow->markSet( "t$mark", $lincol );
-
-                    # remember which line goes with which mark
-                    $::errors{$line} = "t$mark";
-                }
-
-                # display all lines, even those without line numbers
-                push @errorchecklines, $line;
             } elsif ( $thiserrorchecktype eq "Bookloupe/Gutcheck" ) {
                 next if $line =~ /^File: /;
-                $::errors{$line} = '';
-                $lincol = '';
-                if ( $line =~ /Line (\d+) column (\d+)/ ) {
-                    my $linnum = $1;
-                    my $colnum = $2;
+                if ( $line =~ /^\s*Line (\d+) column (\d+)\s*/ ) {
 
-                    # Adjust column number to start from 0
-                    $colnum-- unless ( $line =~ /Long|Short|digit|space|bracket\?/ );
-                    $lincol = "$linnum.$colnum";
-                    $line =~ s/ *Line \d+ column \d+/line $linnum:$colnum/;
-                } elsif ( $line =~ /Line (\d+)/ ) {
-                    $lincol = "$1.0";
-                    $line =~ s/ *Line (\d+)/line $1:0/;
+                    # Adjust column number to start from 0 for most bookloupe/gutcheck errors
+                    $columnadjust = -1 if $line !~ /Long|Short|digit|space|bracket\?/;
+                    $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
                 }
-                if ( $lincol ne '' ) {
-                    $mark++;
-                    $textwindow->markSet( "t$mark", $lincol );
-                    $::errors{$line} = "t$mark";
-                }
+                $line =~ s/^\s*Line (\d+)\s*/$1:0 /;
 
-                push @errorchecklines, $line;
             } elsif ( $thiserrorchecktype eq "Jeebies" ) {
-                $::errors{$line} = '';
-                $lincol = '';
-                if ( $line =~ /Line (\d+) column (\d+)/ ) {
-                    my $linnum = $1;
-                    my $colnum = $2;
-                    $lincol = "$linnum.$colnum";
+                next if $line =~ /^File: /;
+                if ( $line =~ /^\s*Line (\d+) column (\d+)/ ) {
+                    my ( $row, $col ) = ( $1, $2 );
+
+                    # Jeebies reports end of phrase, so adjust to the beginning
                     if ( $line =~ /Query phrase "([^"]+)"/ ) {
-                        my $len = length($1) + 1;
-                        $lincol = $textwindow->index( $lincol . " -${len}c" );
+                        my $len      = length($1) + 1;
+                        my $location = $textwindow->index( "$row.$col" . " -${len}c" );
+                        ( $row, $col ) = split /\./, $location;
                     }
-                    $line =~ s/ *Line \d+ column \d+/line $linnum:$colnum/;
-                } elsif ( $line =~ /Line (\d+)/ ) {
-                    $lincol = "$1.0";
-                    $line =~ s/ *Line (\d+)/line $1:0/;
+                    $line =~ s/^\s*Line \d+ column \d+\s*/$row:$col /;
                 }
-                if ( $lincol ne '' ) {
-                    $mark++;
-                    $textwindow->markSet( "t$mark", $lincol );
-                    $::errors{$line} = "t$mark";
-                }
-                push @errorchecklines, $line;
             }
+
+            # All line/column formats now converted to "line:col" - mark the locations in the main window
+            if ( $line =~ /^(\d+):(\d+)/ ) {
+
+                # Some tools count lines/columns differently
+                my $linnum = $1 + $lineadjust;
+                my $colnum = $2 + $columnadjust;
+                $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
+
+                my $markname = "t" . ++$mark;
+                $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
+                $::errors{$line} = $markname;                                # cross-ref error with mark
+            }
+
+            # Add all lines to the output, even those without line/column numbers
+            push @errorchecklines, $line;
         }
         $fh->close if $fh;
         unlink 'errors.err' unless $thiserrorchecktype eq 'Load Checkfile';
@@ -773,7 +729,7 @@ sub errorcheckview {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     my $line = $::lglobal{errorchecklistbox}->get('active');
     return if not defined $line;
-    if ( $line =~ /^line/ ) {    # normally line number of error is shown
+    if ( $line =~ /^\d+:\d+/ ) {    # normally line and column number of error is shown
         $textwindow->see( $::errors{$line} );
         $textwindow->markSet( 'insert', $::errors{$line} );
 
@@ -823,8 +779,8 @@ sub gcwindowpopulate {
             last;
         }
         next if $flag;
-        unless ( $count == 0 and $line =~ /^\s*$/ ) {    # Don't add blank line at top
-            $start++ unless ( index( $line, 'line', 0 ) == 0 );
+        unless ( $count == 0 and $line =~ /^\s*$/ ) {    # Wait for first non-blank line
+            $start++ unless $line =~ /^\d+:\d+/;
             $count++;
             $::lglobal{errorchecklistbox}->insert( 'end', $line );
         }
