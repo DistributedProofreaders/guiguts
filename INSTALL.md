@@ -4,7 +4,7 @@ These instructions cover a fresh install of Guiguts. If you are upgrading,
 see [UPGRADE.md](UPGRADE.md) before beginning.
 
 Please direct any help requests to the
-[DP forum Guiguts thread](https://www.pgdp.net/phpBB2/viewtopic.php?t=3075).
+[DP forum Help with: guiguts thread](https://www.pgdp.net/phpBB2/viewtopic.php?t=11466).
 
 See also https://www.pgdp.net/wiki/PPTools/Guiguts/Install
 
