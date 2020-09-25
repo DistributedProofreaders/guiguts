@@ -6,7 +6,7 @@ Features are provided for editing text files produced by
 [Distributed Proofreaders](https://www.pgdp.net).
 
 For help or to contact the developers, see the
-[guiguts development forum](https://www.pgdp.net/phpBB3/viewtopic.php?t=46944)
+[Help with: guiguts forum](https://www.pgdp.net/phpBB3/viewtopic.php?t=11466)
 hosted at Distributed Proofreaders.
 
 This code was originally hosted at
