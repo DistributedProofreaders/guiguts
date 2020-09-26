@@ -128,8 +128,6 @@ sub _updatesel {
     }
     my $msgln = length($msg);
 
-    #FIXME
-    no warnings 'uninitialized';
     $::lglobal{selmaxlength} = $msgln if ( $msgln > $::lglobal{selmaxlength} );
     $::lglobal{selectionlabel}->configure( -text => $msg, -width => $::lglobal{selmaxlength} );
     ::update_indicators();
@@ -380,7 +378,6 @@ sub update_ordinal_button {
     if ( $::lglobal{longordlabel} ) {
         my $msg   = charnames::viacode($ordinal) || '';
         my $msgln = length(" Dec $ordinal : Hex $hexi : $msg ");
-        no warnings 'uninitialized';
         $::lglobal{ordmaxlength} = $msgln
           if ( $msgln > $::lglobal{ordmaxlength} );
         $::lglobal{ordinallabel}->configure(
@@ -640,16 +637,13 @@ sub update_proofers_button {
             $::lglobal{statushelp}
               ->attach( $::lglobal{proofbutton}, -balloonmsg => "Proofers for the current page." );
         }
-        {
-            no warnings 'uninitialized';
-            my ( $pg, undef ) = each %::proofers;
-            for my $round ( 1 .. 8 ) {
-                last unless defined $::proofers{$pg}->[$round];
-                $::lglobal{numrounds} = $round;
-                $::lglobal{proofbar}[$round]
-                  ->configure( -text => "  Round $round  $::proofers{$pnum}->[$round]  " )
-                  if $::lglobal{proofbarvisible};
-            }
+        my ( $pg, undef ) = each %::proofers;
+        for my $round ( 1 .. 8 ) {
+            last unless defined $pg and defined $::proofers{$pg}->[$round];
+            $::lglobal{numrounds} = $round;
+            $::lglobal{proofbar}[$round]
+              ->configure( -text => "  Round $round  $::proofers{$pnum}->[$round]  " )
+              if $::lglobal{proofbarvisible};
         }
     }
 }
@@ -678,32 +672,26 @@ sub tglprfbar {
             -expand => 0
         );
 
-        #my @geom = split /[x+]/, $top->geometry;
-        #$geom[1] += $::counter_frame->height;
-        #$top->geometry("$geom[0]x$geom[1]+$geom[2]+$geom[3]");
-        {
-            no warnings 'uninitialized';
-            my ( $pg, undef ) = each %::proofers;
-            for my $round ( 1 .. 8 ) {
-                last unless defined $::proofers{$pg}->[$round];
-                $::lglobal{numrounds} = $round;
-                $::lglobal{proofbar}[$round] = $::proofer_frame->Label(
-                    -text       => '',
-                    -relief     => 'ridge',
-                    -background => 'gray',
-                )->grid( -row => 1, -column => $round, -sticky => 'nw' );
-                _butbind( $::lglobal{proofbar}[$round] );
-                $::lglobal{proofbar}[$round]->bind(
-                    '<1>' => sub {
-                        $::lglobal{proofbar}[$round]->configure( -relief => 'sunken' );
-                        my $proofer =
-                          $::lglobal{proofbar}[$round]->cget( -text );
-                        $proofer =~ s/\s+Round \d\s+|\s+$//g;
-                        $proofer =~ s/\s/%20/g;
-                        prfrmessage($proofer);
-                    }
-                );
-            }
+        my ( $pg, undef ) = each %::proofers;
+        for my $round ( 1 .. 8 ) {
+            last unless defined $::proofers{$pg}->[$round];
+            $::lglobal{numrounds} = $round;
+            $::lglobal{proofbar}[$round] = $::proofer_frame->Label(
+                -text       => '',
+                -relief     => 'ridge',
+                -background => 'gray',
+            )->grid( -row => 1, -column => $round, -sticky => 'nw' );
+            _butbind( $::lglobal{proofbar}[$round] );
+            $::lglobal{proofbar}[$round]->bind(
+                '<1>' => sub {
+                    $::lglobal{proofbar}[$round]->configure( -relief => 'sunken' );
+                    my $proofer =
+                      $::lglobal{proofbar}[$round]->cget( -text );
+                    $proofer =~ s/\s+Round \d\s+|\s+$//g;
+                    $proofer =~ s/\s/%20/g;
+                    prfrmessage($proofer);
+                }
+            );
         }
         $::lglobal{proofbarvisible} = 1;
     }
@@ -757,18 +745,20 @@ sub showproofers {
             -text             => 'Total',
             -width            => 12
         )->grid( -row => 2, -column => 2, -padx => 3, -pady => 3 );
-        for my $round ( 1 .. $::lglobal{numrounds} ) {
-            $bframe->Button(
-                -activebackground => $::activecolor,
-                -command          => [ sub { prfrby( $_[0] ) }, $round ],
-                -text             => "Round $round",
-                -width            => 12
-            )->grid(
-                -row    => ( ( $round + 1 ) % 2 ) + 1,
-                -column => int( ( $round + 5 ) / 2 ),
-                -padx   => 3,
-                -pady   => 3
-            );
+        if ( $::lglobal{numrounds} ) {
+            for my $round ( 1 .. $::lglobal{numrounds} ) {
+                $bframe->Button(
+                    -activebackground => $::activecolor,
+                    -command          => [ sub { prfrby( $_[0] ) }, $round ],
+                    -text             => "Round $round",
+                    -width            => 12
+                )->grid(
+                    -row    => ( ( $round + 1 ) % 2 ) + 1,
+                    -column => int( ( $round + 5 ) / 2 ),
+                    -padx   => 3,
+                    -pady   => 3
+                );
+            }
         }
         my $frame = $::lglobal{prooferpop}->Frame->pack(
             -anchor => 'nw',
@@ -809,6 +799,7 @@ sub prfrhdr {
 }
 
 sub prfrbypage {
+    return unless $::lglobal{numrounds};
     my @max = split //, ( '8' x ( $::lglobal{numrounds} + 1 ) );
     for my $page ( keys %::proofers ) {
         for my $round ( 1 .. $::lglobal{numrounds} ) {

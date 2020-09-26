@@ -9,7 +9,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw( &reflow_file &reflow_string &reflow_array );
+    @EXPORT = qw( &reflow_string );
 }
 
 # ReflowGG based on Text::Reflow, with some modifications,
@@ -18,6 +18,7 @@ BEGIN {
 # Subsequently modified further to pass arguments as Perl arrays
 # rather than converting to hex with pack & unpack (the original
 # had to be able to pass arguments to a C XSUB).
+# Also reflow_file and reflow_array removed since unused.
 
 # Original Reflow script written by Michael Larsen, larsen@edu.upenn.math
 # Modified by Martin Ward, martin@gkc.org.uk
@@ -104,14 +105,14 @@ sub reflow_trial($$$$$$$$$$) {
 }
 
 use vars qw(
-  $IO_Files      $lastbreak     $poetryindent  %abbrev	    @output
-  $connpenalty   $maximum	      $quote	     %connectives   @save_opts
-  $dependent     $namebreak     $semantic	     %keys	    @space_len
-  $frenchspacing $noreflow      $sentence	     @extra	    @tmp
-  $indent	       $oneparagraph  $shortlast     @from	    @to
-  $indent1       $optimum	      $skipindented  @linewords	    @word_len
-  $indent2       $penaltylimit  $skipto	     @linkbreak	    @words
-  $independent   $pin	      $wordcount     @optimum
+  $lastbreak     $poetryindent  %abbrev	       @output
+  $connpenalty   $maximum	    $quote	       %connectives @save_opts
+  $dependent     $namebreak     $semantic	   %keys	    @space_len
+  $frenchspacing $noreflow      $sentence	   @extra	    @tmp
+  $indent	     $oneparagraph  $shortlast     @from	    @to
+  $indent1       $optimum	    $skipindented  @linewords	@word_len
+  $indent2       $penaltylimit  $skipto	       @linkbreak	@words
+  $independent   $pin	        $wordcount     @optimum
 );
 
 # The following parameters can be twiddled to taste:
@@ -348,68 +349,13 @@ $pin = " " x $poetryindent;
     next    => 2
 );
 
-sub reflow_file($$@) {
-    my ( $from, $to, @opts ) = @_;
-    local $IO_Files = 1;    # We are reading/writing files
-    $from = \*STDIN  if ( $from eq "" );
-    $to   = \*STDOUT if ( $to eq "" );
-    my $from_a_handle = (
-        ref($from)
-        ? ( ref($from) eq 'GLOB'
-              || UNIVERSAL::isa( $from, 'GLOB' )
-              || UNIVERSAL::isa( $from, 'IO::Handle' ) )
-        : ( ref( \$from ) eq 'GLOB' )
-    );
-    my $to_a_handle = (
-        ref($to)
-        ? ( ref($to) eq 'GLOB'
-              || UNIVERSAL::isa( $to, 'GLOB' )
-              || UNIVERSAL::isa( $to, 'IO::Handle' ) )
-        : ( ref( \$to ) eq 'GLOB' )
-    );
-    my $closefrom = 0;
-    my $closeto   = 0;
-    local ( *FROM, *TO );
-
-    if ($from_a_handle) {
-        {
-            no warnings;
-            *FROM = *$from{FILEHANDLE};
-        }
-    } else {
-        $from = "./$from" if $from =~ /^\s/s;
-        open( FROM, "< $from\0" ) or croak "Cannot read `$from': $!";
-        binmode FROM              or die "($!,$^E)";
-        $closefrom = 1;
-    }
-
-    if ($to_a_handle) {
-        {
-            no warnings;
-            *TO = *$to{FILEHANDLE};
-        }
-    } else {
-        $to = "./$to" if $to =~ /^\s/s;
-        open( TO, "> $to\0" ) or croak "Cannot write to `$to': $!";
-        binmode TO            or die "($!,$^E)";
-        $closeto = 1;
-    }
-
-    process_opts(@opts);
-    reflow();
-    restore_opts();
-
-    close(TO)   || croak("Cannot close `$to': $!")   if ($closeto);
-    close(FROM) || croak("Cannot close `$from': $!") if ($closefrom);
-}
-
 sub reflow_string($@) {
     my ( $input, @opts ) = @_;
-    local $IO_Files = 0;                           # We are reading/writing arrays
-                                                   # Create the array from the string, keep trailing empty lines.
-                                                   # We split on newlines and then restore them, being careful
-                                                   # not to add an extra newline at the end:
-    local @from     = split( /\n/, $input, -1 );
+
+    # Create the array from the string, keep trailing empty lines.
+    # We split on newlines and then restore them, being careful
+    # not to add an extra newline at the end:
+    local @from = split( /\n/, $input, -1 );
     pop(@from) if ( $#from >= 0 and $from[$#from] eq "" );
     @from = map { "$_\n" } @from;
     local @to = ();
@@ -417,17 +363,6 @@ sub reflow_string($@) {
     reflow();
     restore_opts();
     return ( join( "", @to ) );
-}
-
-sub reflow_array($@) {
-    my ( $input, @opts ) = @_;
-    local $IO_Files = 0;         # We are reading/writing arrays
-    local @from     = @$input;
-    local @to       = ();
-    process_opts(@opts);
-    reflow();
-    restore_opts();
-    return ( \@to );
 }
 
 # Process the keyword options, set module global variables as required,
@@ -488,12 +423,7 @@ sub restore_opts() {
 }
 
 sub get_line() {
-    my $line;
-    if ($IO_Files) {
-        $line = <FROM>;
-    } else {
-        $line = shift(@from);
-    }
+    my $line = shift(@from);
     return ($line) unless defined($line);
     $line =~ tr/\015\032//d;
     $line =~ s/^$quote//;
@@ -510,11 +440,7 @@ sub get_line() {
 sub print_lines(@) {
     my @lines = @_;
     map { s/[ \t]+\n/\n/gs } @lines;
-    if ($IO_Files) {
-        print TO @lines;
-    } else {
-        push( @to, @lines );
-    }
+    push( @to, @lines );
 }
 
 sub reflow() {

@@ -852,6 +852,7 @@ sub initialize {
     $::lglobal{lastsearchterm}     = '';
     $::lglobal{leave_utf}          = 1;                           # HTML convert - retain utf8 characters
     $::lglobal{longordlabel}       = 0;
+    $::lglobal{ordmaxlength}       = 1;
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
     $::lglobal{pagecmt}            = 0;                           # HTML convert - page markers as comments
     $::lglobal{poetrynumbers}      = 0;                           # HTML convert - find & format poetry line numbers
@@ -859,6 +860,7 @@ sub initialize {
     $::lglobal{regaa}              = 0;
     $::lglobal{seepagenums}        = 0;
     $::lglobal{selectionsearch}    = 0;
+    $::lglobal{selmaxlength}       = 1;
     $::lglobal{shorthtmlfootnotes} = 1;                           # HTML convert - Footnote_3 rather than Footnote_3_3
     $::lglobal{showblocksize}      = 1;
     $::lglobal{showthispageimage}  = 0;

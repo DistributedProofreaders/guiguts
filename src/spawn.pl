@@ -13,9 +13,6 @@ die "fork(): $!" unless defined $pid;
 # Original process returns immediately
 exit if $pid;
 
-# No need to bother user with filename + line number messages
-no warnings 'exec';
+exec { $ARGV[0] } @ARGV;
+die "Error running $ARGV[0]: $!";
 
-if ( ( exec { $ARGV[0] } @ARGV ) < 0 ) {
-    print STDERR qq/Error running "$ARGV[0]": $!\n/;
-}

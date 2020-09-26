@@ -1221,7 +1221,6 @@ sub distance {
     if ( $::lglobal{LevenshteinXS} ) {
         return Text::LevenshteinXS::distance(@_);
     }
-    no warnings;
     my $word1 = shift;
     my $word2 = shift;
     return 0 if $word1 eq $word2;
