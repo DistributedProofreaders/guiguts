@@ -244,6 +244,7 @@ sub processpageseparator {
     my $pagesep;
     $pagesep = $textwindow->get( $::searchstartindex, $::searchendindex )
       if ( $::searchstartindex && $::searchendindex );
+    return unless $pagesep;
     my $pagemark = $pagesep;
     $pagesep =~ m/^-----*\s?File:\s?([^\.]+)/;
     return unless $1;
@@ -638,11 +639,8 @@ sub delblanklines {
           $textwindow->search( '-nocase', '-regexp', '--',
             '^-----*\s*File:\s?(\S+)\.(png|jpg)---.*$',
             $::searchendindex, 'end' );
-        {
-            no warnings 'uninitialized';
-            $::searchstartindex = '2.0' if $::searchstartindex eq '1.0';
-        }
         last unless $::searchstartindex;
+        $::searchstartindex = '2.0' if $::searchstartindex eq '1.0';
         ( $r, $c ) = split /\./, $::searchstartindex;
         if ( $textwindow->get( ( $r - 1 ) . '.0', ( $r - 1 ) . '.end' ) eq '' ) {
             $textwindow->delete( "$::searchstartindex -1c", $::searchstartindex );

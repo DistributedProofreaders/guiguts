@@ -16,20 +16,16 @@ BEGIN {
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors);
 }
 
+# Return true if asterisks or <tb> converted on this line
 sub html_convert_tb {
     my ( $textwindow, $selection, $step ) = @_;
-    no warnings;    # FIXME: Warning-- Exiting subroutine via next
-    if ( $selection =~ s/\s{7}(\*\s{7}){4}\*/<hr class="tb" \/>/ ) {
+    if (   $selection =~ s/\s{7}(\*\s{7}){4}\*/<hr class="tb" \/>/
+        or $selection =~ s/<tb>/<hr class="tb" \/>/ ) {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
-        next;
+        return 1;
     }
-    if ( $selection =~ s/<tb>/<hr class="tb" \/>/ ) {
-        $textwindow->ntdelete( "$step.0", "$step.end" );
-        $textwindow->ntinsert( "$step.0", $selection );
-        next;
-    }
-    return;
+    return 0;
 }
 
 sub html_convert_subscripts {
@@ -462,7 +458,7 @@ sub html_convert_body {
             && ( $incontents eq '1.0' ) );
         html_convert_subscripts( $textwindow, $selection, $step );
         html_convert_superscripts( $textwindow, $selection, $step );
-        html_convert_tb( $textwindow, $selection, $step );
+        next if html_convert_tb( $textwindow, $selection, $step );
 
         # /x|/X gets <pre>
         if ( $selection =~ m"^/x"i ) {
@@ -924,7 +920,6 @@ sub html_convert_body {
         }
 
         # four blank lines--start of chapter
-        no warnings qw/uninitialized/;
         if (   ( !$last5[0] )
             && ( !$last5[1] )
             && ( !$last5[2] )
@@ -981,7 +976,7 @@ sub html_convert_body {
             $textwindow->update;
 
             #open subheading with <p>
-        } elsif ( ( $last5[2] =~ /<h2/ ) && ($selection) ) {
+        } elsif ( $last5[2] && ( $last5[2] =~ /<h2/ ) && ($selection) ) {
             $textwindow->ntinsert( "$step.0", '<p>' )
               unless ( ( $selection =~ /<\/*[phd]/ )
                 || ( $selection =~ /<[hb]r/ )
@@ -1253,8 +1248,12 @@ sub html_convert_pageanchors {
                 if (@pagerefs) {
                     my $br = "";
                     $pagereference = "";
-                    no warnings;    # roman numerals are nonnumeric for sort
-                    for ( sort { $a <=> $b } @pagerefs ) {
+                    for (
+                        sort {    # Sort Roman numerals correctly too
+                            ( looks_like_number($a) ? $a : ::arabic($a) )
+                              <=> ( looks_like_number($b) ? $b : ::arabic($b) )
+                        } @pagerefs
+                    ) {
                         if ( $::lglobal{exportwithmarkup} ) {
                             $pagereference .= "$br" . "<$_>";
                             $br = '';    # No page break for exportwithmarkup
@@ -1429,7 +1428,7 @@ sub html_parse_header {
         if ( $intitle == 0 ) {
             $textwindow->ntinsert( "$step.0", '<h1>' );
             $intitle = 1;
-        } else {
+        } elsif ($title) {
             if ( ( $title =~ /^by/i ) or ( $title =~ /\Wby\s/i ) ) {
                 $step--;
                 $textwindow->ntinsert( "$step.end", '</h1>' );

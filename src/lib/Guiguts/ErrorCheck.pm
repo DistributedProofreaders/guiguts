@@ -1023,7 +1023,6 @@ sub jeebiesrun {
 sub gutcheckrun {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    no warnings;
     ::operationadd('Bookloupe/Gutcheck');
     ::hidepagenums();
     $textwindow->focus;

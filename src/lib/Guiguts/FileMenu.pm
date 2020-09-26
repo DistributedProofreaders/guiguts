@@ -296,7 +296,6 @@ sub _bin_save {
     if ( defined $fh ) {
         print $fh "\%::pagenumbers = (\n";
         for my $page ( sort { $a cmp $b } keys %::pagenumbers ) {
-            no warnings 'uninitialized';
             if ( $page eq "Pg" ) {
                 next;
             }
@@ -309,15 +308,16 @@ sub _bin_save {
         }
         print $fh ");\n\n";
         delete $::proofers{''};
-        foreach my $page ( sort keys %::proofers ) {
-            no warnings 'uninitialized';
-            for my $round ( 1 .. $::lglobal{numrounds} ) {
-                if ( defined $::proofers{$page}->[$round] ) {
-                    print $fh '$::proofers{\''
-                      . $page . '\'}['
-                      . $round
-                      . '] = \''
-                      . $::proofers{$page}->[$round] . '\';' . "\n";
+        if ( $::lglobal{numrounds} ) {
+            foreach my $page ( sort keys %::proofers ) {
+                for my $round ( 1 .. $::lglobal{numrounds} ) {
+                    if ( defined $::proofers{$page}->[$round] ) {
+                        print $fh '$::proofers{\''
+                          . $page . '\'}['
+                          . $round
+                          . '] = \''
+                          . $::proofers{$page}->[$round] . '\';' . "\n";
+                    }
                 }
             }
         }
