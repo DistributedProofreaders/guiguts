@@ -1,0 +1,5 @@
+Beginning check: Link Check
++#LIST: Internal link without anchor
++images/t.jpg: not found!
+Check is complete: Link Check
+
