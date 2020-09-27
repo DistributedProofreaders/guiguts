@@ -7,7 +7,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&setdefaultpath &setmargins &fontsize &setpngspath
+    @EXPORT = qw(&setdefaultpath &setmargins &fontsize &setpngspath &storedefaultcolor_autosave
       &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls );
 }
 
@@ -363,15 +363,13 @@ sub reset_autosave {
         );
     }
 
-    # Save icon's default background color so it can be restored when turning off autosave
-    $::lglobal{savetoolcolor} = $::lglobal{savetool}->cget('-background')
-      if not $::lglobal{savetoolcolor};
+    storedefaultcolor_autosave();
 
     # Ensure the icon is the right color
     $::lglobal{savetool}->configure(
         -background       => $::autosave ? 'green' : $::lglobal{savetoolcolor},
         -activebackground => $::autosave ? 'green' : $::lglobal{savetoolcolor}
-    ) unless $::notoolbar;
+    ) if $::lglobal{savetool};
 
     ::savesettings();
 }
@@ -381,7 +379,9 @@ sub flash_autosave {
     $::lglobal{saveflashingid} = $::top->repeat(
         500,
         sub {
+            return unless $::lglobal{savetool};
             my $textwindow = $::textwindow;
+            storedefaultcolor_autosave();
             if ( $::lglobal{savetool}->cget('-background') eq 'yellow' ) {
                 $::lglobal{savetool}->configure(
                     -background       => 'green',
@@ -397,7 +397,14 @@ sub flash_autosave {
     );
 }
 
-sub setcolor {    # Color picking routine
+# Store save icon's default background color so it can be restored when turning off autosave
+sub storedefaultcolor_autosave {
+    return if $::lglobal{savetoolcolor};    # once stored, don't overwrite the color later
+    return unless $::lglobal{savetool};     # can't get color if icon not shown
+    $::lglobal{savetoolcolor} = $::lglobal{savetool}->cget('-background');
+}
+
+sub setcolor {                              # Color picking routine
     my $top     = $::top;
     my $initial = shift;
     return (
