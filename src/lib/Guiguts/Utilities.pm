@@ -735,7 +735,6 @@ sub initialize {
         $::positionhash{pagemarkerpop}    = '+302+97';
         $::geometryhash{pagesephelppop}   = '+191+132';
         $::positionhash{pageseppop}       = '+334+176';
-        $::geometryhash{prooferpop}       = '600x400+100+70';
         $::geometryhash{regexrefpop}      = '+106+72';
         $::positionhash{searchpop}        = '+10+10';
         $::positionhash{selectionpop}     = '+10+10';
@@ -777,8 +776,7 @@ sub initialize {
         -pady   => 2,
         -expand => 0
     );
-    $::proofer_frame = $::text_frame->Frame;
-    $::text_font     = $top->fontCreate(
+    $::text_font = $top->fontCreate(
         'courier',
         -family => "Courier New",
         -size   => 12,
@@ -856,7 +854,6 @@ sub initialize {
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
     $::lglobal{pagecmt}            = 0;                           # HTML convert - page markers as comments
     $::lglobal{poetrynumbers}      = 0;                           # HTML convert - find & format poetry line numbers
-    $::lglobal{proofbarvisible}    = 0;
     $::lglobal{regaa}              = 0;
     $::lglobal{seepagenums}        = 0;
     $::lglobal{selectionsearch}    = 0;

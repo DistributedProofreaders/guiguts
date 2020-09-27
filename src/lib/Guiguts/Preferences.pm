@@ -647,22 +647,6 @@ sub setDPurls {
         $::lglobal{defurlspop} = $top->Toplevel;
         $::lglobal{defurlspop}->title('DP URLs');
         my $f0 = $::lglobal{defurlspop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        $f0->Label( -text => "Contact proofer with username:" )
-          ->grid( -row => 1, -column => 0, -sticky => 'w' );
-        $f0->Entry(
-            -width        => 70,
-            -textvariable => \$::url_yes_proofer,
-            -relief       => 'sunken',
-            -background   => $::bkgcolor,
-        )->grid( -row => 1, -column => 1, -pady => 2 );
-        $f0->Label( -text => "Contact proofer without username:" )
-          ->grid( -row => 2, -column => 0, -sticky => 'w' );
-        $f0->Entry(
-            -width        => 70,
-            -textvariable => \$::url_no_proofer,
-            -relief       => 'sunken',
-            -background   => $::bkgcolor,
-        )->grid( -row => 2, -column => 1, -pady => 2 );
         $f0->Label( -text => "View project page of projectid:" )
           ->grid( -row => 3, -column => 0, -sticky => 'w' );
         $f0->Entry(
