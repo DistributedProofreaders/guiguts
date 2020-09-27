@@ -177,7 +177,6 @@ our $spellindexbkmrk       = q{};
 our $stayontop             = 0;
 our $suspectindex;
 our $toolside              = 'bottom';
-our $menulayout            = 'default';
 our $trackoperations       = 0;               # Default to off (tracking triggers edited flag)
 our $twowordsinhyphencheck = 0;
 our $utffontname           = 'Courier New';
