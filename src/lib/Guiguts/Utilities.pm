@@ -2033,6 +2033,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
     if ( $::notoolbar && $::lglobal{toptool} ) {
         $::lglobal{toptool}->destroy;
         undef $::lglobal{toptool};
+        undef $::lglobal{savetool};
     } elsif ( !$::notoolbar && !$::lglobal{toptool} ) {
         $::lglobal{toptool}  = $top->ToolBar( -side => $::toolside, -close => '30' );
         $::lglobal{toolfont} = $top->Font(
@@ -2051,6 +2052,7 @@ sub toolbar_toggle {    # Set up / remove the tool bar
             -command => [ \&::savefile ],
             -tip     => 'Save',
         );
+        ::reset_autosave();    # Ensure save icon color is correct for autosave setting
 
         # Mouse-3 just resets the autosave timers
         $::lglobal{savetool}->bind( '<3>', sub { ::reset_autosave() } );
