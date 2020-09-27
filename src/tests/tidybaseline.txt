@@ -4,4 +4,3 @@ Beginning check: HTML Tidy
 Info: Doctype given is "-//W3C//DTD XHTML 1.0 Strict//EN"
 Info: Document content looks like XHTML 1.0 Transitional
 Check is complete: HTML Tidy
-

@@ -46,11 +46,10 @@ sub errorcheckpop_up {
 
     # Add verbose checkbox only for certain error check types
     # Note Bookloupe/Gutcheck have their own (always on) verbose flag
-    if (   ( $errorchecktype eq 'Check All' )
-        or ( $errorchecktype eq 'Link Check' )
-        or ( $errorchecktype eq 'W3C Validate CSS' )
-        or ( $errorchecktype eq 'ppvimage' )
-        or ( $errorchecktype eq 'pphtml' ) ) {
+    if (   $errorchecktype eq 'Link Check'
+        or $errorchecktype eq 'W3C Validate CSS'
+        or $errorchecktype eq 'ppvimage'
+        or $errorchecktype eq 'pphtml' ) {
         $ptopframe->Checkbutton(
             -variable    => \$::verboseerrorchecks,
             -selectcolor => $::lglobal{checkcolor},
@@ -159,13 +158,6 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->update;
 
     # End presentation; begin logic
-    my (@errorchecktypes);                     # Multiple errorchecktypes in one popup
-    if ( $errorchecktype eq 'Check All' ) {    # Means all HTML checks
-        @errorchecktypes =
-          ( 'W3C Validate', 'HTML Tidy', 'ppvimage', 'Link Check', 'W3C Validate CSS', 'pphtml' );
-    } else {
-        @errorchecktypes = ($errorchecktype);
-    }
     %errors          = ();
     @errorchecklines = ();
     my $mark  = 0;
@@ -176,203 +168,200 @@ sub errorcheckpop_up {
         }
     }
     my $unicode = ::currentfileisunicode();
-    foreach my $thiserrorchecktype (@errorchecktypes) {
-        my $fname = '';
-        ::working($thiserrorchecktype);
-        if ( $thiserrorchecktype eq 'Load Checkfile' ) {
-            $fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
-            last if ( not $fname );
-        } else {
-            push @errorchecklines, "Beginning check: " . $thiserrorchecktype;
-            if ( errorcheckrun($thiserrorchecktype) ) {
-                push @errorchecklines, "Failed to run: " . $thiserrorchecktype;
+    my $fname   = '';
+    ::working($errorchecktype);
+    if ( $errorchecktype eq 'Load Checkfile' ) {
+        $fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
+        last if ( not $fname );
+    } else {
+        push @errorchecklines, "Beginning check: " . $errorchecktype;
+        if ( errorcheckrun($errorchecktype) ) {
+            push @errorchecklines, "Failed to run: " . $errorchecktype;
+        }
+        $fname = "errors.err";
+    }
+
+    # Open error file
+    my $fh = FileHandle->new("< $fname");
+    if ( not defined($fh) ) {
+        my $dialog = $top->Dialog(
+            -text    => 'Could not find ' . $errorchecktype . ' error file.',
+            -bitmap  => 'question',
+            -title   => 'File not found',
+            -buttons => [qw/OK/],
+        );
+        $dialog->Show;
+        next;
+    }
+
+    # CSS validator reports line numbers from start of style block, so need to adjust
+    my $lineadjust = 0;
+    if (    $errorchecktype eq 'W3C Validate CSS'
+        and $lineadjust = $textwindow->search( '--', '<style', '1.0', 'end' ) ) {
+        $lineadjust =~ s/\..*//;    # strip column from 'row.column'
+    }
+
+    my $countblank = 0;             # number of blank lines
+
+    # Read and process one line at a time
+    while ( $line = <$fh> ) {
+        utf8::decode($line) if $unicode;
+
+        # Remove leading space and end-of-line characters
+        $line =~ s/^\s//g;
+        $line =~ s/(\x0d)$//;
+        chomp $line;
+
+        # distinguish blank lines by setting them to varying numbers
+        # of spaces, otherwise if user deletes one, it deletes them all
+        $line = ' ' x ++$countblank if ( $line eq '' );
+
+        # Skip rest of CSS
+        last
+          if $errorchecktype eq 'W3C Validate CSS'
+          and not $::verboseerrorchecks
+          and (( $line =~ /^To show your readers/i )
+            or ( $line =~ /^Valid CSS Information/i ) );
+
+        # skip blank lines
+        next if $line =~ /^\s*$/;
+
+        # skip some unnecessary lines from W3C Validate CSS
+        next
+          if $line =~ /^{output/i and not $::verboseerrorchecks
+          or $line =~ /^W3C/i
+          or $line =~ /^URI/i;
+
+        # Skip verbose informational warnings in Link Check
+        if (    ( not $::verboseerrorchecks )
+            and ( $errorchecktype eq 'Link Check' )
+            and ( $line =~ /^Link statistics/i ) ) {
+            last;
+        }
+        if ( $errorchecktype eq 'pphtml' ) {
+            if ( $line =~ /^-/i ) {    # skip lines beginning with '-'
+                next;
             }
-            $fname = "errors.err";
-        }
-
-        # Open error file
-        my $fh = FileHandle->new("< $fname");
-        if ( not defined($fh) ) {
-            my $dialog = $top->Dialog(
-                -text    => 'Could not find ' . $thiserrorchecktype . ' error file.',
-                -bitmap  => 'question',
-                -title   => 'File not found',
-                -buttons => [qw/OK/],
-            );
-            $dialog->Show;
-            next;
-        }
-
-        # CSS validator reports line numbers from start of style block, so need to adjust
-        my $lineadjust = 0;
-        if (    $thiserrorchecktype eq 'W3C Validate CSS'
-            and $lineadjust = $textwindow->search( '--', '<style', '1.0', 'end' ) ) {
-            $lineadjust =~ s/\..*//;    # strip column from 'row.column'
-        }
-
-        my $countblank = 0;             # number of blank lines
-
-        # Read and process one line at a time
-        while ( $line = <$fh> ) {
-            utf8::decode($line) if $unicode;
-
-            # Remove leading space and end-of-line characters
-            $line =~ s/^\s//g;
-            $line =~ s/(\x0d)$//;
-            chomp $line;
-
-            # distinguish blank lines by setting them to varying numbers
-            # of spaces, otherwise if user deletes one, it deletes them all
-            $line = ' ' x ++$countblank if ( $line eq '' );
-
-            # Skip rest of CSS
-            last
-              if $thiserrorchecktype eq 'W3C Validate CSS'
-              and not $::verboseerrorchecks
-              and (( $line =~ /^To show your readers/i )
-                or ( $line =~ /^Valid CSS Information/i ) );
-
-            # skip blank lines
-            next if $line =~ /^\s*$/;
-
-            # skip some unnecessary lines from W3C Validate CSS
-            next
-              if $line =~ /^{output/i and not $::verboseerrorchecks
-              or $line =~ /^W3C/i
-              or $line =~ /^URI/i;
-
-            # Skip verbose informational warnings in Link Check
-            if (    ( not $::verboseerrorchecks )
-                and ( $thiserrorchecktype eq 'Link Check' )
-                and ( $line =~ /^Link statistics/i ) ) {
+            if ( ( not $::verboseerrorchecks )
+                and $line =~ /^Verbose checks/i ) {    # stop with verbose specials check
                 last;
             }
-            if ( $thiserrorchecktype eq 'pphtml' ) {
-                if ( $line =~ /^-/i ) {    # skip lines beginning with '-'
-                    next;
-                }
-                if ( ( not $::verboseerrorchecks )
-                    and $line =~ /^Verbose checks/i ) {    # stop with verbose specials check
-                    last;
-                }
+        }
+
+        my $columnadjust = 0;
+        $::errors{$line} = '';
+        if ( $errorchecktype eq 'HTML Tidy' ) {
+            last
+              if $line =~ /^No warning or errors were found/
+              or $line =~ /^Tidy found/;
+            $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
+
+        } elsif ( ( $errorchecktype eq "W3C Validate" )
+            or ( $errorchecktype eq "W3C Validate Remote" )
+            or ( $errorchecktype eq "pphtml" )
+            or ( $errorchecktype eq "ppvimage" ) ) {
+            $line =~ s/^.*:(\d+):(\d+)\s*/$1:$2 /;
+            $line =~ s/^\s*line (\d+)\s*/$1:0 /;
+
+        } elsif ( ( $errorchecktype eq "W3C Validate CSS" )
+            or ( $errorchecktype eq "Link Check" )
+            or ( $errorchecktype eq "pptxt" ) ) {
+            $line =~ s/^\s*line (\d+)\s*/$1:0 /;
+            $line =~ s/^\s*Line : (\d+)\s*/$1:0 /;
+
+        } elsif ( $errorchecktype eq "Load Checkfile" ) {
+
+            # Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
+            # File may be in HTML format or a text file
+
+            # Ignore HTML header & footer
+            if ( $line =~ /<body>/ ) {
+                @errorchecklines = ();
+                next;
             }
+            last if ( $line =~ /<\/body>/ );
 
-            my $columnadjust = 0;
-            $::errors{$line} = '';
-            if ( $thiserrorchecktype eq 'HTML Tidy' ) {
-                last
-                  if $line =~ /^No warning or errors were found/
-                  or $line =~ /^Tidy found/;
-                $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
+            # Mark *red text* (used by pptxt)
+            $line =~ s/<span class='red'>([^<]*)<\/span>/*$1*/g;
 
-            } elsif ( ( $thiserrorchecktype eq "W3C Validate" )
-                or ( $thiserrorchecktype eq "W3C Validate Remote" )
-                or ( $thiserrorchecktype eq "pphtml" )
-                or ( $thiserrorchecktype eq "ppvimage" ) ) {
-                $line =~ s/^.*:(\d+):(\d+)\s*/$1:$2 /;
-                $line =~ s/^\s*line (\d+)\s*/$1:0 /;
+            # Mark >>>inserted<<< and ###deleted### text (used by ppcomp)
+            $line =~ s/<ins>([^<]*)<\/ins>/>>>$1<<</g;
+            $line =~ s/<del>([^<]*)<\/del>/###$1###/g;
 
-            } elsif ( ( $thiserrorchecktype eq "W3C Validate CSS" )
-                or ( $thiserrorchecktype eq "Link Check" )
-                or ( $thiserrorchecktype eq "pptxt" ) ) {
-                $line =~ s/^\s*line (\d+)\s*/$1:0 /;
-                $line =~ s/^\s*Line : (\d+)\s*/$1:0 /;
+            # Remove some unwanted HTML
+            $line =~ s/<\/?span[^>]*>//g;
+            $line =~ s/<\/?a[^>]*>//g;
+            $line =~ s/<\/?pre>//g;
+            $line =~ s/<\/?p[^>]*>//g;
+            $line =~ s/<\/?div[^>]*>//g;
+            $line =~ s/<br[^>]*>/ /g;             # Line break becomes space - can't insert \n
+            $line =~ s/<\/?h[1-6][^>]*>/***/g;    # Put asterisks round headers
+            $line =~ s/<hr[^>]*>/====/g;          # Replace horizontal rules with ====
+            $line =~ s/\&lt;/</g;                 # Restore < & > characters
+            $line =~ s/\&gt;/>/g;
 
-            } elsif ( $thiserrorchecktype eq "Load Checkfile" ) {
+            # if line has a number at the start, assume it is the error line number
+            $line =~ s/^\s*(\d+)\s*/$1:0 /;
 
-                # Load a checkfile from an external tool, e.g. online ppcomp, pptxt, pphtml
-                # File may be in HTML format or a text file
+        } elsif ( $errorchecktype eq "Bookloupe/Gutcheck" ) {
+            next if $line =~ /^File: /;
+            if ( $line =~ /^\s*Line (\d+) column (\d+)\s*/ ) {
 
-                # Ignore HTML header & footer
-                if ( $line =~ /<body>/ ) {
-                    @errorchecklines = ();
-                    next;
-                }
-                last if ( $line =~ /<\/body>/ );
-
-                # Mark *red text* (used by pptxt)
-                $line =~ s/<span class='red'>([^<]*)<\/span>/*$1*/g;
-
-                # Mark >>>inserted<<< and ###deleted### text (used by ppcomp)
-                $line =~ s/<ins>([^<]*)<\/ins>/>>>$1<<</g;
-                $line =~ s/<del>([^<]*)<\/del>/###$1###/g;
-
-                # Remove some unwanted HTML
-                $line =~ s/<\/?span[^>]*>//g;
-                $line =~ s/<\/?a[^>]*>//g;
-                $line =~ s/<\/?pre>//g;
-                $line =~ s/<\/?p[^>]*>//g;
-                $line =~ s/<\/?div[^>]*>//g;
-                $line =~ s/<br[^>]*>/ /g;             # Line break becomes space - can't insert \n
-                $line =~ s/<\/?h[1-6][^>]*>/***/g;    # Put asterisks round headers
-                $line =~ s/<hr[^>]*>/====/g;          # Replace horizontal rules with ====
-                $line =~ s/\&lt;/</g;                 # Restore < & > characters
-                $line =~ s/\&gt;/>/g;
-
-                # if line has a number at the start, assume it is the error line number
-                $line =~ s/^\s*(\d+)\s*/$1:0 /;
-
-            } elsif ( $thiserrorchecktype eq "Bookloupe/Gutcheck" ) {
-                next if $line =~ /^File: /;
-                if ( $line =~ /^\s*Line (\d+) column (\d+)\s*/ ) {
-
-                    # Adjust column number to start from 0 for most bookloupe/gutcheck errors
-                    $columnadjust = -1 if $line !~ /Long|Short|digit|space|bracket\?/;
-                    $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
-                }
-                $line =~ s/^\s*Line (\d+)\s*/$1:0 /;
-
-            } elsif ( $thiserrorchecktype eq "Jeebies" ) {
-                next if $line =~ /^File: /;
-                if ( $line =~ /^\s*Line (\d+) column (\d+)/ ) {
-                    my ( $row, $col ) = ( $1, $2 );
-
-                    # Jeebies reports end of phrase, so adjust to the beginning
-                    if ( $line =~ /Query phrase "([^"]+)"/ ) {
-                        my $len      = length($1) + 1;
-                        my $location = $textwindow->index( "$row.$col" . " -${len}c" );
-                        ( $row, $col ) = split /\./, $location;
-                    }
-                    $line =~ s/^\s*Line \d+ column \d+\s*/$row:$col /;
-                }
+                # Adjust column number to start from 0 for most bookloupe/gutcheck errors
+                $columnadjust = -1 if $line !~ /Long|Short|digit|space|bracket\?/;
+                $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
             }
+            $line =~ s/^\s*Line (\d+)\s*/$1:0 /;
 
-            # All line/column formats now converted to "line:col" - mark the locations in the main window
-            if ( $line =~ /^(\d+):(\d+)/ ) {
+        } elsif ( $errorchecktype eq "Jeebies" ) {
+            next if $line =~ /^File: /;
+            if ( $line =~ /^\s*Line (\d+) column (\d+)/ ) {
+                my ( $row, $col ) = ( $1, $2 );
 
-                # Some tools count lines/columns differently
-                my $linnum = $1 + $lineadjust;
-                my $colnum = $2 + $columnadjust;
-                $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
-
-                my $markname = "t" . ++$mark;
-                $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
-                $::errors{$line} = $markname;                                # cross-ref error with mark
+                # Jeebies reports end of phrase, so adjust to the beginning
+                if ( $line =~ /Query phrase "([^"]+)"/ ) {
+                    my $len      = length($1) + 1;
+                    my $location = $textwindow->index( "$row.$col" . " -${len}c" );
+                    ( $row, $col ) = split /\./, $location;
+                }
+                $line =~ s/^\s*Line \d+ column \d+\s*/$row:$col /;
             }
+        }
 
-            # Add all lines to the output, even those without line/column numbers
-            push @errorchecklines, $line;
+        # All line/column formats now converted to "line:col" - mark the locations in the main window
+        if ( $line =~ /^(\d+):(\d+)/ ) {
+
+            # Some tools count lines/columns differently
+            my $linnum = $1 + $lineadjust;
+            my $colnum = $2 + $columnadjust;
+            $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
+
+            my $markname = "t" . ++$mark;
+            $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
+            $::errors{$line} = $markname;                                # cross-ref error with mark
         }
-        $fh->close if $fh;
-        unlink 'errors.err' unless $thiserrorchecktype eq 'Load Checkfile';
-        my $size = @errorchecklines;
-        if ( ( $thiserrorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
-            push @errorchecklines,
-              "Could not perform validation: install java or use W3C CSS Validation web site.";
-            next;
-        }
-        push @errorchecklines, "Check is complete: " . $thiserrorchecktype
-          unless $thiserrorchecktype eq 'Load Checkfile';
-        if ( $thiserrorchecktype eq "W3C Validate" ) {
-            push @errorchecklines,
-              "Don't forget to do the final validation at http://validator.w3.org";
-        }
-        if ( $thiserrorchecktype eq "W3C Validate CSS" ) {
-            push @errorchecklines,
-              "Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
-        }
-        push @errorchecklines, "";
+
+        # Add all lines to the output, even those without line/column numbers
+        push @errorchecklines, $line;
     }
+    $fh->close if $fh;
+    unlink 'errors.err' unless $errorchecktype eq 'Load Checkfile';
+    my $size = @errorchecklines;
+    if ( ( $errorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
+        push @errorchecklines,
+          "Could not perform validation: install java or use W3C CSS Validation web site.";
+        next;
+    }
+    push @errorchecklines, "Check is complete: " . $errorchecktype
+      unless $errorchecktype eq 'Load Checkfile';
+    if ( $errorchecktype eq "W3C Validate" ) {
+        push @errorchecklines, "Don't forget to do the final validation at http://validator.w3.org";
+    }
+    if ( $errorchecktype eq "W3C Validate CSS" ) {
+        push @errorchecklines,
+          "Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
+    }
+
     ::working();
     if ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
         gcwindowpopulate( \@errorchecklines );

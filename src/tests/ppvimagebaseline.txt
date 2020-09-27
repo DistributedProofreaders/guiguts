@@ -9,4 +9,3 @@ Beginning check: ppvimage
 ---------- checking for unused images ----------
           WARNING: /images folder not found
 Check is complete: ppvimage
-
