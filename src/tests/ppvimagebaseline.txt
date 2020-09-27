@@ -1,0 +1,12 @@
+Beginning check: ppvimage
+---------- checking <img> images ----------
+26:0 Image: images/t.jpg
+26:0 image file images/t.jpg not found
+---------- checking css background images ----------
+---------- checking linked images ----------
+---------- checking cover image ----------
+          *** WARNING: no epub cover image found
+---------- checking for unused images ----------
+          WARNING: /images folder not found
+Check is complete: ppvimage
+

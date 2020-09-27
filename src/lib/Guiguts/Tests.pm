@@ -38,52 +38,14 @@ sub runtests {
 
     ok( 1 == do { 1 }, "do block" );
 
-    ok( -e "tests/textcheck.txt", "tests/textcheck.txt exists" );
-
-    ok( 1 == do { ::openfile("tests/textcheck.txt"); 1 }, "openfile on tests/textcheck.txt" );
-
-    # Test bookloupe/gutcheck
-    ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' );
-    my $LFNAME = "tests/blgccheckresults.txt";
-    open my $logfile, ">", $LFNAME
-      or die "Unable to open $LFNAME for writing\n";
-    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
-        print $logfile "$_\n";
-    }
-    close $logfile;
-    unlink $LFNAME
-      if ok( File::Compare::compare_text( $LFNAME, 'tests/blgccheckbaseline.txt' ) == 0,
-        "Bookloupe/Gutcheck successful" );
-
-    # Test jeebies
-    ::errorcheckpop_up( $textwindow, $top, 'Jeebies' );
-    $LFNAME = "tests/jeebiescheckresults.txt";
-    open $logfile, ">", $LFNAME
-      or die "Unable to open $LFNAME for writing\n";
-    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
-        print $logfile "$_\n";
-    }
-    close $logfile;
-    unlink $LFNAME
-      if ok( File::Compare::compare_text( $LFNAME, 'tests/jeebiescheckbaseline.txt' ) == 0,
-        "Jeebies successful" );
-
-    ok( -e "tests/errorcheck.html", "tests/errorcheck.html exists" );
-
-    ok( 1 == do { ::openfile("tests/errorcheck.html"); 1 }, "openfile on tests/errorcheck.html" );
-
-    # Test of all HTML checks
-    ::errorcheckpop_up( $textwindow, $top, 'Check All' );
-    $LFNAME = "tests/errorcheckresults.txt";
-    open $logfile, ">", $LFNAME
-      or die "Unable to open $LFNAME for writing\n";
-    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
-        print $logfile "$_\n";
-    }
-    close $logfile;
-    unlink $LFNAME
-      if ok( File::Compare::compare_text( $LFNAME, 'tests/errorcheckbaseline.txt' ) == 0,
-        "Check All successful" );
+    runtesterrorcheck( "Bookloupe/Gutcheck", "textcheck.txt",   "blgcbaseline.txt" );
+    runtesterrorcheck( "Jeebies",            "textcheck.txt",   "jeebiesbaseline.txt" );
+    runtesterrorcheck( "W3C Validate",       "errorcheck.html", "htmlvalidatebaseline.txt" );
+    runtesterrorcheck( "HTML Tidy",          "errorcheck.html", "tidybaseline.txt" );
+    runtesterrorcheck( "ppvimage",           "errorcheck.html", "ppvimagebaseline.txt" );
+    runtesterrorcheck( "Link Check",         "errorcheck.html", "linkcheckline.txt" );
+    runtesterrorcheck( "W3C Validate CSS",   "errorcheck.html", "cssvalidatebaseline.txt" );
+    runtesterrorcheck( "pphtml",             "errorcheck.html", "pphtmlbaseline.txt" );
 
     # Open/close README - allow for development system run from src subdirectory
     ok( ( -e "../README.md" or -e "README.md" ), "README.md exists" );
@@ -172,6 +134,33 @@ sub runtesthtml {
     # Delete backup files created during HTML generation
     unlink $HTMLBAKFILE;
     unlink "$HTMLBAKFILE.bin";
+}
+
+# Run an error check conversion test given the test type,
+# input filename and baseline output filename
+sub runtesterrorcheck {
+    my $TESTTYPE      = shift;
+    my $CHECKINFILE   = "tests/" . shift;
+    my $CHECKBASEFILE = "tests/" . shift;
+
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+
+    ok( 1 == do { ::openfile($CHECKINFILE); 1 }, "openfile on $CHECKINFILE" );
+
+    my $lfname = $CHECKBASEFILE;
+    $lfname =~ s/baseline//;
+    open my $logfile, ">", $lfname
+      or die "Unable to open $lfname for writing\n";
+
+    ::errorcheckpop_up( $textwindow, $top, $TESTTYPE );
+    for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
+        print $logfile "$_\n";
+    }
+
+    close $logfile;
+    unlink $lfname
+      if ok( File::Compare::compare_text( $lfname, $CHECKBASEFILE ) == 0, "$TESTTYPE successful" );
 }
 
 1;
