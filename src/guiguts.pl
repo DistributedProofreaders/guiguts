@@ -97,8 +97,6 @@ use Guiguts::WordFrequency;
 
 ### Constants
 our $allblocktypes        = quotemeta '#$*FfIiLlPpXx';
-our $url_no_proofer       = 'https://www.pgdp.net/phpBB3/ucp.php?i=pm&mode=compose';
-our $url_yes_proofer      = 'https://www.pgdp.net/c/stats/members/mbr_list.php?uname=';
 our $urlprojectpage       = 'https://www.pgdp.net/c/project.php?id=';
 our $urlprojectdiscussion = 'https://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
 
@@ -199,7 +197,6 @@ our $validatecsscommand = '';
 our $ebookmakercommand  = '';
 our %pagenumbers;
 our %projectdict;
-our %proofers;
 our %reghints = ();
 our %scannoslist;
 our %geometryhash;    #Geometry of some windows in one hash.
@@ -279,7 +276,6 @@ our $top;
 our $icon;
 our $text_frame;
 our $counter_frame;
-our $proofer_frame;
 our $text_font;
 our $textwindow;
 our $menubar;

@@ -307,21 +307,6 @@ sub _bin_save {
             print $fh "'base' => '$::pagenumbers{$page}{base}'},\n";
         }
         print $fh ");\n\n";
-        delete $::proofers{''};
-        if ( $::lglobal{numrounds} ) {
-            foreach my $page ( sort keys %::proofers ) {
-                for my $round ( 1 .. $::lglobal{numrounds} ) {
-                    if ( defined $::proofers{$page}->[$round] ) {
-                        print $fh '$::proofers{\''
-                          . $page . '\'}['
-                          . $round
-                          . '] = \''
-                          . $::proofers{$page}->[$round] . '\';' . "\n";
-                    }
-                }
-            }
-        }
-        print $fh "\n";
         foreach ( keys %::operationshash ) {
             my $mark = ::escape_problems($_);
             print $fh "\$::operationshash{'$mark'}='" . $::operationshash{$mark} . "';\n";
@@ -363,7 +348,6 @@ sub clearvars {
     $::lglobal{seenwords}     = ();
     $::lglobal{seenwordpairs} = ();
     $::lglobal{fnarray}       = ();
-    %::proofers               = ();
     %::pagenumbers            = ();
     %::operationshash         = ();
     @::bookmarks              = ();
@@ -371,7 +355,6 @@ sub clearvars {
     ::setedited(0);
     ::hidepagenums();
     @{ $::lglobal{fnarray} } = ();
-    ::tglprfbar() if $::lglobal{proofbarvisible};
     undef $::lglobal{prepfile};
     return;
 }
@@ -389,10 +372,6 @@ sub clearpopups {
     if ( $::lglobal{previmagebutton} ) {
         $::lglobal{previmagebutton}->destroy;
         undef $::lglobal{previmagebutton};
-    }
-    if ( $::lglobal{proofbutton} ) {
-        $::lglobal{proofbutton}->destroy;
-        undef $::lglobal{proofbutton};
     }
     ::killpopup('footpop');
     ::killpopup('footcheckpop');
@@ -470,11 +449,6 @@ sub file_mark_pages {
     $::searchstartindex = '1.0';
     $::searchendindex   = '1.0';
     while ($::searchstartindex) {
-
-        #$::searchstartindex =
-        #  $textwindow->search( '-exact', '--',
-        #					   '--- File:',
-        #					   $::searchendindex, 'end' );
         $::searchstartindex =
           $textwindow->search( '-nocase', '-regexp', '--', '-*\s?File:\s?(\S+)\.(png|jpg)---.*$',
             $::searchendindex, 'end' );
@@ -483,36 +457,13 @@ sub file_mark_pages {
         $line             = $textwindow->get( "$row.0", "$row.end" );
         $::searchendindex = $textwindow->index("$::searchstartindex lineend");
 
-        #$line = $textwindow->get( $::searchstartindex, $::searchendindex );
-        # get the page name - we do this separate from pulling the
-        # proofer names in case we did an Import Test Prep Files
-        # which does not include proofer names
-        #  look for one or more dashes followed by File: followed
-        #  by zero or more spaces, then non-greedily capture everything
-        #  up to the first period
-        if ( $line =~ /-+File:\s*(.*?)\./ ) {
-            $page = $1;
-        }
-
-        # get list of proofers:
-        #  look for one or more dashes followed by File:, then
-        #  non-greedily ignore everything up to the
-        #  string of dashes, ignore the dashes, then capture
-        #  everything until the dashes begin again (proofer string)
-        #		if ( $line =~ /-+File:.*?-+([^-]+)-+/ ) {
-        if ( $line =~ /^-----*\s?File:\s?\S+\.(png|jpg)---(.*)$/ ) {
-            my $prftrim = $2;
-            $prftrim =~ s/-*$//g;
-
-            # split the proofer string into parts
-            @{ $::proofers{$page} } = split( "\Q\\\E", $prftrim );
-        }
-        $pagemark = 'Pg' . $page;
+        # get the page name & mark the position
+        $page                             = $1 if $line =~ /-+File:\s*(.*?)\./;
+        $pagemark                         = 'Pg' . $page;
         $::pagenumbers{$pagemark}{offset} = 1;
         $textwindow->markSet( $pagemark, $::searchstartindex );
         $textwindow->markGravity( $pagemark, 'left' );
     }
-    delete $::proofers{''};
     $top->Unbusy( -recurse => 1 );
     return;
 }
@@ -939,7 +890,7 @@ EOM
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted spellcheckwithenchant stayontop toolside
             trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
             twowordsinhyphencheck utf8save utffontname utffontsize
-            url_no_proofer url_yes_proofer urlprojectpage urlprojectdiscussion
+            urlprojectpage urlprojectdiscussion
             menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
         ) {
             print $save_handle "\$$_", ' ' x ( 25 - length $_ ), "= '", eval '$::' . $_, "';\n";
