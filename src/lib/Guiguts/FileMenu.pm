@@ -891,7 +891,7 @@ EOM
             trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
             twowordsinhyphencheck utf8save utffontname utffontsize
             urlprojectpage urlprojectdiscussion
-            menulayout verboseerrorchecks vislnnm w3cremote wfstayontop/
+            verboseerrorchecks vislnnm w3cremote wfstayontop/
         ) {
             print $save_handle "\$$_", ' ' x ( 25 - length $_ ), "= '", eval '$::' . $_, "';\n";
         }
