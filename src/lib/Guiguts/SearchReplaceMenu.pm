@@ -1777,8 +1777,11 @@ sub find_proofer_comment {
     $direction = 'forward' unless $direction;
     my $textwindow = $::textwindow;
     my $pattern    = '[**';
-    my $comment    = $textwindow->search( $direction eq 'reverse' ? '-backwards' : '-forwards',
-        '--', $pattern, "insert" );
+
+    # Avoid finding same one again
+    my $start   = $direction eq 'reverse' ? 'insert -1c' : 'insert';
+    my $comment = $textwindow->search( $direction eq 'reverse' ? '-backwards' : '-forwards',
+        '--', $pattern, $start );
     if ($comment) {
         my $index = $textwindow->index("$comment +1c");
         $textwindow->SetCursor($index);
