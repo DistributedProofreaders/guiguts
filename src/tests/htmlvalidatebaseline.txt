@@ -2,4 +2,4 @@ Beginning check: W3C Validate
 23:7 :E: end tag for element "p" which is not open
 26:64 :E: document type does not allow element "img" here; missing one of "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "address", "fieldset", "ins", "del" start-tag
 Check is complete: W3C Validate
-Don't forget to do the final validation at http://validator.w3.org
+Don't forget to do the final validation at https://validator.w3.org
