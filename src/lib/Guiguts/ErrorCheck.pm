@@ -355,11 +355,12 @@ sub errorcheckpop_up {
     push @errorchecklines, "Check is complete: " . $errorchecktype
       unless $errorchecktype eq 'Load Checkfile';
     if ( $errorchecktype eq "W3C Validate" ) {
-        push @errorchecklines, "Don't forget to do the final validation at http://validator.w3.org";
+        push @errorchecklines,
+          "Don't forget to do the final validation at https://validator.w3.org";
     }
     if ( $errorchecktype eq "W3C Validate CSS" ) {
         push @errorchecklines,
-          "Don't forget to do the final validation at http://jigsaw.w3.org/css-validator/";
+          "Don't forget to do the final validation at https://jigsaw.w3.org/css-validator";
     }
 
     ::working();
