@@ -40,6 +40,7 @@ sub runtests {
 
     runtesterrorcheck( "Bookloupe/Gutcheck", "textcheck.txt",   "blgcbaseline.txt" );
     runtesterrorcheck( "Jeebies",            "textcheck.txt",   "jeebiesbaseline.txt" );
+    runtesterrorcheck( "pptxt",              "textcheck.txt",   "pptxtbaseline.txt" );
     runtesterrorcheck( "W3C Validate",       "errorcheck.html", "htmlvalidatebaseline.txt" );
     runtesterrorcheck( "HTML Tidy",          "errorcheck.html", "tidybaseline.txt" );
     runtesterrorcheck( "ppvimage",           "errorcheck.html", "ppvimagebaseline.txt" );
@@ -153,6 +154,7 @@ sub runtesterrorcheck {
     open my $logfile, ">", $lfname
       or die "Unable to open $lfname for writing\n";
 
+    binmode $logfile, ":encoding(UTF-8)";
     ::errorcheckpop_up( $textwindow, $top, $TESTTYPE );
     for ( $::lglobal{errorchecklistbox}->get( 0, 'end' ) ) {
         print $logfile "$_\n";

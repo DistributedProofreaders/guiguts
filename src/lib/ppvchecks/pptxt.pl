@@ -108,11 +108,6 @@ sub runProgram {
     &had_bad;
     &specials;
 
-    ( my $sec, my $min, my $hour, my $mday, my $mon, my $year, my $wday, my $yday, my $isdst ) =
-      localtime(time);
-    printf LOGFILE ( "\n%s\n", "=" x 80 );
-    printf LOGFILE "run completed: %4d-%02d-%02d %02d:%02d:%02d\n",
-      $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
     close LOGFILE;
 }
 
