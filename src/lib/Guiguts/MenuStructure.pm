@@ -13,10 +13,7 @@ BEGIN {
 # rebuild every time it is modified
 sub menurebuild {
 
-    # Delete any current menus
-    for ( 0 .. 12 ) {
-        $::menubar->delete('last');
-    }
+    $::menubar->delete( 0, 'last' );    # Delete any current menus
 
     menu_toplevel( '~File',        &menu_file );
     menu_toplevel( '~Edit',        &menu_edit );
