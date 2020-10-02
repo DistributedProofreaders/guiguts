@@ -172,7 +172,11 @@ sub errorcheckpop_up {
     ::working($errorchecktype);
     if ( $errorchecktype eq 'Load Checkfile' ) {
         $fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
-        last if ( not $fname );
+        if ( not $fname ) {    # if cancelled, close dialog and exit
+            ::killpopup('errorcheckpop');
+            ::working();
+            return;
+        }
     } else {
         push @errorchecklines, "Beginning check: " . $errorchecktype;
         if ( errorcheckrun($errorchecktype) ) {
