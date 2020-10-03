@@ -256,7 +256,7 @@ sub errorcheckpop_up {
         $::errors{$line} = '';
         if ( $errorchecktype eq 'HTML Tidy' ) {
             last
-              if $line =~ /^No warning or errors were found/
+              if $line =~ /^No warnings or errors were found/
               or $line =~ /^Tidy found/;
             $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
 
