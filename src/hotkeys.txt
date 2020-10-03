@@ -96,9 +96,15 @@ Single click right mouse button -- pop up shortcut to menu bar
 
 <command>+q - quit Guiguts (Mac only)
 
+
 MENUS (non-Mac)
 
 Hold Alt to activate the menu bar, select an item by typing its underlined symbol.
+
+
+POPUP DIALOGS
+
+F1 -- Display the relevant manual page in a browser window 
 
 
 SEARCH POPUP
