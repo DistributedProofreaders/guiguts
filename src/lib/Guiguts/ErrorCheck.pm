@@ -117,7 +117,7 @@ sub errorcheckpop_up {
 
     # Create the dialog - it has a customised delete binding which clears the error marks
     # and destroys the run/view options dialogs as well
-    ::initialize_popup_without_deletebinding('errorcheckpop');
+    ::initialize_popup_without_deletebinding( 'errorcheckpop', "$errorchecktype" );
     $::lglobal{errorcheckpop}->protocol(
         'WM_DELETE_WINDOW' => sub {
             ::killpopup('errorcheckpop');

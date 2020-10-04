@@ -1508,7 +1508,8 @@ sub searchpopup {
             );
         }
         $::lglobal{searchpop}->resizable( 'yes', 'no' );
-        ::initialize_popup_without_deletebinding('searchpop');
+        ::initialize_popup_without_deletebinding( 'searchpop',
+            $::lglobal{doscannos} ? 'scannos' : 'search' );
         $::lglobal{searchpop}->minsize( 460, 127 );
         $::lglobal{searchentry}->focus;
 

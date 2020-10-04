@@ -201,6 +201,7 @@ our %scannoslist;
 our %geometryhash;    #Geometry of some windows in one hash.
 $geometryhash{wfpop} = q{};
 our %positionhash;    #Position of other windows in one hash.
+our %manualhash;      # subpage of manual for each dialog
 our @bookmarks = ( 0, 0, 0, 0, 0, 0 );
 our @gcopt     = ( 0, 0, 0, 0, 0, 0, 1, 0, 1 );
 our @joinundolist;
