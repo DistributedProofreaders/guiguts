@@ -699,57 +699,55 @@ sub initialize {
         chdir $dir if length $dir;
     }
 
-    unless ( $::geometryhash{wfpop} ) {
-
-        # positionhash stores user's window position
-        # geometryhash stores user's window position and size
-        $::geometryhash{aboutpop}         = '+312+136';
-        $::geometryhash{alignpop}         = '+338+83';
-        $::geometryhash{asciiboxpop}      = '+358+187';
-        $::positionhash{brkpop}           = '+482+131';
-        $::positionhash{defurlspop}       = '+150+150';
-        $::geometryhash{errorcheckpop}    = '+484+72';
-        $::positionhash{extoptpop}        = '+120+38';
-        $::positionhash{filepathspop}     = '+55+7';
-        $::positionhash{fixpop}           = '+34+22';
-        $::positionhash{floodpop}         = '+150+150';
-        $::positionhash{fontpop}          = '+10+10';
-        $::geometryhash{footcheckpop}     = '+22+12';
-        $::positionhash{footpop}          = '+255+157';
-        $::geometryhash{gcrunoptspop}     = '+244+72';
-        $::geometryhash{gcviewoptspop}    = '+264+72';
-        $::positionhash{grpop}            = '+144+153';
-        $::positionhash{guesspgmarkerpop} = '+10+10';
-        $::geometryhash{hotkeyspop}       = '+144+119';
-        $::positionhash{hilitepop}        = '+150+150';
-        $::positionhash{hintpop}          = '+150+150';
-        $::geometryhash{hpopup}           = '300x400+584+211';
-        $::positionhash{htmlgenpop}       = '+145+37';
-        $::positionhash{htmlimpop}        = '+45+37';
-        $::positionhash{latinpop}         = '+10+10';
-        $::geometryhash{linkpop}          = '+224+72';
-        $::positionhash{marginspop}       = '+145+137';
-        $::positionhash{markpop}          = '+140+93';
-        $::geometryhash{oppop}            = '600x400+50+50';
-        $::geometryhash{pagelabelpop}     = '375x500+20+20';
-        $::positionhash{pagemarkerpop}    = '+302+97';
-        $::geometryhash{pagesephelppop}   = '+191+132';
-        $::positionhash{pageseppop}       = '+334+176';
-        $::geometryhash{regexrefpop}      = '+106+72';
-        $::positionhash{searchpop}        = '+10+10';
-        $::positionhash{selectionpop}     = '+10+10';
-        $::positionhash{spellpopup}       = '+152+97';
-        $::positionhash{srchhistsizepop}  = '+152+97';
-        $::positionhash{stoppop}          = '+10+10';
-        $::positionhash{surpop}           = '+150+150';
-        $::positionhash{tblfxpop}         = '+120+120';
-        $::positionhash{txtconvpop}       = '+82+131';
-        $::positionhash{utfentrypop}      = '+191+132';
-        $::geometryhash{utfpop}           = '+46+46';
-        $::geometryhash{utfsearchpop}     = '550x450+53+87';
-        $::geometryhash{versionbox}       = '300x250+80+80';
-        $::geometryhash{wfpop}            = '+365+63';
-    }
+    # positionhash stores user's window position
+    # geometryhash stores user's window position and size
+    # Set default value if no value already loaded from setting.rc
+    $::geometryhash{aboutpop}         = '+312+136'        unless $::geometryhash{aboutpop};
+    $::geometryhash{alignpop}         = '+338+83'         unless $::geometryhash{alignpop};
+    $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
+    $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
+    $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
+    $::geometryhash{errorcheckpop}    = '+484+72'         unless $::geometryhash{errorcheckpop};
+    $::positionhash{extoptpop}        = '+120+38'         unless $::positionhash{extoptpop};
+    $::positionhash{filepathspop}     = '+55+7'           unless $::positionhash{filepathspop};
+    $::positionhash{fixpop}           = '+34+22'          unless $::positionhash{fixpop};
+    $::positionhash{floodpop}         = '+150+150'        unless $::positionhash{floodpop};
+    $::positionhash{fontpop}          = '+10+10'          unless $::positionhash{fontpop};
+    $::geometryhash{footcheckpop}     = '+22+12'          unless $::geometryhash{footcheckpop};
+    $::positionhash{footpop}          = '+255+157'        unless $::positionhash{footpop};
+    $::geometryhash{gcrunoptspop}     = '+244+72'         unless $::geometryhash{gcrunoptspop};
+    $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
+    $::positionhash{grpop}            = '+144+153'        unless $::positionhash{grpop};
+    $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
+    $::geometryhash{hotkeyspop}       = '+144+119'        unless $::geometryhash{hotkeyspop};
+    $::positionhash{hilitepop}        = '+150+150'        unless $::positionhash{hilitepop};
+    $::positionhash{hintpop}          = '+150+150'        unless $::positionhash{hintpop};
+    $::geometryhash{hpopup}           = '300x400+584+211' unless $::geometryhash{hpopup};
+    $::positionhash{htmlgenpop}       = '+145+37'         unless $::positionhash{htmlgenpop};
+    $::positionhash{htmlimpop}        = '+45+37'          unless $::positionhash{htmlimpop};
+    $::positionhash{latinpop}         = '+10+10'          unless $::positionhash{latinpop};
+    $::geometryhash{linkpop}          = '+224+72'         unless $::geometryhash{linkpop};
+    $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
+    $::positionhash{markpop}          = '+140+93'         unless $::positionhash{markpop};
+    $::geometryhash{oppop}            = '600x400+50+50'   unless $::geometryhash{oppop};
+    $::geometryhash{pagelabelpop}     = '375x500+20+20'   unless $::geometryhash{pagelabelpop};
+    $::positionhash{pagemarkerpop}    = '+302+97'         unless $::positionhash{pagemarkerpop};
+    $::geometryhash{pagesephelppop}   = '+191+132'        unless $::geometryhash{pagesephelppop};
+    $::positionhash{pageseppop}       = '+334+176'        unless $::positionhash{pageseppop};
+    $::geometryhash{regexrefpop}      = '+106+72'         unless $::geometryhash{regexrefpop};
+    $::positionhash{searchpop}        = '+10+10'          unless $::positionhash{searchpop};
+    $::positionhash{selectionpop}     = '+10+10'          unless $::positionhash{selectionpop};
+    $::positionhash{spellpopup}       = '+152+97'         unless $::positionhash{spellpopup};
+    $::positionhash{srchhistsizepop}  = '+152+97'         unless $::positionhash{srchhistsizepop};
+    $::positionhash{stoppop}          = '+10+10'          unless $::positionhash{stoppop};
+    $::positionhash{surpop}           = '+150+150'        unless $::positionhash{surpop};
+    $::positionhash{tblfxpop}         = '+120+120'        unless $::positionhash{tblfxpop};
+    $::positionhash{txtconvpop}       = '+82+131'         unless $::positionhash{txtconvpop};
+    $::positionhash{utfentrypop}      = '+191+132'        unless $::positionhash{utfentrypop};
+    $::geometryhash{utfpop}           = '+46+46'          unless $::geometryhash{utfpop};
+    $::geometryhash{utfsearchpop}     = '550x450+53+87'   unless $::geometryhash{utfsearchpop};
+    $::geometryhash{versionbox}       = '300x250+80+80'   unless $::geometryhash{versionbox};
+    $::geometryhash{wfpop}            = '+365+63'         unless $::geometryhash{wfpop};
 
     # manualhash stores subpage of manual for each dialog
     # Where dialog is used in several contexts, use 'dialogname+context' as key
