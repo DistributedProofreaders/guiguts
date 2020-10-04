@@ -673,9 +673,8 @@ sub menu_unicode {
                 'command',
                 "$_",
                 -columnbreak => menu_unicode_break($_),
-                -command     => sub {
-                    ::utfpopup( $_, $::lglobal{utfblocks}{$_}[0], $::lglobal{utfblocks}{$_}[1] );
-                },
+                -command =>
+                  [ \&::utfpopup, $_, $::lglobal{utfblocks}{$_}[0], $::lglobal{utfblocks}{$_}[1] ],
                 -accelerator => $::lglobal{utfblocks}{$_}[0] . ' - ' . $::lglobal{utfblocks}{$_}[1]
             ],
             ( sort menu_unicode_sort ( keys %{ $::lglobal{utfblocks} } ) ) ),
