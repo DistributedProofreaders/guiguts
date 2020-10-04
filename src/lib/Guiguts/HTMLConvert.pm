@@ -1997,8 +1997,8 @@ sub thumbnailbrowse {
               . $::lglobal{htmlimagesizey} / $EMPX . " em "
               . "($::lglobal{htmlimagesizex} x $::lglobal{htmlimagesizey} px)" );
     } else {
-        $::lglobal{htmlimagesizex} = 0;
-        $::lglobal{htmlimagesizey} = 0;
+        $::lglobal{htmlimagesizex} = $xythumb;
+        $::lglobal{htmlimagesizey} = $xythumb;
         $::lglobal{htmlimggeom}->configure( -text => "File size: unknown" );
         $::lglobal{htmlimgmaxwidth}->configure( -text => "" );
     }
