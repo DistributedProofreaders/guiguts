@@ -18,7 +18,7 @@ sub update_indicators {
     my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
     my ( $line,      $column )   = split( /\./, $textwindow->index('insert') );
     $::lglobal{current_line_label}
-      ->configure( -text => "Ln:$line/" . ( $last_line - 1 ) . " Col:$column" )
+      ->configure( -text => "L:$line/" . ( $last_line - 1 ) . " C:$column" )
       if ( $::lglobal{current_line_label} );
     my $mode             = $textwindow->OverstrikeMode;
     my $overstrke_insert = ' I ';
@@ -150,8 +150,8 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
     );
     ::drag($textwindow);
     $::lglobal{current_line_label} = $::counter_frame->Label(
-        -text       => 'Ln: 1/1 - Col: 0',
-        -width      => 20,
+        -text       => 'L:1/1 C:0',
+        -width      => 18,
         -relief     => 'ridge',
         -background => 'gray',
     )->grid( -row => 1, -column => 0, -sticky => 'nw' );
@@ -177,7 +177,7 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         -text       => ' No Selection ',
         -relief     => 'ridge',
         -background => 'gray',
-    )->grid( -row => 1, -column => 11, -sticky => 'nw' );
+    )->grid( -row => 1, -column => 9, -sticky => 'nw' );
     $::lglobal{selectionlabel}->bind(
         '<1>',
         sub {
@@ -259,7 +259,7 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         -relief     => 'ridge',
         -background => 'gray',
         -width      => 2,
-    )->grid( -row => 1, -column => 10, -sticky => 'nw' );
+    )->grid( -row => 1, -column => 8, -sticky => 'nw' );
     $::lglobal{insert_overstrike_mode_label}->bind(
         '<1>',
         sub {
@@ -276,7 +276,7 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         -relief     => 'ridge',
         -background => 'gray',
         -anchor     => 'w',
-    )->grid( -row => 1, -column => 12 );
+    )->grid( -row => 1, -column => 10 );
     $::lglobal{ordinallabel}->bind(
         '<1>',
         sub {
@@ -552,7 +552,7 @@ sub update_lang_button {
             -width      => 11,
             -relief     => 'ridge',
             -background => 'gray',
-        )->grid( -row => 1, -column => 8 );
+        )->grid( -row => 1, -column => 11 );
         _butbind( $::lglobal{langbutton} );
         $::lglobal{langbutton}->bind(
             '<1>',
