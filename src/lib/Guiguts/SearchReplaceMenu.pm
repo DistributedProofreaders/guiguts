@@ -1195,6 +1195,7 @@ sub searchpopup {
             -padx   => 2,
             -anchor => 'w'
         );
+        search_shiftreverse( $::lglobal{searchbutton} );
         $::lglobal{searchentry} = $sf11->Text(
             -background => $::bkgcolor,
             -width      => 60,
@@ -1348,7 +1349,7 @@ sub searchpopup {
             -padx   => 2,
             -anchor => 'nw'
         );
-        $sf12->Button(
+        my $sf12rs = $sf12->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
@@ -1363,6 +1364,7 @@ sub searchpopup {
             -padx   => 2,
             -anchor => 'nw'
         );
+        search_shiftreverse($sf12rs);
         $sf12->Button(
             -activebackground => $::activecolor,
             -command          => sub {
@@ -1639,6 +1641,33 @@ sub searchpopup {
     }
 }
 
+# Create bindings so Shift key causes a one-off reversal of Search or Replace & Search direction.
+# Shift-Button toggles the reverse flag before the class's ButtonRelease event
+# executes the search command.
+# It is necessary to remember this has been done so it can be toggled back via
+# the instance's ButtonRelease event, which is executed after the class's event.
+# This also ensures we trap the case where the user releases the Shift key between
+# Button and ButtonRelease, which a simple toggle in a Shift-ButtonRelease event would not.
+sub search_shiftreverse {
+    my $btn = shift;
+    $btn->bind(
+        '<Shift-Button-1>',
+        sub {
+            $::lglobal{searchop2}->invoke;
+            $::lglobal{searchreversetemp} = 1;
+        }
+    );
+    $btn->bind(
+        '<ButtonRelease-1>',
+        sub {
+            if ( $::lglobal{searchreversetemp} ) {
+                $::lglobal{searchop2}->invoke;
+                $::lglobal{searchreversetemp} = 0;
+            }
+        }
+    );
+}
+
 # Bind a key-combination to a sub for the S&R dialog
 # Also disable default class behaviour for key on Text widgets
 # (e.g. Ctrl-b does "move left" by default)
@@ -1680,7 +1709,7 @@ sub searchaddterms {
             -padx   => 2,
             -anchor => 'nw'
         );
-        $msref->[$_]->Button(
+        my $rsbtn = $msref->[$_]->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
@@ -1695,6 +1724,7 @@ sub searchaddterms {
             -padx   => 2,
             -anchor => 'nw'
         );
+        search_shiftreverse($rsbtn);
         $msref->[$_]->Button(
             -activebackground => $::activecolor,
             -command          => sub {
