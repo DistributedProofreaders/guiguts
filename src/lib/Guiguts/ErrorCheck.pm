@@ -760,12 +760,15 @@ sub errorcheckview {
 sub gcwindowpopulate {
     my $linesref = shift;
     return unless defined $::lglobal{errorcheckpop};
-    my $start = 0;
-    my $count = 0;
+    my $headr = 0;
+    my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     foreach my $line ( @{$linesref} ) {
-        my $flag = 0;
+        next if $line =~ /^\s*$/;    # Skip blank lines
         next unless defined $::errors{$line};
+
+        # Check if error type has been hidden
+        my $flag = 0;
         for ( 0 .. $#{ $::lglobal{gcarray} } ) {
             next unless ( index( $line, $::lglobal{gcarray}->[$_] ) > 0 );
             $::gsopt[$_] = 0 unless defined $::gsopt[$_];
@@ -773,15 +776,13 @@ sub gcwindowpopulate {
             last;
         }
         next if $flag;
-        unless ( $count == 0 and $line =~ /^\s*$/ ) {    # Wait for first non-blank line
-            $start++ unless $line =~ /^\d+:\d+/;
-            $count++;
-            $::lglobal{errorchecklistbox}->insert( 'end', $line );
-        }
+
+        # Increment count of either header lines or non-hidden error lines
+        ( $line =~ /^\s*-->/ or $line =~ /^\s*\*\*\*/ ) ? $headr++ : $error++;
+        $::lglobal{errorchecklistbox}->insert( 'end', $line );
     }
-    $count -= $start;
-    $::lglobal{errorchecklistbox}->insert( $start, "  --> $count queries.", '' );
-    $::lglobal{errorchecklistbox}->insert( $start, '' );
+    $::lglobal{errorchecklistbox}->insert( $headr, "  --> $error queries.", '' );
+    $::lglobal{errorchecklistbox}->insert( $headr, '' );
 
     # Add start/end messages
     my $command =
