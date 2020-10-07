@@ -195,7 +195,9 @@ sub errorcheckpop_up {
             -buttons => [qw/OK/],
         );
         $dialog->Show;
-        next;
+        ::killpopup('errorcheckpop');
+        ::working();
+        return;
     }
 
     # CSS validator reports line numbers from start of style block, so need to adjust
@@ -351,10 +353,18 @@ sub errorcheckpop_up {
     $fh->close if $fh;
     unlink 'errors.err' unless $errorchecktype eq 'Load Checkfile';
     my $size = @errorchecklines;
+    $size = 1;
     if ( ( $errorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
-        push @errorchecklines,
-          "Could not perform validation: install java or use W3C CSS Validation web site.";
-        next;
+        my $dialog = $top->Dialog(
+            -text    => 'Could not validate: install java or use W3C CSS Validation web site.',
+            -bitmap  => 'warning',
+            -title   => 'Validation failed',
+            -buttons => [qw/OK/],
+        );
+        $dialog->Show;
+        ::killpopup('errorcheckpop');
+        ::working();
+        return;
     }
     push @errorchecklines, "Check is complete: " . $errorchecktype
       unless $errorchecktype eq 'Load Checkfile';
