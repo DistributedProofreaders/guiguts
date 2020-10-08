@@ -791,8 +791,13 @@ sub gcwindowpopulate {
         ( $line =~ /^\s*-->/ or $line =~ /^\s*\*\*\*/ ) ? $headr++ : $error++;
         $::lglobal{errorchecklistbox}->insert( 'end', $line );
     }
-    $::lglobal{errorchecklistbox}->insert( $headr, "  --> $error queries.", '' );
-    $::lglobal{errorchecklistbox}->insert( $headr, '' );
+
+    # Tell user how many queries and how many error types are hidden
+    my $hidden = 0;
+    $hidden += ( $::gsopt[$_] ? 1 : 0 ) for ( 0 .. $#{ $::lglobal{gcarray} } );
+    my $hidtxt = "";
+    $hidtxt .= " ($hidden error " . ( $hidden > 1 ? "types" : "type" ) . " hidden)" if $hidden > 0;
+    $::lglobal{errorchecklistbox}->insert( $headr, '', "  --> $error queries$hidtxt.", '' );
 
     # Add start/end messages
     my $command =
@@ -860,7 +865,7 @@ sub gcviewopts {
         'Unspaced quotes',
         'Wrongspaced quotes',
         'Wrongspaced singlequotes',
-    );
+    ) if $#{ $::lglobal{gcarray} } < 0;
     my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
     if ( defined( $::lglobal{gcviewoptspop} ) ) {
         $::lglobal{gcviewoptspop}->deiconify;
@@ -997,7 +1002,6 @@ sub gcviewopts {
         $::lglobal{gcviewoptspop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 $::lglobal{gcviewoptspop}->destroy;
-                @{ $::lglobal{gcarray} } = ();
                 undef $::lglobal{gcviewoptspop};
                 unlink 'gutreslts.tmp';    #cat('gutreslts.tmp')
             }
