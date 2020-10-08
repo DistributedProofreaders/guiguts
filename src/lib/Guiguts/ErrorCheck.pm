@@ -810,61 +810,6 @@ sub gcviewopts {
     my $linesref = shift;
     my $top      = $::top;
     my @gsoptions;
-    @{ $::lglobal{gcarray} } = (
-        'Asterisk',
-        'Begins with punctuation',
-        'Broken em-dash',
-        'Capital "S"',
-        'Carat character',
-        'CR without LF',
-        'Double punctuation',
-        'endquote missing punctuation',
-        'Extra period',
-        'Forward slash',
-        'HTML symbol',
-        'HTML Tag',
-        'Hyphen at end of line',
-        'Long line',
-        'Mismatched curly brackets',
-        'Mismatched quotes',
-        'Mismatched round brackets',
-        'Mismatched singlequotes',
-        'Mismatched square brackets',
-        'Mismatched underscores',
-        'Missing space',
-        'No CR',
-        'No punctuation at para end',
-        'Non-ASCII character',
-        'Non-ISO-8859 character',
-        'Paragraph starts with lower-case',
-        'Query angled bracket with From',
-        'Query digit in',
-        "Query had\/bad error",
-        "Query he\/be error",
-        "Query hut\/but error",
-        'Query I=exclamation mark',
-        'Query missing paragraph break',
-        'Query possible scanno',
-        'Query punctuation after',
-        'Query single character line',
-        'Query standalone 0',
-        'Query standalone 1',
-        'Query word',
-        'Short line',
-        'Spaced dash',
-        'Spaced doublequote',
-        'Spaced em-dash',
-        'Spaced punctuation',
-        'Spaced quote',
-        'Spaced singlequote',
-        'Tab character',
-        'Tilde character',
-        'Two successive CRs',
-        'Unspaced bracket',
-        'Unspaced quotes',
-        'Wrongspaced quotes',
-        'Wrongspaced singlequotes',
-    ) if $#{ $::lglobal{gcarray} } < 0;
     my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
     if ( defined( $::lglobal{gcviewoptspop} ) ) {
         $::lglobal{gcviewoptspop}->deiconify;
@@ -898,7 +843,7 @@ sub gcviewopts {
                 gcwindowpopulate($linesref);
             },
             -text  => 'Hide All',
-            -width => 12
+            -width => 14
         )->pack(
             -side   => 'left',
             -pady   => 10,
@@ -914,7 +859,7 @@ sub gcviewopts {
                 gcwindowpopulate($linesref);
             },
             -text  => 'See All',
-            -width => 12
+            -width => 14
         )->pack(
             -side   => 'left',
             -pady   => 10,
@@ -935,7 +880,7 @@ sub gcviewopts {
                     gcwindowpopulate($linesref);
                 },
                 -text  => "Load View: '$::booklang'",
-                -width => 12
+                -width => 14
             )->pack(
                 -side   => 'left',
                 -pady   => 10,
@@ -952,7 +897,7 @@ sub gcviewopts {
                     gcwindowpopulate($linesref);
                 },
                 -text  => 'Toggle View',
-                -width => 12
+                -width => 14
             )->pack(
                 -side   => 'left',
                 -pady   => 10,
@@ -972,8 +917,8 @@ sub gcviewopts {
                 }
                 gcwindowpopulate($linesref);
             },
-            -text  => 'Load My View',
-            -width => 12
+            -text  => 'Load Defaults',
+            -width => 14
         )->pack(
             -side   => 'left',
             -pady   => 10,
@@ -988,8 +933,8 @@ sub gcviewopts {
                 }
                 ::savesettings();
             },
-            -text  => 'Save My View',
-            -width => 12
+            -text  => 'Save As Defaults',
+            -width => 14
         )->pack(
             -side   => 'left',
             -pady   => 10,
