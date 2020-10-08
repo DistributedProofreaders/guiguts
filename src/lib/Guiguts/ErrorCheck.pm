@@ -353,7 +353,6 @@ sub errorcheckpop_up {
     $fh->close if $fh;
     unlink 'errors.err' unless $errorchecktype eq 'Load Checkfile';
     my $size = @errorchecklines;
-    $size = 1;
     if ( ( $errorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
         my $dialog = $top->Dialog(
             -text    => 'Could not validate: install java or use W3C CSS Validation web site.',
