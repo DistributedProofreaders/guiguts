@@ -408,8 +408,7 @@ sub menu_tools {
             -command => sub {
                 $textwindow->addGlobStart;
                 $textwindow->selectAll;
-                ::selectrewrap( $textwindow, $::lglobal{seepagenums},
-                    $::scannos_highlighted, $::rwhyphenspace );
+                ::selectrewrap();
                 $textwindow->addGlobEnd;
                 $textwindow->see('1.0');
             }
@@ -420,8 +419,7 @@ sub menu_tools {
             -accelerator => 'Ctrl+w',
             -command     => sub {
                 $textwindow->addGlobStart;
-                ::selectrewrap( $textwindow, $::lglobal{seepagenums},
-                    $::scannos_highlighted, $::rwhyphenspace );
+                ::selectrewrap();
                 $textwindow->addGlobEnd;
             }
         ],

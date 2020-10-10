@@ -58,11 +58,12 @@ sub knuth_wrapper {
 }
 
 sub selectrewrap {
-
-    #my ( $textwindow, $seepagenums, $scannos_highlighted ) = @_;
+    my $silentmode = shift;
     my $textwindow = $::textwindow;
-    ::hidepagenums();
-    ::savesettings();
+    unless ($silentmode) {
+        ::hidepagenums();
+        ::savesettings();
+    }
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
     my $thisblockstart;
@@ -123,7 +124,7 @@ sub selectrewrap {
         if ( $textwindow->get( '1.0', '1.end' ) eq '' ) {    #trap top line delete bug
             $toplineblank = 1;
         }
-        ::opstop();
+        ::opstop() unless $silentmode;
         $spaces = 0;
 
         # main while loop
@@ -149,17 +150,13 @@ sub selectrewrap {
             unless ($selection) {
                 $thisblockstart = $thisblockend;
                 $thisblockstart = $textwindow->index("$thisblockstart+1c");
-                last
-                  if ( $textwindow->compare( $thisblockstart, '>=', $end ) );
+                last if $textwindow->compare( $thisblockstart, '>=', $end );
                 last if $::operationinterrupt;
                 next;
             }
             last
-
               if ( ( $thisblockend eq $lastend )
-                || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    #quit if the search isn't advancing
-            $textwindow->see($thisblockend);
-            $textwindow->update;
+                || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
 
             # Check for block types that support blockwrap
             if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
@@ -295,26 +292,29 @@ sub selectrewrap {
             last unless $end;
             $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
             $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
+
+            # if there are blank lines before the next paragraph, advance past them
             while (1) {
-                $thisblockstart = $textwindow->index("$thisblockstart+1l");    #if there are blank lines before the next paragraph, advance past them
-                last
-                  if ( $textwindow->compare( $thisblockstart, '>=', 'end' ) );
-                next
-                  if ( $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '' );
+                $thisblockstart = $textwindow->index("$thisblockstart+1l");
+                last if $textwindow->compare( $thisblockstart, '>=', 'end' );
+                next if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '';
                 last;
             }
-            $::blockwrap = 0
-              if $::operationinterrupt;                                        #reset blockwrap if rewrap routine is interrupted
-            last if $::operationinterrupt;                                     #then quit
-            last
-              if ( $thisblockstart eq $end );                                  #quit if next paragrapn starts at end of selection
-            ::update_indicators();                                             # update line and page numbers
+
+            # reset blockwrap and quit if interrupted
+            if ($::operationinterrupt) {
+                $::blockwrap = 0;
+                last;
+            }
+            last if $thisblockstart eq $end;    # finish if next paragraph starts at end of selection
+
+            $textwindow->update unless $silentmode or ::updatedrecently();    # Too slow if update window after every paragraph
         }
-        ::killstoppop();
-        $::operationinterrupt = 0;
-        $textwindow->focus;
-        $textwindow->update;
-        $textwindow->Busy( -recurse => 1 );
+        unless ($silentmode) {
+            ::killstoppop();
+            $::operationinterrupt = 0;
+            $textwindow->Busy( -recurse => 1 );
+        }
 
         #if there are saved page markers, remove the temporary markers and reinsert the saved ones
         while (@savelist) {
@@ -324,25 +324,25 @@ sub selectrewrap {
             $textwindow->markSet( $markname, $markindex );
             $textwindow->markGravity( $markname, 'left' );
         }
-        if ( $start eq '1.0' ) {    #reinsert deleted top line if it was removed
-            if ( $toplineblank == 1 ) {    #(kinda half assed but it works)
-                $textwindow->insert( '1.0', "\n" );
-            }
-        }
+
+        # reinsert deleted top line if it was removed
+        $textwindow->insert( '1.0', "\n" ) if $start eq '1.0' and $toplineblank == 1;
+
         $textwindow->tagRemove( 'blockend', '1.0', 'end' );
     }
 
-    # If line consists solely of whitespace, empty it
-    while (1) {
-        $thisblockstart = $textwindow->search( '-regexp', '--', '^\s+$', '1.0', 'end' );
-        last unless $thisblockstart;
-        $textwindow->delete( $thisblockstart, "$thisblockstart lineend" );
-    }
-    $textwindow->see($start);
-    $textwindow->addGlobEnd;
+    # If any line consists solely of whitespace, empty it
+    $textwindow->delete( $thisblockstart, "$thisblockstart lineend" )
+      while $thisblockstart = $textwindow->search( '-regexp', '--', '^\s+$', '1.0', 'end' );
 
-    #$scannos_highlighted = $scannosave;
-    $textwindow->Unbusy( -recurse => 1 );
+    $textwindow->addGlobEnd;
+    unless ($silentmode) {
+        $textwindow->focus;
+        $textwindow->update;
+        $textwindow->see($start);
+        $textwindow->Unbusy;
+        ::update_indicators();
+    }
 }
 
 sub aligntext {
@@ -781,7 +781,7 @@ sub alignpopup {
 sub blockrewrap {
     my $textwindow = $::textwindow;
     $::blockwrap = 1;
-    selectrewrap( $textwindow, $::lglobal{seepagenums}, $::scannos_highlighted, $::rwhyphenspace );
+    selectrewrap();
     $::blockwrap = 0;
 }
 

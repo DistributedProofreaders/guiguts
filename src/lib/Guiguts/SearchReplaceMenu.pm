@@ -227,7 +227,7 @@ sub searchtext {
         $::searchendindex = $textwindow->index("$::searchstartindex +1c")
           unless $length;
 
-        unless ($silentmode) {
+        unless ( $silentmode or ::updatedrecently() ) {
             $textwindow->markSet( 'insert', $::searchstartindex )
               if $::searchstartindex;    # position the cursor at the index
             $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
@@ -246,14 +246,14 @@ sub searchtext {
         if ( $::sopt[2] ) {
             $::searchstartindex = $end;
 
-            unless ($silentmode) {
+            unless ( $silentmode or ::updatedrecently() ) {
                 $textwindow->markSet( 'insert', $::searchstartindex );
                 $textwindow->see($::searchendindex);
             }
         } else {
             $::searchendindex = $start;
 
-            unless ($silentmode) {
+            unless ( $silentmode or ::updatedrecently() ) {
                 $textwindow->markSet( 'insert', $start );
                 $textwindow->see($start);
             }
@@ -272,7 +272,7 @@ sub searchtext {
             }
         }
     }
-    unless ($silentmode) {
+    unless ( $silentmode or ::updatedrecently() ) {
         ::updatesearchlabels();
         ::update_indicators();
     }
@@ -1085,14 +1085,15 @@ sub replaceall {
     #print "repl:$replacement:ranges:@ranges:\n";
     $textwindow->focus;
     ::opstop();
-    while ( searchtext() ) {    # keep calling search() and replace() until you return undef
+
+    # keep calling search() and replace() until no more matches
+    while ( searchtext() ) {
         last unless replace($replacement);
         last if $::operationinterrupt;
-        $textwindow->update;
+        $textwindow->update unless ::updatedrecently();    # Too slow if update window after every match
     }
     $::operationinterrupt = 0;
-    $::lglobal{stoppop}->destroy;
-    undef $::lglobal{stoppop};
+    ::killstoppop();
 }
 
 # Reset search from start of doc if new search term

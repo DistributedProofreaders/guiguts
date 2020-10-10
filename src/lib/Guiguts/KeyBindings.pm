@@ -184,8 +184,7 @@ sub keybindings {
         '<Control-w>',
         sub {
             $textwindow->addGlobStart;
-            ::selectrewrap( $textwindow, $::lglobal{seepagenums},
-                $::scannos_highlighted, $::rwhyphenspace );
+            ::selectrewrap();
             $textwindow->addGlobEnd;
         }
     );

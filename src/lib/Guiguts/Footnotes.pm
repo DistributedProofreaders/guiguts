@@ -752,8 +752,7 @@ sub footnotefixup {
         ) if $::lglobal{fnsecondpass};
         $pointer = '';
         $anchor  = '';
-        $textwindow->yview('end');
-        $textwindow->see($start) if $start;
+        $textwindow->see($start) if $start and not ::updatedrecently();
         $textwindow->tagAdd( 'footnote', $start, $end );
         $textwindow->markSet( 'insert', $start );
         $::lglobal{fnindexbrowse}->insert( 'end', $::lglobal{fnindex} )
@@ -1156,10 +1155,10 @@ sub footnotetidy {
         $end = $textwindow->index( 'fne' . $::lglobal{fnindex} );
         $textwindow->delete("$end-1c");
         $textwindow->tagAdd( 'sel', 'fns' . $::lglobal{fnindex}, "$end+1c" );
-        ::selectrewrap( $textwindow, $::lglobal{seepagenums},
-            $::scannos_highlighted, $::rwhyphenspace );
+        ::selectrewrap('silentmode');    # slow to rewrap if screen updated for every note
         $::lglobal{fnindex}++;
         last if $::lglobal{fnindex} > $::lglobal{fntotal};
+        $textwindow->update unless ::updatedrecently();    # do occasional updates
     }
     $textwindow->addGlobEnd;
 }
