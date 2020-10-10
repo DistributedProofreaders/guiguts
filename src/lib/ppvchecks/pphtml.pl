@@ -8,7 +8,7 @@ use Getopt::Long;
 # command line version of pphtml.pl
 # author: Roger Frank (DP:rfrank)
 
-my $vnum = "1.15";
+my $vnum = "1.16";
 
 my @book         = ();
 my @css          = ();
@@ -110,9 +110,6 @@ sub runProgram {
             }
             if ( $line =~ /hr style/ ) {
                 printf LOGFILE ( "%d:0 Unconverted HR: %s\n", $count, $line );
-            }
-            if ( $line =~ /\S\/>/ ) {
-                printf LOGFILE ( "%d:0 Closing tag: %s\n", $count, $line );
             }
             if ( $line =~ /&amp;amp/ ) {
                 printf LOGFILE ( "%d:0 Ampersand: %s\n", $count, $line );
