@@ -443,7 +443,7 @@ sub html_convert_body {
 
     #step through all the lines
     while ( $step <= $ler ) {
-        unless ( $step % 500 ) {    #refresh window every 550 steps
+        unless ( ::updatedrecently() ) {    # slow if updated too frequently
             $textwindow->see("$step.0");
             $textwindow->update;
         }
@@ -972,8 +972,6 @@ sub html_convert_body {
                 push @contents, "<a href=\"#" . $aname . "\">" . $completeheader . "</a><br />\n";
             }
             $selection .= '<h2';
-            $textwindow->see("$step.0");
-            $textwindow->update;
 
             #open subheading with <p>
         } elsif ( $last5[2] && ( $last5[2] =~ /<h2/ ) && ($selection) ) {

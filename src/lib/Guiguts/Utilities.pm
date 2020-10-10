@@ -16,7 +16,7 @@ BEGIN {
       &sidenotes &poetrynumbers &get_page_number &externalpopup
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
-      &scrolldismiss);
+      &scrolldismiss &updatedrecently);
 
 }
 
@@ -2417,5 +2417,33 @@ sub viewprojectpage {
     ::setprojectid() unless $::projectid;
     ::launchurl( $::urlprojectpage . $::projectid ) if $::projectid;
 }
+
+# Allow for infrequent window updates to display during long operations
+# Timings are only accurate to seconds, not milliseconds
+# Routine keeps returning true until UPDATE_FREQUENCY seconds have passed.
+# It then resets the base time and returns false.
+# It is the user's responsibility to do the update when false is returned.
+#
+# Usage:
+#   while ( lots_of_repeats ) {
+#       my_processing_sub();
+#       my_update_sub() unless ::updatedrecently();
+#   }
+#
+
+{    # Block to make variables local & persistent
+    my $UPDATE_FREQUENCY = 1;        # in seconds
+    my $lastcalled       = time();
+
+    sub updatedrecently {
+
+        # Return true if not long since last time save
+        return 1 if time() - $lastcalled < $UPDATE_FREQUENCY;
+
+        # Too long since last time save, so save new time and return false
+        $lastcalled = time();
+        return 0;
+    }
+}    # end of variable-enclosing block
 
 1;

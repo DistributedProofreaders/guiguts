@@ -68,14 +68,7 @@ sub runtests {
 
     ok( 1 == do { $textwindow->selectAll; 1 }, "Select All" );
 
-    ok(
-        1 == do {
-            ::selectrewrap( $textwindow, $::lglobal{seepagenums},
-                $::scannos_highlighted, $::rwhyphenspace );
-            1;
-        },
-        "Rewrap Selection"
-    );
+    ok( 1 == do { ::selectrewrap(); 1 }, "Rewrap Selection" );
 
     ok( 1 == do { $textwindow->SaveUTF($WRAPOUTFILE); ::setedited(0); 1 },
         "File saved as $WRAPOUTFILE" );
