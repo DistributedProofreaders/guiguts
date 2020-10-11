@@ -1033,6 +1033,7 @@ sub initialize {
         -borderwidth => 2
     );
     $textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
+    ::displaylinenumbers($::vislnnm);
 
     %{ $::lglobal{utfblocks} } = (
         'Alphabetic Presentation Forms' => [ 'FB00', 'FB4F' ],
