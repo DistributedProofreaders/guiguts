@@ -433,7 +433,6 @@ sub menu_tools {
                 $textwindow->addGlobEnd;
             }
         ],
-        [ 'command', '~Interrupt Rewrap', -command => sub { $::operationinterrupt = 1 } ],
         [
             'command',
             'Clean ~Up Rewrap Markers',

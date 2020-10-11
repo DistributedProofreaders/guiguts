@@ -8,7 +8,7 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&update_sr_histories &add_search_history &searchtext &search_history &reg_check &getnextscanno &updatesearchlabels
-      &isvalid &swapterms &findascanno &reghint &replaceeval &replace &opstop &replaceall &killstoppop
+      &isvalid &swapterms &findascanno &reghint &replaceeval &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
       &loadscannos &replace_incr_counter &countmatches);
@@ -1011,33 +1011,6 @@ END
     return $replaceterm;
 }
 
-sub opstop {
-    if ( defined( $::lglobal{stoppop} ) ) {
-        $::lglobal{stoppop}->deiconify;
-        $::lglobal{stoppop}->raise;
-        $::lglobal{stoppop}->focus;
-    } else {
-        $::lglobal{stoppop} = $::top->Toplevel;
-        $::lglobal{stoppop}->title('Interrupt');
-        ::initialize_popup_with_deletebinding('stoppop');
-        my $frame      = $::lglobal{stoppop}->Frame->pack;
-        my $stopbutton = $frame->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { $::operationinterrupt = 1 },
-            -text             => 'Interrupt Operation',
-            -width            => 16
-        )->grid( -row => 1, -column => 1, -padx => 10, -pady => 10 );
-    }
-}
-
-sub killstoppop {
-    if ( $::lglobal{stoppop} ) {
-        $::lglobal{stoppop}->destroy;
-        undef $::lglobal{stoppop};
-    }
-    ;    #destroy interrupt popup
-}
-
 sub replaceall {
     my $replacement = shift;
     $replacement = '' unless $replacement;
@@ -1084,16 +1057,15 @@ sub replaceall {
 
     ::hidelinenumbers();    # To speed updating of text window
     $textwindow->focus;
-    ::opstop();
+    ::enable_interrupt();
 
     # keep calling search() and replace() until no more matches
     while ( searchtext() ) {
         last unless replace($replacement);
-        last if $::operationinterrupt;
+        last if ::query_interrupt();
         $textwindow->update unless ::updatedrecently();    # Too slow if update window after every match
     }
-    $::operationinterrupt = 0;
-    ::killstoppop();
+    ::disable_interrupt();
     ::restorelinenumbers();
 }
 
