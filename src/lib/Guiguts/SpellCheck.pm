@@ -362,7 +362,6 @@ sub spellcheckrange {
     ::hidepagenums();
     my $textwindow = $::textwindow;
     my @ranges     = $textwindow->tagRanges('sel');
-    $::operationinterrupt = 0;
     if (@ranges) {
         $::lglobal{spellindexstart} = $ranges[0];
         $::lglobal{spellindexend}   = $ranges[-1];

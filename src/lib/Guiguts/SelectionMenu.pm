@@ -71,7 +71,6 @@ sub selectrewrap {
     my $start;
     my $scannosave = $::scannos_highlighted;
     $::scannos_highlighted = 0;
-    $::operationinterrupt  = 0;
 
     if ( $range_total == 0 ) {
         return;
@@ -125,7 +124,7 @@ sub selectrewrap {
         if ( $textwindow->get( '1.0', '1.end' ) eq '' ) {    #trap top line delete bug
             $toplineblank = 1;
         }
-        ::opstop() unless $silentmode;
+        ::enable_interrupt() unless $silentmode;
         $spaces = 0;
 
         # main while loop
@@ -152,7 +151,7 @@ sub selectrewrap {
                 $thisblockstart = $thisblockend;
                 $thisblockstart = $textwindow->index("$thisblockstart+1c");
                 last if $textwindow->compare( $thisblockstart, '>=', $end );
-                last if $::operationinterrupt;
+                last if ::query_interrupt();
                 next;
             }
             last
@@ -303,7 +302,7 @@ sub selectrewrap {
             }
 
             # reset blockwrap and quit if interrupted
-            if ($::operationinterrupt) {
+            if ( ::query_interrupt() ) {
                 $::blockwrap = 0;
                 last;
             }
@@ -312,8 +311,7 @@ sub selectrewrap {
             $textwindow->update unless $silentmode or ::updatedrecently();    # Too slow if update window after every paragraph
         }
         unless ($silentmode) {
-            ::killstoppop();
-            $::operationinterrupt = 0;
+            ::disable_interrupt();
             $textwindow->Busy( -recurse => 1 );
         }
 
@@ -633,7 +631,6 @@ sub indent {
     my ( $textwindow, $indent ) = @_;
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
-    $::operationinterrupt = 0;
     if ( $range_total == 0 ) {
         return;
     } else {

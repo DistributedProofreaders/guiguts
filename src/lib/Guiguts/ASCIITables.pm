@@ -53,7 +53,6 @@ sub tablefx {
                 sub {
                     my @ranges      = $textwindow->tagRanges('linesel');
                     my $range_total = @ranges;
-                    $::operationinterrupt = 0;
                     $textwindow->addGlobStart;
                     if ( $range_total == 0 ) {
                         $textwindow->addGlobEnd;
@@ -234,7 +233,6 @@ sub tlineremove {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('linesel');
     my $range_total = @ranges;
-    $::operationinterrupt = 0;
     $textwindow->addGlobStart;
     if ( $range_total == 0 ) {
         $textwindow->addGlobEnd;
@@ -260,7 +258,6 @@ sub tlineselect {
     $textwindow->tagRemove( 'linesel', '1.0', 'end' );
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
-    $::operationinterrupt = 0;
 
     if ( $range_total == 0 ) {
         my $nextcolumn;
@@ -373,7 +370,6 @@ sub insertline {
     my ( $row, $col ) = split( /\./, $insert );
     my @ranges      = $textwindow->tagRanges('table');
     my $range_total = @ranges;
-    $::operationinterrupt = 0;
     if ( $range_total == 0 ) {
         $textwindow->bell;
         return;

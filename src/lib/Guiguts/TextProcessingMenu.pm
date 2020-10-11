@@ -335,7 +335,7 @@ sub fixup {
     my $update    = 0;
     my $edited    = 0;
     my $end       = $textwindow->index('end');
-    $::operationinterrupt = 0;
+    ::enable_interrupt();
 
     while ( $lastindex < $end ) {
         $line = $textwindow->get( $lastindex, $index );
@@ -442,9 +442,10 @@ sub fixup {
         $lastindex = $index;
         $index++;
         $index .= '.0';
-        if ( $index > $end )       { $index                = $end }
-        if ($::operationinterrupt) { $::operationinterrupt = 0; return }
+        if ( $index > $end ) { $index = $end }
+        return if ::query_interrupt();
     }
+    ::disable_interrupt();
     $textwindow->markSet( 'insert', 'end' );
     $textwindow->see('end');
     ::update_indicators();
@@ -506,7 +507,6 @@ sub endofline {
         $start = $ranges[0];
         $end   = $ranges[-1];
     }
-    $::operationinterrupt = 0;
     $textwindow->FindAndReplaceAll( '-regex', '-nocase', '\s+$', '' );
     ::update_indicators();
 }

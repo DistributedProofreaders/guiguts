@@ -16,7 +16,8 @@ BEGIN {
       &sidenotes &poetrynumbers &get_page_number &externalpopup
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
-      &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers);
+      &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
+      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt);
 
 }
 
@@ -2460,5 +2461,56 @@ sub hidelinenumbers {
 sub restorelinenumbers {
     $::textwindow->showlinenum if $::vislnnm;
 }
+
+# Allow for long operations to be interrupted by the user
+#
+# Usage:
+#   ::enable_interrupt();               # Pop interrupt dialog
+#   while ( lots_of_repeats ) {
+#       my_processing_sub();
+#       last if ::query_interrupt();    # User has interrupted
+#   }
+#   ::disable_interrupt();
+#
+# Note that query_interrupt calls disable_interrupt when returning true,
+# so it's OK to use return instead of last in above example.
+
+{    # Block to make variable local & persistent
+    my $operationinterrupt = 0;
+
+    # Popup the interrupt dialog so user can interrupt operation
+    sub enable_interrupt {
+        disable_interrupt();    # Reset mechanism
+        $::lglobal{stoppop} = $::top->Toplevel;
+        $::lglobal{stoppop}->title('Interrupt');
+        ::initialize_popup_with_deletebinding('stoppop');
+        my $frame      = $::lglobal{stoppop}->Frame->pack;
+        my $stopbutton = $frame->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { set_interrupt(); },
+            -text             => 'Interrupt Operation',
+            -width            => 16
+        )->grid( -row => 1, -column => 1, -padx => 10, -pady => 10 );
+    }
+
+    # Destroy the dialog and ensure flag is cleared
+    sub disable_interrupt {
+        killpopup('stoppop');
+        $operationinterrupt = 0;
+    }
+
+    # Set the interrupt flag, so next time query_interrupt is called, it will return true
+    sub set_interrupt {
+        $operationinterrupt = 1;
+    }
+
+    # Return whether user has interrupted the operation.
+    sub query_interrupt {
+        return 0 unless $operationinterrupt;
+        disable_interrupt();    # If interrupted destroy dialog
+        return 1;
+    }
+
+}    # end of variable-enclosing block
 
 1;
