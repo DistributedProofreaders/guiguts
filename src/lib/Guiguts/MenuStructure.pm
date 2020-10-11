@@ -787,12 +787,7 @@ sub menu_preferences_appearance {
             -variable   => \$::vislnnm,
             -onvalue    => 1,
             -offvalue   => 0,
-            -command    => sub {
-                $::vislnnm
-                  ? $textwindow->showlinenum
-                  : $textwindow->hidelinenum;
-                ::savesettings();
-            }
+            -command    => sub { ::displaylinenumbers($::vislnnm) },
         ],
         [
             Checkbutton => 'Auto Show Page Images',

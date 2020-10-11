@@ -61,6 +61,7 @@ sub selectrewrap {
     my $silentmode = shift;
     my $textwindow = $::textwindow;
     unless ($silentmode) {
+        ::hidelinenumbers();    # To speed updating of text window
         ::hidepagenums();
         ::savesettings();
     }
@@ -342,6 +343,7 @@ sub selectrewrap {
         $textwindow->see($start);
         $textwindow->Unbusy;
         ::update_indicators();
+        ::restorelinenumbers();
     }
 }
 
