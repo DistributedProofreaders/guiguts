@@ -673,6 +673,7 @@ sub fnview {
 sub footnotefixup {
     my $top        = $::top;
     my $textwindow = $::textwindow;
+    ::hidelinenumbers();    # To speed updating of text window
     ::hidepagenums();
     ::operationadd('Reindex footnotes') if $::lglobal{fnsecondpass} == 1;
     my ( $start, $end, $anchor, $pointer );
@@ -844,6 +845,7 @@ sub footnotefixup {
         $::lglobal{fnmvinlinebutton}->configure( '-state' => 'normal' );
     }
     footnoteshow();
+    ::restorelinenumbers();
 }
 
 sub getlz {
@@ -1143,7 +1145,9 @@ sub footnotetidy {
     footnotefixup();
     return unless $::lglobal{fntotal} > 0;
     $::lglobal{fnindex} = 1;
+    ::hidelinenumbers();    # To speed updating of text window
     $textwindow->addGlobStart;
+
     while (1) {
         $begin = $textwindow->index( 'fns' . $::lglobal{fnindex} );
         $textwindow->delete( "$begin+1c", "$begin+10c" );
@@ -1161,6 +1165,7 @@ sub footnotetidy {
         $textwindow->update unless ::updatedrecently();    # do occasional updates
     }
     $textwindow->addGlobEnd;
+    ::restorelinenumbers();
 }
 
 sub setanchor {

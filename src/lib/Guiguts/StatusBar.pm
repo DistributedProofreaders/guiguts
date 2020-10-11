@@ -149,12 +149,16 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         -data   => 'R0lGODlhBwAEAIAAAAAAAP///yH5BAEAAAEALAAAAAAHAAQAAAIIhA+BGWoNWSgAOw=='
     );
     ::drag($textwindow);
+
+    # Row and column of insert position
     $::lglobal{current_line_label} = $::counter_frame->Label(
         -text       => 'L:1/1 C:0',
         -width      => 18,
         -relief     => 'ridge',
         -background => 'gray',
     )->grid( -row => 1, -column => 0, -sticky => 'nw' );
+
+    # Mouse-1 to go to line number
     $::lglobal{current_line_label}->bind(
         '<1>',
         sub {
@@ -163,16 +167,15 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
             ::update_indicators();
         }
     );
+
+    # Mouse-3 to toggle line number display
     $::lglobal{current_line_label}->bind(
         '<3>',
         sub {
-            if   ($::vislnnm) { $::vislnnm = 0 }
-            else              { $::vislnnm = 1 }
-            $textwindow->showlinenum if $::vislnnm;
-            $textwindow->hidelinenum unless $::vislnnm;
-            ::savesettings();
+            ::displaylinenumbers( !$::vislnnm );
         }
     );
+
     $::lglobal{selectionlabel} = $::counter_frame->Label(
         -text       => ' No Selection ',
         -relief     => 'ridge',

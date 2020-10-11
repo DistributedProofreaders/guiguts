@@ -1082,7 +1082,7 @@ sub replaceall {
         }
     }
 
-    #print "repl:$replacement:ranges:@ranges:\n";
+    ::hidelinenumbers();    # To speed updating of text window
     $textwindow->focus;
     ::opstop();
 
@@ -1094,6 +1094,7 @@ sub replaceall {
     }
     $::operationinterrupt = 0;
     ::killstoppop();
+    ::restorelinenumbers();
 }
 
 # Reset search from start of doc if new search term

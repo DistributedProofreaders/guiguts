@@ -438,6 +438,8 @@ sub html_convert_body {
         $blkclose = '</p></blockquote>';
     }
 
+    ::hidelinenumbers();    # To speed updating of text window
+
     #last line and column
     ( $ler, $lec ) = split /\./, $thisblockend;
 
@@ -1021,7 +1023,7 @@ sub html_convert_body {
     $contentstext = "<p>" . $contentstext . "</p>"
       unless is_paragraph_open( $textwindow, $incontents );
     $textwindow->insert( $incontents, $contentstext ) if @contents;
-    return;
+    ::restorelinenumbers();
 }
 
 # Put <div class="chapter"> before, and </div> after h2 elements, including pagenum

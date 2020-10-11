@@ -16,7 +16,7 @@ BEGIN {
       &sidenotes &poetrynumbers &get_page_number &externalpopup
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
-      &scrolldismiss &updatedrecently);
+      &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers);
 
 }
 
@@ -872,9 +872,6 @@ sub initialize {
                 return unless $::nohighlights;
                 $::textwindow->HighlightAllPairsBracketingCursor;
             },
-            sub {
-                $::textwindow->hidelinenum unless $::vislnnm;
-            }
         ]
     );
 
@@ -2445,5 +2442,23 @@ sub viewprojectpage {
         return 0;
     }
 }    # end of variable-enclosing block
+
+# Show/hide line numbers based on input argument
+sub displaylinenumbers {
+    $::vislnnm = shift;
+    $::vislnnm ? $::textwindow->showlinenum : $::textwindow->hidelinenum;
+    ::savesettings();
+}
+
+# Temporarily hide line numbers to speed up some operations
+# Note that the global flag is not changed
+sub hidelinenumbers {
+    $::textwindow->hidelinenum if $::vislnnm;
+}
+
+# Restore the line numbers after they have been temporarily hidden
+sub restorelinenumbers {
+    $::textwindow->showlinenum if $::vislnnm;
+}
 
 1;
