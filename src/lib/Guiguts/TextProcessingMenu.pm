@@ -326,28 +326,30 @@ sub fixpopup {
 ## Fixup Popup
 sub fixup {
     my $textwindow = $::textwindow;
+    ::hidelinenumbers();    # To speed updating of text window
     ::operationadd('Fixup Routine');
     ::hidepagenums();
     my ($line);
     my $index     = '1.0';
     my $lastindex = '1.0';
     my $inblock   = 0;
-    my $update    = 0;
-    my $edited    = 0;
     my $end       = $textwindow->index('end');
     ::enable_interrupt();
 
     while ( $lastindex < $end ) {
+        my $edited = 0;     # if current line has been edited
         $line = $textwindow->get( $lastindex, $index );
         if ( $line =~ /\/[\$\*Xx]/ ) { $inblock = 1 }
         if ( $line =~ /[\$\*]\// )   { $inblock = 0 }
         unless ( $inblock && ${ $::lglobal{fixopt} }[0] ) {
+
+            # remove multiple spaces
             if ( ${ $::lglobal{fixopt} }[2] ) {
                 while ( $line =~ s/(?<=\S)\s\s+(?=\S)/ / ) { $edited++ }
-                ;    # remove multiple spaces
             }
             if ( ${ $::lglobal{fixopt} }[1] ) {
-                ;    # Remove spaces before hyphen (only if hyphen isn't first on line, like poetry)
+
+                # Remove spaces before hyphen (only if hyphen isn't first on line, like poetry)
                 $edited++ if $line =~ s/(\S) +-/$1-/g;
                 $edited++ if $line =~ s/- /-/g;          # Remove space after hyphen
                 $edited++
@@ -428,27 +430,28 @@ sub fixup {
                 $edited++ if $line =~ s/\s+«/«/g;
                 $edited++ if $line =~ s/»\s+/»/g;
             }
-            $update++                if ( ( $index % 250 ) == 0 );
-            $textwindow->see($index) if ( $edited || $update );
-            if ($edited) {
-                $textwindow->replacewith( $lastindex, $index, $line );
-            }
+            $textwindow->replacewith( $lastindex, $index, $line ) if $edited;
         }
-        $textwindow->markSet( 'insert', $index ) if $update;
-        $textwindow->update   if ( $edited || $update );
-        ::update_indicators() if ( $edited || $update );
-        $edited    = 0;
-        $update    = 0;
+        unless ( ::updatedrecently() ) {
+            $textwindow->see($index);
+            $textwindow->markSet( 'insert', $index );
+            $textwindow->update;
+            ::update_indicators();
+        }
         $lastindex = $index;
         $index++;
         $index .= '.0';
         if ( $index > $end ) { $index = $end }
-        return if ::query_interrupt();
+        if ( ::query_interrupt() ) {
+            ::restorelinenumbers();
+            return;
+        }
     }
     ::disable_interrupt();
     $textwindow->markSet( 'insert', 'end' );
     $textwindow->see('end');
     ::update_indicators();
+    ::restorelinenumbers();
 }
 
 sub text_uppercase_smallcaps {
