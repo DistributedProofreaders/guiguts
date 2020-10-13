@@ -84,10 +84,7 @@ sub spellchecknext {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );    # unhighlight any higlighted text
     spellclearvars();
     $::lglobal{misspelledlabel}->configure( -text => 'Not in Dictionary:' );
-    unless ($::nobell) {
-        $textwindow->bell
-          if ( $::lglobal{nextmiss} >= ( scalar( @{ $::lglobal{misspelledlist} } ) ) );
-    }
+    ::soundbell() if $::lglobal{nextmiss} >= ( scalar( @{ $::lglobal{misspelledlist} } ) );
     $::lglobal{suggestionlabel}->configure( -text => 'Suggestions:' );
     return
       if $::lglobal{nextmiss} >= ( scalar( @{ $::lglobal{misspelledlist} } ) );    # no more misspelled words, bail
@@ -201,7 +198,7 @@ sub spellreplace {
     my $textwindow = $::textwindow;
     ::hidepagenums();
     my $replacement = $::lglobal{spreplaceentry}->get;          # get the word for the replacement box
-    $textwindow->bell unless ( $replacement || $::nobell );
+    ::soundbell() unless $replacement;
     my $misspelled = $::lglobal{misspelledentry}->get;
     return unless $replacement;
     $textwindow->replacewith( $::lglobal{matchindex},
@@ -240,8 +237,10 @@ sub spellmisspelled_replace {
 sub spelladdword {
     my $textwindow = $::textwindow;
     my $term       = $::lglobal{misspelledentry}->get;
-    $textwindow->bell unless ( $term || $::nobell );
-    return            unless $term;
+    unless ($term) {
+        ::soundbell();
+        return;
+    }
     print OUT "*$term\n";
     print OUT "#\n";
 }
@@ -250,8 +249,10 @@ sub spelladdword {
 sub spellmyaddword {
     my $textwindow = $::textwindow;
     my $term       = shift;
-    $textwindow->bell unless ( $term || $::nobell );
-    return            unless $term;
+    unless ($term) {
+        ::soundbell();
+        return;
+    }
     getprojectdic();
     $::projectdict{$term} = '';
     open( my $dic, '>:bytes', "$::lglobal{projectdictname}" );
@@ -446,8 +447,10 @@ sub spellignoreall {
     my $textwindow = $::textwindow;
     my $next;
     my $word = $::lglobal{misspelledentry}->get;        # get word you want to ignore
-    $textwindow->bell unless ( $word || $::nobell );
-    return            unless $word;
+    unless ($word) {
+        ::soundbell();
+        return;
+    }
     my @ignorelist = @{ $::lglobal{misspelledlist} };    # copy the misspellings array
     @{ $::lglobal{misspelledlist} } = ();                # then clear it
     foreach my $next (@ignorelist) {                     # then put all of the words you are NOT ignoring back into the

@@ -1126,7 +1126,7 @@ sub footnoteadjust {
       if $::lglobal{footpop};
 
     if ( $end eq "$start+10c" ) {
-        $textwindow->bell unless $::nobell;
+        ::soundbell();
         return;
     }
     $::lglobal{fnarray}->[ $::lglobal{fnindex} ][0] = $start if $start;

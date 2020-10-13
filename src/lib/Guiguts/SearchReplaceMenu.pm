@@ -260,7 +260,7 @@ sub searchtext {
         }
         $::lglobal{selectionsearch} = 0;
         unless ( $::lglobal{regaa} or $silentmode ) {
-            $textwindow->bell unless $::nobell;
+            ::soundbell();
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
 
@@ -663,7 +663,7 @@ sub findascanno {
     $word = $::lglobal{scannosarray}[ $::lglobal{scannosindex} ];
     $::lglobal{searchentry}->delete( '1.0', 'end' );
     $::lglobal{replaceentry}->delete( '1.0', 'end' );
-    $textwindow->bell unless ( $word || $::nobell || $::lglobal{regaa} );
+    ::soundbell()                   unless ( $word || $::lglobal{regaa} );
     $::lglobal{searchbutton}->flash unless ( $word || $::lglobal{regaa} );
     $::lglobal{regtracker}->configure(
         -text => ( $::lglobal{scannosindex} + 1 ) . '/' . scalar( @{ $::lglobal{scannosarray} } ) );
@@ -2044,7 +2044,7 @@ sub orphanedbrackets {
                     $brkresult->configure( -text => "No more orphaned $brackets found." );
                     $brnextbt->configure( -state => 'disabled', -text => 'Next' );
                     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-                    $textwindow->bell unless $::nobell;
+                    ::soundbell();
                     return;
                 }
                 brnext( $brkresult, $brnextbt );
@@ -2095,7 +2095,7 @@ sub orphanedbrackets {
             $brkresult->configure( -text => "No more orphaned $brackets found." );
             $brnextbt->configure( -text => 'Next', -state => 'disabled' );
             $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-            $textwindow->bell unless $::nobell;
+            ::soundbell();
         }
     }
 
@@ -2196,7 +2196,7 @@ sub orphanedbrackets {
             $brkresult->configure( -text => "No more orphaned $brackets found." );
             $brnextbt->configure( -text => 'Next', -state => 'disabled' );
             $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-            $textwindow->bell unless $::nobell;
+            ::soundbell();
         }
     }
 }

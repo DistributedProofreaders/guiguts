@@ -2738,7 +2738,7 @@ sub markup {
                 if ( exists $inthash{ '#' . ( lc($match) ) } ) {
                     $textwindow->tagAdd( 'highlight', $anchorstartindex, $anchorendindex );
                     $textwindow->see($anchorstartindex);
-                    $textwindow->bell unless $::nobell;
+                    ::soundbell();
                     $top->messageBox(
                         -icon    => 'error',
                         -message => "More than one instance of the anchor $match2 in text.",

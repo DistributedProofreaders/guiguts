@@ -17,7 +17,7 @@ BEGIN {
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
-      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt);
+      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell);
 
 }
 
@@ -1899,13 +1899,14 @@ sub setbookmark {
 sub gotobookmark {
     my $bookmark   = shift;
     my $textwindow = $::textwindow;
-    $textwindow->bell unless ( $::bookmarks[$bookmark] || $::nobell );
-    $textwindow->see("bkmk$bookmark") if $::bookmarks[$bookmark];
-    $textwindow->markSet( 'insert', "bkmk$bookmark" )
-      if $::bookmarks[$bookmark];
+    if ( $::bookmarks[$bookmark] ) {
+        $textwindow->see("bkmk$bookmark");
+        $textwindow->markSet( 'insert', "bkmk$bookmark" );
+        $textwindow->tagAdd( 'bkmk', "bkmk$bookmark", "bkmk$bookmark+1c" );
+    } else {
+        ::soundbell();
+    }
     ::update_indicators();
-    $textwindow->tagAdd( 'bkmk', "bkmk$bookmark", "bkmk$bookmark+1c" )
-      if $::bookmarks[$bookmark];
 }
 
 sub seeindex {
@@ -2019,9 +2020,11 @@ sub sidenotes {
         $sdnoteindexstart = "$bracketstartndx+10c";
     }
     my $error = $textwindow->search( '-regexp', '--', '(?<=[^\[])[Ss]idenote[: ]', '1.0', 'end' );
-    unless ($::nobell) { $textwindow->bell if $error }
-    $textwindow->see($error)                 if $error;
-    $textwindow->markSet( 'insert', $error ) if $error;
+    if ($error) {
+        ::soundbell();
+        $textwindow->see($error);
+        $textwindow->markSet( 'insert', $error );
+    }
 }
 
 # Find and format poetry line numbers. They need to be to the right, at
@@ -2513,5 +2516,20 @@ sub restorelinenumbers {
     }
 
 }    # end of variable-enclosing block
+
+# Sound bell unless global nobell flag is set
+# Also flash first label on status bar
+sub soundbell {
+    $::textwindow->bell unless $::nobell;
+    return              unless $::lglobal{current_line_label};
+    for ( 1 .. 5 ) {
+        $::lglobal{current_line_label}->after( $::lglobal{delay} );
+        $::lglobal{current_line_label}->configure( -background => $::activecolor );
+        $::lglobal{current_line_label}->update;
+        $::lglobal{current_line_label}->after( $::lglobal{delay} );
+        $::lglobal{current_line_label}->configure( -background => 'gray' );
+        $::lglobal{current_line_label}->update;
+    }
+}
 
 1;
