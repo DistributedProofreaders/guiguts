@@ -154,7 +154,7 @@ sub pnumadjust {
         my $frame5 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         $frame5->Button(
             -activebackground => $::activecolor,
-            -command          => sub { $textwindow->bell unless ::pageadd() },
+            -command          => sub { ::soundbell() unless ::pageadd() },
             -text             => 'Add',
             -width            => 8
         )->grid( -row => 1, -column => 1 );
@@ -325,8 +325,10 @@ sub pgrenum {    # Re sequence page markers
         $end = $::lglobal{pagenumentry}->get unless $end;
         while ( $marks[$#marks] ne $end ) { pop @marks }
     }
-    $textwindow->bell unless $offset;
-    return            unless $offset;
+    unless ($offset) {
+        ::soundbell();
+        return;
+    }
     ::hidepagenums();
     $textwindow->markSet( 'insert', '1.0' );
     %::pagenumbers = ();

@@ -371,7 +371,7 @@ sub insertline {
     my @ranges      = $textwindow->tagRanges('table');
     my $range_total = @ranges;
     if ( $range_total == 0 ) {
-        $textwindow->bell;
+        ::soundbell();
         return;
     } else {
         $textwindow->addGlobStart;

@@ -746,7 +746,7 @@ sub gotopage {
             -command => sub {
                 if ( ( defined $_[0] ) and ( $_[0] eq 'OK' ) ) {
                     unless ( $::lglobal{lastpage} ) {
-                        $::lglobal{gotopagpop}->bell;
+                        ::soundbell();
                         $::lglobal{gotopagpop}->destroy;
                         undef $::lglobal{gotopagpop};
                         return;
@@ -761,7 +761,7 @@ sub gotopage {
                     unless ( exists $::pagenumbers{ 'Pg' . $::lglobal{lastpage} }
                         && defined $::pagenumbers{ 'Pg' . $::lglobal{lastpage} } ) {
                         delete $::pagenumbers{ 'Pg' . $::lglobal{lastpage} };
-                        $::lglobal{gotopagpop}->bell;
+                        ::soundbell();
                         $::lglobal{gotopagpop}->destroy;
                         undef $::lglobal{gotopagpop};
                         return;
@@ -808,7 +808,7 @@ sub gotolabel {
                         }
                     }
                     unless ($mark) {
-                        $::lglobal{gotolabpop}->bell;
+                        ::soundbell();
                         $::lglobal{gotolabpop}->destroy;
                         undef $::lglobal{gotolabpop};
                         return;
