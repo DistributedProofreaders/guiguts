@@ -29,12 +29,12 @@ sub menurebuild {
 }
 
 sub menu_file {
-    my ( $textwindow, $top ) = ( $::textwindow, $::top );
+    my $textwindow = $::textwindow;
     [
         [
             'command', '~Open...',
             -accelerator => 'Ctrl+o',
-            -command     => sub { ::file_open($textwindow) }
+            -command     => sub { ::file_open($textwindow); }
         ],
         [ 'separator', '' ],
         map ( [
@@ -52,27 +52,18 @@ sub menu_file {
         [
             'command', 'Save ~As...',
             -accelerator => 'Ctrl+Shift+s',
-            -command     => sub { ::file_saveas($textwindow) }
+            -command     => sub { ::file_saveas($textwindow); }
         ],
-        [ 'command',   'Sa~ve a Copy As...', -command => sub { ::file_savecopyas($textwindow) } ],
+        [ 'command',   'Sa~ve a Copy As...', -command => sub { ::file_savecopyas($textwindow); } ],
         [ 'command',   '~Include File...',   -command => sub { ::file_include($textwindow); } ],
-        [ 'command',   '~Close',             -command => sub { ::file_close($textwindow) } ],
+        [ 'command',   '~Close',             -command => sub { ::file_close($textwindow); } ],
         [ 'separator', '' ],
 
         menu_cascade( '~Project', &menu_file_project ),
 
-        [
-            'command',
-            'I~mport Prep Text Files...',
-            -command => sub { ::file_import_preptext( $textwindow, $top ) }
-        ],
-        [
-            'command',
-            'E~xport as Prep Text Files...',
-            -command => sub { ::file_export_preptext('separatefiles') }
-        ],
-        [ 'separator', '' ],
-        [ 'command', '~Quit', -command => \&::_exit ],
+        menu_cascade( 'Co~ntent Providing', &menu_file_content_providing ),
+
+        [ 'command', 'E~xit', -command => \&::_exit ],
     ];
 }
 
@@ -93,27 +84,43 @@ sub menu_file_project {
         [ 'command',   'Set Pro~ject ID...',       -command => \&::setprojectid ],
         [ 'command',   'Set I~mage Directory...',  -command => \&::setpngspath ],
         [ 'separator', '' ],
-        [ 'command',   'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
-        [ 'command',   '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
-        [ 'command',   '~Set Page Markers',               -command => \&::file_mark_pages ],
-        [ 'command',   'Configure Page La~bels...',       -command => \&::pageadjust ],
+        [ 'command', 'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
+        [ 'command', '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
+        [ 'command', '~Set Page Markers',               -command => \&::file_mark_pages ],
+        [ 'command', 'Configure Page La~bels...',       -command => \&::pageadjust ],
+    ];
+}
+
+sub menu_file_content_providing {
+    my ( $textwindow, $top ) = ( $::textwindow, $::top );
+    [
+        [
+            'command',
+            '~Import Prep Text Files...',
+            -command => sub { ::file_import_preptext( $textwindow, $top ); }
+        ],
+        [
+            'command',
+            '~Export as Prep Text Files...',
+            -command => sub { ::file_export_preptext('separatefiles'); }
+        ],
         [ 'separator', '' ],
         [
             'command',
-            'Export One File with Page Separators...',
-            -command => sub { ::file_export_preptext('onefile') }
+            'Export One File with Page ~Separators...',
+            -command => sub { ::file_export_preptext('onefile'); }
         ],
         [
             'command',
-            'Export One File with Page Sep. Markup...',
-            -command => sub { ::file_export_pagemarkup(); }
-        ],
-        [
-            'command',
-            'Import One File with Page Sep. Markup...',
+            'I~mport One File with Page Sep. Markup...',
             -command => sub { ::file_import_markup(); }
         ],
-    ]
+        [
+            'command',
+            'E~xport One File with Page Sep. Markup...',
+            -command => sub { ::file_export_pagemarkup(); }
+        ],
+    ];
 }
 
 sub menu_edit {
@@ -133,17 +140,17 @@ sub menu_edit {
         [
             'command', 'Cut',
             -accelerator => 'Ctrl+x',
-            -command     => sub { ::cut() },
+            -command     => sub { ::cut(); },
         ],
         [
             'command', 'Copy',
             -accelerator => 'Ctrl+c',
-            -command     => sub { ::textcopy() },
+            -command     => sub { ::textcopy(); },
         ],
         [
             'command', 'Paste',
             -accelerator => 'Ctrl+v',
-            -command     => sub { ::paste() },
+            -command     => sub { ::paste(); },
         ],
         [ 'separator', '' ],
         [
@@ -163,48 +170,35 @@ sub menu_edit {
         ],
         [ 'separator', '' ],
         [
-            'command',
-            'Select All',
-            -command => sub {
-                $textwindow->selectAll;
-            },
-            -accelerator => 'Ctrl+a'
+            'command', 'Select All',
+            -accelerator => 'Ctrl+a',
+            -command     => sub { $textwindow->selectAll; },
         ],
         [
-            'command',
-            'Unselect All',
-            -command => sub {
-                $textwindow->unselectAll;
-            },
+            'command', 'Unselect All', -command => sub { $textwindow->unselectAll; },
         ],
         [ 'separator', '' ],
         [
-            'command',
-            '~lowercase selection',
+            'command', '~lowercase selection',
             -accelerator => 'Ctrl+l',
             -command     => sub { ::case( $textwindow, 'lc' ); },
         ],
         [
-            'command',
-            '~Sentence case Selection',
-            -command => sub { ::case( $textwindow, 'sc' ); }
+            'command', '~Sentence case Selection', -command => sub { ::case( $textwindow, 'sc' ); }
         ],
         [
-            'command',
-            '~Title Case Selection',
+            'command', '~Title Case Selection',
             -accelerator => 'Ctrl+t',
             -command     => sub { ::case( $textwindow, 'tc' ); },
         ],
         [
-            'command',
-            '~UPPERCASE Selection',
+            'command', '~UPPERCASE Selection',
             -accelerator => 'Ctrl+u',
             -command     => sub { ::case( $textwindow, 'uc' ); },
         ],
         [ 'separator', '' ],
         [
-            'command',
-            'Su~rround Selection With...',
+            'command', 'Su~rround Selection With...',
             -accelerator => 'Ctrl+r',
             -command     => \&::surround
         ],
@@ -212,7 +206,7 @@ sub menu_edit {
             'command',
             'Fl~ood Fill Selection With...',
             -accelerator => 'Ctrl+e',
-            -command     => sub { ::flood() }
+            -command     => sub { ::flood(); }
         ],
     ];
 }
@@ -352,7 +346,7 @@ sub menu_tools {
         [
             'command',
             'Spell Check in ~Multiple Languages',
-            -command => sub { ::spellmultiplelanguages( $textwindow, $top ) }
+            -command => sub { ::spellmultiplelanguages( $textwindow, $top ); }
         ],
         [
             'command', 'Stealt~h Scannos...',
@@ -458,13 +452,13 @@ sub menu_tools_charactertools {
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',          -command => \&::greekpopup ],
         [ 'command',   'Find and ~Convert Greek...',      -command => \&::findandextractgreek ],
-    ]
+    ];
 }
 
 sub menu_txt {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
-        [ 'command', "Txt Conversion ~Palette...", -command => sub { ::txt_convert_palette() } ],
+        [ 'command', "Txt Conversion ~Palette...", -command => sub { ::txt_convert_palette(); } ],
         [ 'separator', '' ],
         [
             'command',
@@ -476,7 +470,7 @@ sub menu_txt {
         [
             'command',
             "Convert ~Bold",
-            -command => sub { ::text_convert_bold( $textwindow, $::bold_char ) }
+            -command => sub { ::text_convert_bold( $textwindow, $::bold_char ); }
         ],
         [
             'command',
@@ -498,7 +492,9 @@ sub menu_txt {
                 $textwindow->addGlobEnd;
             }
         ],
-        [ 'command', "Auto-Convert ~Options...", -command => sub { ::text_convert_options($top) } ],
+        [
+            'command', "Auto-Convert ~Options...", -command => sub { ::text_convert_options($top); }
+        ],
         [ 'separator', '' ],
         [
             'command',
@@ -569,10 +565,12 @@ sub menu_html {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
         [
-            'command', 'HTML ~Generator...', -command => sub { ::htmlgenpopup( $textwindow, $top ) }
+            'command',
+            'HTML ~Generator...',
+            -command => sub { ::htmlgenpopup( $textwindow, $top ); }
         ],
-        [ 'command', 'HTML ~Markup...', -command => sub { ::htmlmarkpopup( $textwindow, $top ) } ],
-        [ 'command',   'HTML Auto Inde~x (List)', -command => sub { ::autoindex($textwindow) } ],
+        [ 'command', 'HTML ~Markup...', -command => sub { ::htmlmarkpopup( $textwindow, $top ); } ],
+        [ 'command',   'HTML Auto Inde~x (List)', -command => sub { ::autoindex($textwindow); } ],
         [ 'separator', '' ],
         [
             'command',
@@ -654,7 +652,7 @@ sub menu_html {
                 ::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
             }
         ],
-        [ 'command', 'EB~ookMaker', -command => sub { ::ebookmaker() } ],
+        [ 'command', 'EB~ookMaker', -command => sub { ::ebookmaker(); } ],
     ];
 }
 
@@ -675,8 +673,7 @@ sub menu_unicode {
                 -accelerator => $::lglobal{utfblocks}{$_}[0] . ' - ' . $::lglobal{utfblocks}{$_}[1]
             ],
             ( sort menu_unicode_sort ( keys %{ $::lglobal{utfblocks} } ) ) ),
-    ],
-      ;
+    ];
 }
 
 # Returns 1 if Unicode menu column break should be inserted at the given block name
@@ -754,7 +751,7 @@ sub menu_preferences_filepaths {
             -offvalue   => 0
         ],
         [ 'command', 'Set DP ~URLs...', -command => \&::setDPurls, ],
-    ]
+    ];
 }
 
 sub menu_preferences_appearance {
@@ -926,8 +923,7 @@ sub menu_preferences_toolbar {
             -onvalue  => 1,
             -offvalue => 0
         ],
-    ],
-      ;
+    ];
 }
 
 sub menu_preferences_backup {
@@ -955,7 +951,7 @@ sub menu_preferences_backup {
             -onvalue    => 1,
             -offvalue   => 0
         ]
-    ]
+    ];
 }
 
 sub menu_preferences_processing {
@@ -1023,7 +1019,7 @@ sub menu_preferences_processing {
             -onvalue    => 'css21',
             -offvalue   => 'css3',
         ],
-    ]
+    ];
 }
 
 sub menu_help {
@@ -1079,7 +1075,7 @@ sub menu_cascade {
         Cascade    => shift,
         -tearoff   => 1,
         -menuitems => shift,
-    ]
+    ];
 }
 
 1;
