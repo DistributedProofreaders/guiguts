@@ -299,6 +299,9 @@ sub countmatches {
     my $savesopt2 = $::sopt[2];
     $::sopt[2] = 0;
 
+    # save Start at Beginning flag, because searching clears it
+    my $savesopt4 = $::sopt[4];
+
     # save selectionsearch flag and clear it
     my $saveselectionsearch = $::lglobal{selectionsearch};
     $::lglobal{selectionsearch} = 0;
@@ -311,6 +314,7 @@ sub countmatches {
     $::searchstartindex         = $savesearchstartindex;
     $::searchendindex           = $savesearchendindex;
     $::sopt[2]                  = $savesopt2;
+    $::sopt[4]                  = $savesopt4;
     $::lglobal{selectionsearch} = $saveselectionsearch;
 
     # restore selection range if there was one before counting
