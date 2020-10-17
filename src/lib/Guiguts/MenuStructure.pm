@@ -63,7 +63,8 @@ sub menu_file {
 
         menu_cascade( 'Co~ntent Providing', &menu_file_content_providing ),
 
-        [ 'command', 'E~xit', -command => \&::_exit ],
+        [ 'separator', '' ],
+        [ 'command', '~Quit', -command => \&::_exit ],
     ];
 }
 
