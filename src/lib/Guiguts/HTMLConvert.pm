@@ -1164,8 +1164,14 @@ sub html_convert_sidenotes {
             $thisblockstart = $thisnoteend;
             $thisnoteend    = $textwindow->search( '--', ']</p>', $thisblockstart, 'end' );
         }
-        $textwindow->ntdelete( $thisnoteend, "$thisnoteend+5c" )
-          if $thisnoteend;
+        if ($thisnoteend) {
+            my $dtext = $textwindow->get( $thisnoteend, "$thisnoteend+5c" );
+            if ( $dtext eq ']</p>' ) {    # normal footnote in its own paragraph
+                $textwindow->ntdelete( $thisnoteend, "$thisnoteend+5c" );
+            } elsif ( substr( $dtext, 0, 1 ) =~ ']' ) {    # inline footnote
+                $textwindow->ntdelete( $thisnoteend, "$thisnoteend+1c" );
+            }
+        }
         $textwindow->ntinsert( $thisnoteend, '</div>' ) if $thisnoteend;
     }
     while ( $thisblockstart = $textwindow->search( '--', '</div></div></p>', '1.0', 'end' ) ) {
