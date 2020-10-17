@@ -1018,16 +1018,17 @@ sub file_import_markup {
         -title      => 'Open File',
         -initialdir => $::globallastpath
     );
-    if ( defined($name) and length($name) ) {
-        ::openfile($name);
-    }
+    return unless defined($name) and length($name);
+    ::openfile($name);
     $::lglobal{global_filename} = 'No File Loaded';
     $textwindow->FileName( $::lglobal{global_filename} );
+
     my $firstline = $textwindow->get( '1.0', '1.end' );
     if ( $firstline =~ '##### Do not edit this line.' ) {
         $textwindow->delete( '1.0', '2.0' );
     }
     my $binstart = $textwindow->search( '-exact', '--', '##### Do not edit below.', '1.0', 'end' );
+    return unless $binstart;    # File is not an exported .gut file
     my ( $row, $col ) = split( /\./, $binstart );
     $textwindow->delete( "$row.0", "$row.end" );
     my $binfile = $textwindow->get( "$row.0", "end" );
