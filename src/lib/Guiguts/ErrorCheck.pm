@@ -442,31 +442,7 @@ sub errorcheckrun {    # Runs error checks
         $name = 'errors.tmp';
     }
     my $unicode = ::currentfileisunicode();
-    if ( open my $td, '>', $name ) {
-        my $count   = 0;
-        my $index   = '1.0';
-        my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end     = $textwindow->index("$index  lineend +1c");
-            my $gettext = $textwindow->get( $index, $end );
-            utf8::encode($gettext) if ($unicode);
-            print $td $gettext;
-            $index = $end;
-        }
-        close $td;
-    } else {
-        warn "Could not open temp file for writing. $!";
-        my $dialog = $top->Dialog(
-            -text => 'Could not write to the '
-              . cwd()
-              . ' directory. Check for write permission or space problems.',
-            -bitmap  => 'question',
-            -title   => "$errorchecktype problem",
-            -buttons => [qw/OK/],
-        );
-        $dialog->Show;
-        return;
-    }
+    return unless savetoerrortmpfile($name);
     if ( $errorchecktype eq 'HTML Tidy' ) {
         if ($unicode) {
             ::run( $::tidycommand, "-f", "errors.err", "-e", "-utf8", $name );
@@ -538,7 +514,7 @@ sub errorcheckrun {    # Runs error checks
     } elsif ( $errorchecktype eq 'pphtml' ) {
         ::run( "perl", "lib/ppvchecks/pphtml.pl", "-i", $name, "-o", "errors.err" );
     } elsif ( $errorchecktype eq 'Link Check' ) {
-        linkcheckrun();
+        linkcheckrun($name);
     } elsif ( $errorchecktype eq 'ppvimage' ) {
         if ($::verboseerrorchecks) {
             ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-gg', '-o', 'errors.err', $name );
@@ -558,14 +534,50 @@ sub errorcheckrun {    # Runs error checks
     return;
 }
 
+# Save current file to a temporary file in order to run a check on it
+# Return true if saved successfully
+sub savetoerrortmpfile {
+    my $name       = shift;
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+
+    my $unicode = ::currentfileisunicode();
+    if ( open my $td, '>', $name ) {
+        my $count   = 0;
+        my $index   = '1.0';
+        my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
+        while ( $textwindow->compare( $index, '<', 'end' ) ) {
+            my $end     = $textwindow->index("$index  lineend +1c");
+            my $gettext = $textwindow->get( $index, $end );
+            utf8::encode($gettext) if ($unicode);
+            print $td $gettext;
+            $index = $end;
+        }
+        close $td;
+    } else {
+        warn "Could not open temp file for writing. $!";
+        my $dialog = $top->Dialog(
+            -text    => "Could not write file $name. Check for write permission or space problems.",
+            -bitmap  => 'question',
+            -title   => "Temporary File Error",
+            -buttons => [qw/OK/],
+        );
+        $dialog->Show;
+        return 0;
+    }
+    return 1;
+}
+
 sub linkcheckrun {
+    my $tempfname  = shift;
     my $textwindow = $::textwindow;
     my $top        = $::top;
     open my $logfile, ">", "errors.err" || die "output file error\n";
     my ( %anchor, %id, %link, %image, %badlink, $length, $upper );
     my ( $anchors, $ids, $ilinks, $elinks, $images, $count, $css ) = ( 0, 0, 0, 0, 0, 0, 0 );
     my @warning = ();
-    my $fname   = $::lglobal{global_filename};
+
+    my $fname = $::lglobal{global_filename};
     if ( $fname =~ /(No File Loaded)/ ) {
         print $logfile "You need to save your file first.";
         return;
@@ -575,7 +587,6 @@ sub linkcheckrun {
     my @ifiles   = ();
     my $imagedir = '';
     push @warning, '';
-    my ( $fh, $filename );
     my @temp         = split( /[\\\/]/, $textwindow->FileName );
     my $tempfilename = $temp[-1];
 
@@ -585,21 +596,7 @@ sub linkcheckrun {
     if ( $tempfilename =~ /[A-Z]/ ) {
         print $logfile "Use only lower case in filename: $tempfilename\n";
     }
-    if ( $textwindow->numberChanges ) {
-        $filename = 'tempfile.tmp';
-        open( my $fh, ">", "$filename" );
-        my ($lines) = $textwindow->index('end - 1 chars') =~ /^(\d+)\./;
-        my $index = '1.0';
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end  = $textwindow->index("$index lineend +1c");
-            my $line = $textwindow->get( $index, $end );
-            print $fh $line;
-            $index = $end;
-        }
-        $fname = $filename;
-        close $fh;
-    }
-    my $parser = HTML::TokeParser->new($fname);
+    my $parser = HTML::TokeParser->new($tempfname);
     while ( my $token = $parser->get_token ) {
         if ( $token->[0] eq 'S' and $token->[1] eq 'style' ) {
             $token = $parser->get_token;
@@ -722,7 +719,6 @@ sub linkcheckrun {
         }
     }
     print $logfile "$count  anchors without links\n";
-    unlink $filename if $filename;
     close $logfile;
 }
 
