@@ -227,7 +227,7 @@ sub searchtext {
         $::searchendindex = $textwindow->index("$::searchstartindex +1c")
           unless $length;
 
-        unless ( $silentmode or ::updatedrecently() ) {
+        unless ($silentmode) {
             $textwindow->markSet( 'insert', $::searchstartindex )
               if $::searchstartindex;    # position the cursor at the index
             $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
@@ -246,14 +246,14 @@ sub searchtext {
         if ( $::sopt[2] ) {
             $::searchstartindex = $end;
 
-            unless ( $silentmode or ::updatedrecently() ) {
+            unless ($silentmode) {
                 $textwindow->markSet( 'insert', $::searchstartindex );
                 $textwindow->see($::searchendindex);
             }
         } else {
             $::searchendindex = $start;
 
-            unless ( $silentmode or ::updatedrecently() ) {
+            unless ($silentmode) {
                 $textwindow->markSet( 'insert', $start );
                 $textwindow->see($start);
             }
@@ -272,7 +272,7 @@ sub searchtext {
             }
         }
     }
-    unless ( $silentmode or ::updatedrecently() ) {
+    unless ($silentmode) {
         ::updatesearchlabels();
         ::update_indicators();
     }
@@ -1063,8 +1063,9 @@ sub replaceall {
     $textwindow->focus;
     ::enable_interrupt();
 
-    # keep calling search() and replace() until no more matches
-    while ( searchtext() ) {
+    # Keep calling searchtext() and replace() until no more matches
+    # Use silentmode for searchtext() or it will do window updates
+    while ( searchtext( undef, 'silentmode' ) ) {
         last unless replace($replacement);
         last if ::query_interrupt();
         $textwindow->update unless ::updatedrecently();    # Too slow if update window after every match
