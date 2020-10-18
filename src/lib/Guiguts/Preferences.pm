@@ -496,13 +496,13 @@ sub filePathsPopup {
             -fill   => 'x'
         );
         $f3->Label(
-            -text   => "Bookloupe/Gutcheck:",
+            -text   => "Bookloupe:",
             -width  => 22,
             -anchor => 'w',
         )->pack( -side => 'left' );
         $f3->Button(
-            -text    => 'Locate Bookloupe/Gutcheck...',
-            -command => sub { ::locateExecutable( 'Bookloupe/Gutcheck', \$::gutcommand ); },
+            -text    => 'Locate Bookloupe...',
+            -command => sub { ::locateExecutable( 'Bookloupe', \$::gutcommand ); },
             -width   => 24,
         )->pack( -side => 'right' );
         $f3->Entry(
