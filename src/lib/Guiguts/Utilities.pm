@@ -752,14 +752,13 @@ sub initialize {
 
     # manualhash stores subpage of manual for each dialog
     # Where dialog is used in several contexts, use 'dialogname+context' as key
-    $::manualhash{'aboutpop'}    = '#Overview';
-    $::manualhash{'alignpop'}    = '/Guiguts_1.1_Text_Menu#Align_text_on_string';
-    $::manualhash{'asciiboxpop'} = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
-    $::manualhash{'brkpop'}      = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
-    $::manualhash{'defurlspop'}  = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'errorcheckpop+Bookloupe/Gutcheck'} =
-      '/Guiguts_1.1_Tools_Menu#Bookloupe.2FGutcheck';
-    $::manualhash{'errorcheckpop+Jeebies'}        = '/Guiguts_1.1_Tools_Menu#Jeebies';
+    $::manualhash{'aboutpop'}                = '#Overview';
+    $::manualhash{'alignpop'}                = '/Guiguts_1.1_Text_Menu#Align_text_on_string';
+    $::manualhash{'asciiboxpop'}             = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
+    $::manualhash{'brkpop'}                  = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
+    $::manualhash{'defurlspop'}              = '/Guiguts_1.1_Preferences_Menu#File_Paths';
+    $::manualhash{'errorcheckpop+Bookloupe'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'errorcheckpop+Jeebies'}   = '/Guiguts_1.1_Tools_Menu#Jeebies';
     $::manualhash{'errorcheckpop+Load Checkfile'} = '/Guiguts_1.1_Tools_Menu#Load_Checkfile';
     $::manualhash{'errorcheckpop+pptxt'}          = '/Guiguts_1.1_Text_Menu#PPtxt';
     $::manualhash{'errorcheckpop+W3C Validate Remote'} =
@@ -779,8 +778,8 @@ sub initialize {
     $::manualhash{'fontpop'}          = '/Guiguts_1.1_Preferences_Menu#Appearance';
     $::manualhash{'footcheckpop'}     = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
     $::manualhash{'footpop'}          = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcrunoptspop'}     = '/Guiguts_1.1_Tools_Menu#Bookloupe.2FGutcheck';
-    $::manualhash{'gcviewoptspop'}    = '/Guiguts_1.1_Tools_Menu#Bookloupe.2FGutcheck';
+    $::manualhash{'gcrunoptspop'}     = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'gcviewoptspop'}    = '/Guiguts_1.1_Tools_Menu#Bookloupe';
     $::manualhash{'grpop'}            = '/Guiguts_1.1_Tools_Menu#Find_and_Convert_Greek';
     $::manualhash{'guesspgmarkerpop'} = '/Guiguts_1.1_File_Menu#Guess_Page_Markers';
     $::manualhash{'hotkeyspop'}       = '/Guiguts_1.1_Help_Menu#Keyboard_Shortcuts';
@@ -935,7 +934,7 @@ sub initialize {
     @{ $::lglobal{ascii} }  = qw/+ - + | | | + - +/;
     @{ $::lglobal{fixopt} } = ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 
-    # Gutcheck/bookloupe error types
+    # Bookloupe error types
     @{ $::lglobal{gcarray} } = (
         'Asterisk',
         'Begins with punctuation',
@@ -2247,10 +2246,10 @@ sub toolbar_toggle {    # Set up / remove the tool bar
             -tip     => 'Word Frequency'
         );
         $::lglobal{toptool}->ToolButton(
-            -text    => 'GC',
+            -text    => 'BL',
             -font    => $::lglobal{toolfont},
-            -command => [ sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); } ],
-            -tip     => 'Bookloupe/Gutcheck'
+            -command => [ sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); } ],
+            -tip     => 'Bookloupe'
         );
         $::lglobal{toptool}->ToolButton(
             -image   => 'actcheck16',

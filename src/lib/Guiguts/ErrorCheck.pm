@@ -10,7 +10,7 @@ BEGIN {
 }
 
 # General error check window
-# Handles Gutcheck, Jeebies, HTML & CSS Validate, Tidy, Link Check
+# Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
 # pphtml, pptxt and Load External Checkfile,
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
@@ -45,7 +45,7 @@ sub errorcheckpop_up {
     );
 
     # Add verbose checkbox only for certain error check types
-    # Note Bookloupe/Gutcheck have their own (always on) verbose flag
+    # Note bookloupe has its own (always on) verbose flag
     if (   $errorchecktype eq 'Link Check'
         or $errorchecktype eq 'W3C Validate CSS'
         or $errorchecktype eq 'ppvimage'
@@ -61,8 +61,8 @@ sub errorcheckpop_up {
             -anchor => 'n'
         );
 
-        # Bookloupe/Gutcheck have buttons to change Run Options and View Options
-    } elsif ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+        # Bookloupe has buttons to change Run Options and View Options
+    } elsif ( $errorchecktype eq 'Bookloupe' ) {
         my $opsbutton2 = $ptopframe->Button(
             -activebackground => $::activecolor,
             -command          => sub { gcrunopts() },
@@ -122,7 +122,7 @@ sub errorcheckpop_up {
         'WM_DELETE_WINDOW' => sub {
             ::killpopup('errorcheckpop');
             $textwindow->markUnset($_) for values %::errors;
-            if ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+            if ( $errorchecktype eq 'Bookloupe' ) {
                 ::killpopup('gcviewoptspop');
                 ::killpopup('gcrunoptspop');
             }
@@ -309,11 +309,11 @@ sub errorcheckpop_up {
             # if line has a number at the start, assume it is the error line number
             $line =~ s/^\s*(\d+)\s*/$1:0 /;
 
-        } elsif ( $errorchecktype eq "Bookloupe/Gutcheck" ) {
+        } elsif ( $errorchecktype eq "Bookloupe" ) {
             next if $line =~ /^File: /;
             if ( $line =~ /^\s*Line (\d+) column (\d+)\s*/ ) {
 
-                # Adjust column number to start from 0 for most bookloupe/gutcheck errors
+                # Adjust column number to start from 0 for most bookloupe errors
                 $columnadjust = -1 if $line !~ /Long|Short|digit|space|bracket\?/;
                 $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
             }
@@ -377,7 +377,7 @@ sub errorcheckpop_up {
     }
 
     ::working();
-    if ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
+    if ( $errorchecktype eq 'Bookloupe' ) {
         gcwindowpopulate( \@errorchecklines );
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
@@ -524,8 +524,8 @@ sub errorcheckrun {    # Runs error checks
         }
     } elsif ( $errorchecktype eq 'pptxt' ) {
         ::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $name, "-o", "errors.err" );
-    } elsif ( $errorchecktype eq 'Bookloupe/Gutcheck' ) {
-        gutcheckrun();
+    } elsif ( $errorchecktype eq 'Bookloupe' ) {
+        booklouperun($name);
     } elsif ( $errorchecktype eq 'Jeebies' ) {
         jeebiesrun();
     }
@@ -795,10 +795,8 @@ sub gcwindowpopulate {
     $::lglobal{errorchecklistbox}->insert( $headr, '', "  --> $error queries$hidtxt.", '' );
 
     # Add start/end messages
-    my $command =
-      ( $::gutcommand and ::basename($::gutcommand) =~ /gutcheck/ ) ? "Gutcheck" : "Bookloupe";
-    $::lglobal{errorchecklistbox}->insert( 0,     "Beginning check: $command" );
-    $::lglobal{errorchecklistbox}->insert( "end", "Check is complete: $command" );
+    $::lglobal{errorchecklistbox}->insert( 0,     "Beginning check: Bookloupe" );
+    $::lglobal{errorchecklistbox}->insert( "end", "Check is complete: Bookloupe" );
     $::lglobal{errorchecklistbox}->update;
 }
 
@@ -813,7 +811,7 @@ sub gcviewopts {
         $::lglobal{gcviewoptspop}->focus;
     } else {
         $::lglobal{gcviewoptspop} = $top->Toplevel;
-        $::lglobal{gcviewoptspop}->title('Bookloupe/Gutcheck View Options');
+        $::lglobal{gcviewoptspop}->title('Bookloupe View Options');
         my $pframe = $::lglobal{gcviewoptspop}->Frame->pack;
         $pframe->Label( -text => 'Select option to hide that error.', )->pack;
         my $pframe1 = $::lglobal{gcviewoptspop}->Frame->pack;
@@ -968,11 +966,12 @@ sub jeebiesrun {
     $top->Unbusy( -recurse => 1 );
 }
 
-## Run bookloupe/gutcheck
-sub gutcheckrun {
+## Run bookloupe
+sub booklouperun {
+    my $tempfname  = shift;
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    ::operationadd('Bookloupe/Gutcheck');
+    ::operationadd('Bookloupe');
     ::hidepagenums();
     $textwindow->focus;
     ::update_indicators();
@@ -983,60 +982,32 @@ sub gutcheckrun {
         return;
     }
 
-    # Bookloupe is utf-8 friendly, but if still using gutcheck, revert to "bytes" encoding
-    my $encoding = ">:encoding(UTF-8)";
-    if ( $::gutcommand and ::basename($::gutcommand) =~ /gutcheck/ ) {
-        $encoding = ">:bytes";
-    }
-    if ( open my $gc, $encoding, 'gutchk.tmp' ) {
-        my $count = 0;
-        my $index = '1.0';
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end = $textwindow->index("$index  lineend +1c");
-            print $gc $textwindow->get( $index, $end );
-            $index = $end;
-        }
-        close $gc;
-    } else {
-        warn "Could not open temp file for writing. $!";
-        my $dialog = $top->Dialog(
-            -text => 'Could not write to the '
-              . cwd()
-              . ' directory. Check for write permission or space problems.',
-            -bitmap  => 'question',
-            -title   => 'Bookloupe/Gutcheck problem',
-            -buttons => [qw/OK/],
-        );
-        $dialog->Show;
-        return;
-    }
     unless ($::gutcommand) {
-        ::locateExecutable( 'Bookloupe/Gutcheck', \$::gutcommand );
+        ::locateExecutable( 'Bookloupe', \$::gutcommand );
         return unless $::gutcommand;
     }
-    my $gutcheckoptions = '-ey';    # e - echo queried line. y - puts errors to stdout instead of stderr.
-    $gutcheckoptions .= 't' if $::gcopt[0];    # Check common typos
-    $gutcheckoptions .= 'x' if $::gcopt[1];    # "Trust no one" Paranoid mode. Queries everything
-    $gutcheckoptions .= 'p' if $::gcopt[2];    # Require closure of quotes on every paragraph
-    $gutcheckoptions .= 's' if $::gcopt[3];    # Force checking for matched pairs of single quotes
-    $gutcheckoptions .= 'm' if $::gcopt[4];    # Ignore markup in < >
-    $gutcheckoptions .= 'l' if $::gcopt[5];    # Line end checking - defaults on
-    $gutcheckoptions .= 'v' if $::gcopt[6];    # Verbose - list EVERYTHING!
-    $gutcheckoptions .= 'u' if $::gcopt[7];    # Use file of User-defined Typos
-    $gutcheckoptions .= 'd' if $::gcopt[8];    # Ignore DP style page separators
+    my $bookloupeoptions = '-ey';    # e - echo queried line. y - puts errors to stdout instead of stderr.
+    $bookloupeoptions .= 't' if $::gcopt[0];    # Check common typos
+    $bookloupeoptions .= 'x' if $::gcopt[1];    # "Trust no one" Paranoid mode. Queries everything
+    $bookloupeoptions .= 'p' if $::gcopt[2];    # Require closure of quotes on every paragraph
+    $bookloupeoptions .= 's' if $::gcopt[3];    # Force checking for matched pairs of single quotes
+    $bookloupeoptions .= 'm' if $::gcopt[4];    # Ignore markup in < >
+    $bookloupeoptions .= 'l' if $::gcopt[5];    # Line end checking - defaults on
+    $bookloupeoptions .= 'v' if $::gcopt[6];    # Verbose - list EVERYTHING!
+    $bookloupeoptions .= 'u' if $::gcopt[7];    # Use file of User-defined Typos
+    $bookloupeoptions .= 'd' if $::gcopt[8];    # Ignore DP style page separators
     $::gutcommand = ::os_normal($::gutcommand);
     ::savesettings();
 
     my $runner = ::runner::tofile('errors.err');
-    $runner->run( $::gutcommand, $gutcheckoptions, 'gutchk.tmp' );
-    unlink 'gutchk.tmp';
+    $runner->run( $::gutcommand, $bookloupeoptions, $tempfname );
 }
 
 sub gcrunopts {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     $::lglobal{gcrunoptspop} =
-      $top->DialogBox( -title => 'Bookloupe/Gutcheck Run Options', -buttons => ['OK'] );
+      $top->DialogBox( -title => 'Bookloupe Run Options', -buttons => ['OK'] );
     my $gcopt6 = $::lglobal{gcrunoptspop}->add(
         'Checkbutton',
         -variable    => \$::gcopt[6],

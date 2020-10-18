@@ -329,9 +329,9 @@ sub menu_tools {
             -command     => \&::wordfrequency,
         ],
         [
-            'command', 'Bookloupe/~Gutcheck...',
+            'command', 'Boo~kloupe...',
             -accelerator => 'F6',
-            -command     => sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); }
+            -command     => sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); }
         ],
         [ 'command', 'Basic Fi~xup...',             -command => \&::fixpopup ],
         [ 'command', 'Check ~Orphaned Brackets...', -command => \&::orphanedbrackets ],
@@ -363,7 +363,7 @@ sub menu_tools {
         ],
         [
             'command',
-            'Load Chec~kfile...',
+            'Load Checkf~ile...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Load Checkfile' );
             }

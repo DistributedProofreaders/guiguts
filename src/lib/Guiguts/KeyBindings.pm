@@ -35,7 +35,7 @@ sub keybindings {
 
     # Tools
     keybind( '<F5>', sub { ::wordfrequency(); } );
-    keybind( '<F6>', sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe/Gutcheck' ); } );
+    keybind( '<F6>', sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); } );
     keybind( '<F7>', sub { ::spellchecker(); } );
     keybind( '<F8>', sub { ::stealthscanno(); } );
 

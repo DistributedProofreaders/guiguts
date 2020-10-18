@@ -38,15 +38,15 @@ sub runtests {
 
     ok( 1 == do { 1 }, "do block" );
 
-    runtesterrorcheck( "Bookloupe/Gutcheck", "textcheck.txt",   "blgcbaseline.txt" );
-    runtesterrorcheck( "Jeebies",            "textcheck.txt",   "jeebiesbaseline.txt" );
-    runtesterrorcheck( "pptxt",              "textcheck.txt",   "pptxtbaseline.txt" );
-    runtesterrorcheck( "W3C Validate",       "errorcheck.html", "htmlvalidatebaseline.txt" );
-    runtesterrorcheck( "HTML Tidy",          "errorcheck.html", "tidybaseline.txt" );
-    runtesterrorcheck( "ppvimage",           "errorcheck.html", "ppvimagebaseline.txt" );
-    runtesterrorcheck( "Link Check",         "errorcheck.html", "linkcheckline.txt" );
-    runtesterrorcheck( "W3C Validate CSS",   "errorcheck.html", "cssvalidatebaseline.txt" );
-    runtesterrorcheck( "pphtml",             "errorcheck.html", "pphtmlbaseline.txt" );
+    runtesterrorcheck( "Bookloupe",        "textcheck.txt",   "bookloupebaseline.txt" );
+    runtesterrorcheck( "Jeebies",          "textcheck.txt",   "jeebiesbaseline.txt" );
+    runtesterrorcheck( "pptxt",            "textcheck.txt",   "pptxtbaseline.txt" );
+    runtesterrorcheck( "W3C Validate",     "errorcheck.html", "htmlvalidatebaseline.txt" );
+    runtesterrorcheck( "HTML Tidy",        "errorcheck.html", "tidybaseline.txt" );
+    runtesterrorcheck( "ppvimage",         "errorcheck.html", "ppvimagebaseline.txt" );
+    runtesterrorcheck( "Link Check",       "errorcheck.html", "linkcheckline.txt" );
+    runtesterrorcheck( "W3C Validate CSS", "errorcheck.html", "cssvalidatebaseline.txt" );
+    runtesterrorcheck( "pphtml",           "errorcheck.html", "pphtmlbaseline.txt" );
 
     # Open/close README - allow for development system run from src subdirectory
     ok( ( -e "../README.md" or -e "README.md" ), "README.md exists" );

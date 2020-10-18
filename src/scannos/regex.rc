@@ -84,7 +84,7 @@
 '\t',                                    => 'Find a tab character and change it to space.',
 '\xAD',                                  => 'Find a soft Hyphen and change it to a (hard) Hyphen.',
 '^-[^-]',                                => 'Find a line starting with a single hyphen and remove the hyphen.',
-'^.{75,}'                                => 'Find long lines in the text. In this case, lines that contain more than 75 characters. Modify the number to to find lines with that many or more characters. (Gutcheck considers anything over 75 characters to be a long line.)',
+'^.{75,}'                                => 'Find long lines in the text. In this case, lines that contain more than 75 characters. Modify the number to to find lines with that many or more characters. (Bookloupe considers anything over 75 characters to be a long line.)',
 '^[!;:,.?]'                              => 'Find a line that starts with punctuation and remove the punctuation.',
 'cb'                                     => 'Find a string that contains cb and change it to ch.',
 'cl\b'                                   => 'Find a string that ends in cl and change it to d.',
