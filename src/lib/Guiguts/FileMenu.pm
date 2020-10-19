@@ -873,9 +873,6 @@ EOM
     $::geometry = $top->geometry unless $::geometry;
     if ( open my $save_handle, '>', $savefile ) {
         print $save_handle $message;
-        print $save_handle '@gcopt = (';
-        print $save_handle "$_," || '0,' for @::gcopt;
-        print $save_handle ");\n\n";
 
         # a variable's value is also saved if it is zero
         # otherwise we can't have a default value of 1 without overwriting the user's setting

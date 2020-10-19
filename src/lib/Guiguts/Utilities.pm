@@ -716,7 +716,6 @@ sub initialize {
     $::positionhash{fontpop}          = '+10+10'          unless $::positionhash{fontpop};
     $::geometryhash{footcheckpop}     = '+22+12'          unless $::geometryhash{footcheckpop};
     $::positionhash{footpop}          = '+255+157'        unless $::positionhash{footpop};
-    $::geometryhash{gcrunoptspop}     = '+244+72'         unless $::geometryhash{gcrunoptspop};
     $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
     $::positionhash{grpop}            = '+144+153'        unless $::positionhash{grpop};
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
@@ -778,7 +777,6 @@ sub initialize {
     $::manualhash{'fontpop'}          = '/Guiguts_1.1_Preferences_Menu#Appearance';
     $::manualhash{'footcheckpop'}     = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
     $::manualhash{'footpop'}          = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcrunoptspop'}     = '/Guiguts_1.1_Tools_Menu#Bookloupe';
     $::manualhash{'gcviewoptspop'}    = '/Guiguts_1.1_Tools_Menu#Bookloupe';
     $::manualhash{'grpop'}            = '/Guiguts_1.1_Tools_Menu#Find_and_Convert_Greek';
     $::manualhash{'guesspgmarkerpop'} = '/Guiguts_1.1_File_Menu#Guess_Page_Markers';
