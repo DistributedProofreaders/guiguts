@@ -45,7 +45,6 @@ sub errorcheckpop_up {
     );
 
     # Add verbose checkbox only for certain error check types
-    # Note bookloupe has its own (always on) verbose flag
     if (   $errorchecktype eq 'Link Check'
         or $errorchecktype eq 'W3C Validate CSS'
         or $errorchecktype eq 'ppvimage'
@@ -61,20 +60,9 @@ sub errorcheckpop_up {
             -anchor => 'n'
         );
 
-        # Bookloupe has buttons to change Run Options and View Options
+        # Bookloupe has button to change View Options
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
-        my $opsbutton2 = $ptopframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { gcrunopts() },
-            -text             => 'Run Options',
-            -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
-        my $opsbutton3 = $ptopframe->Button(
+        $ptopframe->Button(
             -activebackground => $::activecolor,
             -command          => sub { gcviewopts( \@errorchecklines ) },
             -text             => 'View Options',
@@ -85,6 +73,8 @@ sub errorcheckpop_up {
             -padx   => 2,
             -anchor => 'n'
         );
+
+        # Jeebies has paranoia level radio buttons
     } elsif ( $errorchecktype eq 'Jeebies' ) {
         $ptopframe->Label( -text => 'Search mode:', )->pack( -side => 'left', -padx => 2 );
         my @rbutton = ( [ 'Paranoid', 'p' ], [ 'Normal', '' ], [ 'Tolerant', 't' ], );
@@ -121,11 +111,8 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->protocol(
         'WM_DELETE_WINDOW' => sub {
             ::killpopup('errorcheckpop');
+            ::killpopup('gcviewoptspop') if $errorchecktype eq 'Bookloupe';
             $textwindow->markUnset($_) for values %::errors;
-            if ( $errorchecktype eq 'Bookloupe' ) {
-                ::killpopup('gcviewoptspop');
-                ::killpopup('gcrunoptspop');
-            }
         }
     );
 
@@ -986,85 +973,13 @@ sub booklouperun {
         ::locateExecutable( 'Bookloupe', \$::gutcommand );
         return unless $::gutcommand;
     }
-    my $bookloupeoptions = '-ey';    # e - echo queried line. y - puts errors to stdout instead of stderr.
-    $bookloupeoptions .= 't' if $::gcopt[0];    # Check common typos
-    $bookloupeoptions .= 'x' if $::gcopt[1];    # "Trust no one" Paranoid mode. Queries everything
-    $bookloupeoptions .= 'p' if $::gcopt[2];    # Require closure of quotes on every paragraph
-    $bookloupeoptions .= 's' if $::gcopt[3];    # Force checking for matched pairs of single quotes
-    $bookloupeoptions .= 'm' if $::gcopt[4];    # Ignore markup in < >
-    $bookloupeoptions .= 'l' if $::gcopt[5];    # Line end checking - defaults on
-    $bookloupeoptions .= 'v' if $::gcopt[6];    # Verbose - list EVERYTHING!
-    $bookloupeoptions .= 'u' if $::gcopt[7];    # Use file of User-defined Typos
-    $bookloupeoptions .= 'd' if $::gcopt[8];    # Ignore DP style page separators
     $::gutcommand = ::os_normal($::gutcommand);
-    ::savesettings();
 
+    # Run bookloupe with standard options
+    # e - echo queried line. y - puts errors to stdout instead of stderr.
+    # v - list EVERYTHING!.  d -  ignore DP style page separators.
     my $runner = ::runner::tofile('errors.err');
-    $runner->run( $::gutcommand, $bookloupeoptions, $tempfname );
-}
-
-sub gcrunopts {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    $::lglobal{gcrunoptspop} =
-      $top->DialogBox( -title => 'Bookloupe Run Options', -buttons => ['OK'] );
-    my $gcopt6 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[6],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-v Enable verbose mode (Recommended).',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt0 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[0],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-t Disable check for common typos.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt1 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[1],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-x Disable paranoid mode.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt2 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[2],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-p Report ALL unbalanced double quotes.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt3 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[3],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-s Report ALL unbalanced single quotes.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt4 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[4],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-m Interpret HTML markup.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt5 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[5],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-l Do not report non DOS newlines.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt7 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[7],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-u Flag words from the .typ file.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    my $gcopt8 = $::lglobal{gcrunoptspop}->add(
-        'Checkbutton',
-        -variable    => \$::gcopt[8],
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => '-d Ignore DP style page separators.',
-    )->pack( -side => 'top', -anchor => 'nw', -padx => 5 );
-    ::initialize_popup_without_deletebinding('gcrunoptspop');
-    $::lglobal{gcrunoptspop}->Show;
-    ::savesettings();
+    $runner->run( $::gutcommand, '-eyvd', $tempfname );
 }
 
 1;
