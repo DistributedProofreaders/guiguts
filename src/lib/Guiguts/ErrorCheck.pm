@@ -155,25 +155,34 @@ sub errorcheckpop_up {
         }
     }
     my $unicode = ::currentfileisunicode();
-    my $fname   = '';
     ::working($errorchecktype);
+
+    my $errname;
     if ( $errorchecktype eq 'Load Checkfile' ) {
-        $fname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
-        if ( not $fname ) {    # if cancelled, close dialog and exit
+        $errname = $::lglobal{errorcheckpop}->getOpenFile( -title => 'File Name?' );
+        if ( not $errname ) {    # if cancelled, close dialog and exit
             ::killpopup('errorcheckpop');
             ::working();
             return;
         }
     } else {
         push @errorchecklines, "Beginning check: " . $errorchecktype;
-        if ( errorcheckrun($errorchecktype) ) {
-            push @errorchecklines, "Failed to run: " . $errorchecktype;
+
+        # Temporary file in same folder as current file - needs .html extension for some tools
+        # Error output in same folder, named errors.err
+        my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+        my $tmpfname = $d . 'tmpcheck' . ( $errorchecktype =~ 'W3C Validate' ? '.html' : '.tmp' );
+        $errname = $d . 'errors.err';
+
+        if ( errorcheckrun( $errorchecktype, $tmpfname, $errname ) ) {    # exit if error check failed to run
+            ::killpopup('errorcheckpop');
+            ::working();
+            return;
         }
-        $fname = "errors.err";
     }
 
     # Open error file
-    my $fh = FileHandle->new("< $fname");
+    my $fh = FileHandle->new("< $errname");
     if ( not defined($fh) ) {
         my $dialog = $top->Dialog(
             -text    => 'Could not find ' . $errorchecktype . ' error file.',
@@ -338,9 +347,9 @@ sub errorcheckpop_up {
         push @errorchecklines, $line;
     }
     $fh->close if $fh;
-    unlink 'errors.err' unless $errorchecktype eq 'Load Checkfile';
+    unlink $errname unless $errorchecktype eq 'Load Checkfile';
     my $size = @errorchecklines;
-    if ( ( $errorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors.err file with zero lines
+    if ( ( $errorchecktype eq "W3C Validate CSS" ) and ( $size <= 1 ) ) {    # handle errors file with zero lines
         my $dialog = $top->Dialog(
             -text    => 'Could not validate: install java or use W3C CSS Validation web site.',
             -bitmap  => 'warning',
@@ -377,9 +386,9 @@ sub errorcheckpop_up {
 }
 
 sub errorcheckrun {    # Runs error checks
-    my $errorchecktype = shift;
-    my $textwindow     = $::textwindow;
-    my $top            = $::top;
+    my ( $errorchecktype, $tmpfname, $errname ) = @_;
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
     if ( $errorchecktype eq 'W3C Validate Remote' ) {
         unless ( eval { require WebService::Validator::HTML::W3C } ) {
             print
@@ -392,11 +401,10 @@ sub errorcheckrun {    # Runs error checks
     if ( $::lglobal{errorcheckpop} ) {
         $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     }
-    my ( $name, $fname, $path, $extension, @path );
     $textwindow->focus;
     ::update_indicators();
-    my $title = $top->cget('title');
-    if ( $title =~ /No File Loaded/ ) { ::savefile( $textwindow, $top ) }
+    return 1 if ::nofileloadedwarning();
+
     if ( $errorchecktype eq 'HTML Tidy' ) {
         unless ($::tidycommand) {
             ::locateExecutable( 'HTML Tidy', \$::tidycommand );
@@ -418,23 +426,14 @@ sub errorcheckrun {    # Runs error checks
     }
     ::savesettings();
     $top->Busy( -recurse => 1 );
-    if (   ( $errorchecktype eq 'W3C Validate Remote' )
-        or ( $errorchecktype eq 'W3C Validate CSS' ) ) {
-        $name = 'validate.html';
-    } elsif ( $errorchecktype eq 'ppvimage' ) {
-        my ( $f, $d, $e ) =
-          ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
-        $name = $d . 'errors.tmp';    # ppvimage requires tmp file to be in the right dir, so the paths match
-    } else {
-        $name = 'errors.tmp';
-    }
+
     my $unicode = ::currentfileisunicode();
-    return unless savetoerrortmpfile($name);
+    return 1 unless savetoerrortmpfile($tmpfname);
     if ( $errorchecktype eq 'HTML Tidy' ) {
         if ($unicode) {
-            ::run( $::tidycommand, "-f", "errors.err", "-e", "-utf8", $name );
+            ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
         } else {
-            ::run( $::tidycommand, "-f", "errors.err", "-e", $name );
+            ::run( $::tidycommand, "-f", $errname, "-e", $tmpfname );
         }
     } elsif ( $errorchecktype eq 'W3C Validate' ) {
         if ( $::w3cremote == 0 ) {
@@ -446,14 +445,14 @@ sub errorcheckrun {    # Runs error checks
                 "--catalog=" . ( $::OS_WIN ? "xhtml.soc" : "tools/W3C/xhtml.soc" ),
                 "--no-output",
                 "--open-entities",
-                "--error-file=errors.err",
-                $name
+                "--error-file=$errname",
+                $tmpfname
             );
         }
     } elsif ( $errorchecktype eq 'W3C Validate Remote' ) {
         my $validator = WebService::Validator::HTML::W3C->new( detailed => 1 );
-        if ( $validator->validate_file('./validate.html') ) {
-            if ( open my $td, '>', "errors.err" ) {
+        if ( $validator->validate_file($tmpfname) ) {
+            if ( open my $td, '>', $errname ) {
                 if ( $validator->is_valid ) {
                 } else {
                     my $errors   = $validator->errors();
@@ -488,48 +487,48 @@ sub errorcheckrun {    # Runs error checks
                 close $td;
             }
         } else {
-            if ( open my $td, '>', "errors.err" ) {
+            if ( open my $td, '>', $errname ) {
                 print $td $validator->validator_error() . "\n";
                 print $td "Try using local validator onsgmls\n";
                 close $td;
             }
         }
     } elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
-        my $runner = ::runner::tofile( "errors.err", "errors.err" );    # stdout & stderr
+        my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel",
-            "file:$name" );
+            "file:$tmpfname" );
     } elsif ( $errorchecktype eq 'pphtml' ) {
-        ::run( "perl", "lib/ppvchecks/pphtml.pl", "-i", $name, "-o", "errors.err" );
+        ::run( "perl", "lib/ppvchecks/pphtml.pl", "-i", $tmpfname, "-o", $errname );
     } elsif ( $errorchecktype eq 'Link Check' ) {
-        linkcheckrun($name);
+        linkcheckrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'ppvimage' ) {
         if ($::verboseerrorchecks) {
-            ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-gg', '-o', 'errors.err', $name );
+            ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-gg', '-o', $errname, $tmpfname );
         } else {
             ::run( 'perl', 'tools/ppvimage/ppvimage.pl',
-                '-gg', '-terse', '-o', 'errors.err', $name );
+                '-gg', '-terse', '-o', $errname, $tmpfname );
         }
     } elsif ( $errorchecktype eq 'pptxt' ) {
-        ::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $name, "-o", "errors.err" );
+        ::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $tmpfname, "-o", $errname );
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
-        booklouperun($name);
+        booklouperun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Jeebies' ) {
-        jeebiesrun();
+        jeebiesrun( $tmpfname, $errname );
     }
     $top->Unbusy;
-    unlink $name;
-    return;
+    unlink $tmpfname;
+    return 0;
 }
 
 # Save current file to a temporary file in order to run a check on it
 # Return true if saved successfully
 sub savetoerrortmpfile {
-    my $name       = shift;
+    my $tmpfname   = shift;
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
     my $unicode = ::currentfileisunicode();
-    if ( open my $td, '>', $name ) {
+    if ( open my $td, '>', $tmpfname ) {
         my $count   = 0;
         my $index   = '1.0';
         my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
@@ -544,7 +543,8 @@ sub savetoerrortmpfile {
     } else {
         warn "Could not open temp file for writing. $!";
         my $dialog = $top->Dialog(
-            -text    => "Could not write file $name. Check for write permission or space problems.",
+            -text =>
+              "Could not write file $tmpfname. Check for write permission or space problems.",
             -bitmap  => 'question',
             -title   => "Temporary File Error",
             -buttons => [qw/OK/],
@@ -556,10 +556,10 @@ sub savetoerrortmpfile {
 }
 
 sub linkcheckrun {
-    my $tempfname  = shift;
+    my ( $tempfname, $errname ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    open my $logfile, ">", "errors.err" || die "output file error\n";
+    open my $logfile, ">", $errname || die "output file error\n";
     my ( %anchor, %id, %link, %image, %badlink, $length, $upper );
     my ( $anchors, $ids, $ilinks, $elinks, $images, $count, $css ) = ( 0, 0, 0, 0, 0, 0, 0 );
     my @warning = ();
@@ -935,39 +935,29 @@ sub gcviewopts {
 }
 
 sub jeebiesrun {
+    my ( $tempfname, $errname ) = @_;
     my $top        = $::top;
     my $textwindow = $::textwindow;
-    ::savefile() if ( $textwindow->numberChanges );
-    my $title = ::os_normal( $::lglobal{global_filename} );
+
     unless ($::jeebiescommand) {
         ::locateExecutable( 'Jeebies', \$::jeebiescommand );
         return unless $::jeebiescommand;
     }
-    my $jeebiesoptions = "-$::jeebiesmode" . 'e';
     $::jeebiescommand = ::os_normal($::jeebiescommand);
-    my $mark = 0;
-    $top->Busy( -recurse => 1 );
-    my $runner = runner::tofile('errors.err');
-    $runner->run( $::jeebiescommand, $jeebiesoptions, $title );
 
-    $top->Unbusy( -recurse => 1 );
+    # Pass paranoia level as an option to jeebies
+    my $jeebiesoptions = "-$::jeebiesmode" . 'e';
+    my $runner         = runner::tofile($errname);
+    $runner->run( $::jeebiescommand, $jeebiesoptions, $tempfname );
+
 }
 
 ## Run bookloupe
 sub booklouperun {
-    my $tempfname  = shift;
+    my ( $tempfname, $errname ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
     ::operationadd('Bookloupe');
-    ::hidepagenums();
-    $textwindow->focus;
-    ::update_indicators();
-    my $title = $top->cget('title');
-
-    if ( $title =~ /No File Loaded/ ) {
-        ::nofileloadedwarning();
-        return;
-    }
 
     unless ($::gutcommand) {
         ::locateExecutable( 'Bookloupe', \$::gutcommand );
@@ -978,7 +968,7 @@ sub booklouperun {
     # Run bookloupe with standard options
     # e - echo queried line. y - puts errors to stdout instead of stderr.
     # v - list EVERYTHING!.  d -  ignore DP style page separators.
-    my $runner = ::runner::tofile('errors.err');
+    my $runner = ::runner::tofile($errname);
     $runner->run( $::gutcommand, '-eyvd', $tempfname );
 }
 

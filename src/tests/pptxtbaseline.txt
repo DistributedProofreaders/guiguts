@@ -1,5 +1,4 @@
 Beginning check: pptxt
-processing errors.tmp to errors.err
 --------------------------------------------------------------------------------
 asterisk check
  no unexpected asterisks found in text.
