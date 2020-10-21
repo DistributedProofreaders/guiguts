@@ -211,9 +211,9 @@ sub nofileloadedwarning {
     my $top = $::top;
     if ( $::lglobal{global_filename} =~ m/No File Loaded/ ) {
         my $dialog = $top->Dialog(
-            -text    => "No file loaded.",
+            -text    => "File has not been saved.",
             -bitmap  => 'warning',
-            -title   => "No File Loaded",
+            -title   => "No Filename",
             -buttons => ['OK']
         );
         my $answer = $dialog->Show;

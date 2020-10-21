@@ -53,7 +53,6 @@ sub runProgram {
 
     open LOGFILE, "> $outfile" || die "output file error\n";
 
-    print LOGFILE "processing $srctext to $outfile\n\n";
     printf LOGFILE ( "%s\n", "-" x 80 );
 
     open INFILE, $srctext;
