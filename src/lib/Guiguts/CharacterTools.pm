@@ -127,8 +127,7 @@ sub doutfbuttons {
     my $rows       = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
     my ( @buttons, $blln );
     $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
-    $::lglobal{pframe}->destroy if $::lglobal{pframe};
-    undef $::lglobal{pframe};
+    ::killpopup('pframe');
     $::lglobal{pframe} =
       $::lglobal{utfpop}->Frame( -background => $::bkgcolor )
       ->pack( -expand => 'y', -fill => 'both' );
@@ -184,8 +183,7 @@ sub utfpopup {
     my $blln;
     my ( $frame, $sizelabel, @buttons );
     my $rows = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
-    $::lglobal{utfpop}->destroy if $::lglobal{utfpop};
-    undef $::lglobal{utfpop};
+    ::killpopup('utfpop');
     $::lglobal{utfpop} = $top->Toplevel;
     ::initialize_popup_without_deletebinding('utfpop');
     $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
@@ -266,8 +264,7 @@ sub utfpopup {
         'WM_DELETE_WINDOW' => sub {
             $blln->destroy;
             undef $blln;
-            $::lglobal{utfpop}->destroy;
-            undef $::lglobal{utfpop};
+            ::killpopup('utfpop');
         }
     );
     $top->Unbusy( -recurse => 1 );
@@ -570,10 +567,7 @@ sub utfcharentrypopup {
         $frame1->Button(
             -text    => 'Close',
             -width   => 8,
-            -command => sub {
-                $::lglobal{utfentrypop}->destroy;
-                undef $::lglobal{utfentrypop};
-            },
+            -command => sub { ::killpopup('utfentrypop'); },
         )->grid( -row => 1, -column => 2 );
         $inentry->Tk::bind(
             '<Return>',

@@ -275,11 +275,9 @@ sub wordfrequency {
         ::drag( $::lglobal{wclistbox} );
         $::lglobal{wfpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{wfpop}->destroy;
-                undef $::lglobal{wfpop};
+                ::killpopup('wfpop');
                 undef $::lglobal{wclistbox};
-                $::lglobal{markuppop}->destroy if $::lglobal{markuppop};
-                undef $::lglobal{markuppop};
+                ::killpopup('markuppop');
             }
         );
         ::BindMouseWheel( $::lglobal{wclistbox} );
@@ -827,12 +825,9 @@ sub ital_adjust {
     )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
     $f1->Button(
         -activebackground => $::activecolor,
-        -command          => sub {
-            $::lglobal{markuppop}->destroy;
-            undef $::lglobal{markuppop};
-        },
-        -text  => 'OK',
-        -width => 8
+        -command          => sub { ::killpopup('markuppop'); },
+        -text             => 'OK',
+        -width            => 8
     )->grid( -row => 2, -column => 1, -padx => 2, -pady => 4 );
 }
 
@@ -1074,8 +1069,7 @@ sub harmonicspop {
         ::drag( $::lglobal{hlistbox} );
         $::lglobal{hpopup}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{hpopup}->destroy;
-                undef $::lglobal{hpopup};
+                ::killpopup('hpopup');
                 undef $::lglobal{hlistbox};
             }
         );

@@ -1718,23 +1718,7 @@ sub htmlimage {
             -background => $::bkgcolor,
         )->grid( -row => 1, -column => 1 );
         $::lglobal{imagelbl}->bind( $::lglobal{imagelbl}, '<1>', \&thumbnailbrowse );
-        $::lglobal{htmlimpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                $::lglobal{htmlthumb}->delete  if $::lglobal{htmlthumb};
-                $::lglobal{htmlthumb}->destroy if $::lglobal{htmlthumb};
-                $::lglobal{htmlorig}->delete   if $::lglobal{htmlorig};
-                $::lglobal{htmlorig}->destroy  if $::lglobal{htmlorig};
-                for (
-                    $::lglobal{alttext},   $::lglobal{titltext}, $::lglobal{widthent},
-                    $::lglobal{heightent}, $::lglobal{imagelbl}, $::lglobal{imgname}
-                ) {
-                    $_->destroy;
-                }
-                $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-                $::lglobal{htmlimpop}->destroy;
-                undef $::lglobal{htmlimpop};
-            }
-        );
+        $::lglobal{htmlimpop}->protocol( 'WM_DELETE_WINDOW' => sub { htmlimagedestroy(); } );
         $::lglobal{htmlimpop}->transient($top);
     }
     $::lglobal{alttext}->delete( 0, 'end' )                       if $::lglobal{alttext};
@@ -1849,26 +1833,16 @@ sub htmlimageok {
         }
     }
     $textwindow->addGlobEnd;
+    htmlimagedestroy();
+}
 
-    $::lglobal{htmlthumb}->delete
-      if $::lglobal{htmlthumb};
-    $::lglobal{htmlthumb}->destroy
-      if $::lglobal{htmlthumb};
-    $::lglobal{htmlorig}->delete
-      if $::lglobal{htmlorig};
-    $::lglobal{htmlorig}->destroy
-      if $::lglobal{htmlorig};
-    for (
-        $::lglobal{alttext},   $::lglobal{titltext}, $::lglobal{widthent},
-        $::lglobal{heightent}, $::lglobal{imagelbl}, $::lglobal{imgname}
-    ) {
-        $_->destroy;
-    }
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-    $::lglobal{htmlimpop}->destroy
-      if $::lglobal{htmlimpop};
-    undef $::lglobal{htmlimpop}
-      if $::lglobal{htmlimpop};
+sub htmlimagedestroy {
+    $::lglobal{htmlthumb}->delete if $::lglobal{htmlthumb};
+    ::killpopup('htmlthumb');
+    $::lglobal{htmlorig}->delete if $::lglobal{htmlorig};
+    ::killpopup('htmlorig');
+    $::textwindow->tagRemove( 'highlight', '1.0', 'end' );
+    ::killpopup('htmlimpop');
 }
 
 # Reset the width field to the default for the current type
@@ -2329,13 +2303,7 @@ sub htmlgenpopup {
             -width => 16,
         )->grid( -row => 1, -column => 2, -padx => 5, -pady => 1 );
 
-        ::initialize_popup_without_deletebinding('htmlgenpop');
-        $::lglobal{htmlgenpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                $::lglobal{htmlgenpop}->destroy;
-                undef $::lglobal{htmlgenpop};
-            }
-        );
+        ::initialize_popup_with_deletebinding('htmlgenpop');
     }
 }
 
@@ -2587,13 +2555,7 @@ sub htmlmarkpopup {
             -width            => 16
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
 
-        ::initialize_popup_without_deletebinding('markpop');
-        $::lglobal{markpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                $::lglobal{markpop}->destroy;
-                undef $::lglobal{markpop};
-            }
-        );
+        ::initialize_popup_with_deletebinding('markpop');
     }
 }
 
@@ -2703,16 +2665,11 @@ sub markup {
                             $done = '<a href="' . $name . "\">";
                             $textwindow->insert( $thisblockstart, $done );
                         }
-                        $::lglobal{elinkpop}->destroy;
-                        undef $::lglobal{elinkpop};
+                        ::killpopup('elinkpop');
                     }
                 )->pack( -pady => 4 );
-                $::lglobal{elinkpop}->protocol(
-                    'WM_DELETE_WINDOW' => sub {
-                        $::lglobal{elinkpop}->destroy;
-                        undef $::lglobal{elinkpop};
-                    }
-                );
+                $::lglobal{elinkpop}
+                  ->protocol( 'WM_DELETE_WINDOW' => sub { ::killpopup('elinkpop'); } );
                 $::lglobal{elinkpop}->Icon( -image => $::icon );
                 $::lglobal{elinkpop}->transient( $::lglobal{markpop} );
                 $::lglobal{linkentry}->focus;
@@ -2831,8 +2788,7 @@ sub markup {
                 $::lglobal{linkpop}->protocol(
                     'WM_DELETE_WINDOW' => sub {
                         $::geometryhash{linkpop} = $::lglobal{linkpop}->geometry;
-                        $::lglobal{linkpop}->destroy;
-                        undef $::lglobal{linkpop};
+                        ::killpopup('linkpop');
                     }
                 );
                 $::lglobal{linkpop}->Icon( -image => $::icon );
@@ -2847,8 +2803,7 @@ sub markup {
                         $textwindow->insert( $thisblockend, $done );
                         $done = "<a href=\"" . $name . "\">";
                         $textwindow->insert( $thisblockstart, $done );
-                        $::lglobal{linkpop}->destroy;
-                        undef $::lglobal{linkpop};
+                        ::killpopup('linkpop');
                     }
                 );
                 my $tempvar   = lc( makeanchor( ::deaccentdisplay($selection) ) );
@@ -3858,8 +3813,7 @@ sub pageadjust {
                 }
                 $recalc->invoke;
                 ::setedited(1);
-                $::lglobal{pagelabelpop}->destroy;
-                undef $::lglobal{pagelabelpop};
+                ::killpopup('pagelabelpop');
             }
         )->grid( -row => 1, -column => 2, -padx => 5 );
         my $frame1 = $::lglobal{pagelabelpop}->Scrolled(

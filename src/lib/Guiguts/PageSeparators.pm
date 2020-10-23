@@ -47,10 +47,7 @@ EOM
         my $button_ok = $::lglobal{pagesephelppop}->Button(
             -activebackground => $::activecolor,
             -text             => 'Close',
-            -command          => sub {
-                $::lglobal{pagesephelppop}->destroy;
-                undef $::lglobal{pagesephelppop};
-            }
+            -command          => sub { ::killpopup('pagesephelppop'); }
         )->pack;
         $::lglobal{pagesephelppop}->resizable( 'yes', 'yes' );
     }
@@ -592,8 +589,7 @@ sub separatorpopup {
         ::initialize_popup_without_deletebinding('pageseppop');
         $::lglobal{pageseppop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{pageseppop}->destroy;
-                undef $::lglobal{pageseppop};
+                ::killpopup('pageseppop');
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             }
         );

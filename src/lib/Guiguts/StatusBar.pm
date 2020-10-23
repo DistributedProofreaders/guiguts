@@ -585,8 +585,7 @@ sub setlang {
                     update_lang_button();
                     ::readlabels();
                 }
-                $::lglobal{setlangpop}->destroy;
-                undef $::lglobal{setlangpop};
+                ::killpopup('setlangpop');
             }
         );
         $::lglobal{setlangpop}->resizable( 'no', 'no' );
@@ -660,8 +659,7 @@ sub selection {
             -text    => 'Close',
             -width   => 8,
             -command => sub {
-                $::lglobal{selectionpop}->destroy;
-                undef $::lglobal{selectionpop};
+                ::killpopup('selectionpop');
                 undef $::lglobal{selsentry};
                 undef $::lglobal{seleentry};
             },
@@ -670,8 +668,7 @@ sub selection {
         ::initialize_popup_without_deletebinding('selectionpop');
         $::lglobal{selectionpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{selectionpop}->destroy;
-                undef $::lglobal{selectionpop};
+                ::killpopup('selectionpop');
                 undef $::lglobal{selsentry};
                 undef $::lglobal{seleentry};
             }
@@ -717,11 +714,9 @@ sub gotoline {
                     $textwindow->markSet( 'insert', "$::lglobal{line_number}.0" );
                     $textwindow->see('insert');
                     update_indicators();
-                    $::lglobal{gotolinepop}->destroy;
-                    undef $::lglobal{gotolinepop};
+                    ::killpopup('gotolinepop');
                 } else {
-                    $::lglobal{gotolinepop}->destroy;
-                    undef $::lglobal{gotolinepop};
+                    ::killpopup('gotolinepop');
                 }
             }
         );
@@ -747,8 +742,7 @@ sub gotopage {
                 if ( ( defined $_[0] ) and ( $_[0] eq 'OK' ) ) {
                     unless ( $::lglobal{lastpage} ) {
                         ::soundbell();
-                        $::lglobal{gotopagpop}->destroy;
-                        undef $::lglobal{gotopagpop};
+                        ::killpopup('gotopagpop');
                         return;
                     }
                     if ( $::lglobal{pagedigits} == 3 ) {
@@ -762,8 +756,7 @@ sub gotopage {
                         && defined $::pagenumbers{ 'Pg' . $::lglobal{lastpage} } ) {
                         delete $::pagenumbers{ 'Pg' . $::lglobal{lastpage} };
                         ::soundbell();
-                        $::lglobal{gotopagpop}->destroy;
-                        undef $::lglobal{gotopagpop};
+                        ::killpopup('gotopagpop');
                         return;
                     }
                     my $index = $textwindow->index( 'Pg' . $::lglobal{lastpage} );
@@ -771,11 +764,9 @@ sub gotopage {
                     ::seeindex( 'insert -2l', 1 );
                     $textwindow->focus;
                     update_indicators();
-                    $::lglobal{gotopagpop}->destroy;
-                    undef $::lglobal{gotopagpop};
+                    ::killpopup('gotopagpop');
                 } else {
-                    $::lglobal{gotopagpop}->destroy;
-                    undef $::lglobal{gotopagpop};
+                    ::killpopup('gotopagpop');
                 }
             }
         );
@@ -809,8 +800,7 @@ sub gotolabel {
                     }
                     unless ($mark) {
                         ::soundbell();
-                        $::lglobal{gotolabpop}->destroy;
-                        undef $::lglobal{gotolabpop};
+                        ::killpopup('gotolabpop');
                         return;
                     }
                     my $index = $textwindow->index($mark);
@@ -818,11 +808,9 @@ sub gotolabel {
                     ::seeindex( 'insert -2l', 1 );
                     $textwindow->focus;
                     ::update_indicators();
-                    $::lglobal{gotolabpop}->destroy;
-                    undef $::lglobal{gotolabpop};
+                    ::killpopup('gotolabpop');
                 } else {
-                    $::lglobal{gotolabpop}->destroy;
-                    undef $::lglobal{gotolabpop};
+                    ::killpopup('gotolabpop');
                 }
             }
         );

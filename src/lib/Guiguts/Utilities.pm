@@ -630,8 +630,7 @@ sub working {
         $::lglobal{worklabel}->configure( -text => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n" );
         $::lglobal{workpop}->update;
     } elsif ( defined $::lglobal{workpop} ) {
-        $::lglobal{workpop}->destroy;
-        undef $::lglobal{workpop};
+        ::killpopup('workpop');
     } else {
         $::lglobal{workpop} = $top->Toplevel;
         $::lglobal{workpop}->transient($top);
@@ -644,8 +643,7 @@ sub working {
         $::lglobal{workpop}->resizable( 'no', 'no' );
         $::lglobal{workpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{workpop}->destroy;
-                undef $::lglobal{workpop};
+                ::killpopup('workpop');
             }
         );
         $::lglobal{workpop}->Icon( -image => $::icon );
@@ -1388,8 +1386,7 @@ sub scrolldismiss {
     my $textwindow = $::textwindow;
     return unless $::lglobal{scroller};
     $textwindow->configure( -cursor => $::lglobal{oldcursor} );
-    $::lglobal{scroller}->destroy;
-    $::lglobal{scroller} = '';
+    ::killpopup('scroller');
     $::lglobal{scroll_id}->cancel if $::lglobal{scroll_id};
     $::lglobal{scroll_id} = '';
 }
@@ -2156,8 +2153,7 @@ sub externalpopup {    # Set up the external commands menu
                 # save the settings and rebuild the menu
                 ::savesettings();
                 ::menurebuild();
-                $::lglobal{extoptpop}->destroy;
-                undef $::lglobal{extoptpop};
+                ::killpopup('extoptpop');
             },
             -text  => 'OK',
             -width => 8
@@ -2172,14 +2168,18 @@ sub xtops {    # run an external program through the external commands menu
     ::runner( ::cmdinterp( $::extops[$index]{command} ) );
 }
 
-sub toolbar_toggle {    # Set up / remove the tool bar
+#
+# Remove / set up the tool bar
+sub toolbar_toggle {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    if ( $::notoolbar && $::lglobal{toptool} ) {
-        $::lglobal{toptool}->destroy;
-        undef $::lglobal{toptool};
-        undef $::lglobal{savetool};
-    } elsif ( !$::notoolbar && !$::lglobal{toptool} ) {
+
+    # Destroy existing toolbar
+    ::killpopup('toptool');
+    undef $::lglobal{savetool};
+
+    # Create toolbar unless not wanted
+    unless ($::notoolbar) {
         $::lglobal{toptool}  = $top->ToolBar( -side => $::toolside, -close => '30' );
         $::lglobal{toolfont} = $top->Font(
             -family => 'Times',

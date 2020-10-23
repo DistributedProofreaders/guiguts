@@ -313,8 +313,7 @@ sub fixpopup {
             -command          => sub {
                 $::lglobal{fixpop}->UnmapWindow;
                 fixup();
-                $::lglobal{fixpop}->destroy;
-                undef $::lglobal{fixpop};
+                ::killpopup('fixpop');
             },
             -text  => 'Go!',
             -width => 14

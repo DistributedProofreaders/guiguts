@@ -225,8 +225,7 @@ sub multilangpopup {
         ::drag($multiwclistbox);
         $::lglobal{multispellpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{multispellpop}->destroy;
-                undef $::lglobal{multispellpop};
+                ::killpopup('multispellpop');
                 undef $multiwclistbox;
             }
         );

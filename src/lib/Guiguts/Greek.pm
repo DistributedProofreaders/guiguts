@@ -704,8 +704,7 @@ sub greekpopup {
                     $::lglobal{buttons}->{$image}->destroy;
                 }
                 %attributes = ();
-                $::lglobal{grpop}->destroy;
-                undef $::lglobal{grpop};
+                ::killpopup('grpop');
             }
         );
         $glatin->select;

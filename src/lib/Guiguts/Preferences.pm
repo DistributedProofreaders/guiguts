@@ -165,8 +165,7 @@ sub setmargins {
             -activebackground => $::activecolor,
             -text             => 'OK',
             -command          => sub {
-                $::lglobal{marginspop}->destroy;
-                undef $::lglobal{marginspop};
+                ::killpopup('marginspop');
                 if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) ) {
                     $top->messageBox(
                         -icon    => 'error',
@@ -249,8 +248,7 @@ sub fontsize {
             -activebackground => $::activecolor,
             -text             => 'OK',
             -command          => sub {
-                $::lglobal{fontpop}->destroy;
-                undef $::lglobal{fontpop};
+                ::killpopup('fontpop');
                 ::savesettings();
             }
         )->grid( -row => 3, -column => 2, -pady => 5 );
@@ -310,15 +308,13 @@ sub saveinterval {
             -text    => 'OK',
             -command => sub {
                 $::autosaveinterval = 5 unless $::autosaveinterval;
-                $::lglobal{intervalpop}->destroy;
-                undef $::lglobal{intervalpop};
+                ::killpopup('intervalpop');
             },
         )->pack;
         $::lglobal{intervalpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 $::autosaveinterval = 5 unless $::autosaveinterval;
-                $::lglobal{intervalpop}->destroy;
-                undef $::lglobal{intervalpop};
+                ::killpopup('intervalpop');
             }
         );
         $::lglobal{intervalpop}->Icon( -image => $::icon );
@@ -634,8 +630,7 @@ sub filePathsPopup {
             -activebackground => $::activecolor,
             -text             => 'OK',
             -command          => sub {
-                $::lglobal{filepathspop}->destroy;
-                undef $::lglobal{filepathspop};
+                ::killpopup('filepathspop');
                 ::savesettings();
             }
         )->pack;
@@ -674,8 +669,7 @@ sub setDPurls {
             -activebackground => $::activecolor,
             -text             => 'OK',
             -command          => sub {
-                $::lglobal{defurlspop}->destroy;
-                undef $::lglobal{defurlspop};
+                ::killpopup('defurlspop');
                 ::savesettings();
             }
         )->grid( -row => 5, -column => 0, -columnspan => 2, -pady => 5 );
