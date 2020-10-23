@@ -361,18 +361,9 @@ sub clearvars {
 
 ## Destroy some popups and labels when closing a file
 sub clearpopups {
-    if ( $::lglobal{img_num_label} ) {
-        $::lglobal{img_num_label}->destroy;
-        undef $::lglobal{img_num_label};
-    }
-    if ( $::lglobal{pagebutton} ) {
-        $::lglobal{pagebutton}->destroy;
-        undef $::lglobal{pagebutton};
-    }
-    if ( $::lglobal{previmagebutton} ) {
-        $::lglobal{previmagebutton}->destroy;
-        undef $::lglobal{previmagebutton};
-    }
+    ::killpopup('img_num_label');
+    ::killpopup('pagebutton');
+    ::killpopup('previmagebutton');
     ::killpopup('footpop');
     ::killpopup('footcheckpop');
     ::killpopup('htmlgenpop');
@@ -605,8 +596,7 @@ sub file_guess_page_marks {
                     $textwindow->markSet( "Pg$number", "$lnum.0" );
                     $textwindow->markGravity( "Pg$number", 'left' );
                 }
-                $::lglobal{guesspgmarkerpop}->destroy;
-                undef $::lglobal{guesspgmarkerpop};
+                ::killpopup('guesspgmarkerpop');
             },
             -text  => 'Guess Page #s',
             -width => 18

@@ -872,46 +872,26 @@ sub menu_preferences_toolbar {
         [
             Radiobutton => 'Toolbar on Top',
             -variable   => \$::toolside,
-            -command    => sub {
-                $::lglobal{toptool}->destroy
-                  if $::lglobal{toptool};
-                undef $::lglobal{toptool};
-                ::toolbar_toggle();
-            },
-            -value => 'top'
+            -command    => sub { ::toolbar_toggle(); },
+            -value      => 'top'
         ],
         [
             Radiobutton => 'Toolbar on Bottom',
             -variable   => \$::toolside,
-            -command    => sub {
-                $::lglobal{toptool}->destroy
-                  if $::lglobal{toptool};
-                undef $::lglobal{toptool};
-                ::toolbar_toggle();
-            },
-            -value => 'bottom'
+            -command    => sub { ::toolbar_toggle(); },
+            -value      => 'bottom'
         ],
         [
             Radiobutton => 'Toolbar on Left',
             -variable   => \$::toolside,
-            -command    => sub {
-                $::lglobal{toptool}->destroy
-                  if $::lglobal{toptool};
-                undef $::lglobal{toptool};
-                ::toolbar_toggle();
-            },
-            -value => 'left'
+            -command    => sub { ::toolbar_toggle(); },
+            -value      => 'left'
         ],
         [
             Radiobutton => 'Toolbar on Right',
             -variable   => \$::toolside,
-            -command    => sub {
-                $::lglobal{toptool}->destroy
-                  if $::lglobal{toptool};
-                undef $::lglobal{toptool};
-                ::toolbar_toggle();
-            },
-            -value => 'right'
+            -command    => sub { ::toolbar_toggle(); },
+            -value      => 'right'
         ],
         [ 'separator', '' ],
         [

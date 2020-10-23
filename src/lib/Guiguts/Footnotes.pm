@@ -315,8 +315,7 @@ sub footnotepop {
         $::lglobal{footpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 ::killpopup('footcheckpop');
-                $::lglobal{footpop}->destroy;
-                undef $::lglobal{footpop};
+                ::killpopup('footpop');
                 $textwindow->tagRemove( 'footnote', '1.0', 'end' );
             }
         );
@@ -512,8 +511,7 @@ sub fnjoin {
 
     # reload the Check Footnotes window to update the list
     if ( defined( $::lglobal{footcheckpop} ) ) {
-        $::lglobal{footcheckpop}->destroy;
-        undef $::lglobal{footcheckpop};
+        ::killpopup('footcheckpop');
         fnview( $::lglobal{fnindex} );
     }
     footnoteshow();

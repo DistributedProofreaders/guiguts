@@ -19,10 +19,7 @@ sub errorcheckpop_up {
     ::hidepagenums();
 
     # Destroy and start afresh if already popped
-    if ( $::lglobal{errorcheckpop} ) {
-        $::lglobal{errorcheckpop}->destroy;
-        undef $::lglobal{errorcheckpop};
-    }
+    ::killpopup('errorcheckpop');
     $::lglobal{errorcheckpop} = $top->Toplevel;
     $::lglobal{errorcheckpop}->title($errorchecktype);
 
@@ -926,9 +923,8 @@ sub gcviewopts {
         ::initialize_popup_without_deletebinding('gcviewoptspop');
         $::lglobal{gcviewoptspop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{gcviewoptspop}->destroy;
-                undef $::lglobal{gcviewoptspop};
-                unlink 'gutreslts.tmp';    #cat('gutreslts.tmp')
+                ::killpopup('gcviewoptspop');
+                unlink 'gutreslts.tmp';
             }
         );
     }

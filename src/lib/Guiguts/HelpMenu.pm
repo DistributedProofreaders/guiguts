@@ -53,10 +53,7 @@ EOM
         my $button_ok = $::lglobal{aboutpop}->Button(
             -activebackground => $::activecolor,
             -text             => 'OK',
-            -command          => sub {
-                $::lglobal{aboutpop}->destroy;
-                undef $::lglobal{aboutpop};
-            }
+            -command          => sub { ::killpopup('aboutpop'); }
         )->pack( -pady => 6 );
         $::lglobal{aboutpop}->resizable( 'no', 'no' );
         $::lglobal{aboutpop}->raise;
@@ -90,14 +87,12 @@ sub hotkeyshelp {
         my $button_ok = $frame->Button(
             -activebackground => $::activecolor,
             -text             => 'Close',
-            -command          => sub {
-                $::lglobal{hotkeyspop}->destroy;
-                undef $::lglobal{hotkeyspop};
-            }
+            -command          => sub { ::killpopup('hotkeyspop'); }
         )->pack;
         ::initialize_popup_with_deletebinding('hotkeyspop');
         ::drag($rotextbox);
         $rotextbox->focus;
+
         if ( -e 'hotkeys.txt' ) {
             if ( open my $ref, '<', 'hotkeys.txt' ) {
                 while (<$ref>) {
@@ -131,10 +126,7 @@ sub regexref {
         my $button_ok = $::lglobal{regexrefpop}->Button(
             -activebackground => $::activecolor,
             -text             => 'Close',
-            -command          => sub {
-                $::lglobal{regexrefpop}->destroy;
-                undef $::lglobal{regexrefpop};
-            }
+            -command          => sub { ::killpopup('regexrefpop'); }
         )->pack;
         ::initialize_popup_with_deletebinding('regexrefpop');
         ::drag($regtext);

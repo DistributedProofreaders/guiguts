@@ -38,8 +38,7 @@ sub togglepagenums {
         $textwindow->tagRemove( 'pagenum', '1.0', 'end' );
         if ( $::lglobal{pagemarkerpop} ) {
             $::geometryhash{pagemarkerpop} = $::lglobal{pagemarkerpop}->geometry;
-            $::lglobal{pagemarkerpop}->destroy;
-            undef $::lglobal{pagemarkerpop};
+            ::killpopup('pagemarkerpop');
         }
     } else {
         $::lglobal{seepagenums} = 1;
@@ -207,8 +206,7 @@ sub pnumadjust {
         $::lglobal{pagemarkerpop}->bind( $::lglobal{pagemarkerpop}, '<Delete>' => \&::pageremove );
         $::lglobal{pagemarkerpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{pagemarkerpop}->destroy;
-                undef $::lglobal{pagemarkerpop};
+                ::killpopup('pagemarkerpop');
                 ::hidepagenums();
             }
         );

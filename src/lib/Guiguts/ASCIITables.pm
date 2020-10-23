@@ -198,8 +198,7 @@ sub tablefx {
                 $textwindow->tagRemove( 'table',   '1.0', 'end' );
                 $textwindow->tagRemove( 'linesel', '1.0', 'end' );
                 $textwindow->markUnset( 'tblstart', 'tblend' );
-                $::lglobal{tblfxpop}->destroy;
-                undef $::lglobal{tblfxpop};
+                ::killpopup('tblfxpop');
             }
         );
         tblselect();

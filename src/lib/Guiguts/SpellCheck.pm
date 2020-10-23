@@ -911,8 +911,7 @@ sub spellchecker {    # Set up spell check window
 sub endaspell {
     my $textwindow = $::textwindow;
     @{ $::lglobal{misspelledlist} } = ();
-    $::lglobal{spellpopup}->destroy;
-    undef $::lglobal{spellpopup};                                # completely remove spellcheck window
+    ::killpopup('spellpopup');                                   # completely remove spellcheck window
     print OUT "\cC\n" if $::lglobal{spellpid};                   # send quit signal to aspell
     aspellstop();                                                # and remove the process
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );

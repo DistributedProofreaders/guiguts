@@ -1498,8 +1498,7 @@ sub searchpopup {
             'WM_DELETE_WINDOW' => sub {
                 $::lglobal{regrepeat}->cancel;
                 undef $::lglobal{regrepeat};
-                $::lglobal{searchpop}->destroy;
-                undef $::lglobal{searchpop};
+                ::killpopup('searchpop');
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
                 undef $::lglobal{hintpop} if $::lglobal{hintpop};
                 $::scannosearch = 0;    #no longer in a scanno search
@@ -1768,9 +1767,8 @@ sub stealthscanno {
     if ( defined $::lglobal{searchpop} ) {
         $::lglobal{regrepeat}->cancel;
         undef $::lglobal{regrepeat};
-        $::lglobal{searchpop}->destroy;
+        ::killpopup('searchpop');
     }
-    undef $::lglobal{searchpop};
     searchoptset(qw/1 x x 0 1/);    # force search to begin at start of doc, whole word
     if ( ::loadscannos() ) {
         ::savesettings();
@@ -2060,8 +2058,7 @@ sub orphanedbrackets {
         ::initialize_popup_without_deletebinding('brkpop');
         $::lglobal{brkpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{brkpop}->destroy;
-                undef $::lglobal{brkpop};
+                ::killpopup('brkpop');
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             }
         );
@@ -2248,8 +2245,7 @@ sub searchsize {    # Pop up a window where you can adjust the search history si
             -width   => 10,
             -command => sub {
                 ::savesettings();
-                $::lglobal{srchhistsizepop}->destroy;
-                undef $::lglobal{srchhistsizepop};
+                ::killpopup('srchhistsizepop');
             }
         )->pack;
         $::lglobal{srchhistsizepop}->resizable( 'no', 'no' );
