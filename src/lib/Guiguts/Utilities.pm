@@ -772,17 +772,19 @@ sub initialize {
     $::manualhash{'errorcheckpop+pphtml'}    = '/Guiguts_1.1_HTML#PPhtml';
     $::manualhash{'errorcheckpop+ppvimage'} =
       '/Guiguts_1.1_HTML#Check_for_image-related_errors_.28PPVimage.29';
-    $::manualhash{'extoptpop'}        = '/Guiguts_1.1_Custom_Menu';
-    $::manualhash{'filepathspop'}     = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'fixpop'}           = '/Guiguts_1.1_Tools_Menu#Basic_Fixup';
-    $::manualhash{'floodpop'}         = '/Guiguts_1.1_Edit_Menu#Flood_Fill';
-    $::manualhash{'fontpop'}          = '/Guiguts_1.1_Preferences_Menu#Appearance';
-    $::manualhash{'footcheckpop'}     = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'footpop'}          = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcviewoptspop'}    = '/Guiguts_1.1_Tools_Menu#Bookloupe';
-    $::manualhash{'gotolabpop'}       = '/Guiguts_1.1_Navigating#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
-    $::manualhash{'gotolinepop'}      = '/Guiguts_1.1_Navigating#Go_to_a_specific_Line';
-    $::manualhash{'gotopagpop'}       = '/Guiguts_1.1_Navigating#Go_to_the_text_corresponding_to_a_specific_page_Image';
+    $::manualhash{'extoptpop'}     = '/Guiguts_1.1_Custom_Menu';
+    $::manualhash{'filepathspop'}  = '/Guiguts_1.1_Preferences_Menu#File_Paths';
+    $::manualhash{'fixpop'}        = '/Guiguts_1.1_Tools_Menu#Basic_Fixup';
+    $::manualhash{'floodpop'}      = '/Guiguts_1.1_Edit_Menu#Flood_Fill';
+    $::manualhash{'fontpop'}       = '/Guiguts_1.1_Preferences_Menu#Appearance';
+    $::manualhash{'footcheckpop'}  = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
+    $::manualhash{'footpop'}       = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
+    $::manualhash{'gcviewoptspop'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'gotolabpop'} =
+      '/Guiguts_1.1_Navigating#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
+    $::manualhash{'gotolinepop'} = '/Guiguts_1.1_Navigating#Go_to_a_specific_Line';
+    $::manualhash{'gotopagpop'} =
+      '/Guiguts_1.1_Navigating#Go_to_the_text_corresponding_to_a_specific_page_Image';
     $::manualhash{'grpop'}            = '/Guiguts_1.1_Tools_Menu#Find_and_Convert_Greek';
     $::manualhash{'guesspgmarkerpop'} = '/Guiguts_1.1_File_Menu#Guess_Page_Markers';
     $::manualhash{'hotkeyspop'}       = '/Guiguts_1.1_Help_Menu#Keyboard_Shortcuts';
