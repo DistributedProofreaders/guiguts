@@ -287,6 +287,7 @@ sub saveinterval {
         $::lglobal{intervalpop} = $top->Toplevel;
         $::lglobal{intervalpop}->title('Auto Save Interval');
         $::lglobal{intervalpop}->resizable( 'no', 'no' );
+        ::initialize_popup_with_deletebinding('intervalpop');
         my $frame = $::lglobal{intervalpop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         $frame->Label( -text => 'Minutes between auto save' )->pack( -side => 'left' );
         my $entry = $frame->Entry(
@@ -311,13 +312,6 @@ sub saveinterval {
                 ::killpopup('intervalpop');
             },
         )->pack;
-        $::lglobal{intervalpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                $::autosaveinterval = 5 unless $::autosaveinterval;
-                ::killpopup('intervalpop');
-            }
-        );
-        $::lglobal{intervalpop}->Icon( -image => $::icon );
         $entry->selectionRange( 0, 'end' );
     }
 }

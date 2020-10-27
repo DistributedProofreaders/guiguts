@@ -641,12 +641,7 @@ sub working {
             -background => $::activecolor,
         )->pack;
         $::lglobal{workpop}->resizable( 'no', 'no' );
-        $::lglobal{workpop}->protocol(
-            'WM_DELETE_WINDOW' => sub {
-                ::killpopup('workpop');
-            }
-        );
-        $::lglobal{workpop}->Icon( -image => $::icon );
+        initialize_popup_with_deletebinding('workpop');
         $::lglobal{workpop}->update;
     }
 }
@@ -706,6 +701,7 @@ sub initialize {
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
     $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
+    $::geometryhash{elinkpop}         = '330x110+150+120' unless $::geometryhash{elinkpop};
     $::geometryhash{errorcheckpop}    = '+484+72'         unless $::geometryhash{errorcheckpop};
     $::positionhash{extoptpop}        = '+120+38'         unless $::positionhash{extoptpop};
     $::positionhash{filepathspop}     = '+55+7'           unless $::positionhash{filepathspop};
@@ -714,19 +710,25 @@ sub initialize {
     $::positionhash{fontpop}          = '+10+10'          unless $::positionhash{fontpop};
     $::geometryhash{footcheckpop}     = '+22+12'          unless $::geometryhash{footcheckpop};
     $::positionhash{footpop}          = '+255+157'        unless $::positionhash{footpop};
+    $::positionhash{gotolabpop}       = '+400+400'        unless $::positionhash{gotolabpop};
+    $::positionhash{gotolinepop}      = '+400+400'        unless $::positionhash{gotolinepop};
+    $::positionhash{gotopagpop}       = '+400+400'        unless $::positionhash{gotopagpop};
     $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
     $::positionhash{grpop}            = '+144+153'        unless $::positionhash{grpop};
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
-    $::geometryhash{hotkeyspop}       = '+144+119'        unless $::geometryhash{hotkeyspop};
     $::positionhash{hilitepop}        = '+150+150'        unless $::positionhash{hilitepop};
     $::positionhash{hintpop}          = '+150+150'        unless $::positionhash{hintpop};
+    $::geometryhash{hotkeyspop}       = '+144+119'        unless $::geometryhash{hotkeyspop};
     $::geometryhash{hpopup}           = '300x400+584+211' unless $::geometryhash{hpopup};
     $::positionhash{htmlgenpop}       = '+145+37'         unless $::positionhash{htmlgenpop};
     $::positionhash{htmlimpop}        = '+45+37'          unless $::positionhash{htmlimpop};
+    $::positionhash{intervalpop}      = '+300+137'        unless $::positionhash{intervalpop};
     $::positionhash{latinpop}         = '+10+10'          unless $::positionhash{latinpop};
     $::geometryhash{linkpop}          = '+224+72'         unless $::geometryhash{linkpop};
     $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
     $::positionhash{markpop}          = '+140+93'         unless $::positionhash{markpop};
+    $::positionhash{markuppop}        = '+150+100'        unless $::positionhash{markuppop};
+    $::geometryhash{multispellpop}    = '430x410+100+100' unless $::geometryhash{multispellpop};
     $::geometryhash{oppop}            = '600x400+50+50'   unless $::geometryhash{oppop};
     $::geometryhash{pagelabelpop}     = '375x500+20+20'   unless $::geometryhash{pagelabelpop};
     $::positionhash{pagemarkerpop}    = '+302+97'         unless $::positionhash{pagemarkerpop};
@@ -746,6 +748,7 @@ sub initialize {
     $::geometryhash{utfsearchpop}     = '550x450+53+87'   unless $::geometryhash{utfsearchpop};
     $::geometryhash{versionbox}       = '300x250+80+80'   unless $::geometryhash{versionbox};
     $::geometryhash{wfpop}            = '+365+63'         unless $::geometryhash{wfpop};
+    $::positionhash{workpop}          = '+30+30'          unless $::positionhash{workpop};
 
     # manualhash stores subpage of manual for each dialog
     # Where dialog is used in several contexts, use 'dialogname+context' as key
@@ -754,6 +757,7 @@ sub initialize {
     $::manualhash{'asciiboxpop'}             = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
     $::manualhash{'brkpop'}                  = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
     $::manualhash{'defurlspop'}              = '/Guiguts_1.1_Preferences_Menu#File_Paths';
+    $::manualhash{'elinkpop'}                = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'errorcheckpop+Bookloupe'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
     $::manualhash{'errorcheckpop+Jeebies'}   = '/Guiguts_1.1_Tools_Menu#Jeebies';
     $::manualhash{'errorcheckpop+Load Checkfile'} = '/Guiguts_1.1_Tools_Menu#Load_Checkfile';
@@ -768,14 +772,19 @@ sub initialize {
     $::manualhash{'errorcheckpop+pphtml'}    = '/Guiguts_1.1_HTML#PPhtml';
     $::manualhash{'errorcheckpop+ppvimage'} =
       '/Guiguts_1.1_HTML#Check_for_image-related_errors_.28PPVimage.29';
-    $::manualhash{'extoptpop'}        = '/Guiguts_1.1_Custom_Menu';
-    $::manualhash{'filepathspop'}     = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'fixpop'}           = '/Guiguts_1.1_Tools_Menu#Basic_Fixup';
-    $::manualhash{'floodpop'}         = '/Guiguts_1.1_Edit_Menu#Flood_Fill';
-    $::manualhash{'fontpop'}          = '/Guiguts_1.1_Preferences_Menu#Appearance';
-    $::manualhash{'footcheckpop'}     = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'footpop'}          = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcviewoptspop'}    = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'extoptpop'}     = '/Guiguts_1.1_Custom_Menu';
+    $::manualhash{'filepathspop'}  = '/Guiguts_1.1_Preferences_Menu#File_Paths';
+    $::manualhash{'fixpop'}        = '/Guiguts_1.1_Tools_Menu#Basic_Fixup';
+    $::manualhash{'floodpop'}      = '/Guiguts_1.1_Edit_Menu#Flood_Fill';
+    $::manualhash{'fontpop'}       = '/Guiguts_1.1_Preferences_Menu#Appearance';
+    $::manualhash{'footcheckpop'}  = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
+    $::manualhash{'footpop'}       = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
+    $::manualhash{'gcviewoptspop'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'gotolabpop'} =
+      '/Guiguts_1.1_Navigating#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
+    $::manualhash{'gotolinepop'} = '/Guiguts_1.1_Navigating#Go_to_a_specific_Line';
+    $::manualhash{'gotopagpop'} =
+      '/Guiguts_1.1_Navigating#Go_to_the_text_corresponding_to_a_specific_page_Image';
     $::manualhash{'grpop'}            = '/Guiguts_1.1_Tools_Menu#Find_and_Convert_Greek';
     $::manualhash{'guesspgmarkerpop'} = '/Guiguts_1.1_File_Menu#Guess_Page_Markers';
     $::manualhash{'hotkeyspop'}       = '/Guiguts_1.1_Help_Menu#Keyboard_Shortcuts';
@@ -784,16 +793,19 @@ sub initialize {
     $::manualhash{'hpopup'}           = '/Guiguts_1.1_Tools_Menu#Harmonic_Searches';
     $::manualhash{'htmlgenpop'} = '/Guiguts_1.1_HTML#Convert_the_text_to_HTML_.28HTML_Generator.29';
     $::manualhash{'htmlimpop'}  = '/Guiguts_1.1_HTML#Add_Illustrations';
-    $::manualhash{'latinpop'}   = '/Guiguts_1.1_Unicode_Menu#The_Latin-1_Dialog';
-    $::manualhash{'linkpop'}    = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'marginspop'} = '/Guiguts_1.1_Preferences_Menu#Processing';
-    $::manualhash{'markpop'}    = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'oppop'}      = '/Guiguts_1.1_File_Menu#View_Operations_History';
-    $::manualhash{'pagelabelpop'}      = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
-    $::manualhash{'pagemarkerpop'}     = '/Guiguts_1.1_File_Menu#Display.2FAdjust_Page_Markers';
-    $::manualhash{'pagesephelppop'}    = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'pageseppop'}        = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'regexrefpop'}       = '/Guiguts_1.1_Searching#Regular_Expressions';
+    $::manualhash{'intervalpop'}    = '/Guiguts_1.1_Preferences_Menu#Backup';
+    $::manualhash{'latinpop'}       = '/Guiguts_1.1_Unicode_Menu#The_Latin-1_Dialog';
+    $::manualhash{'linkpop'}        = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'marginspop'}     = '/Guiguts_1.1_Preferences_Menu#Processing';
+    $::manualhash{'markpop'}        = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'markuppop'}      = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'multispellpop'}  = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
+    $::manualhash{'oppop'}          = '/Guiguts_1.1_File_Menu#View_Operations_History';
+    $::manualhash{'pagelabelpop'}   = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
+    $::manualhash{'pagemarkerpop'}  = '/Guiguts_1.1_File_Menu#Display.2FAdjust_Page_Markers';
+    $::manualhash{'pagesephelppop'} = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'pageseppop'}     = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'regexrefpop'}    = '/Guiguts_1.1_Searching#Regular_Expressions';
     $::manualhash{'searchpop+scannos'} = '/Guiguts_1.1_Tools_Menu#Stealth_Scannos';
     $::manualhash{'searchpop+search'}  = '/Guiguts_1.1_Searching#The_Search_Dialog';
     $::manualhash{'selectionpop'}      = '/Guiguts_1.1_Edit_Menu#Selection_Dialog';
@@ -808,7 +820,8 @@ sub initialize {
     $::manualhash{'utfsearchpop'}      = '/Guiguts_1.1_Unicode_Menu#Unicode_Search_by_Name';
     $::manualhash{'versionbox'} =
       '/Guiguts_1.1_Help_Menu#Guiguts_HELP_Menu:_Online_and_Built-in_Help';
-    $::manualhash{'wfpop'} = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'wfpop'}   = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'workpop'} = '#Overview';
 
     ::readsettings();
     ::fontinit();    # Initialize the fonts for the two windows
@@ -1462,12 +1475,10 @@ sub initialize_popup_without_deletebinding {
         );
     }
     $::lglobal{$popupname}->Icon( -image => $::icon );
-    if ( ($::stayontop) and ( not $popupname eq "wfpop" ) ) {
-        $::lglobal{$popupname}->transient($top);
-    }
-    if ( ($::wfstayontop) and ( $popupname eq "wfpop" ) ) {
-        $::lglobal{$popupname}->transient($top);
-    }
+
+    # wfpop has its own "stay on top" flag
+    $::lglobal{$popupname}->transient($top)
+      if ( $popupname eq "wfpop" ? $::wfstayontop : $::stayontop );
 
     $::lglobal{$popupname}->Tk::bind( '<F1>' => sub { display_manual( $popupname, $context ); } );
 

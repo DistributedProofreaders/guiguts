@@ -59,7 +59,7 @@ sub multilangpopup {
     } else {
         $::lglobal{multispellpop} = $top->Toplevel;
         $::lglobal{multispellpop}->title('Multilingual Spelling');
-        $::lglobal{multispellpop}->Icon( -image => $::icon );
+        ::initialize_popup_without_deletebinding('multispellpop');
 
         #new frame
         my $f2 = $::lglobal{multispellpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -158,12 +158,6 @@ sub multilangpopup {
             -width            => 20
         )->grid( -row => 4, -column => 3, -padx => 1, -pady => 1 );
 
-        #		$f0->Button(
-        #					-activebackground => $::activecolor,
-        #					-command => sub { lowergetmisspelled( $textwindow, $top ) },
-        #					-text    => 'Lower case spellcheck',
-        #					-width   => 20
-        #		)->grid( -row => 5, -column => 3, -padx => 1, -pady => 1 );
         $f0->Button(
             -activebackground => $::activecolor,
             -command          => sub { multi_help_popup($top) },
@@ -216,12 +210,6 @@ sub multilangpopup {
             }
         );
 
-        #		$f3->Radiobutton(
-        #									   -variable    => \$sortorder,
-        #									   -selectcolor => $::lglobal{checkcolor},
-        #									   -value       => 'g',
-        #									   -text        => 'Lang',
-        #		)->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
         ::drag($multiwclistbox);
         $::lglobal{multispellpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
@@ -231,7 +219,6 @@ sub multilangpopup {
         );
     }
 
-    #	::spellloadprojectdict();
     updateMultiDictEntry();
     getwordcounts();
 }

@@ -829,6 +829,7 @@ sub ital_adjust {
         -text             => 'OK',
         -width            => 8
     )->grid( -row => 2, -column => 1, -padx => 2, -pady => 4 );
+    $::lglobal{markuppop}->resizable( 'no', 'no' );
 }
 
 sub hyphencheck {
