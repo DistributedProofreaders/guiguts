@@ -826,7 +826,7 @@ sub gotocommonsetup {
     my $prompt  = shift;             # prompt for label in dialog
     my $default = shift;             # default value for label (e.g. "Pg " in gotopage)
     my $len     = length $default;
-    $::lglobal{$dlg}->Icon( -image => $::icon );
+    ::initialize_popup_without_deletebinding($dlg);
     $::lglobal{$dlg}->resizable( 'no', 'no' );
     $::lglobal{$dlg}
       ->Tk::bind( '<Key-KP_Enter>' => sub { $::lglobal{$dlg}->Subwidget('B_OK')->invoke; } );

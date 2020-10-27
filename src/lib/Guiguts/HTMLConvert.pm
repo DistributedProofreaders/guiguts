@@ -2577,322 +2577,309 @@ sub markup {
     my $done        = '';
     my @intanchors;
     return unless $range_total;
-    if (1) {
-        my $end            = pop(@ranges);
-        my $start          = pop(@ranges);
-        my $thisblockstart = $start;
-        my $thisblockend   = $end;
-        my $selection;
-        if ( $mark eq 'br' ) {
-            my ( $lsr, $lsc, $ler, $lec, $step );
-            ( $lsr, $lsc ) = split /\./, $thisblockstart;
-            ( $ler, $lec ) = split /\./, $thisblockend;
-            if ( $lsr eq $ler ) {
-                $textwindow->insert( 'insert', '<br />' );
-            } else {
-                $step = $lsr;
-                while ( $step <= $ler ) {
-                    $selection = $textwindow->get( "$step.0", "$step.end" );
-                    $selection =~ s/<br.*?>//g;
-                    $textwindow->insert( "$step.end", '<br />' );
-                    $step++;
-                }
-            }
-        } elsif ( $mark eq 'hr' ) {
-            $textwindow->insert( 'insert', '<hr class="full" />' );
-        } elsif ( $mark eq '&nbsp;' ) {
-            my ( $lsr, $lsc, $ler, $lec, $step );
-            ( $lsr, $lsc ) = split /\./, $thisblockstart;
-            ( $ler, $lec ) = split /\./, $thisblockend;
-            if ( $lsr eq $ler ) {
-                $textwindow->insert( 'insert', '&nbsp;' );
-            } else {
-                $step = $lsr;
-                while ( $step <= $ler ) {
-                    $selection = $textwindow->get( "$step.0", "$step.end" );
-                    if ( $selection =~ /\s\s/ ) {
-                        $selection =~ s/^\s/&nbsp;/;
-                        $selection =~ s/  /&nbsp; /g;
-                        $selection =~ s/&nbsp; /&nbsp;&nbsp;/g;
-                        $textwindow->delete( "$step.0", "$step.end" );
-                        $textwindow->insert( "$step.0", $selection );
-                    }
-                    $step++;
-                }
-            }
-        } elsif ( $mark eq 'img' ) {
-            htmlimage( $textwindow, $top, $thisblockstart, $thisblockend );
-        } elsif ( $mark eq 'elink' ) {
-            my ( $name, $tempname );
-            $name = '';
-            if ( $::lglobal{elinkpop} ) {
-                $::lglobal{elinkpop}->raise;
-            } else {
-                $::lglobal{elinkpop} = $top->Toplevel;
-                $::lglobal{elinkpop}->title('Link Name');
-                my $linkf1    = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-                my $linklabel = $linkf1->Label( -text => 'Link name' )->pack;
-                $::lglobal{linkentry} =
-                  $linkf1->Entry( -width => 60, -background => $::bkgcolor )->pack;
-                my $linkf2    = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-                my $extbrowse = $linkf2->Button(
-                    -activebackground => $::activecolor,
-                    -text             => 'Browse',
-                    -width            => 16,
-                    -command          => sub {
-                        $name = $::lglobal{elinkpop}->getOpenFile( -title => 'File Name?' );
-                        if ($name) {
-                            $::lglobal{linkentry}->delete( 0, 'end' );
-                            $::lglobal{linkentry}->insert( 'end', $name );
-                        }
-                    }
-                )->pack( -side => 'left', -pady => 4 );
-                my $linkf3 = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-                my $okbut  = $linkf3->Button(
-                    -activebackground => $::activecolor,
-                    -text             => 'OK',
-                    -width            => 16,
-                    -command          => sub {
-                        $name = $::lglobal{linkentry}->get;
-                        if ($name) {
-                            $name =~ s/[\/\\]/;/g;
-                            $tempname = $::globallastpath;
-                            $tempname =~ s/[\/\\]/;/g;
-                            $name     =~ s/$tempname//;
-                            $name     =~ s/;/\//g;
-                            $done = '</a>';
-                            $textwindow->insert( $thisblockend, $done );
-                            $done = '<a href="' . $name . "\">";
-                            $textwindow->insert( $thisblockstart, $done );
-                        }
-                        ::killpopup('elinkpop');
-                    }
-                )->pack( -pady => 4 );
-                $::lglobal{elinkpop}
-                  ->protocol( 'WM_DELETE_WINDOW' => sub { ::killpopup('elinkpop'); } );
-                $::lglobal{elinkpop}->Icon( -image => $::icon );
-                $::lglobal{elinkpop}->transient( $::lglobal{markpop} );
-                $::lglobal{linkentry}->focus;
-            }
-            $done = '';
-        } elsif ( $mark eq 'ilink' ) {
-            my ( $anchorname, $anchorstartindex, $anchorendindex, $length,
-                $srow, $scol, $string, $link, $match, $match2 );
-            $length     = 0;
-            @intanchors = ();
-            my %inthash = ();
-            $anchorstartindex = $anchorendindex = '1.0';
-            while (
-                $anchorstartindex = $textwindow->search(
-                    '-regexp',
-                    '-count' => \$length,
-                    '--',
-                    '(name|id)=[\'"].+?[\'"]',
-                    $anchorendindex, 'end'
-                )
-            ) {
-                $anchorendindex = $textwindow->index( $anchorstartindex . ' +' . $length . 'c' );
-                $string         = $textwindow->get( $anchorstartindex, $anchorendindex );
-                $string =~ m/=['"](.+?)['"]/;
-                $match = $1;
-                push @intanchors, '#' . $match;
-                $match2 = $match;
+    my $end            = pop(@ranges);
+    my $start          = pop(@ranges);
+    my $thisblockstart = $start;
+    my $thisblockend   = $end;
+    my $selection;
 
-                if ( exists $inthash{ '#' . ( lc($match) ) } ) {
-                    $textwindow->tagAdd( 'highlight', $anchorstartindex, $anchorendindex );
-                    $textwindow->see($anchorstartindex);
-                    ::soundbell();
-                    $top->messageBox(
-                        -icon    => 'error',
-                        -message => "More than one instance of the anchor $match2 in text.",
-                        -title   => 'Duplicate anchor names.',
-                        -type    => 'Ok',
-                    );
-                    return;
-                } else {
-                    $inthash{ '#' . ( lc($match) ) } = '#' . $match2;
-                }
-            }
-            my ( $name, $tempname );
-            $name = '';
-            if ( $::lglobal{linkpop} ) {
-                $::lglobal{linkpop}->deiconify;
-            } else {
-                my $linklistbox;
-                $selection = $textwindow->get( $thisblockstart, $thisblockend );
-                return unless length($selection);
-                $::lglobal{linkpop} = $top->Toplevel;
-                $::lglobal{linkpop}->title('Internal Links');
-                $::lglobal{linkpop}->geometry( $::geometryhash{linkpop} );
-                $::lglobal{linkpop}->transient($top) if $::stayontop;
-                $::lglobal{fnlinks} = 1;
-                my $tframe = $::lglobal{linkpop}->Frame->pack;
-                $tframe->Checkbutton(
-                    -variable    => \$::lglobal{ilinksrt},
-                    -selectcolor => $::lglobal{checkcolor},
-                    -text        => 'Sort Alphabetically',
-                    -command     => sub {
-                        $linklistbox->delete( '0', 'end' );
-                        linkpopulate( $linklistbox, \@intanchors );
-                    },
-                )->pack(
-                    -side   => 'left',
-                    -pady   => 2,
-                    -padx   => 2,
-                    -anchor => 'n'
-                );
-                $tframe->Checkbutton(
-                    -variable    => \$::lglobal{fnlinks},
-                    -selectcolor => $::lglobal{checkcolor},
-                    -text        => 'Hide Footnote Links',
-                    -command     => sub {
-                        $linklistbox->delete( '0', 'end' );
-                        linkpopulate( $linklistbox, \@intanchors );
-                    },
-                )->pack(
-                    -side   => 'left',
-                    -pady   => 2,
-                    -padx   => 2,
-                    -anchor => 'n'
-                );
-                $tframe->Checkbutton(
-                    -variable    => \$::lglobal{pglinks},
-                    -selectcolor => $::lglobal{checkcolor},
-                    -text        => 'Hide Page Links',
-                    -command     => sub {
-                        $linklistbox->delete( '0', 'end' );
-                        linkpopulate( $linklistbox, \@intanchors );
-                    },
-                )->pack(
-                    -side   => 'left',
-                    -pady   => 2,
-                    -padx   => 2,
-                    -anchor => 'n'
-                );
-                my $pframe = $::lglobal{linkpop}->Frame->pack( -fill => 'both', -expand => 'both' );
-                $linklistbox = $pframe->Scrolled(
-                    'Listbox',
-                    -scrollbars  => 'se',
-                    -background  => $::bkgcolor,
-                    -selectmode  => 'single',
-                    -activestyle => 'none',
-                )->pack(
-                    -side   => 'top',
-                    -anchor => 'nw',
-                    -fill   => 'both',
-                    -expand => 'both',
-                    -padx   => 2,
-                    -pady   => 2
-                );
-                ::drag($linklistbox);
-                $::lglobal{linkpop}->protocol(
-                    'WM_DELETE_WINDOW' => sub {
-                        $::geometryhash{linkpop} = $::lglobal{linkpop}->geometry;
-                        ::killpopup('linkpop');
-                    }
-                );
-                $::lglobal{linkpop}->Icon( -image => $::icon );
-                ::BindMouseWheel($linklistbox);
-                $linklistbox->eventAdd( '<<trans>>' => '<Double-Button-1>' );
-                $linklistbox->bind(
-                    '<<trans>>',
-                    sub {
-                        $name                    = $linklistbox->get('active');
-                        $::geometryhash{linkpop} = $::lglobal{linkpop}->geometry;
-                        $done                    = '</a>';
-                        $textwindow->insert( $thisblockend, $done );
-                        $done = "<a href=\"" . $name . "\">";
-                        $textwindow->insert( $thisblockstart, $done );
-                        ::killpopup('linkpop');
-                    }
-                );
-                my $tempvar   = lc( makeanchor( ::deaccentdisplay($selection) ) );
-                my $flag      = 0;
-                my @entrarray = split( /_/, $tempvar );
-                $entrarray[1] = '@' unless $entrarray[1];
-                $entrarray[2] = '@' unless $entrarray[2];
-                for ( sort (@intanchors) ) {
-                    last unless $tempvar;
-                    next
-                      if (
-                        (
-                               ( $_ =~ /#$::htmllabels{fnlabel}/ )
-                            || ( $_ =~ /#$::htmllabels{fnanchor}/ )
-                        )
-                        && $::lglobal{fnlinks}
-                      );
-                    next
-                      if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
-                    next unless ( lc($_) eq '#' . $tempvar );
-                    $linklistbox->insert( 'end', $_ );
-                    $flag++;
-                }
-                $linklistbox->insert( 'end', '  ' );
-
-                #print"$selection2\n";
-                if ( $entrarray[1] && ( $entrarray[1] ne '@' ) ) {
-                    $entrarray[0] = '@'
-                      if ( $entrarray[0] =~ /^to$|^a$|^the$|^and$/ );
-                    $entrarray[1] = '@'
-                      if ( $entrarray[1] =~ /^to$|^a$|^the$|^and$/ );
-                    $entrarray[2] = '@'
-                      if ( $entrarray[2] =~ /^to$|^a$|^the$|^and$/ );
-                }
-                for ( sort (@intanchors) ) {
-                    next
-                      if (
-                        (
-                               ( $_ =~ /#$::htmllabels{fnlabel}/ )
-                            || ( $_ =~ /#$::htmllabels{fnanchor}/ )
-                        )
-                        && $::lglobal{fnlinks}
-                      );
-
-                    next
-                      if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
-                    next
-                      unless ( lc($_) =~ /\Q$entrarray[0]\E|\Q$entrarray[1]\E|\Q$entrarray[2]\E/ );
-                    $linklistbox->insert( 'end', $_ );
-                    $flag++;
-                }
-                $linklistbox->insert( 'end', "  " );
-                $flag = 0;
-                linkpopulate( $linklistbox, \@intanchors );
-                $linklistbox->focus;
-            }
-        } elsif ( $mark eq 'anchor' ) {
-            my $linkname;
-            $selection = $textwindow->get( $thisblockstart, $thisblockend )
-              || '';
-            $linkname = makeanchor( ::deaccentdisplay($selection) );
-            $done     = "<a id=\"" . $linkname . "\"></a>";
-            $textwindow->insert( $thisblockstart, $done );
-        } elsif ( $mark =~ /h\d/ ) {
-            $selection = $textwindow->get( $thisblockstart, $thisblockend );
-            if ( $selection =~ s/<\/?p>//g ) {
-                $textwindow->delete( $thisblockstart, $thisblockend );
-                $textwindow->tagRemove( 'sel', '1.0', 'end' );
-                $textwindow->markSet( 'blkend', $thisblockstart );
-                $textwindow->insert( $thisblockstart, "<$mark>$selection<\/$mark>" );
-                $textwindow->tagAdd( 'sel', $thisblockstart, $textwindow->index('blkend') );
-            } else {
-                $textwindow->insert( $thisblockend,   "<\/$mark>" );
-                $textwindow->insert( $thisblockstart, "<$mark>" );
-            }
-        } elsif ( ( $mark =~ /div/ ) || ( $mark =~ /span/ ) ) {
-            $done = "<\/" . $mark . ">";
-            $textwindow->insert( $thisblockend, $done );
-            $mark .= $mark1;
-            $done = '<' . $mark . '>';
-            $textwindow->insert( $thisblockstart, $done );
+    if ( $mark eq 'br' ) {
+        my ( $lsr, $lsc, $ler, $lec, $step );
+        ( $lsr, $lsc ) = split /\./, $thisblockstart;
+        ( $ler, $lec ) = split /\./, $thisblockend;
+        if ( $lsr eq $ler ) {
+            $textwindow->insert( 'insert', '<br />' );
         } else {
-            $done = "<\/" . $mark . '>';
-            $textwindow->insert( $thisblockend, $done );
-            $done = '<' . $mark . '>';
-            $textwindow->insert( $thisblockstart, $done );
+            $step = $lsr;
+            while ( $step <= $ler ) {
+                $selection = $textwindow->get( "$step.0", "$step.end" );
+                $selection =~ s/<br.*?>//g;
+                $textwindow->insert( "$step.end", '<br />' );
+                $step++;
+            }
         }
+    } elsif ( $mark eq 'hr' ) {
+        $textwindow->insert( 'insert', '<hr class="full" />' );
+    } elsif ( $mark eq '&nbsp;' ) {
+        my ( $lsr, $lsc, $ler, $lec, $step );
+        ( $lsr, $lsc ) = split /\./, $thisblockstart;
+        ( $ler, $lec ) = split /\./, $thisblockend;
+        if ( $lsr eq $ler ) {
+            $textwindow->insert( 'insert', '&nbsp;' );
+        } else {
+            $step = $lsr;
+            while ( $step <= $ler ) {
+                $selection = $textwindow->get( "$step.0", "$step.end" );
+                if ( $selection =~ /\s\s/ ) {
+                    $selection =~ s/^\s/&nbsp;/;
+                    $selection =~ s/  /&nbsp; /g;
+                    $selection =~ s/&nbsp; /&nbsp;&nbsp;/g;
+                    $textwindow->delete( "$step.0", "$step.end" );
+                    $textwindow->insert( "$step.0", $selection );
+                }
+                $step++;
+            }
+        }
+    } elsif ( $mark eq 'img' ) {
+        htmlimage( $textwindow, $top, $thisblockstart, $thisblockend );
+    } elsif ( $mark eq 'elink' ) {
+        my ( $name, $tempname );
+        $name = '';
+        if ( $::lglobal{elinkpop} ) {
+            $::lglobal{elinkpop}->deiconify;
+        } else {
+            $::lglobal{elinkpop} = $top->Toplevel;
+            $::lglobal{elinkpop}->title('External Link');
+            ::initialize_popup_with_deletebinding('elinkpop');
+            $::lglobal{elinkpop}->resizable( 'yes', 'no' );
+            my $linkf1 = $::lglobal{elinkpop}->Frame->pack(
+                -side   => 'top',
+                -anchor => 'n',
+                -expand => 'yes',
+                -fill   => 'x',
+                -padx   => 10,
+                -pady   => 4
+            );
+            my $linklabel = $linkf1->Label( -text => 'Link name' )->pack;
+            $::lglobal{linkentry} =
+              $linkf1->Entry( -background => $::bkgcolor )->pack( -expand => 'yes', -fill => 'x' );
+            my $linkf2    = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+            my $extbrowse = $linkf2->Button(
+                -activebackground => $::activecolor,
+                -text             => 'Browse',
+                -width            => 16,
+                -command          => sub {
+                    $name = $::lglobal{elinkpop}->getOpenFile( -title => 'File Name?' );
+                    if ($name) {
+                        $::lglobal{linkentry}->delete( 0, 'end' );
+                        $::lglobal{linkentry}->insert( 'end', $name );
+                    }
+                }
+            )->pack( -side => 'left', -pady => 4 );
+            my $linkf3 = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+            my $okbut  = $linkf3->Button(
+                -activebackground => $::activecolor,
+                -text             => 'OK',
+                -width            => 16,
+                -command          => sub {
+                    $name = $::lglobal{linkentry}->get;
+                    if ($name) {
+                        $name =~ s/[\/\\]/;/g;
+                        $tempname = $::globallastpath;
+                        $tempname =~ s/[\/\\]/;/g;
+                        $name     =~ s/$tempname//;
+                        $name     =~ s/;/\//g;
+                        $done = '</a>';
+                        $textwindow->insert( $thisblockend, $done );
+                        $done = '<a href="' . $name . "\">";
+                        $textwindow->insert( $thisblockstart, $done );
+                    }
+                    ::killpopup('elinkpop');
+                }
+            )->pack( -pady => 4 );
+            $::lglobal{linkentry}->focus;
+        }
+        $done = '';
+    } elsif ( $mark eq 'ilink' ) {
+        my ( $anchorname, $anchorstartindex, $anchorendindex, $length,
+            $srow, $scol, $string, $link, $match, $match2 );
+        $length     = 0;
+        @intanchors = ();
+        my %inthash = ();
+        $anchorstartindex = $anchorendindex = '1.0';
+        while (
+            $anchorstartindex = $textwindow->search(
+                '-regexp',
+                '-count' => \$length,
+                '--',
+                '(name|id)=[\'"].+?[\'"]',
+                $anchorendindex, 'end'
+            )
+        ) {
+            $anchorendindex = $textwindow->index( $anchorstartindex . ' +' . $length . 'c' );
+            $string         = $textwindow->get( $anchorstartindex, $anchorendindex );
+            $string =~ m/=['"](.+?)['"]/;
+            $match = $1;
+            push @intanchors, '#' . $match;
+            $match2 = $match;
+
+            if ( exists $inthash{ '#' . ( lc($match) ) } ) {
+                $textwindow->tagAdd( 'highlight', $anchorstartindex, $anchorendindex );
+                $textwindow->see($anchorstartindex);
+                ::soundbell();
+                $top->messageBox(
+                    -icon    => 'error',
+                    -message => "More than one instance of the anchor $match2 in text.",
+                    -title   => 'Duplicate anchor names.',
+                    -type    => 'Ok',
+                );
+                return;
+            } else {
+                $inthash{ '#' . ( lc($match) ) } = '#' . $match2;
+            }
+        }
+        my ( $name, $tempname );
+        $name = '';
+        if ( $::lglobal{linkpop} ) {
+            $::lglobal{linkpop}->deiconify;
+        } else {
+            my $linklistbox;
+            $selection = $textwindow->get( $thisblockstart, $thisblockend );
+            return unless length($selection);
+            $::lglobal{linkpop} = $top->Toplevel;
+            $::lglobal{linkpop}->title('Internal Links');
+            ::initialize_popup_with_deletebinding('linkpop');
+            $::lglobal{fnlinks} = 1;
+            my $tframe = $::lglobal{linkpop}->Frame->pack;
+            $tframe->Checkbutton(
+                -variable    => \$::lglobal{ilinksrt},
+                -selectcolor => $::lglobal{checkcolor},
+                -text        => 'Sort Alphabetically',
+                -command     => sub {
+                    $linklistbox->delete( '0', 'end' );
+                    linkpopulate( $linklistbox, \@intanchors );
+                },
+            )->pack(
+                -side   => 'left',
+                -pady   => 2,
+                -padx   => 2,
+                -anchor => 'n'
+            );
+            $tframe->Checkbutton(
+                -variable    => \$::lglobal{fnlinks},
+                -selectcolor => $::lglobal{checkcolor},
+                -text        => 'Hide Footnote Links',
+                -command     => sub {
+                    $linklistbox->delete( '0', 'end' );
+                    linkpopulate( $linklistbox, \@intanchors );
+                },
+            )->pack(
+                -side   => 'left',
+                -pady   => 2,
+                -padx   => 2,
+                -anchor => 'n'
+            );
+            $tframe->Checkbutton(
+                -variable    => \$::lglobal{pglinks},
+                -selectcolor => $::lglobal{checkcolor},
+                -text        => 'Hide Page Links',
+                -command     => sub {
+                    $linklistbox->delete( '0', 'end' );
+                    linkpopulate( $linklistbox, \@intanchors );
+                },
+            )->pack(
+                -side   => 'left',
+                -pady   => 2,
+                -padx   => 2,
+                -anchor => 'n'
+            );
+            my $pframe = $::lglobal{linkpop}->Frame->pack( -fill => 'both', -expand => 'both' );
+            $linklistbox = $pframe->Scrolled(
+                'Listbox',
+                -scrollbars  => 'se',
+                -background  => $::bkgcolor,
+                -selectmode  => 'single',
+                -activestyle => 'none',
+            )->pack(
+                -side   => 'top',
+                -anchor => 'nw',
+                -fill   => 'both',
+                -expand => 'both',
+                -padx   => 2,
+                -pady   => 2
+            );
+            ::drag($linklistbox);
+            ::BindMouseWheel($linklistbox);
+            $linklistbox->eventAdd( '<<trans>>' => '<Double-Button-1>' );
+            $linklistbox->bind(
+                '<<trans>>',
+                sub {
+                    $name = $linklistbox->get('active');
+                    $done = '</a>';
+                    $textwindow->insert( $thisblockend, $done );
+                    $done = "<a href=\"" . $name . "\">";
+                    $textwindow->insert( $thisblockstart, $done );
+                    ::killpopup('linkpop');
+                }
+            );
+            my $tempvar   = lc( makeanchor( ::deaccentdisplay($selection) ) );
+            my $flag      = 0;
+            my @entrarray = split( /_/, $tempvar );
+            $entrarray[1] = '@' unless $entrarray[1];
+            $entrarray[2] = '@' unless $entrarray[2];
+            for ( sort (@intanchors) ) {
+                last unless $tempvar;
+                next
+                  if (
+                    ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+                    && $::lglobal{fnlinks} );
+                next
+                  if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+                next unless ( lc($_) eq '#' . $tempvar );
+                $linklistbox->insert( 'end', $_ );
+                $flag++;
+            }
+            $linklistbox->insert( 'end', '  ' );
+
+            if ( $entrarray[1] && ( $entrarray[1] ne '@' ) ) {
+                $entrarray[0] = '@'
+                  if ( $entrarray[0] =~ /^to$|^a$|^the$|^and$/ );
+                $entrarray[1] = '@'
+                  if ( $entrarray[1] =~ /^to$|^a$|^the$|^and$/ );
+                $entrarray[2] = '@'
+                  if ( $entrarray[2] =~ /^to$|^a$|^the$|^and$/ );
+            }
+            for ( sort (@intanchors) ) {
+                next
+                  if (
+                    ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
+                    && $::lglobal{fnlinks} );
+
+                next
+                  if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+                next
+                  unless ( $entrarray[0]
+                    and lc($_) =~ /\Q$entrarray[0]\E|\Q$entrarray[1]\E|\Q$entrarray[2]\E/ );
+                $linklistbox->insert( 'end', $_ );
+                $flag++;
+            }
+            $linklistbox->insert( 'end', "  " );
+            $flag = 0;
+            linkpopulate( $linklistbox, \@intanchors );
+            $linklistbox->focus;
+        }
+    } elsif ( $mark eq 'anchor' ) {
+        my $linkname;
+        $selection = $textwindow->get( $thisblockstart, $thisblockend )
+          || '';
+        $linkname = makeanchor( ::deaccentdisplay($selection) );
+        $done     = "<a id=\"" . $linkname . "\"></a>";
+        $textwindow->insert( $thisblockstart, $done );
+    } elsif ( $mark =~ /h\d/ ) {
+        $selection = $textwindow->get( $thisblockstart, $thisblockend );
+        if ( $selection =~ s/<\/?p>//g ) {
+            $textwindow->delete( $thisblockstart, $thisblockend );
+            $textwindow->tagRemove( 'sel', '1.0', 'end' );
+            $textwindow->markSet( 'blkend', $thisblockstart );
+            $textwindow->insert( $thisblockstart, "<$mark>$selection<\/$mark>" );
+            $textwindow->tagAdd( 'sel', $thisblockstart, $textwindow->index('blkend') );
+        } else {
+            $textwindow->insert( $thisblockend,   "<\/$mark>" );
+            $textwindow->insert( $thisblockstart, "<$mark>" );
+        }
+    } elsif ( ( $mark =~ /div/ ) || ( $mark =~ /span/ ) ) {
+        $done = "<\/" . $mark . ">";
+        $textwindow->insert( $thisblockend, $done );
+        $mark .= $mark1;
+        $done = '<' . $mark . '>';
+        $textwindow->insert( $thisblockstart, $done );
+    } else {
+        $done = "<\/" . $mark . '>';
+        $textwindow->insert( $thisblockend, $done );
+        $done = '<' . $mark . '>';
+        $textwindow->insert( $thisblockstart, $done );
     }
-    $textwindow->focus;
+    $textwindow->focus unless $mark eq 'elink' or $mark eq 'ilink';
 }
 
 sub clearmarkupinselection {

@@ -36,10 +36,7 @@ sub togglepagenums {
             }
         }
         $textwindow->tagRemove( 'pagenum', '1.0', 'end' );
-        if ( $::lglobal{pagemarkerpop} ) {
-            $::geometryhash{pagemarkerpop} = $::lglobal{pagemarkerpop}->geometry;
-            ::killpopup('pagemarkerpop');
-        }
+        ::killpopup('pagemarkerpop');
     } else {
         $::lglobal{seepagenums} = 1;
         my @marks = $textwindow->markNames;
