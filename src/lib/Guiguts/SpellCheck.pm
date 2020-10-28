@@ -352,9 +352,7 @@ sub spellshow_guesses {
     $::lglobal{replacementlist}->activate(0);
     $::lglobal{spreplaceentry}->delete( '0', 'end' );
     $::lglobal{spreplaceentry}->insert( 'end', $::lglobal{guesslist}[0] );
-    $::lglobal{replacementlist}->yview( 'scroll', 1, 'units' );
     $::lglobal{replacementlist}->update;
-    $::lglobal{replacementlist}->yview( 'scroll', -1, 'units' );
     $::lglobal{suggestionlabel}->configure( -text => @{ $::lglobal{guesslist} } . ' Suggestions:' );
 }
 
@@ -548,7 +546,7 @@ sub spellchecker {    # Set up spell check window
           ->pack( -side => 'top', -anchor => 'n', -pady => 5 );
         $::lglobal{replacementlist} = $spf1->ScrlListbox(
             -background => $::bkgcolor,
-            -scrollbars => 'osoe',
+            -scrollbars => 'se',
             -font       => $::lglobal{font},
             -width      => 40,
             -height     => 4,
@@ -901,7 +899,6 @@ sub spellchecker {    # Set up spell check window
         $::lglobal{replacementlist}->bind( '<Double-Button-1>', \&spellmisspelled_replace );
         $::lglobal{replacementlist}
           ->bind( '<Triple-Button-1>', sub { spellmisspelled_replace(); spellreplace() } );
-        ::BindMouseWheel( $::lglobal{replacementlist} );
         spelloptions()
           unless $::globalspellpath && -e $::globalspellpath;    # Check to see if we know where Aspell is
         spellcheckfirst();                                       # Start the spellcheck
@@ -986,7 +983,7 @@ sub spelloptions {
       $spellop->add( 'Label', -text => 'Dictionary files (double-click to select):' )->pack;
     $dictlist = $spellop->add(
         'ScrlListbox',
-        -scrollbars => 'oe',
+        -scrollbars => 'e',
         -selectmode => 'browse',
         -background => $::bkgcolor,
         -height     => 10,

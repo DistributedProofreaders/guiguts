@@ -255,9 +255,6 @@ sub showAllWords {
     $multiwclistbox->delete('0');
     $multiwclistbox->insert( '0', $savedHeader );
     $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', 1, 'units' );
-    $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', -1, 'units' );
 }
 
 sub showUnspeltWords {
@@ -295,9 +292,6 @@ sub showUnspeltWords {
     $multiwclistbox->delete('0');
     $multiwclistbox->insert( '0', $savedHeader );
     $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', 1, 'units' );
-    $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', -1, 'units' );
 }
 
 sub showspeltforeignwords {
@@ -350,9 +344,6 @@ sub showspeltforeignwords {
     $multiwclistbox->delete('0');
     $multiwclistbox->insert( '0', $savedHeader );
     $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', 1, 'units' );
-    $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', -1, 'units' );
 }
 
 # update global lists
@@ -390,9 +381,6 @@ sub showmisspelledlist {
     $multiwclistbox->delete('0');
     $multiwclistbox->insert( '0', $savedHeader );
     $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', 1, 'units' );
-    $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', -1, 'units' );
 }
 
 #show project dictionary
@@ -413,9 +401,6 @@ sub showprojectdict {
     $multiwclistbox->delete('0');
     $multiwclistbox->insert( '0', $savedHeader );
     $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', 1, 'units' );
-    $multiwclistbox->update;
-    $multiwclistbox->yview( 'scroll', -1, 'units' );
 }
 
 # outputs various arrays to files
@@ -574,7 +559,7 @@ sub setmultiplelanguages {
     my $dictlabel = $spellop->add( 'Label', -text => 'Dictionary files' )->pack;
     my $dictlist  = $spellop->add(
         'ScrlListbox',
-        -scrollbars => 'oe',
+        -scrollbars => 'e',
         -selectmode => 'browse',
         -background => $::bkgcolor,
         -height     => 10,

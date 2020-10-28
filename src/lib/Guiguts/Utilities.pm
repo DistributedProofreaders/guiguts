@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
       &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
-      &deaccentsort &deaccentdisplay &readlabels &BindMouseWheel &working &initialize &fontinit &initialize_popup_with_deletebinding
+      &deaccentsort &deaccentdisplay &readlabels &working &initialize &fontinit &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
@@ -593,33 +593,6 @@ sub readlabels {
         my $index = index( $::convertcharssinglesearch, $chararray[$i] );
         substr $::convertcharssinglesearch,  $index, 1, '';
         substr $::convertcharssinglereplace, $index, 1, '';
-    }
-}
-
-sub BindMouseWheel {
-    my ($w) = @_;
-    if ($::OS_WIN) {
-        $w->bind(
-            '<MouseWheel>' => [
-                sub {
-                    $_[0]->yview( 'scroll', -( $_[1] / 120 ) * 3, 'units' );
-                },
-                ::Ev('D')
-            ]
-        );
-    } else {
-        $w->bind(
-            '<4>' => sub {
-                $_[0]->yview( 'scroll', -3, 'units' )
-                  unless $Tk::strictMotif;
-            }
-        );
-        $w->bind(
-            '<5>' => sub {
-                $_[0]->yview( 'scroll', +3, 'units' )
-                  unless $Tk::strictMotif;
-            }
-        );
     }
 }
 

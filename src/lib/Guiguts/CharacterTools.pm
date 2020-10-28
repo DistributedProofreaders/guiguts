@@ -307,7 +307,6 @@ sub utfcharsearchpopup {
             -sticky     => 'wne',
         )->pack( -expand => 'y', -fill => 'both', -anchor => 'nw' );
         ::drag($pane);
-        ::BindMouseWheel($pane);
         my $fontlist = $cframe->BrowseEntry(
             -label     => 'Font',
             -browsecmd => sub {
