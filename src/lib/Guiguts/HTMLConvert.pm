@@ -2789,7 +2789,6 @@ sub markup {
                 -pady   => 2
             );
             ::drag($linklistbox);
-            ::BindMouseWheel($linklistbox);
             $linklistbox->eventAdd( '<<trans>>' => '<Double-Button-1>' );
             $linklistbox->bind(
                 '<<trans>>',
@@ -3904,9 +3903,7 @@ sub pageadjust {
                 $pagetrack{$num}[5]->insert( 'end', $::pagenumbers{$page}{base} );
             }
         }
-        $frame1->yview( 'scroll', => 1, 'units' );
         $top->update;
-        $frame1->yview( 'scroll', -1, 'units' );
     }
 }
 

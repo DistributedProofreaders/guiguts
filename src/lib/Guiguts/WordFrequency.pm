@@ -280,7 +280,6 @@ sub wordfrequency {
                 ::killpopup('markuppop');
             }
         );
-        ::BindMouseWheel( $::lglobal{wclistbox} );
         $::lglobal{wclistbox}->eventAdd( '<<search>>' => '<ButtonRelease-3>' );
         $::lglobal{wclistbox}->bind(
             '<<search>>',
@@ -571,9 +570,7 @@ sub alphanumcheck {
     }
     $::lglobal{wfsaveheader} = "$wordw mixed alphanumeric words.";
     sortanddisplaywords( \%display );
-    $::lglobal{wclistbox}->yview( 'scroll', 1, 'units' );
     $::lglobal{wclistbox}->update;
-    $::lglobal{wclistbox}->yview( 'scroll', -1, 'units' );
     @::wfsearchopt = qw/0 x x 0/;
     $top->Unbusy;
 }
@@ -1074,7 +1071,6 @@ sub harmonicspop {
                 undef $::lglobal{hlistbox};
             }
         );
-        ::BindMouseWheel( $::lglobal{hlistbox} );
         $::lglobal{hlistbox}->eventAdd( '<<search>>' => '<ButtonRelease-3>' );
         $::lglobal{hlistbox}->bind(
             '<<search>>',
@@ -1290,9 +1286,6 @@ sub sortanddisplaywords {
     $::lglobal{wclistbox}->delete('0');
     $::lglobal{wclistbox}->insert( '0', $::lglobal{wfsaveheader} );
     $::lglobal{wclistbox}->update;
-    $::lglobal{wclistbox}->yview( 'scroll', 1, 'units' );
-    $::lglobal{wclistbox}->update;
-    $::lglobal{wclistbox}->yview( 'scroll', -1, 'units' );
 }
 
 sub nofileloaded {

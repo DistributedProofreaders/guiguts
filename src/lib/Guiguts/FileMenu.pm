@@ -618,9 +618,6 @@ sub oppopupdate {
         $::lglobal{oplistbox}->insert( 'end', "$value $::operationshash{$value}" );
     }
     $::lglobal{oplistbox}->update;
-    $::lglobal{oplistbox}->yview( 'scroll', 1, 'units' );
-    $::lglobal{oplistbox}->update;
-    $::lglobal{oplistbox}->yview( 'scroll', -1, 'units' );
 }
 
 sub operationadd {

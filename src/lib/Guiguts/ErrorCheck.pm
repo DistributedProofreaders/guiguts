@@ -112,9 +112,7 @@ sub errorcheckpop_up {
             $textwindow->markUnset($_) for values %::errors;
         }
     );
-
     ::drag( $::lglobal{errorchecklistbox} );
-    ::BindMouseWheel( $::lglobal{errorchecklistbox} );
 
     # button 1 views the error
     $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
@@ -375,9 +373,7 @@ sub errorcheckpop_up {
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
     }
-    $::lglobal{errorchecklistbox}->yview( 'scroll', 1, 'units' );
     $::lglobal{errorchecklistbox}->update;
-    $::lglobal{errorchecklistbox}->yview( 'scroll', -1, 'units' );
     $::lglobal{errorchecklistbox}->focus;
     $::lglobal{errorcheckpop}->raise;
 }

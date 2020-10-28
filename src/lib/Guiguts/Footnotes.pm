@@ -654,7 +654,6 @@ sub fnview {
         if ($allcheckspassed) {
             ::operationadd('Footnote check passed');
         }
-        ::BindMouseWheel($ftext);
         $ftext->see("1.0 + $fnindex l") if $fnindex;
     }
 }
