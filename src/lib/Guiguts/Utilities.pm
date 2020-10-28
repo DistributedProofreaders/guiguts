@@ -923,7 +923,7 @@ sub initialize {
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
     $::lglobal{pagecmt}            = 0;                           # HTML convert - page markers as comments
     $::lglobal{poetrynumbers}      = 0;                           # HTML convert - find & format poetry line numbers
-    $::lglobal{regaa}              = 0;
+    $::lglobal{regaa}              = 1;                           # Auto-advance stealth scannos
     $::lglobal{seepagenums}        = 0;
     $::lglobal{selectionsearch}    = 0;
     $::lglobal{selmaxlength}       = 1;
