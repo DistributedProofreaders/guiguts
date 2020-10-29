@@ -72,101 +72,122 @@ sub refreshpageseparator {
       if $::searchstartindex;
 }
 
+#
+# Once refresh is done, this routine is called to handle auto-joining if needed
 sub handleautomaticonrefresh {
     my $textwindow = $::textwindow;
     my $character;
     my ($index);
-    $textwindow->markSet( 'page',  $::searchstartindex );        # error here
-    $textwindow->markSet( 'page1', "$::searchstartindex+1l" );
-    while (1) {
-        $index     = $textwindow->index('page');
-        $character = $textwindow->get("$index-1c");
 
-        # If the character before ends with \s or \n or -*, (last case cannot happen)
-        # delete the character
-        if (   ( $character =~ /[\s\n]$/ )
-            || ( $character =~ /[\w-]\*$/ ) ) {
-            $textwindow->delete("$index-1c");
-            $::lglobal{joinundo}++;
-        } else {
-            last;
+    # Repeat until no more page separators to join
+    # Early exit happens via last if code can't auto-join
+    while ($::searchstartindex) {
+        $textwindow->markSet( 'page',  $::searchstartindex );        # error here
+        $textwindow->markSet( 'page1', "$::searchstartindex+1l" );
+        while (1) {
+            $index     = $textwindow->index('page');
+            $character = $textwindow->get("$index-1c");
+
+            # If the character before ends with \s or \n or -*, (last case cannot happen)
+            # delete the character
+            if (   ( $character =~ /[\s\n]$/ )
+                || ( $character =~ /[\w-]\*$/ ) ) {
+                $textwindow->delete("$index-1c");
+                $::lglobal{joinundo}++;
+            } else {
+                last;
+            }
         }
-    }
-    $textwindow->insert( $index, "\n" );
-    $::lglobal{joinundo}++;
+        $textwindow->insert( $index, "\n" );
+        $::lglobal{joinundo}++;
 
-    if ( $::lglobal{pagesepauto} == 2 ) {
+        if ( $::lglobal{pagesepauto} == 2 ) {
 
-        # If the last character is a word, ";" or ","
-        # and the next character is \n or *, then delete the character
-        # Revision: dropped \n
-        if ( $character =~ /[\w;,]/ ) {
-            while (1) {
-                $index     = $textwindow->index('page1');
-                $character = $textwindow->get($index);
-                if ( $character =~ /[\*]/ ) {    # dropped \n
-                    print "deleting:character page1\n";
-                    $textwindow->delete($index);
-                    $::lglobal{joinundo}++;
-                    last
-                      if $textwindow->compare( 'page1 +1l', '>=', 'end' );
-                } else {
-                    last;
+            # If the last character is a word, ";" or ","
+            # and the next character is \n or *, then delete the character
+            # Revision: dropped \n
+            if ( $character =~ /[\w;,]/ ) {
+                while (1) {
+                    $index     = $textwindow->index('page1');
+                    $character = $textwindow->get($index);
+                    if ( $character =~ /[\*]/ ) {    # dropped \n
+                        print "deleting:character page1\n";
+                        $textwindow->delete($index);
+                        $::lglobal{joinundo}++;
+                        last
+                          if $textwindow->compare( 'page1 +1l', '>=', 'end' );
+                    } else {
+                        last;
+                    }
                 }
             }
-        }
 
-        # Join if the next character is lower case or with I
-        #print $character.":page?\n";
-        if ( ( $character =~ /\p{IsLower}/ ) || ( $character =~ /^I / ) ) {
-            processpageseparator('j');
-        }
-        my ( $r, $c ) = split /\./, $textwindow->index('page-1c');
-        my ($size) =
-          length( $textwindow->get( 'page+1l linestart', 'page+1l lineend' ) );
-
-        # Insert blank line if the character is ."'?
-        if ( ( $character =~ /[\.\"\'\?]/ ) && ( $c < ( $size * 0.5 ) ) ) {
-            processpageseparator('l');
-        }
-    } elsif ( $::lglobal{pagesepauto} == 3 ) {
-        my $linebefore = $textwindow->get( "$index -10c",    $index );
-        my $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
-        if ( $lineafter =~ /^\n\n\n\n/ ) {
-            processpageseparator('h');
-        } elsif ( $lineafter =~ /^\n\n/ ) {
-            processpageseparator('t');
-        } elsif ( $lineafter =~ /^\n/ ) {
-            processpageseparator('l');
-        } elsif ( $lineafter =~ /^-----File/ ) {
-            processpageseparator('l');
-        } elsif ( $lineafter =~ /^\S/ ) {
-            if ( closeupmarkup() ) {
-                $linebefore = $textwindow->get( "$index -10c",    $index );
-                $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
+            # Join if the next character is lower case or with I
+            #print $character.":page?\n";
+            if ( ( $character =~ /\p{IsLower}/ ) || ( $character =~ /^I / ) ) {
+                processpageseparator('j');
             }
-            if ( $lineafter =~ /^\n/ ) {    # can be reached if closeupmarkup did something
+            my ( $r, $c ) = split /\./, $textwindow->index('page-1c');
+            my ($size) =
+              length( $textwindow->get( 'page+1l linestart', 'page+1l lineend' ) );
+
+            # Insert blank line if the character is ."'?
+            if ( ( $character =~ /[\.\"\'\?]/ ) && ( $c < ( $size * 0.5 ) ) ) {
                 processpageseparator('l');
-            } elsif ( $lineafter =~ /^\// ) {
-            } elsif ( $lineafter =~ /^\*--\S/ ) {
-                processpageseparator('k');
-            } elsif ( $lineafter =~ /^-- / ) {
-                processpageseparator('j');
-            } elsif ( $lineafter  =~ /^\*-- / ) {
-            } elsif ( $lineafter  =~ /^--\S/ ) {
-            } elsif ( $linebefore =~ /\S--\*$/ ) {
-                processpageseparator('k');
-            } elsif ( $linebefore =~ / --$/ ) {
-                processpageseparator('k');
-            } elsif ( $linebefore =~ / --\*$/ ) {
-            } elsif ( $linebefore =~ /\S--$/ ) {
-            } elsif ( $linebefore =~ /-\*$/ ) {
-            } elsif ( $linebefore =~ /-$/ ) {
-                processpageseparator('k') if $::rwhyphenspace;
+            }
+        } elsif ( $::lglobal{pagesepauto} == 3 ) {
+            my $linebefore = $textwindow->get( "$index -10c",    $index );
+            my $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
+            if ( $lineafter =~ /^\n\n\n\n/ ) {
+                processpageseparator('h');
+            } elsif ( $lineafter =~ /^\n\n/ ) {
+                processpageseparator('t');
+            } elsif ( $lineafter =~ /^\n/ ) {
+                processpageseparator('l');
+            } elsif ( $lineafter =~ /^-----File/ ) {
+                processpageseparator('l');
+            } elsif ( $lineafter =~ /^\S/ ) {
+                if ( closeupmarkup() ) {
+                    $linebefore = $textwindow->get( "$index -10c",    $index );
+                    $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
+                }
+                if ( $lineafter =~ /^\n/ ) {    # can be reached if closeupmarkup did something
+                    processpageseparator('l');
+                } elsif ( $lineafter =~ /^\// ) {
+                    last;
+                } elsif ( $lineafter =~ /^\*--\S/ ) {
+                    processpageseparator('k');
+                } elsif ( $lineafter =~ /^-- / ) {
+                    processpageseparator('j');
+                } elsif ( $lineafter =~ /^\*-- / ) {
+                    last;
+                } elsif ( $lineafter =~ /^--\S/ ) {
+                    last;
+                } elsif ( $linebefore =~ /\S--\*$/ ) {
+                    processpageseparator('k');
+                } elsif ( $linebefore =~ / --$/ ) {
+                    processpageseparator('k');
+                } elsif ( $linebefore =~ / --\*$/ ) {
+                    last;
+                } elsif ( $linebefore =~ /\S--$/ ) {
+                    last;
+                } elsif ( $linebefore =~ /-\*$/ ) {
+                    last;
+                } elsif ( $linebefore =~ /-$/ ) {
+                    processpageseparator('k') if $::rwhyphenspace;
+                } else {
+                    processpageseparator('j');
+                }
             } else {
-                processpageseparator('j');
+                last;
             }
         }
+
+        # Get set up for the next page separator (mini-refresh)
+        findpageseparator();
+        $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
+          if $::searchstartindex;
+        $textwindow->update unless ::updatedrecently();
     }
 }
 
@@ -230,14 +251,24 @@ sub closeupmarkup {
     return $changemade;
 }
 
+# Process page separator and refresh ready for next one if needed
+# Only called via user action, not auto-joining
+sub processpageseparatorrefresh {
+    my $op = shift;
+    ::hidepagenums();
+    $::lglobal{joinundo} = 0;
+    processpageseparator($op);
+    refreshpageseparator() if $::lglobal{pagesepauto} >= 1;
+    push @::joinundolist, $::lglobal{joinundo};
+}
+
 # Process page separator based on option chosen: j, k, l, t, h, d
+# Called either via user action or via auto-joining.
 sub processpageseparator {
     my $op         = shift;
     my $textwindow = $::textwindow;
-    ::hidepagenums();
     my ( $line, $index, $r, $c );
     findpageseparator();
-    $::lglobal{joinundo} = 0;
     my $pagesep;
     $pagesep = $textwindow->get( $::searchstartindex, $::searchendindex )
       if ( $::searchstartindex && $::searchendindex );
@@ -439,10 +470,6 @@ sub processpageseparator {
         $::lglobal{joinundo}++;
     }
 
-    # refreshpageseparator and processpageseparator call each other
-    # recursively
-    refreshpageseparator() if $::lglobal{pagesepauto} >= 1;
-    push @::joinundolist, $::lglobal{joinundo};
 }
 
 sub undojoin {
@@ -472,8 +499,6 @@ sub redojoin {
     return unless $joinredo;
     push @::joinundolist, $joinredo;
     $textwindow->redo for ( 0 .. $joinredo );
-
-    #refreshpageseparator();
 }
 
 sub separatorpopup {
@@ -491,14 +516,14 @@ sub separatorpopup {
         my $sf1        = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $joinbutton = $sf1->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('j') },
+            -command          => sub { processpageseparatorrefresh('j') },
             -text             => 'Join Lines',
             -underline        => 0,
             -width            => 19
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $joinhybutton = $sf1->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('k') },
+            -command          => sub { processpageseparatorrefresh('k') },
             -text             => 'Join, Keep Hyphen',
             -underline        => 6,
             -width            => 19
@@ -506,21 +531,21 @@ sub separatorpopup {
         my $sf2 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $blankbutton = $sf2->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('l') },
+            -command          => sub { processpageseparatorrefresh('l') },
             -text             => 'Blank Line',
             -underline        => 6,
             -width            => 12
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sectjoinbutton = $sf2->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('t') },
+            -command          => sub { processpageseparatorrefresh('t') },
             -text             => 'New Section',
             -underline        => 7,
             -width            => 12
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $chjoinbutton = $sf2->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('h') },
+            -command          => sub { processpageseparatorrefresh('h') },
             -text             => 'New Chapter',
             -underline        => 5,
             -width            => 12
@@ -560,7 +585,7 @@ sub separatorpopup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $delbutton = $sf4->Button(
             -activebackground => $::activecolor,
-            -command          => sub { processpageseparator('d') },
+            -command          => sub { processpageseparatorrefresh('d') },
             -text             => 'Delete',
             -underline        => 0,
             -width            => 8
@@ -593,12 +618,12 @@ sub separatorpopup {
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             }
         );
-        $::lglobal{pageseppop}->Tk::bind( '<j>'            => sub { processpageseparator('j') } );
-        $::lglobal{pageseppop}->Tk::bind( '<k>'            => sub { processpageseparator('k') } );
-        $::lglobal{pageseppop}->Tk::bind( '<l>'            => sub { processpageseparator('l') } );
-        $::lglobal{pageseppop}->Tk::bind( '<h>'            => sub { processpageseparator('h') } );
-        $::lglobal{pageseppop}->Tk::bind( '<d>'            => sub { processpageseparator('d') } );
-        $::lglobal{pageseppop}->Tk::bind( '<t>'            => sub { processpageseparator('t') } );
+        $::lglobal{pageseppop}->Tk::bind( '<j>' => sub { processpageseparatorrefresh('j') } );
+        $::lglobal{pageseppop}->Tk::bind( '<k>' => sub { processpageseparatorrefresh('k') } );
+        $::lglobal{pageseppop}->Tk::bind( '<l>' => sub { processpageseparatorrefresh('l') } );
+        $::lglobal{pageseppop}->Tk::bind( '<h>' => sub { processpageseparatorrefresh('h') } );
+        $::lglobal{pageseppop}->Tk::bind( '<d>' => sub { processpageseparatorrefresh('d') } );
+        $::lglobal{pageseppop}->Tk::bind( '<t>' => sub { processpageseparatorrefresh('t') } );
         $::lglobal{pageseppop}->Tk::bind( '<Key-question>' => sub { pageseparatorhelppopup('?') } );
         $::lglobal{pageseppop}->Tk::bind( '<r>'            => \&refreshpageseparator );
         $::lglobal{pageseppop}->Tk::bind(
