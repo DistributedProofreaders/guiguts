@@ -569,8 +569,10 @@ sub getnextscanno {
     unless ( searchtext() ) {
         if ( $::lglobal{regaa} ) {
             while (1) {
-                last
-                  if ( $::lglobal{scannosindex}++ >= $#{ $::lglobal{scannosarray} } );
+                if ( $::lglobal{scannosindex}++ >= $#{ $::lglobal{scannosarray} } ) {
+                    $::lglobal{scannosindex} = $#{ $::lglobal{scannosarray} };
+                    last;
+                }
                 ::findascanno();
                 last if searchtext();
             }
@@ -672,7 +674,7 @@ sub findascanno {
     ::soundbell()                   unless ( $word || $::lglobal{regaa} );
     $::lglobal{searchbutton}->flash unless ( $word || $::lglobal{regaa} );
     $::lglobal{regtracker}->configure(
-        -text => ( $::lglobal{scannosindex} + 1 ) . '/' . scalar( @{ $::lglobal{scannosarray} } ) );
+        -text => ( $::lglobal{scannosindex} + 1 ) . '/' . ( $#{ $::lglobal{scannosarray} } + 1 ) );
     $::lglobal{hintmessage}->delete( '1.0', 'end' )
       if ( defined( $::lglobal{hintpop} ) );
     return 0 unless $word;
@@ -1399,8 +1401,7 @@ sub searchpopup {
                 -activebackground => $::activecolor,
                 -command          => sub {
                     $::lglobal{scannosindex}++
-                      unless (
-                        $::lglobal{scannosindex} >= scalar( @{ $::lglobal{scannosarray} } ) );
+                      unless $::lglobal{scannosindex} >= $#{ $::lglobal{scannosarray} };
                     getnextscanno();
                 },
                 -text  => 'Next Stealtho',
