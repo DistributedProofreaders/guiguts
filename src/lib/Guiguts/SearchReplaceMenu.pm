@@ -261,7 +261,7 @@ sub searchtext {
         $::lglobal{selectionsearch} = 0;
 
         # Warn user string was not found, unless auto-advancing scannos, or silent mode
-        unless ( ( $::lglobal{doscannos} and $::lglobal{regaa} ) or $silentmode ) {
+        unless ( ( $::scannosearch and $::lglobal{regaa} ) or $silentmode ) {
             ::soundbell();
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
