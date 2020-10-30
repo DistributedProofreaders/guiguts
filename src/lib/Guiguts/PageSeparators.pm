@@ -54,8 +54,19 @@ EOM
 }
 
 # Called by "Refresh" on Separator popup.
-# Search for page separator. If automatic, then process it.
+# Wraps single undo around all changes made from this click
+sub refreshpageseparatorwrapper {
+    my $textwindow = $::textwindow;
+    $textwindow->addGlobStart;
+    refreshpageseparator();
+    $textwindow->addGlobEnd;
+}
+
+#
+# Search for page separator.
+# If automatic, then process it unless 'noauto' argument specified, e.g. after Undo
 sub refreshpageseparator {
+    my $noauto     = shift;
     my $textwindow = $::textwindow;
     ::hidepagenums();
     findpageseparator();
@@ -63,9 +74,8 @@ sub refreshpageseparator {
       if $::searchstartindex;
 
     # Handle Automatic
-    if (   $::lglobal{pagesepauto} >= 2
-        && $::searchstartindex ) {
-        handleautomaticonrefresh();
+    if ( $::lglobal{pagesepauto} >= 2 and $::searchstartindex ) {
+        handleautomaticonrefresh() unless $noauto;
     }
     $textwindow->xviewMoveto(.0);
     $textwindow->markSet( 'insert', "$::searchstartindex+2l" )
@@ -93,13 +103,11 @@ sub handleautomaticonrefresh {
             if (   ( $character =~ /[\s\n]$/ )
                 || ( $character =~ /[\w-]\*$/ ) ) {
                 $textwindow->delete("$index-1c");
-                $::lglobal{joinundo}++;
             } else {
                 last;
             }
         }
         $textwindow->insert( $index, "\n" );
-        $::lglobal{joinundo}++;
 
         if ( $::lglobal{pagesepauto} == 2 ) {
 
@@ -113,7 +121,6 @@ sub handleautomaticonrefresh {
                     if ( $character =~ /[\*]/ ) {    # dropped \n
                         print "deleting:character page1\n";
                         $textwindow->delete($index);
-                        $::lglobal{joinundo}++;
                         last
                           if $textwindow->compare( 'page1 +1l', '>=', 'end' );
                     } else {
@@ -254,12 +261,13 @@ sub closeupmarkup {
 # Process page separator and refresh ready for next one if needed
 # Only called via user action, not auto-joining
 sub processpageseparatorrefresh {
-    my $op = shift;
+    my $op         = shift;
+    my $textwindow = $::textwindow;
+    $textwindow->addGlobStart;    # Single undo around all edits made from this click
     ::hidepagenums();
-    $::lglobal{joinundo} = 0;
     processpageseparator($op);
     refreshpageseparator() if $::lglobal{pagesepauto} >= 1;
-    push @::joinundolist, $::lglobal{joinundo};
+    $textwindow->addGlobEnd;
 }
 
 # Process page separator based on option chosen: j, k, l, t, h, d
@@ -293,7 +301,6 @@ sub processpageseparator {
             $line  = $textwindow->get($index);
             if ( $line =~ /[\n\*]/ ) {
                 $textwindow->delete($index);
-                $::lglobal{joinundo}++;
                 last if ( $textwindow->compare( $index, '>=', 'end' ) );
             } else {
                 last;
@@ -309,7 +316,6 @@ sub processpageseparator {
             }
             if ( ( $line =~ /[\s\n]$/ ) || ( $line =~ /[\w-]\*$/ ) ) {
                 $textwindow->delete("$index-1c");
-                $::lglobal{joinundo}++;
             } else {
                 last;
             }
@@ -328,7 +334,6 @@ sub processpageseparator {
             my $match = $textwindow->get( "$index-3c", "$index+2c" );
             if ( $match =~ /(.)\/\/\1/ ) {
                 $textwindow->delete( "$index-3c", "$index+3c" );
-                $::lglobal{joinundo}++;
             } else {
                 $textwindow->insert( "$index", "\n" );
             }
@@ -346,20 +351,16 @@ sub processpageseparator {
             my $markupl = $textwindow->get( "$index-4c", $index );
             my $markupn = $textwindow->get( $index,      "$index+3c" );
             if ( ( $markupl =~ /<\/([ibgf])>/i ) && ( $markupn =~ /<$1>/i ) ) {
-                $textwindow->delete( $index, "$index+3c" );
-                $::lglobal{joinundo}++;
+                $textwindow->delete( $index,      "$index+3c" );
                 $textwindow->delete( "$index-4c", $index );
-                $::lglobal{joinundo}++;
                 $index = $textwindow->index('page');
                 $line  = $textwindow->get("$index-1c");
                 last if ( $textwindow->compare( $index, '>=', 'end' ) );
             }
             if (   ( $textwindow->get( "$index-5c", $index ) =~ /<\/sc>/i )
                 && ( $textwindow->get( $index, "$index+4c" ) =~ /<sc>/i ) ) {
-                $textwindow->delete( $index, "$index+4c" );
-                $::lglobal{joinundo}++;
+                $textwindow->delete( $index,      "$index+4c" );
                 $textwindow->delete( "$index-5c", $index );
-                $::lglobal{joinundo}++;
                 $index = $textwindow->index('page');
                 $line  = $textwindow->get("$index-1c");
                 last if ( $textwindow->compare( $index, '>=', 'end' ) );
@@ -379,7 +380,6 @@ sub processpageseparator {
             ) {
                 while ( $line =~ /\-/ ) {
                     $textwindow->delete("$index-1c");
-                    $::lglobal{joinundo}++;
                     $index = $textwindow->index('page');
                     $line  = $textwindow->get("$index-1c");
                     last if ( $textwindow->compare( $index, '>=', 'end' ) );
@@ -387,17 +387,13 @@ sub processpageseparator {
                 $line = $textwindow->get($index);
                 if ( $line =~ /\*/ ) {
                     $textwindow->delete($index);
-                    $::lglobal{joinundo}++;
                 }
                 $index = $textwindow->search( '-regexp', '--', '\s', $index, 'end' );
                 $textwindow->delete($index);
-                $::lglobal{joinundo}++;
             }
         }
         $textwindow->insert( $index, "\n" );
-        $::lglobal{joinundo}++;
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
     } elsif ( $op eq 'k' ) {    # join lines keep hyphen
         $index = $textwindow->index('page');
         $line  = $textwindow->get("$index-1c");
@@ -405,10 +401,8 @@ sub processpageseparator {
             my $markupl = $textwindow->get( "$index-4c", $index );
             my $markupn = $textwindow->get( $index,      "$index+3c" );
             if ( ( $markupl =~ /<\/([ibgf])>/i ) && ( $markupn =~ /<$1>/i ) ) {
-                $textwindow->delete( $index, "$index+3c" );
-                $::lglobal{joinundo}++;
+                $textwindow->delete( $index,      "$index+3c" );
                 $textwindow->delete( "$index-4c", $index );
-                $::lglobal{joinundo}++;
                 $index = $textwindow->index('page');
                 $line  = $textwindow->get("$index-1c");
                 last if ( $textwindow->compare( $index, '>=', 'end' ) );
@@ -434,71 +428,46 @@ sub processpageseparator {
                 $textwindow->insert( "$index", " " );
                 $index = $textwindow->search( '-regexp', '--', '\s', "$index+1c", 'end' );
                 $textwindow->delete($index);
-                $::lglobal{joinundo}++;
             }
         }
         $line = $textwindow->get($index);
         if ( $line =~ /-/ ) {
-            $::lglobal{joinundo}++;
             $index = $textwindow->search( '-regexp', '--', '\s', $index, 'end' );
             $textwindow->delete($index);
-            $::lglobal{joinundo}++;
         }
         $textwindow->insert( $index, "\n" );
-        $::lglobal{joinundo}++;
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
     } elsif ( $op eq 'l' ) {    # add a line
         $textwindow->insert( $index, "\n\n" );
-        $::lglobal{joinundo}++;
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
     } elsif ( $op eq 't' ) {    # new section
         $textwindow->insert( $index, "\n\n\n" );
-        $::lglobal{joinundo}++;
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
     } elsif ( $op eq 'h' ) {    # new chapter
         $textwindow->insert( $index, "\n\n\n\n\n" );
-        $::lglobal{joinundo}++;
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
     } elsif ( $op eq 'd' ) {    # delete
         $textwindow->insert( $index, $pagesep ) if $::lglobal{htmlpagenum};
-        $::lglobal{joinundo}++                  if $::lglobal{htmlpagenum};
         $textwindow->delete("$index-1c");
-        $::lglobal{joinundo}++;
     }
 
 }
 
 sub undojoin {
     my $textwindow = $::textwindow;
-    if ( $::lglobal{pagesepauto} >= 2 ) {
-        $textwindow->undo;
-        $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-        $textwindow->see('insert');
-        return;
-    }
-    my $joinundo = pop @::joinundolist;
-    return unless $joinundo;
-    push @::joinredolist, $joinundo;
-    $textwindow->undo for ( 0 .. $joinundo );
-    refreshpageseparator();
+    $textwindow->undo;
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+    $textwindow->see('insert');
+
+    # Refresh, but don't allow it to restart auto-joining
+    refreshpageseparator('noauto');
 }
 
 sub redojoin {
     my $textwindow = $::textwindow;
-    if ( $::lglobal{pagesepauto} >= 2 ) {
-        $textwindow->redo;
-        $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-        $textwindow->see('insert');
-        return;
-    }
-    my $joinredo = pop @::joinredolist;
-    return unless $joinredo;
-    push @::joinundolist, $joinredo;
-    $textwindow->redo for ( 0 .. $joinredo );
+    $textwindow->redo;
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+    $textwindow->see('insert');
 }
 
 sub separatorpopup {
@@ -578,7 +547,7 @@ sub separatorpopup {
         my $sf4 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $refreshbutton = $sf4->Button(
             -activebackground => $::activecolor,
-            -command          => sub { refreshpageseparator() },
+            -command          => sub { refreshpageseparatorwrapper() },
             -text             => 'Refresh',
             -underline        => 0,
             -width            => 8
@@ -625,7 +594,7 @@ sub separatorpopup {
         $::lglobal{pageseppop}->Tk::bind( '<d>' => sub { processpageseparatorrefresh('d') } );
         $::lglobal{pageseppop}->Tk::bind( '<t>' => sub { processpageseparatorrefresh('t') } );
         $::lglobal{pageseppop}->Tk::bind( '<Key-question>' => sub { pageseparatorhelppopup('?') } );
-        $::lglobal{pageseppop}->Tk::bind( '<r>'            => \&refreshpageseparator );
+        $::lglobal{pageseppop}->Tk::bind( '<r>' => sub { refreshpageseparatorwrapper() } );
         $::lglobal{pageseppop}->Tk::bind(
             '<v>' => sub {
                 ::openpng( $textwindow, ::get_page_number() );
@@ -641,7 +610,7 @@ sub separatorpopup {
             }
         );
     }
-    refreshpageseparator();
+    refreshpageseparatorwrapper();
 }
 
 # Delete blank lines before page separators
