@@ -201,9 +201,7 @@ our %geometryhash;    #Geometry of some windows in one hash.
 $geometryhash{wfpop} = q{};
 our %positionhash;    #Position of other windows in one hash.
 our %manualhash;      # subpage of manual for each dialog
-our @bookmarks = ( 0, 0, 0, 0, 0, 0 );
-our @joinundolist;
-our @joinredolist;
+our @bookmarks  = ( 0, 0, 0, 0, 0, 0 );
 our @multidicts = ();
 our @mygcview;
 our %operationshash;    # New format {operation, time}
