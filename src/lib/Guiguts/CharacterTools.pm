@@ -106,7 +106,7 @@ sub insertit {
     my $isatext = 0;
     my $spot;
 
-    # Tk::Text matches searchentry and replaceentries
+    # Tk::Text/Tk::Entry match various text entry boxes
     $isatext = $::lglobal{hasfocus}->isa('Tk::Text') || $::lglobal{hasfocus} == $::textwindow;
     if ($isatext) {
         $spot = $::lglobal{hasfocus}->index('insert');

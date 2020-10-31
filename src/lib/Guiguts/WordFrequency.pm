@@ -317,7 +317,7 @@ sub wordfrequency {
                     $sword =~ s/([^\w\s\\])/\\$1/g;
                     ::searchoptset(qw/0 x x 1/);
                 }
-                $::lglobal{searchentry}->delete( '1.0', 'end' );
+                $::lglobal{searchentry}->delete( 0, 'end' );
                 $::lglobal{searchentry}->insert( 'end', $sword );
                 ::updatesearchlabels();
                 $::lglobal{searchentry}->after( $::lglobal{delay} );
@@ -1092,7 +1092,7 @@ sub harmonicspop {
                 ::searchpopup();
                 $sword =~ s/\d+\s+([\w'-]*)/$1/;
                 $sword =~ s/\s+\*\*\*\*$//;
-                $::lglobal{searchentry}->delete( '1.0', 'end' );
+                $::lglobal{searchentry}->delete( 0, 'end' );
                 $::lglobal{searchentry}->insert( 'end', $sword );
                 ::updatesearchlabels();
                 $::lglobal{searchentry}->after( $::lglobal{delay} );

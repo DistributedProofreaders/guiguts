@@ -16,8 +16,8 @@ BEGIN {
 
 # Update both the search and replace histories from their dialog fields
 sub update_sr_histories {
-    add_search_history( $::lglobal{searchentry}->get( '1.0', '1.end' ),  \@::search_history );
-    add_search_history( $::lglobal{replaceentry}->get( '1.0', '1.end' ), \@::replace_history );
+    add_search_history( $::lglobal{searchentry}->get,  \@::search_history );
+    add_search_history( $::lglobal{replaceentry}->get, \@::replace_history );
 }
 
 # Add given term to either the search or replace history
@@ -102,7 +102,7 @@ sub searchtext {
     }
 
     # use the string in the dialog search field unless one was passed in as an argument
-    $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' ) unless ($searchterm);
+    $searchterm = $::lglobal{searchentry}->get unless ($searchterm);
     return ('') unless length($searchterm);
     if ( $::sopt[3] ) {
         unless ( ::isvalid($searchterm) ) {
@@ -362,16 +362,14 @@ sub load_hist_term {
     $widget->insert( 'end', $term );
 }
 
+# Set search entry box to red/black text if invalid/valid search term
+# Also used as a validation routine, but always returns OK because we still want
+# the text to be shown, even if it's a bad regex - user may not have finished typing
 sub reg_check {
-    $::lglobal{searchentry}->tagConfigure( 'reg', -foreground => 'black' );
-    $::lglobal{searchentry}->tagRemove( 'reg', '1.0', 'end' );
-    return unless $::sopt[3];
-    $::lglobal{searchentry}->tagAdd( 'reg', '1.0', 'end' );
-    my $term = $::lglobal{searchentry}->get( '1.0', 'end' );
-    return if ( $term eq '^' or $term eq '$' );
-    return if ::isvalid($term);
-    $::lglobal{searchentry}->tagConfigure( 'reg', -foreground => 'red' );
-    return;
+    my $term  = shift;
+    my $color = ( $::sopt[3] and not ::isvalid($term) ) ? 'red' : 'black';
+    $::lglobal{searchentry}->configure( -foreground => $color );
+    return 1;
 }
 
 sub regedit {
@@ -430,13 +428,12 @@ sub regedit {
         -text             => 'Del',
         -command          => \&regdel,
     )->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'w' );
-    $::lglobal{regsearch}->insert( 'end', ( $::lglobal{searchentry}->get( '1.0', '1.end' ) ) )
-      if $::lglobal{searchentry}->get( '1.0', '1.end' );
-    $::lglobal{regreplace}->insert( 'end', ( $::lglobal{replaceentry}->get( '1.0', '1.end' ) ) )
-      if $::lglobal{replaceentry}->get( '1.0', '1.end' );
-    $::lglobal{reghinted}
-      ->insert( 'end', ( $::reghints{ $::lglobal{searchentry}->get( '1.0', '1.end' ) } ) )
-      if $::reghints{ $::lglobal{searchentry}->get( '1.0', '1.end' ) };
+    $::lglobal{regsearch}->insert( 'end', ( $::lglobal{searchentry}->get ) )
+      if $::lglobal{searchentry}->get;
+    $::lglobal{regreplace}->insert( 'end', ( $::lglobal{replaceentry}->get ) )
+      if $::lglobal{replaceentry}->get;
+    $::lglobal{reghinted}->insert( 'end', ( $::reghints{ $::lglobal{searchentry}->get } ) )
+      if $::reghints{ $::lglobal{searchentry}->get };
     my $button = $editor->Show;
     if ( defined $button and $button =~ /save/i ) {
         open my $reg, ">", "$::lglobal{scannosfilename}";
@@ -530,7 +527,7 @@ sub regdel {
 
 sub reghint {
     my $message = 'No hints for this entry.';
-    my $reg     = $::lglobal{searchentry}->get( '1.0', '1.end' );
+    my $reg     = $::lglobal{searchentry}->get;
     if ( $::reghints{$reg} ) { $message = $::reghints{$reg} }
     if ( defined( $::lglobal{hintpop} ) ) {
         $::lglobal{hintpop}->deiconify;
@@ -581,18 +578,51 @@ sub getnextscanno {
 }
 
 sub swapterms {
-    my $tempholder = $::lglobal{replaceentry}->get( '1.0', '1.end' );
-    $::lglobal{replaceentry}->delete( '1.0', 'end' );
-    $::lglobal{replaceentry}->insert( 'end', $::lglobal{searchentry}->get( '1.0', '1.end' ) );
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
+    my $tempholder = $::lglobal{replaceentry}->get;
+    $::lglobal{replaceentry}->delete( 0, 'end' );
+    $::lglobal{replaceentry}->insert( 'end', $::lglobal{searchentry}->get );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', $tempholder );
     searchtext();
 }
 
-sub isvalid {
-    my $term = shift;
-    return eval { '' =~ m/$term/; 1 } || 0;
+# Check if a regex is valid by attempting to eval it
+#
+# Two possible errors:
+#   1. eval block fails to compile and $@ contains the compile error
+#   2. regex compiles OK, but causes warning to be issued,
+#      e.g. "...matches null string many times in regex"
+#
+# Case 2 is caught by temporarily overriding warning handling via "local $SIG{__WARN__}"
+# Since Perl avoids outputting a duplicate warning, if the same bad regex is checked again,
+# case 2 would not trigger. Therefore it is necessary to remember the bad regex and check
+# against that as well.
+#
+# Block to ensure persistence of $lastbad
+{
+    my $lastbad = '^*';    # initialise to a regex that would generate a warning
+
+    sub isvalid {
+        my $regex = shift;
+
+        # assume a new regex is a good one
+        my $valid = $regex ne $lastbad;
+
+        # local warning handler to trap regex warnings
+        local $SIG{__WARN__} = sub {
+            $lastbad = $regex;
+            $valid   = 0;
+        };
+
+        # try compiling it - note warning handler may set $valid to 0 at this point
+        eval { qr/$regex/ };
+
+        $valid = 0 if $@;    # if compile failed
+        return $valid;
+    }
 }
+
+# End of enclosing block
 
 sub badreg {
     my $warning = $::top->Dialog(
@@ -630,7 +660,7 @@ sub getmark {
 
 sub updatesearchlabels {
     if ( $::lglobal{searchpop} ) {
-        my $searchterm1 = $::lglobal{searchentry}->get( '1.0', '1.end' );
+        my $searchterm1 = $::lglobal{searchentry}->get;
 
         if ( $searchterm1 eq '' ) {
             $::lglobal{searchnumlabel}->configure( -text => "" );
@@ -656,7 +686,7 @@ sub replace {
     my $replaceterm = shift;
     $replaceterm = '' unless length $replaceterm;
     return unless $::searchstartindex;
-    my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+    my $searchterm = $::lglobal{searchentry}->get;
     $replaceterm = replaceeval( $searchterm, $replaceterm ) if ( $::sopt[3] );
     if ($::searchstartindex) {
         $::textwindow->replacewith( $::searchstartindex, $::searchendindex, $replaceterm );
@@ -669,8 +699,8 @@ sub findascanno {
     $::searchendindex = '1.0';
     my $word = '';
     $word = $::lglobal{scannosarray}[ $::lglobal{scannosindex} ];
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
-    $::lglobal{replaceentry}->delete( '1.0', 'end' );
+    $::lglobal{searchentry}->delete( 0, 'end' );
+    $::lglobal{replaceentry}->delete( 0, 'end' );
     ::soundbell()                   unless ( $word || $::lglobal{regaa} );
     $::lglobal{searchbutton}->flash unless ( $word || $::lglobal{regaa} );
     $::lglobal{regtracker}->configure(
@@ -1028,12 +1058,11 @@ sub replaceall {
     # Check if replaceall applies only to a selection
     my @ranges = $textwindow->tagRanges('sel');
     if (@ranges) {
-        $::lglobal{lastsearchterm} =
-          $::lglobal{replaceentry}->get( '1.0', '1.end' );
-        $::searchstartindex = pop @ranges;
-        $::searchendindex   = pop @ranges;
+        $::lglobal{lastsearchterm} = $::lglobal{replaceentry}->get;
+        $::searchstartindex        = pop @ranges;
+        $::searchendindex          = pop @ranges;
     } else {
-        my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+        my $searchterm = $::lglobal{searchentry}->get;
         $::lglobal{lastsearchterm} = '';
 
         # if not a regex search
@@ -1107,7 +1136,8 @@ sub searchoptset {
         }
     }
 
-    #print $::sopt[0],$::sopt[1],$::sopt[2],$::sopt[3],$::sopt[4].":sopt set\n";
+    # Changing options may affect if search string is valid, so re-check it
+    reg_check( $::lglobal{searchentry}->get ) if $::lglobal{searchpop};
 }
 ### Search
 sub searchpopup {
@@ -1136,7 +1166,7 @@ sub searchpopup {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+                countmatches( $::lglobal{searchentry}->get );
             },
             -text  => 'Count',
             -width => 6
@@ -1179,10 +1209,12 @@ sub searchpopup {
             -anchor => 'w'
         );
         search_shiftreverse( $::lglobal{searchbutton} );
-        $::lglobal{searchentry} = $sf11->Text(
+        $::lglobal{searchentry} = $sf11->Entry(
             -background => $::bkgcolor,
+            -foreground => 'black',
             -width      => 60,
-            -height     => 1,
+            -validate   => 'all',
+            -vcmd       => sub { reg_check(shift); }
         )->pack(
             -side   => 'right',
             -anchor => 'w',
@@ -1198,8 +1230,6 @@ sub searchpopup {
             -width  => 9,
             -height => 15,
         )->pack( -side => 'right', -anchor => 'w' );
-        $::lglobal{regrepeat} =
-          $::lglobal{searchentry}->repeat( 500, \&reg_check );
         my $sf2 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'w' );
         $::lglobal{searchop1} = $sf2->Checkbutton(
             -variable    => \$::sopt[1],
@@ -1322,7 +1352,7 @@ sub searchpopup {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replaceall( $::lglobal{replaceentry}->get );
             },
             -text  => 'Rpl All',
             -width => 5
@@ -1336,7 +1366,7 @@ sub searchpopup {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replace( $::lglobal{replaceentry}->get );
                 searchtext('');
             },
             -text  => 'R & S',
@@ -1352,7 +1382,7 @@ sub searchpopup {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replace( $::lglobal{replaceentry}->get );
             },
             -text  => 'Replace',
             -width => 6
@@ -1362,10 +1392,9 @@ sub searchpopup {
             -padx   => 2,
             -anchor => 'nw'
         );
-        $::lglobal{replaceentry} = $sf12->Text(
+        $::lglobal{replaceentry} = $sf12->Entry(
             -background => $::bkgcolor,
             -width      => 60,
-            -height     => 1,
         )->pack(
             -side   => 'right',
             -anchor => 'w',
@@ -1499,8 +1528,6 @@ sub searchpopup {
 
         $::lglobal{searchpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
-                $::lglobal{regrepeat}->cancel;
-                undef $::lglobal{regrepeat};
                 ::killpopup('searchpop');
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
                 undef $::lglobal{hintpop} if $::lglobal{hintpop};
@@ -1523,7 +1550,7 @@ sub searchpopup {
             '<Control-Return>',
             sub {
                 update_sr_histories();
-                replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replace( $::lglobal{replaceentry}->get );
                 searchtext();
                 $top->raise;
             }
@@ -1534,7 +1561,7 @@ sub searchpopup {
             '<Shift-Return>',
             sub {
                 update_sr_histories();
-                replace( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replace( $::lglobal{replaceentry}->get );
                 $top->raise;
             }
         );
@@ -1544,7 +1571,7 @@ sub searchpopup {
             '<Control-Shift-Return>',
             sub {
                 update_sr_histories();
-                replaceall( $::lglobal{replaceentry}->get( '1.0', '1.end' ) );
+                replaceall( $::lglobal{replaceentry}->get );
                 $top->raise;
             }
         );
@@ -1564,7 +1591,7 @@ sub searchpopup {
             '<Control-g>',
             sub {
                 update_sr_histories();
-                searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+                searchtext( $::lglobal{searchentry}->get );
                 $textwindow->focus;
             }
         );
@@ -1575,7 +1602,7 @@ sub searchpopup {
             sub {
                 update_sr_histories();
                 $::lglobal{searchop2}->toggle;
-                searchtext( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+                searchtext( $::lglobal{searchentry}->get );
                 $::lglobal{searchop2}->toggle;
                 $textwindow->focus;
             }
@@ -1586,7 +1613,7 @@ sub searchpopup {
             '<Control-b>',
             sub {
                 update_sr_histories();
-                countmatches( $::lglobal{searchentry}->get( '1.0', '1.end' ) );
+                countmatches( $::lglobal{searchentry}->get );
             }
         );
         $::lglobal{searchentry}->{_MENU_}  = ();
@@ -1610,13 +1637,9 @@ sub searchpopup {
         }
     }
     if ( length $searchterm ) {
-        $::lglobal{searchentry}->delete( '1.0', 'end' );
+        $::lglobal{searchentry}->delete( 0, 'end' );
         $::lglobal{searchentry}->insert( 'end', $searchterm );
-
-        # Multiline search string not supported
-        # Todo: consider Entry instead of Text widgets
-        $::lglobal{searchentry}->delete( '1.end', 'end' );
-        $::lglobal{searchentry}->tagAdd( 'sel', '1.0', 'end -1c' );
+        $::lglobal{searchentry}->tagAdd( 'sel', 0, 'end' );
         update_sr_histories();
         searchtext('');
     }
@@ -1650,7 +1673,7 @@ sub search_shiftreverse {
 }
 
 # Bind a key-combination to a sub for the S&R dialog
-# Also disable default class behaviour for key on Text widgets
+# Also disable default class behaviour for key on Entry widgets
 # (e.g. Ctrl-b does "move left" by default)
 # See KeyBindings.pm for main text window equivalent
 sub searchbind {
@@ -1663,9 +1686,9 @@ sub searchbind {
     $::lglobal{searchpop}->bind( $lkey => $subr );
     $::lglobal{searchpop}->bind( $ukey => $subr ) if $ukey ne $lkey;
 
-    # Disable default class bindings for Text widgets
-    $::lglobal{searchpop}->MainWindow->bind( "Tk::Text", $lkey, 'NoOp' );
-    $::lglobal{searchpop}->MainWindow->bind( "Tk::Text", $ukey, 'NoOp' ) if $ukey ne $lkey;
+    # Disable default class bindings for Entry widgets
+    $::lglobal{searchpop}->MainWindow->bind( "Tk::Entry", $lkey, 'NoOp' );
+    $::lglobal{searchpop}->MainWindow->bind( "Tk::Entry", $ukey, 'NoOp' ) if $ukey ne $lkey;
 }
 
 # Add frames containing field and buttons for replacement terms
@@ -1680,7 +1703,7 @@ sub searchaddterms {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replaceall( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
+                replaceall( $::lglobal{$replaceentry}->get );
             },
             -text  => 'Rpl All',
             -width => 5
@@ -1694,7 +1717,7 @@ sub searchaddterms {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
+                replace( $::lglobal{$replaceentry}->get );
                 searchtext('');
             },
             -text  => 'R & S',
@@ -1710,9 +1733,8 @@ sub searchaddterms {
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
-                replace( $::lglobal{$replaceentry}->get( '1.0', '1.end' ) );
-                add_search_history( $::lglobal{$replaceentry}->get( '1.0', '1.end' ),
-                    \@::replace_history );
+                replace( $::lglobal{$replaceentry}->get );
+                add_search_history( $::lglobal{$replaceentry}->get, \@::replace_history );
             },
             -text  => 'Replace',
             -width => 6
@@ -1722,10 +1744,9 @@ sub searchaddterms {
             -padx   => 2,
             -anchor => 'nw'
         );
-        $::lglobal{$replaceentry} = $msref->[$_]->Text(
+        $::lglobal{$replaceentry} = $msref->[$_]->Entry(
             -background => $::bkgcolor,
             -width      => 60,
-            -height     => 1,
         )->pack(
             -side   => 'right',
             -anchor => 'w',
@@ -1767,11 +1788,7 @@ sub stealthscanno {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     $::lglobal{doscannos} = 1;
-    if ( defined $::lglobal{searchpop} ) {
-        $::lglobal{regrepeat}->cancel;
-        undef $::lglobal{regrepeat};
-        ::killpopup('searchpop');
-    }
+    ::killpopup('searchpop');
     searchoptset(qw/1 x x 0 1/);    # force search to begin at start of doc, whole word
     if ( ::loadscannos() ) {
         ::savesettings();
@@ -1820,7 +1837,7 @@ sub find_transliterations {
     searchpopup();
     searchoptset(qw/0 x x 1/);
     $::lglobal{searchsingle}->invoke;
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', $pattern );
     $::lglobal{searchbutton}->invoke;
 
@@ -1839,9 +1856,6 @@ sub nextblock {
     my $top        = $::top;
     unless ($::searchstartindex) { $::searchstartindex = '1.0' }
 
-    #use Text::Balanced qw (			extract_delimited			extract_bracketed			extract_quotelike			extract_codeblock			extract_variable			extract_tagged			extract_multiple			gen_delimited_pat			gen_extract_tagged		       );
-    #print extract_bracketed( "((I)(like(pie))!)", '()' );
-    #return;
     if ( $mark eq 'default' ) {
         if ( $direction eq 'forward' ) {
             $::searchstartindex =
@@ -2209,9 +2223,7 @@ sub orphanedbrackets {
 sub orphanedmarkup {
     searchpopup();
     searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
-
-    #	$::lglobal{searchentry}->insert( 'end', "\\<(\\w+)>\\n?[^<]+<(?!/\\1>)" );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}
       ->insert( 'end', "<(?!tb)(\\w+)>(\\n|[^<])+<(?!/\\1>)|<(?!/?(tb|sc|[bfgi])>)" );
     $::lglobal{searchbutton}->invoke;

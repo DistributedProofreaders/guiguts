@@ -119,7 +119,7 @@ sub keybindings {
         sub {
             if ( $::lglobal{searchpop} ) {
                 ::update_sr_histories();
-                my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+                my $searchterm = $::lglobal{searchentry}->get;
                 ::searchtext($searchterm);
             } else {
                 ::searchpopup();
@@ -132,7 +132,7 @@ sub keybindings {
         sub {
             if ( $::lglobal{searchpop} ) {
                 ::update_sr_histories();
-                my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+                my $searchterm = $::lglobal{searchentry}->get;
                 $::lglobal{searchop2}->toggle;
                 ::searchtext($searchterm);
                 $::lglobal{searchop2}->toggle;
@@ -147,7 +147,7 @@ sub keybindings {
         sub {
             if ( $::lglobal{searchpop} ) {
                 ::update_sr_histories();
-                my $searchterm = $::lglobal{searchentry}->get( '1.0', '1.end' );
+                my $searchterm = $::lglobal{searchentry}->get;
                 ::countmatches($searchterm);
             }
         }
