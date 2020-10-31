@@ -456,7 +456,7 @@ sub fixup {
 sub text_uppercase_smallcaps {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
     $::lglobal{replaceentry}->delete( '1.0', 'end' );
     $::lglobal{replaceentry}->insert( 'end', "\\U\$1\\E" );
@@ -477,7 +477,7 @@ sub txt_auto_uppercase_smallcaps {
 sub text_remove_smallcaps_markup {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
     $::lglobal{replaceentry}->delete( '1.0', 'end' );
     $::lglobal{replaceentry}->insert( 'end', "\$1" );
@@ -486,7 +486,7 @@ sub text_remove_smallcaps_markup {
 sub txt_manual_sc_conversion {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( '1.0', 'end' );
+    $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{replaceentry}->delete( '1.0', 'end' );
     $::lglobal{replaceentry1}->delete( '1.0', 'end' );
     $::lglobal{replaceentry2}->delete( '1.0', 'end' );
