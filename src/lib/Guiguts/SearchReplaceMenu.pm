@@ -1065,28 +1065,25 @@ sub replaceall {
         my $searchterm = $::lglobal{searchentry}->get;
         $::lglobal{lastsearchterm} = '';
 
-        # if not a regex search
-        # and replacement does not contain searchterm, including case insensitive format
+        # unless it's a regex search
+        # or replacement contains searchterm, including case insensitive form
         # (to avoid an infinite loop bug in TextEdit's FindAndReplaceAll function)
         # do a speedy FindAndReplaceAll
-        unless ( ( $::sopt[3] )
-            or ( isvalid($searchterm) and $replacement =~ $searchterm )
-            or ( isvalid($searchterm) and $::sopt[1] and $replacement =~ /$searchterm/i ) ) {
-            my $exactsearch = $searchterm;
+        unless ( $::sopt[3]
+            or index( $replacement, $searchterm ) >= 0
+            or ( $::sopt[1] and index( lc($replacement), lc($searchterm) ) >= 0 ) ) {
 
-            # escape metacharacters for whole word matching
-            $exactsearch = ::escape_regexmetacharacters($exactsearch);         # this is a whole word search
-            $searchterm  = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})'
-              if $::sopt[0];
-            my ( $searchstart, $mode );
-            if   ( $::sopt[0] or $::sopt[3] ) { $mode = '-regexp' }
-            else                              { $mode = '-exact' }
-            ::working("Replace All");
-            if ( $::sopt[1] ) {
-                $textwindow->FindAndReplaceAll( $mode, '-nocase', $searchterm, $replacement );
-            } else {
-                $textwindow->FindAndReplaceAll( $mode, '-case', $searchterm, $replacement );
+            # escape metacharacters and check before/after for non-alpha if whole word matching
+            if ( $::sopt[0] ) {
+                my $exactsearch = ::escape_regexmetacharacters($searchterm);
+                $searchterm = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})';
             }
+
+            # regex search is needed for whole word matching as well as regex matching
+            my $mode = ( $::sopt[0] or $::sopt[3] ) ? '-regexp' : '-exact';
+            my $case = $::sopt[1]                   ? '-nocase' : '-case';
+            ::working("Replace All");
+            $textwindow->FindAndReplaceAll( $mode, $case, $searchterm, $replacement );
             ::working();
             return;
         }
