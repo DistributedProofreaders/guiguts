@@ -240,7 +240,7 @@ sub utfpopup {
         -text        => 'HTML code',
     )->grid( -row => 1, -column => 6 );
     my $unicodelist = $cframe->BrowseEntry(
-        -label     => 'UTF Block',
+        -label     => 'Block',
         -width     => 30,
         -browsecmd => sub {
             doutfbuttons( $::lglobal{utfblocks}{$block}[0], $::lglobal{utfblocks}{$block}[1] );
@@ -493,7 +493,7 @@ sub utfcharentrypopup {
         $::lglobal{utfentrypop}->raise;
     } else {
         $::lglobal{utfentrypop} = $top->Toplevel;
-        $::lglobal{utfentrypop}->title('Ordinal to Char');
+        $::lglobal{utfentrypop}->title('Unicode Character Entry');
         my $frame  = $::lglobal{utfentrypop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         my $frame2 = $::lglobal{utfentrypop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         $frame->Label( -text => 'Ordinal of char.' )->grid( -row => 1, -column => 1 );
@@ -539,7 +539,7 @@ sub utfcharentrypopup {
                 $charlbl->configure( -text => $name );
                 return 1;
             },
-        )->grid( -row => 1, -column => 2 );
+        )->grid( -row => 1, -column => 2, -pady => 5 );
         $outentry = $frame->ROText(
             -background => $::bkgcolor,
             -relief     => 'sunken',
