@@ -2499,10 +2499,12 @@ sub restorelinenumbers {
 }    # end of variable-enclosing block
 
 # Sound bell unless global nobell flag is set
-# Also flash first label on status bar
+# Also flash first label on status bar unless noflash argument is given
 sub soundbell {
+    my $noflash = shift;
     $::textwindow->bell unless $::nobell;
-    return              unless $::lglobal{current_line_label};
+    return if $noflash;
+    return unless $::lglobal{current_line_label};
     for ( 1 .. 5 ) {
         $::lglobal{current_line_label}->after( $::lglobal{delay} );
         $::lglobal{current_line_label}->configure( -background => $::activecolor );

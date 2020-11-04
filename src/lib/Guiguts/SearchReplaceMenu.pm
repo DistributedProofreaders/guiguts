@@ -262,7 +262,7 @@ sub searchtext {
 
         # Warn user string was not found, unless auto-advancing scannos, or silent mode
         unless ( ( $::scannosearch and $::lglobal{regaa} ) or $silentmode ) {
-            ::soundbell();
+            ::soundbell('noflash');
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
 
@@ -701,7 +701,7 @@ sub findascanno {
     $word = $::lglobal{scannosarray}[ $::lglobal{scannosindex} ];
     $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{replaceentry}->delete( 0, 'end' );
-    ::soundbell()                   unless ( $word || $::lglobal{regaa} );
+    ::soundbell('noflash')          unless ( $word || $::lglobal{regaa} );
     $::lglobal{searchbutton}->flash unless ( $word || $::lglobal{regaa} );
     $::lglobal{regtracker}->configure(
         -text => ( $::lglobal{scannosindex} + 1 ) . '/' . ( $#{ $::lglobal{scannosarray} } + 1 ) );
