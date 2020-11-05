@@ -12,33 +12,17 @@ BEGIN {
 # build lists of words, word pairs, and double hyphenated words
 sub wordfrequencybuildwordlist {
     my $textwindow = shift;
-    my ( @words, $match, @savesets );
-    my $index = '1.0';
-    my $wc    = 0;
-    my $end   = $textwindow->index('end');
+    my ( @words, $match );
+    my $wc = 0;
     $::lglobal{seenwordsdoublehyphen} = ();
     $::lglobal{seenwords}             = ();
     $::lglobal{seenwordpairs}         = ();
-    my $filename = $textwindow->FileName;
-
-    unless ($filename) {
-        $filename = 'tempfile.tmp';
-        open( my $file, ">", "$filename" );
-        my ($lines) = $textwindow->index('end - 1 chars') =~ /^(\d+)\./;
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end  = $textwindow->index("$index  lineend +1c");
-            my $line = $textwindow->get( $index, $end );
-            print $file $line;
-            $index = $end;
-        }
-    }
-    ::savefile()
-      if ( ( $textwindow->FileName )
-        && ( $textwindow->numberChanges != 0 ) );
-    open my $fh, '<', $filename;
     my $lastwordseen = '';
-    while ( my $line = <$fh> ) {
-        utf8::decode($line);
+
+    my $index = '1';
+    while ( $textwindow->compare( "$index.0", '<', 'end' ) ) {
+        my $line = $textwindow->get( "$index.0", "$index.end" );
+        ++$index;
         next if $line =~ m/^-----*\s?File:\s?\S+\.(png|jpg)---/;
         $line         =~ s/_/ /g;
         $line         =~ s/<!--//g;
@@ -79,12 +63,7 @@ sub wordfrequencybuildwordlist {
             $match = ( $::lglobal{wf_ignore_case} ) ? lc($word) : $word;
             $::lglobal{seenwords}->{$match}++;
         }
-        $index++;
-        $index .= '.0';
-        $textwindow->update;
     }
-    close $fh;
-    unlink 'tempfile.tmp' if ( -e 'tempfile.tmp' );
     return $wc;
 }
 
