@@ -305,7 +305,7 @@ sub wordfrequency {
             }
         );
         $::lglobal{wclistbox}->eventAdd( '<<find>>' => '<Double-Button-1>', '<Return>' );
-        $::lglobal{wclistbox}->bind(    # FIXME: This needs to go in GC code.
+        $::lglobal{wclistbox}->bind(
             '<<find>>',
             sub {
                 my ($sword) = $::lglobal{wclistbox}->get( $::lglobal{wclistbox}->curselection );
@@ -401,10 +401,11 @@ sub wordfrequency {
                     -initialfile => 'wordfreq.txt'
                 );
 
-                #FIXME not UTF-8 compatible
                 if ( defined($name) and length($name) ) {
                     open( my $save, ">", "$name" );
-                    print $save join "\n", $::lglobal{wclistbox}->get( '0', 'end' );
+                    my $list = join "\n", $::lglobal{wclistbox}->get( '0', 'end' );
+                    utf8::encode($list) if ::currentfileisunicode();
+                    print $save $list;
                 }
             }
         );
@@ -417,15 +418,16 @@ sub wordfrequency {
                     -initialfile => 'wordlist.txt'
                 );
 
-                #FIXME not UTF-8 compatible
                 if ( defined($name) and length($name) ) {
-                    my $count = $::lglobal{wclistbox}->index('end');
+                    my $unicode = ::currentfileisunicode();
+                    my $count   = $::lglobal{wclistbox}->index('end');
                     open( my $save, ">", "$name" );
                     for ( 1 .. $count ) {
                         my $word = $::lglobal{wclistbox}->get($_);
                         if ( ( defined $word ) && ( length $word ) ) {
                             $word =~ s/^\d+\s+//;
                             $word =~ s/\s+\*{4}\s*$//;
+                            utf8::encode($word) if $unicode;
                             print $save $word, "\n";
                         }
                     }
