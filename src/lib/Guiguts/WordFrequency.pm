@@ -1153,8 +1153,7 @@ sub harmonicspop {
         $::lglobal{hlistbox}->delete( '0', 'end' );
         $::lglobal{hlistbox}->insert( 'end', "$wc 1st order harmonics for $active." );
     }
-    foreach my $word ( sort { ::deaccentsort( lc $a ) cmp ::deaccentsort( lc $b ) }
-        ( keys %{ $::lglobal{harmonic} } ) ) {
+    foreach my $word ( ::natural_sort_alpha( keys %{ $::lglobal{harmonic} } ) ) {
         $line = sprintf( "%-8d %s", $::lglobal{seenwords}->{$word}, $word );    # Print to the file
         $::lglobal{hlistbox}->insert( 'end', $line );
     }
@@ -1255,8 +1254,6 @@ sub sortanddisplaywords {
                     }
                 ) unless length($firstletter) > 1;
             }
-
-            #$::lglobal{regexpentry}->Tk::bind( '<Key-'.$firstletter.'>' => '' );
         }
     } elsif ( $::alpha_sort eq 'l' ) {    # Sorted by word length
         for ( ::natural_sort_length( keys %$href ) ) {

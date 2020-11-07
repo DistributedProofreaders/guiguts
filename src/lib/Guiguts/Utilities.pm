@@ -1542,29 +1542,39 @@ sub drag {
     );
 }
 
-## Ultra fast natural sort - wants an array
+#
+# Sorts an array of strings, handling case and accents intelligently
+# Sorting is case-insensitive and ignores accents, except for "identical" words
+# which are sorted according to normal sort order, e.g. Ab, ab, ABc, Abc, AxY, Axy, etc.
 sub natural_sort_alpha {
-    my $i;
-    s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg, $_ .= ' ' . $i++
-      for ( my @x = map { lc deaccentsort $_} @_ );
-    @_[ map { (split)[-1] } sort @x ];
+    sort { lc( ::deaccentsort($a) ) cmp lc( ::deaccentsort($b) ) or $a cmp $b; } @_;
 }
 
-## Fast length sort with secondary natural sort - wants an array
+#
+# Sorts an array of strings by length then string, handling case and accents intelligently
+# Sorting is first by length, then string sorting is case-insensitive and ignores accents,
+# except for "identical" words which are sorted according to normal sort order.
+# Also note trailing asterisks (used to flag suspects) are stripped from length calculation.
+# e.g. Y, y, Z, z, Ab ****, ab ****, ABc, Abc, AxY, Axy, etc.
 sub natural_sort_length {
-    $_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
-      for ( my @x = map { [ length noast($_), $_, lc deaccentsort $_ ] } @_ );
-    map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
+    sort {
+             length( noast($a) ) <=> length( noast($b) )
+          or lc( ::deaccentsort($a) ) cmp lc( ::deaccentsort($b) )
+          or $a cmp $b;
+    } @_;
 }
 
-## Fast freqency sort with secondary natural sort - wants a hash reference
+#
+# Given a ref to a hash containing a number (e.g. word frequency), sorts the keys,
+# first by number, then string sorting is case-insensitive and ignores accents,
+# except for "identical" words which are sorted according to normal sort order,
+# e.g. 1 ABc, 1 Abc, 1 AxY, 1 Axy, 2 Ab, 2 ab,  etc.
 sub natural_sort_freq {
-    $_->[2] =~ s/(\d+(,\d+)*)/pack 'aNa*', 0, length $1, $1/eg
-      for (
-        my @x =
-        map { [ $_[0]->{$_}, $_, lc deaccentsort $_ ] } keys %{ $_[0] }
-      );
-    map { $_->[1] } sort { $b->[0] <=> $a->[0] or $a->[2] cmp $b->[2] } @x;
+    sort {
+             $_[0]->{$a} <=> $_[0]->{$b}
+          or lc( ::deaccentsort($a) ) cmp lc( ::deaccentsort($b) )
+          or $a cmp $b;
+    } keys %{ $_[0] };
 }
 
 ## No Asterisks
