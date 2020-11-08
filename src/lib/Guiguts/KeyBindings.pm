@@ -281,6 +281,25 @@ sub keybindings {
     keybind( '<Control-KeyPress-3>',           sub { ::gotobookmark('3'); } );
     keybind( '<Control-KeyPress-4>',           sub { ::gotobookmark('4'); } );
     keybind( '<Control-KeyPress-5>',           sub { ::gotobookmark('5'); } );
+
+    # Necessary to create a dummy Entry widget so Entry class bindings get set up or
+    # the binding below will be overwritten when the first Entry gets created later
+    my $de = $top->Entry();
+    $de->destroy();
+
+    # Override Paste binding, so that Entry widgets delete any selected text
+    # in the field, just like happens in the main textwindow
+    $textwindow->MainWindow->bind(
+        'Tk::Entry',
+        '<<Paste>>' => sub {    # Taken from Tk::clipboardPaste (where delete is commented out)
+            my $w = shift;
+            $w->deleteSelected;
+
+            # Basic eval exception handling to avoid error if nothing in clipboard
+            eval { $w->insert( "insert", $::textwindow->clipboardGet ); };
+            $w->SeeInsert if $w->can('SeeInsert');
+        }
+    );
 }
 
 # Bind a key-combination to a sub allowing for capslock on/off.

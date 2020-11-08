@@ -1636,7 +1636,7 @@ sub searchpopup {
     if ( length $searchterm ) {
         $::lglobal{searchentry}->delete( 0, 'end' );
         $::lglobal{searchentry}->insert( 'end', $searchterm );
-        $::lglobal{searchentry}->tagAdd( 'sel', 0, 'end' );
+        $::lglobal{searchentry}->selectionRange( 0, 'end' );
         update_sr_histories();
         searchtext('');
     }

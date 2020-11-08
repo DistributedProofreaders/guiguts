@@ -1614,7 +1614,12 @@ sub paste {
             my $start = pop @ranges;
             $textwindow->delete( $start, $end );
         }
-        my $text    = $textwindow->clipboardGet;
+
+        # Basic eval exception handling to avoid error if nothing in clipboard
+        my $text;
+        eval { $text = $textwindow->clipboardGet; };
+        $text = '' unless $text;
+
         my $lineend = $textwindow->get( 'insert', 'insert lineend' );
         my $length  = length $text;
         $length = length $lineend if ( length $lineend < length $text );
