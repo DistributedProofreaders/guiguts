@@ -1529,8 +1529,11 @@ sub html_wrapup {
     }
     $textwindow->ntinsert( 'end', "\n<\/body>\n<\/html>" );
 
-    ::named( '><p',  ">\n\n<p" );    # improve readability of code
-    ::named( '><hr', ">\n\n<hr" );
+    # improve readability of code
+    ::named( '><p',               ">\n\n<p" );
+    ::named( '><hr',              ">\n\n<hr" );
+    ::named( '</p></div>',        "</p>\n</div>" );
+    ::named( '</p></blockquote>', "</p>\n</blockquote>" );
 
     # Output poetry indent CSS.
     # Find end of CSS, then search back for end of last class definition
