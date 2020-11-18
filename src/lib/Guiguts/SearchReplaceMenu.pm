@@ -38,10 +38,11 @@ sub add_search_history {
 }
 
 sub searchtext {
-    my $searchterm = shift;
-    my $silentmode = shift;           # if true, don't update main window, insert position, etc.
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
+    my $searchterm      = shift;
+    my $silentmode      = shift;                                  # 1 = don't update main window; 2 = total silence for counting only
+    my $silentcountmode = ( $silentmode and $silentmode == 2 );
+    my $textwindow      = $::textwindow;
+    my $top             = $::top;
     ::hidepagenums();
 
     # $::sopt[0] --> 0 = pattern search               1 = whole word search
@@ -54,17 +55,19 @@ sub searchtext {
     $searchterm = '' unless defined $searchterm;
     $::lglobal{lastsearchterm} = 'stupid variable needs to be initialized'
       unless length( $::lglobal{lastsearchterm} );
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex and not $silentmode;
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex and $silentcountmode;
     my ( $start, $end );
     my $foundone    = 1;
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
     $::searchstartindex = $textwindow->index('insert')
       unless $::searchstartindex;
-    my $searchstartingpoint = $silentmode ? $::searchstartindex : $textwindow->index('insert');
+    my $searchstartingpoint = $silentcountmode ? $::searchstartindex : $textwindow->index('insert');
 
-    my $stepforward = '+1c';    # to avoid next search finding same match
-                                # this is starting a search within a selection
+    # to avoid next search finding same match
+    my $stepforward = '+1c';
+
+    # this is starting a search within a selection
     if ( $range_total > 0 ) {
         $end                        = pop(@ranges);
         $start                      = pop(@ranges);
@@ -72,17 +75,17 @@ sub searchtext {
         $::searchstartindex         = $end if $::sopt[2];
 
         # don't skip first character if counting in selection or may miss first occurrence
-        $stepforward = '' if $silentmode;
+        $stepforward = '' if $silentcountmode;
 
         # this is continuing a search within a selection
     } elsif ( $::lglobal{selectionsearch} ) {
-        $start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
+        $start = $silentcountmode ? $::searchstartindex : $textwindow->index('insert');
         $end   = $::lglobal{selectionsearch};
 
         # this is a search through end/start of the document
     } else {
-        $start = $silentmode ? $::searchstartindex : $textwindow->index('insert');
-        $end   = $::sopt[2]  ? '1.0'               : 'end';
+        $start = $silentcountmode ? $::searchstartindex : $textwindow->index('insert');
+        $end   = $::sopt[2]       ? '1.0'               : 'end';
     }
 
     # this is user requesting Start at Beginning (End if reverse)
@@ -119,7 +122,7 @@ sub searchtext {
     }
 
     # may need to clear count label if term has changed
-    countlabelclear($searchterm) unless $silentmode;
+    countlabelclear($searchterm) unless $silentcountmode;
 
     $textwindow->tagRemove( 'sel', '1.0', 'end' );
     my $length = '0';
@@ -227,16 +230,20 @@ sub searchtext {
         $::searchendindex = $textwindow->index("$::searchstartindex +1c")
           unless $length;
 
-        unless ($silentmode) {
+        unless ($silentcountmode) {
             $textwindow->markSet( 'insert', $::searchstartindex )
               if $::searchstartindex;    # position the cursor at the index
             $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
               if $::searchstartindex;    # highlight the text
-            $textwindow->yviewMoveto(1);
-            $textwindow->see($::searchstartindex)
-              if ( $::searchendindex && $::sopt[2] );    # scroll text box, if necessary, to make found text visible
-            $textwindow->see($::searchendindex)
-              if ( $::searchendindex && !$::sopt[2] );
+
+            # scroll text window, to make found text visible
+            unless ($silentmode) {
+                $textwindow->yviewMoveto(1);
+                $textwindow->see($::searchstartindex)
+                  if ( $::searchendindex && $::sopt[2] );
+                $textwindow->see($::searchendindex)
+                  if ( $::searchendindex && !$::sopt[2] );
+            }
         }
         $::searchendindex = $::searchstartindex unless $length;
     }
@@ -246,22 +253,22 @@ sub searchtext {
         if ( $::sopt[2] ) {
             $::searchstartindex = $end;
 
-            unless ($silentmode) {
+            unless ($silentcountmode) {
                 $textwindow->markSet( 'insert', $::searchstartindex );
-                $textwindow->see($::searchendindex);
+                $textwindow->see($::searchendindex) unless $silentmode;
             }
         } else {
             $::searchendindex = $start;
 
-            unless ($silentmode) {
+            unless ($silentcountmode) {
                 $textwindow->markSet( 'insert', $start );
-                $textwindow->see($start);
+                $textwindow->see($start) unless $silentmode;
             }
         }
         $::lglobal{selectionsearch} = 0;
 
-        # Warn user string was not found, unless auto-advancing scannos, or silent mode
-        unless ( ( $::scannosearch and $::lglobal{regaa} ) or $silentmode ) {
+        # Warn user string was not found, unless auto-advancing scannos, or silent count mode
+        unless ( ( $::scannosearch and $::lglobal{regaa} ) or $silentcountmode ) {
             ::soundbell('noflash');
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
             $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
@@ -309,7 +316,7 @@ sub countmatches {
     $::lglobal{selectionsearch} = 0;
 
     my $count = 0;
-    ++$count while searchtext( $searchterm, 1 );    # search silently, counting matches
+    ++$count while searchtext( $searchterm, 2 );    # search very silently, counting matches
     $::lglobal{searchnumlabel}->configure( -text => searchnumtext($count) );
 
     # restore saved globals
@@ -1094,8 +1101,8 @@ sub replaceall {
     ::enable_interrupt();
 
     # Keep calling searchtext() and replace() until no more matches
-    # Use silentmode for searchtext() or it will do window updates
-    while ( searchtext( undef, 'silentmode' ) ) {
+    # Use silentmode=1 for searchtext() or it will do window updates
+    while ( searchtext( undef, 1 ) ) {
         last unless replace($replacement);
         last if ::query_interrupt();
         $textwindow->update unless ::updatedrecently();    # Too slow if update window after every match
