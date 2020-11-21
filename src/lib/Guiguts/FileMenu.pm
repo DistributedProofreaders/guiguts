@@ -867,8 +867,7 @@ EOM
             qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
             blocklmargin blockrmargin bold_char cssvalidationlevel defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
             font_char fontname fontsize fontweight geometry
-            gesperrt_char globalaspellmode highlightcolor history_size
-            htmldiventry htmlspanentry ignoreversionnumber
+            gesperrt_char globalaspellmode highlightcolor history_size ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin
             multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar oldspellchecklayout poetrylmargin projectfileslocation
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted spellcheckwithenchant stayontop toolside
@@ -916,6 +915,7 @@ EOM
         print $save_handle '@mygcview = (';
         for (@::mygcview) { print $save_handle "$_," }
         print $save_handle (");\n\n");
+
         print $save_handle ("\@search_history = (\n");
         my @array = @::search_history;
         for my $index (@array) {
@@ -923,6 +923,7 @@ EOM
             print $save_handle qq/\t"$index",\n/;
         }
         print $save_handle ");\n\n";
+
         print $save_handle ("\@replace_history = (\n");
         @array = @::replace_history;
         for my $index (@array) {
@@ -930,11 +931,33 @@ EOM
             print $save_handle qq/\t"$index",\n/;
         }
         print $save_handle ");\n\n";
+
         print $save_handle ("\@multidicts = (\n");
         for my $index (@::multidicts) {
             print $save_handle qq/\t"$index",\n/;
         }
-        print $save_handle ");\n\n1;\n";
+        print $save_handle ");\n\n";
+
+        print $save_handle ("\@htmlentry = (\n");
+        for (@::htmlentry) {
+            print $save_handle "\t'", ::escape_problems($_), "',\n";
+        }
+        print $save_handle ");\n\n";
+
+        print $save_handle ("\@htmlentryhistory = (\n");
+        for (@::htmlentryhistory) {
+            print $save_handle "\t'", ::escape_problems($_), "',\n";
+        }
+        print $save_handle ");\n\n";
+
+        for ( keys %::htmlentryattribhash ) {
+            my $val = ::escape_problems( $::htmlentryattribhash{$_} );
+            print $save_handle "\$htmlentryattribhash{$_}", ' ' x ( 8 - length $_ ), "= '$val';\n";
+        }
+        print $save_handle "\n\n";
+
+        # Final line
+        print $save_handle "1;\n";
     }
 }
 

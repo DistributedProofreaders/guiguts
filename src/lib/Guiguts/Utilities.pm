@@ -7,13 +7,13 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
-      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start
+      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
       &deaccentsort &deaccentdisplay &readlabels &working &initialize &fontinit &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
-      &sidenotes &poetrynumbers &get_page_number &externalpopup
+      &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
@@ -2528,6 +2528,86 @@ sub soundbell {
         $::lglobal{current_line_label}->configure( -background => 'gray' );
         $::lglobal{current_line_label}->update;
     }
+}
+
+#
+# Add given term to the given history array
+sub add_entry_history {
+    my ( $term, $history_array_ref ) = @_;
+
+    return if $term eq '';
+
+    my @temparray = @$history_array_ref;
+
+    # new term goes at the top of a fresh list
+    @$history_array_ref = ();
+    push @$history_array_ref, $term;
+
+    # add the other terms from the list in order
+    for (@temparray) {
+        next if $_ eq $term;    # omit current term if previously in list
+        push @$history_array_ref, $_;
+        last if @$history_array_ref >= $::history_size;    # don't exceed maximum history size
+    }
+}
+
+#
+# Construct and post the history menu for the given widget
+sub entry_history {
+    my ( $widget, $history_array_ref ) = @_;
+
+    my $menu = $widget->Menu( -title => 'History' );
+    $menu->command(
+        -label   => 'Clear History',
+        -command => sub { @$history_array_ref = (); ::savesettings(); },
+    );
+    $menu->separator;
+    for my $item (@$history_array_ref) {
+        $menu->command(
+            -label   => $item,
+            -command => sub { $widget->delete( '0', 'end' ); $widget->insert( 'end', $item ); },
+        );
+    }
+    my $x = $widget->rootx;
+    my $y = $widget->rooty + $widget->height;
+    $menu->post( $x, $y );
+}
+
+#
+# Perform common tasks to set up a dialog box with an Entry field
+# including setting Escape key and window manager close button to invoke cancel.
+#
+# The $default argument will be displayed and precede where the user types input,
+# e.g. for "Pg 25" on gotopage, just "25" will be selected and user will typeover
+sub dialogboxcommonsetup {
+    my $dlg     = shift;    # dialog key in lglobal
+    my $var     = shift;    # global variable ref to link to entry field
+    my $prompt  = shift;    # prompt for label in dialog
+    my $default = shift;    # default value for label (e.g. "Pg " in gotopage)
+    $default = '' unless $default;
+    my $len = length $default;
+    ::initialize_popup_without_deletebinding($dlg);
+    $::lglobal{$dlg}->resizable( 'no', 'no' );
+    $::lglobal{$dlg}
+      ->Tk::bind( '<Key-KP_Enter>' => sub { $::lglobal{$dlg}->Subwidget('B_OK')->invoke; } );
+    $::lglobal{$dlg}
+      ->Tk::bind( '<Escape>' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; } );
+    $::lglobal{$dlg}
+      ->protocol( 'WM_DELETE_WINDOW' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; } );
+    my $frame = $::lglobal{$dlg}->Frame->pack( -fill => 'x' );
+    $frame->Label( -text => $prompt )->pack( -side => 'left' );
+    $$var = $default unless $$var;
+    my $entry = $frame->Entry(
+        -background   => $::bkgcolor,
+        -width        => 25,
+        -textvariable => $var,
+    )->pack( -side => 'left', -fill => 'x' );
+    $::lglobal{$dlg}->Advertise( entry => $entry );
+    $::lglobal{$dlg}->Popup;
+    $::lglobal{$dlg}->Subwidget('entry')->focus;
+    $::lglobal{$dlg}->Subwidget('entry')->selectionRange( $len, 'end' );
+    $::lglobal{$dlg}->Subwidget('entry')->icursor($len);    # place cursor at end of default text
+    $::lglobal{$dlg}->Wait;
 }
 
 1;

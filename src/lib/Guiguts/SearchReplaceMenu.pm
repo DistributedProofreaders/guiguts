@@ -5,9 +5,8 @@ use warnings;
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
-    @ISA = qw(Exporter);
-    @EXPORT =
-      qw(&update_sr_histories &add_search_history &searchtext &search_history &reg_check &getnextscanno &updatesearchlabels
+    @ISA    = qw(Exporter);
+    @EXPORT = qw(&update_sr_histories &searchtext &reg_check &getnextscanno &updatesearchlabels
       &isvalid &swapterms &findascanno &reghint &replaceeval &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
@@ -16,25 +15,9 @@ BEGIN {
 
 # Update both the search and replace histories from their dialog fields
 sub update_sr_histories {
-    add_search_history( $::lglobal{searchentry}->get,  \@::search_history );
-    add_search_history( $::lglobal{replaceentry}->get, \@::replace_history );
-}
-
-# Add given term to either the search or replace history
-sub add_search_history {
-    my ( $term, $history_array_ref ) = @_;
-
-    # do not add during a scannos check nor if term is empty string
-    return if $::scannosearch or $term eq '';
-
-    my @temparray = @$history_array_ref;
-    @$history_array_ref = ();
-    push @$history_array_ref, $term;
-    for (@temparray) {
-        next if $_ eq $term;
-        push @$history_array_ref, $_;
-        last if @$history_array_ref >= $::history_size;
-    }
+    return if $::scannosearch;
+    ::add_entry_history( $::lglobal{searchentry}->get,  \@::search_history );
+    ::add_entry_history( $::lglobal{replaceentry}->get, \@::replace_history );
 }
 
 sub searchtext {
@@ -342,31 +325,6 @@ BEGIN {    # restrict scope of $countlastterm
             $::lglobal{searchnumlabel}->configure( -text => "" ) if defined $::lglobal{searchpop};
         }
     }
-}
-
-sub search_history {
-    my ( $widget, $history_array_ref ) = @_;
-    my $menu = $widget->Menu( -title => 'History', -tearoff => 0 );
-    $menu->command(
-        -label   => 'Clear History',
-        -command => sub { @$history_array_ref = (); ::savesettings(); },
-    );
-    $menu->separator;
-    for my $item (@$history_array_ref) {
-        $menu->command(
-            -label   => $item,
-            -command => [ sub { load_hist_term( $widget, $_[0] ) }, $item ],
-        );
-    }
-    my $x = $widget->rootx;
-    my $y = $widget->rooty + $widget->height;
-    $menu->post( $x, $y );
-}
-
-sub load_hist_term {
-    my ( $widget, $term ) = @_;
-    $widget->delete( '1.0', 'end' );
-    $widget->insert( 'end', $term );
 }
 
 # Set search entry box to red/black text if invalid/valid search term
@@ -1228,7 +1186,7 @@ sub searchpopup {
         $sf11->Button(
             -activebackground => $::activecolor,
             -command          => sub {
-                search_history( $::lglobal{searchentry}, \@::search_history );
+                ::entry_history( $::lglobal{searchentry}, \@::search_history );
             },
             -image  => $::lglobal{hist_img},
             -width  => 9,
@@ -1409,7 +1367,7 @@ sub searchpopup {
         $sf12->Button(
             -activebackground => $::activecolor,
             -command          => sub {
-                search_history( $::lglobal{replaceentry}, \@::replace_history );
+                ::entry_history( $::lglobal{replaceentry}, \@::replace_history );
             },
             -image  => $::lglobal{hist_img},
             -width  => 9,
@@ -1738,7 +1696,6 @@ sub searchaddterms {
             -command          => sub {
                 update_sr_histories();
                 replace( $::lglobal{$replaceentry}->get );
-                add_search_history( $::lglobal{$replaceentry}->get, \@::replace_history );
             },
             -text  => 'Replace',
             -width => 6
@@ -1764,7 +1721,7 @@ sub searchaddterms {
         $msref->[$_]->Button(
             -activebackground => $::activecolor,
             -command          => sub {
-                search_history( $::lglobal{$replaceentry}, \@::replace_history );
+                ::entry_history( $::lglobal{$replaceentry}, \@::replace_history );
             },
             -image  => $::lglobal{hist_img},
             -width  => 9,

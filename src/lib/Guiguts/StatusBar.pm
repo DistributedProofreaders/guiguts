@@ -720,7 +720,7 @@ sub gotoline {
                 }
             }
         );
-        gotocommonsetup( 'gotolinepop', 'line_number', 'Enter line number: ', '' );
+        ::dialogboxcommonsetup( 'gotolinepop', \$::lglobal{line_number}, 'Enter line number: ' );
     }
 }
 
@@ -770,7 +770,7 @@ sub gotopage {
                 }
             }
         );
-        gotocommonsetup( 'gotopagpop', 'lastpage', 'Enter image number: ', '' );
+        ::dialogboxcommonsetup( 'gotopagpop', \$::lglobal{lastpage}, 'Enter image number: ' );
     }
 }
 
@@ -814,40 +814,8 @@ sub gotolabel {
                 }
             }
         );
-        gotocommonsetup( 'gotolabpop', 'lastlabel', 'Enter label: ', 'Pg ' );
+        ::dialogboxcommonsetup( 'gotolabpop', \$::lglobal{lastlabel}, 'Enter label: ', 'Pg ' );
     }
-}
-
-# Perform operations common to the "goto" dialogs,
-# including setting Escape key and window manager close button to invoke cancel
-sub gotocommonsetup {
-    my $dlg     = shift;             # dialog key in lglobal
-    my $var     = shift;             # variable key in lglobal
-    my $prompt  = shift;             # prompt for label in dialog
-    my $default = shift;             # default value for label (e.g. "Pg " in gotopage)
-    my $len     = length $default;
-    ::initialize_popup_without_deletebinding($dlg);
-    $::lglobal{$dlg}->resizable( 'no', 'no' );
-    $::lglobal{$dlg}
-      ->Tk::bind( '<Key-KP_Enter>' => sub { $::lglobal{$dlg}->Subwidget('B_OK')->invoke; } );
-    $::lglobal{$dlg}
-      ->Tk::bind( '<Escape>' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; } );
-    $::lglobal{$dlg}
-      ->protocol( 'WM_DELETE_WINDOW' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; } );
-    my $frame = $::lglobal{$dlg}->Frame->pack( -fill => 'x' );
-    $frame->Label( -text => $prompt )->pack( -side => 'left' );
-    $::lglobal{$var} = $default unless $::lglobal{$var};
-    my $entry = $frame->Entry(
-        -background   => $::bkgcolor,
-        -width        => 25,
-        -textvariable => \$::lglobal{$var}
-    )->pack( -side => 'left', -fill => 'x' );
-    $::lglobal{$dlg}->Advertise( entry => $entry );
-    $::lglobal{$dlg}->Popup;
-    $::lglobal{$dlg}->Subwidget('entry')->focus;
-    $::lglobal{$dlg}->Subwidget('entry')->selectionRange( $len, 'end' );
-    $::lglobal{$dlg}->Subwidget('entry')->icursor($len);    # place cursor at end of default text
-    $::lglobal{$dlg}->Wait;
 }
 
 1;
