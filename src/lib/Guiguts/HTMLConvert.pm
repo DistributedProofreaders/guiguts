@@ -2310,6 +2310,8 @@ sub htmlgenpopup {
     }
 }
 
+#
+# Create the HTML markup dialog
 sub htmlmarkpopup {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     ::operationadd('Begin HTML Markup');
@@ -2322,86 +2324,85 @@ sub htmlmarkpopup {
         $::lglobal{markpop} = $top->Toplevel;
         $::lglobal{markpop}->title('HTML Markup');
         my $tableformat;
-        my $f1 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+
+        # Markup buttons
+        my $lf1 = $::lglobal{markpop}->LabFrame( -label => 'Markup' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        my $f1 = $lf1->Frame->pack( -side => 'top', -anchor => 'n' );
         my ( $inc, $row, $col ) = ( 0, 0, 0 );
 
         for (
-            qw/ em strong i b h1 h2 h3 h4 h5 h6 p hr br big small ol ul li
-            sup sub blockquote q cite ins del table tr td pre /
+            qw/
+            em    strong i   b       big small
+            h1    h2     h3  h4      h5  h6
+            table tr     td  ol      ul  li
+            sup   sub    ins del     q   cite
+            p     hr     br  blkquot pre nbsp
+            /
         ) {
-            $col = $inc % 5;
-            $row = int $inc / 5;
-            $f1->Button(
+            $col = $inc % 6;
+            $row = int $inc / 6;
+            my $mbtn = $f1->Button(
                 -activebackground => $::activecolor,
                 -command          => [
                     sub {
-                        markup( $textwindow, $top, $_[0] );
+                        markup( $textwindow, $top, $_[0], $::htmlentryattribhash{ $_[0] } );
                     },
                     $_
                 ],
-                -text  => "<$_>",
-                -width => 10
+                -text  => ( $_ eq "nbsp" ? "&$_;" : "<$_>" ),
+                -width => 7
             )->grid(
                 -row    => $row,
                 -column => $col,
                 -padx   => 1,
                 -pady   => 1
             );
+            markupbindconfig( $mbtn, $_ );
             ++$inc;
         }
+        my $f5 = $lf1->Frame->pack( -side => 'top', -anchor => 'n', -pady => 8 );
 
-        while ( $inc % 5 gt 0 ) { ++$inc; }
-        for (qw/ nbsp mdash ndash dagger Dagger lsquo rsquo sbquo ldquo rdquo bdquo /) {
-            $col = $inc % 5;
-            $row = int $inc / 5;
-            $f1->Button(
+        # Create rows with entry field and buttons for configurable div, span & i
+        for my $row ( 1 .. @::htmlentry ) {
+            my $col   = 1;
+            my $entry = $f5->Entry(
+                -width      => 23,
+                -background => $::bkgcolor,
+                -relief     => 'sunken',
+            )->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
+            $f5->Button(
                 -activebackground => $::activecolor,
-                -command          => [ sub { markup( $textwindow, $top, $_[0] ); }, "&$_;" ],
-                -text             => "$_",
-                -width            => 10,
-            )->grid(
-                -row    => $row,
-                -column => $col,
-                -padx   => 1,
-                -pady   => 1,
-            );
-            ++$inc;
+                -command          => sub {
+                    ::entry_history( $entry, \@::htmlentryhistory );
+                },
+                -image  => $::lglobal{hist_img},
+                -width  => 9,
+                -height => 15,
+            )->grid( -row => $row, -column => $col++, -padx => 0, -pady => 2 );
+            my $ent = $row - 1;
+            $entry->insert( 'end', $::htmlentry[$ent] );
+            for (qw / div span i /) {
+                $f5->Button(
+                    -activebackground => $::activecolor,
+                    -command          => [
+                        sub {
+                            $::htmlentry[$ent] = $entry->get;
+                            ::add_entry_history( $::htmlentry[$ent], \@::htmlentryhistory );
+                            markup( $textwindow, $top, "$_[0]", $::htmlentry[$ent] );
+                        },
+                        $_
+                    ],
+                    -text  => "$_",
+                    -width => 7
+                )->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
+            }
         }
-        my $f5       = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        my $diventry = $f5->Entry(
-            -width      => 40,
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
-        )->grid( -row => 1, -column => 1, -pady => 2 );
-        $f5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                $::htmldiventry = $diventry->get;
-                markup( $textwindow, $top, 'div', $::htmldiventry );
-                $textwindow->focus;
-            },
-            -text  => 'div',
-            -width => 8
-        )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
-        my $spanentry = $f5->Entry(
-            -width      => 40,
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
-        )->grid( -row => 2, -column => 1, -pady => 2 );
-        $f5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                $::htmlspanentry = $spanentry->get;
-                markup( $textwindow, $top, 'span', $::htmlspanentry );
-                $textwindow->focus;
-            },
-            -text  => 'span',
-            -width => 8
-        )->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
-        $diventry->insert( 'end', $::htmldiventry );
-        $spanentry->insert( 'end', $::htmlspanentry );
 
-        my $f2       = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $lf2 = $::lglobal{markpop}->LabFrame( -label => 'Links' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+
+        my $f2       = $lf2->Frame->pack( -side => 'top', -anchor => 'n' );
         my @hbuttons = (
             [ 'Internal Link', 'ilink' ],
             [ 'External Link', 'elink' ],
@@ -2412,117 +2413,119 @@ sub htmlmarkpopup {
         ( $row, $col ) = ( 0, 0 );
         for (@hbuttons) {
             my $marktype = $hbuttons[$col][1];
-            $f2->Button(
+            my $mbtn     = $f2->Button(
                 -activebackground => $::activecolor,
                 -command          => [
                     sub {
-                        markup( $textwindow, $top, $marktype );
+                        markup( $textwindow, $top, $marktype, $::htmlentryattribhash{$marktype} );
                     }
                 ],
                 -text  => "$hbuttons[$col][0]",
-                -width => 13
+                -width => 11
             )->grid(
                 -row    => $row,
                 -column => $col,
                 -padx   => 1,
                 -pady   => 2
             );
+            markupbindconfig( $mbtn, $marktype );
             ++$col;
         }
 
-        my $f4            = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        my $unorderselect = $f4->Radiobutton(
+        my $lf3 = $::lglobal{markpop}->LabFrame( -label => 'Lists' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        my $unorderselect = $lf3->Radiobutton(
             -text        => 'unordered',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{liststyle},
             -value       => 'ul',
-        )->grid( -row => 1, -column => 1 );
-        my $orderselect = $f4->Radiobutton(
+        )->pack( -side => 'left', -anchor => 'w', -padx => 4, -pady => 2 );
+        my $orderselect = $lf3->Radiobutton(
             -text        => 'ordered',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{liststyle},
             -value       => 'ol',
-        )->grid( -row => 1, -column => 2 );
-        my $autolbutton = $f4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { autolist($textwindow); $textwindow->focus },
-            -text             => 'Auto List',
-            -width            => 16
-        )->grid( -row => 1, -column => 4, -padx => 1, -pady => 2 );
-        $f4->Checkbutton(
+        )->pack( -side => 'left', -anchor => 'w', -padx => 4, -pady => 2 );
+        $unorderselect->select;
+        $lf3->Checkbutton(
             -text     => 'ML',
             -variable => \$::lglobal{list_multiline},
             -onvalue  => 1,
             -offvalue => 0
-        )->grid( -row => 1, -column => 5 );
-        $f4->Label( -text => 'Column Fmt:', )
-          ->grid( -row => 2, -column => 1, -padx => 2, -pady => 2, -sticky => 'e' );
-        $tableformat = $f4->Entry(
-            -width      => 30,
+        )->pack( -side => 'right', -anchor => 'e', -padx => 4, -pady => 2 );
+        my $autolbutton = $lf3->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { autolist($textwindow); $textwindow->focus },
+            -text             => 'Auto List',
+            -width            => 12
+        )->pack( -side => 'right', -anchor => 'e', -padx => 4, -pady => 2 );
+
+        my $lf4 = $::lglobal{markpop}->LabFrame( -label => 'Tables' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        my $f4a =
+          $lf4->Frame->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        $f4a->Label( -text => 'Column Format:', )
+          ->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
+        $tableformat = $f4a->Entry(
             -background => $::bkgcolor,
             -relief     => 'sunken',
-        )->grid( -row => 2, -column => 2, -columnspan => 3, -pady => 2, -sticky => 'w' );
-        my $leftselect = $f4->Radiobutton(
+        )->pack(
+            -side   => 'left',
+            -anchor => 'n',
+            -padx   => 4,
+            -pady   => 2,
+            -expand => 'yes',
+            -fill   => 'x'
+        );
+        my $f4b =
+          $lf4->Frame->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        my $leftselect = $f4b->Radiobutton(
             -text        => 'left',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{tablecellalign},
             -value       => ' class="tdl"',
-        )->grid( -row => 3, -column => 1 );
-        my $censelect = $f4->Radiobutton(
+        )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
+        my $censelect = $f4b->Radiobutton(
             -text        => 'center',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{tablecellalign},
             -value       => ' class="tdc"',
-        )->grid( -row => 3, -column => 2 );
-        my $rghtselect = $f4->Radiobutton(
+        )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
+        my $rghtselect = $f4b->Radiobutton(
             -text        => 'right',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{tablecellalign},
             -value       => ' class="tdr"',
-        )->grid( -row => 3, -column => 3 );
+        )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
         $leftselect->select;
-        $unorderselect->select;
-        $f4->Button(
+        $f4b->Checkbutton(
+            -text     => 'ML',
+            -variable => \$::lglobal{tbl_multiline},
+            -onvalue  => 1,
+            -offvalue => 0
+        )->pack( -side => 'right', -anchor => 'n', -padx => 4, -pady => 2 );
+        $f4b->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 autotable( $textwindow, $tableformat->get );
                 $textwindow->focus;
             },
             -text  => 'Auto Table',
-            -width => 16
-        )->grid( -row => 3, -column => 4, -padx => 1, -pady => 2 );
-        $f4->Checkbutton(
-            -text     => 'ML',
-            -variable => \$::lglobal{tbl_multiline},
-            -onvalue  => 1,
-            -offvalue => 0
-        )->grid( -row => 3, -column => 5 );
+            -width => 12
+        )->pack( -side => 'right', -anchor => 'n', -padx => 4, -pady => 2 );
 
         my $f7 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f7->Button(
             -activebackground => $::activecolor,
-            -command          => sub {
-                open my $infile, '<', 'header.txt'
-                  or warn "Could not open header file. $!\n";
-                my $headertext;
-                while (<$infile>) {
-                    $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
-                    #$_ =::eol_convert($_);
-                    $headertext .= $_;
-                }
-                $textwindow->insert( '1.0', $headertext );
-                close $infile;
-                $textwindow->insert( 'end', "<\/body>\n<\/html>" );
-            },
-            -text  => 'Insert Header',
-            -width => 28
+            -command          => \&poetryhtml,
+            -text             => 'Apply Poetry Markup to Sel.',
+            -width            => 24
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f7->Button(
             -activebackground => $::activecolor,
-            -command          => \&poetryhtml,
-            -text             => 'Apply Poetry Markup to Sel.',
-            -width            => 28
+            -command          => \&hyperlinkpagenums,
+            -text             => 'Hyperlink Page Nums',
+            -width            => 24
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 
         my $f3 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2530,44 +2533,74 @@ sub htmlmarkpopup {
             -activebackground => $::activecolor,
             -command          => sub { clearmarkupinselection() },
             -text             => 'Remove Markup from Selection',
-            -width            => 28
-        )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-        $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                for my $orphan (
-                    'i',          'b',    'u',      'center', 'sub',   'sup',
-                    'h1',         'h2',   'h3',     'h4',     'h5',    'h6',
-                    'p',          'em',   'strong', 'big',    'small', 'q',
-                    'blockquote', 'cite', 'pre',    'del',    'ins',
-                ) {
-                    ::working( 'Checking <' . $orphan . '>' );
-                    last if orphans($orphan);
-                }
-                ::working();
-            },
-            -text  => 'Find Some Orphaned Markup',
-            -width => 28
-        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
-
-        my $f8 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        $f8->Button(
-            -activebackground => $::activecolor,
-            -command          => \&hyperlinkpagenums,
-            -text             => 'Hyperlink Page Nums',
-            -width            => 16
+            -width            => 24
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
 
         ::initialize_popup_with_deletebinding('markpop');
     }
 }
 
+#
+# Configure Mouse-3 and Ctrl/Meta Mouse-1 to pop a dialog to set class/attributes for given button
+sub markupbindconfig {
+    my $w   = shift;
+    my $typ = shift;
+
+    return if $typ eq 'nbsp' or $typ eq 'img';
+
+    $w->eventAdd( '<<config>>' => '<ButtonRelease-3>' );
+    $w->eventAdd( '<<config>>' => '<Control-ButtonRelease-1>' );
+    $w->eventAdd( '<<config>>' => '<Meta-ButtonRelease-1>' ) if $::OS_MAC;
+    $w->bind( '<<config>>' => sub { markupconfig( $w, $typ ); } );
+
+    # re-order bindings so that widget's binding precedes class binding
+    # meaning we can break out of callbacks later before class callback is called
+    my @tags = $w->bindtags;
+    $w->bindtags( [ @tags[ 1, 0, 2, 3 ] ] );
+}
+
+#
+# Pop a config dialog to set class/attributes for given button
+sub markupconfig {
+    my $w   = shift;
+    my $typ = shift;
+
+    $::lglobal{markupconfigpop} = $w->DialogBox(
+        -buttons => [qw[OK Cancel]],
+        -title   => "Configure Attributes for <$typ>",
+        -popover => 'cursor',
+        -command => sub {
+            my $btn = shift;
+            $w->invoke if $btn and $btn eq 'OK';    # invoke the button widget we are configuring
+            ::killpopup('markupconfigpop');
+        }
+    );
+    ::dialogboxcommonsetup(
+        'markupconfigpop',
+        \$::htmlentryattribhash{$typ},
+        'Class name or attributes: '
+    );
+
+    # stop class callback being called - possible due to binding reordering in markupbindconfig
+    $w->break;
+}
+
+#
+# Add markup of the given type
 sub markup {
     my $textwindow = shift;
     my $top        = shift;
     my $mark       = shift;
-    my $mark1;
-    $mark1 = shift if @_;
+    my $attr       = shift;
+
+    # User may have configured additional class/attributes
+    if ($attr) {
+        $attr = "class=\"$attr\"" if $attr =~ /^[-_\w]+$/;           # expand classname to class="classname"
+        $attr = " " . $attr       if substr( $attr, 0, 1 ) ne " ";
+    } else {
+        $attr = "";
+    }
+
     ::hidepagenums();
     ::savesettings();
     my @ranges = $textwindow->tagRanges('sel');
@@ -2586,24 +2619,26 @@ sub markup {
     my $thisblockend   = $end;
     my $selection;
 
+    $mark = "blockquote" if $mark eq "blkquot";    # shortened form for button label
+
     if ( $mark eq 'br' ) {
         my ( $lsr, $lsc, $ler, $lec, $step );
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
         ( $ler, $lec ) = split /\./, $thisblockend;
         if ( $lsr eq $ler ) {
-            $textwindow->insert( 'insert', '<br />' );
+            $textwindow->insert( 'insert', "<br$attr />" );
         } else {
             $step = $lsr;
             while ( $step <= $ler ) {
                 $selection = $textwindow->get( "$step.0", "$step.end" );
                 $selection =~ s/<br.*?>//g;
-                $textwindow->insert( "$step.end", '<br />' );
+                $textwindow->insert( "$step.end", "<br$attr />" );
                 $step++;
             }
         }
     } elsif ( $mark eq 'hr' ) {
-        $textwindow->insert( 'insert', '<hr class="full" />' );
-    } elsif ( $mark eq '&nbsp;' ) {
+        $textwindow->insert( 'insert', "<hr$attr />" );
+    } elsif ( $mark eq 'nbsp' ) {
         my ( $lsr, $lsc, $ler, $lec, $step );
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
         ( $ler, $lec ) = split /\./, $thisblockend;
@@ -2672,10 +2707,8 @@ sub markup {
                         $tempname =~ s/[\/\\]/;/g;
                         $name     =~ s/$tempname//;
                         $name     =~ s/;/\//g;
-                        $done = '</a>';
-                        $textwindow->insert( $thisblockend, $done );
-                        $done = '<a href="' . $name . "\">";
-                        $textwindow->insert( $thisblockstart, $done );
+                        $textwindow->insert( $thisblockend,   "</a>" );
+                        $textwindow->insert( $thisblockstart, "<a href=\"$name\"$attr>" );
                     }
                     ::killpopup('elinkpop');
                 }
@@ -2797,10 +2830,8 @@ sub markup {
                 '<<trans>>',
                 sub {
                     $name = $linklistbox->get('active');
-                    $done = '</a>';
-                    $textwindow->insert( $thisblockend, $done );
-                    $done = "<a href=\"" . $name . "\">";
-                    $textwindow->insert( $thisblockstart, $done );
+                    $textwindow->insert( $thisblockend,   "</a>" );
+                    $textwindow->insert( $thisblockstart, "<a href=\"$name\"$attr>" );
                     ::killpopup('linkpop');
                 }
             );
@@ -2854,32 +2885,23 @@ sub markup {
         my $linkname;
         $selection = $textwindow->get( $thisblockstart, $thisblockend )
           || '';
-        $linkname = makeanchor( ::deaccentdisplay($selection) );
-        $done     = "<a id=\"" . $linkname . "\"></a>";
-        $textwindow->insert( $thisblockstart, $done );
+        $linkname = makeanchor( ::deaccentdisplay($selection) ) || '';
+        $textwindow->insert( $thisblockstart, "<a id=\"$linkname\"$attr></a>" );
     } elsif ( $mark =~ /h\d/ ) {
         $selection = $textwindow->get( $thisblockstart, $thisblockend );
         if ( $selection =~ s/<\/?p>//g ) {
             $textwindow->delete( $thisblockstart, $thisblockend );
             $textwindow->tagRemove( 'sel', '1.0', 'end' );
             $textwindow->markSet( 'blkend', $thisblockstart );
-            $textwindow->insert( $thisblockstart, "<$mark>$selection<\/$mark>" );
+            $textwindow->insert( $thisblockstart, "<$mark$attr>$selection</$mark>" );
             $textwindow->tagAdd( 'sel', $thisblockstart, $textwindow->index('blkend') );
         } else {
-            $textwindow->insert( $thisblockend,   "<\/$mark>" );
-            $textwindow->insert( $thisblockstart, "<$mark>" );
+            $textwindow->insert( $thisblockend,   "</$mark>" );
+            $textwindow->insert( $thisblockstart, "<$mark$attr>" );
         }
-    } elsif ( ( $mark =~ /div/ ) || ( $mark =~ /span/ ) ) {
-        $done = "<\/" . $mark . ">";
-        $textwindow->insert( $thisblockend, $done );
-        $mark .= $mark1;
-        $done = '<' . $mark . '>';
-        $textwindow->insert( $thisblockstart, $done );
     } else {
-        $done = "<\/" . $mark . '>';
-        $textwindow->insert( $thisblockend, $done );
-        $done = '<' . $mark . '>';
-        $textwindow->insert( $thisblockstart, $done );
+        $textwindow->insert( $thisblockend,   "</$mark>" );
+        $textwindow->insert( $thisblockstart, "<$mark$attr>" );
     }
     $textwindow->focus unless $mark eq 'elink' or $mark eq 'ilink';
 }
@@ -3206,122 +3228,6 @@ sub autotable {
     $textwindow->delete( "$lsr.0", "$ler.end" );
     $textwindow->insert( "$lsr.0", $selection );
     $textwindow->addGlobEnd;
-}
-
-sub orphans {
-    my $textwindow = $::textwindow;
-    ::hidepagenums();
-    my $br = shift;
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-    my ( $thisindex, $open, $close, $crow, $ccol, $orow, $ocol, @op );
-    $open  = '<' . $br . '>|<' . $br . ' [^>]*>';
-    $close = '<\/' . $br . '>';
-    my $end = $textwindow->index('end');
-    $thisindex = '1.0';
-    my ( $lengtho, $lengthc );
-    my $opindex = $textwindow->search(
-        '-regexp',
-        '-count' => \$lengtho,
-        '--', $open, $thisindex, 'end'
-    );
-    push @op, $opindex;
-    my $clindex = $textwindow->search(
-        '-regexp',
-        '-count' => \$lengthc,
-        '--', $close, $thisindex, 'end'
-    );
-    return unless ( $clindex || $opindex );
-    push @op, ( $clindex || $end );
-
-    while ($opindex) {
-        $opindex = $textwindow->search(
-            '-regexp',
-            '-count' => \$lengtho,
-            '--', $open, $op[0] . '+1c', 'end'
-        );
-        if ($opindex) {
-            push @op, $opindex;
-        } else {
-            push @op, $textwindow->index('end');
-        }
-        my $begin = $op[1];
-        $begin   = 'end' unless $begin;
-        $clindex = $textwindow->search(
-            '-regexp',
-            '-count' => \$lengthc,
-            '--', $close, "$begin+1c", 'end'
-        );
-        if ($clindex) {
-            push @op, $clindex;
-        } else {
-            push @op, $textwindow->index('end');
-        }
-        if ( $textwindow->compare( $op[1], '==', $op[3] ) ) {
-            $textwindow->markSet( 'insert', $op[0] ) if $op[0];
-            $textwindow->see( $op[0] )               if $op[0];
-            $textwindow->tagAdd( 'highlight', $op[0], $op[0] . '+' . length($open) . 'c' );
-            return 1;
-        }
-        if (   ( $textwindow->compare( $op[0], '<', $op[1] ) )
-            && ( $textwindow->compare( $op[1], '<', $op[2] ) )
-            && ( $textwindow->compare( $op[2], '<', $op[3] ) )
-            && ( $op[2] ne $end )
-            && ( $op[3] ne $end ) ) {
-            $textwindow->update;
-            $textwindow->focus;
-            shift @op;
-            shift @op;
-            next;
-        } elsif ( ( $textwindow->compare( $op[0], '<', $op[1] ) )
-            && ( $textwindow->compare( $op[1], '>', $op[2] ) ) ) {
-            $textwindow->markSet( 'insert', $op[2] ) if $op[2];
-            $textwindow->see( $op[2] )               if $op[2];
-            $textwindow->tagAdd( 'highlight', $op[2], $op[2] . ' +' . $lengtho . 'c' );
-            $textwindow->tagAdd( 'highlight', $op[0], $op[0] . ' +' . $lengtho . 'c' );
-            $textwindow->update;
-            $textwindow->focus;
-            return 1;
-        } elsif ( ( $textwindow->compare( $op[0], '<', $op[1] ) )
-            && ( $textwindow->compare( $op[2], '>', $op[3] ) ) ) {
-            $textwindow->markSet( 'insert', $op[3] ) if $op[3];
-            $textwindow->see( $op[3] )               if $op[3];
-            $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengthc . 'c' );
-            $textwindow->tagAdd( 'highlight', $op[1], $op[1] . '+' . $lengthc . 'c' );
-            $textwindow->update;
-            $textwindow->focus;
-            return 1;
-        } elsif ( ( $textwindow->compare( $op[0], '>', $op[1] ) )
-            && ( $op[0] ne $end ) ) {
-            $textwindow->markSet( 'insert', $op[1] ) if $op[1];
-            $textwindow->see( $op[1] )               if $op[1];
-            $textwindow->tagAdd( 'highlight', $op[1], $op[1] . '+' . $lengthc . 'c' );
-            $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengtho . 'c' );
-            $textwindow->update;
-            $textwindow->focus;
-            return 1;
-        } else {
-            if (   ( $op[3] eq $end )
-                && ( $textwindow->compare( $op[2], '>', $op[0] ) ) ) {
-                $textwindow->markSet( 'insert', $op[2] ) if $op[2];
-                $textwindow->see( $op[2] )               if $op[2];
-                $textwindow->tagAdd( 'highlight', $op[2], $op[2] . '+' . $lengthc . 'c' );
-            }
-            if (   ( $op[2] eq $end )
-                && ( $textwindow->compare( $op[3], '>', $op[1] ) ) ) {
-                $textwindow->markSet( 'insert', $op[3] ) if $op[3];
-                $textwindow->see( $op[3] )               if $op[3];
-                $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengthc . 'c' );
-            }
-            if ( ( $op[1] eq $end ) && ( $op[2] eq $end ) ) {
-                $textwindow->markSet( 'insert', $op[0] ) if $op[0];
-                $textwindow->see( $op[0] )               if $op[0];
-                $textwindow->tagAdd( 'highlight', $op[0], $op[0] . '+' . $lengthc . 'c' );
-            }
-            ::update_indicators();
-            return 0;
-        }
-    }
-    return 0;
 }
 
 sub poetryhtml {

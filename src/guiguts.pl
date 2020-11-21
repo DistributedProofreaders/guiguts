@@ -135,8 +135,6 @@ our $globalspellpath        = q{};
 our $globalviewerpath       = q{};
 our $globalprojectdirectory = q{};
 our @gsopt;
-our $htmldiventry           = ' class="i2"';
-our $htmlspanentry          = ' class="i2"';
 our $highlightcolor         = '#a08dfc';
 our $history_size           = 20;
 our $ignoreversions         = "none";                      # Don't ignore any updates by default
@@ -212,6 +210,11 @@ our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
 our @wfsearchopt;
+
+# html markup dialog
+our @htmlentry = ('') x 4;        # class/attributes for each div, span, i button
+our @htmlentryhistory;            # single shared history list htmlentry
+our %htmlentryattribhash;         # class/attributes for each element button
 
 our %htmllabels;
 our %convertcharsdisplay;
