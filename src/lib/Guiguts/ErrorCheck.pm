@@ -130,6 +130,8 @@ sub errorcheckpop_up {
             my $yy = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
             my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
             $::lglobal{errorchecklistbox}->activate($idx);
+            $textwindow->markUnset( $::errors{ $::lglobal{errorchecklistbox}->get('active') } );
+            undef $::errors{ $::lglobal{errorchecklistbox}->get('active') };
             $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
