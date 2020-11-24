@@ -2333,11 +2333,11 @@ sub htmlmarkpopup {
 
         for (
             qw/
-            em    strong i   b       big small
-            h1    h2     h3  h4      h5  h6
-            table tr     td  ol      ul  li
-            sup   sub    ins del     q   cite
-            p     hr     br  blkquot pre nbsp
+            em    strong i   b     big small
+            h1    h2     h3  h4    h5  h6
+            table tr     td  ol    ul  li
+            sup   sub    ins del   q   cite
+            p     hr     br  blkq  pre nbsp
             /
         ) {
             $col = $inc % 6;
@@ -2406,7 +2406,7 @@ sub htmlmarkpopup {
         my @hbuttons = (
             [ 'Internal Link', 'ilink' ],
             [ 'External Link', 'elink' ],
-            [ 'Named anchor',  'anchor' ],
+            [ 'Anchor',        'anchor' ],
             [ 'Image',         'img' ],
         );
 
@@ -2542,6 +2542,7 @@ sub htmlmarkpopup {
 
 #
 # Configure Mouse-3 and Ctrl/Meta Mouse-1 to pop a dialog to set class/attributes for given button
+# Also, if button has attributes set, append a plus sign to its button label
 sub markupbindconfig {
     my $w   = shift;
     my $typ = shift;
@@ -2557,6 +2558,8 @@ sub markupbindconfig {
     # meaning we can break out of callbacks later before class callback is called
     my @tags = $w->bindtags;
     $w->bindtags( [ @tags[ 1, 0, 2, 3 ] ] );
+
+    markupconfiglabel( $w, $typ );    # Adjust label to show presence of class/attributes
 }
 
 #
@@ -2581,8 +2584,25 @@ sub markupconfig {
         'Class name or attributes: '
     );
 
+    markupconfiglabel( $w, $typ );                  # Adjust label to show presence of class/attributes
+
     # stop class callback being called - possible due to binding reordering in markupbindconfig
     $w->break;
+}
+
+#
+# Configure given widget's label to have a plus sign appended (or not) if class name/attributes set
+sub markupconfiglabel {
+    my $w   = shift;
+    my $typ = shift;
+
+    my $label = $w->cget( -text );
+    if ( $::htmlentryattribhash{$typ} ) {
+        $label =~ s/$/+/;
+    } else {
+        $label =~ s/\+$//;
+    }
+    $w->configure( -text => $label );
 }
 
 #
@@ -2619,7 +2639,7 @@ sub markup {
     my $thisblockend   = $end;
     my $selection;
 
-    $mark = "blockquote" if $mark eq "blkquot";    # shortened form for button label
+    $mark = "blockquote" if $mark eq "blkq";    # shortened form for button label
 
     if ( $mark eq 'br' ) {
         my ( $lsr, $lsc, $ler, $lec, $step );
