@@ -924,11 +924,16 @@ sub getprojectdic {
     $::lglobal{projectdictname} = $fname;
     $::lglobal{projectdictname} =~ s/\.[^\.]*?$/\.dic/;
 
-    # adjustment for multi-volume projects
-    # assumes multi-volumes in same directory and end in numbers
+    # Adjustment for multiple volumes/versions, assuming names like mybook1, mybook2, etc.
+    # Allows up to 3 digits for the volume/version number
+    # For backward compatibility, first check for dictionary name obtained by removing one digit
     $::lglobal{projectdictname} =~ s/\d\.dic$/\.dic/;
-    if ( $::lglobal{projectdictname} eq $fname ) {
-        $::lglobal{projectdictname} .= '.dic';
+    $::lglobal{projectdictname} .= '.dic' if $::lglobal{projectdictname} eq $fname;
+
+    # If old-named dictionary doesn't exist, use new name (removing up to 2 more digits)
+    unless ( -e $::lglobal{projectdictname} ) {
+        $::lglobal{projectdictname} =~ s/\d{1,2}\.dic$/\.dic/;
+        $::lglobal{projectdictname} .= '.dic' if $::lglobal{projectdictname} eq $fname;
     }
 }
 
