@@ -575,7 +575,7 @@ sub fnview {
             'ROText',
             -scrollbars => 'se',
             -background => $::bkgcolor,
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
         )->pack(
             -anchor => 'nw',
             -fill   => 'both',

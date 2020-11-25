@@ -5,9 +5,8 @@ use warnings;
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
-    @ISA = qw(Exporter);
-    @EXPORT =
-      qw(&latinpopup &utfpopup &utffontinit &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
+    @ISA    = qw(Exporter);
+    @EXPORT = qw(&latinpopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
 }
 
 sub pututf {
@@ -69,7 +68,7 @@ sub latinpopup {
                 $lbuttons[ ( $y * 16 ) + $x ] = $frame->Button(
                     -activebackground   => $::activecolor,
                     -text               => $latinchars[$y][$x],
-                    -font               => '{Times} 18',
+                    -font               => 'unicode',
                     -relief             => 'flat',
                     -borderwidth        => 0,
                     -background         => $::bkgcolor,
@@ -154,7 +153,7 @@ sub doutfbuttons {
                 #    $buttons( ( $y * 16 ) + $x ) = $frame->Button(
                 -activebackground   => $::activecolor,
                 -text               => chr($name),
-                -font               => $::lglobal{utffont},
+                -font               => 'unicode',
                 -relief             => 'flat',
                 -borderwidth        => 0,
                 -background         => $::bkgcolor,
@@ -188,45 +187,11 @@ sub utfpopup {
     ::initialize_popup_without_deletebinding('utfpop');
     $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
     $::lglobal{utfpop}->title( $block . ': ' . $start . ' - ' . $end );
-    my $cframe   = $::lglobal{utfpop}->Frame->pack;
-    my $fontlist = $cframe->BrowseEntry(
-        -label     => 'Font',
-        -browsecmd => sub {
-            ::utffontinit();
-            for (@buttons) {
-                $_->configure( -font => $::lglobal{utffont} );
-            }
-        },
-        -variable => \$::utffontname,
-    )->grid( -row => 1, -column => 1, -padx => 8, -pady => 2 );
-    $fontlist->insert( 'end', sort( $textwindow->fontFamilies ) );
-    my $bigger = $cframe->Button(
-        -activebackground => $::activecolor,
-        -text             => 'Smaller',
-        -command          => sub {
-            $::utffontsize--;
-            ::utffontinit();
-            for (@buttons) {
-                $_->configure( -font => $::lglobal{utffont} );
-            }
-            $sizelabel->configure( -text => $::utffontsize );
-        },
-    )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
-    $sizelabel =
-      $cframe->Label( -text => $::utffontsize )
-      ->grid( -row => 1, -column => 3, -padx => 2, -pady => 2 );
-    my $smaller = $cframe->Button(
-        -activebackground => $::activecolor,
-        -text             => 'Bigger',
-        -command          => sub {
-            $::utffontsize++;
-            ::utffontinit();
-            for (@buttons) {
-                $_->configure( -font => $::lglobal{utffont} );
-            }
-            $sizelabel->configure( -text => $::utffontsize );
-        },
-    )->grid( -row => 1, -column => 4, -padx => 2, -pady => 2 );
+    my $cframe = $::lglobal{utfpop}->Frame->pack;
+
+    ::setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight, 'Font', $cframe,
+        1 );
+
     my $usel = $cframe->Radiobutton(
         -variable    => \$::lglobal{uoutp},
         -selectcolor => $::lglobal{checkcolor},
@@ -270,10 +235,6 @@ sub utfpopup {
     $top->Unbusy( -recurse => 1 );
 }
 
-sub utffontinit {
-    $::lglobal{utffont} = "{$::utffontname} $::utffontsize";
-}
-
 sub utfcharsearchpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -307,44 +268,10 @@ sub utfcharsearchpopup {
             -sticky     => 'wne',
         )->pack( -expand => 'y', -fill => 'both', -anchor => 'nw' );
         ::drag($pane);
-        my $fontlist = $cframe->BrowseEntry(
-            -label     => 'Font',
-            -browsecmd => sub {
-                utffontinit();
-                for (@textchars) {
-                    $_->configure( -font => $::lglobal{utffont} );
-                }
-            },
-            -variable => \$::utffontname,
-        )->grid( -row => 1, -column => 1, -padx => 8, -pady => 2 );
-        $fontlist->insert( 'end', sort( $textwindow->fontFamilies ) );
-        my $bigger = $cframe->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Bigger',
-            -command          => sub {
-                $::utffontsize++;
-                utffontinit();
-                for (@textchars) {
-                    $_->configure( -font => $::lglobal{utffont} );
-                }
-                $sizelabel->configure( -text => $::utffontsize );
-            },
-        )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
-        $sizelabel =
-          $cframe->Label( -text => $::utffontsize )
-          ->grid( -row => 1, -column => 3, -padx => 2, -pady => 2 );
-        my $smaller = $cframe->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Smaller',
-            -command          => sub {
-                $::utffontsize--;
-                utffontinit();
-                for (@textchars) {
-                    $_->configure( -font => $::lglobal{utffont} );
-                }
-                $sizelabel->configure( -text => $::utffontsize );
-            },
-        )->grid( -row => 1, -column => 4, -padx => 2, -pady => 2 );
+
+        ::setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight, 'Font',
+            $cframe, 1 );
+
         $frame0->Label( -text => 'Search Characteristics ', )->grid( -row => 1, -column => 1 );
         my $characteristics = $frame0->Entry(
             -width      => 40,
@@ -392,7 +319,7 @@ sub utfcharsearchpopup {
                             next if not $block;    # character is not in a known block
                             $textchars[$row] = $pane->Label(
                                 -text       => chr( hex $ord ),
-                                -font       => $::lglobal{utffont},
+                                -font       => 'unicode',
                                 -background => $::bkgcolor,
                             )->grid(
                                 -row    => $row,
@@ -543,7 +470,7 @@ sub utfcharentrypopup {
         $outentry = $frame->ROText(
             -background => $::bkgcolor,
             -relief     => 'sunken',
-            -font       => "{sanserif} $::utffontsize",
+            -font       => 'unicode',
             -width      => 6,
             -height     => 1,
         )->grid( -row => 2, -column => 2 );

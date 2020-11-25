@@ -251,7 +251,6 @@ sub hilitepopup {
         my $entry = $f->Entry(
             -width      => 40,
             -background => $::bkgcolor,
-            -font       => $::lglobal{font},
             -relief     => 'sunken',
         )->pack(
             -expand => 1,

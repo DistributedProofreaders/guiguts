@@ -758,7 +758,7 @@ sub menu_preferences_filepaths {
 sub menu_preferences_appearance {
     my $textwindow = $::textwindow;
     [
-        [ 'command', 'Set ~Font...', -command => \&::fontsize ],
+        [ 'command', 'Set ~Fonts...', -command => \&::setfonts ],
         [ 'separator', '' ],
         [
             Checkbutton => 'Keep Pop-ups On Top',

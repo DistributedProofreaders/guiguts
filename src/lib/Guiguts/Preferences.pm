@@ -6,8 +6,9 @@ use File::Basename;
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
-    @ISA    = qw(Exporter);
-    @EXPORT = qw(&setdefaultpath &setmargins &fontsize &setpngspath &storedefaultcolor_autosave
+    @ISA = qw(Exporter);
+    @EXPORT =
+      qw(&setdefaultpath &setmargins &setfonts &setfontrow &setpngspath &storedefaultcolor_autosave
       &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls );
 }
 
@@ -186,77 +187,152 @@ sub setmargins {
     $::lglobal{marginspop}->focus;
 }
 
-# FIXME: Adapt to work with fontCreate thingy
-sub fontsize {
+#
+# Pop dialog for user to set fonts used for interface and text window
+sub setfonts {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    my $sizelabel;
     if ( defined( $::lglobal{fontpop} ) ) {
         $::lglobal{fontpop}->deiconify;
         $::lglobal{fontpop}->raise;
         $::lglobal{fontpop}->focus;
     } else {
         $::lglobal{fontpop} = $top->Toplevel;
-        $::lglobal{fontpop}->title('Font');
-        my $tframe   = $::lglobal{fontpop}->Frame->pack;
-        my $fontlist = $tframe->BrowseEntry(
-            -label     => 'Font',
-            -browsecmd => sub {
-                ::fontinit();
-                $textwindow->configure( -font => $::lglobal{font} );
+        $::lglobal{fontpop}->title('Font Preferences');
+
+        my $tframe = $::lglobal{fontpop}->Frame->pack;
+
+        setfontrow( 'proofing', \$::fontname, \$::fontsize, \$::fontweight,
+            'Main and Error Windows',
+            $tframe, 1 );
+        setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight,
+            'Unicode and Greek',
+            $tframe, 2 );
+        setfontrow( 'textentry', \$::txtfontname, \$::txtfontsize, \$::txtfontweight,
+            'Text Entry Fields',
+            $tframe, 3 );
+
+        $::lglobal{fontpop}->Checkbutton(
+            -variable => \$::txtfontsystem,
+            -command  => sub {
+                $::top->messageBox(
+                    -icon    => 'info',
+                    -title   => 'Restart Required',
+                    -message => 'Guiguts must be restarted to use '
+                      . ( $::txtfontsystem ? 'system' : 'custom' ) . ' font',
+                    -type => 'OK',
+                );
+                ::savesettings();
             },
-            -variable => \$::fontname
-        )->grid( -row => 1, -column => 1, -pady => 5 );
-        $fontlist->insert( 'end', sort( $textwindow->fontFamilies ) );
-        my $mframe        = $::lglobal{fontpop}->Frame->pack;
-        my $smallerbutton = $mframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                $::fontsize--;
-                ::fontinit();
-                $textwindow->configure( -font => $::lglobal{font} );
-                $sizelabel->configure( -text => $::fontsize );
-            },
-            -text  => 'Smaller',
-            -width => 10
-        )->grid( -row => 1, -column => 1, -pady => 5 );
-        $sizelabel =
-          $mframe->Label( -text => $::fontsize )->grid( -row => 1, -column => 2, -pady => 5 );
-        my $biggerbutton = $mframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                $::fontsize++;
-                ::fontinit();
-                $textwindow->configure( -font => $::lglobal{font} );
-                $sizelabel->configure( -text => $::fontsize );
-            },
-            -text  => 'Bigger',
-            -width => 10
-        )->grid( -row => 1, -column => 3, -pady => 5 );
-        my $weightbox = $mframe->Checkbutton(
-            -variable    => \$::fontweight,
-            -onvalue     => 'bold',
-            -offvalue    => '',
-            -selectcolor => $::activecolor,
-            -command     => sub {
-                ::fontinit();
-                $textwindow->configure( -font => $::lglobal{font} );
-            },
-            -text => 'Bold'
-        )->grid( -row => 2, -column => 2, -pady => 5 );
-        my $button_ok = $mframe->Button(
+            -text => 'Use System Default For Text Entry Fields'
+        )->pack;
+
+        my $button_ok = $::lglobal{fontpop}->Button(
             -activebackground => $::activecolor,
             -text             => 'OK',
             -command          => sub {
+                $::top->fontConfigure(
+                    'proofing',
+                    -family => $::fontname,
+                    -size   => $::fontsize,
+                    -weight => $::fontweight,
+                );
+                $::top->fontConfigure(
+                    'unicode',
+                    -family => $::utffontname,
+                    -size   => $::utffontsize,
+                    -weight => $::utffontweight,
+                );
+                $::top->fontConfigure(
+                    'textentry',
+                    -family => $::txtfontname,
+                    -size   => $::txtfontsize,
+                    -weight => $::txtfontweight,
+                );
                 ::killpopup('fontpop');
                 ::savesettings();
             }
-        )->grid( -row => 3, -column => 2, -pady => 5 );
+        )->pack( -pady => 5 );
+
         $::lglobal{fontpop}->resizable( 'no', 'no' );
-        ::initialize_popup_with_deletebinding('fontpop');
-        $::lglobal{fontpop}->raise;
-        $::lglobal{fontpop}->focus;
+        ::initialize_popup_without_deletebinding('fontpop');
+
+        # Even if dialog closed via window manager, ensure fonts used match dialog settings
+        $::lglobal{fontpop}->protocol( 'WM_DELETE_WINDOW' => sub { $button_ok->invoke; } );
     }
+}
+
+#
+# Create row of widgets to configure given font using refs to relevant global variables
+sub setfontrow {
+    my $name    = shift;
+    my $rfamily = shift;
+    my $rsize   = shift;
+    my $rweight = shift;
+    my $label   = shift;
+    my $tframe  = shift;
+    my $row     = shift;
+
+    my $top = $::top;
+
+    # Font family
+    my $fontlist = $tframe->BrowseEntry(
+        -label     => $label . ": ",
+        -browsecmd => sub {
+            $top->fontConfigure( $name, -family => $$rfamily );
+        },
+        -variable => $rfamily,
+    )->grid( -row => $row, -column => 1, -padx => 5, -pady => 5, -sticky => 'e' );
+    $fontlist->insert( 'end', sort( $top->fontFamilies ) );
+
+    # Font size
+    my $sizeentry = $tframe->Spinbox(
+        -textvariable => $rsize,
+        -width        => 4,
+        -increment    => 1,
+        -from         => 1,
+        -to           => 1000,
+        -validate     => 'all',
+        -vcmd         => sub { fontsizevalidate( $name, @_ ); },
+    )->grid( -row => $row, -column => 2, -pady => 5 );
+
+    # User can hit Return/Enter to apply the font size they have typed
+    for (qw/Return KP_Enter/) {
+        $sizeentry->bind(
+            "<$_>" => sub {
+                $::top->fontConfigure( $name, -size => $$rsize );
+            }
+        );
+    }
+
+    # Font weight
+    $tframe->Checkbutton(
+        -variable => $rweight,
+        -onvalue  => 'bold',
+        -offvalue => 'normal',
+        -command  => sub {
+            $::top->fontConfigure( $name, -weight => $$rweight );
+        },
+        -text => 'Bold'
+    )->grid( -row => $row, -column => 3, -pady => 5 );
+}
+
+#
+# Validation routine for font size SpinBoxes - must be numeric and >= 1.
+# If user is not in the process of editing, e.g. routine called due to loss of focus
+# or because linked textvariable changes, then reconfigure the font.
+# Note: accepts empty string because user might be in the process of editing.
+sub fontsizevalidate {
+    my $font     = shift;
+    my $val      = shift;
+    my $useredit = defined shift;
+    my $top      = $::top;
+    return 1 if $val eq '';                  # OK - user might delete then type new number
+    return 0 if $val =~ /\D/ or $val < 1;    # invalid font size
+
+    # don't update if user is just editing; use $val as $::fontsize isn't set yet
+    $::top->fontConfigure( $font, -size => $val ) unless $useredit;
+    return 1;
 }
 
 sub setpngspath {

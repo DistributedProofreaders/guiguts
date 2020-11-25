@@ -79,7 +79,7 @@ sub hotkeyshelp {
             'ROText',
             -scrollbars => 'se',
             -background => $::bkgcolor,
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
             -width      => 80,
             -height     => 25,
             -wrap       => 'none',
@@ -121,7 +121,7 @@ sub regexref {
             'ROText',
             -scrollbars => 'se',
             -background => $::bkgcolor,
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
         )->pack( -anchor => 'n', -expand => 'y', -fill => 'both' );
         my $button_ok = $::lglobal{regexrefpop}->Button(
             -activebackground => $::activecolor,

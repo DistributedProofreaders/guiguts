@@ -233,7 +233,7 @@ sub wordfrequency {
             'Listbox',
             -scrollbars  => 'se',
             -background  => $::bkgcolor,
-            -font        => $::lglobal{font},
+            -font        => 'proofing',
             -selectmode  => 'single',
             -activestyle => 'none',
         )->pack(
@@ -1035,7 +1035,7 @@ sub harmonicspop {
             'Listbox',
             -scrollbars  => 'se',
             -background  => $::bkgcolor,
-            -font        => $::lglobal{font},
+            -font        => 'proofing',
             -selectmode  => 'single',
             -activestyle => 'none',
         )->pack(
