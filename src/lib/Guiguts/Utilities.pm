@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
       &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
-      &deaccentsort &deaccentdisplay &readlabels &working &initialize &fontinit &initialize_popup_with_deletebinding
+      &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
@@ -797,8 +797,31 @@ sub initialize {
     $::manualhash{'workpop'} = '#Overview';
 
     ::readsettings();
-    ::fontinit();    # Initialize the fonts for the two windows
-    ::utffontinit();
+
+    # Create named fonts
+    $::fontweight = 'normal' unless $::fontweight;    # cope with old settings file
+    $top->fontCreate(
+        'proofing',
+        -family => $::fontname,
+        -size   => $::fontsize,
+        -weight => $::fontweight,
+    );
+    $top->fontCreate(
+        'textentry',
+        -family => $::txtfontname,
+        -size   => $::txtfontsize,
+        -weight => $::txtfontweight,
+    );
+    $::utffontweight = 'normal' unless $::utffontweight;    # cope with old settings file
+    $top->fontCreate(
+        'unicode',
+        -family => $::utffontname,
+        -size   => $::utffontsize,
+        -weight => $::utffontweight,
+    );
+
+    # Use option database to set font for all Entry widgets unless user prefers the system default
+    $top->optionAdd( '*Entry*font' => 'textentry' ) unless $::txtfontsystem;
 
     # Set up Main window size
     unless ($::geometry) {
@@ -821,20 +844,14 @@ sub initialize {
         -pady   => 2,
         -expand => 0
     );
-    $::text_font = $top->fontCreate(
-        'courier',
-        -family => "Courier New",
-        -size   => 12,
-        -weight => 'normal',
-    );
 
     # The actual text widget
     $::textwindow = $::text_frame->LineNumberText(
         -widget          => 'TextUnicode',
-        -exportselection => 'true',             # 'sel' tag is associated with selections
+        -exportselection => 'true',           # 'sel' tag is associated with selections
         -background      => $::bkgcolor,
         -relief          => 'sunken',
-        -font            => $::lglobal{font},
+        -font            => 'proofing',
         -wrap            => 'none',
         -curlinebg       => $::activecolor,
     )->pack(
@@ -1398,10 +1415,6 @@ sub b2scroll {
         $textwindow->xview( 'scroll', ( $signx * $::lglobal{scrolltriggerx} ), 'units' );
         $::lglobal{scrolltriggerx} = 0;
     }
-}
-
-sub fontinit {
-    $::lglobal{font} = "{$::fontname} $::fontsize $::fontweight";
 }
 
 sub initialize_popup_with_deletebinding {

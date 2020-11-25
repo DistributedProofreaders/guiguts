@@ -91,7 +91,7 @@ sub errorcheckpop_up {
         'Listbox',
         -scrollbars  => 'se',
         -background  => $::bkgcolor,
-        -font        => $::lglobal{font},
+        -font        => 'proofing',
         -selectmode  => 'single',
         -activestyle => 'none',
     )->pack(

@@ -499,7 +499,6 @@ sub surround {
             -textvariable => \$::lglobal{surstrt},
             -width        => 8,
             -background   => $::bkgcolor,
-            -font         => $::lglobal{font},
             -relief       => 'sunken',
         )->pack(
             -side   => 'left',
@@ -511,7 +510,6 @@ sub surround {
             -textvariable => \$::lglobal{surend},
             -width        => 8,
             -background   => $::bkgcolor,
-            -font         => $::lglobal{font},
             -relief       => 'sunken',
         )->pack(
             -side   => 'left',
@@ -580,7 +578,6 @@ sub flood {
         );
         my $floodch = $f1->Entry(
             -background   => $::bkgcolor,
-            -font         => $::lglobal{font},
             -relief       => 'sunken',
             -textvariable => \$::lglobal{ffchar},
         )->pack(
@@ -759,7 +756,6 @@ sub alignpopup {
         $f1->Entry(
             -width        => 8,
             -background   => $::bkgcolor,
-            -font         => $::lglobal{font},
             -relief       => 'sunken',
             -textvariable => \$::lglobal{alignstring},
         )->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
@@ -807,7 +803,7 @@ sub asciibox_popup {
             $f5->Entry(
                 -width        => 1,
                 -background   => $::bkgcolor,
-                -font         => $::lglobal{font},
+                -font         => 'proofing',
                 -relief       => 'sunken',
                 -textvariable => \${ $::lglobal{ascii} }[$_],
             )->grid(

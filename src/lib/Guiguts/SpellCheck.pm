@@ -531,7 +531,7 @@ sub spellchecker {    # Set up spell check window
         $::lglobal{misspelledentry} = $spf1->Entry(
             -background => $::bkgcolor,
             -width      => 42,
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
         )->pack( -side => 'top', -anchor => 'n', -pady => 1 );
         my $replacelabel =
           $spf1->Label( -text => 'Replacement Text:', )
@@ -539,7 +539,7 @@ sub spellchecker {    # Set up spell check window
         $::lglobal{spreplaceentry} = $spf1->Entry(
             -background => $::bkgcolor,
             -width      => 42,
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
         )->pack( -side => 'top', -anchor => 'n', -padx => 1 );
         $::lglobal{suggestionlabel} =
           $spf1->Label( -text => 'Suggestions:', )
@@ -547,7 +547,7 @@ sub spellchecker {    # Set up spell check window
         $::lglobal{replacementlist} = $spf1->ScrlListbox(
             -background => $::bkgcolor,
             -scrollbars => 'se',
-            -font       => $::lglobal{font},
+            -font       => 'proofing',
             -width      => 40,
             -height     => 4,
         )->pack( -side => 'top', -anchor => 'n', -padx => 6, -pady => 6 );

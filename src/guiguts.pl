@@ -121,7 +121,7 @@ our $epubpercentoverride = 1;               # True = override % img widths to 10
 our $failedsearch        = 0;
 our $fontname            = 'Courier New';
 our $fontsize            = 10;
-our $fontweight          = q{};
+our $fontweight          = 'normal';
 our $geometry;
 our $globalaspellmode   = 'normal';
 our $globalbrowserstart = $ENV{BROWSER};
@@ -175,9 +175,14 @@ our $stayontop              = 0;
 our $suspectindex;
 our $toolside              = 'bottom';
 our $trackoperations       = 0;               # Default to off (tracking triggers edited flag)
+our $txtfontname           = 'Courier New';
+our $txtfontsize           = 10;
+our $txtfontweight         = 'normal';
+our $txtfontsystem         = 1;               # Default to use system font
 our $twowordsinhyphencheck = 0;
 our $utffontname           = 'Courier New';
 our $utffontsize           = 14;
+our $utffontweight         = 'normal';
 our $utf8save              = 1;               # True = always save utf8, false = only if unicode characters in file
 our $verboseerrorchecks    = 0;
 our $vislnnm               = 0;

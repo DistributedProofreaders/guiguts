@@ -73,7 +73,6 @@ sub multilangpopup {
         $multidictentry = $f2->Entry(
             -background => $::bkgcolor,
             -width      => 40,
-            -font       => $::lglobal{font},
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
         my $f0 = $::lglobal{multispellpop}->Frame->pack( -side => 'top', -anchor => 'n' );
 
@@ -169,7 +168,6 @@ sub multilangpopup {
             'Listbox',
             -scrollbars  => 'se',
             -background  => $::bkgcolor,
-            -font        => $::lglobal{font},
             -selectmode  => 'single',
             -activestyle => 'none',
         )->pack(

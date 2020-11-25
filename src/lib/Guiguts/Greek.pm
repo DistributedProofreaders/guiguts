@@ -249,7 +249,6 @@ sub greekpopup {
             'lkoppa'    => [ 'j',   'akoppa',      '&#985;',       "\x{03D9}" ],
             'oulig'     => [ 'ou',  'oulig',       '&#959;&#965;', "\x{03BF}\x{03C5}" ]
         );
-        my $grfont = '{Times} 14';
         for my $image ( keys %attributes ) {
             $::lglobal{images}->{$image} = $top->Photo(
                 -format => 'gif',
@@ -279,15 +278,12 @@ sub greekpopup {
             -value       => 'h',
             -text        => 'HTML code',
         )->grid( -row => 1, -column => 3 );
-
-        if ( $Tk::version ge 8.4 ) {
-            $tframe->Radiobutton(
-                -variable    => \$::lglobal{groutp},
-                -selectcolor => $::lglobal{checkcolor},
-                -value       => 'u',
-                -text        => 'UTF-8',
-            )->grid( -row => 1, -column => 4 );
-        }
+        $tframe->Radiobutton(
+            -variable    => \$::lglobal{groutp},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => 'u',
+            -text        => 'UTF-8',
+        )->grid( -row => 1, -column => 4 );
         $tframe->Button(
             -activebackground => $::activecolor,
             -command          => sub {
@@ -309,106 +305,105 @@ sub greekpopup {
             -command          => sub { movegreek(); findandextractgreek(); },
             -text             => 'Transfer and get next',
         )->grid( -row => 1, -column => 7 );
-        if ( $Tk::version ge 8.4 ) {
-            my $tframe2 = $::lglobal{grpop}->Frame->pack(
-                -expand => 'no',
-                -fill   => 'none',
-                -anchor => 'n',
-                -pady   => 3
-            );
-            $tframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
-                    my @ranges      = $::lglobal{grtext}->tagRanges('sel');
-                    my $range_total = @ranges;
-                    if ( $range_total == 0 ) {
-                        push @ranges, ( '1.0', 'end' );
-                    }
-                    my $textindex = 0;
-                    my $end       = pop(@ranges);
-                    my $start     = pop(@ranges);
-                    my $selection = $::lglobal{grtext}->get( $start, $end );
-                    $::lglobal{grtext}->delete( $start, $end );
-                    $::lglobal{grtext}->insert( $start, togreektr($selection) );
-                    if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
-                        $::lglobal{grtext}->delete( 'end -1c', 'end' );
-                    }
-                },
-                -text => 'ASCII->Greek',
-            )->grid( -row => 1, -column => 1, -padx => 2 );
-            $tframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
-                    my @ranges      = $::lglobal{grtext}->tagRanges('sel');
-                    my $range_total = @ranges;
-                    if ( $range_total == 0 ) {
-                        push @ranges, ( '1.0', 'end' );
-                    }
-                    my $textindex = 0;
-                    my $end       = pop(@ranges);
-                    my $start     = pop(@ranges);
-                    my $selection = $::lglobal{grtext}->get( $start, $end );
-                    $::lglobal{grtext}->delete( $start, $end );
-                    $::lglobal{grtext}->insert( $start, fromgreektr($selection) );
-                    if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
-                        $::lglobal{grtext}->delete( 'end -1c', 'end' );
-                    }
-                },
-                -text => 'Greek->ASCII',
-            )->grid( -row => 1, -column => 2, -padx => 2 );
-            $tframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
-                    my @ranges      = $::lglobal{grtext}->tagRanges('sel');
-                    my $range_total = @ranges;
-                    if ( $range_total == 0 ) {
-                        push @ranges, ( '1.0', 'end' );
-                    }
-                    my $textindex = 0;
-                    my $end       = pop(@ranges);
-                    my $start     = pop(@ranges);
-                    my $selection = $::lglobal{grtext}->get( $start, $end );
-                    $::lglobal{grtext}->delete( $start, $end );
-                    $::lglobal{grtext}->insert( $start, bettergreek( 'unicode', $selection ) );
-                    if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
-                        $::lglobal{grtext}->delete( 'end -1c', 'end' );
-                    }
-                },
-                -text => 'Beta code->Unicode',
-            )->grid( -row => 1, -column => 3, -padx => 2 );
-            $tframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
-                    my @ranges      = $::lglobal{grtext}->tagRanges('sel');
-                    my $range_total = @ranges;
-                    if ( $range_total == 0 ) {
-                        push @ranges, ( '1.0', 'end' );
-                    }
-                    my $textindex = 0;
-                    my $end       = pop(@ranges);
-                    my $start     = pop(@ranges);
-                    my $selection = $::lglobal{grtext}->get( $start, $end );
-                    $::lglobal{grtext}->delete( $start, $end );
-                    $::lglobal{grtext}->insert( $start, bettergreek( 'beta', $selection ) );
-                    if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
-                        $::lglobal{grtext}->delete( 'end -1c', 'end' );
-                    }
-                },
-                -text => 'Unicode->Beta code',
-            )->grid( -row => 1, -column => 4, -padx => 2 );
-        }
+        my $tframe2 = $::lglobal{grpop}->Frame->pack(
+            -expand => 'no',
+            -fill   => 'none',
+            -anchor => 'n',
+            -pady   => 3
+        );
+        $tframe2->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                my @ranges      = $::lglobal{grtext}->tagRanges('sel');
+                my $range_total = @ranges;
+                if ( $range_total == 0 ) {
+                    push @ranges, ( '1.0', 'end' );
+                }
+                my $textindex = 0;
+                my $end       = pop(@ranges);
+                my $start     = pop(@ranges);
+                my $selection = $::lglobal{grtext}->get( $start, $end );
+                $::lglobal{grtext}->delete( $start, $end );
+                $::lglobal{grtext}->insert( $start, togreektr($selection) );
+                if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
+                    $::lglobal{grtext}->delete( 'end -1c', 'end' );
+                }
+            },
+            -text => 'ASCII->Greek',
+        )->grid( -row => 1, -column => 1, -padx => 2 );
+        $tframe2->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                my @ranges      = $::lglobal{grtext}->tagRanges('sel');
+                my $range_total = @ranges;
+                if ( $range_total == 0 ) {
+                    push @ranges, ( '1.0', 'end' );
+                }
+                my $textindex = 0;
+                my $end       = pop(@ranges);
+                my $start     = pop(@ranges);
+                my $selection = $::lglobal{grtext}->get( $start, $end );
+                $::lglobal{grtext}->delete( $start, $end );
+                $::lglobal{grtext}->insert( $start, fromgreektr($selection) );
+                if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
+                    $::lglobal{grtext}->delete( 'end -1c', 'end' );
+                }
+            },
+            -text => 'Greek->ASCII',
+        )->grid( -row => 1, -column => 2, -padx => 2 );
+        $tframe2->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                my @ranges      = $::lglobal{grtext}->tagRanges('sel');
+                my $range_total = @ranges;
+                if ( $range_total == 0 ) {
+                    push @ranges, ( '1.0', 'end' );
+                }
+                my $textindex = 0;
+                my $end       = pop(@ranges);
+                my $start     = pop(@ranges);
+                my $selection = $::lglobal{grtext}->get( $start, $end );
+                $::lglobal{grtext}->delete( $start, $end );
+                $::lglobal{grtext}->insert( $start, bettergreek( 'unicode', $selection ) );
+                if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
+                    $::lglobal{grtext}->delete( 'end -1c', 'end' );
+                }
+            },
+            -text => 'Beta code->Unicode',
+        )->grid( -row => 1, -column => 3, -padx => 2 );
+        $tframe2->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                my @ranges      = $::lglobal{grtext}->tagRanges('sel');
+                my $range_total = @ranges;
+                if ( $range_total == 0 ) {
+                    push @ranges, ( '1.0', 'end' );
+                }
+                my $textindex = 0;
+                my $end       = pop(@ranges);
+                my $start     = pop(@ranges);
+                my $selection = $::lglobal{grtext}->get( $start, $end );
+                $::lglobal{grtext}->delete( $start, $end );
+                $::lglobal{grtext}->insert( $start, bettergreek( 'beta', $selection ) );
+                if ( $::lglobal{grtext}->get( 'end -1c', 'end' ) =~ /^$/ ) {
+                    $::lglobal{grtext}->delete( 'end -1c', 'end' );
+                }
+            },
+            -text => 'Unicode->Beta code',
+        )->grid( -row => 1, -column => 4, -padx => 2 );
         my $frame =
           $::lglobal{grpop}->Frame( -background => $::bkgcolor )
           ->pack( -expand => 'no', -fill => 'none', -anchor => 'n' );
-        my $index = 0;
+        my $index   = 0;
+        my $spacing = 0;    # Spacing between Greek letters in grid
         for my $column (@greek) {
             my $row = 1;
             $index++;
             $frame->Label(
                 -text       => ${$column}[0],
-                -font       => $grfont,
+                -font       => 'unicode',
                 -background => $::bkgcolor,
-            )->grid( -row => $row, -column => $index, -padx => 2 );
+            )->grid( -row => $row, -column => $index, -padx => $spacing );
             $row++;
             $::lglobal{buttons}->{ ${$column}[1] } = $frame->Button(
                 -activebackground   => $::activecolor,
@@ -417,7 +412,7 @@ sub greekpopup {
                 -borderwidth        => 0,
                 -command            => [ sub { putgreek( $_[0], \%attributes ) }, ${$column}[1] ],
                 -highlightthickness => 0,
-            )->grid( -row => $row, -column => $index, -padx => 2 );
+            )->grid( -row => $row, -column => $index, -padx => $spacing );
             $row++;
             $::lglobal{buttons}->{ ${$column}[2] } = $frame->Button(
                 -activebackground   => $::activecolor,
@@ -426,7 +421,7 @@ sub greekpopup {
                 -borderwidth        => 0,
                 -command            => [ sub { putgreek( $_[0], \%attributes ) }, ${$column}[2] ],
                 -highlightthickness => 0,
-            )->grid( -row => $row, -column => $index, -padx => 2 );
+            )->grid( -row => $row, -column => $index, -padx => $spacing );
             $row++;
             next unless ( ${$column}[3] );
             $::lglobal{buttons}->{ ${$column}[3] } = $frame->Button(
@@ -436,7 +431,7 @@ sub greekpopup {
                 -borderwidth        => 0,
                 -command            => [ sub { putgreek( $_[0], \%attributes ) }, ${$column}[3] ],
                 -highlightthickness => 0,
-            )->grid( -row => $row, -column => $index, -padx => 2 );
+            )->grid( -row => $row, -column => $index, -padx => $spacing );
             $row++;
             next unless ( ${$column}[4] );
             $::lglobal{buttons}->{ ${$column}[4] } = $frame->Button(
@@ -446,13 +441,13 @@ sub greekpopup {
                 -borderwidth        => 0,
                 -command            => [ sub { putgreek( $_[0], \%attributes ) }, ${$column}[4] ],
                 -highlightthickness => 0,
-            )->grid( -row => $row, -column => $index, -padx => 2 );
+            )->grid( -row => $row, -column => $index, -padx => $spacing );
         }
         $frame->Label(
             -text       => 'ou',
-            -font       => $grfont,
+            -font       => 'unicode',
             -background => $::bkgcolor,
-        )->grid( -row => 4, -column => 16, -padx => 2 );
+        )->grid( -row => 4, -column => 16, -padx => $spacing );
         $::lglobal{buttons}->{'oulig'} = $frame->Button(
             -activebackground   => $::activecolor,
             -image              => $::lglobal{images}->{'oulig'},
@@ -472,7 +467,7 @@ sub greekpopup {
             -width      => 50,
             -wrap       => 'word',
             -background => $::bkgcolor,
-            -font       => $::lglobal{utffont},
+            -font       => 'unicode',
             -wrap       => 'none',
             -setgrid    => 'true',
             -scrollbars => 'se',
@@ -489,210 +484,204 @@ sub greekpopup {
             }
         );
         ::drag( $::lglobal{grtext} );
-        if ( $Tk::version ge 8.4 ) {
-            my $bframe2 =
-              $::lglobal{grpop}->Frame( -relief => 'ridge' )
-              ->pack( -expand => 'n', -anchor => 's' );
-            $bframe2->Label(
-                -text => 'Character Builder',
-                -font => $::lglobal{utffont},
-            )->pack( -side => 'left', -padx => 2 );
-            $buildlabel = $bframe2->Label(
-                -text       => '',
-                -width      => 5,
-                -font       => $::lglobal{utffont},
-                -background => $::bkgcolor,
-                -relief     => 'ridge'
-            )->pack( -side => 'left', -padx => 2 );
-            $::lglobal{buildentry} = $bframe2->Entry(
-                -width      => 5,
-                -font       => $::lglobal{utffont},
-                -background => $::bkgcolor,
-                -relief     => 'ridge',
-                -validate   => 'all',
-                -vcmd       => sub {
-                    my %hash = (
-                        %{ $::lglobal{grkbeta1} },
-                        %{ $::lglobal{grkbeta2} },
-                        %{ $::lglobal{grkbeta3} }
-                    );
+        my $bframe2 =
+          $::lglobal{grpop}->Frame( -relief => 'ridge' )->pack( -expand => 'n', -anchor => 's' );
+        $bframe2->Label( -text => 'Character Builder', )->pack( -side => 'left', -padx => 2 );
+        $buildlabel = $bframe2->Label(
+            -text       => '',
+            -width      => 5,
+            -font       => 'unicode',
+            -background => $::bkgcolor,
+            -relief     => 'ridge'
+        )->pack( -side => 'left', -padx => 2 );
+        $::lglobal{buildentry} = $bframe2->Entry(
+            -width      => 5,
+            -font       => 'unicode',
+            -background => $::bkgcolor,
+            -relief     => 'ridge',
+            -validate   => 'all',
+            -vcmd       => sub {
+                my %hash = (
+                    %{ $::lglobal{grkbeta1} },
+                    %{ $::lglobal{grkbeta2} },
+                    %{ $::lglobal{grkbeta3} }
+                );
 
-                    # LHS of table goes into RHS of Character Builder
-                    # RHS of table comes out LHS of Character Builder
-                    %hash         = reverse %hash;
-                    $hash{'a'}    = "\x{3B1}";
-                    $hash{'A'}    = "\x{391}";
-                    $hash{'e'}    = "\x{3B5}";
-                    $hash{'E'}    = "\x{395}";
-                    $hash{"Ê"}    = "\x{397}";
-                    $hash{"ê"}    = "\x{3B7}";
-                    $hash{'I'}    = "\x{399}";
-                    $hash{'i'}    = "\x{3B9}";
-                    $hash{'O'}    = "\x{39F}";
-                    $hash{'o'}    = "\x{3BF}";
-                    $hash{'Y'}    = "\x{3A5}";
-                    $hash{'y'}    = "\x{3C5}";
-                    $hash{'U'}    = "\x{3A5}";
-                    $hash{'u'}    = "\x{3C5}";
-                    $hash{"Ô"}    = "\x{3A9}";
-                    $hash{"ô"}    = "\x{3C9}";
-                    $hash{'R'}    = "\x{3A1}";
-                    $hash{'r'}    = "\x{3C1}";
-                    $hash{'B'}    = "\x{392}";
-                    $hash{'b'}    = "\x{3B2}";
-                    $hash{'G'}    = "\x{393}";
-                    $hash{'g'}    = "\x{3B3}";
-                    $hash{'D'}    = "\x{394}";
-                    $hash{'d'}    = "\x{3B4}";
-                    $hash{'Z'}    = "\x{396}";
-                    $hash{'z'}    = "\x{3B6}";
-                    $hash{'K'}    = "\x{39A}";
-                    $hash{'k'}    = "\x{3BA}";
-                    $hash{'L'}    = "\x{39B}";
-                    $hash{'l'}    = "\x{3BB}";
-                    $hash{'M'}    = "\x{39C}";
-                    $hash{'m'}    = "\x{3BC}";
-                    $hash{'N'}    = "\x{39D}";
-                    $hash{'n'}    = "\x{3BD}";
-                    $hash{'X'}    = "\x{39E}";
-                    $hash{'x'}    = "\x{3BE}";
-                    $hash{'P'}    = "\x{3A0}";
-                    $hash{'p'}    = "\x{3C0}";
-                    $hash{'S'}    = "\x{3A3}";
-                    $hash{'s'}    = "\x{3C3}";
-                    $hash{'s '}   = "\x{3C2}";
-                    $hash{'T'}    = "\x{3A4}";
-                    $hash{'t'}    = "\x{3C4}";
-                    $hash{'th'}   = "\x{03B8}";
-                    $hash{'ng'}   = "\x{03B3}\x{03B3}";
-                    $hash{'nk'}   = "\x{03B3}\x{03BA}";
-                    $hash{'nx'}   = "\x{03B3}\x{03BE}";
-                    $hash{'rh'}   = "\x{1FE5}";
-                    $hash{'ph'}   = "\x{03C6}";
-                    $hash{'nch'}  = "\x{03B3}\x{03C7}";
-                    $hash{'nc'}   = "";
-                    $hash{'c'}    = "";
-                    $hash{'C'}    = "";
-                    $hash{'ch'}   = "\x{03C7}";
-                    $hash{'ps'}   = "\x{03C8}";
-                    $hash{'CH'}   = "\x{03A7}";
-                    $hash{'TH'}   = "\x{0398}";
-                    $hash{'PH'}   = "\x{03A6}";
-                    $hash{'PS'}   = "\x{03A8}";
-                    $hash{'Ch'}   = "\x{03A7}";
-                    $hash{'Th'}   = "\x{0398}";
-                    $hash{'Ph'}   = "\x{03A6}";
-                    $hash{'Ps'}   = "\x{03A8}";
-                    $hash{'e^'}   = "\x{3B7}";            #Was "\x{397}";
-                    $hash{'E^'}   = "\x{397}";            #Was "\x{3B7}";
-                    $hash{'O^'}   = "\x{3A9}";
-                    $hash{'o^'}   = "\x{3C9}";
-                    $hash{'H'}    = "\x{397}";
-                    $hash{'h'}    = "\x{3B7}";
-                    $hash{'W'}    = "\x{3DC}";            #Was "\x{3A9}";
-                    $hash{'w'}    = "\x{3DD}";            #Was "\x{3C9}";
-                    $hash{' '}    = ' ';
-                    $hash{'u\+'}  = "\x{1FE2}";
-                    $hash{'u/+'}  = "\x{1FE3}";
-                    $hash{'u~+'}  = "\x{1FE7}";
-                    $hash{'u)\\'} = "\x{1F52}";
-                    $hash{'u(\\'} = "\x{1F53}";
-                    $hash{'u)/'}  = "\x{1F54}";
-                    $hash{'u(/'}  = "\x{1F55}";
-                    $hash{'u~)'}  = "\x{1F56}";
-                    $hash{'u~('}  = "\x{1F57}";
-                    $hash{'U(\\'} = "\x{1F5B}";
-                    $hash{'U(/'}  = "\x{1F5D}";
-                    $hash{'U~('}  = "\x{1F5F}";
-                    $hash{'u+'}   = "\x{03CB}";
-                    $hash{'U+'}   = "\x{03AB}";
-                    $hash{'u='}   = "\x{1FE0}";
-                    $hash{'u_'}   = "\x{1FE1}";
-                    $hash{'r)'}   = "\x{1FE4}";
-                    $hash{'r('}   = "\x{1FE5}";
-                    $hash{'u~'}   = "\x{1FE6}";
-                    $hash{'U='}   = "\x{1FE8}";
-                    $hash{'U_'}   = "\x{1FE9}";
-                    $hash{'U\\'}  = "\x{1FEA}";
-                    $hash{'U/'}   = "\x{1FEB}";
-                    $hash{'u\\'}  = "\x{1F7A}";
-                    $hash{'u/'}   = "\x{1F7B}";
-                    $hash{'u)'}   = "\x{1F50}";
-                    $hash{'u('}   = "\x{1F51}";
-                    $hash{'U('}   = "\x{1F59}";
+                # LHS of table goes into RHS of Character Builder
+                # RHS of table comes out LHS of Character Builder
+                %hash         = reverse %hash;
+                $hash{'a'}    = "\x{3B1}";
+                $hash{'A'}    = "\x{391}";
+                $hash{'e'}    = "\x{3B5}";
+                $hash{'E'}    = "\x{395}";
+                $hash{"Ê"}    = "\x{397}";
+                $hash{"ê"}    = "\x{3B7}";
+                $hash{'I'}    = "\x{399}";
+                $hash{'i'}    = "\x{3B9}";
+                $hash{'O'}    = "\x{39F}";
+                $hash{'o'}    = "\x{3BF}";
+                $hash{'Y'}    = "\x{3A5}";
+                $hash{'y'}    = "\x{3C5}";
+                $hash{'U'}    = "\x{3A5}";
+                $hash{'u'}    = "\x{3C5}";
+                $hash{"Ô"}    = "\x{3A9}";
+                $hash{"ô"}    = "\x{3C9}";
+                $hash{'R'}    = "\x{3A1}";
+                $hash{'r'}    = "\x{3C1}";
+                $hash{'B'}    = "\x{392}";
+                $hash{'b'}    = "\x{3B2}";
+                $hash{'G'}    = "\x{393}";
+                $hash{'g'}    = "\x{3B3}";
+                $hash{'D'}    = "\x{394}";
+                $hash{'d'}    = "\x{3B4}";
+                $hash{'Z'}    = "\x{396}";
+                $hash{'z'}    = "\x{3B6}";
+                $hash{'K'}    = "\x{39A}";
+                $hash{'k'}    = "\x{3BA}";
+                $hash{'L'}    = "\x{39B}";
+                $hash{'l'}    = "\x{3BB}";
+                $hash{'M'}    = "\x{39C}";
+                $hash{'m'}    = "\x{3BC}";
+                $hash{'N'}    = "\x{39D}";
+                $hash{'n'}    = "\x{3BD}";
+                $hash{'X'}    = "\x{39E}";
+                $hash{'x'}    = "\x{3BE}";
+                $hash{'P'}    = "\x{3A0}";
+                $hash{'p'}    = "\x{3C0}";
+                $hash{'S'}    = "\x{3A3}";
+                $hash{'s'}    = "\x{3C3}";
+                $hash{'s '}   = "\x{3C2}";
+                $hash{'T'}    = "\x{3A4}";
+                $hash{'t'}    = "\x{3C4}";
+                $hash{'th'}   = "\x{03B8}";
+                $hash{'ng'}   = "\x{03B3}\x{03B3}";
+                $hash{'nk'}   = "\x{03B3}\x{03BA}";
+                $hash{'nx'}   = "\x{03B3}\x{03BE}";
+                $hash{'rh'}   = "\x{1FE5}";
+                $hash{'ph'}   = "\x{03C6}";
+                $hash{'nch'}  = "\x{03B3}\x{03C7}";
+                $hash{'nc'}   = "";
+                $hash{'c'}    = "";
+                $hash{'C'}    = "";
+                $hash{'ch'}   = "\x{03C7}";
+                $hash{'ps'}   = "\x{03C8}";
+                $hash{'CH'}   = "\x{03A7}";
+                $hash{'TH'}   = "\x{0398}";
+                $hash{'PH'}   = "\x{03A6}";
+                $hash{'PS'}   = "\x{03A8}";
+                $hash{'Ch'}   = "\x{03A7}";
+                $hash{'Th'}   = "\x{0398}";
+                $hash{'Ph'}   = "\x{03A6}";
+                $hash{'Ps'}   = "\x{03A8}";
+                $hash{'e^'}   = "\x{3B7}";            #Was "\x{397}";
+                $hash{'E^'}   = "\x{397}";            #Was "\x{3B7}";
+                $hash{'O^'}   = "\x{3A9}";
+                $hash{'o^'}   = "\x{3C9}";
+                $hash{'H'}    = "\x{397}";
+                $hash{'h'}    = "\x{3B7}";
+                $hash{'W'}    = "\x{3DC}";            #Was "\x{3A9}";
+                $hash{'w'}    = "\x{3DD}";            #Was "\x{3C9}";
+                $hash{' '}    = ' ';
+                $hash{'u\+'}  = "\x{1FE2}";
+                $hash{'u/+'}  = "\x{1FE3}";
+                $hash{'u~+'}  = "\x{1FE7}";
+                $hash{'u)\\'} = "\x{1F52}";
+                $hash{'u(\\'} = "\x{1F53}";
+                $hash{'u)/'}  = "\x{1F54}";
+                $hash{'u(/'}  = "\x{1F55}";
+                $hash{'u~)'}  = "\x{1F56}";
+                $hash{'u~('}  = "\x{1F57}";
+                $hash{'U(\\'} = "\x{1F5B}";
+                $hash{'U(/'}  = "\x{1F5D}";
+                $hash{'U~('}  = "\x{1F5F}";
+                $hash{'u+'}   = "\x{03CB}";
+                $hash{'U+'}   = "\x{03AB}";
+                $hash{'u='}   = "\x{1FE0}";
+                $hash{'u_'}   = "\x{1FE1}";
+                $hash{'r)'}   = "\x{1FE4}";
+                $hash{'r('}   = "\x{1FE5}";
+                $hash{'u~'}   = "\x{1FE6}";
+                $hash{'U='}   = "\x{1FE8}";
+                $hash{'U_'}   = "\x{1FE9}";
+                $hash{'U\\'}  = "\x{1FEA}";
+                $hash{'U/'}   = "\x{1FEB}";
+                $hash{'u\\'}  = "\x{1F7A}";
+                $hash{'u/'}   = "\x{1F7B}";
+                $hash{'u)'}   = "\x{1F50}";
+                $hash{'u('}   = "\x{1F51}";
+                $hash{'U('}   = "\x{1F59}";
 
-                    if ( ( $_[0] eq '' ) or ( exists $hash{ $_[0] } ) ) {
-                        $buildlabel->configure( -text => $hash{ $_[0] } );
-                        return 1;
-                    }
+                if ( ( $_[0] eq '' ) or ( exists $hash{ $_[0] } ) ) {
+                    $buildlabel->configure( -text => $hash{ $_[0] } );
+                    return 1;
                 }
-            )->pack( -side => 'left', -padx => 2 );
-            $::lglobal{buildentry}->bind(
-                '<FocusIn>',
-                sub {
-                    $::lglobal{hasfocus} = $::lglobal{buildentry};
+            }
+        )->pack( -side => 'left', -padx => 2 );
+        $::lglobal{buildentry}->bind(
+            '<FocusIn>',
+            sub {
+                $::lglobal{hasfocus} = $::lglobal{buildentry};
+            }
+        );
+        $::lglobal{buildentry}->bind(
+            $::lglobal{buildentry},
+            '<Return>',
+            sub {
+                my $index = $::lglobal{grtext}->index('insert');
+                $index = 'end' unless $index;
+                my $char = $buildlabel->cget( -text );
+                $char = "\n" unless $char;
+                $::lglobal{grtext}->insert( $index, $char );
+                $::lglobal{grtext}->markSet( 'insert', "$index+1c" );
+                $::lglobal{buildentry}->delete( '0', 'end' );
+                $::lglobal{buildentry}->focus;
+            }
+        );
+        $::lglobal{buildentry}->bind(
+            $::lglobal{buildentry},
+            '<asciicircum>',
+            sub {
+                my $string = $::lglobal{buildentry}->get;
+                if ( $string =~ /(O\^|o\^|E\^|e\^)/ ) {
+                    $string =~ tr/OoEe/ÔôÊê/;
+                    $string =~ s/\^//;
                 }
-            );
-            $::lglobal{buildentry}->bind(
-                $::lglobal{buildentry},
-                '<Return>',
-                sub {
-                    my $index = $::lglobal{grtext}->index('insert');
-                    $index = 'end' unless $index;
-                    my $char = $buildlabel->cget( -text );
-                    $char = "\n" unless $char;
-                    $::lglobal{grtext}->insert( $index, $char );
-                    $::lglobal{grtext}->markSet( 'insert', "$index+1c" );
-                    $::lglobal{buildentry}->delete( '0', 'end' );
-                    $::lglobal{buildentry}->focus;
-                }
-            );
-            $::lglobal{buildentry}->bind(
-                $::lglobal{buildentry},
-                '<asciicircum>',
-                sub {
-                    my $string = $::lglobal{buildentry}->get;
-                    if ( $string =~ /(O\^|o\^|E\^|e\^)/ ) {
-                        $string =~ tr/OoEe/ÔôÊê/;
-                        $string =~ s/\^//;
-                    }
+                $::lglobal{buildentry}->delete( '0', 'end' );
+                $::lglobal{buildentry}->insert( 'end', $string );
+            }
+        );
+        $::lglobal{buildentry}->eventAdd( '<<alias>>' => '<h>', '<H>', '<w>', '<W>' );
+        $::lglobal{buildentry}->bind(
+            $::lglobal{buildentry},
+            '<<alias>>',
+            sub {
+                my $string = $::lglobal{buildentry}->get;
+                if ( $string =~ /(^h$|^H$|^w$|^W$)/ ) {
+                    $string =~ tr/WwHh/ÔôÊê/;
                     $::lglobal{buildentry}->delete( '0', 'end' );
                     $::lglobal{buildentry}->insert( 'end', $string );
                 }
-            );
-            $::lglobal{buildentry}->eventAdd( '<<alias>>' => '<h>', '<H>', '<w>', '<W>' );
-            $::lglobal{buildentry}->bind(
-                $::lglobal{buildentry},
-                '<<alias>>',
-                sub {
-                    my $string = $::lglobal{buildentry}->get;
-                    if ( $string =~ /(^h$|^H$|^w$|^W$)/ ) {
-                        $string =~ tr/WwHh/ÔôÊê/;
-                        $::lglobal{buildentry}->delete( '0', 'end' );
-                        $::lglobal{buildentry}->insert( 'end', $string );
-                    }
-                }
-            );
-            $::lglobal{buildentry}->bind(
-                $::lglobal{buildentry},
-                '<BackSpace>',
-                sub {
-                    if ( $::lglobal{buildentry}->get ) {
-                        $::lglobal{buildentry}->delete('insert');
-                    } else {
-                        $::lglobal{grtext}->delete( 'insert -1c', 'insert' );
-                    }
-                }
-            );
-            for (qw!( ) / \ | ~ + = _!) {
-                $bframe2->Button(
-                    -activebackground => $::activecolor,
-                    -text             => $_,
-                    -font             => $::lglobal{utffont},
-                    -borderwidth      => 0,
-                    -command          => \&placechar,
-                )->pack( -side => 'left', -padx => 1 );
             }
+        );
+        $::lglobal{buildentry}->bind(
+            $::lglobal{buildentry},
+            '<BackSpace>',
+            sub {
+                if ( $::lglobal{buildentry}->get ) {
+                    $::lglobal{buildentry}->delete('insert');
+                } else {
+                    $::lglobal{grtext}->delete( 'insert -1c', 'insert' );
+                }
+            }
+        );
+        for (qw!( ) / \ | ~ + = _!) {
+            $bframe2->Button(
+                -activebackground => $::activecolor,
+                -text             => $_,
+                -font             => 'unicode',
+                -borderwidth      => 0,
+                -command          => \&placechar,
+            )->pack( -side => 'left', -padx => 1 );
         }
         $::lglobal{grpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
