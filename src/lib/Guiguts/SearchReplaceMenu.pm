@@ -1757,7 +1757,7 @@ sub stealthscanno {
         ::wordfrequencybuildwordlist($textwindow);
         searchpopup();
         getnextscanno();
-        searchtext();
+        searchtext() unless $::lglobal{regaa};    # getnextscanno has already done a search if auto-advance
     }
     $::lglobal{doscannos} = 0;
 }
