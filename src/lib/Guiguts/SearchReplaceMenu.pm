@@ -38,7 +38,8 @@ sub searchtext {
     $searchterm = '' unless defined $searchterm;
     $::lglobal{lastsearchterm} = 'stupid variable needs to be initialized'
       unless length( $::lglobal{lastsearchterm} );
-    $textwindow->tagRemove( 'highlight', '1.0', 'end' ) if $::searchstartindex and $silentcountmode;
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' )
+      if $::searchstartindex and not $silentcountmode;
     my ( $start, $end );
     my $foundone    = 1;
     my @ranges      = $textwindow->tagRanges('sel');
