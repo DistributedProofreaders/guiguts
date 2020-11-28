@@ -798,6 +798,18 @@ sub initialize {
 
     ::readsettings();
 
+    # Necessary to create a dummy Entry widget for two reasons:
+    # Firstly, Entry class key bindings do not get set up until the first instance is created,
+    # so without this, any bindings would be overwritten when the first real Entry gets created
+    # Secondly, to find out what the default system font characteristics are for Entry widgets
+    my $de   = $top->Entry();
+    my $font = $de->fontCreate( $de->cget( -font ) );
+    $::lglobal{txtfontsystemfamily} = $de->fontActual( $font, -family );
+    $::lglobal{txtfontsystemsize}   = $de->fontActual( $font, -size );
+    $::lglobal{txtfontsystemweight} = $de->fontActual( $font, -weight );
+    $de->fontDelete($font);
+    $de->destroy();
+
     # Create named fonts
     $::fontweight = 'normal' unless $::fontweight;    # cope with old settings file
     $top->fontCreate(
@@ -806,12 +818,6 @@ sub initialize {
         -size   => $::fontsize,
         -weight => $::fontweight,
     );
-    $top->fontCreate(
-        'textentry',
-        -family => $::txtfontname,
-        -size   => $::txtfontsize,
-        -weight => $::txtfontweight,
-    );
     $::utffontweight = 'normal' unless $::utffontweight;    # cope with old settings file
     $top->fontCreate(
         'unicode',
@@ -819,9 +825,16 @@ sub initialize {
         -size   => $::utffontsize,
         -weight => $::utffontweight,
     );
+    $top->fontCreate(
+        'textentry',
+        -family => $::txtfontname,
+        -size   => $::txtfontsize,
+        -weight => $::txtfontweight,
+    );
+    ::textentryfontconfigure();    # may need to set to system default
 
-    # Use option database to set font for all Entry widgets unless user prefers the system default
-    $top->optionAdd( '*Entry*font' => 'textentry' ) unless $::txtfontsystem;
+    # Use option database to set font for all Entry widgets
+    $top->optionAdd( '*Entry*font' => 'textentry' );
 
     # Set up Main window size
     unless ($::geometry) {

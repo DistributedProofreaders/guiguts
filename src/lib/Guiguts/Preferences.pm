@@ -8,7 +8,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA = qw(Exporter);
     @EXPORT =
-      qw(&setdefaultpath &setmargins &setfonts &setfontrow &setpngspath &storedefaultcolor_autosave
+      qw(&setdefaultpath &setmargins &setfonts &setfontrow &textentryfontconfigure &setpngspath &storedefaultcolor_autosave
       &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls );
 }
 
@@ -208,23 +208,19 @@ sub setfonts {
         setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight,
             'Unicode and Greek',
             $tframe, 2 );
-        setfontrow( 'textentry', \$::txtfontname, \$::txtfontsize, \$::txtfontweight,
+        my ( $txtnamew, $txtsizew, $txtweightw ) =
+          setfontrow( 'textentry', \$::txtfontname, \$::txtfontsize, \$::txtfontweight,
             'Text Entry Fields',
             $tframe, 3 );
+        textentryfontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
 
         $::lglobal{fontpop}->Checkbutton(
-            -variable => \$::txtfontsystem,
+            -variable => \$::txtfontsystemuse,
+            -text     => 'Use System Default For Text Entry Fields',
             -command  => sub {
-                $::top->messageBox(
-                    -icon    => 'info',
-                    -title   => 'Restart Required',
-                    -message => 'Guiguts must be restarted to use '
-                      . ( $::txtfontsystem ? 'system' : 'custom' ) . ' font',
-                    -type => 'OK',
-                );
-                ::savesettings();
+                textentryfontconfigure();
+                textentryfontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
             },
-            -text => 'Use System Default For Text Entry Fields'
         )->pack;
 
         my $button_ok = $::lglobal{fontpop}->Button(
@@ -243,12 +239,8 @@ sub setfonts {
                     -size   => $::utffontsize,
                     -weight => $::utffontweight,
                 );
-                $::top->fontConfigure(
-                    'textentry',
-                    -family => $::txtfontname,
-                    -size   => $::txtfontsize,
-                    -weight => $::txtfontweight,
-                );
+                textentryfontconfigure();
+
                 ::killpopup('fontpop');
                 ::savesettings();
             }
@@ -264,6 +256,7 @@ sub setfonts {
 
 #
 # Create row of widgets to configure given font using refs to relevant global variables
+# Return list of created widgets
 sub setfontrow {
     my $name    = shift;
     my $rfamily = shift;
@@ -306,7 +299,7 @@ sub setfontrow {
     }
 
     # Font weight
-    $tframe->Checkbutton(
+    my $chkbtn = $tframe->Checkbutton(
         -variable => $rweight,
         -onvalue  => 'bold',
         -offvalue => 'normal',
@@ -315,6 +308,8 @@ sub setfontrow {
         },
         -text => 'Bold'
     )->grid( -row => $row, -column => 3, -pady => 5 );
+
+    return ( $fontlist, $sizeentry, $chkbtn );
 }
 
 #
@@ -333,6 +328,27 @@ sub fontsizevalidate {
     # don't update if user is just editing; use $val as $::fontsize isn't set yet
     $::top->fontConfigure( $font, -size => $val ) unless $useredit;
     return 1;
+}
+
+#
+# Configure the Text Entry widgets' font
+# Either set to the system default stored previously or to the user's choice
+sub textentryfontconfigure {
+    $::top->fontConfigure(
+        'textentry',
+        -family => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemfamily} : $::txtfontname ),
+        -size   => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemsize}   : $::txtfontsize ),
+        -weight => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemweight} : $::txtfontweight ),
+    );
+}
+
+#
+# Set state of given widgets to disabled/normal depending on if system font is being used
+sub textentryfontfieldsstate {
+    my $sysuse = shift;
+    while ( my $w = shift ) {
+        $w->configure( -state => ( $sysuse ? 'disabled' : 'normal' ) );
+    }
 }
 
 sub setpngspath {

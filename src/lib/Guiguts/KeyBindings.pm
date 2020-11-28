@@ -282,13 +282,11 @@ sub keybindings {
     keybind( '<Control-KeyPress-4>',           sub { ::gotobookmark('4'); } );
     keybind( '<Control-KeyPress-5>',           sub { ::gotobookmark('5'); } );
 
-    # Necessary to create a dummy Entry widget so Entry class bindings get set up or
-    # the binding below will be overwritten when the first Entry gets created later
-    my $de = $top->Entry();
-    $de->destroy();
-
     # Override Paste binding, so that Entry widgets delete any selected text
     # in the field, just like happens in the main textwindow
+    # Note that for this to work, a dummy Entry is created in initialize() routine previously,
+    # because default class bindings don't get set up until first Entry is created. So without
+    # the dummy widget, the binding below would be overwritten by the default at a later point.
     $textwindow->MainWindow->bind(
         'Tk::Entry',
         '<<Paste>>' => sub {    # Taken from Tk::clipboardPaste (where delete is commented out)
