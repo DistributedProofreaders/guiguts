@@ -904,7 +904,7 @@ sub initialize {
     $::lglobal{delay}            = 50;
     $::lglobal{footstyle}        = 'end';
     $::lglobal{ftnoteindexstart} = '1.0';
-    $::lglobal{groutp}           = 'l';
+    $::lglobal{groutp}           = 'u';
 
     # The 4 default replacements below must match one of the radiobutton values in htmlgenpop
     $::lglobal{html_b}             = '<b>';                       # HTML convert - default replacement for <b>
