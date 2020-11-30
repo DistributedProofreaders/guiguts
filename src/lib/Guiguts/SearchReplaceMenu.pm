@@ -902,7 +902,7 @@ END
         $replbuild   = '';
     }
 
-    # \B (aka \GB) runs betagreek beta
+    # \B (aka \GB) runs greekbeta
     if ($bfound) {
         if ( $replaceterm =~ s/^\\B// ) {
             if ( $replaceterm =~ s/\\B// ) {
@@ -917,14 +917,14 @@ END
         while ( $replaceseg = shift @replarray ) {
             $seg1 = $seg2 = '';
             ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= Guiguts::Greek::betagreek( 'beta', $seg1 );    #replacement function
+            $replbuild .= ::greekbeta($seg1);    #replacement function
             $replbuild .= $seg2 if $seg2;
         }
         $replaceterm = $replbuild;
         $replbuild   = '';
     }
 
-    # \G (aka \GG) runs betagreek unicode
+    # \G (aka \GG) runs betagreek
     if ($gfound) {
         if ( $replaceterm =~ s/^\\G// ) {
             if ( $replaceterm =~ s/\\G// ) {
@@ -939,7 +939,7 @@ END
         while ( $replaceseg = shift @replarray ) {
             $seg1 = $seg2 = '';
             ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= Guiguts::Greek::betagreek( 'unicode', $seg1 );    # replacement function
+            $replbuild .= ::betagreek($seg1);    # replacement function
             $replbuild .= $seg2 if $seg2;
         }
         $replaceterm = $replbuild;
