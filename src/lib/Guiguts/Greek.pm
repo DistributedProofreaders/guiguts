@@ -499,25 +499,32 @@ sub greekpopup {
 }
 
 #
-# Create a button containing a Greek character for the Greek popup dialog
-# Button is positioned in the given frame at the given row & column
-# Data for button label and the text to insert is an array from %attributes
+# Create a label that simulates a button containing a Greek character for the
+# Greek popup dialog - labels take up less space than even a 1x1 character button.
+# Label is positioned in the given frame at the given row & column.
+# Label string and the text to insert is in array from %attributes
 sub greekpopupbutton {
     my $frame  = shift;
     my $row    = shift;
     my $col    = shift;
     my $attrib = shift;
     return unless $attrib;
-    $frame->Button(
+    my $w = $frame->Label(
         -activebackground   => $::activecolor,
         -text               => $attrib->[3],
         -font               => 'unicode',
         -relief             => 'flat',
         -borderwidth        => 0,
         -background         => $::bkgcolor,
-        -command            => sub { putgreek($attrib) },
         -highlightthickness => 0,
     )->grid( -row => $row, -column => $col );
+
+    # Show label active when cursor enters
+    $w->bind( '<Enter>', sub { $w->configure( -background => $::activecolor ); } );
+    $w->bind( '<Leave>', sub { $w->configure( -background => $::bkgcolor ); } );
+
+    # Manually bind command to be executed when clicked
+    $w->bind( '<ButtonRelease-1>', sub { putgreek($attrib); } );
 }
 
 #
