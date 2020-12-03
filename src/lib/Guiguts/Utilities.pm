@@ -687,7 +687,7 @@ sub initialize {
     $::positionhash{gotolinepop}      = '+400+400'        unless $::positionhash{gotolinepop};
     $::positionhash{gotopagpop}       = '+400+400'        unless $::positionhash{gotopagpop};
     $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
-    $::positionhash{grpop}            = '+144+153'        unless $::positionhash{grpop};
+    $::geometryhash{grpop}            = '700x500+100+100' unless $::geometryhash{grpop};
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
     $::positionhash{hilitepop}        = '+150+150'        unless $::positionhash{hilitepop};
     $::positionhash{hintpop}          = '+150+150'        unless $::positionhash{hintpop};
