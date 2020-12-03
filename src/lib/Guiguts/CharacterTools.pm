@@ -9,17 +9,6 @@ BEGIN {
     @EXPORT = qw(&latinpopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
 }
 
-sub pututf {
-    $::lglobal{utfpop} = shift;
-    my @xy     = $::lglobal{utfpop}->pointerxy;
-    my $widget = $::lglobal{utfpop}->containing(@xy);
-    my $letter = $widget->cget( -text );
-    return unless $letter;
-    my $ord = ord($letter);
-    $letter = "&#$ord;" if ( $::lglobal{uoutp} eq 'h' );
-    insertit($letter);
-}
-
 sub latinpopup {
     my $top = $::top;
     if ( defined( $::lglobal{latinpop} ) ) {
@@ -124,8 +113,7 @@ sub doutfbuttons {
     my ( $start, $end ) = @_;
     my $textwindow = $::textwindow;
     my $rows       = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
-    my ( @buttons, $blln );
-    $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
+    my $blln       = $::lglobal{utfpop}->Balloon( -initwait => 750 );
     ::killpopup('pframe');
     $::lglobal{pframe} =
       $::lglobal{utfpop}->Frame( -background => $::bkgcolor )
@@ -140,37 +128,45 @@ sub doutfbuttons {
 
     for my $y ( 0 .. $rows ) {
         for my $x ( 0 .. 15 ) {
-            my $name  = hex($start) + ( $y * 16 ) + $x;
-            my $hex   = sprintf "%04X", $name;
-            my $msg   = "Dec. $name, Hex. $hex";
-            my $cname = charnames::viacode($name);
-            $msg .= ", $cname" if $cname;
-            $name = 0 unless $cname;
+            my $ord  = hex($start) + ( $y * 16 ) + $x;
+            my $text = chr($ord);
 
-            # FIXME: See Todo
-            $buttons[ ( $y * 16 ) + $x ] = $::lglobal{utfframe}->Button(
+            my $cname = charnames::viacode($ord);
+            next unless $cname;    # Unnamed - don't create button
+            my $msg = "Dec. $ord, Hex. " . sprintf( "%04X", $ord ) . ", $cname";
 
-                #    $buttons( ( $y * 16 ) + $x ) = $frame->Button(
+            # Use label instead of button since it takes less space
+            my $w = $::lglobal{utfframe}->Label(
                 -activebackground   => $::activecolor,
-                -text               => chr($name),
+                -text               => $text,
                 -font               => 'unicode',
                 -relief             => 'flat',
                 -borderwidth        => 0,
                 -background         => $::bkgcolor,
-                -command            => [ \&pututf, $::lglobal{utfpop} ],
                 -highlightthickness => 0,
+                -width              => 1,
             )->grid( -row => $y, -column => $x );
-            $buttons[ ( $y * 16 ) + $x ]->bind(
+
+            # Show label active when cursor enters
+            $w->bind( '<Enter>', sub { $w->configure( -background => $::activecolor ); } );
+            $w->bind( '<Leave>', sub { $w->configure( -background => $::bkgcolor ); } );
+
+            # Manually bind command to be executed when clicked
+            $w->bind( '<ButtonRelease-1>',
+                sub { insertit( $::lglobal{uoutp} eq 'h' ? "&#$ord;" : $text ); } );
+
+            # Also bind Mouse-3 to copy character to clipboard
+            $w->bind(
                 '<ButtonPress-3>',
                 sub {
                     $textwindow->clipboardClear;
-                    $textwindow->clipboardAppend( $buttons[ ( $y * 16 ) + $x ]->cget('-text') );
+                    $textwindow->clipboardAppend($text);
                 }
             );
-            $blln->attach( $buttons[ ( $y * 16 ) + $x ], -balloonmsg => $msg, );
-            $::lglobal{utfpop}->update;
+            $blln->attach( $w, -balloonmsg => $msg, );
         }
     }
+    $::lglobal{utfpop}->update;
 }
 
 ### Unicode
@@ -187,12 +183,10 @@ sub utfpopup {
     ::initialize_popup_without_deletebinding('utfpop');
     $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
     $::lglobal{utfpop}->title( $block . ': ' . $start . ' - ' . $end );
+
+    # Choose Unicode/HTML code and select block
     my $cframe = $::lglobal{utfpop}->Frame->pack;
-
-    ::setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight, 'Font', $cframe,
-        1 );
-
-    my $usel = $cframe->Radiobutton(
+    my $usel   = $cframe->Radiobutton(
         -variable    => \$::lglobal{uoutp},
         -selectcolor => $::lglobal{checkcolor},
         -value       => 'u',
@@ -214,6 +208,12 @@ sub utfpopup {
     )->grid( -row => 1, -column => 7, -padx => 8, -pady => 2 );
     $unicodelist->insert( 'end', sort( keys %{ $::lglobal{utfblocks} } ) );
     $usel->select;
+
+    # Allow user to change font
+    my $fframe = $::lglobal{utfpop}->Frame->pack;
+    ::setfontrow( 'unicode', \$::utffontname, \$::utffontsize, \$::utffontweight, 'Font', $fframe,
+        1 );
+
     $::lglobal{pframe} =
       $::lglobal{utfpop}->Frame( -background => $::bkgcolor )
       ->pack( -expand => 'y', -fill => 'both' );
