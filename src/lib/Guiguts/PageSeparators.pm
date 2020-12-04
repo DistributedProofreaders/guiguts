@@ -497,6 +497,11 @@ sub separatorpopup {
             -underline        => 6,
             -width            => 19
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
+        my $phelpbutton = $sf1->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { pageseparatorhelppopup() },
+            -text             => 'Help',
+        )->pack( -side => 'left', -pady => 2, -padx => 10, -anchor => 'w' );
         my $sf2 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $blankbutton = $sf2->Button(
             -activebackground => $::activecolor,
@@ -545,6 +550,16 @@ sub separatorpopup {
             -text        => '99% Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf4 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
+        my $viewbutton = $sf4->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                ::openpng( $textwindow, ::get_page_number() );
+                $::lglobal{pageseppop}->raise;
+            },
+            -text      => 'View Img',
+            -underline => 0,
+            -width     => 8
+        )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $refreshbutton = $sf4->Button(
             -activebackground => $::activecolor,
             -command          => sub { refreshpageseparatorwrapper() },
@@ -558,12 +573,6 @@ sub separatorpopup {
             -text             => 'Delete',
             -underline        => 0,
             -width            => 8
-        )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
-        my $phelpbutton = $sf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pageseparatorhelppopup() },
-            -text             => '?',
-            -width            => 1
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf5 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $undobutton = $sf5->Button(
@@ -587,28 +596,23 @@ sub separatorpopup {
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             }
         );
-        $::lglobal{pageseppop}->Tk::bind( '<j>' => sub { processpageseparatorrefresh('j') } );
-        $::lglobal{pageseppop}->Tk::bind( '<k>' => sub { processpageseparatorrefresh('k') } );
-        $::lglobal{pageseppop}->Tk::bind( '<l>' => sub { processpageseparatorrefresh('l') } );
-        $::lglobal{pageseppop}->Tk::bind( '<h>' => sub { processpageseparatorrefresh('h') } );
-        $::lglobal{pageseppop}->Tk::bind( '<d>' => sub { processpageseparatorrefresh('d') } );
-        $::lglobal{pageseppop}->Tk::bind( '<t>' => sub { processpageseparatorrefresh('t') } );
-        $::lglobal{pageseppop}->Tk::bind( '<Key-question>' => sub { pageseparatorhelppopup('?') } );
-        $::lglobal{pageseppop}->Tk::bind( '<r>' => sub { refreshpageseparatorwrapper() } );
-        $::lglobal{pageseppop}->Tk::bind(
-            '<v>' => sub {
-                ::openpng( $textwindow, ::get_page_number() );
-                $::lglobal{pageseppop}->raise;
-            }
-        );
-        $::lglobal{pageseppop}->Tk::bind( '<u>' => \&undojoin );
-        $::lglobal{pageseppop}->Tk::bind( '<e>' => \&redojoin );
+        $::lglobal{pageseppop}->Tk::bind( '<j>' => sub { $joinbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<k>' => sub { $joinhybutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<?>' => sub { $phelpbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<l>' => sub { $blankbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<t>' => sub { $sectjoinbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<h>' => sub { $chjoinbutton->invoke; } );
         $::lglobal{pageseppop}->Tk::bind(
             '<a>' => sub {
                 $::lglobal{pagesepauto}++;
                 $::lglobal{pagesepauto} = 0 if $::lglobal{pagesepauto} == 4;
             }
         );
+        $::lglobal{pageseppop}->Tk::bind( '<v>' => sub { $viewbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<r>' => sub { $refreshbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<d>' => sub { $delbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<u>' => sub { $undobutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<e>' => sub { $redobutton->invoke; } );
     }
     refreshpageseparatorwrapper();
 }
