@@ -136,26 +136,19 @@ sub doutfbuttons {
             my $msg = "Dec. $ord, Hex. " . sprintf( "%04X", $ord ) . ", $cname";
 
             # Use label instead of button since it takes less space
-            my $w = $::lglobal{utfframe}->Label(
-                -activebackground   => $::activecolor,
-                -text               => $text,
-                -font               => 'unicode',
-                -relief             => 'flat',
-                -borderwidth        => 0,
-                -background         => $::bkgcolor,
+            my $w = $::lglobal{utfframe}->Button(
+                -activebackground => $::activecolor,
+                -text             => $text,
+                -font             => 'unicode',
+                -relief           => 'flat',
+                -borderwidth      => 0,
+                -background       => $::bkgcolor,
+                -command => sub { insertit( $::lglobal{uoutp} eq 'h' ? "&#$ord;" : $text ); },
                 -highlightthickness => 0,
                 -width              => 1,
             )->grid( -row => $y, -column => $x );
 
-            # Show label active when cursor enters
-            $w->bind( '<Enter>', sub { $w->configure( -background => $::activecolor ); } );
-            $w->bind( '<Leave>', sub { $w->configure( -background => $::bkgcolor ); } );
-
-            # Manually bind command to be executed when clicked
-            $w->bind( '<ButtonRelease-1>',
-                sub { insertit( $::lglobal{uoutp} eq 'h' ? "&#$ord;" : $text ); } );
-
-            # Also bind Mouse-3 to copy character to clipboard
+            # Bind Mouse-3 to copy character to clipboard
             $w->bind(
                 '<ButtonPress-3>',
                 sub {
