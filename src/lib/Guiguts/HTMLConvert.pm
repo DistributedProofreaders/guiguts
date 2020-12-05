@@ -1046,7 +1046,7 @@ sub html_convert_chapterdivs {
                 '-regexp', '-backwards',
                 '-count' => \$pagelength,
                 '--',
-                '<p><span class="pagenum">.+</span></p>', $h2blockstart, $h2blockstart . '-5l'
+                '<p><span class="pagenum".+</span></p>', $h2blockstart, $h2blockstart . '-5l'
             );
             if ($pagestart) {
 
@@ -1184,7 +1184,6 @@ sub html_convert_pageanchors {
     my $textwindow = $::textwindow;
     ::working("Inserting Page Number Markup");
     $|++;
-    my $markindex;
     my @pagerefs;    # keep track of first/last page markers at the same position
     my $tempcounter;
     my $mark = '1.0';
@@ -1194,170 +1193,141 @@ sub html_convert_pageanchors {
 
     # Work through all the text markers
     while ( $mark = $textwindow->markNext($mark) ) {
+        next unless $mark =~ m{Pg(\S+)};    # Only look at page markers
+        my $markindex = $textwindow->index($mark);    # Get page marker's index
 
-        # Only look at page markers
-        if ( $mark =~ m{Pg(\S+)} ) {
+        # This is the custom page label
+        my $num = $::pagenumbers{$mark}{label};
+        $num =~ s/Pg // if defined $num;
 
-            # This is the custom page label
-            my $num = $::pagenumbers{$mark}{label};
-            $num =~ s/Pg // if defined $num;
+        # Use the marker unless there is a custom page label
+        $num = $1 unless $::pagenumbers{$mark}{action};
+        next unless length $num;
 
-            # Use the marker unless there is a custom page label
-            $num = $1 unless $::pagenumbers{$mark}{action};
-            next unless length $num;
+        # Strip leading zeroes
+        $num =~ s/^0+(\d)/$1/;
 
-            # Strip leading zeroes
-            $num =~ s/^0+(\d)/$1/;
+        # Accumulate markers in pagerefs
+        if ( $::lglobal{exportwithmarkup} ) {
+            push @pagerefs, $mark;    # do not drop leading zeroes
+        } else {
+            push @pagerefs, $num;
+        }
 
-            # Get the next marker
-            $markindex = $textwindow->index($mark);
+        # Find next page marker & its index
+        my $marknext = $mark;
+        while ( $marknext = $textwindow->markNext($marknext) ) {
+            last if $marknext =~ m{Pg(\S+)};
+        }
 
-            # This is not used
-            my $check = $textwindow->get( $markindex . 'linestart', $markindex . 'linestart +4c' );
-            my $pagereference;
-
-            # marknext is the same as markindex?
-            my $marknext = $textwindow->markNext($mark);
-            my $marknextindex;
-
-            # Skip over non-page markers
-            while ($marknext) {
-                if ( not $marknext =~ m{Pg(\S+)} ) {
-                    $marknext = $textwindow->markNext($marknext);
-                } else {
-                    last;
-                }
-            }
-            if ($marknext) {
-                $marknextindex = $textwindow->index($marknext);
-            } else {
-                $marknextindex = 0;
-            }
-
-            # Accumulate markers in pagerefs
-            if ( $::lglobal{exportwithmarkup} ) {
-                push @pagerefs, $mark;    # do not drop leading zeroes
-            } else {
-                push @pagerefs, $num;
-            }
-
-            # Multiple page markers at one place or with 2 characters
-            if (
-                ( $markindex == $marknextindex )
-                || (   ( $marknextindex ne '0' )
-                    && ( $textwindow->compare( $markindex, '>', "$marknextindex-1l" ) ) )
+        # If no more marks (reached end of file) or next mark page marker at least a line
+        # beyond the current one, then convert batch of accumulated page markers to a string
+        my $pagereference = '';
+        if (
+            not $marknext    # no next marker - end of file
+            or $textwindow->compare( $textwindow->index($marknext), '>=', "$markindex+1l" )
+        ) {
+            my $br      = "";                 # No br before first marker in batch
+            my $numrefs = scalar @pagerefs;
+            my $count   = 0;
+            for (
+                sort {                        # Sort Roman numerals correctly too
+                    ( looks_like_number($a) ? $a : ::arabic($a) )
+                      <=> ( looks_like_number($b) ? $b : ::arabic($b) )
+                } @pagerefs
             ) {
-                $pagereference = "";
+                ++$count;
+                if ( $::lglobal{exportwithmarkup} ) {
+                    $pagereference .= "<$_>";
+                } elsif ( not $::lglobal{pageskipco} or $count == $numrefs ) {
+
+                    # If skipping coincident pagenums, just one pagenum per span, so put id on
+                    # span later, rather than on individual anchor element per pagenum here
+                    my $idtxt =
+                      $::lglobal{pageskipco} ? "" : "<a id=\"$::htmllabels{pglabel}$_\"></a>";
+                    $pagereference .=
+                      "$br" . "$idtxt$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
+                    $br = "<br />";    # Insert br before any subsequent markers
+                }
+            }
+            @pagerefs = ();
+        }
+
+        # comment only
+        $textwindow->ntinsert( $markindex, "<!-- Page $num -->" )
+          if ( $::pagecmt and $num );
+        if ($pagereference) {
+
+            # If exporting with page markers, insert where found
+            $textwindow->ntinsert( $markindex, $pagereference )
+              if ( $::lglobal{exportwithmarkup} and $num );
+
+            # If skipping coincident pagenums, we know there is just one id to insert in the span
+            my $idtxt = $::lglobal{pageskipco} ? " id=\"$::htmllabels{pglabel}$num\"" : "";
+
+            # Otherwise may need to insert elsewhere
+            my $insertpoint = $markindex;
+            my $inserted    = 0;
+            my $inserttext  = "<span class=\"pagenum\"$idtxt>$pagereference</span>";
+
+            # move page ref if inside end of paragraph to outside
+            my $nextpend = $textwindow->search( '--', '</p>', $markindex, 'end' ) || 'end';
+            if ( $textwindow->compare( $nextpend, '<=', $markindex . '+1c' ) ) {
+                $insertpoint = $nextpend . '+4c';
+                $inserttext  = '<p>' . $inserttext . '</p>';
             } else {
 
-                # Time to push page markers into text
-                if (@pagerefs) {
-                    my $br = "";
-                    $pagereference = "";
-                    for (
-                        sort {    # Sort Roman numerals correctly too
-                            ( looks_like_number($a) ? $a : ::arabic($a) )
-                              <=> ( looks_like_number($b) ? $b : ::arabic($b) )
-                        } @pagerefs
+                # move page ref forward to just inside <li...> markup if up to 2 characters before it,
+                # i.e. at start of line, or on previous blank line, or two blank lines back
+                my $nextlistart = $textwindow->search( '--', '<li', $markindex, 'end' );
+                if (    $nextlistart
+                    and $textwindow->compare( $nextlistart, '<=', $markindex . '+2c' ) ) {
+                    my $nextliend = $textwindow->search( '--', '>', $markindex, 'end' );
+                    $insertpoint = "$nextliend+1c" if $nextliend;
+                } else {
+
+                    # if neither previous <p> nor previous <div> is open, then wrap in <p>
+                    my $pstart =
+                      $textwindow->search( '-backwards', '-exact', '--', '<p', $markindex, '1.0' )
+                      || '1.0';
+                    my $pend =
+                      $textwindow->search( '-backwards', '-exact', '--', '</p>', $markindex, '1.0' )
+                      || '1.0';
+                    my $sstart =
+                      $textwindow->search( '-backwards', '-exact', '--', '<div ', $markindex,
+                        '1.0' )
+                      || '1.0';
+                    my $send =
+                      $textwindow->search( '-backwards', '-exact', '--', '</div>', $markindex,
+                        '1.0' )
+                      || '1.0';
+                    if (
+                        not( $textwindow->compare( $pend, '<', $pstart )
+                            or ( $textwindow->compare( $send, '<', $sstart ) ) )
                     ) {
-                        if ( $::lglobal{exportwithmarkup} ) {
-                            $pagereference .= "$br" . "<$_>";
-                            $br = '';    # No page break for exportwithmarkup
-                        } else {
-                            $pagereference .= "$br"
-                              . "<a id=\"$::htmllabels{pglabel}$_\"></a>$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
-                            $br = "<br />";
-                        }
-                    }
-                    @pagerefs = ();
-                } else {
-
-                    # just one page reference
-                    if ( $::lglobal{exportwithmarkup} ) {
-                        $pagereference = "<$mark>";
-                    } else {
-                        $pagereference =
-                          "<a id=\"$::htmllabels{pglabel}$num\"></a>$::htmllabels{pgnumbefore}$num$::htmllabels{pgnumafter}";
+                        $inserttext = '<p>' . $inserttext . '</p>';
                     }
                 }
             }
 
-            # comment only
-            $textwindow->ntinsert( $markindex, "<!-- Page $num -->" )
-              if ( $::pagecmt and $num );
-            if ($pagereference) {
+            # Oops find headers not <hr>
+            my $hstart =
+              $textwindow->search( '-backwards', '-regexp', '--', '<h\d', $markindex, '1.0' )
+              || '1.0';
+            my $hend =
+              $textwindow->search( '-backwards', '-regexp', '--', '</h\d', $markindex, '1.0' )
+              || '1.0';
+            $insertpoint = $textwindow->index("$hstart-1l lineend")
+              if $textwindow->compare( $hend, '<', $hstart );
 
-                # If exporting with page markers, insert where found
-                $textwindow->ntinsert( $markindex, $pagereference )
-                  if ( $::lglobal{exportwithmarkup} and $num );
-
-                # Otherwise may need to insert elsewhere
-                my $insertpoint = $markindex;
-                my $inserted    = 0;
-                my $inserttext  = "<span class=\"pagenum\">$pagereference</span>";
-
-                # move page ref if inside end of paragraph to outside
-                my $nextpend = $textwindow->search( '--', '</p>', $markindex, 'end' ) || 'end';
-                if ( $textwindow->compare( $nextpend, '<=', $markindex . '+1c' ) ) {
-                    $insertpoint = $nextpend . '+4c';
-                    $inserttext  = '<p>' . $inserttext . '</p>';
-                } else {
-
-                    # move page ref forward to just inside <li...> markup if up to 2 characters before it,
-                    # i.e. at start of line, or on previous blank line, or two blank lines back
-                    my $nextlistart = $textwindow->search( '--', '<li', $markindex, 'end' );
-                    if (    $nextlistart
-                        and $textwindow->compare( $nextlistart, '<=', $markindex . '+2c' ) ) {
-                        my $nextliend = $textwindow->search( '--', '>', $markindex, 'end' );
-                        $insertpoint = "$nextliend+1c" if $nextliend;
-                    } else {
-
-                        # if neither previous <p> nor previous <div> is open, then wrap in <p>
-                        my $pstart =
-                          $textwindow->search( '-backwards', '-exact', '--', '<p', $markindex,
-                            '1.0' )
-                          || '1.0';
-                        my $pend =
-                          $textwindow->search( '-backwards', '-exact', '--', '</p>', $markindex,
-                            '1.0' )
-                          || '1.0';
-                        my $sstart =
-                          $textwindow->search( '-backwards', '-exact', '--', '<div ', $markindex,
-                            '1.0' )
-                          || '1.0';
-                        my $send =
-                          $textwindow->search( '-backwards', '-exact', '--', '</div>', $markindex,
-                            '1.0' )
-                          || '1.0';
-                        if (
-                            not( $textwindow->compare( $pend, '<', $pstart )
-                                or ( $textwindow->compare( $send, '<', $sstart ) ) )
-                        ) {
-                            $inserttext = '<p>' . $inserttext . '</p>';
-                        }
-                    }
-                }
-
-                # Oops find headers not <hr>
-                my $hstart =
-                  $textwindow->search( '-backwards', '-regexp', '--', '<h\d', $markindex, '1.0' )
-                  || '1.0';
-                my $hend =
-                  $textwindow->search( '-backwards', '-exact', '--', '</h', $markindex, '1.0' )
-                  || '1.0';
-                if ( $textwindow->compare( $hend, '<', $hstart ) ) {
-                    $insertpoint = $textwindow->index("$hstart-1l lineend");
-                }
-
-                # poetry divs - place page ref at end of line to avoid disturbing code layout
-                if ( $textwindow->get( "$markindex linestart", "$markindex lineend" ) =~
-                    /\s*<div class="(verse)|(stanza)/ ) {
-                    $insertpoint = "$markindex lineend";
-                }
-
-                $textwindow->ntinsert( $insertpoint, $inserttext )
-                  if $::lglobal{pageanch};
+            # poetry divs - place page ref at end of line to avoid disturbing code layout
+            if ( $textwindow->get( "$markindex linestart", "$markindex lineend" ) =~
+                /\s*<div class="(verse)|(stanza)/ ) {
+                $insertpoint = "$markindex lineend";
             }
+
+            $textwindow->ntinsert( $insertpoint, $inserttext )
+              if $::lglobal{pageanch};
         }
     }
     ::working();
@@ -2096,6 +2066,20 @@ sub htmlgenpopup {
         )->grid(
             -row    => 1,
             -column => 2,
+            -padx   => 1,
+            -pady   => 2,
+            -sticky => 'w'
+        );
+
+        # Only output last of coincident page numbers (due to blank pages)
+        $f0->Checkbutton(
+            -variable    => \$::lglobal{pageskipco},
+            -selectcolor => $::lglobal{checkcolor},
+            -text        => 'Skip coincident Pg #s',
+            -anchor      => 'w',
+        )->grid(
+            -row    => 1,
+            -column => 3,
             -padx   => 1,
             -pady   => 2,
             -sticky => 'w'
