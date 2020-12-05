@@ -925,6 +925,7 @@ sub initialize {
     $::lglobal{ordmaxlength}       = 1;
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
     $::lglobal{pagecmt}            = 0;                           # HTML convert - page markers as comments
+    $::lglobal{pageskipco}         = 1;                           # HTML convert - skip coincident page markers
     $::lglobal{poetrynumbers}      = 0;                           # HTML convert - find & format poetry line numbers
     $::lglobal{regaa}              = 1;                           # Auto-advance stealth scannos
     $::lglobal{seepagenums}        = 0;
