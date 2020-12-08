@@ -447,7 +447,7 @@ sub menu_tools_charactertools {
             -command => \&::cp1252toUni
         ],
         [ 'command',   'Search for ~Transliterations...', -command => \&::find_transliterations ],
-        [ 'command',   '~Latin-1 Chart',                  -command => \&::latinpopup ],
+        [ 'command',   'Common~ly-Used Characters Chart', -command => \&::commoncharspopup ],
         [ 'command',   'Unicode Character ~Entry',        -command => \&::utfcharentrypopup ],
         [ 'command',   'Unicode Character ~Search',       -command => \&::utfcharsearchpopup ],
         [ 'separator', '' ],
@@ -681,9 +681,9 @@ sub menu_unicode {
 sub menu_unicode_break {
     my $block = shift;
     if ( $::lglobal{utfrangesort} ) {
-        return ( $block eq 'Sinhala' or $block eq 'Miscellaneous Technical' ) ? 1 : 0;
+        return ( $block eq 'Malayalam' or $block eq 'Mathematical Operators' ) ? 1 : 0;
     } else {
-        return ( $block eq 'Ethiopic' or $block eq 'Mongolian' ) ? 1 : 0;
+        return ( $block eq 'Ethiopic' or $block eq 'Miscellaneous Technical' ) ? 1 : 0;
     }
 }
 

@@ -6,87 +6,197 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&latinpopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
+    @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
 }
 
-sub latinpopup {
+#
+# Create popup containing commonly used characters
+# Buttons inserting a space can be defined by user, configured by Ctrl-click, stored in $::userchars
+# This allows as many as possible of user's definitions to be preserved if in a future upgrade,
+# more buttons are defined, preferably keeping at least as many user-defined buttons
+sub commoncharspopup {
     my $top = $::top;
-    if ( defined( $::lglobal{latinpop} ) ) {
-        $::lglobal{latinpop}->deiconify;
-        $::lglobal{latinpop}->raise;
-        $::lglobal{latinpop}->focus;
+    if ( defined( $::lglobal{comchars} ) ) {
+        $::lglobal{comchars}->deiconify;
+        $::lglobal{comchars}->raise;
+        $::lglobal{comchars}->focus;
     } else {
         my @lbuttons;
-        $::lglobal{latinpop} = $top->Toplevel;
-        $::lglobal{latinpop}->title('Latin-1 ISO 8859-1');
-        ::initialize_popup_with_deletebinding('latinpop');
-        my $b       = $::lglobal{latinpop}->Balloon( -initwait => 750 );
-        my $tframe  = $::lglobal{latinpop}->Frame->pack;
-        my $default = $tframe->Radiobutton(
-            -variable    => \$::lglobal{latoutp},
+        $::lglobal{comchars} = $top->Toplevel;
+        $::lglobal{comchars}->title('Commonly Used Characters');
+        ::initialize_popup_with_deletebinding('comchars');
+        my $blln      = $::lglobal{comchars}->Balloon( -initwait => 750 );
+        my $tframe    = $::lglobal{comchars}->Frame->pack;
+        my $charradio = $tframe->Radiobutton(
+            -variable    => \$::lglobal{comcharoutp},
             -selectcolor => $::lglobal{checkcolor},
-            -value       => 'l',
-            -text        => 'Latin-1 Character',
+            -value       => 'c',
+            -text        => 'Character',
         )->grid( -row => 1, -column => 1 );
         $tframe->Radiobutton(
-            -variable    => \$::lglobal{latoutp},
+            -variable    => \$::lglobal{comcharoutp},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'h',
-            -text        => 'HTML Named Entity',
+            -text        => 'HTML Entity',
         )->grid( -row => 1, -column => 2 );
-        $tframe->Label( -text => 'Click to insert', )
-          ->grid( -row => 2, -column => 1, -columnspan => 2 );
-        my $frame      = $::lglobal{latinpop}->Frame( -background => $::bkgcolor )->pack;
-        my @latinchars = (
-            [ 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ',      'Ç' ],
-            [ 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ',      'ç' ],
-            [ 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î',      'Ï' ],
-            [ 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î',      'ï' ],
-            [ 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ñ',      'Þ' ],
-            [ 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ñ',      'þ' ],
-            [ 'Ù', 'Ú', 'Û', 'Ü', 'Ð', 'ß', 'Ý',      '×' ],
-            [ 'ù', 'ú', 'û', 'ü', 'ð', 'ÿ', 'ý',      '÷' ],
-            [ '¡', '¿', '«', '»', '¼', '½', '¾',      '¬' ],
-            [ '°', 'µ', '©', '®', '¹', '²', '³',      '±' ],
-            [ '£', '¢', '¦', '§', '¶', 'º', 'ª',      '·' ],
-            [ '¤', '¥', '¯', '¸', '¨', '´', "\x{A0}", '' ],
+        $charradio->select;
+        my $frame       = $::lglobal{comchars}->Frame( -background => $::bkgcolor )->pack;
+        my @commonchars = (
+            [ 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', ],
+            [    # Capital Y with diaresis isn't in allowed range for Perl source code
+                'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ñ',       'ß',
+                'Ù', 'Ú', 'Û', 'Ü', 'Ð', 'þ', "\x{178}", 'Ý',
+            ],
+            [ 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', ],
+            [ 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ñ', '',  'ù', 'ú', 'û', 'ü', 'ð', 'Þ', 'ÿ', 'ý', ],
+            [    # Invert ! ?, angle quotes, curly single/double, low/high single/double, pointers
+                "\x{A1}",   "\x{BF}",   "\x{AB}",   "\x{BB}",   "\x{2018}", "\x{2019}",
+                "\x{201C}", "\x{201D}", "\x{201A}", "\x{201B}", "\x{201E}", "\x{201F}",
+                "\x{261E}", "\x{261B}", "\x{261C}", "\x{261A}",
+            ],
+            [    # +-, mid-dot, mult & div, deg, 1,2,3 prime, per mille, super 1,2,3, pound, cent, (C), nbsp
+                "\x{B1}",   "\x{B7}",   "\x{D7}",   "\x{F7}", "\x{B0}", "\x{2032}",
+                "\x{2033}", "\x{2034}", "\x{2030}", "\x{B9}", "\x{B2}", "\x{B3}",
+                "\x{A3}",   "\x{A2}",   "\x{A9}",   "\x{A0}",
+            ],
+            [    # fractions, ordered by denominator then numerator
+                "\x{BD}",   "\x{2153}", "\x{BC}",   "\x{BE}",   "\x{2155}", "\x{2156}",
+                "\x{2157}", "\x{2158}", "\x{2159}", "\x{215A}", "\x{2150}", "\x{215B}",
+                "\x{215C}", "\x{215D}", "\x{215E}", "\x{2151}",
+            ],
+            [    # emdash, endash, footnote markers, asterism, o&a ordinals, 5 x user-defined buttons
+                "\x{2014}", "\x{2013}", "\x{2020}", "\x{2021}", "\x{A7}", "\x{2016}",
+                "\x{B6}",   "\x{A6}",   "\x{2042}", "\x{BA}",   "\x{AA}", " ",
+                " ",        " ",        " ",        " ",
+            ],
         );
 
-        for my $y ( 0 .. 11 ) {
-            for my $x ( 0 .. 7 ) {
-                $lbuttons[ ( $y * 16 ) + $x ] = $frame->Button(
-                    -activebackground   => $::activecolor,
-                    -text               => $latinchars[$y][$x],
-                    -font               => 'unicode',
-                    -relief             => 'flat',
-                    -borderwidth        => 0,
-                    -background         => $::bkgcolor,
-                    -command            => \&putlatin,
+        my $ucidx = 0;    # Index into user-defined characters
+        for my $y ( 0 .. $#commonchars ) {
+            for my $x ( 0 .. $#{ $commonchars[$y] } ) {
+                my $text = $commonchars[$y][$x];
+                next if $text eq '';    # No text, don't even create a button
+
+                # User can override 'space' buttons - simply fill them in order, not via row/column
+                my $userbutton = ( $text eq ' ' );
+                if ( $userbutton and $ucidx <= $#::userchars and $::userchars[$ucidx] ) {
+                    $text = $::userchars[$ucidx];
+                }
+
+                my $ord = ord($text);
+
+                # Define simple flat button to save space
+                my $w = $frame->Button(
+                    -activebackground => $::activecolor,
+                    -text             => $text,
+                    -font             => 'unicode',
+                    -relief           => 'flat',
+                    -borderwidth      => 0,
+                    -background       => $::bkgcolor,
+                    -command =>
+                      sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); },
                     -highlightthickness => 0,
-                )->grid( -row => $y, -column => $x, -padx => 2 );
-                my $name  = ord( $latinchars[$y][$x] );
-                my $hex   = uc sprintf( "%04x", $name );
-                my $msg   = "Dec. $name, Hex. $hex";
-                my $cname = charnames::viacode($name);
-                $msg .= ", $cname" if $cname;
-                $b->attach( $lbuttons[ ( $y * 16 ) + $x ], -balloonmsg => $msg, );
+                    -width              => 1,
+                )->grid( -row => $y, -column => $x );
+
+                charbind3( $w, $text );    # Bind Mouse-3 to copy character to clipboard
+
+                # For user buttons, bind Ctrl/Meta Mouse-1 to pop a dialog to set character
+                if ($userbutton) {
+                    $w->eventAdd( '<<config>>' => '<Control-ButtonRelease-1>' );
+                    $w->eventAdd( '<<config>>' => '<Meta-ButtonRelease-1>' ) if $::OS_MAC;
+                    $w->bind( '<<config>>' => [ \&usercharconfig, $ucidx, $blln ] );
+                    ++$ucidx;              # Keep count of number of user buttons defined
+                }
+
+                # re-order bindings so that widget's binding precedes class binding
+                # meaning we can break out of callbacks later before class callback is called
+                my @tags = $w->bindtags;
+                $w->bindtags( [ @tags[ 1, 0, 2, 3 ] ] );
+
+                charbuttonballoon( $w, $blln, $ord );    # Balloon message if user hovers over button
             }
         }
-        $default->select;
-
-        sub putlatin {
-            my @xy     = $::lglobal{latinpop}->pointerxy;
-            my $widget = $::lglobal{latinpop}->containing(@xy);
-            my $letter = $widget->cget( -text );
-            return unless $letter;
-            my $hex = sprintf( "%x", ord($letter) );
-            $letter = ::entity( '\x' . $hex ) if ( $::lglobal{latoutp} eq 'h' );
-            insertit($letter);
-        }
-        $::lglobal{latinpop}->resizable( 'no', 'no' );
-        $::lglobal{latinpop}->raise;
-        $::lglobal{latinpop}->focus;
+        $::lglobal{comchars}->resizable( 'no', 'no' );
+        $::lglobal{comchars}->raise;
+        $::lglobal{comchars}->focus;
     }
+}
+
+#
+# Pop a config dialog to set character for given button
+# Accepts a single character, e.g. '#'.
+# If more than 1 character entered, convert to a decimal ordinal if valid
+# If not valid decimal, try converting to a hex ordinal, optionally preceded by \x, 0x or x
+# Final fallback, just take first character from string entered
+sub usercharconfig {
+    my $w    = shift;
+    my $idx  = shift;
+    my $blln = shift;
+
+    $::lglobal{comcharsconfigpop} = $w->DialogBox(
+        -buttons => [qw[OK Cancel]],
+        -title   => "Define button",
+        -popover => 'cursor',
+    );
+    ::dialogboxcommonsetup(
+        'comcharsconfigpop',
+        \$::lglobal{comcharconfigval},
+        'Enter character, decimal or hex ordinal: '
+    );
+
+    # Replace empty string with space character
+    my $text = $::lglobal{comcharconfigval} ? $::lglobal{comcharconfigval} : ' ';
+
+    # If more than one character, interpret as decimal ordinal, hex ordinal or just take first char
+    if ( length($text) > 1 ) {
+        if ( $text =~ /^\d+$/ ) {    # decimal integer
+            $text = chr($text);
+        } elsif ( $text =~ s/([\\0]?[x])?([0-9a-f]+)/$2/i ) {    # hex (with x, \x, 0x or no prefix)
+            $text = chr( hex($text) );
+        } else {
+            $text = substr( $text, 0, 1 );                       # Just take first character of string
+        }
+    }
+
+    my $ord = ord($text);
+    $::userchars[$idx] = $text;                                  # Save user's new definition
+    $w->configure( -text => $text );                             # Update the label on the button
+    $w->configure(                                               # Button needs to insert the new character
+        -command => sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); }
+    );
+    charbind3( $w, $text );                                      # Right-click button copies text to clipboard
+    charbuttonballoon( $w, $blln, $ord );                        # Balloon message if user hovers over button
+
+    # stop class callback being called - possible due to binding reordering during button creation above
+    $w->break;
+}
+
+#
+# Bind Mouse-3 to copy given text to clipboard
+sub charbind3 {
+    my $w    = shift;
+    my $text = shift;
+    $w->bind(
+        '<ButtonPress-3>',
+        sub {
+            my $textwindow = $::textwindow;
+            $textwindow->clipboardClear;
+            $textwindow->clipboardAppend($text);
+        }
+    );
+}
+
+#
+# Attach balloon to widget with message about character it will insert
+sub charbuttonballoon {
+    my $w     = shift;
+    my $blln  = shift;
+    my $ord   = shift;
+    my $cname = charnames::viacode($ord);
+    my $msg   = "Dec. $ord, Hex. " . sprintf( "%04X", $ord );
+    $msg .= ", $cname" if $cname;
+    $blln->attach( $w, -balloonmsg => $msg, );
 }
 
 sub insertit {
@@ -111,9 +221,8 @@ sub insertit {
 
 sub doutfbuttons {
     my ( $start, $end ) = @_;
-    my $textwindow = $::textwindow;
-    my $rows       = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
-    my $blln       = $::lglobal{utfpop}->Balloon( -initwait => 750 );
+    my $rows = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
+    my $blln = $::lglobal{utfpop}->Balloon( -initwait => 750 );
     ::killpopup('pframe');
     $::lglobal{pframe} =
       $::lglobal{utfpop}->Frame( -background => $::bkgcolor )
@@ -131,11 +240,6 @@ sub doutfbuttons {
             my $ord  = hex($start) + ( $y * 16 ) + $x;
             my $text = chr($ord);
 
-            my $cname = charnames::viacode($ord);
-            next unless $cname;    # Unnamed - don't create button
-            my $msg = "Dec. $ord, Hex. " . sprintf( "%04X", $ord ) . ", $cname";
-
-            # Use label instead of button since it takes less space
             my $w = $::lglobal{utfframe}->Button(
                 -activebackground => $::activecolor,
                 -text             => $text,
@@ -148,15 +252,8 @@ sub doutfbuttons {
                 -width              => 1,
             )->grid( -row => $y, -column => $x );
 
-            # Bind Mouse-3 to copy character to clipboard
-            $w->bind(
-                '<ButtonPress-3>',
-                sub {
-                    $textwindow->clipboardClear;
-                    $textwindow->clipboardAppend($text);
-                }
-            );
-            $blln->attach( $w, -balloonmsg => $msg, );
+            charbind3( $w, $text );                  # Right-click button copies text to clipboard
+            charbuttonballoon( $w, $blln, $ord );    # Balloon message if user hovers over button
         }
     }
     $::lglobal{utfpop}->update;
@@ -241,9 +338,8 @@ sub utfcharsearchpopup {
         # get lists of supported blocks and unicode characters at start
         my %blocks = %{ $::lglobal{utfblocks} };
 
-        # Add Basic Latin and Latin-1 Supplement blocks
-        $blocks{'Basic Latin'}        = [ '0000', '007F' ];
-        $blocks{'Latin-1 Supplement'} = [ '0080', '00FF' ];
+        # Add Basic Latin block - not in list of unicode blocks displayed
+        $blocks{'Basic Latin'} = [ '0000', '007F' ];
 
         my @lines = split /\n/, do 'unicore/Name.pl';
         $::lglobal{utfsearchpop} = $top->Toplevel;

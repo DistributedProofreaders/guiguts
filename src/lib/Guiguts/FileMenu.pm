@@ -939,6 +939,13 @@ EOM
         }
         print $save_handle ");\n\n";
 
+        print $save_handle ("\@userchars = (\n");
+        for (@::userchars) {
+            my $hstr = ( $_ ? '\x{' . ( sprintf "%x", ord($_) ) . '}' : ' ' );
+            print $save_handle "\t\"", $hstr, "\",\n";
+        }
+        print $save_handle ");\n\n";
+
         print $save_handle ("\@htmlentry = (\n");
         for (@::htmlentry) {
             print $save_handle "\t'", ::escape_problems($_), "',\n";

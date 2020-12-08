@@ -32,7 +32,7 @@ sub runtests {
         "deaccentdisplay('ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı')"
     );
 
-    ok( ( ::entity('\xff') eq '&yuml;' ), "entity('\\xff') eq '&yuml;'" );
+    ok( ( ::entity(255) eq '&yuml;' ), "entity(255) eq '&yuml;'" );
 
     ok( $::debug == 0, "Do not release with \$debug = 1" );
 

@@ -673,6 +673,7 @@ sub initialize {
     $::geometryhash{alignpop}         = '+338+83'         unless $::geometryhash{alignpop};
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
+    $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
     $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
     $::geometryhash{elinkpop}         = '330x110+150+120' unless $::geometryhash{elinkpop};
     $::geometryhash{errorcheckpop}    = '+484+72'         unless $::geometryhash{errorcheckpop};
@@ -696,7 +697,6 @@ sub initialize {
     $::positionhash{htmlgenpop}       = '+145+37'         unless $::positionhash{htmlgenpop};
     $::positionhash{htmlimpop}        = '+45+37'          unless $::positionhash{htmlimpop};
     $::positionhash{intervalpop}      = '+300+137'        unless $::positionhash{intervalpop};
-    $::positionhash{latinpop}         = '+10+10'          unless $::positionhash{latinpop};
     $::geometryhash{linkpop}          = '+224+72'         unless $::geometryhash{linkpop};
     $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
     $::positionhash{markpop}          = '+140+93'         unless $::positionhash{markpop};
@@ -725,14 +725,17 @@ sub initialize {
 
     # manualhash stores subpage of manual for each dialog
     # Where dialog is used in several contexts, use 'dialogname+context' as key
-    $::manualhash{'aboutpop'}                = '#Overview';
-    $::manualhash{'alignpop'}                = '/Guiguts_1.1_Text_Menu#Align_text_on_string';
-    $::manualhash{'asciiboxpop'}             = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
-    $::manualhash{'brkpop'}                  = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
-    $::manualhash{'defurlspop'}              = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'elinkpop'}                = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'errorcheckpop+Bookloupe'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
-    $::manualhash{'errorcheckpop+Jeebies'}   = '/Guiguts_1.1_Tools_Menu#Jeebies';
+    $::manualhash{'aboutpop'}    = '#Overview';
+    $::manualhash{'alignpop'}    = '/Guiguts_1.1_Text_Menu#Align_text_on_string';
+    $::manualhash{'asciiboxpop'} = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
+    $::manualhash{'brkpop'}      = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
+    $::manualhash{'comcharspop'} = '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'comcharsconfigpop'} =
+      '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'defurlspop'}                   = '/Guiguts_1.1_Preferences_Menu#File_Paths';
+    $::manualhash{'elinkpop'}                     = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'errorcheckpop+Bookloupe'}      = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+    $::manualhash{'errorcheckpop+Jeebies'}        = '/Guiguts_1.1_Tools_Menu#Jeebies';
     $::manualhash{'errorcheckpop+Load Checkfile'} = '/Guiguts_1.1_Tools_Menu#Load_Checkfile';
     $::manualhash{'errorcheckpop+pptxt'}          = '/Guiguts_1.1_Text_Menu#PPtxt';
     $::manualhash{'errorcheckpop+W3C Validate Remote'} =
@@ -766,19 +769,19 @@ sub initialize {
     $::manualhash{'hpopup'}           = '/Guiguts_1.1_Tools_Menu#Harmonic_Searches';
     $::manualhash{'htmlgenpop'} = '/Guiguts_1.1_HTML#Convert_the_text_to_HTML_.28HTML_Generator.29';
     $::manualhash{'htmlimpop'}  = '/Guiguts_1.1_HTML#Add_Illustrations';
-    $::manualhash{'intervalpop'}    = '/Guiguts_1.1_Preferences_Menu#Backup';
-    $::manualhash{'latinpop'}       = '/Guiguts_1.1_Unicode_Menu#The_Latin-1_Dialog';
-    $::manualhash{'linkpop'}        = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'marginspop'}     = '/Guiguts_1.1_Preferences_Menu#Processing';
-    $::manualhash{'markpop'}        = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'markuppop'}      = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
-    $::manualhash{'multispellpop'}  = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
-    $::manualhash{'oppop'}          = '/Guiguts_1.1_File_Menu#View_Operations_History';
-    $::manualhash{'pagelabelpop'}   = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
-    $::manualhash{'pagemarkerpop'}  = '/Guiguts_1.1_File_Menu#Display.2FAdjust_Page_Markers';
-    $::manualhash{'pagesephelppop'} = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'pageseppop'}     = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'regexrefpop'}    = '/Guiguts_1.1_Searching#Regular_Expressions';
+    $::manualhash{'intervalpop'}     = '/Guiguts_1.1_Preferences_Menu#Backup';
+    $::manualhash{'linkpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'marginspop'}      = '/Guiguts_1.1_Preferences_Menu#Processing';
+    $::manualhash{'markpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'markupconfigpop'} = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
+    $::manualhash{'markuppop'}       = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'multispellpop'}   = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
+    $::manualhash{'oppop'}           = '/Guiguts_1.1_File_Menu#View_Operations_History';
+    $::manualhash{'pagelabelpop'}    = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
+    $::manualhash{'pagemarkerpop'}   = '/Guiguts_1.1_File_Menu#Display.2FAdjust_Page_Markers';
+    $::manualhash{'pagesephelppop'}  = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'pageseppop'}      = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'regexrefpop'}     = '/Guiguts_1.1_Searching#Regular_Expressions';
     $::manualhash{'searchpop+scannos'} = '/Guiguts_1.1_Tools_Menu#Stealth_Scannos';
     $::manualhash{'searchpop+search'}  = '/Guiguts_1.1_Searching#The_Search_Dialog';
     $::manualhash{'selectionpop'}      = '/Guiguts_1.1_Edit_Menu#Selection_Dialog';
@@ -1116,6 +1119,7 @@ sub initialize {
         'Latin Extended-A'          => [ '0100', '017F' ],
         'Latin Extended-B'          => [ '0180', '024F' ],
         'Latin IPA Extensions'      => [ '0250', '02AF' ],
+        'Latin-1 Supplement'        => [ '00A0', '00FF' ],
         'Letterlike Symbols'        => [ '2100', '214F' ],
 
         #'Limbu' => ['1900', '194F'],
@@ -2287,10 +2291,10 @@ sub toolbar_toggle {
         );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
-            -text    => 'Ltn-1',
+            -text    => 'Common',
             -font    => $::lglobal{toolfont},
-            -command => [ \&::latinpopup ],
-            -tip     => 'Latin-1 Popup'
+            -command => [ \&::commoncharspopup ],
+            -tip     => 'Commonly-Used Characters Chart'
         );
         $::lglobal{toptool}->ToolButton(
             -text    => 'Grk',
