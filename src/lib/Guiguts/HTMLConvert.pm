@@ -95,8 +95,7 @@ sub html_convert_emdashes {
 sub html_convert_latin1 {
     ::working("Converting Latin-1 Characters...");
     for ( 128 .. 255 ) {
-        my $from = lc sprintf( "%x", $_ );
-        ::named( '\x' . $from, ::entity( '\x' . $from ) );
+        ::named( chr($_), ::entity($_) );
     }
     return;
 }
@@ -3374,142 +3373,38 @@ sub linkpopulate {
     $linklistbox->yviewScroll( -1, 'units' );
 }
 
+#
+# Convert ordinal to a named or number HTML entity
 sub entity {
-    my $char       = shift;
-    my %markuphash = (
-        '\x80' => '&#8364;',
-        '\x81' => '&#129;',
-        '\x82' => '&#8218;',
-        '\x83' => '&#402;',
-        '\x84' => '&#8222;',
-        '\x85' => '&#8230;',
-        '\x86' => '&#8224;',
-        '\x87' => '&#8225;',
-        '\x88' => '&#710;',
-        '\x89' => '&#8240;',
-        '\x8a' => '&#352;',
-        '\x8b' => '&#8249;',
-        '\x8c' => '&#338;',
-        '\x8d' => '&#141;',
-        '\x8e' => '&#381;',
-        '\x8f' => '&#143;',
-        '\x90' => '&#144;',
-        '\x91' => '&#8216;',
-        '\x92' => '&#8217;',
-        '\x93' => '&#8220;',
-        '\x94' => '&#8221;',
-        '\x95' => '&#8226;',
-        '\x96' => '&#8211;',
-        '\x97' => '&#8212;',
-        '\x98' => '&#732;',
-        '\x99' => '&#8482;',
-        '\x9a' => '&#353;',
-        '\x9b' => '&#8250;',
-        '\x9c' => '&#339;',
-        '\x9d' => '&#157;',
-        '\x9e' => '&#382;',
-        '\x9f' => '&#376;',
-        '\xa0' => '&nbsp;',
-        '\xa1' => '&iexcl;',
-        '\xa2' => '&cent;',
-        '\xa3' => '&pound;',
-        '\xa4' => '&curren;',
-        '\xa5' => '&yen;',
-        '\xa6' => '&brvbar;',
-        '\xa7' => '&sect;',
-        '\xa8' => '&uml;',
-        '\xa9' => '&textcopy;',
-        '\xaa' => '&ordf;',
-        '\xab' => '&laquo;',
-        '\xac' => '&not;',
-        '\xad' => '&shy;',
-        '\xae' => '&reg;',
-        '\xaf' => '&macr;',
-        '\xb0' => '&deg;',
-        '\xb1' => '&plusmn;',
-        '\xb2' => '&sup2;',
-        '\xb3' => '&sup3;',
-        '\xb4' => '&acute;',
-        '\xb5' => '&micro;',
-        '\xb6' => '&para;',
-        '\xb7' => '&middot;',
-        '\xb8' => '&cedil;',
-        '\xb9' => '&sup1;',
-        '\xba' => '&ordm;',
-        '\xbb' => '&raquo;',
-        '\xbc' => '&frac14;',
-        '\xbd' => '&frac12;',
-        '\xbe' => '&frac34;',
-        '\xbf' => '&iquest;',
-        '\xc0' => '&Agrave;',
-        '\xc1' => '&Aacute;',
-        '\xc2' => '&Acirc;',
-        '\xc3' => '&Atilde;',
-        '\xc4' => '&Auml;',
-        '\xc5' => '&Aring;',
-        '\xc6' => '&AElig;',
-        '\xc7' => '&Ccedil;',
-        '\xc8' => '&Egrave;',
-        '\xc9' => '&Eacute;',
-        '\xca' => '&Ecirc;',
-        '\xcb' => '&Euml;',
-        '\xcc' => '&Igrave;',
-        '\xcd' => '&Iacute;',
-        '\xce' => '&Icirc;',
-        '\xcf' => '&Iuml;',
-        '\xd0' => '&ETH;',
-        '\xd1' => '&Ntilde;',
-        '\xd2' => '&Ograve;',
-        '\xd3' => '&Oacute;',
-        '\xd4' => '&Ocirc;',
-        '\xd5' => '&Otilde;',
-        '\xd6' => '&Ouml;',
-        '\xd7' => '&times;',
-        '\xd8' => '&Oslash;',
-        '\xd9' => '&Ugrave;',
-        '\xda' => '&Uacute;',
-        '\xdb' => '&Ucirc;',
-        '\xdc' => '&Uuml;',
-        '\xdd' => '&Yacute;',
-        '\xde' => '&THORN;',
-        '\xdf' => '&szlig;',
-        '\xe0' => '&agrave;',
-        '\xe1' => '&aacute;',
-        '\xe2' => '&acirc;',
-        '\xe3' => '&atilde;',
-        '\xe4' => '&auml;',
-        '\xe5' => '&aring;',
-        '\xe6' => '&aelig;',
-        '\xe7' => '&ccedil;',
-        '\xe8' => '&egrave;',
-        '\xe9' => '&eacute;',
-        '\xea' => '&ecirc;',
-        '\xeb' => '&euml;',
-        '\xec' => '&igrave;',
-        '\xed' => '&iacute;',
-        '\xee' => '&icirc;',
-        '\xef' => '&iuml;',
-        '\xf0' => '&eth;',
-        '\xf1' => '&ntilde;',
-        '\xf2' => '&ograve;',
-        '\xf3' => '&oacute;',
-        '\xf4' => '&ocirc;',
-        '\xf5' => '&otilde;',
-        '\xf6' => '&ouml;',
-        '\xf7' => '&divide;',
-        '\xf8' => '&oslash;',
-        '\xf9' => '&ugrave;',
-        '\xfa' => '&uacute;',
-        '\xfb' => '&ucirc;',
-        '\xfc' => '&uuml;',
-        '\xfd' => '&yacute;',
-        '\xfe' => '&thorn;',
-        '\xff' => '&yuml;',
+    my $ord      = shift;
+    my @entities = (
+        '&#8364;',  '&#129;',   '&#8218;',  '&#402;',   '&#8222;',  '&#8230;',
+        '&#8224;',  '&#8225;',  '&#710;',   '&#8240;',  '&#352;',   '&#8249;',
+        '&#338;',   '&#141;',   '&#381;',   '&#143;',   '&#144;',   '&#8216;',
+        '&#8217;',  '&#8220;',  '&#8221;',  '&#8226;',  '&#8211;',  '&#8212;',
+        '&#732;',   '&#8482;',  '&#353;',   '&#8250;',  '&#339;',   '&#157;',
+        '&#382;',   '&#376;',   '&nbsp;',   '&iexcl;',  '&cent;',   '&pound;',
+        '&curren;', '&yen;',    '&brvbar;', '&sect;',   '&uml;',    '&textcopy;',
+        '&ordf;',   '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&macr;',
+        '&deg;',    '&plusmn;', '&sup2;',   '&sup3;',   '&acute;',  '&micro;',
+        '&para;',   '&middot;', '&cedil;',  '&sup1;',   '&ordm;',   '&raquo;',
+        '&frac14;', '&frac12;', '&frac34;', '&iquest;', '&Agrave;', '&Aacute;',
+        '&Acirc;',  '&Atilde;', '&Auml;',   '&Aring;',  '&AElig;',  '&Ccedil;',
+        '&Egrave;', '&Eacute;', '&Ecirc;',  '&Euml;',   '&Igrave;', '&Iacute;',
+        '&Icirc;',  '&Iuml;',   '&ETH;',    '&Ntilde;', '&Ograve;', '&Oacute;',
+        '&Ocirc;',  '&Otilde;', '&Ouml;',   '&times;',  '&Oslash;', '&Ugrave;',
+        '&Uacute;', '&Ucirc;',  '&Uuml;',   '&Yacute;', '&THORN;',  '&szlig;',
+        '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',
+        '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',
+        '&igrave;', '&iacute;', '&icirc;',  '&iuml;',   '&eth;',    '&ntilde;',
+        '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;',
+        '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;',
+        '&thorn;',  '&yuml;',
     );
-    my %pukramhash = reverse %markuphash;
-    return $markuphash{$char} if $markuphash{$char};
-    return $pukramhash{$char} if $pukramhash{$char};
-    return $char;
+    return $entities[ $ord - 128 ] if $ord >= 128 and $ord <= 255;
+
+    # If we don't have an HTML name, return the number form
+    return '&#' . $ord . ';';
 }
 
 sub named {
@@ -3554,11 +3449,9 @@ sub fromnamed {
         ::named( '&mdash;', '--', $start, 'srchend' );
         ::named( ' &gt;',   ' >', $start, 'srchend' );
         ::named( '&lt; ',   '< ', $start, 'srchend' );
-        my $from;
 
         for ( 160 .. 255 ) {
-            $from = lc sprintf( "%x", $_ );
-            ::named( ::entity( '\x' . $from ), chr($_), $start, 'srchend' );
+            ::named( ::entity($_), chr($_), $start, 'srchend' );
         }
         while (
             $thisblockstart = $textwindow->search(
@@ -3599,11 +3492,9 @@ sub tonamed {
         ::named( '&c\.',                 '&amp;c.', $start, 'srchend' );
         ::named( ' >',                   ' &gt;',   $start, 'srchend' );
         ::named( '< ',                   '&lt; ',   $start, 'srchend' );
-        my $from;
 
         for ( 128 .. 255 ) {
-            $from = lc sprintf( "%x", $_ );
-            ::named( '\x' . $from, ::entity( '\x' . $from ), $start, 'srchend' );
+            ::named( chr($_), ::entity($_), $start, 'srchend' );
         }
         while ( $thisblockstart =
             $textwindow->search( '-regexp', '--', '[\x{100}-\x{65535}]', $start, 'srchend' ) ) {
