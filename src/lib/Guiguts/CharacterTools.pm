@@ -127,7 +127,7 @@ sub commoncharspopup {
 # Pop a config dialog to set character for given button
 # Accepts a single character, e.g. '#'.
 # If more than 1 character entered, convert to a decimal ordinal if valid
-# If not valid decimal, try converting to a hex ordinal, optionally preceded by \x, 0x or x
+# If not valid decimal, try converting to a hex ordinal, optionally preceded by \x, 0x, x or U+
 # Final fallback, just take first character from string entered
 sub usercharconfig {
     my $w    = shift;
@@ -152,21 +152,21 @@ sub usercharconfig {
     if ( length($text) > 1 ) {
         if ( $text =~ /^\d+$/ ) {    # decimal integer
             $text = chr($text);
-        } elsif ( $text =~ s/([\\0]?[x])?([0-9a-f]+)/$2/i ) {    # hex (with x, \x, 0x or no prefix)
+        } elsif ( $text =~ s/(([\\0]?[x])|U\+)?([0-9a-f]+)/$3/i ) {    # hex (with x, \x, 0x, U+ or no prefix)
             $text = chr( hex($text) );
         } else {
-            $text = substr( $text, 0, 1 );                       # Just take first character of string
+            $text = substr( $text, 0, 1 );                             # Just take first character of string
         }
     }
 
     my $ord = ord($text);
-    $::userchars[$idx] = $text;                                  # Save user's new definition
-    $w->configure( -text => $text );                             # Update the label on the button
-    $w->configure(                                               # Button needs to insert the new character
+    $::userchars[$idx] = $text;                                        # Save user's new definition
+    $w->configure( -text => $text );                                   # Update the label on the button
+    $w->configure(                                                     # Button needs to insert the new character
         -command => sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); }
     );
-    charbind3( $w, $text );                                      # Right-click button copies text to clipboard
-    charbuttonballoon( $w, $blln, $ord );                        # Balloon message if user hovers over button
+    charbind3( $w, $text );                                            # Right-click button copies text to clipboard
+    charbuttonballoon( $w, $blln, $ord );                              # Balloon message if user hovers over button
 
     # stop class callback being called - possible due to binding reordering during button creation above
     $w->break;
