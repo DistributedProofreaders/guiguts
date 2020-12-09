@@ -168,6 +168,8 @@ sub usercharconfig {
     charbind3( $w, $text );                                            # Right-click button copies text to clipboard
     charbuttonballoon( $w, $blln, $ord );                              # Balloon message if user hovers over button
 
+    ::savesettings();                                                  # Ensure new button definition saved to setting file
+
     # stop class callback being called - possible due to binding reordering during button creation above
     $w->break;
 }
