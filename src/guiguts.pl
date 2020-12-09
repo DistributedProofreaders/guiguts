@@ -214,7 +214,7 @@ our @replace_history;
 our @search_history;
 our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
 our @wfsearchopt;
-our @userchars = ();              # user defined chars for common characters dialog
+our @userchars;                   # user defined chars for common characters dialog
 
 # html markup dialog
 our @htmlentry = ('') x 4;        # class/attributes for each div, span, i button
