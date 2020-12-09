@@ -552,7 +552,7 @@ sub utfcharentrypopup {
                 }
                 $outentry->delete( '1.0', 'end' );
                 $outentry->insert( 'end', $char );
-                $charlbl->configure( -text => $name );
+                $charlbl->configure( -text => $name ) if $name;
                 return 1;
             },
         )->grid( -row => 1, -column => 2, -pady => 5 );

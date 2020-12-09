@@ -2997,7 +2997,7 @@ sub makeanchor {
         my $phrase   = charnames::viacode($ord);
         my $case     = 'lc';
         my $notlatin = 1;
-        $phrase   = '-X-' unless ( $phrase =~ /(LETTER|DIGIT|LIGATURE)/ );
+        $phrase   = '-X-' unless ( $phrase and $phrase =~ /(LETTER|DIGIT|LIGATURE)/ );
         $case     = 'uc' if $phrase =~ /CAPITAL|^-X-$/;
         $notlatin = 0 if $phrase =~ /LATIN/;
         $phrase =~ s/.+(LETTER|DIGIT|LIGATURE) //;
