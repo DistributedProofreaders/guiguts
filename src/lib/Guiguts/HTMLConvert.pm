@@ -2569,6 +2569,8 @@ sub markupconfig {
 
     markupconfiglabel( $w, $typ );                  # Adjust label to show presence of class/attributes
 
+    ::savesettings();                               # Ensure new definition gets saved in setting file
+
     # stop class callback being called - possible due to binding reordering in markupbindconfig
     $w->break;
 }
