@@ -274,12 +274,16 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
             }
         }
     );
+
+    # Ordinal label
     $::lglobal{ordinallabel} = $::counter_frame->Label(
         -text       => '',
         -relief     => 'ridge',
         -background => 'gray',
         -anchor     => 'w',
     )->grid( -row => 1, -column => 10 );
+
+    # Left-click to toggle display of character's Unicode name
     $::lglobal{ordinallabel}->bind(
         '<1>',
         sub {
@@ -287,6 +291,10 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
             ::togglelongordlabel();
         }
     );
+
+    # Right-click to pop the Unicode Character Entry dialog
+    $::lglobal{ordinallabel}->bind( '<3>', sub { ::utfcharentrypopup(); } );
+
     _butbind($_)
       for (
         $::lglobal{insert_overstrike_mode_label}, $::lglobal{current_line_label},

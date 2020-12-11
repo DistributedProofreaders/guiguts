@@ -179,6 +179,7 @@ our $txtfontsize           = 10;
 our $txtfontweight         = 'normal';
 our $txtfontsystemuse      = 1;               # Default to use system font
 our $twowordsinhyphencheck = 0;
+our $utfcharentrybase      = 'dec';           # 'dec' or 'hex' allowed
 our $utffontname           = 'Courier New';
 our $utffontsize           = 14;
 our $utffontweight         = 'normal';
