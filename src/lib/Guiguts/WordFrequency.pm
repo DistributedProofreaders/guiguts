@@ -164,10 +164,10 @@ sub wordfrequency {
             [ 'Hyphens'   => sub { hyphencheck() } ],
             [ 'Alpha/num' => sub { alphanumcheck() } ],
             [ 'All Words' => sub { allwords($wc) } ],
-            [ 'Check Spelling', sub { wordfrequencyspellcheck() } ],
-            [ 'Ital/Bold/SC',   sub { itwords(); ital_adjust() } ],
-            [ 'ALL CAPS',       sub { capscheck() } ],
-            [ 'MiXeD CasE',     sub { mixedcasecheck() } ],
+            [ 'Check Spelling',   sub { wordfrequencyspellcheck() } ],
+            [ 'Ital/Bold/SC/etc', sub { itwords(); ital_adjust() } ],
+            [ 'ALL CAPS',         sub { capscheck() } ],
+            [ 'MiXeD CasE',       sub { mixedcasecheck() } ],
             [
                 'Initial Caps',
                 sub {
@@ -244,12 +244,10 @@ sub wordfrequency {
             -pady   => 2
         );
         my $helpframe = $::lglobal{wfpop}->Frame->pack( -side => 'bottom' );
-        my $helplabel = $helpframe->Label(
-            -text => 'Double-click a line to find in text, Right-click to open S&R, '
-              . 'type a letter to see it (beta), '
-              . 'Ctrl+s to save list, Ctrl+x to export list.',
-            -wraplength => 550,
-        )->pack;
+        $helpframe->Label( -text => 'Double-click a line to find in text, Right-click to open S&R' )
+          ->pack;
+        $helpframe->Label(
+            -text => 'Type a letter to see it, Ctrl+s to save list, Ctrl+x to export list', )->pack;
         ::initialize_popup_without_deletebinding('wfpop');
         ::drag( $::lglobal{wclistbox} );
         $::lglobal{wfpop}->protocol(
@@ -748,7 +746,8 @@ sub itwords {
     my $wholefile = slurpfile();
     $::markupthreshold = 0 unless $::markupthreshold;
 
-    while ( $wholefile =~ m/(<(i|I|b|B|sc)>)(.*?)(<\/(i|I|b|B|sc)>)/sg ) {
+    my $markuptypes = "i|I|b|B|sc|cite|em|strong|f|g|u";
+    while ( $wholefile =~ m/(<($markuptypes)>)(.*?)(<\/($markuptypes)>)/sg ) {
         my $word   = $1 . $3 . $4;
         my $wordwo = $3;
         my $num    = 0;
