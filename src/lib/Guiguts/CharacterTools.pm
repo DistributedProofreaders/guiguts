@@ -504,8 +504,6 @@ sub utfchar_bind {
 sub utfcharentrypopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    my $ord;
-    my $base = 'dec';
     if ( $::lglobal{utfentrypop} ) {
         $::lglobal{utfentrypop}->deiconify;
         $::lglobal{utfentrypop}->raise;
@@ -518,21 +516,32 @@ sub utfcharentrypopup {
         my $charlbl = $frame2->Label( -text => '', -width => 50 )->pack;
         my ( $inentry, $outentry );
         $frame->Radiobutton(
-            -variable => \$base,
+            -variable => \$::utfcharentrybase,
             -value    => 'hex',
             -text     => 'Hex',
             -command  => sub { $inentry->validate }
         )->grid( -row => 0, -column => 1 );
         $frame->Radiobutton(
-            -variable => \$base,
+            -variable => \$::utfcharentrybase,
             -value    => 'dec',
             -text     => 'Decimal',
             -command  => sub { $inentry->validate }
         )->grid( -row => 0, -column => 2 );
+
+        # Define output entry field first so it can be populated by input entry validation routine
+        $outentry = $frame->ROText(
+            -background => $::bkgcolor,
+            -relief     => 'sunken',
+            -font       => 'unicode',
+            -width      => 6,
+            -height     => 1,
+        )->grid( -row => 2, -column => 2 );
+
+        # Input entry field
         $inentry = $frame->Entry(
             -background   => $::bkgcolor,
             -width        => 6,
-            -textvariable => \$ord,
+            -textvariable => \$::lglobal{utfcharentryord},
             -validate     => 'key',
             -vcmd         => sub {
 
@@ -541,11 +550,11 @@ sub utfcharentrypopup {
                     return 1;
                 }
                 my ( $name, $char );
-                if ( $base eq 'hex' ) {
+                if ( $::utfcharentrybase eq 'hex' ) {
                     return 0 unless ( $_[0] =~ /^[a-fA-F\d]{0,4}$/ );
                     $char = chr( hex( $_[0] ) );
                     $name = charnames::viacode( hex( $_[0] ) );
-                } elsif ( $base eq 'dec' ) {
+                } elsif ( $::utfcharentrybase eq 'dec' ) {
                     return 0
                       unless ( ( $_[0] =~ /^\d{0,5}$/ )
                         && ( $_[0] < 65519 ) );
@@ -558,13 +567,6 @@ sub utfcharentrypopup {
                 return 1;
             },
         )->grid( -row => 1, -column => 2, -pady => 5 );
-        $outentry = $frame->ROText(
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
-            -font       => 'unicode',
-            -width      => 6,
-            -height     => 1,
-        )->grid( -row => 2, -column => 2 );
         my $outcopy = $frame->Button(
             -text    => 'Copy',
             -width   => 8,
@@ -574,26 +576,26 @@ sub utfcharentrypopup {
             },
         )->grid( -row => 2, -column => 3 );
         my $frame1 = $::lglobal{utfentrypop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        my $button = $frame1->Button(
+        my $insertbtn = $frame1->Button(
             -text    => 'Insert',
             -width   => 8,
             -command => sub {
                 $::lglobal{hasfocus}->insert( 'insert', $outentry->get( '1.0', 'end -1c' ) );
             },
         )->grid( -row => 1, -column => 1 );
-        $frame1->Button(
+        $inentry->Tk::bind( '<Return>', sub { $insertbtn->invoke(); } );
+        my $closebtn = $frame1->Button(
             -text    => 'Close',
             -width   => 8,
             -command => sub { ::killpopup('utfentrypop'); },
         )->grid( -row => 1, -column => 2 );
-        $inentry->Tk::bind(
-            '<Return>',
-            sub {
-                $::lglobal{hasfocus}->insert( 'insert', $outentry->get( '1.0', 'end -1c' ) );
-            }
-        );
+        $inentry->Tk::bind( '<Escape>', sub { $closebtn->invoke(); } );
+
         $::lglobal{utfentrypop}->resizable( 'yes', 'no' );
         ::initialize_popup_with_deletebinding('utfentrypop');
+        $inentry->focus;
+        $inentry->selectionRange( 0, 'end' );
+        $inentry->icursor('end');
     }
 }
 
