@@ -701,6 +701,7 @@ sub initialize {
     $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
     $::positionhash{markpop}          = '+140+93'         unless $::positionhash{markpop};
     $::positionhash{markuppop}        = '+150+100'        unless $::positionhash{markuppop};
+    $::positionhash{multihelppop}     = '+110+50'         unless $::positionhash{multihelppop};
     $::geometryhash{multispellpop}    = '430x410+100+100' unless $::geometryhash{multispellpop};
     $::geometryhash{oppop}            = '600x400+50+50'   unless $::geometryhash{oppop};
     $::geometryhash{pagelabelpop}     = '375x500+20+20'   unless $::geometryhash{pagelabelpop};
@@ -775,6 +776,7 @@ sub initialize {
     $::manualhash{'markpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'markupconfigpop'} = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'markuppop'}       = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'multihelppop'}    = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
     $::manualhash{'multispellpop'}   = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
     $::manualhash{'oppop'}           = '/Guiguts_1.1_File_Menu#View_Operations_History';
     $::manualhash{'pagelabelpop'}    = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
