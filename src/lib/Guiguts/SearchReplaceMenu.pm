@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&update_sr_histories &searchtext &reg_check &getnextscanno &updatesearchlabels
-      &isvalid &swapterms &findascanno &reghint &replaceeval &replace &replaceall
+      &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
       &loadscannos &replace_incr_counter &countmatches);
@@ -723,47 +723,18 @@ sub replaceeval {
     $searchterm =~ s/\Q(?<=\E.*?\)//;
     $searchterm =~ s/\Q(?=\E.*?\)//;
 
-    if ( $::sopt[1] ) {
-        $found =~ m/$searchterm/mi;
-        $m1 = $1;
-        $m2 = $2;
-        $m3 = $3;
-        $m4 = $4;
-        $m5 = $5;
-        $m6 = $6;
-        $m7 = $7;
-        $m8 = $8;
-    } else {
-        $found =~ m/$searchterm/m;
-        $m1 = $1;
-        $m2 = $2;
-        $m3 = $3;
-        $m4 = $4;
-        $m5 = $5;
-        $m6 = $6;
-        $m7 = $7;
-        $m8 = $8;
+    # Handle regex grouping via () and $
+    # Don't want dollars in text to be interpreted during substitution (e.g. $2 inserted
+    # as a result of match 1 then being substituted for match 2), so escape dollars in match strings
+    my @matches = $::sopt[1] ? ( $found =~ m/$searchterm/mi ) : ( $found =~ m/$searchterm/m );
+    for my $idx ( 1 .. 8 ) {    # Up to 8 groups supported
+        my $match = $matches[ $idx - 1 ];
+        next unless defined $match;
+        $match       =~ s/\$/\\\$/;
+        $replaceterm =~ s/(?<!\\)\$$idx/$match/g;
     }
-    $m1          =~ s/\\/\\\\/g        if defined $m1;
-    $m2          =~ s/\\/\\\\/g        if defined $m2;
-    $m3          =~ s/\\/\\\\/g        if defined $m3;
-    $m4          =~ s/\\/\\\\/g        if defined $m4;
-    $m5          =~ s/\\/\\\\/g        if defined $m5;
-    $m6          =~ s/\\/\\\\/g        if defined $m6;
-    $m7          =~ s/\\/\\\\/g        if defined $m7;
-    $m8          =~ s/\\/\\\\/g        if defined $m8;
-    $replaceterm =~ s/(?<!\\)\$1/$m1/g if defined $m1;
-    $replaceterm =~ s/(?<!\\)\$2/$m2/g if defined $m2;
-    $replaceterm =~ s/(?<!\\)\$3/$m3/g if defined $m3;
-    $replaceterm =~ s/(?<!\\)\$4/$m4/g if defined $m4;
-    $replaceterm =~ s/(?<!\\)\$5/$m5/g if defined $m5;
-    $replaceterm =~ s/(?<!\\)\$6/$m6/g if defined $m6;
-    $replaceterm =~ s/(?<!\\)\$7/$m7/g if defined $m7;
-    $replaceterm =~ s/(?<!\\)\$8/$m8/g if defined $m8;
-    $replaceterm =~ s/\\\$/\$/g;
+    $replaceterm =~ s/\\\$/\$/g;    # Unescape dollars
 
-    # For an explanation see
-    # https://www.pgdp.net/wiki/PPTools/Guiguts/Searching#Replacing_by_Modifying_Quoted_Text
     # \C indicates perl code to be run
     if ($cfound) {
         if ( $::lglobal{codewarn} ) {
@@ -876,9 +847,6 @@ END
         $replaceterm = $replbuild;
         $replbuild   = '';
     }
-
-    #       $replaceterm =~ s/\\n/\n/g;             #backslash enn -> newline    done later
-    #       $replaceterm =~ s/\\t/\t/g;             #backslash tee -> tab
 
     # \X (aka \GA aka \GX) runs betaascii
     if ($xfound) {
@@ -1045,9 +1013,9 @@ sub replaceall {
                 $searchterm = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})';
             }
 
-            # regex search is needed for whole word matching as well as regex matching
-            my $mode = ( $::sopt[0] or $::sopt[3] ) ? '-regexp' : '-exact';
-            my $case = $::sopt[1]                   ? '-nocase' : '-case';
+            # regex search is needed for whole word matching
+            my $mode = $::sopt[0] ? '-regexp' : '-exact';
+            my $case = $::sopt[1] ? '-nocase' : '-case';
             ::working("Replace All");
             $textwindow->FindAndReplaceAll( $mode, $case, $searchterm, $replacement );
             ::working();
