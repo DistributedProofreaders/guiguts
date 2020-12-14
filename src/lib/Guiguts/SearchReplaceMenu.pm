@@ -700,25 +700,16 @@ sub replaceeval {
     $replaceterm =~ s/\\GX/\\X/g;
     $replaceterm =~ s/\\GB/\\B/g;
     $replaceterm =~ s/\\GG/\\G/g;
+    $cfound = ( $replaceterm =~ /\\C/ );
+    $lfound = ( $replaceterm =~ /\\L/ );
+    $ufound = ( $replaceterm =~ /\\U/ );
+    $tfound = ( $replaceterm =~ /\\T/ );
+    $xfound = ( $replaceterm =~ /\\X/ );
+    $bfound = ( $replaceterm =~ /\\B/ );
+    $gfound = ( $replaceterm =~ /\\G/ );
+    $afound = ( $replaceterm =~ /\\A/ );
+    $rfound = ( $replaceterm =~ /\\R/ );
 
-    if   ( $replaceterm =~ /\\C/ ) { $cfound = 1; }
-    else                           { $cfound = 0; }
-    if   ( $replaceterm =~ /\\L/ ) { $lfound = 1; }
-    else                           { $lfound = 0; }
-    if   ( $replaceterm =~ /\\U/ ) { $ufound = 1; }
-    else                           { $ufound = 0; }
-    if   ( $replaceterm =~ /\\T/ ) { $tfound = 1; }
-    else                           { $tfound = 0; }
-    if   ( $replaceterm =~ /\\X/ ) { $xfound = 1; }
-    else                           { $xfound = 0; }
-    if   ( $replaceterm =~ /\\B/ ) { $bfound = 1; }
-    else                           { $bfound = 0; }
-    if   ( $replaceterm =~ /\\G/ ) { $gfound = 1; }
-    else                           { $gfound = 0; }
-    if   ( $replaceterm =~ /\\A/ ) { $afound = 1; }
-    else                           { $afound = 0; }
-    if   ( $replaceterm =~ /\\R/ ) { $rfound = 1; }
-    else                           { $rfound = 0; }
     my $found = $textwindow->get( $::searchstartindex, $::searchendindex );
     $searchterm =~ s/\Q(?<=\E.*?\)//;
     $searchterm =~ s/\Q(?=\E.*?\)//;
@@ -730,6 +721,7 @@ sub replaceeval {
     for my $idx ( 1 .. 8 ) {    # Up to 8 groups supported
         my $match = $matches[ $idx - 1 ];
         next unless defined $match;
+        $match       =~ s/\\/\\\\/g;
         $match       =~ s/\$/\\\$/;
         $replaceterm =~ s/(?<!\\)\$$idx/$match/g;
     }
@@ -754,210 +746,38 @@ END
             );
             my $answer = $dialog->Show;
             $::lglobal{codewarn} = 0 if ( $answer eq 'Warnings Off' );
-            return $replaceterm
-              unless ( ( $answer eq 'OK' )
-                || ( $answer eq 'Warnings Off' ) );
+            return $replaceterm unless $answer eq 'OK' or $answer eq 'Warnings Off';
         }
-        $replbuild = '';
-        if ( $replaceterm =~ s/^\\C// ) {
-            if ( $replaceterm =~ s/\\C// ) {
-                @replarray = split /\\C/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\C/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= eval $seg1;
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
+        $replaceterm = replaceevalaction( $replaceterm, 'C', sub { eval shift; } );
     }
 
-    # \Ltest\E is converted to lower case
-    if ($lfound) {
-        if ( $replaceterm =~ s/^\\L// ) {
-            if ( $replaceterm =~ s/\\L// ) {
-                @replarray = split /\\L/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\L/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= lc($seg1);
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    # \L converts to lower case
+    $replaceterm = replaceevalaction( $replaceterm, 'L', sub { lc shift; } ) if $lfound;
 
-    # \Utest\E is converted to uppercase
-    if ($ufound) {
-        if ( $replaceterm =~ s/^\\U// ) {
-            if ( $replaceterm =~ s/\\U// ) {
-                @replarray = split /\\U/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\U/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= uc($seg1);
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    # \U converts to upper case
+    $replaceterm = replaceevalaction( $replaceterm, 'U', sub { uc shift; } ) if $ufound;
 
-    # \Ttest\E is converted to title case
-    if ($tfound) {
-        if ( $replaceterm =~ s/^\\T// ) {
-            if ( $replaceterm =~ s/\\T// ) {
-                @replarray = split /\\T/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\T/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $seg1 = lc($seg1);
-            $seg1 =~ s/(^\W*\w)/\U$1\E/;
-            $seg1 =~ s/([\s\n]+\W*\w)/\U$1\E/g;
-            $replbuild .= $seg1;
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    # \T converts to title case
+    $replaceterm = replaceevalaction( $replaceterm, 'T', \&::titlecase ) if $tfound;
 
     # \X (aka \GA aka \GX) runs betaascii
-    if ($xfound) {
-        if ( $replaceterm =~ s/^\\X// ) {
-            if ( $replaceterm =~ s/\\X// ) {
-                @replarray = split /\\X/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\X/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= Guiguts::Greek::betaascii($seg1);    #replacement function
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    $replaceterm = replaceevalaction( $replaceterm, 'X', \&::betaascii ) if $xfound;
 
     # \B (aka \GB) runs greekbeta
-    if ($bfound) {
-        if ( $replaceterm =~ s/^\\B// ) {
-            if ( $replaceterm =~ s/\\B// ) {
-                @replarray = split /\\B/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\B/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= ::greekbeta($seg1);    #replacement function
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    $replaceterm = replaceevalaction( $replaceterm, 'B', \&::greekbeta ) if $bfound;
 
     # \G (aka \GG) runs betagreek
-    if ($gfound) {
-        if ( $replaceterm =~ s/^\\G// ) {
-            if ( $replaceterm =~ s/\\G// ) {
-                @replarray = split /\\G/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\G/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $replbuild .= ::betagreek($seg1);    # replacement function
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-        $replbuild   = '';
-    }
+    $replaceterm = replaceevalaction( $replaceterm, 'G', \&::betagreek ) if $gfound;
 
     # \A converts to anchor
-    if ($afound) {
-        if ( $replaceterm =~ s/^\\A// ) {
-            if ( $replaceterm =~ s/\\A// ) {
-                @replarray = split /\\A/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\A/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $seg1 = ::makeanchor( ::deaccentdisplay($seg1) );
-            $replbuild .= $seg1;
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-    }
+    $replaceterm =
+      replaceevalaction( $replaceterm, 'A', sub { ::makeanchor( ::deaccentdisplay(shift) ); } )
+      if $afound;
 
     # \R converts to Roman numerals
-    if ($rfound) {
-        if ( $replaceterm =~ s/^\\R// ) {
-            if ( $replaceterm =~ s/\\R// ) {
-                @replarray = split /\\R/, $replaceterm;
-            } else {
-                push @replarray, $replaceterm;
-            }
-        } else {
-            @replarray = split /\\R/, $replaceterm;
-            $replbuild = shift @replarray;
-        }
-        while ( $replaceseg = shift @replarray ) {
-            $seg1 = $seg2 = '';
-            ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-            $seg1 = ::roman($seg1);
-            $replbuild .= $seg1;
-            $replbuild .= $seg2 if $seg2;
-        }
-        $replaceterm = $replbuild;
-    }
+    $replaceterm = replaceevalaction( $replaceterm, 'R', \&::roman ) if $rfound;
 
+    # Sort out escaped backslashes
     $replaceterm =~ s/^\\n/\n/;                        # No pairs @ string start
     $replaceterm =~ s/^\\\\\\n/\\\\\n/;                # 1 pair @ string start
     $replaceterm =~ s/^((\\\\)*)\\n/$1\n/;             # Multiple pairs @ string start
@@ -981,6 +801,25 @@ END
     $replaceterm =~ s/\\\\/\\/g;                       # Ghastly, but it does work!!!
 
     return $replaceterm;
+}
+
+# Execute extended regex actions of one type, e.g. all the \L...\E for lowercase
+sub replaceevalaction {
+    my $replaceterm = shift;
+    my $type        = shift;
+    my $callback    = shift;
+
+    # Split into segments delimited by \type
+    my @replarray = split /\\$type/, $replaceterm;
+    my $replbuild = shift @replarray;                # start with replace term up to first \type (may be empty)
+
+    # For each segment that began with \type, split into 2 segments: before/after next \E
+    while ( my $replaceseg = shift @replarray ) {
+        my ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
+        $replbuild .= &$callback($seg1);             # Append segment after processing according to \type
+        $replbuild .= $seg2 if $seg2;                # Append segment after \E without processing
+    }
+    return $replbuild;
 }
 
 sub replaceall {
