@@ -300,7 +300,7 @@ sub footnotepop {
         $::lglobal{fnmvinlinebutton} = $frame7->Button(
             -activebackground => $::activecolor,
             -command          => sub { footnotemoveinline() },
-            -text             => 'Move FNs to Para (beta)',
+            -text             => 'Move FNs to Para',
             -state            => 'disabled',
             -width            => 30
         )->grid( -row => 2, -column => 2, -padx => 3, -pady => 4 );
