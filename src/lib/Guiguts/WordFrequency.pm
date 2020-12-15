@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&wordfrequencybuildwordlist &wordfrequency);
+    @EXPORT = qw(&wordfrequencybuildwordlist &wordfrequency &ital_adjust);
 }
 
 # build lists of words, word pairs, and double hyphenated words
@@ -254,7 +254,7 @@ sub wordfrequency {
             'WM_DELETE_WINDOW' => sub {
                 ::killpopup('wfpop');
                 undef $::lglobal{wclistbox};
-                ::killpopup('markuppop');
+                $::lglobal{markuppopok}->invoke if $::lglobal{markuppop};
             }
         );
         $::lglobal{wclistbox}->eventAdd( '<<search>>' => '<ButtonRelease-3>' );
@@ -752,7 +752,7 @@ sub itwords {
         my $wordwo = $3;
         my $num    = 0;
         $num++ while ( $word =~ /(\S\s)/g );
-        next if ( $num >= $::markupthreshold );
+        next if ( $num >= $::markupthreshold and $::markupthreshold > 0 );    # threshold 0 = unlimited
         $word =~ s/\n/\\n/g;
         $display{$word}++;
         $wordwo =~ s/\n/\\n/g;
@@ -784,9 +784,9 @@ sub ital_adjust {
     $::lglobal{markuppop} = $top->Toplevel( -title => 'Word count threshold', );
     ::initialize_popup_with_deletebinding('markuppop');
     my $f0 = $::lglobal{markuppop}->Frame->pack( -side => 'top', -anchor => 'n' );
-    $f0->Label( -text =>
-          "Threshold word count for marked up phrase.\nPhrases with more words will be skipped.\nDefault is 4."
-    )->pack;
+    $f0->Label( -text => "Threshold word count for marked up phrase.\n"
+          . "Phrases with more words will be skipped.\n"
+          . "Threshold of 0 means no limit" )->pack;
     my $f1 = $::lglobal{markuppop}->Frame->pack( -side => 'top', -anchor => 'n' );
     $f1->Entry(
         -width        => 10,
@@ -800,12 +800,19 @@ sub ital_adjust {
             return 0;
         },
     )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
-    $f1->Button(
+    $::lglobal{markuppopok} = $f1->Button(
         -activebackground => $::activecolor,
-        -command          => sub { ::killpopup('markuppop'); },
-        -text             => 'OK',
-        -width            => 8
+        -command          => sub {
+            $::markupthreshold = 0 unless $::markupthreshold;    # User has cleared entry field
+            ::savesettings();
+            ::killpopup('markuppop');
+            undef $::lglobal{markuppopok};
+        },
+        -text  => 'OK',
+        -width => 8
     )->grid( -row => 2, -column => 1, -padx => 2, -pady => 4 );
+    $::lglobal{markuppop}->bind( '<Return>' => sub { $::lglobal{markuppopok}->invoke; } );
+    $::lglobal{markuppop}->bind( '<Escape>' => sub { $::lglobal{markuppopok}->invoke; } );
     $::lglobal{markuppop}->resizable( 'no', 'no' );
 }
 

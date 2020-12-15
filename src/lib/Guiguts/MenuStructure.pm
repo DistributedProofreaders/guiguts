@@ -958,7 +958,14 @@ sub menu_preferences_processing {
             -offvalue   => 0
         ],
         [
-            Checkbutton => "Include Two Words ('flash light') in WF Hyphen Check (beta)",
+            'command',
+            'Set Threshold Word Count for Marked Up Phrases...',
+            -command => sub {
+                ::ital_adjust();
+            }
+        ],
+        [
+            Checkbutton => "Include Two Words ('flash light') in WF Hyphen Check",
             -variable   => \$::twowordsinhyphencheck,
             -onvalue    => 1,
             -offvalue   => 0
