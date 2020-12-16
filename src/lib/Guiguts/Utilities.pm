@@ -674,6 +674,8 @@ sub initialize {
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
     $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
+    $::positionhash{composepop}       = '+100+10'         unless $::positionhash{composepop};
+    $::geometryhash{composerefpop}    = '+300+72'         unless $::geometryhash{composerefpop};
     $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
     $::geometryhash{elinkpop}         = '330x110+150+120' unless $::geometryhash{elinkpop};
     $::geometryhash{errorcheckpop}    = '+484+72'         unless $::geometryhash{errorcheckpop};
@@ -733,6 +735,8 @@ sub initialize {
     $::manualhash{'comcharspop'} = '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'comcharsconfigpop'} =
       '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'composepop'}                   = '/Guiguts_1.1_Unicode_Menu#Compose_Character';
+    $::manualhash{'composerefpop'}                = '/Guiguts_1.1_Unicode_Menu#Compose_Character';
     $::manualhash{'defurlspop'}                   = '/Guiguts_1.1_Preferences_Menu#File_Paths';
     $::manualhash{'elinkpop'}                     = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'errorcheckpop+Bookloupe'}      = '/Guiguts_1.1_Tools_Menu#Bookloupe';
@@ -800,6 +804,8 @@ sub initialize {
       '/Guiguts_1.1_Help_Menu#Guiguts_HELP_Menu:_Online_and_Built-in_Help';
     $::manualhash{'wfpop'}   = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
     $::manualhash{'workpop'} = '#Overview';
+
+    ::composeinitialize();
 
     ::readsettings();
 

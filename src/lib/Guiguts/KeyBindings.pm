@@ -237,6 +237,9 @@ sub keybindings {
     # Help
     keybind( '<Control-Alt-r>', sub { ::regexref(); } );
 
+    # Compose
+    keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
+
     # Mouse
     keybind( '<Shift-B1-Motion>', sub { $textwindow->shiftB1_Motion(@_); } );
     keybind( '<ButtonRelease-2>', sub { ::popscroll() unless $Tk::mouseMoved } );
