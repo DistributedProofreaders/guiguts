@@ -6,7 +6,8 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni);
+    @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni
+      &composepopup  &composeinitialize &composeref);
 }
 
 #
@@ -640,5 +641,270 @@ sub cp1252toUni {
         }
     }
     ::update_indicators();
+}
+
+# Pop up compose window to allow entering characters via keystroke shortcuts
+sub composepopup {
+    my $top = $::top;
+    $::lglobal{composepopstr} = '';
+
+    if ( $::lglobal{composepopup} ) {
+        $::lglobal{composepop}->deiconify;
+        $::lglobal{composepop}->raise;
+    } else {
+        $::lglobal{composepop} = $top->Toplevel;
+        $::lglobal{composepop}->title('Compose Character');
+        my $frame1 = $::lglobal{composepop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+        $::lglobal{composepopentry} =
+          $frame1->Label( -text => 'Compose:' )->grid( -row => 1, -column => 1 );
+        $::lglobal{composepopentry} = $frame1->Entry(
+            -background   => $::bkgcolor,
+            -width        => 6,
+            -textvariable => \$::lglobal{composepopstr},
+        )->grid( -row => 1, -column => 2 );
+        my $frame2 = $::lglobal{composepop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+        my $okbtn  = $frame2->Button(
+            -text    => 'OK',
+            -width   => 8,
+            -command => sub { composekeyaction(); }
+        )->grid( -row => 1, -column => 1 );
+        my $cancelbtn = $frame2->Button(
+            -text    => 'Cancel',
+            -width   => 8,
+            -command => sub { ::killpopup('composepop'); },
+        )->grid( -row => 1, -column => 2 );
+        $::lglobal{composepop}->Tk::bind( '<Key>',    \&composekeyaction );
+        $::lglobal{composepop}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
+        $::lglobal{composepop}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
+
+        $::lglobal{composepop}->resizable( 'no', 'no' );
+        ::initialize_popup_with_deletebinding('composepop');
+        $::lglobal{composepopentry}->focus;
+    }
+}
+
+# Action when a key is pressed or OK button forces interpretation of string so far
+# If string matches a defined compose sequence, insert the relevant character
+# If string is a 4 digit hex number (with optional prefix), interpret as unicode ordinal
+# If forced, interpret string as a hex ordinal even if not 4 digit, or as decimal if # prefix
+# or, just insert the forced string.
+sub composekeyaction {
+    my $forced = not shift;                    # Binding passes the widget in here, forced does not
+    my $str    = $::lglobal{composepopstr};    # Get string typed so far in dialog
+
+    if ( $::composehash{$str} ) {              # Does it match one of the defined compose sequences?
+        insertit( $::composehash{$str} );
+        ::killpopup('composepop');
+    } elsif ( $str =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]{4})$/$3/i ) {    # or 4 digit hex, (optional \x, 0x, x or U+)
+        insertit( chr( hex($str) ) );
+        ::killpopup('composepop');
+    } elsif ($forced) {                                               # User clicked OK - make the best we can of the string
+        if ( $str =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]{2,4})$/$3/i and hex($str) >= 32 ) {    # hex?
+            insertit( chr( hex($str) ) );
+        } elsif ( $str =~ s/^#([0-9]{2,})$/$1/ and $str >= 32 and $str < 65536 ) {         # decimal
+            insertit( chr($str) );
+        } else {                                                                           # insert string
+            insertit($str);
+        }
+        ::killpopup('composepop');
+    }
+}
+
+#
+# Initialise hash of compose keystrokes to characters
+sub composeinitialize {
+    composeinitaccent( 'À',       'à', 'A', '`',  '\\' );
+    composeinitaccent( 'Á',       'á', 'A', '\'', '/' );
+    composeinitaccent( 'Â',       'â', 'A', '^' );
+    composeinitaccent( 'Ã',       'ã', 'A', '~' );
+    composeinitaccent( 'Ä',       'ä', 'A', '"',  ':' );
+    composeinitaccent( 'Å',       'å', 'A', 'o',  '*' );
+    composeinitaccent( 'È',       'è', 'E', '`',  '\\' );
+    composeinitaccent( 'É',       'é', 'E', '\'', '/' );
+    composeinitaccent( 'Ê',       'ê', 'E', '^' );
+    composeinitaccent( 'Ë',       'ë', 'E', '"',  ':' );
+    composeinitaccent( 'Ì',       'ì', 'I', '`',  '\\' );
+    composeinitaccent( 'Í',       'í', 'I', '\'', '/' );
+    composeinitaccent( 'Î',       'î', 'I', '^' );
+    composeinitaccent( 'Ï',       'ï', 'I', '"',  ':' );
+    composeinitaccent( 'Ò',       'ò', 'O', '`',  '\\' );
+    composeinitaccent( 'Ó',       'ó', 'O', '\'' );
+    composeinitaccent( 'Ô',       'ô', 'O', '^' );
+    composeinitaccent( 'Õ',       'õ', 'O', '~' );
+    composeinitaccent( 'Ö',       'ö', 'O', '"',  ':' );
+    composeinitaccent( 'Ø',       'ø', 'O', '/' );
+    composeinitaccent( 'Ù',       'ù', 'U', '`',  '\\' );
+    composeinitaccent( 'Ú',       'ú', 'U', '\'', '/' );
+    composeinitaccent( 'Û',       'û', 'U', '^' );
+    composeinitaccent( 'Ü',       'ü', 'U', '"',  ':' );
+    composeinitaccent( 'Ç',       'ç', 'C', ',' );
+    composeinitaccent( 'Ñ',       'ñ', 'N', '~' );
+    composeinitaccent( "\x{178}", 'ÿ', 'Y', '"',  ':' );
+    composeinitaccent( 'Ý',       'ý', 'Y', '\'', '/' );
+    composeinitaccent( "\x{A3}", "\x{A3}", 'L', '-' );         # pound
+    composeinitaccent( "\x{A2}", "\x{A2}", 'C', '/', '|' );    # cent
+    composeinitchars( "\x{BD}",   '1/2' );                     # 1/2
+    composeinitchars( "\x{2153}", '1/3' );                     # 1/3
+    composeinitchars( "\x{2154}", '2/3' );                     # 1/3
+    composeinitchars( "\x{BC}",   '1/4' );                     # 1/4
+    composeinitchars( "\x{BE}",   '3/4' );                     # 3/4
+    composeinitchars( "\x{2155}", '1/5' );                     # 1/5
+    composeinitchars( "\x{2156}", '2/5' );                     # 2/5
+    composeinitchars( "\x{2157}", '3/5' );                     # 3/5
+    composeinitchars( "\x{2158}", '4/5' );                     # 4/5
+    composeinitchars( "\x{2159}", '1/6' );                     # 1/6
+    composeinitchars( "\x{215A}", '5/6' );                     # 5/6
+    composeinitchars( "\x{2150}", '1/7' );                     # 1/7
+    composeinitchars( "\x{215B}", '1/8' );                     # 1/8
+    composeinitchars( "\x{215C}", '3/8' );                     # 3/8
+    composeinitchars( "\x{215D}", '5/8' );                     # 5/8
+    composeinitchars( "\x{215E}", '7/8' );                     # 7/8
+    composeinitchars( "\x{2151}", '1/9' );                     # 1/9
+    composeinitsyms( "\x{A1}",   '!',  '!' );                  # inverted !
+    composeinitsyms( "\x{BF}",   '?',  '?' );                  # inverted ?
+    composeinitsyms( "\x{AB}",   '<',  '<' );                  # left angle quotes
+    composeinitsyms( "\x{BB}",   '>',  '>' );                  # right angle quotes
+    composeinitsyms( "\x{2018}", '\'', '<', '\'', '6' );       # left single quote
+    composeinitsyms( "\x{2019}", '\'', '>', '\'', '9' );       # right single quote
+    composeinitsyms( "\x{201C}", '"',  '<', '"', '6' );        # left double quote
+    composeinitsyms( "\x{201D}", '"',  '>', '"', '9' );        # right double quote
+    composeinitsyms( "\x{201A}", '\'', ',' );                  # low single quote
+    composeinitsyms( "\x{201B}", '\'', '^' );                  # high reversed single quote
+    composeinitsyms( "\x{201E}", '"',  ',' );                  # low double quote
+    composeinitsyms( "\x{201F}", '"',  '^' );                  # high reversed double quote
+    composeinitsyms( "\x{B1}",   '+',  '-' );                  # plus/minus
+    composeinitsyms( "\x{B7}",   '.',  '^', '*', '.' );        # middle dot
+    composeinitsyms( "\x{D7}",   'x',  'x', '*', 'x' );        # multiplication
+    composeinitsyms( "\x{F7}",   ':',  '-' );                  # division
+    composeinitsyms( "\x{B0}",   'o',  'o', '*', 'o' );        # degree
+    composeinitsyms( "\x{2032}", '*',  '\'', '1', '\'' );      # single prime
+    composeinitsyms( "\x{2033}", '*',  '"', '2', '\'' );       # double prime
+    composeinitsyms( "\x{2034}", '3',  '\'' );                 # triple prime
+    composeinitsyms( "\x{2030}", '%',  '0', '%', 'o' );        # per mille
+    composeinitsyms( "\x{B9}",   '^',  '1' );                  # superscript 1
+    composeinitsyms( "\x{B2}",   '^',  '2' );                  # superscript 2
+    composeinitsyms( "\x{B3}",   '^',  '3' );                  # superscript 3
+    composeinitsyms( "\x{A0}",   ' ',  ' ', '*', ' ' );        # non-breaking space
+    composeinitsyms( "\x{2014}", '-',  '-' );                  # emdash
+    composeinitsyms( "\x{2013}", '-',  ' ' );                  # endash
+    composeinitsyms( "\x{2042}", '*',  '*' );                  # asterism
+    composeinitsyms( "\x{BA}",   'o',  '_' );                  # masculine ordinal
+    composeinitsyms( "\x{AA}",   'a',  '_' );                  # feminine ordinal
+    composeinitsyms( "\x{2016}", '|',  '|' );                  # double vertical line
+    composeinitcase( 'Æ',        'æ',        'AE' );                 # ae ligature
+    composeinitcase( "\x{152}",  "\x{153}",  'OE' );                 # oe ligature
+    composeinitcase( "\x{1E9E}", 'ß',        'SS' );                 # eszett
+    composeinitcase( 'Ð',        'ð',        'DH', 'ETH' );          # eth
+    composeinitcase( 'þ',        'Þ',        'TH' );                 # thorn
+    composeinitcase( "\x{A9}",   "\x{A9}",   'CO', '(C)' );          # copyright
+    composeinitcase( "\x{2020}", "\x{2020}", 'DAG' );                # dagger
+    composeinitcase( "\x{2021}", "\x{2021}", 'DDAG' );               # double dagger
+    composeinitcase( "\x{A7}",   "\x{A7}",   'SEC', 'S*', '*S' );    # section
+    composeinitcase( "\x{B6}",   "\x{B6}",   'PIL', 'P*', '*P' );    # pilcrow
+}
+
+#
+# Add compose sequences for accented characters
+# First argument is uppercase character to create
+# Second argument is lowercase character to create
+# Third is upper case base character
+# Fourth and subsequent are keystrokes for accent
+# E.g. given A with grave accent, a with grave accent, A, backquote and backslash, it will create
+# `A, `a, A`, `a, \A, \a, A\, a\ to create the upper & lower case accented characters
+sub composeinitaccent {
+    my $uchr  = shift;
+    my $lchr  = shift;
+    my $ubase = shift;
+    my $lbase = lc $ubase;
+
+    while ( my $accent = shift ) {
+        $::composehash{ $accent . $ubase } = $uchr;
+        $::composehash{ $accent . $lbase } = $lchr;
+        $::composehash{ $ubase . $accent } = $uchr;
+        $::composehash{ $lbase . $accent } = $lchr;
+    }
+}
+
+#
+# Add upper & lower case compose sequences for characters made of 2 or more characters
+# First argument is uppercase character to create
+# Second argument is lowercase character to create
+# Third and subsequent are upper case base character strings
+# E.g. given upper & lower case eth, 'DH' and 'ETH', it will create
+# 'DH' and 'ETH' to give upper case eth, and 'dh' and 'eth' to give lower case eth
+sub composeinitcase {
+    my $uchr = shift;
+    my $lchr = shift;
+
+    while ( my $ubase = shift ) {
+        my $lbase = lc $ubase;
+        $::composehash{$ubase} = $uchr;
+        $::composehash{$lbase} = $lchr;
+    }
+}
+
+#
+# Add compose sequences for characters made of 2 or more characters
+# First argument is uppercase character to create
+# Second and subsequent are compose character strings
+# E.g. given one-half and '1/2', it will create
+# '1/2' to generate the half character
+sub composeinitchars {
+    my $char = shift;
+
+    while ( my $base = shift ) {
+        $::composehash{$base} = $char;
+    }
+}
+
+#
+# Add compose sequences for characters made of 2 or more symbols
+# First argument is character to create
+# Second and subsequent pairs of arguments are keystrokes in either order
+# E.g. given left double quotes, '"', '<', '"', '6', it will create
+# '"<', '<"', '"6' and '6"' to give left double quotes
+sub composeinitsyms {
+    my $char = shift;
+
+    while ( my $sym1 = shift ) {
+        my $sym2 = shift;
+        $::composehash{ $sym1 . $sym2 } = $char;
+        $::composehash{ $sym2 . $sym1 } = $char;
+    }
+}
+
+#
+# Display list of compose sequences
+sub composeref {
+    my $top = $::top;
+    if ( defined( $::lglobal{composerefpop} ) ) {
+        $::lglobal{composerefpop}->deiconify;
+        $::lglobal{composerefpop}->raise;
+        $::lglobal{composerefpop}->focus;
+    } else {
+        $::lglobal{composerefpop} = $top->Toplevel;
+        $::lglobal{composerefpop}->title('Compose Sequences');
+        my $comtext = $::lglobal{composerefpop}->Scrolled(
+            'ROText',
+            -scrollbars => 'se',
+            -background => $::bkgcolor,
+            -font       => 'proofing',
+        )->pack( -anchor => 'n', -expand => 'y', -fill => 'both' );
+        my $button_ok = $::lglobal{composerefpop}->Button(
+            -activebackground => $::activecolor,
+            -text             => 'Close',
+            -command          => sub { ::killpopup('composerefpop'); }
+        )->pack;
+        ::initialize_popup_with_deletebinding('composerefpop');
+        ::drag($comtext);
+        for my $key ( sort composesort keys %::composehash ) {
+            $comtext->insert( 'end', $::composehash{$key} . " <= " . $key . "\n" );
+        }
+    }
+}
+
+# Sort the compose sequences first by character, then by sequence
+sub composesort {
+    $::composehash{$a} cmp $::composehash{$b} or $a cmp $b;
 }
 1;

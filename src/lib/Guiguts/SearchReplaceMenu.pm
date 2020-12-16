@@ -1386,6 +1386,10 @@ sub searchpopup {
                 countmatches( $::lglobal{searchentry}->get );
             }
         );
+
+        # Compose
+        searchbind( "<$::composepopbinding>", sub { ::composepopup(); } );
+
         $::lglobal{searchentry}->{_MENU_}  = ();
         $::lglobal{replaceentry}->{_MENU_} = ();
         $::lglobal{searchentry}->bind(

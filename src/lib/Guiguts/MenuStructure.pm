@@ -1020,6 +1020,7 @@ sub menu_help {
         ],
         [ 'command',   '~Keyboard Shortcuts',    -command => \&::hotkeyshelp ],
         [ 'command',   '~Regex Quick Reference', -command => \&::regexref ],
+        [ 'command',   '~Compose Sequences',     -command => \&::composeref ],
         [ 'separator', '' ],
         [
             'command',

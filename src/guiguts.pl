@@ -113,7 +113,9 @@ our $blocklmargin     = 1;
 our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
-our $booklang            = 'en';
+our $booklang          = 'en';
+our $composepopbinding = 'Alt_R';    # Default key to pop the Compose dialog
+our %composehash;                    # Keystrokes to insert character
 our $cssvalidationlevel  = 'css3';          # CSS level checked by validator (css3 or css21)
 our $defaultindent       = 2;
 our $epubpercentoverride = 1;               # True = override % img widths to 100% for epubs
