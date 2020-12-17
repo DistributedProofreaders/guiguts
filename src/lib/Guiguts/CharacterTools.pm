@@ -44,16 +44,19 @@ sub commoncharspopup {
         my $frame       = $::lglobal{comchars}->Frame( -background => $::bkgcolor )->pack;
         my @commonchars = (
             [ 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', ],
-            [    # Capital Y with diaresis isn't in allowed range for Perl source code
-                'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ñ',       'ß',
+            [    # OE ligature and capital Y with diaresis not in allowed range for Perl source code
+                'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', "\x{152}", 'Ñ',
                 'Ù', 'Ú', 'Û', 'Ü', 'Ğ', 'ş', "\x{178}", 'İ',
             ],
             [ 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', ],
-            [ 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ñ', '',  'ù', 'ú', 'û', 'ü', 'ğ', 'Ş', 'ÿ', 'ı', ],
-            [    # Invert ! ?, angle quotes, curly single/double, low/high single/double, pointers
+            [    # oe ligature also not in allowed range
+                'ò', 'ó', 'ô', 'õ', 'ö', 'ø', "\x{153}", 'ñ',
+                'ù', 'ú', 'û', 'ü', 'ğ', 'Ş', 'ÿ',       'ı',
+            ],
+            [    # Invert ! ?, angle quotes, curly single/double, low/high single/double, ß, asterism, pointers
                 "\x{A1}",   "\x{BF}",   "\x{AB}",   "\x{BB}",   "\x{2018}", "\x{2019}",
                 "\x{201C}", "\x{201D}", "\x{201A}", "\x{201B}", "\x{201E}", "\x{201F}",
-                "\x{261E}", "\x{261B}", "\x{261C}", "\x{261A}",
+                'ß',        "\x{2042}", "\x{261E}", "\x{261C}",
             ],
             [    # +-, mid-dot, mult & div, deg, 1,2,3 prime, per mille, super 1,2,3, pound, cent, (C), nbsp
                 "\x{B1}",   "\x{B7}",   "\x{D7}",   "\x{F7}", "\x{B0}", "\x{2032}",
@@ -61,15 +64,16 @@ sub commoncharspopup {
                 "\x{A3}",   "\x{A2}",   "\x{A9}",   "\x{A0}",
             ],
             [    # fractions, ordered by denominator then numerator
-                "\x{BD}",   "\x{2153}", "\x{BC}",   "\x{BE}",   "\x{2155}", "\x{2156}",
-                "\x{2157}", "\x{2158}", "\x{2159}", "\x{215A}", "\x{2150}", "\x{215B}",
-                "\x{215C}", "\x{215D}", "\x{215E}", "\x{2151}",
+                "\x{BD}",   "\x{2153}", "\x{2154}", "\x{BC}",   "\x{BE}",   "\x{2155}",
+                "\x{2156}", "\x{2157}", "\x{2158}", "\x{2159}", "\x{215A}", "\x{2150}",
+                "\x{215B}", "\x{215C}", "\x{215D}", "\x{215E}",
             ],
-            [    # emdash, endash, footnote markers, asterism, o&a ordinals, 5 x user-defined buttons
+            [    # emdash, endash, footnote markers, o&a ordinals, 6 x user-defined buttons
                 "\x{2014}", "\x{2013}", "\x{2020}", "\x{2021}", "\x{A7}", "\x{2016}",
-                "\x{B6}",   "\x{A6}",   "\x{2042}", "\x{BA}",   "\x{AA}", " ",
+                "\x{B6}",   "\x{A6}",   "\x{BA}",   "\x{AA}",   " ",      " ",
                 " ",        " ",        " ",        " ",
             ],
+            [ " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", ],
         );
 
         my $ucidx = 0;    # Index into user-defined characters
@@ -143,33 +147,33 @@ sub usercharconfig {
     ::dialogboxcommonsetup(
         'comcharsconfigpop',
         \$::lglobal{comcharconfigval},
-        'Enter character, decimal or hex ordinal: '
+        'Enter character, hex or #decimal ordinal: '
     );
 
     # Replace empty string with space character
     my $text = $::lglobal{comcharconfigval} ? $::lglobal{comcharconfigval} : ' ';
 
-    # If more than one character, interpret as decimal ordinal, hex ordinal or just take first char
+    # If more than one character, interpret as #decimal ordinal, hex ordinal or just take first char
     if ( length($text) > 1 ) {
-        if ( $text =~ /^\d+$/ ) {    # decimal integer
+        if ( $text =~ s/^#(\d+)$/$1/ ) {    # decimal ordinal preceded by hash
             $text = chr($text);
-        } elsif ( $text =~ s/(([\\0]?[x])|U\+)?([0-9a-f]+)/$3/i ) {    # hex (with x, \x, 0x, U+ or no prefix)
+        } elsif ( $text =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]+)$/$3/i ) {    # hex (with x, \x, 0x, U+ or no prefix)
             $text = chr( hex($text) );
         } else {
-            $text = substr( $text, 0, 1 );                             # Just take first character of string
+            $text = substr( $text, 0, 1 );                               # Just take first character of string
         }
     }
 
     my $ord = ord($text);
-    $::userchars[$idx] = $text;                                        # Save user's new definition
-    $w->configure( -text => $text );                                   # Update the label on the button
-    $w->configure(                                                     # Button needs to insert the new character
+    $::userchars[$idx] = $text;                                          # Save user's new definition
+    $w->configure( -text => $text );                                     # Update the label on the button
+    $w->configure(                                                       # Button needs to insert the new character
         -command => sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); }
     );
-    charbind3( $w, $text );                                            # Right-click button copies text to clipboard
-    charbuttonballoon( $w, $blln, $ord );                              # Balloon message if user hovers over button
+    charbind3( $w, $text );                                              # Right-click button copies text to clipboard
+    charbuttonballoon( $w, $blln, $ord );                                # Balloon message if user hovers over button
 
-    ::savesettings();                                                  # Ensure new button definition saved to setting file
+    ::savesettings();                                                    # Ensure new button definition saved to setting file
 
     # stop class callback being called - possible due to binding reordering during button creation above
     $w->break;
