@@ -797,6 +797,9 @@ sub readsettings {
         }
     }
 
+    # Greek dialog previously had position but now needs geometry
+    delete $::positionhash{grpop} if $::positionhash{grpop};
+
     # If someone just upgraded, reset the update counter
     unless ( $::lastversionrun eq $::VERSION ) {
         $::lastversioncheck = time();
