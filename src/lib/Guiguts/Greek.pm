@@ -410,7 +410,6 @@ sub greekpopup {
         -background => $::bkgcolor,
         -font       => 'unicode',
         -wrap       => 'none',
-        -setgrid    => 'true',
         -scrollbars => 'se',
     )->pack(
         -expand => 'yes',
