@@ -516,7 +516,7 @@ sub menu_txt {
         [
             'command',
             'Indent Selection ~1',
-            -accelerator => 'Ctrl+m',
+            -accelerator => "Alt\x{2192},Ctrl+m",
             -command     => sub {
                 ::indent( $textwindow, 'in' );
             }
@@ -534,7 +534,7 @@ sub menu_txt {
         [
             'command',
             'In~dent Selection -1',
-            -accelerator => 'Ctrl+Shift+m',
+            -accelerator => "Alt\x{2190},Ctrl+Shift+m",
             -command     => sub {
                 ::indent( $textwindow, 'out' );
             }
