@@ -237,9 +237,6 @@ sub keybindings {
     # Help
     keybind( '<Control-Alt-r>', sub { ::regexref(); } );
 
-    # Compose
-    keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
-
     # Mouse
     keybind( '<Shift-B1-Motion>', sub { $textwindow->shiftB1_Motion(@_); } );
     keybind( '<ButtonRelease-2>', sub { ::popscroll() unless $Tk::mouseMoved } );
@@ -285,6 +282,9 @@ sub keybindings {
     keybind( '<Control-KeyPress-4>',           sub { ::gotobookmark('4'); } );
     keybind( '<Control-KeyPress-5>',           sub { ::gotobookmark('5'); } );
 
+    # Compose - define last since user could set the compose key to one of the above that they never use
+    keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
+
     # Override Paste binding, so that Entry widgets delete any selected text
     # in the field, just like happens in the main textwindow
     # Note that for this to work, a dummy Entry is created in initialize() routine previously,
@@ -325,6 +325,7 @@ sub keybind {
     my $subr       = shift;           # Subroutine to bind to key/event
     my $event      = shift;           # Optional event argument
 
+    $lkey =~ s/-([A-Z])>/-\l$1>/;     # Ensure key letter is lowercase
     my $ukey = $lkey;
     $ukey =~ s/-([a-z])>/-\u$1>/;     # Create uppercase version
 
