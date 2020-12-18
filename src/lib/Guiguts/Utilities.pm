@@ -1675,7 +1675,14 @@ sub paste {
         $textwindow->delete( 'insert', 'insert +' . ($length) . 'c' );
         $textwindow->insert( 'insert', $text );
     } else {
-        $textwindow->clipboardPaste;
+
+        # $textwindow->clipboardPaste;
+        # In Text.pm, routine clipboardPaste fails to handle all unicode strings correctly,
+        # sometimes pasting them as garbage Latin-1 characters. clipboardPaste essentially
+        # consists of the line below, but with Tk::catch instead of eval (which is necessary
+        # to avoid error if nothing in clipboard), so something about Tk::catch or the
+        # local environment in that routine must be causing the issue.
+        eval { $textwindow->Insert( $textwindow->clipboardGet ); };
     }
 }
 
