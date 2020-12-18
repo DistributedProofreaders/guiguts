@@ -227,6 +227,11 @@ sub ReplaceSelectionsWith {
         $first = $w->index( 'mark_sel_' . $i );
         $last  = $w->index( 'mark_sel_' . ( $i + 1 ) );
 
+        # If whole file is selected, $last ends up at the start of the line after
+        # the last actual line, which results in part of the inserted string being deleted.
+        # Bug is in the original TextUndo version too
+        $last = $w->index( $last . ' -1c' ) if $w->compare( $last, '==', 'end' );
+
         # First pass through page markers to store length of old string
         # from start to each page marker in @lengths.
         # In reverse order to avoid a replace affecting positions for the next
