@@ -2031,12 +2031,13 @@ sub sidenotes {
         $textwindow->markSet( 'sidenote', $bracketendndx );
         $paragraphp =
           $textwindow->search( '-backwards', '-regexp', '--', '^$', $bracketstartndx, '1.0' );
+        $paragraphp = $bracketstartndx if not $paragraphp;
         $paragraphn = $textwindow->search( '-regexp', '--', '^$', $bracketstartndx, 'end' );
         $sidenote   = $textwindow->get( $bracketstartndx, $bracketendndx );
         if ( $textwindow->get( "$bracketstartndx-2c", $bracketstartndx ) ne "\n\n" ) {
             if (   ( $textwindow->get( $bracketendndx, "$bracketendndx+1c" ) eq ' ' )
                 || ( $textwindow->get( $bracketendndx, "$bracketendndx+1c" ) eq "\n" ) ) {
-                $textwindow->delete( $bracketendndx, "" );
+                $textwindow->delete( $bracketendndx, "$bracketendndx+1c" );
             }
             $textwindow->delete( $bracketstartndx, $bracketendndx );
             $textwindow->see($bracketstartndx);
