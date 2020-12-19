@@ -9,12 +9,13 @@ BEGIN {
     @EXPORT = qw(&errorcheckpop_up);
 }
 
+my @errorchecklines;
+
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
 # pphtml, pptxt and Load External Checkfile,
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
-    my ( %errors,     @errorchecklines );
     my ( $line,       $lincol );
     ::hidepagenums();
 
@@ -61,7 +62,7 @@ sub errorcheckpop_up {
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
         $ptopframe->Button(
             -activebackground => $::activecolor,
-            -command          => sub { gcviewopts( \@errorchecklines ) },
+            -command          => sub { gcviewopts(); },
             -text             => 'View Options',
             -width            => 16
         )->pack(
@@ -142,7 +143,6 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->update;
 
     # End presentation; begin logic
-    %errors          = ();
     @errorchecklines = ();
     my $mark  = 0;
     my @marks = $textwindow->markNames;
@@ -371,7 +371,7 @@ sub errorcheckpop_up {
 
     ::working();
     if ( $errorchecktype eq 'Bookloupe' ) {
-        gcwindowpopulate( \@errorchecklines );
+        gcwindowpopulate();
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
     }
@@ -748,12 +748,11 @@ sub errorcheckview {
 }
 
 sub gcwindowpopulate {
-    my $linesref = shift;
     return unless defined $::lglobal{errorcheckpop};
     my $headr = 0;
     my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
-    foreach my $line ( @{$linesref} ) {
+    foreach my $line ( @errorchecklines ) {
         next if $line =~ /^\s*$/;    # Skip blank lines
         next unless defined $::errors{$line};
 
@@ -786,7 +785,6 @@ sub gcwindowpopulate {
 }
 
 sub gcviewopts {
-    my $linesref = shift;
     my $top      = $::top;
     my @gsoptions;
     my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
@@ -807,7 +805,7 @@ sub gcviewopts {
             $::gsopt[$_]   = 0 unless defined $::gsopt[$_];
             $gsoptions[$_] = $pframe1->Checkbutton(
                 -variable    => \$::gsopt[$_],
-                -command     => sub { gcwindowpopulate($linesref) },
+                -command     => sub { gcwindowpopulate(); },
                 -selectcolor => $::lglobal{checkcolor},
                 -text        => $::lglobal{gcarray}->[$_],
             )->grid( -row => $gcrow, -column => $gccol, -sticky => 'nw' );
@@ -819,7 +817,7 @@ sub gcviewopts {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->select;
                 }
-                gcwindowpopulate($linesref);
+                gcwindowpopulate();
             },
             -text  => 'Hide All',
             -width => 14
@@ -835,7 +833,7 @@ sub gcviewopts {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->deselect;
                 }
-                gcwindowpopulate($linesref);
+                gcwindowpopulate();
             },
             -text  => 'See All',
             -width => 14
@@ -856,7 +854,7 @@ sub gcviewopts {
                             $gsoptions[$_]->deselect;
                         }
                     }
-                    gcwindowpopulate($linesref);
+                    gcwindowpopulate();
                 },
                 -text  => "Load View: '$::booklang'",
                 -width => 14
@@ -873,7 +871,7 @@ sub gcviewopts {
                     for ( 0 .. $#gsoptions ) {
                         $gsoptions[$_]->toggle;
                     }
-                    gcwindowpopulate($linesref);
+                    gcwindowpopulate();
                 },
                 -text  => 'Toggle View',
                 -width => 14
@@ -894,7 +892,7 @@ sub gcviewopts {
                         $gsoptions[$_]->deselect;
                     }
                 }
-                gcwindowpopulate($linesref);
+                gcwindowpopulate();
             },
             -text  => 'Load Defaults',
             -width => 14
