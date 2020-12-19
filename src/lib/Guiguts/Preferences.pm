@@ -354,7 +354,6 @@ sub textentryfontfieldsstate {
 sub setpngspath {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    my $pagenum    = shift;
 
     #print $pagenum.'';
     my $path = $textwindow->chooseDirectory(
@@ -366,7 +365,6 @@ sub setpngspath {
     $path       = ::os_normal($path);
     $::pngspath = $path;
     ::setedited(1);
-    ::openpng( $textwindow, $pagenum ) if defined $pagenum;
 }
 
 # Pop up a window where you can adjust the auto save interval

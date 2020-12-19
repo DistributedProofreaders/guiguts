@@ -23,7 +23,6 @@ BEGIN {
 
 sub get_image_file {
     my $pagenum = shift;
-    my $number;
     my $imagefile;
     unless ($::pngspath) {
         if ($::OS_WIN) {
@@ -31,7 +30,7 @@ sub get_image_file {
         } else {
             $::pngspath = "${main::globallastpath}pngs/";
         }
-        ::setpngspath($pagenum) unless ( -e "$::pngspath$pagenum.png" );
+        ::setpngspath() unless ( -e "$::pngspath$pagenum.png" );
     }
     if ($::pngspath) {
         $imagefile = "$::pngspath$pagenum.png";
@@ -60,7 +59,7 @@ sub openpng {
     if ( $imagefile && $::globalviewerpath ) {
         ::runner( $::globalviewerpath, $imagefile );
     } else {
-        ::setpngspath($pagenum);
+        ::setpngspath();
     }
     return;
 }
