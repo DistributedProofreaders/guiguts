@@ -16,7 +16,7 @@ my @errorchecklines;
 # pphtml, pptxt and Load External Checkfile,
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
-    my ( $line,       $lincol );
+    my ( $line, $lincol );
     ::hidepagenums();
 
     # Destroy and start afresh if already popped
@@ -752,7 +752,7 @@ sub gcwindowpopulate {
     my $headr = 0;
     my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
-    foreach my $line ( @errorchecklines ) {
+    foreach my $line (@errorchecklines) {
         next if $line =~ /^\s*$/;    # Skip blank lines
         next unless defined $::errors{$line};
 
@@ -785,7 +785,7 @@ sub gcwindowpopulate {
 }
 
 sub gcviewopts {
-    my $top      = $::top;
+    my $top = $::top;
     my @gsoptions;
     my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
     if ( defined( $::lglobal{gcviewoptspop} ) ) {
