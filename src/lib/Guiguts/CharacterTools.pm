@@ -17,17 +17,17 @@ BEGIN {
 # more buttons are defined, preferably keeping at least as many user-defined buttons
 sub commoncharspopup {
     my $top = $::top;
-    if ( defined( $::lglobal{comchars} ) ) {
-        $::lglobal{comchars}->deiconify;
-        $::lglobal{comchars}->raise;
-        $::lglobal{comchars}->focus;
+    if ( defined( $::lglobal{comcharspop} ) ) {
+        $::lglobal{comcharspop}->deiconify;
+        $::lglobal{comcharspop}->raise;
+        $::lglobal{comcharspop}->focus;
     } else {
         my @lbuttons;
-        $::lglobal{comchars} = $top->Toplevel;
-        $::lglobal{comchars}->title('Commonly Used Characters');
-        ::initialize_popup_with_deletebinding('comchars');
-        my $blln      = $::lglobal{comchars}->Balloon( -initwait => 750 );
-        my $tframe    = $::lglobal{comchars}->Frame->pack;
+        $::lglobal{comcharspop} = $top->Toplevel;
+        $::lglobal{comcharspop}->title('Commonly Used Characters');
+        ::initialize_popup_with_deletebinding('comcharspop');
+        my $blln      = $::lglobal{comcharspop}->Balloon( -initwait => 750 );
+        my $tframe    = $::lglobal{comcharspop}->Frame->pack;
         my $charradio = $tframe->Radiobutton(
             -variable    => \$::lglobal{comcharoutp},
             -selectcolor => $::lglobal{checkcolor},
@@ -41,7 +41,7 @@ sub commoncharspopup {
             -text        => 'HTML Entity',
         )->grid( -row => 1, -column => 2 );
         $charradio->select;
-        my $frame       = $::lglobal{comchars}->Frame( -background => $::bkgcolor )->pack;
+        my $frame       = $::lglobal{comcharspop}->Frame( -background => $::bkgcolor )->pack;
         my @commonchars = (
             [ 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', ],
             [    # OE ligature and capital Y with diaresis not in allowed range for Perl source code
@@ -122,9 +122,9 @@ sub commoncharspopup {
                 charbuttonballoon( $w, $blln, $ord );    # Balloon message if user hovers over button
             }
         }
-        $::lglobal{comchars}->resizable( 'no', 'no' );
-        $::lglobal{comchars}->raise;
-        $::lglobal{comchars}->focus;
+        $::lglobal{comcharspop}->resizable( 'no', 'no' );
+        $::lglobal{comcharspop}->raise;
+        $::lglobal{comcharspop}->focus;
     }
 }
 
