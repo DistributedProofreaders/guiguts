@@ -375,6 +375,9 @@ sub errorcheckpop_up {
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
     }
+    $::lglobal{errorchecklistbox}->insert( 2, "  --> $mark queries" )
+      if $errorchecktype eq 'Jeebies';
+
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
     $::lglobal{errorcheckpop}->raise;
