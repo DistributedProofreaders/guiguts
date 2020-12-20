@@ -2583,9 +2583,9 @@ sub markupconfiglabel {
 
     my $label = $w->cget( -text );
     if ( $::htmlentryattribhash{$typ} ) {
-        $label =~ s/$/+/;
+        $label =~ s/\+*$/+/;    # Ensure button ends in just one plus sign
     } else {
-        $label =~ s/\+$//;
+        $label =~ s/\+*$//;     # Remove any plus signs
     }
     $w->configure( -text => $label );
 }
