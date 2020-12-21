@@ -17,7 +17,7 @@ BEGIN {
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
-      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell);
+      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy);
 
 }
 
@@ -2654,6 +2654,19 @@ sub dialogboxcommonsetup {
     $::lglobal{$dlg}->Subwidget('entry')->selectionRange( $len, 'end' );
     $::lglobal{$dlg}->Subwidget('entry')->icursor($len);    # place cursor at end of default text
     $::lglobal{$dlg}->Wait;
+}
+
+#
+# Set cursor to "busy" so user knows something is happening
+# Also ignore key and button presses
+sub busy {
+    $::top->Busy( -recurse => 1 );    # Top level widget and all descendants are "busy"
+}
+
+#
+# Restore cursor and make key/button press bindings active again
+sub unbusy {
+    $::top->Unbusy;
 }
 
 1;

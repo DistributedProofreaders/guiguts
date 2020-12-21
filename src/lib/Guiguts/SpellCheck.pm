@@ -72,9 +72,6 @@ sub spellloadprojectdict {
             $::projectdict{$line} = '';
         }
     }
-
-    #	do "$::lglobal{projectdictname}"
-    #	  if $::lglobal{projectdictname};
 }
 
 sub spellchecknext {
@@ -213,15 +210,12 @@ sub spellreplace {
 # replace all instances of a word with another, pretty straightforward
 sub spellreplaceall {
     my $textwindow = $::textwindow;
-    my $top        = $::top;
-    $top->Busy;
     ::hidepagenums();
     my $lastindex   = '1.0';
     my $misspelled  = $::lglobal{misspelledentry}->get;
     my $replacement = $::lglobal{spreplaceentry}->get;
     my $repmatchindex;
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', $misspelled, $replacement );
-    $top->Unbusy;
     spellignoreall();
 }
 
@@ -265,17 +259,7 @@ sub spellmyaddword {
     $section .= ");";
     utf8::encode($section);
     print $dic $section;
-
-    #	open( my $dic, ">", "$::lglobal{projectdictname}" );
-    #	print $dic "\%::projectdict = (\n";
-    #	for my $term ( sort { $a cmp $b } keys %::projectdict ) {
-    #		$term =~ s/'/\\'/g;
-    #		print $dic "'$term' => '',\n";
-    #	}
-    #	print $dic ");";
     close $dic;
-
-    #print "$::lglobal{projectdictname}";
 }
 
 sub spellclearvars {
@@ -325,16 +309,14 @@ sub aspellstop {
 }
 
 sub spellguesses {         #feed aspell a word to get a list of guess
-    my $word       = shift;           # word to get guesses for
-    my $textwindow = $::textwindow;
-    $textwindow->Busy;                # let the user know something is happening
-    @{ $::lglobal{guesslist} } = ();  # clear the guesslist
+    my $word = shift;      # word to get guesses for
+    @{ $::lglobal{guesslist} } = ();    # clear the guesslist
     utf8::encode($word);
-    print OUT $word, "\n";            # send the word to the stdout file handle
-    my $list = <IN>;                  # and read the results
-    $list =~ s/.*\: //;               # remove incidental stuff (word, index, number of guesses)
-    $list =~ s/\#.*0/\*none\*/;       # oops, no guesses, put a notice in.
-    chomp $list;                      # remove newline
+    print OUT $word, "\n";              # send the word to the stdout file handle
+    my $list = <IN>;                    # and read the results
+    $list =~ s/.*\: //;                 # remove incidental stuff (word, index, number of guesses)
+    $list =~ s/\#.*0/\*none\*/;         # oops, no guesses, put a notice in.
+    chomp $list;                        # remove newline
     chop $list
       if substr( $list, length($list) - 1, 1 ) eq "\r";    # if chomp didn't take care of both \r and \n in Windows...
     @{ $::lglobal{guesslist} } =
@@ -342,7 +324,6 @@ sub spellguesses {         #feed aspell a word to get a list of guess
     map ( utf8::decode($_), @{ $::lglobal{guesslist} } )
       if ( ::get_spellchecker_version() =~ m/^0.6/ );
     do { $list = <IN> } while ( $list ne "\n" && $list ne "\r\n" );    # throw away extra lines until newline (especially for non-ascii)
-    $textwindow->Unbusy;                                               # done processing
 }
 
 # load the guesses into the guess list box
@@ -372,10 +353,8 @@ sub spellcheckrange {
 
 sub spellget_misspellings {    # get list of misspelled words
     my $textwindow = $::textwindow;
-    my $top        = $::top;
     spellcheckrange();         # get chunk of text to process
     return if ( $::lglobal{spellindexstart} eq $::lglobal{spellindexend} );
-    $top->Busy( -recurse => 1 );    # let user know something is going on
     my $section = $textwindow->get( $::lglobal{spellindexstart}, $::lglobal{spellindexend} );    # get selection
     $section =~ s/^-----File:.*//g;
     getmisspelledwords($section);
@@ -391,7 +370,6 @@ sub spellget_misspellings {    # get list of misspelled words
               . ( $::globalspelldictopt || 'No dictionary!' )
               . ' | No Misspelled Words Found.' );
     }
-    $top->Unbusy( -recurse => 0 );    # done processing
     unlink 'checkfil.txt';
 }
 
@@ -562,9 +540,13 @@ sub spellchecker {    # Set up spell check window
 
         my $changebutton = $spf2->Button(
             -activebackground => $::activecolor,
-            -command          => sub { spellreplace() },
-            -text             => 'Change',
-            -width            => 14,
+            -command          => sub {
+                ::busy();
+                spellreplace();
+                ::unbusy();
+            },
+            -text  => 'Change',
+            -width => 14,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -574,8 +556,10 @@ sub spellchecker {    # Set up spell check window
         my $ignorebutton = $spf2->Button(
             -activebackground => $::activecolor,
             -command          => sub {
+                ::busy();
                 shift @{ $::lglobal{misspelledlist} };
                 spellchecknext();
+                ::unbusy();
             },
             -text  => 'Skip <Ctrl+s>',
             -width => 14,
@@ -588,9 +572,11 @@ sub spellchecker {    # Set up spell check window
         my $dictmyaddbutton = $spf2->Button(
             -activebackground => $::activecolor,
             -command          => sub {
+                ::busy();
                 spellmyaddword( $::lglobal{misspelledentry}->get );
                 spellignoreall();
                 spellchecknext();
+                ::unbusy();
             },
             -text  => 'Add To Project Dic. <Ctrl+p>',
             -width => 22,
@@ -602,9 +588,14 @@ sub spellchecker {    # Set up spell check window
         );
         my $replaceallbutton = $spf3->Button(
             -activebackground => $::activecolor,
-            -command          => sub { spellreplaceall(); spellchecknext() },
-            -text             => 'Change All',
-            -width            => 14,
+            -command          => sub {
+                ::busy();
+                spellreplaceall();
+                spellchecknext();
+                ::unbusy();
+            },
+            -text  => 'Change All',
+            -width => 14,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -613,9 +604,14 @@ sub spellchecker {    # Set up spell check window
         );
         my $ignoreallbutton = $spf3->Button(
             -activebackground => $::activecolor,
-            -command          => sub { spellignoreall(); spellchecknext() },
-            -text             => 'Skip All <Ctrl+i>',
-            -width            => 14,
+            -command          => sub {
+                ::busy();
+                spellignoreall();
+                spellchecknext();
+                ::unbusy();
+            },
+            -text  => 'Skip All <Ctrl+i>',
+            -width => 14,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -625,9 +621,11 @@ sub spellchecker {    # Set up spell check window
         my $dictaddbutton = $spf3->Button(
             -activebackground => $::activecolor,
             -command          => sub {
+                ::busy();
                 spelladdword();
                 spellignoreall();
                 spellchecknext();
+                ::unbusy();
             },
             -text  => 'Add To Aspell Dic. <Ctrl+a>',
             -width => 22,
@@ -708,50 +706,14 @@ sub spellchecker {    # Set up spell check window
 
         ::initialize_popup_without_deletebinding('spellpopup');
         $::lglobal{spellpopup}->protocol( 'WM_DELETE_WINDOW' => \&endaspell );
-        $::lglobal{spellpopup}->bind(
-            '<Control-a>',
-            sub {
-                $::lglobal{spellpopup}->focus;
-                spelladdword();
-                spellignoreall();
-                spellchecknext();
-            }
-        );
-        $::lglobal{spellpopup}->bind(
-            '<Control-p>',
-            sub {
-                $::lglobal{spellpopup}->focus;
-                spellmyaddword( $::lglobal{misspelledentry}->get );
-                spellignoreall();
-                spellchecknext();
-            }
-        );
-        $::lglobal{spellpopup}->bind(
-            '<Control-s>',
-            sub {
-                $::lglobal{spellpopup}->focus;
-                shift @{ $::lglobal{misspelledlist} };
-                spellchecknext();
-            }
-        );
-        $::lglobal{spellpopup}->bind(
-            '<Control-i>',
-            sub {
-                $::lglobal{spellpopup}->focus;
-                spellignoreall();
-                spellchecknext();
-            }
-        );
-        $::lglobal{spellpopup}->bind(
-            '<Return>',
-            sub {
-                $::lglobal{spellpopup}->focus;
-                spellreplace();
-            }
-        );
+        $::lglobal{spellpopup}->bind( '<Control-a>', sub { $dictaddbutton->invoke; } );
+        $::lglobal{spellpopup}->bind( '<Control-p>', sub { $dictmyaddbutton->invoke; } );
+        $::lglobal{spellpopup}->bind( '<Control-s>', sub { $ignorebutton->invoke; } );
+        $::lglobal{spellpopup}->bind( '<Control-i>', sub { $ignoreallbutton->invoke; } );
+        $::lglobal{spellpopup}->bind( '<Return>',    sub { $changebutton->invoke; } );
         $::lglobal{replacementlist}->bind( '<Double-Button-1>', \&spellmisspelled_replace );
-        $::lglobal{replacementlist}
-          ->bind( '<Triple-Button-1>', sub { spellmisspelled_replace(); spellreplace() } );
+        $::lglobal{replacementlist}->bind( '<Triple-Button-1>',
+            sub { ::busy(); spellmisspelled_replace(); spellreplace(); ::unbusy(); } );
         spelloptions()
           unless $::globalspellpath && -e $::globalspellpath;    # Check to see if we know where Aspell is
         spellcheckfirst();                                       # Start the spellcheck
@@ -875,6 +837,7 @@ sub spelloptions {
     $dictlist->bind(
         '<<dictsel>>',
         sub {
+            ::busy();
             my $selection = $dictlist->get('active');
             $spelldictxt->delete( '1.0', 'end' );
             $spelldictxt->insert( '1.0', $selection );
@@ -882,13 +845,12 @@ sub spelloptions {
             $::globalspelldictopt = $selection;
             ::savesettings();
             aspellstart();
-            $top->Busy( -recurse => 1 );
 
             if ( defined( $::lglobal{spellpopup} ) ) {
                 spellclearvars();
                 spellcheckfirst();
             }
-            $top->Unbusy( -recurse => 1 );
+            ::unbusy();
         }
     );
     my $spopframe = $spellop->Frame->pack;
