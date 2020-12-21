@@ -152,7 +152,6 @@ our $donotcenterpagemarkers = 0;
 our $nohighlights           = 0;
 our $notoolbar              = 0;
 our $intelligentWF          = 0;
-our $oldspellchecklayout    = 0;
 our $defaultpngspath        = ::os_normal('pngs/');
 our $pngspath               = q{};
 our $projectid              = q{};
