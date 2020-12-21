@@ -850,13 +850,6 @@ sub menu_preferences_appearance {
             -onvalue    => 1,
             -offvalue   => 0
         ],
-        [
-            Checkbutton => 'Use Old Spell Check Layout',
-            -variable   => \$::oldspellchecklayout,
-            -onvalue    => 1,
-            -offvalue   => 0,
-            -command    => \&::savesettings,
-        ],
     ];
 }
 
