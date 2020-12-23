@@ -472,7 +472,7 @@ sub spelladdgoodwords {
     }
     my $pwd = ::getcwd();
     chdir $::globallastpath;
-    open( DAT, "good_words.txt" ) || die("Could not open good_words.txt!");
+    open( DAT, "good_words.txt" ) or die "Could not open good_words.txt!";
 
     # Remove all newlines and/or carriage returns whatever the current OS
     my @raw_data = map { s/[\n\r]+$//g; $_ } <DAT>;

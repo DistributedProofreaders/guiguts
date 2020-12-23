@@ -419,7 +419,7 @@ sub errorcheckrun {    # Runs error checks
     $top->Busy( -recurse => 1 );
 
     my $unicode = ::currentfileisunicode();
-    return 1 unless savetoerrortmpfile($tmpfname);
+    savetoerrortmpfile($tmpfname);
     if ( $errorchecktype eq 'HTML Tidy' ) {
         if ($unicode) {
             ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
@@ -512,45 +512,31 @@ sub errorcheckrun {    # Runs error checks
 }
 
 # Save current file to a temporary file in order to run a check on it
-# Return true if saved successfully
 sub savetoerrortmpfile {
     my $tmpfname   = shift;
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
     my $unicode = ::currentfileisunicode();
-    if ( open my $td, '>', $tmpfname ) {
-        my $count   = 0;
-        my $index   = '1.0';
-        my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end     = $textwindow->index("$index  lineend +1c");
-            my $gettext = $textwindow->get( $index, $end );
-            utf8::encode($gettext) if ($unicode);
-            print $td $gettext;
-            $index = $end;
-        }
-        close $td;
-    } else {
-        warn "Could not open temp file for writing. $!";
-        my $dialog = $top->Dialog(
-            -text =>
-              "Could not write file $tmpfname. Check for write permission or space problems.",
-            -bitmap  => 'question',
-            -title   => "Temporary File Error",
-            -buttons => [qw/OK/],
-        );
-        $dialog->Show;
-        return 0;
+    open my $td, '>', $tmpfname or die "Could not open $tmpfname for writing. $!";
+    my $count   = 0;
+    my $index   = '1.0';
+    my ($lines) = $textwindow->index('end - 1c') =~ /^(\d+)\./;
+    while ( $textwindow->compare( $index, '<', 'end' ) ) {
+        my $end     = $textwindow->index("$index  lineend +1c");
+        my $gettext = $textwindow->get( $index, $end );
+        utf8::encode($gettext) if ($unicode);
+        print $td $gettext;
+        $index = $end;
     }
-    return 1;
+    close $td;
 }
 
 sub linkcheckrun {
     my ( $tempfname, $errname ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    open my $logfile, ">", $errname || die "output file error\n";
+    open my $logfile, ">", $errname or die "Error opening link check output file: $errname";
     my ( %anchor, %id, %link, %image, %badlink, $length, $upper );
     my ( $anchors, $ids, $ilinks, $elinks, $images, $count, $css ) = ( 0, 0, 0, 0, 0, 0, 0 );
     my @warning = ();
