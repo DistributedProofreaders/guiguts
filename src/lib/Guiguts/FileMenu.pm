@@ -999,7 +999,7 @@ sub file_export_pagemarkup {
     if ( defined($name) and length($name) ) {
         $name .= '.gut';
         my $bincontents = '';
-        open my $fh, '<', getbinname() or die "Could not read $name";
+        open my $fh, '<', getbinname() or die "Could not read " . getbinname();
         my $inpagenumbers   = 0;
         my $pastpagenumbers = 0;
         while ( my $line = <$fh> ) {
@@ -1008,7 +1008,7 @@ sub file_export_pagemarkup {
         close $fh;
 
         # write the file with page markup
-        open my $fh2, '>', "$name" or die "Could not read $name";
+        open my $fh2, '>', "$name" or die "Could not write $name";
         my $unicode      = ::currentfileisunicode();
         my $filecontents = $textwindow->get( '1.0', 'end -1c' );
         utf8::encode($filecontents) if $unicode;

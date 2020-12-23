@@ -1,6 +1,7 @@
 package Guiguts::Utilities;
 use strict;
 use warnings;
+use POSIX qw /strftime /;
 
 BEGIN {
     use Exporter();
@@ -17,7 +18,8 @@ BEGIN {
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
-      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy);
+      &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
+      &dieerror &warnerror &infoerror &poperror);
 
 }
 
@@ -702,6 +704,7 @@ sub initialize {
     $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
     $::positionhash{markpop}          = '+140+93'         unless $::positionhash{markpop};
     $::positionhash{markuppop}        = '+150+100'        unless $::positionhash{markuppop};
+    $::geometryhash{messagespop}      = '400x300+106+72'  unless $::geometryhash{messagespop};
     $::positionhash{multihelppop}     = '+110+50'         unless $::positionhash{multihelppop};
     $::geometryhash{multispellpop}    = '430x410+100+100' unless $::geometryhash{multispellpop};
     $::geometryhash{oppop}            = '600x400+50+50'   unless $::geometryhash{oppop};
@@ -779,6 +782,7 @@ sub initialize {
     $::manualhash{'markpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'markupconfigpop'} = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'markuppop'}       = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
+    $::manualhash{'messagespop'}     = '/Guiguts_1.1_Help_Menu#Error_Messages';
     $::manualhash{'multihelppop'}    = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
     $::manualhash{'multispellpop'}   = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
     $::manualhash{'oppop'}           = '/Guiguts_1.1_File_Menu#View_Operations_History';
@@ -2563,8 +2567,8 @@ sub restorelinenumbers {
 # Also flash first label on status bar unless noflash argument is given
 sub soundbell {
     my $noflash = shift;
-    $::textwindow->bell unless $::nobell;
-    return if $noflash;
+    $::textwindow->bell if $::textwindow and not $::nobell;
+    return              if $noflash;
     return unless $::lglobal{current_line_label};
     for ( 1 .. 5 ) {
         $::lglobal{current_line_label}->after( $::lglobal{delay} );
@@ -2668,5 +2672,122 @@ sub busy {
 sub unbusy {
     $::top->Unbusy;
 }
+
+#
+# Handle fatal error (e.g. via die).
+# Timestamp, bell, print to stderr, then display in message log dialog before
+# giving user a chance to copy any messages before exiting.
+# Note that where die is used as a result of a Tk action such as a button
+# or key press, it will abort the action rather than the whole program
+# and will use warnerror below not dierror.
+sub dieerror {
+    CORE::die(@_) if $^S;    # Use default die if occurs within eval
+
+    my $message = stamperror(shift);
+    soundbell();
+    printerror($message);
+    adderror($message);
+
+    # Since about to die, give user a change to copy messages before exiting.
+    adderror("When you close this message log the program will exit.");
+    adderror("Copy/paste any useful messages before clicking Close.");
+    poperror();
+    if ( $::lglobal{messagespop} ) {
+        $::lglobal{messagespop}->grab;          # stop user doing anything else
+        $::lglobal{messagespop}->waitWindow;    # wait until they dismiss the dialog
+    }
+    exit 1;
+}
+
+#
+# Handle warning (e.g. via warn)
+# Timestamp, bell, print to stderr, then display in message log dialog
+sub warnerror {
+    my $message = stamperror(shift);
+    soundbell();
+    printerror($message);
+    adderror($message);
+    poperror();
+}
+
+#
+# Output an info error
+# No bell or message log dialog, but do print to stderr and store in errors list)
+sub infoerror {
+    my $message = stamperror(shift);
+    printerror($message);
+    adderror($message);
+}
+
+#
+# Add a timestamp and strip trailing newlines from error
+sub stamperror {
+    my $message = shift;
+    chomp $message;
+    return strftime( "%H:%M:%S", localtime ) . ": " . $message;
+}
+
+#
+# Print the given error to stderr
+sub printerror {
+    my $message = shift;
+    print STDERR "$message\n";
+}
+
+{    # Start of block to localise error message array
+    my @errormessages;
+
+    #
+    # Add the given error, stripped of newlines, to the error message list
+    sub adderror {
+        my $message = shift;
+        chomp $message;
+        push @errormessages, $message;
+    }
+
+    #
+    # Pop the error messages box with all errors issued so far
+    sub poperror {
+        my $top = $::top;
+        return unless $top;
+
+        if ( defined( $::lglobal{messagespop} ) ) {
+            $::lglobal{messagespop}->deiconify;
+            $::lglobal{messagespop}->raise;
+            $::lglobal{messagespop}->focus;
+        } else {
+            $::lglobal{messagespop} = $top->Toplevel;
+            $::lglobal{messagespop}->title('Message Log');
+            my $button_ok = $::lglobal{messagespop}->Button(
+                -activebackground => $::activecolor,
+                -text             => 'Close',
+                -command          => sub { ::killpopup('messagespop'); }
+            )->pack( -side => 'bottom', -pady => 5 );
+            my $frame = $::lglobal{messagespop}->Frame->pack(
+                -side   => 'top',
+                -expand => 'yes',
+                -fill   => 'both'
+            );
+            $::lglobal{msgbox} = $frame->Scrolled(
+                'ROText',
+                -scrollbars => 'se',
+                -background => $::bkgcolor,
+                -font       => 'proofing',
+                -width      => 80,
+                -height     => 25,
+                -wrap       => 'none',
+            )->pack( -anchor => 'nw', -expand => 'yes', -fill => 'both' );
+            ::initialize_popup_with_deletebinding('messagespop');
+            ::drag( $::lglobal{msgbox} );
+            $::lglobal{msgbox}->focus;
+        }
+
+        # Refresh message box with all messages issued so far
+        $::lglobal{msgbox}->delete( '1.0', 'end' );
+        $::lglobal{msgbox}->insert( 'end', join( "\n", @errormessages ) . "\n" );
+        $::lglobal{msgbox}->see('end');
+    }
+
+}    # End of block to localise error message array
 
 1;

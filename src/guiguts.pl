@@ -287,6 +287,27 @@ our $text_font;
 our $textwindow;
 our $menubar;
 
+# End of declarations - start of code
+
+# Override handling of die and warn to display errors via user interface
+
+# Redirect die in recommended way so it doesn't catch compilation errors.
+# Note that where die is used as a result of a Tk action such as a button
+# or key press, it will abort the action rather than the whole program
+# and will use warnerror below not dieerror.
+BEGIN { *CORE::GLOBAL::die = \&::dieerror }
+
+# Redirect warn by overriding signal handler
+local $SIG{__WARN__} = \&::warnerror;
+
+# An alternative for catching Tk background errors,
+# but they are caught by the warn override above
+# sub Tk::Error {
+#     my($w, $error, @msgs) = @_;
+#     warnerror($error);
+#     warnerror($_) for @msgs;
+# }
+
 # Need to set $lglobal{runtests} before calling initialize(),
 # otherwise it will load setting.rc which could influence the test results.
 $lglobal{runtests} = ( @ARGV == 1 and $ARGV[0] eq 'runtests' );
@@ -336,20 +357,29 @@ unless ( -e 'header.txt' ) {
 }
 ::checkforupdatesmonthly();
 
+if ( $lglobal{runtests} ) {
+    runtests();
+} else {
+    ::infoerror(
+        "Guiguts $VERSION: If you have any problems, please include any error messages that appear here with your bug report.\n"
+    );
+    MainLoop;
+}
+
+#
+# "do" setting.rc, bin file, etc.
+# Routine is in guiguts.pl because the files assume the global variables being set are in local scope,
+# e.g. "$alpha_sort = 'a';" rather than "$::alpha_sort = 'a';"
 sub dofile {
     my $filename = shift;
     return do $filename;
 }
 
+#
+# "eval" string from exported .gut file, etc.
+# Routine is in guiguts.pl because the files assume some global variables being set are in local scope,
+# e.g. "$scannoslistpath = 'wordlist';" rather than "$::scannoslistpath = 'wordlist';"
 sub evalstring {
     my $string = shift;
     return eval($string);
-}
-
-if ( $lglobal{runtests} ) {
-    runtests();
-} else {
-    print
-      "Guiguts $VERSION: If you have any problems, please include any error messages that appear here with your bug report.\n";
-    MainLoop;
 }
