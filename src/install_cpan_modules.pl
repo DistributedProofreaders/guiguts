@@ -2,18 +2,21 @@
 
 my @modules = (
 
-    # Required modules
-    "LWP::UserAgent",
+    # Needed for user interface
     "Tk",
     "Tk::ToolBar",
 
-    # Optional but recommended modules
+    # Needed for word frequency harmonics
     "Text::LevenshteinXS",
+
+    # Needed to check if a tool is on the path
     "File::Which",
+
+    # Needed to determine the dimensions of images for HTML
     "Image::Size",
 
     # Needed for update checking
-    "LWP::Protocol::https",
+    "LWP::UserAgent",
 
     # Needed for remote HTML validation
     "WebService::Validator::HTML::W3C",
@@ -21,6 +24,6 @@ my @modules = (
 );
 
 foreach my $module (@modules) {
-    system("cpanm --notest --install $module") == 0
+    system("cpanm --notest $module") == 0
       or die("Failed trying to install $module\n");
 }

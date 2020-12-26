@@ -387,13 +387,6 @@ sub errorcheckrun {    # Runs error checks
     my ( $errorchecktype, $tmpfname, $errname ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    if ( $errorchecktype eq 'W3C Validate Remote' ) {
-        unless ( eval { require WebService::Validator::HTML::W3C } ) {
-            print
-              "Install the module WebService::Validator::HTML::W3C to do W3C Validation remotely. Defaulting to local validation.\n";
-            $errorchecktype = 'W3C Validate';
-        }
-    }
     ::operationadd("$errorchecktype");
     ::hidepagenums();
     if ( $::lglobal{errorcheckpop} ) {

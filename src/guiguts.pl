@@ -28,6 +28,7 @@ use FindBin;
 use lib $FindBin::Bin . "/lib";
 
 #use Data::Dumper;
+use charnames();
 use Cwd;
 use Encode;
 use FileHandle;
@@ -37,10 +38,12 @@ use File::Spec::Functions qw(catfile);
 use File::Spec::Functions qw(catdir);
 use File::Copy;
 use File::Compare;
+use File::Which;
 use HTML::TokeParser;
+use Image::Size;
 use IPC::Open2;
 use LWP::UserAgent;
-use charnames();
+use Text::LevenshteinXS;
 use Tk;
 use Tk::widgets qw{Balloon
   BrowseEntry
@@ -60,6 +63,8 @@ use Tk::widgets qw{Balloon
   TextEdit
   ToolBar
 };
+use WebService::Validator::HTML::W3C;
+
 our $APP_NAME     = 'Guiguts';
 our $window_title = $APP_NAME . '-' . $VERSION;
 our $icondata;
@@ -273,11 +278,6 @@ our @extops = (
 
 # All local global variables contained in one global hash.
 our %lglobal;    # need to document each variable
-
-# Determine what optional modules are installed
-$lglobal{LevenshteinXS} = eval { require Text::LevenshteinXS; 1; } || 0;
-$lglobal{ImageSize}     = eval { require Image::Size;         1; } || 0;
-$lglobal{Which}         = eval { require File::Which;         1; } || 0;
 
 our $top;
 our $icon;
