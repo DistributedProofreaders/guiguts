@@ -1941,19 +1941,11 @@ sub thumbnailbrowse {
         -initialdir => $::globalimagepath
     );
     return unless ($name);
-    my $xythumb = 200;
-    if ( $::lglobal{ImageSize} ) {
-        ( $::lglobal{htmlimagesizex}, $::lglobal{htmlimagesizey} ) = Image::Size::imgsize($name);
-        $::lglobal{htmlimggeom}->configure( -text => "File size: "
-              . $::lglobal{htmlimagesizex} / $EMPX . " x "
-              . $::lglobal{htmlimagesizey} / $EMPX . " em "
-              . "($::lglobal{htmlimagesizex} x $::lglobal{htmlimagesizey} px)" );
-    } else {
-        $::lglobal{htmlimagesizex} = $xythumb;
-        $::lglobal{htmlimagesizey} = $xythumb;
-        $::lglobal{htmlimggeom}->configure( -text => "File size: unknown" );
-        $::lglobal{htmlimgmaxwidth}->configure( -text => "" );
-    }
+    ( $::lglobal{htmlimagesizex}, $::lglobal{htmlimagesizey} ) = Image::Size::imgsize($name);
+    $::lglobal{htmlimggeom}->configure( -text => "File size: "
+          . $::lglobal{htmlimagesizex} / $EMPX . " x "
+          . $::lglobal{htmlimagesizey} / $EMPX . " em "
+          . "($::lglobal{htmlimagesizex} x $::lglobal{htmlimagesizey} px)" );
     htmlimagewidthsetdefault();
 
     $::lglobal{htmlorig}->blank;
@@ -1970,8 +1962,9 @@ sub thumbnailbrowse {
         $ext =~ s/jpg/jpeg/;
         $::lglobal{htmlorig}->read( $name, -format => $ext, -shrink );
     }
-    my $sw = int( ( $::lglobal{htmlorig}->width ) / $xythumb );
-    my $sh = int( ( $::lglobal{htmlorig}->height ) / $xythumb );
+    my $xythumb = 200;
+    my $sw      = int( ( $::lglobal{htmlorig}->width ) / $xythumb );
+    my $sh      = int( ( $::lglobal{htmlorig}->height ) / $xythumb );
     if ( $sh > $sw ) {
         $sw = $sh;
     }

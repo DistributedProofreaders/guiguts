@@ -23,19 +23,8 @@ sub setdefaultpath {
     # Does the file exist in the same location without the extension (ala *nix)?
     if ( -e ::catfile( $filepath, $basename ) ) {
         $pathname = ::catfile( $filepath, $basename );
-    } else {
-
-        # Is it on the path somewhere?
-        if ( $::lglobal{Which} ) {
-
-            # Check both with and without extension
-            $pathname = File::Which::which($filename)
-              || File::Which::which($basename);
-        } elsif ( !$::OS_WIN ) {
-
-            # Only check without extension since we're on *nix
-            $pathname = substr( qx/which $basename/, 0, -1 );    # strip trailing \n
-        }
+    } else {    # Is it on the path somewhere - check both with and without extension
+        $pathname = File::Which::which($filename) or File::Which::which($basename);
     }
 
     if ( $pathname && -x $pathname ) {

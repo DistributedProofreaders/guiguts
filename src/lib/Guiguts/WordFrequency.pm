@@ -1190,39 +1190,11 @@ sub harmonics2 {
         $::lglobal{harmonic}{$test} = 1 if ( distance( $word, $test ) <= 2 );
     }
 }
-#### Levenshtein edit distance calculations #################
-#### taken from the Text::Levenshtein Module ################
-#### If available, uses Text::LevenshteinXS #################
-#### which is orders of magnitude faster. ###################
-sub distance {
-    if ( $::lglobal{LevenshteinXS} ) {
-        return Text::LevenshteinXS::distance(@_);
-    }
-    my $word1 = shift;
-    my $word2 = shift;
-    return 0 if $word1 eq $word2;
-    my @d;
-    my $len1 = length $word1;
-    my $len2 = length $word2;
-    $d[0][0] = 0;
 
-    for ( 1 .. $len1 ) {
-        $d[$_][0] = $_;
-    }
-    for ( 1 .. $len2 ) {
-        $d[0][$_] = $_;
-    }
-    for my $i ( 1 .. $len1 ) {
-        my $w1 = substr( $word1, $i - 1, 1 );
-        for ( 1 .. $len2 ) {
-            $d[$i][$_] = _min(
-                $d[ $i - 1 ][$_] + 1,
-                $d[$i][ $_ - 1 ] + 1,
-                $d[ $i - 1 ][ $_ - 1 ] + ( $w1 eq substr( $word2, $_ - 1, 1 ) ? 0 : 1 )
-            );
-        }
-    }
-    return $d[$len1][$len2];
+#
+# Levenshtein edit distance calculation
+sub distance {
+    return Text::LevenshteinXS::distance(@_);
 }
 
 sub _min {
