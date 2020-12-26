@@ -94,6 +94,8 @@ Triple-click left mouse button -- select line
 
 Single click right mouse button -- pop up shortcut to menu bar
 
+Right Alt / AltGr key -- compose character with keystrokes (<ctrl>+m on Mac)
+
 <command>+q - quit Guiguts (Mac only)
 
 
