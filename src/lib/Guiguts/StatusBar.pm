@@ -700,7 +700,7 @@ sub selection {
 
 # Pop up a window which will allow jumping directly to a specified line
 sub gotoline {
-    ::dialogboxpopup(
+    ::textentrydialogpopup(
         -key          => 'gotolinepop',
         -title        => 'Go To Line Number',
         -label        => 'Enter line number',
@@ -732,7 +732,7 @@ sub gotolineok {
 # Pop up a window which will allow jumping directly to a specified page
 sub gotopage {
     return unless %::pagenumbers;
-    ::dialogboxpopup(
+    ::textentrydialogpopup(
         -key          => 'gotopagpop',
         -title        => 'Go To Page Number',
         -label        => 'Enter image number',
@@ -771,7 +771,7 @@ sub gotopageok {
 # Pop up a window which will allow jumping directly to a specified page label
 sub gotolabel {
     return unless %::pagenumbers;
-    ::dialogboxpopup(
+    ::textentrydialogpopup(
         -key          => 'gotolabpop',
         -title        => 'Go To Page Label',
         -label        => 'Enter label',

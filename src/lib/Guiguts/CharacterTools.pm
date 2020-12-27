@@ -651,7 +651,7 @@ sub cp1252toUni {
 sub composepopup {
     $::lglobal{composepopstr} = '';
 
-    ::dialogboxpopup(
+    ::textentrydialogpopup(
         -key          => 'composepop',
         -title        => 'Compose Character',
         -label        => 'Compose',
