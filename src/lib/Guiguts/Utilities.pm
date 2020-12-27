@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
-      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup &dialogboxpopup
+      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup &textentrydialogpopup
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
       &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
@@ -2631,7 +2631,7 @@ sub entry_history {
 # -command      => reference to routine to be executed on OK/Enter
 # -defaulttext  => optional default text in entry field that user will append to rather than typeover
 #    e.g. given "Pg " for "Pg 25" on gotopage, just "25" will be selected and user will typeover
-sub dialogboxpopup {
+sub textentrydialogpopup {
     my %args        = (@_);                   # argument pair list stored in hash
     my $key         = $args{-key};
     my $title       = $args{-title};
