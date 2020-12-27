@@ -730,83 +730,80 @@ sub initialize {
 
     # manualhash stores subpage of manual for each dialog
     # Where dialog is used in several contexts, use 'dialogname+context' as key
-    $::manualhash{'aboutpop'}    = '#Overview';
-    $::manualhash{'alignpop'}    = '/Guiguts_1.1_Text_Menu#Align_text_on_string';
-    $::manualhash{'asciiboxpop'} = '/Guiguts_1.1_Text_Menu#Draw_ASCII_Boxes';
-    $::manualhash{'brkpop'}      = '/Guiguts_1.1_Tools_Menu#Check_Orphaned_Brackets';
-    $::manualhash{'comcharspop'} = '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
-    $::manualhash{'comcharsconfigpop'} =
-      '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
-    $::manualhash{'composepop'}                   = '/Guiguts_1.1_Help_Menu';
-    $::manualhash{'composerefpop'}                = '/Guiguts_1.1_Help_Menu';
-    $::manualhash{'defurlspop'}                   = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'elinkpop'}                     = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'errorcheckpop+Bookloupe'}      = '/Guiguts_1.1_Tools_Menu#Bookloupe';
-    $::manualhash{'errorcheckpop+Jeebies'}        = '/Guiguts_1.1_Tools_Menu#Jeebies';
-    $::manualhash{'errorcheckpop+Load Checkfile'} = '/Guiguts_1.1_Tools_Menu#Load_Checkfile';
-    $::manualhash{'errorcheckpop+pptxt'}          = '/Guiguts_1.1_Text_Menu#PPtxt';
-    $::manualhash{'errorcheckpop+W3C Validate Remote'} =
-      '/Guiguts_1.1_HTML#HTML_Validator_.28local.29';
-    $::manualhash{'errorcheckpop+W3C Validate'} = '/Guiguts_1.1_HTML#HTML_Validator_.28local.29';
-    $::manualhash{'errorcheckpop+W3C Validate CSS'} = '/Guiguts_1.1_HTML#CSS_Validator';
+    $::manualhash{'aboutpop'}                = '#Overview';
+    $::manualhash{'alignpop'}                = '/Text_Menu#Align_text_on_string';
+    $::manualhash{'asciiboxpop'}             = '/Text_Menu#Draw_ASCII_Boxes';
+    $::manualhash{'brkpop'}                  = '/Tools_Menu#Check_Orphaned_Brackets';
+    $::manualhash{'comcharspop'}             = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'comcharsconfigpop'}       = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'composepop'}              = '/Help_Menu';
+    $::manualhash{'composerefpop'}           = '/Help_Menu';
+    $::manualhash{'defurlspop'}              = '/Preferences_Menu#File_Paths';
+    $::manualhash{'elinkpop'}                = '/HTML_Menu#The_HTML_Markup_Dialog';
+    $::manualhash{'errorcheckpop+Bookloupe'} = '/Tools_Menu#Bookloupe';
+    $::manualhash{'errorcheckpop+Jeebies'}   = '/Tools_Menu#Jeebies';
+    $::manualhash{'errorcheckpop+Load Checkfile'}      = '/Tools_Menu#Load_Checkfile';
+    $::manualhash{'errorcheckpop+pptxt'}               = '/Text_Menu#PPtxt';
+    $::manualhash{'errorcheckpop+W3C Validate Remote'} = '/HTML_Menu#HTML_Validator_.28local.29';
+    $::manualhash{'errorcheckpop+W3C Validate'}        = '/HTML_Menu#HTML_Validator_.28local.29';
+    $::manualhash{'errorcheckpop+W3C Validate CSS'}    = '/HTML_Menu#CSS_Validator';
     $::manualhash{'errorcheckpop+Link Check'} =
-      '/Guiguts_1.1_HTML#Check_for_link_errors_.28HTML_Link_Checker.29';
-    $::manualhash{'errorcheckpop+HTML Tidy'} = '/Guiguts_1.1_HTML#HTML_Tidy';
-    $::manualhash{'errorcheckpop+pphtml'}    = '/Guiguts_1.1_HTML#PPhtml';
+      '/HTML_Menu#Check_for_link_errors_.28HTML_Link_Checker.29';
+    $::manualhash{'errorcheckpop+HTML Tidy'} = '/HTML_Menu#HTML_Tidy';
+    $::manualhash{'errorcheckpop+pphtml'}    = '/HTML_Menu#PPhtml';
     $::manualhash{'errorcheckpop+ppvimage'} =
-      '/Guiguts_1.1_HTML#Check_for_image-related_errors_.28PPVimage.29';
-    $::manualhash{'extoptpop'}     = '/Guiguts_1.1_Custom_Menu';
-    $::manualhash{'filepathspop'}  = '/Guiguts_1.1_Preferences_Menu#File_Paths';
-    $::manualhash{'fixpop'}        = '/Guiguts_1.1_Tools_Menu#Basic_Fixup';
-    $::manualhash{'floodpop'}      = '/Guiguts_1.1_Edit_Menu#Flood_Fill';
-    $::manualhash{'fontpop'}       = '/Guiguts_1.1_Preferences_Menu#Appearance';
-    $::manualhash{'footcheckpop'}  = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'footpop'}       = '/Guiguts_1.1_Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcviewoptspop'} = '/Guiguts_1.1_Tools_Menu#Bookloupe';
+      '/HTML_Menu#Check_for_image-related_errors_.28PPVimage.29';
+    $::manualhash{'extoptpop'}     = '/Custom_Menu';
+    $::manualhash{'filepathspop'}  = '/Preferences_Menu#File_Paths';
+    $::manualhash{'fixpop'}        = '/Tools_Menu#Basic_Fixup';
+    $::manualhash{'floodpop'}      = '/Edit_Menu#Flood_Fill';
+    $::manualhash{'fontpop'}       = '/Preferences_Menu#Appearance';
+    $::manualhash{'footcheckpop'}  = '/Tools_Menu#Footnote_Fixup';
+    $::manualhash{'footpop'}       = '/Tools_Menu#Footnote_Fixup';
+    $::manualhash{'gcviewoptspop'} = '/Tools_Menu#Bookloupe';
     $::manualhash{'gotolabpop'} =
-      '/Guiguts_1.1_Navigating#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
-    $::manualhash{'gotolinepop'} = '/Guiguts_1.1_Navigating#Go_to_a_specific_Line';
+      '/Navigation#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
+    $::manualhash{'gotolinepop'} = '/Navigation#Go_to_a_specific_Line';
     $::manualhash{'gotopagpop'} =
-      '/Guiguts_1.1_Navigating#Go_to_the_text_corresponding_to_a_specific_page_Image';
-    $::manualhash{'grpop'}            = '/Guiguts_1.1_Tools_Menu#Find_and_Convert_Greek';
-    $::manualhash{'guesspgmarkerpop'} = '/Guiguts_1.1_File_Menu#Guess_Page_Markers';
-    $::manualhash{'hotkeyspop'}       = '/Guiguts_1.1_Help_Menu#Keyboard_Shortcuts';
-    $::manualhash{'hilitepop'}        = '/Guiguts_1.1_Navigating#Highlighting_Characters';
-    $::manualhash{'hintpop'}          = '/Guiguts_1.1_Tools_Menu#Scanno_Hints';
-    $::manualhash{'hpopup'}           = '/Guiguts_1.1_Tools_Menu#Harmonic_Searches';
-    $::manualhash{'htmlgenpop'} = '/Guiguts_1.1_HTML#Convert_the_text_to_HTML_.28HTML_Generator.29';
-    $::manualhash{'htmlimpop'}  = '/Guiguts_1.1_HTML#Add_Illustrations';
-    $::manualhash{'intervalpop'}     = '/Guiguts_1.1_Preferences_Menu#Backup';
-    $::manualhash{'linkpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'marginspop'}      = '/Guiguts_1.1_Preferences_Menu#Processing';
-    $::manualhash{'markpop'}         = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'markupconfigpop'} = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
-    $::manualhash{'markuppop'}       = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
-    $::manualhash{'messagespop'}     = '/Guiguts_1.1_Help_Menu#Error_Messages';
-    $::manualhash{'multihelppop'}    = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
-    $::manualhash{'multispellpop'}   = '/Guiguts_1.1_Tools_Menu#Spell_Check_in_Multiple_Languages';
-    $::manualhash{'oppop'}           = '/Guiguts_1.1_File_Menu#View_Operations_History';
-    $::manualhash{'pagelabelpop'}    = '/Guiguts_1.1_File_Menu#Configure_Page_Labels';
-    $::manualhash{'pagemarkerpop'}   = '/Guiguts_1.1_File_Menu#Display.2FAdjust_Page_Markers';
-    $::manualhash{'pagesephelppop'}  = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'pageseppop'}      = '/Guiguts_1.1_Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'regexrefpop'}     = '/Guiguts_1.1_Searching#Regular_Expressions';
-    $::manualhash{'searchpop+scannos'} = '/Guiguts_1.1_Tools_Menu#Stealth_Scannos';
-    $::manualhash{'searchpop+search'}  = '/Guiguts_1.1_Searching#The_Search_Dialog';
-    $::manualhash{'selectionpop'}      = '/Guiguts_1.1_Edit_Menu#Selection_Dialog';
-    $::manualhash{'spellpopup'}        = '/Guiguts_1.1_Tools_Menu#Spell_Check';
-    $::manualhash{'srchhistsizepop'}   = '/Guiguts_1.1_Preferences_Menu#Processing';
+      '/Navigation#Go_to_the_text_corresponding_to_a_specific_page_Image';
+    $::manualhash{'grpop'}             = '/Tools_Menu#Find_and_Convert_Greek';
+    $::manualhash{'guesspgmarkerpop'}  = '/File_Menu#Guess_Page_Markers';
+    $::manualhash{'hotkeyspop'}        = '/Help_Menu#Keyboard_Shortcuts';
+    $::manualhash{'hilitepop'}         = '/Navigation#Highlighting_Characters';
+    $::manualhash{'hintpop'}           = '/Tools_Menu#Scanno_Hints';
+    $::manualhash{'hpopup'}            = '/Tools_Menu#Harmonic_Searches';
+    $::manualhash{'htmlgenpop'}        = '/HTML_Menu#Convert_the_text_to_HTML_.28HTML_Generator.29';
+    $::manualhash{'htmlimpop'}         = '/HTML_Menu#Add_Illustrations';
+    $::manualhash{'intervalpop'}       = '/Preferences_Menu#Backup';
+    $::manualhash{'linkpop'}           = '/HTML_Menu#The_HTML_Markup_Dialog';
+    $::manualhash{'marginspop'}        = '/Preferences_Menu#Processing';
+    $::manualhash{'markpop'}           = '/HTML_Menu#The_HTML_Markup_Dialog';
+    $::manualhash{'markupconfigpop'}   = '/HTML_Menu#The_HTML_Markup_Dialog';
+    $::manualhash{'markuppop'}         = '/Tools_Menu#Word_Frequency';
+    $::manualhash{'messagespop'}       = '/Help_Menu#Error_Messages';
+    $::manualhash{'multihelppop'}      = '/Tools_Menu#Spell_Check_in_Multiple_Languages';
+    $::manualhash{'multispellpop'}     = '/Tools_Menu#Spell_Check_in_Multiple_Languages';
+    $::manualhash{'oppop'}             = '/File_Menu#View_Operations_History';
+    $::manualhash{'pagelabelpop'}      = '/File_Menu#Configure_Page_Labels';
+    $::manualhash{'pagemarkerpop'}     = '/File_Menu#Display.2FAdjust_Page_Markers';
+    $::manualhash{'pagesephelppop'}    = '/Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'pageseppop'}        = '/Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'regexrefpop'}       = '/Searching#Regular_Expressions';
+    $::manualhash{'searchpop+scannos'} = '/Tools_Menu#Stealth_Scannos';
+    $::manualhash{'searchpop+search'}  = '/Searching#The_Search_Dialog';
+    $::manualhash{'selectionpop'}      = '/Edit_Menu#Selection_Dialog';
+    $::manualhash{'spellpopup'}        = '/Tools_Menu#Spell_Check';
+    $::manualhash{'srchhistsizepop'}   = '/Preferences_Menu#Processing';
     $::manualhash{'stoppop'}           = '#Overview';
-    $::manualhash{'surpop'}            = '/Guiguts_1.1_Edit_Menu#Surround_Selection';
-    $::manualhash{'tblfxpop'}          = '/Guiguts_1.1_Text_Menu#ASCII_Table_Effects';
-    $::manualhash{'txtconvpop'}        = '/Guiguts_1.1_Text_Menu#The_Txt_Conversion_Dialog';
-    $::manualhash{'utfentrypop'}       = '/Guiguts_1.1_Unicode_Menu#Unicode_Lookup_by_Ordinal';
-    $::manualhash{'utfpop'}            = '/Guiguts_1.1_Unicode_Menu#The_Unicode_Menu';
-    $::manualhash{'utfsearchpop'}      = '/Guiguts_1.1_Unicode_Menu#Unicode_Search_by_Name';
-    $::manualhash{'versionbox'} =
-      '/Guiguts_1.1_Help_Menu#Guiguts_HELP_Menu:_Online_and_Built-in_Help';
-    $::manualhash{'wfpop'}   = '/Guiguts_1.1_Tools_Menu#Word_Frequency';
-    $::manualhash{'workpop'} = '#Overview';
+    $::manualhash{'surpop'}            = '/Edit_Menu#Surround_Selection';
+    $::manualhash{'tblfxpop'}          = '/Text_Menu#ASCII_Table_Effects';
+    $::manualhash{'txtconvpop'}        = '/Text_Menu#The_Txt_Conversion_Dialog';
+    $::manualhash{'utfentrypop'}       = '/Unicode_Menu#Unicode_Lookup_by_Ordinal';
+    $::manualhash{'utfpop'}            = '/Unicode_Menu#The_Unicode_Menu';
+    $::manualhash{'utfsearchpop'}      = '/Unicode_Menu#Unicode_Search_by_Name';
+    $::manualhash{'versionbox'}        = '/Help_Menu#Guiguts_HELP_Menu:_Online_and_Built-in_Help';
+    $::manualhash{'wfpop'}             = '/Tools_Menu#Word_Frequency';
+    $::manualhash{'workpop'}           = '#Overview';
 
     ::composeinitialize();
 
@@ -1506,7 +1503,7 @@ sub display_manual {
     $helplookup .= '+' . $context if $context;
     my $manualpage = $::manualhash{$helplookup};
     if ($manualpage) {
-        ::launchurl( 'https://www.pgdp.net/wiki/PPTools/Guiguts/Guiguts_1.1_Manual' . $manualpage );
+        ::launchurl( 'https://www.pgdp.net/wiki/PPTools/Guiguts/Guiguts_Manual' . $manualpage );
     } else {
         my $top = $::top;
         $top->messageBox(
