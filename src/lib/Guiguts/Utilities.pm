@@ -734,8 +734,8 @@ sub initialize {
     $::manualhash{'comcharspop'} = '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'comcharsconfigpop'} =
       '/Guiguts_1.1_Unicode_Menu#The_Commonly-Used_Characters_Dialog';
-    $::manualhash{'composepop'}                   = '/Guiguts_1.1_Unicode_Menu#Compose_Character';
-    $::manualhash{'composerefpop'}                = '/Guiguts_1.1_Unicode_Menu#Compose_Character';
+    $::manualhash{'composepop'}                   = '/Guiguts_1.1_Help_Menu#Compose_Sequences';
+    $::manualhash{'composerefpop'}                = '/Guiguts_1.1_Help_Menu#Compose_Sequences';
     $::manualhash{'defurlspop'}                   = '/Guiguts_1.1_Preferences_Menu#File_Paths';
     $::manualhash{'elinkpop'}                     = '/Guiguts_1.1_HTML#The_HTML_Markup_Dialog';
     $::manualhash{'errorcheckpop+Bookloupe'}      = '/Guiguts_1.1_Tools_Menu#Bookloupe';
