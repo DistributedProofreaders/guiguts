@@ -1010,7 +1010,7 @@ sub menu_help {
             'command',
             '~Manual [www]',
             -command => sub {
-                ::launchurl('https://www.pgdp.net/wiki/PPTools/Guiguts/Guiguts_1.1_Manual');
+                ::launchurl('https://www.pgdp.net/wiki/PPTools/Guiguts/Guiguts_Manual');
             }
         ],
         [
