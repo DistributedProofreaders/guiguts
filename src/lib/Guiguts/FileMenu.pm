@@ -797,15 +797,21 @@ sub readsettings {
         }
     }
 
-    # Greek dialog previously had position but now needs geometry
-    delete $::positionhash{grpop} if $::positionhash{grpop};
-
     # If someone just upgraded, reset the update counter
     unless ( $::lastversionrun eq $::VERSION ) {
         $::lastversioncheck = time();
         $::lastversionrun   = $::VERSION;
 
         $::lmargin = 0 if ( $::lmargin == 1 );
+
+        # for dialogs that previously just stored position but now need geometry,
+        # retain the position and delete the position hash entry
+        for ( 'gotolabpop', 'gotolinepop', 'gotopagpop', 'grpop' ) {
+            if ( $::positionhash{$_} and $::geometryhash{$_} ) {
+                $::geometryhash{$_} =~ s/^(\d+x\d+).*/$1$::positionhash{$_}/;
+                delete $::positionhash{$_};
+            }
+        }
 
         # get rid of geometry values that are out of use, but keep the position
         for ( keys %::geometryhash ) {
