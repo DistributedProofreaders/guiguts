@@ -700,130 +700,109 @@ sub selection {
 
 # Pop up a window which will allow jumping directly to a specified line
 sub gotoline {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    unless ( defined( $::lglobal{gotolinepop} ) ) {
-        $::lglobal{gotolinepop} = $top->DialogBox(
-            -buttons => [qw[OK Cancel]],
-            -title   => 'Go To Line Number',
-            -popover => $top,
-            -command => sub {
-                if ( defined $_[0] and $_[0] eq 'OK' ) {
-                    $::lglobal{line_number} =~ s/[\D.]//g;
-                    my ( $last_line, $junk ) =
-                      split( /\./, $textwindow->index('end') );
-                    ( $::lglobal{line_number}, $junk ) =
-                      split( /\./, $textwindow->index('insert') )
-                      unless $::lglobal{line_number};
-                    $::lglobal{line_number} =~ s/^\s+|\s+$//g;
-                    if ( $::lglobal{line_number} > $last_line ) {
-                        $::lglobal{line_number} = $last_line;
-                    }
-                    $textwindow->markSet( 'insert', "$::lglobal{line_number}.0" );
-                    $textwindow->see('insert');
-                    update_indicators();
-                    ::killpopup('gotolinepop');
-                } else {
-                    ::killpopup('gotolinepop');
-                }
-            }
-        );
-        ::dialogboxcommonsetup( 'gotolinepop', \$::lglobal{line_number}, 'Enter line number: ' );
-    }
+    ::dialogboxpopup(
+        -key          => 'gotolinepop',
+        -title        => 'Go To Line Number',
+        -label        => 'Enter line number',
+        -textvariable => \$::lglobal{line_number},
+        -command      => \&gotolineok,
+    );
 }
 
+#
+# Callback for gotoline dialog
+sub gotolineok {
+    my $textwindow = $::textwindow;
+    $::lglobal{line_number} =~ s/[\D.]//g;
+    my ( $last_line, $junk ) =
+      split( /\./, $textwindow->index('end') );
+    ( $::lglobal{line_number}, $junk ) =
+      split( /\./, $textwindow->index('insert') )
+      unless $::lglobal{line_number};
+    $::lglobal{line_number} =~ s/^\s+|\s+$//g;
+    if ( $::lglobal{line_number} > $last_line ) {
+        $::lglobal{line_number} = $last_line;
+    }
+    $textwindow->markSet( 'insert', "$::lglobal{line_number}.0" );
+    $textwindow->see('insert');
+    update_indicators();
+}
+
+#
 # Pop up a window which will allow jumping directly to a specified page
 sub gotopage {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    unless ( defined( $::lglobal{gotopagpop} ) ) {
-        return unless %::pagenumbers;
-        for ( keys(%::pagenumbers) ) {
-            $::lglobal{pagedigits} = ( length($_) - 2 );
-            last;
-        }
-        $::lglobal{gotopagpop} = $top->DialogBox(
-            -buttons => [qw[OK Cancel]],
-            -title   => 'Goto Page Number',
-            -popover => $top,
-            -command => sub {
-                if ( ( defined $_[0] ) and ( $_[0] eq 'OK' ) ) {
-                    unless ( $::lglobal{lastpage} ) {
-                        ::soundbell();
-                        ::killpopup('gotopagpop');
-                        return;
-                    }
-                    if ( $::lglobal{pagedigits} == 3 ) {
-                        $::lglobal{lastpage} =
-                          sprintf( "%03s", $::lglobal{lastpage} );
-                    } elsif ( $::lglobal{pagedigits} == 4 ) {
-                        $::lglobal{lastpage} =
-                          sprintf( "%04s", $::lglobal{lastpage} );
-                    }
-                    unless ( exists $::pagenumbers{ 'Pg' . $::lglobal{lastpage} }
-                        && defined $::pagenumbers{ 'Pg' . $::lglobal{lastpage} } ) {
-                        delete $::pagenumbers{ 'Pg' . $::lglobal{lastpage} };
-                        ::soundbell();
-                        ::killpopup('gotopagpop');
-                        return;
-                    }
-                    my $index = $textwindow->index( 'Pg' . $::lglobal{lastpage} );
-                    $textwindow->markSet( 'insert', "$index +1l linestart" );
-                    ::seeindex( 'insert -2l', 1 );
-                    $textwindow->focus;
-                    update_indicators();
-                    ::killpopup('gotopagpop');
-                } else {
-                    ::killpopup('gotopagpop');
-                }
-            }
-        );
-        ::dialogboxcommonsetup( 'gotopagpop', \$::lglobal{lastpage}, 'Enter image number: ' );
-    }
+    return unless %::pagenumbers;
+    ::dialogboxpopup(
+        -key          => 'gotopagpop',
+        -title        => 'Go To Page Number',
+        -label        => 'Enter image number',
+        -textvariable => \$::lglobal{lastpage},
+        -command      => \&gotopageok,
+    );
 }
 
-## Pop up a window which will allow jumping directly to a specified page label
-sub gotolabel {
+#
+# Callback for gotopage dialog
+sub gotopageok {
     my $textwindow = $::textwindow;
-    my $top        = $::top;
-    unless ( defined( $::lglobal{gotolabpop} ) ) {
-        return unless %::pagenumbers;
-        for ( keys(%::pagenumbers) ) {
-            $::lglobal{pagedigits} = ( length($_) - 2 );
+    unless ( $::lglobal{lastpage} ) {
+        ::soundbell();
+        ::killpopup('gotopagpop');
+        return;
+    }
+    my $width = length( ( keys %::pagenumbers )[0] ) - 2;    # From "first" key in pagenumbers hash
+    $::lglobal{lastpage} = sprintf( "%0${width}s", $::lglobal{lastpage} )
+      if $width == 3 or $width == 4;
+    unless ( exists $::pagenumbers{ 'Pg' . $::lglobal{lastpage} }
+        && defined $::pagenumbers{ 'Pg' . $::lglobal{lastpage} } ) {
+        delete $::pagenumbers{ 'Pg' . $::lglobal{lastpage} };
+        ::soundbell();
+        ::killpopup('gotopagpop');
+        return;
+    }
+    my $index = $textwindow->index( 'Pg' . $::lglobal{lastpage} );
+    $textwindow->markSet( 'insert', "$index +1l linestart" );
+    ::seeindex( 'insert -2l', 1 );
+    $textwindow->focus;
+    update_indicators();
+}
+
+#
+# Pop up a window which will allow jumping directly to a specified page label
+sub gotolabel {
+    return unless %::pagenumbers;
+    ::dialogboxpopup(
+        -key          => 'gotolabpop',
+        -title        => 'Go To Page Label',
+        -label        => 'Enter label',
+        -textvariable => \$::lglobal{lastlabel},
+        -defaulttext  => 'Pg ',
+        -command      => \&gotolabelok,
+    );
+}
+
+#
+# Callback for gotolabel dialog
+sub gotolabelok {
+    my $textwindow = $::textwindow;
+    my $mark;
+    for ( keys %::pagenumbers ) {
+        if (   $::pagenumbers{$_}{label}
+            && $::pagenumbers{$_}{label} eq $::lglobal{lastlabel} ) {
+            $mark = $_;
             last;
         }
-        $::lglobal{gotolabpop} = $top->DialogBox(
-            -buttons => [qw[Ok Cancel]],
-            -title   => 'Goto Page Label',
-            -popover => $top,
-            -command => sub {
-                if ( $_[0] && $_[0] eq 'Ok' ) {
-                    my $mark;
-                    for ( keys %::pagenumbers ) {
-                        if (   $::pagenumbers{$_}{label}
-                            && $::pagenumbers{$_}{label} eq $::lglobal{lastlabel} ) {
-                            $mark = $_;
-                            last;
-                        }
-                    }
-                    unless ($mark) {
-                        ::soundbell();
-                        ::killpopup('gotolabpop');
-                        return;
-                    }
-                    my $index = $textwindow->index($mark);
-                    $textwindow->markSet( 'insert', "$index +1l linestart" );
-                    ::seeindex( 'insert -2l', 1 );
-                    $textwindow->focus;
-                    ::update_indicators();
-                    ::killpopup('gotolabpop');
-                } else {
-                    ::killpopup('gotolabpop');
-                }
-            }
-        );
-        ::dialogboxcommonsetup( 'gotolabpop', \$::lglobal{lastlabel}, 'Enter label: ', 'Pg ' );
     }
+    unless ($mark) {
+        ::soundbell();
+        ::killpopup('gotolabpop');
+        return;
+    }
+    my $index = $textwindow->index($mark);
+    $textwindow->markSet( 'insert', "$index +1l linestart" );
+    ::seeindex( 'insert -2l', 1 );
+    $textwindow->focus;
+    ::update_indicators();
 }
 
 1;

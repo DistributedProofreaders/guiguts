@@ -157,23 +157,23 @@ sub usercharconfig {
     if ( length($text) > 1 ) {
         if ( $text =~ s/^#(\d+)$/$1/ ) {    # decimal ordinal preceded by hash
             $text = chr($text);
-        } elsif ( $text =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]+)$/$3/i ) {    # hex (with x, \x, 0x, U+ or no prefix)
+        } elsif ( $text =~ s/^(([\\0]?x)|U\+)?([0-9a-f]+)$/$3/i ) {    # hex (with x, \x, 0x, U+ or no prefix)
             $text = chr( hex($text) );
         } else {
-            $text = substr( $text, 0, 1 );                               # Just take first character of string
+            $text = substr( $text, 0, 1 );                             # Just take first character of string
         }
     }
 
     my $ord = ord($text);
-    $::userchars[$idx] = $text;                                          # Save user's new definition
-    $w->configure( -text => $text );                                     # Update the label on the button
-    $w->configure(                                                       # Button needs to insert the new character
+    $::userchars[$idx] = $text;                                        # Save user's new definition
+    $w->configure( -text => $text );                                   # Update the label on the button
+    $w->configure(                                                     # Button needs to insert the new character
         -command => sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); }
     );
-    charbind3( $w, $text );                                              # Right-click button copies text to clipboard
-    charbuttonballoon( $w, $blln, $ord );                                # Balloon message if user hovers over button
+    charbind3( $w, $text );                                            # Right-click button copies text to clipboard
+    charbuttonballoon( $w, $blln, $ord );                              # Balloon message if user hovers over button
 
-    ::savesettings();                                                    # Ensure new button definition saved to setting file
+    ::savesettings();                                                  # Ensure new button definition saved to setting file
 
     # stop class callback being called - possible due to binding reordering during button creation above
     $w->break;
@@ -649,42 +649,16 @@ sub cp1252toUni {
 
 # Pop up compose window to allow entering characters via keystroke shortcuts
 sub composepopup {
-    my $top = $::top;
     $::lglobal{composepopstr} = '';
 
-    if ( $::lglobal{composepopup} ) {
-        $::lglobal{composepop}->deiconify;
-        $::lglobal{composepop}->raise;
-    } else {
-        $::lglobal{composepop} = $top->Toplevel;
-        $::lglobal{composepop}->title('Compose Character');
-        my $frame1 = $::lglobal{composepop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        $::lglobal{composepopentry} =
-          $frame1->Label( -text => 'Compose:' )->grid( -row => 1, -column => 1 );
-        $::lglobal{composepopentry} = $frame1->Entry(
-            -background   => $::bkgcolor,
-            -width        => 6,
-            -textvariable => \$::lglobal{composepopstr},
-        )->grid( -row => 1, -column => 2 );
-        my $frame2 = $::lglobal{composepop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        my $okbtn  = $frame2->Button(
-            -text    => 'OK',
-            -width   => 8,
-            -command => sub { composekeyaction(); }
-        )->grid( -row => 1, -column => 1 );
-        my $cancelbtn = $frame2->Button(
-            -text    => 'Cancel',
-            -width   => 8,
-            -command => sub { ::killpopup('composepop'); },
-        )->grid( -row => 1, -column => 2 );
-        $::lglobal{composepop}->Tk::bind( '<Key>',    \&composekeyaction );
-        $::lglobal{composepop}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
-        $::lglobal{composepop}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
-
-        $::lglobal{composepop}->resizable( 'no', 'no' );
-        ::initialize_popup_with_deletebinding('composepop');
-        $::lglobal{composepopentry}->focus;
-    }
+    ::dialogboxpopup(
+        -key          => 'composepop',
+        -title        => 'Compose Character',
+        -label        => 'Compose',
+        -textvariable => \$::lglobal{composepopstr},
+        -command      => \&composekeyaction,
+    );
+    $::lglobal{composepop}->Tk::bind( '<Key>', \&composekeyaction );
 }
 
 # Action when a key is pressed or OK button forces interpretation of string so far
@@ -699,15 +673,15 @@ sub composekeyaction {
     if ( $::composehash{$str} ) {              # Does it match one of the defined compose sequences?
         insertit( $::composehash{$str} );
         ::killpopup('composepop');
-    } elsif ( $str =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]{4})$/$3/i ) {    # or 4 digit hex, (optional \x, 0x, x or U+)
+    } elsif ( $str =~ s/^(([\\0]?x)|U\+)?([0-9a-f]{4})$/$3/i ) {    # or 4 digit hex, (optional \x, 0x, x or U+)
         insertit( chr( hex($str) ) );
         ::killpopup('composepop');
-    } elsif ($forced) {                                               # User clicked OK - make the best we can of the string
-        if ( $str =~ s/^(([\\0]?[x])|U\+)?([0-9a-f]{2,4})$/$3/i and hex($str) >= 32 ) {    # hex?
+    } elsif ($forced) {                                             # User clicked OK - make the best we can of the string
+        if ( $str =~ s/^(([\\0]?x)|U\+)?([0-9a-f]{2,4})$/$3/i and hex($str) >= 32 ) {    # hex?
             insertit( chr( hex($str) ) );
-        } elsif ( $str =~ s/^#([0-9]{2,})$/$1/ and $str >= 32 and $str < 65536 ) {         # decimal
+        } elsif ( $str =~ s/^#(\d{2,})$/$1/ and $str >= 32 and $str < 65536 ) {          # decimal
             insertit( chr($str) );
-        } else {                                                                           # insert string
+        } else {                                                                         # insert string
             insertit($str);
         }
         ::killpopup('composepop');

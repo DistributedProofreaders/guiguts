@@ -8,7 +8,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
-      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup
+      &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup &dialogboxpopup
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
       &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
@@ -675,7 +675,7 @@ sub initialize {
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
     $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
-    $::positionhash{composepop}       = '+100+10'         unless $::positionhash{composepop};
+    $::geometryhash{composepop}       = '200x70+100+10'   unless $::geometryhash{composepop};
     $::geometryhash{composerefpop}    = '+300+72'         unless $::geometryhash{composerefpop};
     $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
     $::geometryhash{elinkpop}         = '330x110+150+120' unless $::geometryhash{elinkpop};
@@ -687,9 +687,9 @@ sub initialize {
     $::positionhash{fontpop}          = '+10+10'          unless $::positionhash{fontpop};
     $::geometryhash{footcheckpop}     = '+22+12'          unless $::geometryhash{footcheckpop};
     $::positionhash{footpop}          = '+255+157'        unless $::positionhash{footpop};
-    $::positionhash{gotolabpop}       = '+400+400'        unless $::positionhash{gotolabpop};
-    $::positionhash{gotolinepop}      = '+400+400'        unless $::positionhash{gotolinepop};
-    $::positionhash{gotopagpop}       = '+400+400'        unless $::positionhash{gotopagpop};
+    $::geometryhash{gotolabpop}       = '265x70+400+400'  unless $::geometryhash{gotolabpop};
+    $::geometryhash{gotolinepop}      = '265x70+400+400'  unless $::geometryhash{gotolinepop};
+    $::geometryhash{gotopagpop}       = '265x70+400+400'  unless $::geometryhash{gotopagpop};
     $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
     $::geometryhash{grpop}            = '750x540+100+100' unless $::geometryhash{grpop};
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
@@ -2624,18 +2624,80 @@ sub entry_history {
 }
 
 #
+# Create a dialog that is similar to a DialogBox, with a label, text entry field,
+# OK and Cancel buttons, but with control over its position
+#
+# Accepts the following named argument pairs:
+# -key          => key to dialog in $::lglobal hash
+# -title        => title for dialog
+# -label        => label for entry field
+# -textvariable => reference to variable paired with entry field
+# -command      => reference to routine to be executed on OK/Enter
+# -defaulttext  => optional default text in entry field that user will append to rather than typeover
+#    e.g. given "Pg " for "Pg 25" on gotopage, just "25" will be selected and user will typeover
+sub dialogboxpopup {
+    my %args        = (@_);                   # argument pair list stored in hash
+    my $key         = $args{-key};
+    my $title       = $args{-title};
+    my $label       = $args{-label};
+    my $varref      = $args{-textvariable};
+    my $commandref  = $args{-command};
+    my $defaulttext = $args{-defaulttext};
+
+    $label .= ': ' unless $label =~ /: $/;
+    $defaulttext = '' unless $defaulttext;
+    my $len = length $defaulttext;
+
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+
+    if ( $::lglobal{$key} ) {
+        $::lglobal{$key}->deiconify;
+        $::lglobal{$key}->raise;
+    } else {
+        $::lglobal{$key} = $top->Toplevel;
+        $::lglobal{$key}->title($title);
+
+        my $frame1 =
+          $::lglobal{$key}->Frame->pack( -expand => 1, -fill => 'x', -padx => 5, -pady => 5 );
+        $$varref = $defaulttext unless $$varref;
+        my $entryw = $frame1->Entry(
+            -background   => $::bkgcolor,
+            -width        => 12,
+            -textvariable => $varref,
+        )->pack( -expand => 1, -fill => 'x', -side => 'right' );
+        $frame1->Label( -text => $label )->pack( -side => 'right' );
+
+        my $frame2 = $::lglobal{$key}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+        my $okbtn  = $frame2->Button(
+            -text    => 'OK',
+            -width   => 8,
+            -command => sub { &$commandref(); ::killpopup($key); },
+        )->grid( -row => 1, -column => 1, -padx => 5 );
+        my $cancelbtn = $frame2->Button(
+            -text    => 'Cancel',
+            -width   => 8,
+            -command => sub { ::killpopup($key); },
+        )->grid( -row => 1, -column => 2, -padx => 5, );
+        $::lglobal{$key}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
+        $::lglobal{$key}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
+
+        $::lglobal{$key}->resizable( 'yes', 'no' );
+        ::initialize_popup_with_deletebinding($key);
+        $entryw->focus;
+        $entryw->selectionRange( $len, 'end' );
+        $entryw->icursor($len);    # place cursor at end of default text
+
+    }
+}
+
+#
 # Perform common tasks to set up a dialog box with an Entry field
 # including setting Escape key and window manager close button to invoke cancel.
-#
-# The $default argument will be displayed and precede where the user types input,
-# e.g. for "Pg 25" on gotopage, just "25" will be selected and user will typeover
 sub dialogboxcommonsetup {
-    my $dlg     = shift;    # dialog key in lglobal
-    my $var     = shift;    # global variable ref to link to entry field
-    my $prompt  = shift;    # prompt for label in dialog
-    my $default = shift;    # default value for label (e.g. "Pg " in gotopage)
-    $default = '' unless $default;
-    my $len = length $default;
+    my $dlg    = shift;    # dialog key in lglobal
+    my $var    = shift;    # global variable ref to link to entry field
+    my $prompt = shift;    # prompt for label in dialog
     ::initialize_popup_without_deletebinding($dlg);
     $::lglobal{$dlg}->resizable( 'no', 'no' );
     $::lglobal{$dlg}
@@ -2646,17 +2708,14 @@ sub dialogboxcommonsetup {
       ->protocol( 'WM_DELETE_WINDOW' => sub { $::lglobal{$dlg}->Subwidget('B_Cancel')->invoke; } );
     my $frame = $::lglobal{$dlg}->Frame->pack( -fill => 'x' );
     $frame->Label( -text => $prompt )->pack( -side => 'left' );
-    $$var = $default unless $$var;
     my $entry = $frame->Entry(
         -background   => $::bkgcolor,
         -width        => 25,
         -textvariable => $var,
     )->pack( -side => 'left', -fill => 'x' );
-    $::lglobal{$dlg}->Advertise( entry => $entry );
     $::lglobal{$dlg}->Popup;
-    $::lglobal{$dlg}->Subwidget('entry')->focus;
-    $::lglobal{$dlg}->Subwidget('entry')->selectionRange( $len, 'end' );
-    $::lglobal{$dlg}->Subwidget('entry')->icursor($len);    # place cursor at end of default text
+    $entry->focus;
+    $entry->selectionRange( 0, 'end' );
     $::lglobal{$dlg}->Wait;
 }
 
