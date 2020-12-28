@@ -41,6 +41,7 @@ hr {
 
 hr.tb   {width: 45%; margin-left: 27.5%; margin-right: 27.5%;}
 hr.chap {width: 65%; margin-left: 17.5%; margin-right: 17.5%;}
+@media print { hr.chap {display: none; visibility: hidden;} }
 hr.full {width: 95%; margin-left: 2.5%; margin-right: 2.5%;}
 
 hr.r5  {width: 5%; margin-top: 1em; margin-bottom: 1em; margin-left: 47.5%; margin-right: 47.5%;}
