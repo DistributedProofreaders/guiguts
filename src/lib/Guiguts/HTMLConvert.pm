@@ -1063,7 +1063,7 @@ sub html_convert_chapterdivs {
             # insert the end and start of the chapter div, with a chapter break <hr> before it
             $textwindow->ntinsert( $h2blockend . '+5c', "\n</div>" );
             $textwindow->ntinsert( $h2blockstart,
-                "\n<hr class=\"chap\" />\n\n<div class=\"chapter\">\n" );
+                "\n<hr class=\"chap x-ebookmaker-drop\" />\n\n<div class=\"chapter\">\n" );
         }
         $searchstart = $h2blockend . '+5l';    # ensure we don't find the same </h2 again
     }
