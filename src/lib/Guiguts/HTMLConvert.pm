@@ -1756,7 +1756,7 @@ sub htmlimageok {
         # If % width and override flag set, then also add CSS to override width to 100% for epub
         my $cssovr =
           ( $::lglobal{htmlimgwidthtype} eq '%' and $::epubpercentoverride )
-          ? "    \@media handheld { .$classname {width: 100%;} }"
+          ? "\n.x-ebookmaker .$classname {width: 100%;}"
           : "";
 
         # If this class has been added already, write it again (override may have changed)

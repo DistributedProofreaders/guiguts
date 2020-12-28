@@ -206,7 +206,8 @@ img.w100 {width: 100%;}
 .poetry .stanza   {margin: 1em auto;}
 .poetry .verse    {text-indent: -3em; padding-left: 3em;}
 /* large inline blocks don't split well on paged devices */
-@media handheld, print { .poetry {display: block;} }
+@media print { .poetry {display: block;} }
+.x-ebookmaker .poetry {display: block;}
 
 /* Transcriber's notes */
 .transnote {background-color: #E6E6FA;
