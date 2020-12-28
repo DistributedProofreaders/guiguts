@@ -170,6 +170,9 @@ img.w100 {width: 100%;}
     page-break-inside: avoid;
     max-width: 100%;
 }
+/* comment out next line and uncomment the following one for floating figleft on ebookmaker output */
+.x-ebookmaker .figleft {float: none; text-align: center; margin-right: 0;}
+/* .x-ebookmaker .figleft {float: left;} */
 
 .figright {
     float: right;
@@ -183,6 +186,9 @@ img.w100 {width: 100%;}
     page-break-inside: avoid;
     max-width: 100%;
 }
+/* comment out next line and uncomment the following one for floating figright on ebookmaker output */
+.x-ebookmaker .figright {float: none; text-align: center; margin-left: 0;}
+/* .x-ebookmaker .figright {float: right;} */
 
 /* Footnotes */
 .footnotes        {border: 1px dashed;}
