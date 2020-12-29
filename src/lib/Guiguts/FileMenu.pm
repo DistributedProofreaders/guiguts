@@ -769,30 +769,30 @@ sub openfile {    # and open it
     ::reset_autosave();
 }
 
+#
+# Load settings from setting.rc file which should be valid perl
 sub readsettings {
     return if $::lglobal{runtests};    # don't want tests to be affected by a saved setting.rc file
 
+    # Should be able to "do" the file if it exists
     if ( -e 'setting.rc' ) {
-        unless ( my $return = ::dofile('setting.rc') ) {
-            open my $file, "<", "setting.rc"
-              or warn "Could not open setting file\n";
+        my $result = ::dofile('setting.rc');
+
+        # If that fails, try to read the file and "eval" the contents
+        unless ( $result and $result == 1 ) {
+            open my $file, "<", "setting.rc" or die "Could not open setting file\n";
             my @file = <$file>;
             close $file;
             my $settings = '';
-            for (@file) {
-                $settings .= $_;
-            }
-            unless ( my $return = eval($settings) ) {
-                if ( -e 'setting.rc' ) {
-                    open my $file, "<", "setting.rc"
-                      or warn "Could not open setting file\n";
-                    my @file = <$file>;
-                    close $file;
-                    open $file, ">", "setting.err";
-                    print $file @file;
-                    close $file;
-                    print length($file);
-                }
+            $settings .= $_ for @file;
+            $result = eval($settings);
+
+            # If that fails, copy so user can inspect it since setting.rc will be overwritten
+            unless ( $result and $result == 1 ) {
+                warn "Copying corrupt setting.rc to setting.err\n";
+                open $file, ">", "setting.err";
+                print $file @file;
+                close $file;
             }
         }
     }
