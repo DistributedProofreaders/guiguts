@@ -3,16 +3,21 @@
 This provides instructions for publishing a new guiguts release on
 Github.
 
-1. Update the version. This needs to happen in two places:
+1. Ensure the version of ebookmaker to be bundled with the Windows release is
+   the latest version as used online at [PG](https://ebookmaker.pglaf.org).
+   Build and release the latest version using the [ebm_builder repo](https://github.com/DistributedProofreaders/ebm_builder).
+   Set the correct ebookmaker version number in `tools/ebookmaker/package.sh`
+
+2. Update the guiguts version. This needs to happen in two places:
 	* `Makefile`
 	* `guiguts.pl`
 
-2. Update the `CHANGELOG.md`
+3. Update the `CHANGELOG.md`
 
-3. Commit the version update changes and tag the release
+4. Commit the version update changes and tag the release
    (ie: `git tag r<version>`) and push it up to github
 
-4. From a Linux or MacOS system, or a Windows system with MinGW installed,
+5. From a Linux or MacOS system, or a Windows system with MinGW installed,
    confirm that you are working from a clean git checkout. Then build the
    three releases using `make` or `make all` or
    ```
@@ -29,7 +34,7 @@ Github.
    by the user and will be created if they do not exist.
    The `Makefile` takes care of this.
 
-5. Publish the release on Github.com
+6. Publish the release on Github.com
 	1. Log into [github.com](https://github.com)
 	2. Access the [guiguts releases](https://github.com/DistributedProofreaders/guiguts/releases)
 	3. Select *Draft a new release*

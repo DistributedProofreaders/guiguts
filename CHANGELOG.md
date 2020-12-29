@@ -1,5 +1,75 @@
 # Changelog
 
+## Version 1.2.0
+
+### Improved HTML and epub generation
+- redesigned HTML Markup dialog includes buttons configurable via `ctrl-click`
+- readability of HTML pagenum and blockquote markup is improved
+- latest version of ebookmaker is bundled with the Windows release
+- `@media handheld` is no longer used in generated HTML files
+- Best Practices code is used for floated images
+- chapter separator horizontal rules are hidden on paged devices
+
+### Unicode characters
+- compose key (`Right-Alt`/`ctrl+m`) allows entry of characters via a
+  sequence of keystrokes - list available via the Help menu
+- Commonly-Used Characters chart replaces the Latin-1 chart, with spare
+  buttons that the user can configure via `ctrl-click`
+- Unicode Character Entry can be popped by right-clicking status bar
+  ordinal label, and remembers previous use
+- Unicode dialog is faster and more streamlined
+- Greek transliteration dialog buttons show the correct character to be
+  inserted in the current font, and it remembers type of input used
+
+### Usability
+- using F1 key in any dialog will display the relevant manual page
+- fonts may now be configured and displayed instantly for the main text window,
+  Greek and Unicode dialogs, and text entry fields
+- shift-clicking on search buttons temporarily reverses the search direction
+- warnings and errors that used to only appear in the command window are
+  saved and displayed in a message log
+- word count threshold for marked up phrases is saved
+- the Word Frequency Ital/Bold/SC button also checks cite, em, strong, f, g & u
+- auto-advance is now on by default for Stealth Scannos
+- view options are remembered when the bookloupe dialog is closed,
+  and the user's default settings are loaded when guiguts starts
+- options relating to content providing are now in a submenu of the File menu
+- items on the status bar have been reordered to support narrow windows
+
+### Operations sped up by factor of 3 or more
+- Basic Fixup
+- rewrapping
+- Replace All with regular expressions
+- several footnote operations
+- HTML autogeneration
+
+### Removed in this version
+- old menu layout
+- old spellcheck layout
+- old rewrap algorithm
+- gutcheck tool (replaced by bookloupe)
+- bookloupe run options dialog
+- functionality relating to proofers' names
+- debug button in multilingual spelling
+
+### Bug fixes
+- Search/replace failed when text substituted for $1 contained literal $2
+- goto dialogs forgot their screen position
+- Greek dialog failed to resize correctly
+- certain unicode strings were pasted as garbage
+- image viewer was opened twice on first use
+- bad text index errors occurred during sidenote fixup
+- project dictionary filename could not cope with more than 9 volumes
+- alphabetical sorting was incorrect in Word Frequency lists
+- save and export Word Frequency lists were not utf8-safe
+- a search term that was also an invalid regex caused a Replace All loop
+- "Start at Beginning" setting was cleared when using Count in S&R dialog
+- pphtml reported a lack of space in self-closing tag, e.g. `<br/>`
+- Find Previous Proofer Comment failed when already at a comment
+- Undo/Redo buttons were unreliable on the Page Separators dialog - the
+  main undo/redo mechanism now also works for page separator changes
+- converting inline sidenotes to HTML sometimes deleted text incorrectly
+
 ## Version 1.1.1
 
 ### Changes
