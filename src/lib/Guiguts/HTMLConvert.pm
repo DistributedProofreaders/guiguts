@@ -1118,17 +1118,19 @@ sub html_convert_footnoteblocks {
         # the next footnote block
         my $nextfootnoteblock =
           $textwindow->search( '-exact', '--', 'FOOTNOTES:', $thisblockstart . '+1l', 'end' );
-        unless ($nextfootnoteblock) {
-            $nextfootnoteblock = 'end';
-        }
-        unless ($nextfootnoteblock) {
-            $nextfootnoteblock = 'end';
-        }
+        $nextfootnoteblock = 'end' unless $nextfootnoteblock;
 
-        # find the start of last footnote
+        # find the start of last footnote in this block
         my $lastfootnoteinblock =
           $textwindow->search( '-exact', '-backwards', '--', '<div class="footnote">',
             $nextfootnoteblock );
+
+        # if no footnotes in block just insert closing /div immediately after heading
+        if ( not $lastfootnoteinblock ) {
+            $textwindow->insert( $thisblockstart . '+42c', '</div>' );
+            $thisblockstart .= '+1l';
+            next;
+        }
 
         # find the end of the last footnote
         my $endoflastfootnoteinblock =
