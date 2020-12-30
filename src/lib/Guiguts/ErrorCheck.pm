@@ -127,6 +127,7 @@ sub errorcheckpop_up {
     $::lglobal{errorchecklistbox}->bind(
         '<<remove>>',
         sub {
+            ::busy();
             my $xx = $::lglobal{errorchecklistbox}->pointerx - $::lglobal{errorchecklistbox}->rootx;
             my $yy = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
             my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
@@ -137,7 +138,7 @@ sub errorcheckpop_up {
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
             errorcheckview();
-            $::lglobal{errorchecklistbox}->after( $::lglobal{delay} );
+            ::unbusy();
         }
     );
     $::lglobal{errorcheckpop}->update;
