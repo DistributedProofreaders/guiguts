@@ -28,8 +28,9 @@
 - shift-clicking on search buttons temporarily reverses the search direction
 - warnings and errors that used to only appear in the command window are
   saved and displayed in a message log
-- word count threshold for marked up phrases is saved
-- the Word Frequency Ital/Bold/SC button also checks cite, em, strong, f, g & u
+- word count threshold for Word Frequency's Ital/Bold/SC/etc button is saved,
+  overriding default maximum of 4 words detected within those markup tags
+- the Word Frequency Ital/Bold/SC/etc button also checks cite, em, strong, f, g & u
 - auto-advance is now on by default for Stealth Scannos
 - view options are remembered when the bookloupe dialog is closed,
   and the user's default settings are loaded when guiguts starts
