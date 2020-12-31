@@ -675,6 +675,7 @@ sub initialize {
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
     $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
+    $::positionhash{composekeypop}    = '+200+52'         unless $::positionhash{composekeypop};
     $::geometryhash{composepop}       = '200x70+100+10'   unless $::geometryhash{composepop};
     $::geometryhash{composerefpop}    = '+300+72'         unless $::geometryhash{composerefpop};
     $::positionhash{defurlspop}       = '+150+150'        unless $::positionhash{defurlspop};
@@ -736,6 +737,7 @@ sub initialize {
     $::manualhash{'brkpop'}                  = '/Tools_Menu#Check_Orphaned_Brackets';
     $::manualhash{'comcharspop'}             = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'comcharsconfigpop'}       = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
+    $::manualhash{'composekeypop'}           = '/Preferences_Menu#Processing';
     $::manualhash{'composepop'}              = '/Help_Menu';
     $::manualhash{'composerefpop'}           = '/Help_Menu';
     $::manualhash{'defurlspop'}              = '/Preferences_Menu#File_Paths';

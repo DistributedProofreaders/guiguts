@@ -9,7 +9,7 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&setdefaultpath &setmargins &setfonts &setfontrow &textentryfontconfigure &setpngspath &storedefaultcolor_autosave
-      &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls );
+      &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls &composekeypopup);
 }
 
 sub setdefaultpath {
@@ -748,6 +748,86 @@ sub setDPurls {
         )->grid( -row => 5, -column => 0, -columnspan => 2, -pady => 5 );
         ::initialize_popup_with_deletebinding('defurlspop');
     }
+}
+
+#
+# Pop dialog for user to choose which key/combination will initialize Composing
+sub composekeypopup {
+    my $top = $::top;
+
+    $::lglobal{composekeycombination} = $::composepopbinding;
+    $::lglobal{composekeyshift}       = ( $::lglobal{composekeycombination} =~ /Shift-/ );
+    $::lglobal{composekeycontrol}     = ( $::lglobal{composekeycombination} =~ /Control-/ );
+    $::lglobal{composekeyalt}         = ( $::lglobal{composekeycombination} =~ /Alt-/ );
+    $::lglobal{composekeybase}        = $::lglobal{composekeycombination};
+    $::lglobal{composekeybase} =~ s/.+-//;    # remove modifiers to find base key
+
+    if ( defined( $::lglobal{composekeypop} ) ) {
+        $::lglobal{composekeypop}->deiconify;
+        $::lglobal{composekeypop}->raise;
+        $::lglobal{composekeypop}->focus;
+    } else {
+        $::lglobal{composekeypop} = $top->Toplevel;
+        $::lglobal{composekeypop}->title('Set Compose Key');
+        $::lglobal{composekeypop}->Label( -text =>
+              "Press the key to use for starting Compose Sequences\nAlso select Shift, Control and/or Alt modifiers if required",
+        )->pack;
+        my $f0 = $::lglobal{composekeypop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        $f0->Checkbutton(
+            -text     => 'Shift',
+            -variable => \$::lglobal{composekeyshift},
+            -command  => \&composekeypopupbind,
+        )->grid( -row => 1, -column => 1 );
+        $f0->Checkbutton(
+            -text     => 'Control',
+            -variable => \$::lglobal{composekeycontrol},
+            -command  => \&composekeypopupbind,
+        )->grid( -row => 1, -column => 2 );
+        $f0->Checkbutton(
+            -text     => 'Alt',
+            -variable => \$::lglobal{composekeyalt},
+            -command  => \&composekeypopupbind,
+        )->grid( -row => 1, -column => 3 );
+        my $f1       = $::lglobal{composekeypop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $entrybox = $f1->Entry(
+            -width        => 25,
+            -textvariable => \$::lglobal{composekeycombination},
+            -state        => 'readonly',
+        )->pack;
+        $f1->Button(
+            -command => sub { ::killpopup('composekeypop'); },
+            -text    => 'OK',
+        )->pack( -pady => 5 );
+        $::lglobal{composekeypop}->Tk::bind( '<Key>', \&composekeypopupcallback );
+        ::initialize_popup_with_deletebinding('composekeypop');
+    }
+}
+
+#
+# Given base key, set the combination to be used for Composing
+sub composekeypopupcallback {
+    my $widget = shift;
+    $::lglobal{composekeybase} = $widget->XEvent->K;
+    composekeypopupbind();
+}
+
+#
+# Bind the Compose dialog to the chosen combination of modifiers and base
+sub composekeypopupbind {
+
+    ::keybind( "<$::composepopbinding>", undef );    # Unbind previous key
+
+    # Combine the modifiers with the base key
+    $::composepopbinding = '';
+    $::composepopbinding .= 'Shift-'   if $::lglobal{composekeyshift};
+    $::composepopbinding .= 'Control-' if $::lglobal{composekeycontrol};
+    $::composepopbinding .= 'Alt-'     if $::lglobal{composekeyalt};
+    $::lglobal{composekeybase} = 'Alt_R' unless $::lglobal{composekeybase};    # sensible default
+    $::composepopbinding .= $::lglobal{composekeybase};
+
+    ::keybind( "<$::composepopbinding>", sub { ::composepopup(); } );          # Rebind new combination
+
+    $::lglobal{composekeycombination} = $::composepopbinding;                  # Update dialog entry box
 }
 
 1;

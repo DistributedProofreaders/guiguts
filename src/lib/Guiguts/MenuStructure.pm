@@ -1000,6 +1000,7 @@ sub menu_preferences_processing {
             -onvalue    => 'css21',
             -offvalue   => 'css3',
         ],
+        [ 'command', 'Set Compose Key...', -command => sub { ::composekeypopup() } ],
     ];
 }
 
