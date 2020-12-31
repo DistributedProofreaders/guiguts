@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw( &keybindings );
+    @EXPORT = qw( &keybindings &keybind );
 }
 
 sub keybindings {
@@ -322,7 +322,7 @@ sub keybindings {
 sub keybind {
     my $textwindow = $::textwindow;
     my $lkey       = shift;           # Key-combination (lower-case letter)
-    my $subr       = shift;           # Subroutine to bind to key/event
+    my $subr       = shift;           # Subroutine to bind to key/event (undef will unbind)
     my $event      = shift;           # Optional event argument
 
     $lkey =~ s/-([A-Z])>/-\l$1>/;     # Ensure key letter is lowercase
@@ -333,11 +333,9 @@ sub keybind {
         $textwindow->eventAdd( $event => $lkey );
         $textwindow->eventAdd( $event => $ukey ) if $ukey ne $lkey;
         $textwindow->bind( 'TextUnicode', $event => $subr ) if defined $subr;
-    } elsif ( defined $subr ) {
+    } else {
         $textwindow->bind( 'TextUnicode', $lkey => $subr );
         $textwindow->bind( 'TextUnicode', $ukey => $subr ) if $ukey ne $lkey;
-    } else {
-        print "Undefined arguments to keybind\n";
     }
 }
 
