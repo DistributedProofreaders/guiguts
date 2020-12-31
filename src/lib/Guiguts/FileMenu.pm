@@ -299,12 +299,19 @@ sub _bin_save {
             if ( $page eq "Pg" ) {
                 next;
             }
+
+            # output page and offset
             print $fh " '$page' => {";
             print $fh "'offset' => '$::pagenumbers{$page}{offset}', ";
-            print $fh "'label' => '$::pagenumbers{$page}{label}', ";
-            print $fh "'style' => '$::pagenumbers{$page}{style}', ";
-            print $fh "'action' => '$::pagenumbers{$page}{action}', ";
-            print $fh "'base' => '$::pagenumbers{$page}{base}'},\n";
+
+            # if labels have been set up, output label information too
+            if ( $::pagenumbers{$page}{label} ) {
+                print $fh "'label' => '$::pagenumbers{$page}{label}', ";
+                print $fh "'style' => '$::pagenumbers{$page}{style}', ";
+                print $fh "'action' => '$::pagenumbers{$page}{action}', ";
+                print $fh "'base' => '$::pagenumbers{$page}{base}'";
+            }
+            print $fh "},\n";
         }
         print $fh ");\n\n";
         foreach ( keys %::operationshash ) {
