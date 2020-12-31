@@ -2567,14 +2567,10 @@ sub soundbell {
     $::textwindow->bell if $::textwindow and not $::nobell;
     return              if $noflash;
     return unless $::lglobal{current_line_label};
-    for ( 1 .. 5 ) {
-        $::lglobal{current_line_label}->after( $::lglobal{delay} );
-        $::lglobal{current_line_label}->configure( -background => $::activecolor );
-        $::lglobal{current_line_label}->update;
-        $::lglobal{current_line_label}->after( $::lglobal{delay} );
-        $::lglobal{current_line_label}->configure( -background => 'gray' );
-        $::lglobal{current_line_label}->update;
-    }
+    $::lglobal{current_line_label}->configure( -background => $::activecolor );
+    $::lglobal{current_line_label}->update;
+    $::lglobal{current_line_label}->after( $::lglobal{delay} );
+    $::lglobal{current_line_label}->configure( -background => 'gray' );
 }
 
 #
