@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 1.2.1
+
+### Changes
+- user can now choose which key to use to start a Compose Sequence
+  via Processing in the Preferences Menu
+
+### Bug Fixes
+- saving a project without page labels generated many errors
+- error messages were being output too slowly
+- if Aspell was not set up, Software Versions generated an error
+
 ## Version 1.2.0
 
 ### Improved HTML and epub generation

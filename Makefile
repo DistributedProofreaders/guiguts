@@ -1,6 +1,6 @@
 
 # version number
-VERSION=1.2.0
+VERSION=1.2.1
 # DON'T FORGET to update the version number in guiguts.pl too
 
 # zip utility to use
