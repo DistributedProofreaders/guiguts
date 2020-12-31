@@ -293,7 +293,9 @@ sub get_spellchecker_version {
     }
     close $aspell;
     unlink 'aspell.tmp';
-    return $::lglobal{spellversion} = $aspell_version;
+    $::lglobal{spellversion} = $aspell_version;
+    $aspell_version = "Unknown" unless $aspell_version;
+    return $aspell_version;
 }
 
 sub aspellstop {
