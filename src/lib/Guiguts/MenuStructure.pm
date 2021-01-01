@@ -153,6 +153,11 @@ sub menu_edit {
             -accelerator => 'Ctrl+v',
             -command     => sub { ::paste(); },
         ],
+        [
+            'command', 'Alternative Paste',
+            -accelerator => 'Ctrl+Alt+v',
+            -command     => sub { ::paste('alternative'); },
+        ],
         [ 'separator', '' ],
         [
             'command', 'Column Cut',
