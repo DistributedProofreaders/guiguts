@@ -9,6 +9,7 @@ MAIN WINDOW
 <ctrl>+<shift>+s -- save as
 <ctrl>+<alt>+r -- open regex quick reference
 <ctrl>+<alt>+s -- open scratchpad.txt
+<ctrl>+<alt>+v -- alternative paste method to avoid bug with Unicode characters
 
 <shift>+mouse drag -- column select
 F1 -- column copy

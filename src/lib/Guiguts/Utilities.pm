@@ -1657,7 +1657,8 @@ sub textcopy {
 # Special paste routine that will respond differently
 # for overstrike/insert modes
 sub paste {
-    my $textwindow = $::textwindow;
+    my $textwindow        = $::textwindow;
+    my $alternative_paste = shift;
     if ( $textwindow->OverstrikeMode ) {
         my @ranges = $textwindow->tagRanges('sel');
         if (@ranges) {
@@ -1678,13 +1679,17 @@ sub paste {
         $textwindow->insert( 'insert', $text );
     } else {
 
-        # $textwindow->clipboardPaste;
-        # In Text.pm, routine clipboardPaste fails to handle all unicode strings correctly,
-        # sometimes pasting them as garbage Latin-1 characters. clipboardPaste essentially
-        # consists of the line below, but with Tk::catch instead of eval (which is necessary
-        # to avoid error if nothing in clipboard), so something about Tk::catch or the
-        # local environment in that routine must be causing the issue.
-        eval { $textwindow->Insert( $textwindow->clipboardGet ); };
+        # Text::clipboardPaste fails to handle all unicode strings correctly, sometimes
+        # pasting them as garbage Latin-1 characters. Text::clipboardPaste calls
+        # clipboardGet from Clipboard.pm, but the clipboardGet below calls a different
+        # version(?), which crashes with large quantities of text.
+        # Default paste will go wrong less frequently and less seriously, but alternative
+        # is provided so user can try it if standard paste gives garbage.
+        if ($alternative_paste) {
+            Tk::catch { $textwindow->Insert( $textwindow->clipboardGet() ) };
+        } else {
+            $textwindow->clipboardPaste;
+        }
     }
 }
 
