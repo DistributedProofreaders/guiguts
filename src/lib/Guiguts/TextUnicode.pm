@@ -320,7 +320,20 @@ sub Button1 {
     $w->focus if ( $w->cget('-state') eq 'normal' );
 }
 
-sub SelectTo {    # Modified selection routine to deal with block selections
+#
+# Modified selection routine from Text.pm to deal with block selections
+# Also uses safeword() - see below
+#
+# This procedure is invoked to extend the selection, typically when
+# dragging it with the mouse. Depending on the selection mode (character,
+# word, line) it selects in different-sized units. This procedure
+# ignores mouse motions initially until the mouse has moved from
+# one character to another or until there have been multiple clicks.
+#
+# Arguments:
+# w - The text window in which the button was pressed.
+# index - Index of character at which the mouse button was pressed.
+sub SelectTo {
     my ( $w, $index, $mode ) = @_;
     $Tk::selectMode = $mode if defined $mode;
     my $cur    = $w->index($index);
@@ -344,11 +357,11 @@ sub SelectTo {    # Modified selection routine to deal with block selections
         }
     } elsif ( $mode eq 'word' ) {
         if ( $w->compare( $cur, '<', 'anchor' ) ) {
-            $first = $w->index("$cur wordstart");
-            $last  = $w->index('anchor - 1c wordend');
+            $first = $w->index( $w->safeword("$cur wordstart") );
+            $last  = $w->index( $w->safeword('anchor - 1c wordend') );
         } else {
-            $first = $w->index('anchor wordstart');
-            $last  = $w->index("$cur wordend");
+            $first = $w->index( $w->safeword('anchor wordstart') );
+            $last  = $w->index( $w->safeword("$cur wordend") );
         }
     } elsif ( $mode eq 'line' ) {
         if ( $w->compare( $cur, '<', 'anchor' ) ) {
@@ -400,6 +413,103 @@ sub SelectTo {    # Modified selection routine to deal with block selections
     } else {
         $w->markSet( 'insert', $last );
     }
+}
+
+# Taken from Text.pm with addition of safeword() to safely find the start and end
+# of a word - see safeword() for details
+#
+# SetCursor
+# Move the insertion cursor to a given position in a text. Also
+# clears the selection, if there is one in the text, and makes sure
+# that the insertion cursor is visible.
+#
+# Arguments:
+# w - The text window.
+# pos - The desired new position for the cursor in the window.
+sub SetCursor {
+    my ( $w, $pos ) = @_;
+    $pos = 'end - 1 chars' if $w->compare( $pos, '==', 'end' );
+    $pos = $w->safeword($pos);
+    $w->markSet( 'insert', $pos );
+    $w->unselectAll;
+    $w->see('insert');
+}
+
+# Taken from Text.pm with addition of safeword() to safely find the start and end
+# of a word - see safeword() for details
+#
+# KeySelect
+# This procedure is invoked when stroking out selections using the
+# keyboard. It moves the cursor to a new position, then extends
+# the selection to that position.
+#
+# Arguments:
+# w - The text window.
+# new - A new position for the insertion cursor (the cursor has not
+# actually been moved to this position yet).
+sub KeySelect {
+    my ( $w, $new ) = @_;
+    $new = $w->safeword($new);
+
+    my ( $first, $last );
+    if ( !defined $w->tag( 'ranges', 'sel' ) ) {
+
+        # No selection yet
+        $w->markSet( 'anchor', 'insert' );
+        if ( $w->compare( $new, '<', 'insert' ) ) {
+            $w->tagAdd( 'sel', $new, 'insert' );
+        } else {
+            $w->tagAdd( 'sel', 'insert', $new );
+        }
+    } else {
+
+        # Selection exists
+        if ( $w->compare( $new, '<', 'anchor' ) ) {
+            $first = $new;
+            $last  = 'anchor';
+        } else {
+            $first = 'anchor';
+            $last  = $new;
+        }
+        $w->tagRemove( 'sel', '1.0', $first );
+        $w->tagAdd( 'sel', $first, $last );
+        $w->tagRemove( 'sel', $last, 'end' );
+    }
+    $w->markSet( 'insert', $new );
+    $w->see('insert');
+    $w->idletasks;
+}
+
+#
+# Replaces indexes of form "xxx wordstart" or "xxx wordend" with the index
+# of the start or end of the word - internal Tk processing of these
+# fails with some Unicode strings - either treating an accented character as a
+# non-word character, or giving "Malformed UTF-8 character" errors
+sub safeword {
+    my $w   = shift;
+    my $pos = shift;
+
+    if ( $pos =~ s/ wordstart// ) {
+        my $startch = $w->get($pos);
+        return $w->index("$pos") if ( $startch =~ '\W' );    # already at a non-word character
+
+        # Find first non-word character backwards on the current line, then step forward one
+        my $start = $w->search( '-backwards', '-regexp', '--', '\W', "$pos", "$pos linestart" );
+        $start = $w->index("$start + 1c") if $start;
+        $start = $w->index("$pos linestart") unless $start;    # word was at start of line
+        return $start;
+    } elsif ( $pos =~ s/ wordend// ) {
+        my $endch = $w->get($pos);
+        return $w->index("$pos + 1c") if ( $endch =~ '\W' );    # already at a non-word character
+
+        # Find first non-word character forwards on the current line
+        my $end = $w->search( '-regexp', '--', '\W', "$pos", "$pos lineend" );
+        $end = $w->index("$pos lineend") unless $end;           # word was at end of line
+        return $end;
+    }
+
+    # Neither wordstart nor wordend was specified
+    return $pos;
 }
 
 #modified Column Cut & Copy routine to handle block selection
