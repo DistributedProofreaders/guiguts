@@ -310,8 +310,7 @@ sub win32_create_process {
     if ( Win32::Process::Create( $proc, $exe, $cmdline, 1, 0, '.' ) ) {
         return $proc;
     } else {
-        print STDERR "Failed to run $args[0]: ";
-        print STDERR Win32::FormatMessage( Win32::GetLastError() );
+        warn "Failed to run $args[0]: " . Win32::FormatMessage( Win32::GetLastError() );
         return undef;
     }
     return;
