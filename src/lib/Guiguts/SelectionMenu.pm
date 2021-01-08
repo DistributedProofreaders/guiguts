@@ -60,275 +60,268 @@ sub knuth_wrapper {
 sub selectrewrap {
     my $silentmode = shift;
     my $textwindow = $::textwindow;
-    unless ($silentmode) {
-        ::hidelinenumbers();    # To speed updating of text window
-        ::hidepagenums();
-        ::savesettings();
-    }
-    my @ranges      = $textwindow->tagRanges('sel');
-    my $range_total = @ranges;
+    my @ranges     = $textwindow->tagRanges('sel');
+    return if @ranges == 0;    # Nothing selected
+
     my $thisblockstart;
     my $start;
     my $scannosave = $::scannos_highlighted;
     $::scannos_highlighted = 0;
 
-    if ( $range_total == 0 ) {
-        return;
-    } else {
-        $textwindow->addGlobStart;
-        my $end = pop(@ranges);    #get the end index of the selection
-        $start = pop(@ranges);     #get the start index of the selection
-        my @marklist = $textwindow->dump( -mark, $start, $end );    #see if there any page markers set
-        my ( $markname, @savelist, $markindex );
-        while (@marklist) {                                         #save the pagemarkers if they have been set
-            shift @marklist;
-            $markname  = shift @marklist;
-            $markindex = shift @marklist;
-            if ( $markname =~ /Pg\S+/ ) {
-                $textwindow->insert( $markindex, $TEMPPAGEMARK );    #mark the page breaks for rewrapping
-                push @savelist, $markname;
-            }
-        }
-        while ( $textwindow->get($start) =~ /^\s*\n/ ) {             #if the selection starts on a blank line
-            $start = $textwindow->index("$start+1c")                 #advance the selection start until it isn't.
-        }
-        while ( $textwindow->get("$end+1c") =~ /^\s*\n/ ) {          #if the selection ends at the end of a line but not over it
-            $end = $textwindow->index("$end+1c")                     #advance the selection end until it does. (traps odd spaces
-        }    #at paragraph end bug)
-        $thisblockstart = $start;
-        my $thisblockend   = $end;
-        my $indentblockend = $end;
-        my $inblock        = 0;
-        my $infront        = 0;
-        my $enableindent;
-        my $fblock      = 0;
-        my $leftmargin  = $::blocklmargin;
-        my $rightmargin = $::blockrmargin;
-        my $firstmargin = $::blocklmargin;
-        my ( $rewrapped, $initial_tab, $subsequent_tab, $spaces );
-        my $indent = 0;
-        my $offset = 0;
-        my $poem   = 0;
-        my $textline;
-        my $lastend = $start;
-        my ( $sr, $sc, $er, $ec, $line );
-        my $textend      = $textwindow->index('end');
-        my $toplineblank = 0;
-        my $selection;
-
-        if ( $textend eq $end ) {
-            $textwindow->tagAdd( 'blockend', "$end-1c" )    #set a marker at the end of the selection, or one charecter less
-        } else {                                            #if the selection ends at the text end
-            $textwindow->tagAdd( 'blockend', $end );
-        }
-        if ( $textwindow->get( '1.0', '1.end' ) eq '' ) {    #trap top line delete bug
-            $toplineblank = 1;
-        }
-        ::enable_interrupt() unless $silentmode;
-        $spaces = 0;
-
-        # main while loop
-        while (1) {
-            $indent = $::defaultindent;
-            $thisblockend =
-              $textwindow->search( '-regex', '--',
-                '(^[$TEMPPAGEMARK]*$)|([' . $blockwraptypes . ']/)',
-                $thisblockstart, $end );                     # find end of paragraph or end of markup
-                                                             # if two start rewrap block markers aren't separated by a blank line, just let it become added
-            $thisblockend = $thisblockstart
-              if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c" ) =~
-                /^\/[$::allblocktypes]$/ );
-
-            if ($thisblockend) {
-                $thisblockend = $textwindow->index( $thisblockend . ' lineend' );
-            } else {
-                $thisblockend = $end;
-            }
-            ;                                                #or end of text if end of selection
-            $selection = $textwindow->get( $thisblockstart, $thisblockend )
-              if $thisblockend;                              #get the paragraph of text
-            unless ($selection) {
-                $thisblockstart = $thisblockend;
-                $thisblockstart = $textwindow->index("$thisblockstart+1c");
-                last if $textwindow->compare( $thisblockstart, '>=', $end );
-                last if ::query_interrupt();
-                next;
-            }
-            last
-              if ( ( $thisblockend eq $lastend )
-                || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
-
-            # Check for block types that support blockwrap
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
-                $::blockwrap = 1;
-                if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {
-                    $leftmargin  = $::blocklmargin;
-                    $firstmargin = $::blocklmargin;
-                    $rightmargin = $::blockrmargin;
-                }
-
-                # Check if there are any parameters following blockwrap markup [n...
-                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
-                    $leftmargin  = $1;
-                    $firstmargin = $leftmargin;
-                }
-
-                # [n.n...
-                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
-                    $firstmargin = $3;
-                }
-
-                # [n.n,n...
-                if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
-                    $rightmargin = $4;
-                }
-            }
-
-            # if selection is /*, /L, or /l
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[\*Ll]/ ) {
-                $inblock      = 1;
-                $enableindent = 1;
-            }    #check for no rewrap markup
-                 # if there are any parameters /*[n
-            if ( $selection =~ /^$TEMPPAGEMARK*\/\*\[(\d+)/ ) { $indent = $1 }
-
-            # if selection begins /p or /P
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[pP]/ ) {
-                $inblock      = 1;
-                $enableindent = 1;
-                $poem         = 1;
-                $indent       = $::poetrylmargin;
-            }
-
-            # if selection begins /x or /X or /$
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[Xx\$]/ ) { $inblock = 1 }
-
-            # if selection begins /f or /F
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[fF]/ ) {
-                $inblock = 1;
-            }
-            $textwindow->markSet( 'rewrapend', $thisblockend );             #Set a mark at the end of the text so it can be found after rewrap
-            unless ( $selection =~ /^$TEMPPAGEMARK*\s*?(\*\s*){4}\*/ ) {    #skip rewrap if paragraph is a thought break
-                if ($inblock) {
-                    if ($enableindent) {
-                        $indentblockend = $textwindow->search( '-regex', '--',
-                            "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
-                        $indentblockend = $indentblockend || $end;
-                        $textwindow->markSet( 'rewrapend', $indentblockend );
-                        unless ($offset) { $offset = 0 }
-                        ( $sr, $sc ) = split /\./, $thisblockstart;
-                        ( $er, $ec ) = split /\./, $indentblockend;
-                        unless ($offset) {
-                            $offset = 100;
-                            for my $line ( $sr + 1 .. $er - 1 ) {
-                                $textline = $textwindow->get( "$line.0", "$line.end" );
-                                if ($textline) {
-                                    $textwindow->search(
-                                        '-regexp',
-                                        '-count' => \$spaces,
-                                        '--', '^\s+', "$line.0", "$line.end"
-                                    );
-                                    unless ($spaces) { $spaces = 0 }
-                                    if ( $spaces < $offset ) {
-                                        $offset = $spaces;
-                                    }
-                                    $spaces = 0;
-                                }
-                            }
-                            $indent = $indent - $offset;
-                        }
-                        for my $line ( $sr .. $er - 1 ) {
-                            $textline = $textwindow->get( "$line.0", "$line.end" );
-                            next
-                              if ( ( $textline =~ /^$TEMPPAGEMARK*\/[pP\*Ll]/ )
-                                || ( $textline =~ /^$TEMPPAGEMARK*[pP\*LlFf]\// ) );
-                            if ( $enableindent and $fblock == 0 ) {
-                                $textwindow->insert( "$line.0", ( ' ' x $indent ) )
-                                  if ( $indent > 0 );
-                                if ( $indent < 0 ) {
-                                    if (
-                                        $textwindow->get( "$line.0", "$line.@{[abs $indent]}" ) =~
-                                        /\S/ ) {
-                                        while ( $textwindow->get("$line.0") eq ' ' ) {
-                                            $textwindow->delete("$line.0");
-                                        }
-                                    } else {
-                                        $textwindow->delete( "$line.0", "$line.@{[abs $indent]}" );
-                                    }
-                                }
-                            } else {
-                            }
-                        }
-                        $indent       = 0;
-                        $offset       = 0;
-                        $enableindent = 0;
-                        $poem         = 0;
-                        $inblock      = 0;
-                    }
-                } else {
-                    if ($::blockwrap) {
-                        $rewrapped = wrapper(
-                            $leftmargin, $firstmargin, $rightmargin,
-                            $selection,  $::rwhyphenspace
-                        );
-                    } else {    #rewrap the paragraph
-                        $rewrapped = wrapper( $::lmargin, $::lmargin, $::rmargin,
-                            $selection, $::rwhyphenspace );
-                    }
-                    $textwindow->delete( $thisblockstart, $thisblockend );    #delete the original paragraph
-                    $textwindow->insert( $thisblockstart, $rewrapped );       #insert the rewrapped paragraph
-                    my @endtemp = $textwindow->tagRanges('blockend');         #find the end of the rewrapped text
-                    $end = shift @endtemp;
-                }
-            }
-            if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$]\//m ) {
-                $inblock      = 0;
-                $indent       = 0;
-                $offset       = 0;
-                $enableindent = 0;
-                $poem         = 0;
-            }
-            if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
-            last unless $end;
-            $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
-            $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
-
-            # if there are blank lines before the next paragraph, advance past them
-            while (1) {
-                $thisblockstart = $textwindow->index("$thisblockstart+1l");
-                last if $textwindow->compare( $thisblockstart, '>=', 'end' );
-                next if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '';
-                last;
-            }
-
-            # reset blockwrap and quit if interrupted
-            if ( ::query_interrupt() ) {
-                $::blockwrap = 0;
-                last;
-            }
-            last if $thisblockstart eq $end;    # finish if next paragraph starts at end of selection
-
-            $textwindow->update unless $silentmode or ::updatedrecently();    # Too slow if update window after every paragraph
-        }
-        unless ($silentmode) {
-            ::disable_interrupt();
-            $textwindow->Busy( -recurse => 1 );
-        }
-
-        #if there are saved page markers, remove the temporary markers and reinsert the saved ones
-        while (@savelist) {
-            $markname  = shift @savelist;
-            $markindex = $textwindow->search( '-regex', '--', $TEMPPAGEMARK, '1.0', 'end' );
-            $textwindow->delete($markindex);
-            $textwindow->markSet( $markname, $markindex );
-            $textwindow->markGravity( $markname, 'left' );
-        }
-
-        # reinsert deleted top line if it was removed
-        $textwindow->insert( '1.0', "\n" ) if $start eq '1.0' and $toplineblank == 1;
-
-        $textwindow->tagRemove( 'blockend', '1.0', 'end' );
+    unless ($silentmode) {
+        ::hidelinenumbers();    # To speed updating of text window
+        ::hidepagenums();
+        ::savesettings();
     }
+    $textwindow->addGlobStart;
+    my $end = pop(@ranges);     #get the end index of the selection
+    $start = pop(@ranges);      #get the start index of the selection
+    my @marklist = $textwindow->dump( -mark, $start, $end );    #see if there any page markers set
+    my ( $markname, @savelist, $markindex );
+    while (@marklist) {                                         #save the pagemarkers if they have been set
+        shift @marklist;
+        $markname  = shift @marklist;
+        $markindex = shift @marklist;
+        if ( $markname =~ /Pg\S+/ ) {
+            $textwindow->insert( $markindex, $TEMPPAGEMARK );    #mark the page breaks for rewrapping
+            push @savelist, $markname;
+        }
+    }
+    while ( $textwindow->get($start) =~ /^\s*\n/ ) {             #if the selection starts on a blank line
+        $start = $textwindow->index("$start+1c")                 #advance the selection start until it isn't.
+    }
+    while ( $textwindow->get("$end+1c") =~ /^\s*\n/ ) {          #if the selection ends at the end of a line but not over it
+        $end = $textwindow->index("$end+1c")                     #advance the selection end until it does. (traps odd spaces
+    }    #at paragraph end bug)
+    $thisblockstart = $start;
+    my $thisblockend   = $end;
+    my $indentblockend = $end;
+    my $inblock        = 0;
+    my $infront        = 0;
+    my $enableindent;
+    my $fblock      = 0;
+    my $leftmargin  = $::blocklmargin;
+    my $rightmargin = $::blockrmargin;
+    my $firstmargin = $::blocklmargin;
+    my ( $rewrapped, $initial_tab, $subsequent_tab, $spaces );
+    my $indent = 0;
+    my $offset = 0;
+    my $poem   = 0;
+    my $textline;
+    my $lastend = $start;
+    my ( $sr, $sc, $er, $ec, $line );
+    my $textend      = $textwindow->index('end');
+    my $toplineblank = 0;
+    my $selection;
+
+    if ( $textend eq $end ) {
+        $textwindow->tagAdd( 'blockend', "$end-1c" )    #set a marker at the end of the selection, or one charecter less
+    } else {                                            #if the selection ends at the text end
+        $textwindow->tagAdd( 'blockend', $end );
+    }
+    if ( $textwindow->get( '1.0', '1.end' ) eq '' ) {    #trap top line delete bug
+        $toplineblank = 1;
+    }
+    ::enable_interrupt() unless $silentmode;
+    $spaces = 0;
+
+    # main while loop
+    while (1) {
+        $indent = $::defaultindent;
+        $thisblockend =
+          $textwindow->search( '-regex', '--', '(^[$TEMPPAGEMARK]*$)|([' . $blockwraptypes . ']/)',
+            $thisblockstart, $end );                     # find end of paragraph or end of markup
+                                                         # if two start rewrap block markers aren't separated by a blank line, just let it become added
+        $thisblockend = $thisblockstart
+          if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c" ) =~
+            /^\/[$::allblocktypes]$/ );
+
+        if ($thisblockend) {
+            $thisblockend = $textwindow->index( $thisblockend . ' lineend' );
+        } else {
+            $thisblockend = $end;
+        }
+        ;                                                #or end of text if end of selection
+        $selection = $textwindow->get( $thisblockstart, $thisblockend )
+          if $thisblockend;                              #get the paragraph of text
+        unless ($selection) {
+            $thisblockstart = $thisblockend;
+            $thisblockstart = $textwindow->index("$thisblockstart+1c");
+            last if $textwindow->compare( $thisblockstart, '>=', $end );
+            last if ::query_interrupt();
+            next;
+        }
+        last
+          if ( ( $thisblockend eq $lastend )
+            || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
+
+        # Check for block types that support blockwrap
+        if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
+            $::blockwrap = 1;
+            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {
+                $leftmargin  = $::blocklmargin;
+                $firstmargin = $::blocklmargin;
+                $rightmargin = $::blockrmargin;
+            }
+
+            # Check if there are any parameters following blockwrap markup [n...
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
+                $leftmargin  = $1;
+                $firstmargin = $leftmargin;
+            }
+
+            # [n.n...
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
+                $firstmargin = $3;
+            }
+
+            # [n.n,n...
+            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+                $rightmargin = $4;
+            }
+        }
+
+        # if selection is /*, /L, or /l
+        if ( $selection =~ /^$TEMPPAGEMARK*\/[\*Ll]/ ) {
+            $inblock      = 1;
+            $enableindent = 1;
+        }    #check for no rewrap markup
+             # if there are any parameters /*[n
+        if ( $selection =~ /^$TEMPPAGEMARK*\/\*\[(\d+)/ ) { $indent = $1 }
+
+        # if selection begins /p or /P
+        if ( $selection =~ /^$TEMPPAGEMARK*\/[pP]/ ) {
+            $inblock      = 1;
+            $enableindent = 1;
+            $poem         = 1;
+            $indent       = $::poetrylmargin;
+        }
+
+        # if selection begins /x or /X or /$
+        if ( $selection =~ /^$TEMPPAGEMARK*\/[Xx\$]/ ) { $inblock = 1 }
+
+        # if selection begins /f or /F
+        if ( $selection =~ /^$TEMPPAGEMARK*\/[fF]/ ) {
+            $inblock = 1;
+        }
+        $textwindow->markSet( 'rewrapend', $thisblockend );             #Set a mark at the end of the text so it can be found after rewrap
+        unless ( $selection =~ /^$TEMPPAGEMARK*\s*?(\*\s*){4}\*/ ) {    #skip rewrap if paragraph is a thought break
+            if ($inblock) {
+                if ($enableindent) {
+                    $indentblockend = $textwindow->search( '-regex', '--',
+                        "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
+                    $indentblockend = $indentblockend || $end;
+                    $textwindow->markSet( 'rewrapend', $indentblockend );
+                    unless ($offset) { $offset = 0 }
+                    ( $sr, $sc ) = split /\./, $thisblockstart;
+                    ( $er, $ec ) = split /\./, $indentblockend;
+                    unless ($offset) {
+                        $offset = 100;
+                        for my $line ( $sr + 1 .. $er - 1 ) {
+                            $textline = $textwindow->get( "$line.0", "$line.end" );
+                            if ($textline) {
+                                $textwindow->search(
+                                    '-regexp',
+                                    '-count' => \$spaces,
+                                    '--', '^\s+', "$line.0", "$line.end"
+                                );
+                                unless ($spaces) { $spaces = 0 }
+                                if ( $spaces < $offset ) {
+                                    $offset = $spaces;
+                                }
+                                $spaces = 0;
+                            }
+                        }
+                        $indent = $indent - $offset;
+                    }
+                    for my $line ( $sr .. $er - 1 ) {
+                        $textline = $textwindow->get( "$line.0", "$line.end" );
+                        next
+                          if ( ( $textline =~ /^$TEMPPAGEMARK*\/[pP\*Ll]/ )
+                            || ( $textline =~ /^$TEMPPAGEMARK*[pP\*LlFf]\// ) );
+                        if ( $enableindent and $fblock == 0 ) {
+                            $textwindow->insert( "$line.0", ( ' ' x $indent ) )
+                              if ( $indent > 0 );
+                            if ( $indent < 0 ) {
+                                if ( $textwindow->get( "$line.0", "$line.@{[abs $indent]}" ) =~
+                                    /\S/ ) {
+                                    while ( $textwindow->get("$line.0") eq ' ' ) {
+                                        $textwindow->delete("$line.0");
+                                    }
+                                } else {
+                                    $textwindow->delete( "$line.0", "$line.@{[abs $indent]}" );
+                                }
+                            }
+                        } else {
+                        }
+                    }
+                    $indent       = 0;
+                    $offset       = 0;
+                    $enableindent = 0;
+                    $poem         = 0;
+                    $inblock      = 0;
+                }
+            } else {
+                if ($::blockwrap) {
+                    $rewrapped = wrapper( $leftmargin, $firstmargin, $rightmargin,
+                        $selection, $::rwhyphenspace );
+                } else {    #rewrap the paragraph
+                    $rewrapped =
+                      wrapper( $::lmargin, $::lmargin, $::rmargin, $selection, $::rwhyphenspace );
+                }
+                $textwindow->delete( $thisblockstart, $thisblockend );    #delete the original paragraph
+                $textwindow->insert( $thisblockstart, $rewrapped );       #insert the rewrapped paragraph
+                my @endtemp = $textwindow->tagRanges('blockend');         #find the end of the rewrapped text
+                $end = shift @endtemp;
+            }
+        }
+        if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$]\//m ) {
+            $inblock      = 0;
+            $indent       = 0;
+            $offset       = 0;
+            $enableindent = 0;
+            $poem         = 0;
+        }
+        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
+        last unless $end;
+        $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
+        $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
+
+        # if there are blank lines before the next paragraph, advance past them
+        while (1) {
+            $thisblockstart = $textwindow->index("$thisblockstart+1l");
+            last if $textwindow->compare( $thisblockstart, '>=', 'end' );
+            next if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '';
+            last;
+        }
+
+        # reset blockwrap and quit if interrupted
+        if ( ::query_interrupt() ) {
+            $::blockwrap = 0;
+            last;
+        }
+        last if $thisblockstart eq $end;    # finish if next paragraph starts at end of selection
+
+        $textwindow->update unless $silentmode or ::updatedrecently();    # Too slow if update window after every paragraph
+    }
+    unless ($silentmode) {
+        ::disable_interrupt();
+        $textwindow->Busy( -recurse => 1 );
+    }
+
+    #if there are saved page markers, remove the temporary markers and reinsert the saved ones
+    while (@savelist) {
+        $markname  = shift @savelist;
+        $markindex = $textwindow->search( '-regex', '--', $TEMPPAGEMARK, '1.0', 'end' );
+        $textwindow->delete($markindex);
+        $textwindow->markSet( $markname, $markindex );
+        $textwindow->markGravity( $markname, 'left' );
+    }
+
+    # reinsert deleted top line if it was removed
+    $textwindow->insert( '1.0', "\n" ) if $start eq '1.0' and $toplineblank == 1;
+
+    $textwindow->tagRemove( 'blockend', '1.0', 'end' );
 
     # If any line consists solely of whitespace, empty it
     $textwindow->delete( $thisblockstart, "$thisblockstart lineend" )
