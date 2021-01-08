@@ -272,7 +272,7 @@ our @extops = (
     },
     {
         'label'   => 'EBookMaker Online',
-        'command' => "$globalbrowserstart http://ebookmaker.pglaf.org/"
+        'command' => "$globalbrowserstart https://ebookmaker.pglaf.org/"
     },
     {
         'label'   => 'Post-Processing Workbench',
