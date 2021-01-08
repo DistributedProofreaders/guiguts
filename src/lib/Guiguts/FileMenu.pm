@@ -294,6 +294,7 @@ sub _bin_save {
     }
     my $fh = FileHandle->new("> $binname");
     if ( defined $fh ) {
+        binmode $fh, ":encoding(utf-8)";
         print $fh "\%::pagenumbers = (\n";
         for my $page ( sort { $a cmp $b } keys %::pagenumbers ) {
             if ( $page eq "Pg" ) {
