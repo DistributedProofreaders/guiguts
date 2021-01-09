@@ -1006,6 +1006,12 @@ sub menu_preferences_processing {
             -offvalue   => 'css3',
         ],
         [ 'command', 'Set Compose Key...', -command => sub { ::composekeypopup() } ],
+        [
+            Checkbutton => 'Allow px Sizes for HTML Images',
+            -variable   => \$::htmlimageallowpixels,
+            -onvalue    => 1,
+            -offvalue   => 0
+        ],
     ];
 }
 

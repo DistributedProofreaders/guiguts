@@ -884,7 +884,7 @@ EOM
             blocklmargin blockrmargin bold_char composepopbinding cssvalidationlevel
             defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
             font_char fontname fontsize fontweight geometry
-            gesperrt_char globalaspellmode highlightcolor history_size ignoreversionnumber
+            gesperrt_char globalaspellmode highlightcolor history_size htmlimageallowpixels ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin markupthreshold
             multisearchsize multiterm nobell nohighlights projectfileslocation notoolbar poetrylmargin projectfileslocation
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted spellcheckwithenchant stayontop toolside
