@@ -6,6 +6,7 @@
 - User can specify HTML image size in pixels, not just ems or percentage,
   by enabling the feature in the Preferences-->Processing Menu
 - Post-Processing Workbench added to the Custom Menu
+- Underscores are preserved when filename is used to create an image id
 
 ### Bug Fixes
 - error messages could be output when saving after checking curly quotes
