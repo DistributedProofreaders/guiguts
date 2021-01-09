@@ -18,7 +18,7 @@ use warnings;
 use lib '.';
 
 #use criticism 'gentle';
-our $VERSION = '1.2.1';
+our $VERSION = '1.2.2';
 
 # DON'T FORGET to update the version number in makefile too
 

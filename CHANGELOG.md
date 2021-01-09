@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 1.2.2
+
+### Changes
+- User can specify HTML image size in pixels, not just ems or percentage,
+  by enabling the feature in the Preferences-->Processing Menu
+- Post-Processing Workbench added to the Custom Menu
+
+### Bug Fixes
+- error messages could be output when saving after checking curly quotes
+- line numbers were hidden if rewrap was attempted on an empty selection
+- selecting a word or using Ctrl+arrow keys to move by word could cause
+  "Malformed UTF-8 character" errors
+- pasting moderate to large amounts of text could make the program crash
+
 ## Version 1.2.1
 
 ### Changes
