@@ -144,6 +144,7 @@ our $globalprojectdirectory = q{};
 our @gsopt;
 our $highlightcolor         = '#a08dfc';
 our $history_size           = 20;
+our $htmlimageallowpixels   = 0;                           # Don't allow user to specify image size in pixels by default
 our $ignoreversions         = "none";                      # Don't ignore any updates by default
 our $ignoreversionnumber    = "";                          # Ignore a specific version
 our $jeebiesmode            = 'p';

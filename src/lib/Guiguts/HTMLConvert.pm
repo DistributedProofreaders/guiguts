@@ -1646,6 +1646,14 @@ sub htmlimage {
             -value       => 'em',
             -command     => sub { htmlimagewidthsetdefault(); }
         )->pack( -side => 'left' );
+        my $pxsel = $f51->Radiobutton(
+            -variable    => \$::lglobal{htmlimgwidthtype},
+            -text        => 'px',
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => 'px',
+            -command     => sub { htmlimagewidthsetdefault(); }
+        )->pack( -side => 'left' )
+          if $::htmlimageallowpixels;
         my $f52 = $f5->Frame->pack( -side => 'top', -anchor => 'n' );
         $::lglobal{htmlimggeom} =
           $f52->Label( -text => '' )->pack();
@@ -1706,6 +1714,7 @@ sub htmlimageok {
     my $name       = $::lglobal{imgname}->get;
     return unless $name;
     my $widthcn = my $width = $::lglobal{widthent}->get;
+    my $height  = $::lglobal{heightent}->get;
     $widthcn =~ s/\./_/;    # Convert decimal point to underscore for classname
     my ( $fname, $extension );
     ( $fname, $::globalimagepath, $extension ) = ::fileparse($name);
@@ -1729,9 +1738,13 @@ sub htmlimageok {
 
     # Use filename as basis for an id - remove file extension first
     $fname =~ s/\.[^\.]*$//;
-    my $idname    = makeanchor( ::deaccentdisplay($fname) );
-    my $classname = 'illow' . ( $::lglobal{htmlimgwidthtype} eq '%' ? 'p' : 'e' ) . $widthcn;
-    my $classreg  = '\.illow[pe][0-9\.]+';                                                      # Match any automatically added illow classes
+    my $idname      = makeanchor( ::deaccentdisplay($fname) );
+    my $illowsuffix = 'p';
+    $illowsuffix = 'e' if $::lglobal{htmlimgwidthtype} eq 'em';
+    $illowsuffix = 'x' if $::lglobal{htmlimgwidthtype} eq 'px';
+    my $classname = " illow$illowsuffix$widthcn";
+    $classname = "" if $::lglobal{htmlimgwidthtype} eq 'px';
+    my $classreg = '\.illow[pex][0-9\.]+';    # Match any automatically added illow classes
 
     # Replace [Illustration] with div, img and caption
     $textwindow->addGlobStart;
@@ -1739,20 +1752,21 @@ sub htmlimageok {
 
     # Never want image size to exceed its natural size
     my $maxwidth = $::lglobal{htmlimagesizex} / $EMPX;
-    $textwindow->insert(
-        'thisblockstart',
-        "<div class=\"fig$::lglobal{htmlimgalignment} $classname\" id=\"$idname\""
-          . (
-            $::lglobal{htmlimgwidthtype} eq '%' ? " style=\"max-width: ${maxwidth}em;\">\n" : ">\n"
-          )
-          . "  <img class=\"w100\" src=\"$name\" $alt$title />\n"
+    my $sizexy   = "";
+    $sizexy = " width=\"$width\" height=\"$height\""
+      if $::htmlimageallowpixels and $::lglobal{htmlimgwidthtype} eq 'px';
+    my $style = "";
+    $style = " style=\"max-width: ${maxwidth}em;\"" if $::lglobal{htmlimgwidthtype} eq '%';
+    $style = " style=\"width: ${width}px;\""        if $::lglobal{htmlimgwidthtype} eq 'px';
+    $textwindow->insert( 'thisblockstart',
+            "<div class=\"fig$::lglobal{htmlimgalignment}$classname\" id=\"$idname\"$style>\n"
+          . "  <img class=\"w100\" src=\"$name\"$sizexy$alt$title />\n"
           . "$selection</div>"
-          . $::lglobal{preservep}
-    );
+          . $::lglobal{preservep} );
 
     # Write class into CSS block (sorted) - first find end of CSS
     my $insertpoint = $textwindow->search( '--', '</style', '1.0', 'end' );
-    if ($insertpoint) {
+    if ( $insertpoint and $::lglobal{htmlimgwidthtype} ne 'px' ) {    # px type uses style, not class
         my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
 
         # If % width and override flag set, then also add CSS to override width to 100% for epub
@@ -1824,8 +1838,10 @@ sub htmlimagewidthsetdefault {
     my $sizex;
     if ( $::lglobal{htmlimgwidthtype} eq '%' ) {
         $sizex = htmlimagewidthmaxpercent();
-    } else {
+    } elsif ( $::lglobal{htmlimgwidthtype} eq 'em' ) {
         $sizex = $::lglobal{htmlimagesizex} / $EMPX;
+    } else {
+        $sizex = $::lglobal{htmlimagesizex};
     }
     $::lglobal{widthent}->delete( 0, 'end' );
     $::lglobal{widthent}->insert( 'end', $sizex );
@@ -1842,6 +1858,7 @@ sub htmlimagewidthsetdefault {
 # Return the maximum percentage width for the current image
 # such that both its width and height will fit a landscape screen
 sub htmlimagewidthmaxpercent {
+    return 100 unless $::lglobal{htmlimagesizex} and $::lglobal{htmlimagesizey};
     return min( 100,
         int( 100.0 * $LANDY / $LANDX * $::lglobal{htmlimagesizex} / $::lglobal{htmlimagesizey} ) );
 }
@@ -1853,12 +1870,19 @@ sub htmlimageupdateheight {
     my $widthlabel  = shift;
     my $heightlabel = '';
     if ( looks_like_number($widthlabel) ) {
-        if ( $::lglobal{htmlimgwidthtype} eq '%' ) {
-            $heightlabel = ' --';
-        } else {
-            $heightlabel = $widthlabel * $::lglobal{htmlimagesizey} / $::lglobal{htmlimagesizex}
-              if $::lglobal{htmlimagesizex} and $::lglobal{htmlimagesizey};
-            $heightlabel = sprintf( "%.3f", $heightlabel );
+        $heightlabel = ' --';
+        if ( $::lglobal{htmlimagesizex} and $::lglobal{htmlimagesizey} ) {
+            if ( $::lglobal{htmlimgwidthtype} eq 'em' ) {
+                $heightlabel =
+                  $widthlabel * $::lglobal{htmlimagesizey} / $::lglobal{htmlimagesizex};
+                $heightlabel = sprintf( "%.3f", $heightlabel );
+            } elsif ( $::lglobal{htmlimgwidthtype} eq 'px' ) {
+                $heightlabel =
+                  $widthlabel * $::lglobal{htmlimagesizey} / $::lglobal{htmlimagesizex};
+                $heightlabel = sprintf( "%.0f", $heightlabel );
+            } else {
+                $heightlabel = ' --';
+            }
         }
     }
     $::lglobal{htmlimgheight} = $heightlabel;
