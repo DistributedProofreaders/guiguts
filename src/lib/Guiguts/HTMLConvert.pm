@@ -2980,12 +2980,14 @@ sub hyperlinkpagenums {
 sub makeanchor {
     my $linkname = shift;
     return unless $linkname;
-    $linkname =~ s/-/\x00/g;
+    $linkname =~ s/-/\x00/g;              # preserve hyphens
+    $linkname =~ s/_/\x01/g;              # preserve underscores
     $linkname =~ s/&amp;|&mdash;/\xFF/;
     $linkname =~ s/<sup>.*?<\/sup>//g;
     $linkname =~ s/<\/?[^>]+>//g;
     $linkname =~ s/\p{Punct}//g;
-    $linkname =~ s/\x00/-/g;
+    $linkname =~ s/\x00/-/g;              # restore hyphens
+    $linkname =~ s/\x01/_/g;              # restore underscores
     $linkname =~ s/\s+/_/g;
 
     while ( $linkname =~ m/([\x{100}-\x{ffef}])/ ) {
