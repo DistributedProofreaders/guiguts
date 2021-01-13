@@ -3,16 +3,17 @@
 ## Version 1.2.3
 
 ### Bug Fixes
-- Faulty bin file could be created, depending on page label setup
-- `/P...P/` poetry was not always rewrapped correctly 
+- faulty bin file could be created, depending on page label setup
+- `/P...P/` poetry was not always rewrapped correctly
+- search and replace dialog was too wide
 
 ## Version 1.2.2
 
 ### Changes
-- User can specify HTML image size in pixels, not just ems or percentage,
+- user can specify HTML image size in pixels, not just ems or percentage,
   by enabling the feature in the Preferences-->Processing Menu
 - Post-Processing Workbench added to the Custom Menu
-- Underscores are preserved when filename is used to create an image id
+- underscores are preserved when filename is used to create an image id
 
 ### Bug Fixes
 - error messages could be output when saving after checking curly quotes
