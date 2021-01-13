@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.2.3
+
+### Bug Fixes
+- Faulty bin file could be created, depending on page label setup
+- `/P...P/` poetry was not always rewrapped correctly 
+
 ## Version 1.2.2
 
 ### Changes
