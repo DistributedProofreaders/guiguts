@@ -87,12 +87,18 @@ sub selectrewrap {
             push @savelist, $markname;
         }
     }
-    while ( $textwindow->get($start) =~ /^\s*\n/ ) {             #if the selection starts on a blank line
-        $start = $textwindow->index("$start+1c")                 #advance the selection start until it isn't.
+
+    # If the selection starts on a blank(ish) line, advance the selection start until it isn't.
+    while ( $textwindow->get($start) =~ /[\s\n$TEMPPAGEMARK]/ ) {
+        $start = $textwindow->index("$start+1c");
     }
-    while ( $textwindow->get("$end+1c") =~ /^\s*\n/ ) {          #if the selection ends at the end of a line but not over it
-        $end = $textwindow->index("$end+1c")                     #advance the selection end until it does. (traps odd spaces
-    }    #at paragraph end bug)
+
+    # If the selection ends at the end of a line but not over it advance the selection end until it does.
+    # Traps odd spaces at paragraph end bug
+    while ( $textwindow->get( "$end+1c", "$end+1c lineend" ) =~ /^[\s\n$TEMPPAGEMARK]*$/ ) {
+        $end = $textwindow->index("$end+1c");
+        last if $textwindow->compare( $end, '>=', 'end' );
+    }
     $thisblockstart = $start;
     my $thisblockend   = $end;
     my $indentblockend = $end;
@@ -129,7 +135,8 @@ sub selectrewrap {
     while (1) {
         $indent = $::defaultindent;
         $thisblockend =
-          $textwindow->search( '-regex', '--', '(^[$TEMPPAGEMARK]*$)|([' . $blockwraptypes . ']/)',
+          $textwindow->search( '-regex', '--',
+            '(^' . $TEMPPAGEMARK . '*$)|([' . $blockwraptypes . ']/)',
             $thisblockstart, $end );                     # find end of paragraph or end of markup
                                                          # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
