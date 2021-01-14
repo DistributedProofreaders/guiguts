@@ -982,7 +982,7 @@ sub searchpopup {
         $::lglobal{searchentry} = $sf11->Entry(
             -background => $::bkgcolor,
             -foreground => 'black',
-            -width      => 60,
+            -width      => 40,
             -validate   => 'all',
             -vcmd       => sub { reg_check(shift); }
         )->pack(
@@ -1164,7 +1164,7 @@ sub searchpopup {
         );
         $::lglobal{replaceentry} = $sf12->Entry(
             -background => $::bkgcolor,
-            -width      => 60,
+            -width      => 40,
         )->pack(
             -side   => 'right',
             -anchor => 'w',
@@ -1519,7 +1519,7 @@ sub searchaddterms {
         );
         $::lglobal{$replaceentry} = $msref->[$_]->Entry(
             -background => $::bkgcolor,
-            -width      => 60,
+            -width      => 40,
         )->pack(
             -side   => 'right',
             -anchor => 'w',
