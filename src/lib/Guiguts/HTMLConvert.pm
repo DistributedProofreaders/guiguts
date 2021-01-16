@@ -1742,9 +1742,8 @@ sub htmlimageok {
     my $illowsuffix = 'p';
     $illowsuffix = 'e' if $::lglobal{htmlimgwidthtype} eq 'em';
     $illowsuffix = 'x' if $::lglobal{htmlimgwidthtype} eq 'px';
-    my $classname = " illow$illowsuffix$widthcn";
-    $classname = "" if $::lglobal{htmlimgwidthtype} eq 'px';
-    my $classreg = '\.illow[pex][0-9\.]+';    # Match any automatically added illow classes
+    my $classname = "illow$illowsuffix$widthcn";
+    my $divclass  = ( $::lglobal{htmlimgwidthtype} eq 'px' ? "" : " $classname" );
 
     # Replace [Illustration] with div, img and caption
     $textwindow->addGlobStart;
@@ -1759,7 +1758,7 @@ sub htmlimageok {
     $style = " style=\"max-width: ${maxwidth}em;\"" if $::lglobal{htmlimgwidthtype} eq '%';
     $style = " style=\"width: ${width}px;\""        if $::lglobal{htmlimgwidthtype} eq 'px';
     $textwindow->insert( 'thisblockstart',
-            "<div class=\"fig$::lglobal{htmlimgalignment}$classname\" id=\"$idname\"$style>\n"
+            "<div class=\"fig$::lglobal{htmlimgalignment}$divclass\" id=\"$idname\"$style>\n"
           . "  <img class=\"w100\" src=\"$name\"$sizexy$alt$title />\n"
           . "$selection</div>"
           . $::lglobal{preservep} );
@@ -1790,6 +1789,7 @@ sub htmlimageok {
                 $insertpoint = $insertpoint . ' +1l';    # default position for first ever illow class
                 my $length     = 0;
                 my $classpoint = $insertpoint;
+                my $classreg   = '\.illow[pex][0-9\.]+';    # Match any automatically added illow classes
 
                 # Loop back through illow classes to find correct place to insert
                 # If a smaller width is found, insert after it. If not, insert at start of list
