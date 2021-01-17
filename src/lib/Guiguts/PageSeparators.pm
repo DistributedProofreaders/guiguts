@@ -596,12 +596,12 @@ sub separatorpopup {
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             }
         );
-        $::lglobal{pageseppop}->Tk::bind( '<j>' => sub { $joinbutton->invoke; } );
-        $::lglobal{pageseppop}->Tk::bind( '<k>' => sub { $joinhybutton->invoke; } );
-        $::lglobal{pageseppop}->Tk::bind( '<?>' => sub { $phelpbutton->invoke; } );
-        $::lglobal{pageseppop}->Tk::bind( '<l>' => sub { $blankbutton->invoke; } );
-        $::lglobal{pageseppop}->Tk::bind( '<t>' => sub { $sectjoinbutton->invoke; } );
-        $::lglobal{pageseppop}->Tk::bind( '<h>' => sub { $chjoinbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<j>'            => sub { $joinbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<k>'            => sub { $joinhybutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<Key-question>' => sub { $phelpbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<l>'            => sub { $blankbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<t>'            => sub { $sectjoinbutton->invoke; } );
+        $::lglobal{pageseppop}->Tk::bind( '<h>'            => sub { $chjoinbutton->invoke; } );
         $::lglobal{pageseppop}->Tk::bind(
             '<a>' => sub {
                 $::lglobal{pagesepauto}++;
