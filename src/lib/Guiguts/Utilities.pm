@@ -1592,13 +1592,13 @@ sub natural_sort_alpha {
 
 #
 # Sorts an array of strings by length then string, handling case and accents intelligently
-# Sorting is first by length, then string sorting is case-insensitive and ignores accents,
+# Sorting is first by length (reversed), then string sorting is case-insensitive and ignores accents,
 # except for "identical" words which are sorted according to normal sort order.
 # Also note trailing asterisks (used to flag suspects) are stripped from length calculation.
-# e.g. Y, y, Z, z, Ab ****, ab ****, ABc, Abc, AxY, Axy, etc.
+# e.g. ABc, Abc, AxY, Axy, Ab ****, ab ****, Y, y, Z, z, etc.
 sub natural_sort_length {
     sort {
-             length( noast($a) ) <=> length( noast($b) )
+             length( noast($b) ) <=> length( noast($a) )
           or lc( ::deaccentsort($a) ) cmp lc( ::deaccentsort($b) )
           or $a cmp $b;
     } @_;
@@ -1606,12 +1606,12 @@ sub natural_sort_length {
 
 #
 # Given a ref to a hash containing a number (e.g. word frequency), sorts the keys,
-# first by number, then string sorting is case-insensitive and ignores accents,
+# first by number (reversed), then string sorting is case-insensitive and ignores accents,
 # except for "identical" words which are sorted according to normal sort order,
-# e.g. 1 ABc, 1 Abc, 1 AxY, 1 Axy, 2 Ab, 2 ab,  etc.
+# e.g. 19 ABc, 19 Abc, 19 AxY, 19 Axy, 18 Ab, 18 ab,  etc.
 sub natural_sort_freq {
     sort {
-             $_[0]->{$a} <=> $_[0]->{$b}
+             $_[0]->{$b} <=> $_[0]->{$a}
           or lc( ::deaccentsort($a) ) cmp lc( ::deaccentsort($b) )
           or $a cmp $b;
     } keys %{ $_[0] };
