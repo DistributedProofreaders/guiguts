@@ -12,7 +12,7 @@ BEGIN {
       &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
       &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
-      &natural_sort_length &natural_sort_freq &drag &cut &paste &textcopy &colcut &colcopy &colpaste &showversion
+      &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
       &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
       &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
@@ -1689,6 +1689,23 @@ sub paste {
         } else {
             $textwindow->clipboardPaste;
         }
+    }
+}
+
+#
+# Special paste routine to insert into Entry widgets
+# Try to cope with Perl/Tk failing to handle utf8 correctly on some platforms
+# Similarly to paste routine above, alternative paste uses slightly different method
+sub entrypaste {
+    my $w = shift;
+    $w->deleteSelected;    #
+
+    my $alternative_paste = shift;
+    if ($alternative_paste) {
+        eval { $w->insert( "insert", $::textwindow->clipboardGet ); };
+        $w->SeeInsert if $w->can('SeeInsert');
+    } else {
+        $w->clipboardPaste;
     }
 }
 

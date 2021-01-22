@@ -291,17 +291,11 @@ sub keybindings {
     # Note that for this to work, a dummy Entry is created in initialize() routine previously,
     # because default class bindings don't get set up until first Entry is created. So without
     # the dummy widget, the binding below would be overwritten by the default at a later point.
-    $textwindow->MainWindow->bind(
-        'Tk::Entry',
-        '<<Paste>>' => sub {    # Taken from Tk::clipboardPaste (where delete is commented out)
-            my $w = shift;
-            $w->deleteSelected;
+    $textwindow->MainWindow->bind( 'Tk::Entry', '<<Paste>>' => sub { ::entrypaste(shift); }, );
 
-            # Basic eval exception handling to avoid error if nothing in clipboard
-            eval { $w->insert( "insert", $::textwindow->clipboardGet ); };
-            $w->SeeInsert if $w->can('SeeInsert');
-        }
-    );
+    # Alternative paste to give user a second option if Perl/Tk utf8 bug strikes
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Control-Alt-v>' => sub { ::entrypaste( shift, 'alternative' ); }, );
 }
 
 # Bind a key-combination to a sub allowing for capslock on/off.
