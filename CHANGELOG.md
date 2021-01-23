@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.2.4
+
+### Bug Fixes
+- illow class CSS had an unwanted space character before class name
+- length and frequency sorting in Word Frequency were reversed
+- error when popping Page Separator dialog on some platforms
+- pasting utf8 characters into the Search & Replace dialog failed on
+  some platforms
+- orphaned brackets might not be reported and could generate error
+- closing footnote divs were badly placed
+- file paths with quotes caused errors when saving
+
 ## Version 1.2.3
 
 ### Bug Fixes
