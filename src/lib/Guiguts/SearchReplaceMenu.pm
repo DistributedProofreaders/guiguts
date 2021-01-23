@@ -1952,20 +1952,6 @@ sub orphanedbrackets {
             $::lglobal{brbrackets}[1] = $::lglobal{brbrackets}[1] || '';
             last unless @{ $::lglobal{brbrackets} };
         }
-        if ( ( $::lglobal{brbrackets}[2] ) && ( $::lglobal{brbrackets}[3] ) ) {
-            if (   ( $::lglobal{brbrackets}[0] eq $::lglobal{brbrackets}[1] )
-                && ( $::lglobal{brbrackets}[2] eq $::lglobal{brbrackets}[3] ) ) {
-                shift @{ $::lglobal{brbrackets} };
-                shift @{ $::lglobal{brbrackets} };
-                shift @{ $::lglobal{brindices} };
-                shift @{ $::lglobal{brindices} };
-                shift @{ $::lglobal{brbrackets} };
-                shift @{ $::lglobal{brbrackets} };
-                shift @{ $::lglobal{brindices} };
-                shift @{ $::lglobal{brindices} };
-                brnext( $brkresult, $brnextbt );
-            }
-        }
         if ( @{ $::lglobal{brbrackets} } && $::lglobal{brindices}[0] ) {
             $textwindow->markSet( 'insert', $::lglobal{brindices}[0] )
               if $::lglobal{brindices}[0];
