@@ -311,9 +311,11 @@ sub html_convert_footnotes {
         last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
         last unless $fnarray->[$step][0];
         next unless $fnarray->[$step][3];
+
+        # insert first in case page marker directly follows footnote
+        $textwindow->ntinsert( 'fne' . "$step" . '-1c', "\n\n</div>" );
         $textwindow->ntdelete( 'fne' . "$step" . '-1c', 'fne' . "$step" );
 
-        $textwindow->ntinsert( 'fne' . "$step", "\n\n</div>" );
         $textwindow->ntinsert(
             ( 'fns' . "$step" . '+' . ( length( $fnarray->[$step][4] ) + 11 ) . "c" ),
             "$::htmllabels{fnanchafter}</a>" );
@@ -1132,14 +1134,31 @@ sub html_convert_footnoteblocks {
             next;
         }
 
-        # find the end of the last footnote
-        my $endoflastfootnoteinblock =
-          $textwindow->search( '-exact', '--', '</p></div>', $lastfootnoteinblock );
-        $textwindow->insert( $endoflastfootnoteinblock . '+10c', '</div>' );
-        if ($endoflastfootnoteinblock) {
-            $thisblockstart = $endoflastfootnoteinblock;
-        } else {
-            $thisblockstart = 'end';
+        # find the end of the last footnote (</p> followed by </div> with only whitespace between)
+        my $endoflastfootnoteinblock = $lastfootnoteinblock;
+        while (1) {
+
+            # Find the next </div>
+            my $endoflastfootnoteinblock =
+              $textwindow->search( '-exact', '--', '</div>', $endoflastfootnoteinblock );
+            if ($endoflastfootnoteinblock) {
+
+                # Get 6 characters before </div> in case of blank line between </p> and </div>
+                my $pdiv = $textwindow->get( $endoflastfootnoteinblock . '-6c',
+                    $endoflastfootnoteinblock . '+6c' );
+
+                # If find </p> followed by </div> assume it's the end of this last footnote.
+                # Insert another closing </div> but put it before the existing </div>
+                # to avoid problems if pagemarker comes straight after footnote.
+                if ( $pdiv =~ /<\/p>\s*<\/div>/ ) {
+                    $textwindow->insert( $endoflastfootnoteinblock, "</div>\n" );
+                    $thisblockstart = $endoflastfootnoteinblock;
+                    last;
+                }
+            } else {
+                $thisblockstart = 'end';
+                last;
+            }
         }
     }
     return;
