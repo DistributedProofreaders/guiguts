@@ -315,7 +315,7 @@ sub _bin_save {
         print $fh ");\n\n";
         foreach ( keys %::operationshash ) {
             my $mark = ::escape_problems($_);
-            print $fh "\$::operationshash{'$mark'}='" . $::operationshash{$mark} . "';\n";
+            print $fh "\$::operationshash{'$mark'}='" . $::operationshash{$_} . "';\n";
         }
         print $fh "\n";
         print $fh '$::bookmarks[0] = \'' . $textwindow->index('insert') . "';\n";
@@ -634,7 +634,6 @@ sub operationadd {
     $mon  += 1;
     my $timestamp = sprintf( '%4d-%02d-%02d %02d:%02d', $year, $mon, $mday, $hour, $min );
     $::operationshash{$operation} = $timestamp;
-    $operation = ::escape_problems($operation);
     ::oppopupdate() if $::lglobal{oppop};
     ::setedited(1);
 }
