@@ -2556,6 +2556,23 @@ sub htmlmarkpopup {
             -text             => 'Remove Markup from Selection',
             -width            => 24
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+        $f3->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                for my $orphan (
+                    'i',          'b',    'u',      'center', 'sub',   'sup',
+                    'h1',         'h2',   'h3',     'h4',     'h5',    'h6',
+                    'p',          'em',   'strong', 'big',    'small', 'q',
+                    'blockquote', 'cite', 'pre',    'del',    'ins',
+                ) {
+                    ::working( 'Checking <' . $orphan . '>' );
+                    last if orphans($orphan);
+                }
+                ::working();
+            },
+            -text  => 'Find Some Orphaned Markup',
+            -width => 24
+        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 
         ::initialize_popup_with_deletebinding('markpop');
     }
@@ -3273,6 +3290,122 @@ sub autotable {
     $textwindow->delete( "$lsr.0", "$ler.end" );
     $textwindow->insert( "$lsr.0", $selection );
     $textwindow->addGlobEnd;
+}
+
+sub orphans {
+    my $textwindow = $::textwindow;
+    ::hidepagenums();
+    my $br = shift;
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+    my ( $thisindex, $open, $close, $crow, $ccol, $orow, $ocol, @op );
+    $open  = '<' . $br . '>|<' . $br . ' [^>]*>';
+    $close = '<\/' . $br . '>';
+    my $end = $textwindow->index('end');
+    $thisindex = '1.0';
+    my ( $lengtho, $lengthc );
+    my $opindex = $textwindow->search(
+        '-regexp',
+        '-count' => \$lengtho,
+        '--', $open, $thisindex, 'end'
+    );
+    push @op, $opindex;
+    my $clindex = $textwindow->search(
+        '-regexp',
+        '-count' => \$lengthc,
+        '--', $close, $thisindex, 'end'
+    );
+    return unless ( $clindex || $opindex );
+    push @op, ( $clindex || $end );
+
+    while ($opindex) {
+        $opindex = $textwindow->search(
+            '-regexp',
+            '-count' => \$lengtho,
+            '--', $open, $op[0] . '+1c', 'end'
+        );
+        if ($opindex) {
+            push @op, $opindex;
+        } else {
+            push @op, $textwindow->index('end');
+        }
+        my $begin = $op[1];
+        $begin   = 'end' unless $begin;
+        $clindex = $textwindow->search(
+            '-regexp',
+            '-count' => \$lengthc,
+            '--', $close, "$begin+1c", 'end'
+        );
+        if ($clindex) {
+            push @op, $clindex;
+        } else {
+            push @op, $textwindow->index('end');
+        }
+        if ( $textwindow->compare( $op[1], '==', $op[3] ) ) {
+            $textwindow->markSet( 'insert', $op[0] ) if $op[0];
+            $textwindow->see( $op[0] )               if $op[0];
+            $textwindow->tagAdd( 'highlight', $op[0], $op[0] . '+' . length($open) . 'c' );
+            return 1;
+        }
+        if (   ( $textwindow->compare( $op[0], '<', $op[1] ) )
+            && ( $textwindow->compare( $op[1], '<', $op[2] ) )
+            && ( $textwindow->compare( $op[2], '<', $op[3] ) )
+            && ( $op[2] ne $end )
+            && ( $op[3] ne $end ) ) {
+            $textwindow->update;
+            $textwindow->focus;
+            shift @op;
+            shift @op;
+            next;
+        } elsif ( ( $textwindow->compare( $op[0], '<', $op[1] ) )
+            && ( $textwindow->compare( $op[1], '>', $op[2] ) ) ) {
+            $textwindow->markSet( 'insert', $op[2] ) if $op[2];
+            $textwindow->see( $op[2] )               if $op[2];
+            $textwindow->tagAdd( 'highlight', $op[2], $op[2] . ' +' . $lengtho . 'c' );
+            $textwindow->tagAdd( 'highlight', $op[0], $op[0] . ' +' . $lengtho . 'c' );
+            $textwindow->update;
+            $textwindow->focus;
+            return 1;
+        } elsif ( ( $textwindow->compare( $op[0], '<', $op[1] ) )
+            && ( $textwindow->compare( $op[2], '>', $op[3] ) ) ) {
+            $textwindow->markSet( 'insert', $op[3] ) if $op[3];
+            $textwindow->see( $op[3] )               if $op[3];
+            $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengthc . 'c' );
+            $textwindow->tagAdd( 'highlight', $op[1], $op[1] . '+' . $lengthc . 'c' );
+            $textwindow->update;
+            $textwindow->focus;
+            return 1;
+        } elsif ( ( $textwindow->compare( $op[0], '>', $op[1] ) )
+            && ( $op[0] ne $end ) ) {
+            $textwindow->markSet( 'insert', $op[1] ) if $op[1];
+            $textwindow->see( $op[1] )               if $op[1];
+            $textwindow->tagAdd( 'highlight', $op[1], $op[1] . '+' . $lengthc . 'c' );
+            $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengtho . 'c' );
+            $textwindow->update;
+            $textwindow->focus;
+            return 1;
+        } else {
+            if (   ( $op[3] eq $end )
+                && ( $textwindow->compare( $op[2], '>', $op[0] ) ) ) {
+                $textwindow->markSet( 'insert', $op[2] ) if $op[2];
+                $textwindow->see( $op[2] )               if $op[2];
+                $textwindow->tagAdd( 'highlight', $op[2], $op[2] . '+' . $lengthc . 'c' );
+            }
+            if (   ( $op[2] eq $end )
+                && ( $textwindow->compare( $op[3], '>', $op[1] ) ) ) {
+                $textwindow->markSet( 'insert', $op[3] ) if $op[3];
+                $textwindow->see( $op[3] )               if $op[3];
+                $textwindow->tagAdd( 'highlight', $op[3], $op[3] . '+' . $lengthc . 'c' );
+            }
+            if ( ( $op[1] eq $end ) && ( $op[2] eq $end ) ) {
+                $textwindow->markSet( 'insert', $op[0] ) if $op[0];
+                $textwindow->see( $op[0] )               if $op[0];
+                $textwindow->tagAdd( 'highlight', $op[0], $op[0] . '+' . $lengthc . 'c' );
+            }
+            ::update_indicators();
+            return 0;
+        }
+    }
+    return 0;
 }
 
 sub poetryhtml {
