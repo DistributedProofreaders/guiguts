@@ -88,8 +88,8 @@ sub searchtext {
         $::searchendindex = $start . $stepforward;
     }
 
-    # use the string in the dialog search field unless one was passed in as an argument
-    $searchterm = $::lglobal{searchentry}->get unless ($searchterm);
+    # use the string in the dialog search field if none passed in as an argument
+    $searchterm = $::lglobal{searchentry}->get if $searchterm eq '';
     return ('') unless length($searchterm);
     if ( $::sopt[3] ) {
         unless ( ::isvalid($searchterm) ) {
