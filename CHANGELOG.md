@@ -2,6 +2,9 @@
 
 ## Version 1.2.4
 
+### Changes
+- restored the Find Some Orphaned Markup button to the HTML Markup dialog
+
 ### Bug Fixes
 - illow class CSS had an unwanted space character before class name
 - length and frequency sorting in Word Frequency were reversed
@@ -11,6 +14,7 @@
 - orphaned brackets might not be reported and could generate error
 - closing footnote divs were badly placed
 - file paths with quotes caused errors when saving
+- error when searching for "0" from Word Frequency dialog
 
 ## Version 1.2.3
 
