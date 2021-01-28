@@ -15,6 +15,8 @@
 - closing footnote divs were badly placed
 - file paths with quotes caused errors when saving
 - error when searching for "0" from Word Frequency dialog
+- spaces at the start of a paragraph were wrongly preserved, leading to an
+  indented first line after rewrap
 
 ## Version 1.2.3
 

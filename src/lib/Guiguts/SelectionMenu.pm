@@ -89,8 +89,8 @@ sub selectrewrap {
     }
 
     # If the selection starts on a blank(ish) line, advance the selection start until it isn't.
-    while ( $textwindow->get($start) =~ /[\s\n$TEMPPAGEMARK]/ ) {
-        $start = $textwindow->index("$start+1c");
+    while ( $textwindow->get( $start, "$start lineend" ) =~ /^[\s\n$TEMPPAGEMARK]*$/ ) {
+        $start = $textwindow->index("$start+1l linestart");
     }
 
     # If the selection ends at the end of a line but not over it advance the selection end until it does.
