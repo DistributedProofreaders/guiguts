@@ -917,14 +917,14 @@ sub searchpopup {
     ::operationadd('Stealth Scannos') if $::lglobal{doscannos};
     my $aacheck;
     my $searchterm = '';
-    
+
     # If text is selected when dialog is popped, it is used for the search term.
     # Search term must not have actual newline characters because you could end up with a really
     # long string which breaks the history menu, e.g. if select whole file then pop dialog.
     # Trim a multiline string to just the first line.
-    my @ranges     = $textwindow->tagRanges('sel');
+    my @ranges = $textwindow->tagRanges('sel');
     $searchterm = $textwindow->get( $ranges[0], $ranges[1] ) if @ranges;
-    $searchterm =~ s/[\n\r].*//s;   # Trailing 's' makes '.' match newlines
+    $searchterm =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
 
     if ( defined( $::lglobal{searchpop} ) ) {
         $::lglobal{searchpop}->deiconify;
