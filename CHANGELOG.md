@@ -17,6 +17,7 @@
 - error when searching for "0" from Word Frequency dialog
 - spaces at the start of a paragraph were wrongly preserved, leading to an
   indented first line after rewrap
+- 80% auto mode in Fixup Page Separators could get stuck in a loop
 
 ## Version 1.2.3
 

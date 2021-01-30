@@ -110,6 +110,7 @@ sub handleautomaticonrefresh {
         $textwindow->insert( $index, "\n" );
 
         if ( $::lglobal{pagesepauto} == 2 ) {
+            my $nothingdone = 1;
 
             # If the last character is a word, ";" or ","
             # and the next character is \n or *, then delete the character
@@ -119,10 +120,8 @@ sub handleautomaticonrefresh {
                     $index     = $textwindow->index('page1');
                     $character = $textwindow->get($index);
                     if ( $character =~ /[\*]/ ) {    # dropped \n
-                        print "deleting:character page1\n";
                         $textwindow->delete($index);
-                        last
-                          if $textwindow->compare( 'page1 +1l', '>=', 'end' );
+                        last if $textwindow->compare( 'page1 +1l', '>=', 'end' );
                     } else {
                         last;
                     }
@@ -133,6 +132,7 @@ sub handleautomaticonrefresh {
             #print $character.":page?\n";
             if ( ( $character =~ /\p{IsLower}/ ) || ( $character =~ /^I / ) ) {
                 processpageseparator('j');
+                $nothingdone = 0;
             }
             my ( $r, $c ) = split /\./, $textwindow->index('page-1c');
             my ($size) =
@@ -141,7 +141,10 @@ sub handleautomaticonrefresh {
             # Insert blank line if the character is ."'?
             if ( ( $character =~ /[\.\"\'\?]/ ) && ( $c < ( $size * 0.5 ) ) ) {
                 processpageseparator('l');
+                $nothingdone = 0;
             }
+            last if $nothingdone;
+
         } elsif ( $::lglobal{pagesepauto} == 3 ) {
             my $linebefore = $textwindow->get( "$index -10c",    $index );
             my $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
