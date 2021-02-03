@@ -286,6 +286,20 @@ sub keybindings {
     # Compose - define last since user could set the compose key to one of the above that they never use
     keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
 
+    # Override wordstart/end moves because Tk fails to safely find wordstart/end with utf-8 characters.
+    # Bindings are same as in Text.pm, except there the position argument is Ev'd with the index function.
+    # That is unnecessary because SetCursor and KeySelect can accept a non-numeric position index, and
+    # we need the words 'wordstart' or 'wordend' so that the overridden versions of those routines in
+    # TextUnicode can handle wordstart/end safely.
+    $textwindow->MainWindow->bind( 'TextUnicode', '<Control-Left>',
+        [ 'SetCursor', 'insert-1c wordstart' ] );
+    $textwindow->MainWindow->bind( 'TextUnicode', '<Shift-Control-Left>',
+        [ 'KeySelect', 'insert-1c wordstart' ] );
+    $textwindow->MainWindow->bind( 'TextUnicode', '<Control-Right>',
+        [ 'SetCursor', 'insert+1c wordend' ] );
+    $textwindow->MainWindow->bind( 'TextUnicode', '<Shift-Control-Right>',
+        [ 'KeySelect', 'insert wordend' ] );
+
     # Override Paste binding, so that Entry widgets delete any selected text
     # in the field, just like happens in the main textwindow
     # Note that for this to work, a dummy Entry is created in initialize() routine previously,

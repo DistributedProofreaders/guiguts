@@ -428,8 +428,8 @@ sub SelectTo {
 # pos - The desired new position for the cursor in the window.
 sub SetCursor {
     my ( $w, $pos ) = @_;
-    $pos = 'end - 1 chars' if $w->compare( $pos, '==', 'end' );
     $pos = $w->safeword($pos);
+    $pos = 'end - 1 chars' if $w->compare( $pos, '==', 'end' );
     $w->markSet( 'insert', $pos );
     $w->unselectAll;
     $w->see('insert');
@@ -499,12 +499,14 @@ sub safeword {
         $start = $w->index("$pos linestart") unless $start;    # word was at start of line
         return $start;
     } elsif ( $pos =~ s/ wordend// ) {
+        return 'end-1c' if $w->compare( $pos, '>=', 'end-1c' );    # don't try to go beyond the end
+
         my $endch = $w->get($pos);
-        return $w->index("$pos + 1c") if ( $endch =~ '\W' );    # already at a non-word character
+        return $w->index("$pos + 1c") if ( $endch =~ '\W' );       # already at a non-word character
 
         # Find first non-word character forwards on the current line
         my $end = $w->search( '-regexp', '--', '\W', "$pos", "$pos lineend" );
-        $end = $w->index("$pos lineend") unless $end;           # word was at end of line
+        $end = $w->index("$pos lineend") unless $end;              # word was at end of line
         return $end;
     }
 
