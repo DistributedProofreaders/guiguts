@@ -146,8 +146,8 @@ sub handleautomaticonrefresh {
             last if $nothingdone;
 
         } elsif ( $::lglobal{pagesepauto} == 3 ) {
-            my $linebefore = $textwindow->get( "$index -10c",    $index );
-            my $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
+            my $linebefore = $textwindow->get( "page -10c",       "page -1c" );
+            my $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +5c" );
             if ( $lineafter =~ /^\n\n\n\n/ ) {
                 processpageseparator('h');
             } elsif ( $lineafter =~ /^\n\n/ ) {
@@ -158,8 +158,8 @@ sub handleautomaticonrefresh {
                 processpageseparator('l');
             } elsif ( $lineafter =~ /^\S/ ) {
                 if ( closeupmarkup() ) {
-                    $linebefore = $textwindow->get( "$index -10c",    $index );
-                    $lineafter  = $textwindow->get( "$index +1c +1l", "$index +1c +1l +5c" );
+                    $linebefore = $textwindow->get( "page -10c",       "page -1c" );
+                    $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +5c" );
                 }
                 if ( $lineafter =~ /^\n/ ) {    # can be reached if closeupmarkup did something
                     processpageseparator('l');
@@ -231,6 +231,10 @@ sub closeupmarkup {
             $textwindow->delete('page+1l linestart');
             $textwindow->delete( 'page-1l linestart', 'page-1l lineend' );
             $textwindow->delete('page-1l linestart');
+
+            # close/reopen markup has been deleted, so re-fetch the lines surrounding the page break
+            $linebefore = $textwindow->get( 'page-1l linestart', 'page-1l lineend' );
+            $lineafter  = $textwindow->get( 'page+1l linestart', 'page+1l lineend' );
             $changemade = 1;
         }
     }
