@@ -233,6 +233,7 @@ sub win32_cmdline {
     foreach (@args) {
         s/(\\*)\"/$!$!\\\"/g;
         s/^(.*)(\\*)$/\"$1$2$2\"/ if m/[ "]/;
+        s/&/^&/g;    # Windows command line escapes & with ^
     }
     return join " ", @args;
 }
@@ -250,8 +251,8 @@ sub win32_start {
     # which doesn't have this limitation.
     #
     foreach (@args) {
-        if (m/["<>|&()!%^]/) {    # would be very nice to have & for urls...""
-            warn 'Refusing to run "start" command with unsafe characters ("<>|&()!%^): '
+        if (m/["<>|()!%^]/) {
+            warn 'Refusing to run "start" command with unsafe characters ("<>|()!%^): '
               . join( " ", @args );
             return -1;
         }
