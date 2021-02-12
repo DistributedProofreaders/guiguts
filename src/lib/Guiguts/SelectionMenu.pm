@@ -632,7 +632,6 @@ sub indent {
         return;
     } else {
         my @selarray;
-        if ( $indent eq 'up' ) { @ranges = reverse @ranges }
         $textwindow->addGlobStart;
         while (@ranges) {
             my $end            = pop(@ranges);
@@ -679,53 +678,6 @@ sub indent {
                     $index .= '.0';
                 }
                 push @selarray, ( $thisblockstart, "$thisblockend lineend" );
-            }
-            if ( $indent eq 'up' ) {
-                my $temp = $end, $end = $start;
-                $start = $temp;
-                if ( $textwindow->compare( "$start linestart", '==', '1.0' ) ) {
-                    push @selarray, ( $start, $end );
-                    push @selarray, @ranges;
-                    last;
-                } else {
-                    while ( $textwindow->compare( "$end-1l", '>=', "$end-1l lineend" ) ) {
-                        $textwindow->insert( "$end-1l lineend", ' ' );
-                    }
-                    my $templine = $textwindow->get( "$start-1l", "$end-1l" );
-                    $textwindow->replacewith( "$start-1l", "$end-1l",
-                        ( $textwindow->get( $start, $end ) ) );
-                    push @selarray, ( "$start-1l", "$end-1l" );
-                    while (@ranges) {
-                        $start = pop(@ranges);
-                        $end   = pop(@ranges);
-                        $textwindow->replacewith( "$start-1l", "$end-1l",
-                            ( $textwindow->get( $start, $end ) ) );
-                        push @selarray, ( "$start-1l", "$end-1l" );
-                    }
-                    $textwindow->replacewith( $start, $end, $templine );
-                }
-            } elsif ( $indent eq 'dn' ) {
-                if ( $textwindow->compare( "$end+1l", '>=', $textwindow->index('end') ) ) {
-                    push @selarray, ( $start, $end );
-                    push @selarray, @ranges;
-                    last;
-                } else {
-                    while ( $textwindow->compare( "$end+1l", '>=', "$end+1l lineend" ) ) {
-                        $textwindow->insert( "$end+1l lineend", ' ' );
-                    }
-                    my $templine = $textwindow->get( "$start+1l", "$end+1l" );
-                    $textwindow->replacewith( "$start+1l", "$end+1l",
-                        ( $textwindow->get( $start, $end ) ) );
-                    push @selarray, ( "$start+1l", "$end+1l" );
-                    while (@ranges) {
-                        $end   = pop(@ranges);
-                        $start = pop(@ranges);
-                        $textwindow->replacewith( "$start+1l", "$end+1l",
-                            ( $textwindow->get( $start, $end ) ) );
-                        push @selarray, ( "$start+1l", "$end+1l" );
-                    }
-                    $textwindow->replacewith( $start, $end, $templine );
-                }
             }
             $textwindow->focus;
             $textwindow->tagRemove( 'sel', '1.0', 'end' );

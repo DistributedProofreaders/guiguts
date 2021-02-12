@@ -219,8 +219,6 @@ sub keybindings {
     );
     keybind( '<Alt-Left>',  sub { ::indent( $textwindow, 'out' ); } );
     keybind( '<Alt-Right>', sub { ::indent( $textwindow, 'in' ); } );
-    keybind( '<Alt-Up>',    sub { ::indent( $textwindow, 'up' ); } );
-    keybind( '<Alt-Down>',  sub { ::indent( $textwindow, 'dn' ); } );
 
     # Scratchpad
     keybind(
