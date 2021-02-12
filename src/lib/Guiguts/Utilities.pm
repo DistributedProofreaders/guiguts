@@ -59,7 +59,14 @@ sub openpng {
     }
     my $imagefile = ::get_image_file($pagenum);
     if ( $imagefile && $::globalviewerpath ) {
+        my $focuswidget = $textwindow->focusCurrent;    # remember which widget had focus before spawning viewer
         ::runner( $::globalviewerpath, $imagefile );
+        my $grabperiod   = 200;                         # try to get focus back for 200 milliseconds
+        my $grabinterval = 10;                          # try to get focus back every 10 milliseconds
+        for ( 1 .. ( $grabperiod / $grabinterval ) ) {
+            $focuswidget->after($grabinterval);
+            $focuswidget->focusForce;
+        }
     } else {
         ::setpngspath();
     }
