@@ -779,6 +779,30 @@ sub composeinitialize {
     composeinitcase( "\x{2021}", "\x{2021}", 'DDAG' );               # double dagger
     composeinitcase( "\x{A7}",   "\x{A7}",   'SEC', 'S*', '*S' );    # section
     composeinitcase( "\x{B6}",   "\x{B6}",   'PIL', 'P*', '*P' );    # pilcrow
+    composegreekalphabet( "\x{391}", "\x{3b1}", 'ABGDEZHQIKLMNXOPRJSTUFCYW' );
+    composegreekaccent( "\x{1FBA}", "\x{1F70}", 'A' );
+    composegreekaccent( "\x{1FC8}", "\x{1F72}", 'E' );
+    composegreekaccent( "\x{1FCA}", "\x{1F74}", 'H' );
+    composegreekaccent( "\x{1FDA}", "\x{1F76}", 'I' );
+    composegreekaccent( "\x{1FF8}", "\x{1F78}", 'O' );
+    composegreekaccent( "\x{1FEA}", "\x{1F7A}", 'U' );
+    composegreekaccent( "\x{1FFA}", "\x{1F7C}", 'W' );
+    composegreekaccent( "\x{1FBC}", "\x{1FB2}", 'A', 'iota' );
+    composegreekaccent( "\x{1FCC}", "\x{1FC2}", 'H', 'iota' );
+    composegreekaccent( "\x{1FFC}", "\x{1FF2}", 'W', 'iota' );
+    composegreekbreathing( "\x{1F00}", 'A' );
+    composegreekbreathing( "\x{1F10}", 'E' );
+    composegreekbreathing( "\x{1F20}", 'H' );
+    composegreekbreathing( "\x{1F30}", 'I' );
+    composegreekbreathing( "\x{1F40}", 'O' );
+    composegreekbreathing( "\x{1F50}", 'U' );
+    composegreekbreathing( "\x{1F60}", 'W' );
+    composegreekbreathing( "\x{1F80}", 'A', 'iota' );
+    composegreekbreathing( "\x{1F90}", 'H', 'iota' );
+    composegreekbreathing( "\x{1FA0}", 'W', 'iota' );
+    $::composehash{"=)r"} = "\x{1FE4}";
+    $::composehash{"=(r"} = "\x{1FE5}";
+    $::composehash{"=(R"} = "\x{1FEC}";                              # No smooth breathing upper case rho
 }
 
 #
@@ -848,6 +872,78 @@ sub composeinitsyms {
         my $sym2 = shift;
         $::composehash{ $sym1 . $sym2 } = $char;
         $::composehash{ $sym2 . $sym1 } = $char;
+    }
+}
+
+#
+# Add compose sequences for plain Greek characters
+# First argument is start of uppercase alphabet
+# Second argument is start of lowercase alphabet
+# Third argument is string of English letters to be used
+sub composegreekalphabet {
+    my $ustart   = ord(shift);
+    my $lstart   = ord(shift);
+    my $alphabet = shift;
+
+    for my $ch ( split( //, $alphabet ) ) {
+        $::composehash{"=$ch"} = chr( $ustart++ );
+    }
+    for my $ch ( split( //, lc $alphabet ) ) {
+        $::composehash{"=$ch"} = chr( $lstart++ );
+    }
+}
+
+#
+# Add compose sequences for varia and oxia accents on one Greek character
+# First argument is uppercase version with varia (next ordinal has oxia)
+# Second argument is lowercase version with varia (next ordinal has oxia)
+# Third argument is upper case base English character
+# Optional fourth argument adds iota subscript
+sub composegreekaccent {
+    my $ustart = ord(shift);
+    my $lstart = ord(shift);
+    my $base   = shift;
+    my $iota   = shift;
+
+    $base = '|' . $base if $iota;
+
+    # Uppercase
+    if ($iota) {    # Either accents or iota, not both for uppercase
+        $::composehash{"=$base"} = chr( $ustart++ );
+    } else {
+        $::composehash{"=`$base"} = $::composehash{"=\\$base"} = chr( $ustart++ );
+        $::composehash{"='$base"} = $::composehash{"=/$base"}  = chr( $ustart++ );
+    }
+
+    # Lowercase
+    $base                     = lc $base;
+    $::composehash{"=`$base"} = $::composehash{"=\\$base"} = chr( $lstart++ );
+    $::composehash{"=$base"}  = chr( $lstart++ ) if $iota;
+    $::composehash{"='$base"} = $::composehash{"=/$base"} = chr( $lstart++ );
+}
+
+#
+# Add compose sequences for various accent combinations on one Greek character
+# First argument is first character of 16, e.g. alpha with various accents
+# Second argument is upper case base English character
+# Optional third argument adds iota subscript
+sub composegreekbreathing {
+    my $start = ord(shift);
+    my $ubase = shift;
+    my $iota  = shift;
+
+    $ubase = '|' . $ubase if $iota;
+    my $lbase = lc $ubase;
+
+    for my $base ( $lbase, $ubase ) {
+        $::composehash{"=)$base"}  = chr( $start++ );
+        $::composehash{"=($base"}  = chr( $start++ );
+        $::composehash{"=)`$base"} = $::composehash{"=)\\$base"} = chr( $start++ );
+        $::composehash{"=(`$base"} = $::composehash{"=(\\$base"} = chr( $start++ );
+        $::composehash{"=)'$base"} = $::composehash{"=)/$base"} = chr( $start++ );
+        $::composehash{"=('$base"} = $::composehash{"=(/$base"} = chr( $start++ );
+        $::composehash{"=)^$base"} = $::composehash{"=)~$base"} = chr( $start++ );
+        $::composehash{"=(^$base"} = $::composehash{"=(~$base"} = chr( $start++ );
     }
 }
 
