@@ -638,7 +638,17 @@ sub fnview {
                 $dupcount++;
                 $allcheckspassed = 0;
             }
-            if ( $::lglobal{fnarray}->[$findex][1] - $::lglobal{fnarray}->[$findex][0] > 40 ) {
+
+            # Long footnote, or if suitable closing bracket is not found, footnotefind sets the end
+            # to 10 chars after start, i.e. impossibly short.
+            # Either way, mark as a potentially long, potentially missing bracket footnote
+            if (
+                $::lglobal{fnarray}->[$findex][1] - $::lglobal{fnarray}->[$findex][0] > 40
+                or $textwindow->compare(
+                    "$::lglobal{fnarray}->[$findex][0] + 11c", '>',
+                    $::lglobal{fnarray}->[$findex][1]
+                )
+            ) {
                 $ftext->tagAdd( 'long', 'end -2l', 'end -1l' );
                 $ftext->update;
                 $longcount++;
