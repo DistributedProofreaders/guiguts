@@ -654,7 +654,11 @@ sub replace {
     return unless $::searchstartindex;
     my $searchterm = $::lglobal{searchentry}->get;
     $replaceterm = replaceeval( $searchterm, $replaceterm ) if ( $::sopt[3] );
-    if ($::searchstartindex) {
+
+    # If matching string is zero-length, just insert replacement text because Perl/Tk won't replace a zero-length string
+    if ( $::textwindow->compare( $::searchstartindex, '==', $::searchendindex ) ) {
+        $::textwindow->insert( $::searchstartindex, $replaceterm );
+    } elsif ($::searchstartindex) {
         $::textwindow->replacewith( $::searchstartindex, $::searchendindex, $replaceterm );
     }
     return 1;
