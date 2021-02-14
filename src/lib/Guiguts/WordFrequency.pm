@@ -184,14 +184,7 @@ sub wordfrequency {
                 [ \&anythingwfcheck, 'words with unicode chars > FF', '[\x{100}-\x{FFEF}]' ]
             ],
             [ 'Stealtho Check', sub { stealthcheck() } ],
-            [
-                'Ligatures',
-                [
-                    \&anythingwfcheck,
-                    'words with possible ligatures',
-                    '(ae|\xe6|AE|Ae|\xc6|oe|\x{0153}|OE|Oe|\x{0152})'
-                ]
-            ],
+            [ 'Ligatures',      sub { ligaturecheck() } ],
             [ 'RegExpEntry', [ \&anythingwfcheck, 'dummy entry', 'dummy' ] ],
             [
                 '<--RegExp',
@@ -1020,6 +1013,51 @@ sub stealthcheck {
         $display{$word} = $::lglobal{seenwords}->{$word};
     }
     $::lglobal{wfsaveheader} = "$wordw suspect words found in file.";
+    sortanddisplaywords( \%display );
+    @::wfsearchopt = qw/1 x x 0/;
+    $top->Unbusy;
+}
+
+#
+# Check for ae and oe ligatures, including flagging suspects
+sub ligaturecheck {
+    my $top = $::top;
+    ::operationadd('Check words with possible ligatures');
+    $top->Busy( -recurse => 1 );
+    $::lglobal{wclistbox}->delete( '0', 'end' );
+    $::lglobal{wclistbox}->insert( 'end', 'Please wait, building word list....' );
+    $::lglobal{wclistbox}->update;
+    my %display = ();
+    my $wordw   = 0;
+    my $wordwo  = 0;
+
+    foreach my $word ( keys %{ $::lglobal{seenwords} } ) {
+        next unless ( $word =~ /(ae|AE|Ae|oe|OE|Oe|\xe6|\xc6|\x{0153}|\x{0152})/ );
+        $wordw++;
+
+        # Start from non-ligatured versions because Ae/AE and Oe/OE each map to uppercase ligature
+        # so it's easier to convert both of those to the ligature than the other way round
+        if ( $word !~ /(\xe6|\xc6|\x{0153}|\x{0152})/ ) {
+            my $ligword = $word;
+            $ligword =~ s/ae/\xe6/g;
+            $ligword =~ s/(AE|Ae)/\xc6/g;
+            $ligword =~ s/oe/\x{0153}/g;
+            $ligword =~ s/(OE|Oe)/\x{0152}/g;
+
+            # If ligature version also seen, display both
+            if ( $::lglobal{seenwords}->{$ligword} ) {
+                $display{$ligword} = $::lglobal{seenwords}->{$ligword}
+                  if $::lglobal{suspects_only};    # Lig word added below if not suspects only
+                $wordwo++;
+                $display{"$word ****"} = $::lglobal{seenwords}->{$word};
+            } elsif ( not $::lglobal{suspects_only} ) {    # Only non-lig seen, no need to display if suspects only
+                $display{$word} = $::lglobal{seenwords}->{$word};
+            }
+        } elsif ( not $::lglobal{suspects_only} ) {    # Lig word added above if suspects only
+            $display{$word} = $::lglobal{seenwords}->{$word};
+        }
+    }
+    $::lglobal{wfsaveheader} = "$wordw words with ligatures, $wordwo suspects (marked with ****).";
     sortanddisplaywords( \%display );
     @::wfsearchopt = qw/1 x x 0/;
     $top->Unbusy;
