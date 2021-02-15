@@ -1,0 +1,19 @@
+name: perltidy
+on: [push, pull_request]
+jobs:
+  perltidy:
+    runs-on: ubuntu-latest
+    container:
+      image: perl:5.32
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: perl -V
+        run: perl -V
+      - name: Install dependencies
+        run: cpanm --quiet --installdeps --notest --with-develop .
+      - name: perltidy --version
+        run: perltidy --version
+      - name: Run perltidy
+        shell: bash
+        run: ./format_files.sh --check
