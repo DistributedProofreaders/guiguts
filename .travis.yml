@@ -1,4 +1,4 @@
-dist: focal
+dist: bionic
 language: perl
 perl:
   - "5.32"
