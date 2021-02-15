@@ -45,9 +45,7 @@ to any previous versions._
 2. Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double click
    the zip file). A common place for this is `c:\guiguts` although it can be placed
    anywhere.
-3. Download [Strawberry Perl](http://strawberryperl.com/). Due to an incompatibility
-   between Tk and Strawberry Perl (Sept 2020), it is recommended that you use
-   Strawberry Perl version 5.30.3, rather than the latest version.
+3. Download [Strawberry Perl](http://strawberryperl.com/).
 4. Double click the downloaded file to install Strawberry Perl. It is
    recommended that you install in the default folder `c:\Strawberry`.
 5. Using File Explorer, navigate to the `guiguts` folder you unzipped earlier.
