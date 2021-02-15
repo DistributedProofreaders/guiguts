@@ -1265,7 +1265,7 @@ sub footnotefind {
         }
         last;
     }
-    $::lglobal{ftnoteindexstart} = "$bracketstartndx+10c";
+    $::lglobal{ftnoteindexstart} = "$bracketstartndx+1c";
     $textwindow->markSet( 'fnindex', $::lglobal{ftnoteindexstart} );
     my $lastfnindex = $textwindow->index('lastfnindex');
     if ( $textwindow->compare( $lastfnindex, '<', $bracketendndx ) ) {
