@@ -23,6 +23,11 @@ my @modules = (
     "XML::XPath",
 );
 
+# Windows-specific modules
+if ( $^O eq 'MSWin32' ) {
+    push @modules, "Win32::Unicode::Process";
+}
+
 foreach my $module (@modules) {
     system("cpanm --notest $module") == 0
       or die("Failed trying to install $module\n");

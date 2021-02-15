@@ -185,7 +185,9 @@ sub cmdinterp {
                 $selection = '';
             }
             $arg =~ s/\$t/$selection/g;
-            $arg = ::encode( "utf-8", $arg );
+
+            # Windows uses systemW in place of system later, so don't encode here
+            $arg = ::encode( "utf-8", $arg ) unless $::OS_WIN;
         }
 
         # Pass file to default file handler, $f $d $e give the fully specified path/filename
@@ -278,7 +280,8 @@ sub win32_start {
     # because if it isn't quoted it will be interpreted as the command. Windows!
     @args = ( 'start', 'Guiguts Command Window', @args );
     my $cmdline = win32_cmdline(@args);
-    system $cmdline;
+    require Win32::Unicode::Process;
+    Win32::Unicode::Process::systemW $cmdline;    # systemW is like system, but copes with utf8 encoding correctly.
 }
 
 sub win32_is_exe {
