@@ -56,8 +56,8 @@ sub wordfrequencybuildwordlist {
             $lastwordseen = $word;
             $word =~ s/(?<!\-)\*//g;
             $word =~ s/^\*$//;
-            $word =~ s/[\.	',-]+$//;           # throw away punctuation at end
-            $word =~ s/^[\.,'-]+//;            #and at the beginning
+            $word =~ s/[\.	',-]+$//;    # throw away punctuation at end
+            $word =~ s/^[\.,'-]+//;     #and at the beginning
             next if ( $word eq '' );
             $wc++;
             $match = ( $::lglobal{wf_ignore_case} ) ? lc($word) : $word;
@@ -340,10 +340,10 @@ sub wordfrequency {
                     # NOTE: sword will be used as a regular expression filter during display
                     $sword .= '([^\.\?\!]|$)';
                 }
-                if    ( $sword =~ /\*space\*/ )   { $sword = ' ' }
-                elsif ( $sword =~ /\*tab\*/ )     { $sword = "\t" }
-                elsif ( $sword =~ /\*newline\*/ ) { $sword = "\n" }
-                elsif ( $sword =~ /\*nbsp\*/ )    { $sword = "\xA0" }
+                if     ( $sword =~ /\*space\*/ )   { $sword = ' ' }
+                elsif  ( $sword =~ /\*tab\*/ )     { $sword = "\t" }
+                elsif  ( $sword =~ /\*newline\*/ ) { $sword = "\n" }
+                elsif  ( $sword =~ /\*nbsp\*/ )    { $sword = "\xA0" }
                 unless ($snum) {
                     ::searchoptset(qw/0 x x 1/);
                     unless ( $sword =~ m/--/ ) {
@@ -1174,7 +1174,7 @@ sub harmonics {
     $word =~ s/\s//g;
     my $length = length $word;
     for my $test ( keys %{ $::lglobal{seenwords} } ) {
-        next if ( abs( $length - length $test ) > 1 );
+        next                            if ( abs( $length - length $test ) > 1 );
         $::lglobal{harmonic}{$test} = 1 if ( distance( $word, $test ) <= 1 );
     }
 }
@@ -1186,7 +1186,7 @@ sub harmonics2 {
     $word =~ s/\s//g;
     my $length = length $word;
     for my $test ( keys %{ $::lglobal{seenwords} } ) {
-        next if ( abs( $length - length $test ) > 2 );
+        next                            if ( abs( $length - length $test ) > 2 );
         $::lglobal{harmonic}{$test} = 1 if ( distance( $word, $test ) <= 2 );
     }
 }

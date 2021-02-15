@@ -64,7 +64,7 @@ sub menu_file {
         menu_cascade( 'Co~ntent Providing', &menu_file_content_providing ),
 
         [ 'separator', '' ],
-        [ 'command', '~Quit', -command => \&::_exit ],
+        [ 'command',   '~Quit', -command => \&::_exit ],
     ];
 }
 
@@ -85,10 +85,10 @@ sub menu_file_project {
         [ 'command',   'Set Pro~ject ID...',       -command => \&::setprojectid ],
         [ 'command',   'Set I~mage Directory...',  -command => \&::setpngspath ],
         [ 'separator', '' ],
-        [ 'command', 'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
-        [ 'command', '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
-        [ 'command', '~Set Page Markers',               -command => \&::file_mark_pages ],
-        [ 'command', 'Configure Page La~bels...',       -command => \&::pageadjust ],
+        [ 'command',   'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
+        [ 'command',   '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
+        [ 'command',   '~Set Page Markers',               -command => \&::file_mark_pages ],
+        [ 'command',   'Configure Page La~bels...',       -command => \&::pageadjust ],
     ];
 }
 
@@ -374,15 +374,15 @@ sub menu_tools {
             }
         ],
         [ 'separator', '' ],
-        [ 'command', '~Footnote Fixup...', -command => \&::footnotepop ],
-        [ 'command', '~Sidenote Fixup...', -command => \&::sidenotes ],
+        [ 'command',   '~Footnote Fixup...', -command => \&::footnotepop ],
+        [ 'command',   '~Sidenote Fixup...', -command => \&::sidenotes ],
         [
             'command',
             'Replace [::] with I~ncremental Counter',
             -command => \&::replace_incr_counter
         ],
         [ 'separator', '' ],
-        [ 'command', 'Fixup ~Page Separators...', -command => \&::separatorpopup ],
+        [ 'command',   'Fixup ~Page Separators...', -command => \&::separatorpopup ],
         [
             'command',
             'Remove ~End-of-page Blank Lines',
@@ -456,15 +456,15 @@ sub menu_tools_charactertools {
         [ 'command',   'Unicode Character ~Entry',        -command => \&::utfcharentrypopup ],
         [ 'command',   'Unicode Character ~Search',       -command => \&::utfcharsearchpopup ],
         [ 'separator', '' ],
-        [ 'command',   '~Greek Transliteration',          -command => \&::greekpopup ],
-        [ 'command',   'Find and ~Convert Greek...',      -command => \&::findandextractgreek ],
+        [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],
+        [ 'command',   'Find and ~Convert Greek...', -command => \&::findandextractgreek ],
     ];
 }
 
 sub menu_txt {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
-        [ 'command', "Txt Conversion ~Palette...", -command => sub { ::txt_convert_palette(); } ],
+        [ 'command',   "Txt Conversion ~Palette...", -command => sub { ::txt_convert_palette(); } ],
         [ 'separator', '' ],
         [
             'command',
@@ -510,8 +510,8 @@ sub menu_txt {
             }
         ],
         [ 'separator', '' ],
-        [ 'command', '~Small Caps to ALL CAPS',   -command => \&::text_uppercase_smallcaps ],
-        [ 'command', '~Remove Small Caps Markup', -command => \&::text_remove_smallcaps_markup ],
+        [ 'command',   '~Small Caps to ALL CAPS',   -command => \&::text_uppercase_smallcaps ],
+        [ 'command',   '~Remove Small Caps Markup', -command => \&::text_remove_smallcaps_markup ],
         [
             'command',
             '~Manually Convert Small Caps Markup...',
@@ -545,8 +545,8 @@ sub menu_txt {
             }
         ],
         [ 'separator', '' ],
-        [ 'command', "~Center Selection",      -command => sub { ::rcaligntext( 'c', 0 ); } ],
-        [ 'command', "~Right-Align Selection", -command => sub { ::rcaligntext( 'r', 0 ); } ],
+        [ 'command',   "~Center Selection",      -command => sub { ::rcaligntext( 'c', 0 ); } ],
+        [ 'command',   "~Right-Align Selection", -command => sub { ::rcaligntext( 'r', 0 ); } ],
         [
             'command',
             "Right-Align ~Numbers in Selection",
@@ -554,7 +554,7 @@ sub menu_txt {
         ],
         [ 'command',   'A~lign text on string...', -command => \&::alignpopup ],
         [ 'separator', '' ],
-        [ 'command',   'Dra~w ASCII Boxes...', -command => \&::asciibox_popup ],
+        [ 'command',   'Dra~w ASCII Boxes...',    -command => \&::asciibox_popup ],
         [ 'command',   'ASCII Table E~ffects...', -command => \&::tablefx ],
         [ 'separator', '' ],
         [
@@ -576,7 +576,7 @@ sub menu_html {
             -command => sub { ::htmlgenpopup( $textwindow, $top ); }
         ],
         [ 'command', 'HTML ~Markup...', -command => sub { ::htmlmarkpopup( $textwindow, $top ); } ],
-        [ 'command',   'HTML Auto Inde~x (List)', -command => sub { ::autoindex($textwindow); } ],
+        [ 'command', 'HTML Auto Inde~x (List)', -command => sub { ::autoindex($textwindow); } ],
         [ 'separator', '' ],
         [
             'command',
@@ -674,7 +674,7 @@ sub menu_unicode {
                 'command',
                 "$_",
                 -columnbreak => menu_unicode_break($_),
-                -command =>
+                -command     =>
                   [ \&::utfpopup, $_, $::lglobal{utfblocks}{$_}[0], $::lglobal{utfblocks}{$_}[1] ],
                 -accelerator => $::lglobal{utfblocks}{$_}[0] . ' - ' . $::lglobal{utfblocks}{$_}[1]
             ],
@@ -728,7 +728,7 @@ sub menu_custom {
             ],
             ( 0 .. $#::extops ) ),
         [ 'separator', '' ],
-        [ 'command', 'Set ~External Programs...', -command => \&::externalpopup ],
+        [ 'command',   'Set ~External Programs...', -command => \&::externalpopup ],
     ];
 }
 
@@ -763,7 +763,7 @@ sub menu_preferences_filepaths {
 sub menu_preferences_appearance {
     my $textwindow = $::textwindow;
     [
-        [ 'command', 'Set ~Fonts...', -command => \&::setfonts ],
+        [ 'command',   'Set ~Fonts...', -command => \&::setfonts ],
         [ 'separator', '' ],
         [
             Checkbutton => 'Keep Pop-ups On Top',
@@ -1043,9 +1043,9 @@ sub menu_help {
             }
         ],
         [ 'separator', '' ],
-        [ 'command', '~About Guiguts',     -command => sub { ::about_pop_up($top) } ],
-        [ 'command', 'Software ~Versions', -command => [ \&::showversion ] ],
-        [ 'command', 'Check for ~Updates', -command => sub { ::checkforupdates("now") } ],
+        [ 'command',   '~About Guiguts',     -command => sub { ::about_pop_up($top) } ],
+        [ 'command',   'Software ~Versions', -command => [ \&::showversion ] ],
+        [ 'command',   'Check for ~Updates', -command => sub { ::checkforupdates("now") } ],
         [
             'command',
             'Report ~Bug or Suggest Enhancement (DP Wiki) [www]',

@@ -98,7 +98,7 @@ sub commoncharspopup {
                     -relief           => 'flat',
                     -borderwidth      => 0,
                     -background       => $::bkgcolor,
-                    -command =>
+                    -command          =>
                       sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); },
                     -highlightthickness => 0,
                     -width              => 1,
@@ -111,7 +111,7 @@ sub commoncharspopup {
                     $w->eventAdd( '<<config>>' => '<Control-ButtonRelease-1>' );
                     $w->eventAdd( '<<config>>' => '<Meta-ButtonRelease-1>' ) if $::OS_MAC;
                     $w->bind( '<<config>>' => [ \&usercharconfig, $ucidx, $blln ] );
-                    ++$ucidx;              # Keep count of number of user buttons defined
+                    ++$ucidx;    # Keep count of number of user buttons defined
                 }
 
                 # re-order bindings so that widget's binding precedes class binding
@@ -165,15 +165,15 @@ sub usercharconfig {
     }
 
     my $ord = ord($text);
-    $::userchars[$idx] = $text;                                        # Save user's new definition
-    $w->configure( -text => $text );                                   # Update the label on the button
-    $w->configure(                                                     # Button needs to insert the new character
+    $::userchars[$idx] = $text;         # Save user's new definition
+    $w->configure( -text => $text );    # Update the label on the button
+    $w->configure(                      # Button needs to insert the new character
         -command => sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); }
     );
-    charbind3( $w, $text );                                            # Right-click button copies text to clipboard
-    charbuttonballoon( $w, $blln, $ord );                              # Balloon message if user hovers over button
+    charbind3( $w, $text );                  # Right-click button copies text to clipboard
+    charbuttonballoon( $w, $blln, $ord );    # Balloon message if user hovers over button
 
-    ::savesettings();                                                  # Ensure new button definition saved to setting file
+    ::savesettings();                        # Ensure new button definition saved to setting file
 
     # stop class callback being called - possible due to binding reordering during button creation above
     $w->break;
@@ -691,84 +691,84 @@ sub composekeyaction {
 #
 # Initialise hash of compose keystrokes to characters
 sub composeinitialize {
-    composeinitaccent( 'À',       'à', 'A', '`',  '\\' );
-    composeinitaccent( 'Á',       'á', 'A', '\'', '/' );
-    composeinitaccent( 'Â',       'â', 'A', '^' );
-    composeinitaccent( 'Ã',       'ã', 'A', '~' );
-    composeinitaccent( 'Ä',       'ä', 'A', '"',  ':' );
-    composeinitaccent( 'Å',       'å', 'A', 'o',  '*' );
-    composeinitaccent( 'È',       'è', 'E', '`',  '\\' );
-    composeinitaccent( 'É',       'é', 'E', '\'', '/' );
-    composeinitaccent( 'Ê',       'ê', 'E', '^' );
-    composeinitaccent( 'Ë',       'ë', 'E', '"',  ':' );
-    composeinitaccent( 'Ì',       'ì', 'I', '`',  '\\' );
-    composeinitaccent( 'Í',       'í', 'I', '\'', '/' );
-    composeinitaccent( 'Î',       'î', 'I', '^' );
-    composeinitaccent( 'Ï',       'ï', 'I', '"',  ':' );
-    composeinitaccent( 'Ò',       'ò', 'O', '`',  '\\' );
-    composeinitaccent( 'Ó',       'ó', 'O', '\'' );
-    composeinitaccent( 'Ô',       'ô', 'O', '^' );
-    composeinitaccent( 'Õ',       'õ', 'O', '~' );
-    composeinitaccent( 'Ö',       'ö', 'O', '"',  ':' );
-    composeinitaccent( 'Ø',       'ø', 'O', '/' );
-    composeinitaccent( 'Ù',       'ù', 'U', '`',  '\\' );
-    composeinitaccent( 'Ú',       'ú', 'U', '\'', '/' );
-    composeinitaccent( 'Û',       'û', 'U', '^' );
-    composeinitaccent( 'Ü',       'ü', 'U', '"',  ':' );
-    composeinitaccent( 'Ç',       'ç', 'C', ',' );
-    composeinitaccent( 'Ñ',       'ñ', 'N', '~' );
-    composeinitaccent( "\x{178}", 'ÿ', 'Y', '"',  ':' );
-    composeinitaccent( 'Ý',       'ý', 'Y', '\'', '/' );
-    composeinitaccent( "\x{A3}", "\x{A3}", 'L', '-' );         # pound
-    composeinitaccent( "\x{A2}", "\x{A2}", 'C', '/', '|' );    # cent
-    composeinitchars( "\x{BD}",   '1/2' );                     # 1/2
-    composeinitchars( "\x{2153}", '1/3' );                     # 1/3
-    composeinitchars( "\x{2154}", '2/3' );                     # 1/3
-    composeinitchars( "\x{BC}",   '1/4' );                     # 1/4
-    composeinitchars( "\x{BE}",   '3/4' );                     # 3/4
-    composeinitchars( "\x{2155}", '1/5' );                     # 1/5
-    composeinitchars( "\x{2156}", '2/5' );                     # 2/5
-    composeinitchars( "\x{2157}", '3/5' );                     # 3/5
-    composeinitchars( "\x{2158}", '4/5' );                     # 4/5
-    composeinitchars( "\x{2159}", '1/6' );                     # 1/6
-    composeinitchars( "\x{215A}", '5/6' );                     # 5/6
-    composeinitchars( "\x{2150}", '1/7' );                     # 1/7
-    composeinitchars( "\x{215B}", '1/8' );                     # 1/8
-    composeinitchars( "\x{215C}", '3/8' );                     # 3/8
-    composeinitchars( "\x{215D}", '5/8' );                     # 5/8
-    composeinitchars( "\x{215E}", '7/8' );                     # 7/8
-    composeinitchars( "\x{2151}", '1/9' );                     # 1/9
-    composeinitsyms( "\x{A1}",   '!',  '!' );                  # inverted !
-    composeinitsyms( "\x{BF}",   '?',  '?' );                  # inverted ?
-    composeinitsyms( "\x{AB}",   '<',  '<' );                  # left angle quotes
-    composeinitsyms( "\x{BB}",   '>',  '>' );                  # right angle quotes
-    composeinitsyms( "\x{2018}", '\'', '<', '\'', '6' );       # left single quote
-    composeinitsyms( "\x{2019}", '\'', '>', '\'', '9' );       # right single quote
-    composeinitsyms( "\x{201C}", '"',  '<', '"', '6' );        # left double quote
-    composeinitsyms( "\x{201D}", '"',  '>', '"', '9' );        # right double quote
-    composeinitsyms( "\x{201A}", '\'', ',' );                  # low single quote
-    composeinitsyms( "\x{201B}", '\'', '^' );                  # high reversed single quote
-    composeinitsyms( "\x{201E}", '"',  ',' );                  # low double quote
-    composeinitsyms( "\x{201F}", '"',  '^' );                  # high reversed double quote
-    composeinitsyms( "\x{B1}",   '+',  '-' );                  # plus/minus
-    composeinitsyms( "\x{B7}",   '.',  '^', '*', '.' );        # middle dot
-    composeinitsyms( "\x{D7}",   'x',  'x', '*', 'x' );        # multiplication
-    composeinitsyms( "\x{F7}",   ':',  '-' );                  # division
-    composeinitsyms( "\x{B0}",   'o',  'o', '*', 'o' );        # degree
-    composeinitsyms( "\x{2032}", '*',  '\'', '1', '\'' );      # single prime
-    composeinitsyms( "\x{2033}", '*',  '"', '2', '\'' );       # double prime
-    composeinitsyms( "\x{2034}", '3',  '\'' );                 # triple prime
-    composeinitsyms( "\x{2030}", '%',  '0', '%', 'o' );        # per mille
-    composeinitsyms( "\x{B9}",   '^',  '1' );                  # superscript 1
-    composeinitsyms( "\x{B2}",   '^',  '2' );                  # superscript 2
-    composeinitsyms( "\x{B3}",   '^',  '3' );                  # superscript 3
-    composeinitsyms( "\x{A0}",   ' ',  ' ', '*', ' ' );        # non-breaking space
-    composeinitsyms( "\x{2014}", '-',  '-' );                  # emdash
-    composeinitsyms( "\x{2013}", '-',  ' ' );                  # endash
-    composeinitsyms( "\x{2042}", '*',  '*' );                  # asterism
-    composeinitsyms( "\x{BA}",   'o',  '_' );                  # masculine ordinal
-    composeinitsyms( "\x{AA}",   'a',  '_' );                  # feminine ordinal
-    composeinitsyms( "\x{2016}", '|',  '|' );                  # double vertical line
+    composeinitaccent( 'À',       'à',      'A', '`',  '\\' );
+    composeinitaccent( 'Á',       'á',      'A', '\'', '/' );
+    composeinitaccent( 'Â',       'â',      'A', '^' );
+    composeinitaccent( 'Ã',       'ã',      'A', '~' );
+    composeinitaccent( 'Ä',       'ä',      'A', '"',  ':' );
+    composeinitaccent( 'Å',       'å',      'A', 'o',  '*' );
+    composeinitaccent( 'È',       'è',      'E', '`',  '\\' );
+    composeinitaccent( 'É',       'é',      'E', '\'', '/' );
+    composeinitaccent( 'Ê',       'ê',      'E', '^' );
+    composeinitaccent( 'Ë',       'ë',      'E', '"',  ':' );
+    composeinitaccent( 'Ì',       'ì',      'I', '`',  '\\' );
+    composeinitaccent( 'Í',       'í',      'I', '\'', '/' );
+    composeinitaccent( 'Î',       'î',      'I', '^' );
+    composeinitaccent( 'Ï',       'ï',      'I', '"', ':' );
+    composeinitaccent( 'Ò',       'ò',      'O', '`', '\\' );
+    composeinitaccent( 'Ó',       'ó',      'O', '\'' );
+    composeinitaccent( 'Ô',       'ô',      'O', '^' );
+    composeinitaccent( 'Õ',       'õ',      'O', '~' );
+    composeinitaccent( 'Ö',       'ö',      'O', '"', ':' );
+    composeinitaccent( 'Ø',       'ø',      'O', '/' );
+    composeinitaccent( 'Ù',       'ù',      'U', '`',  '\\' );
+    composeinitaccent( 'Ú',       'ú',      'U', '\'', '/' );
+    composeinitaccent( 'Û',       'û',      'U', '^' );
+    composeinitaccent( 'Ü',       'ü',      'U', '"', ':' );
+    composeinitaccent( 'Ç',       'ç',      'C', ',' );
+    composeinitaccent( 'Ñ',       'ñ',      'N', '~' );
+    composeinitaccent( "\x{178}", 'ÿ',      'Y', '"',  ':' );
+    composeinitaccent( 'Ý',       'ý',      'Y', '\'', '/' );
+    composeinitaccent( "\x{A3}",  "\x{A3}", 'L', '-' );              # pound
+    composeinitaccent( "\x{A2}",  "\x{A2}", 'C', '/', '|' );         # cent
+    composeinitchars( "\x{BD}",   '1/2' );                           # 1/2
+    composeinitchars( "\x{2153}", '1/3' );                           # 1/3
+    composeinitchars( "\x{2154}", '2/3' );                           # 1/3
+    composeinitchars( "\x{BC}",   '1/4' );                           # 1/4
+    composeinitchars( "\x{BE}",   '3/4' );                           # 3/4
+    composeinitchars( "\x{2155}", '1/5' );                           # 1/5
+    composeinitchars( "\x{2156}", '2/5' );                           # 2/5
+    composeinitchars( "\x{2157}", '3/5' );                           # 3/5
+    composeinitchars( "\x{2158}", '4/5' );                           # 4/5
+    composeinitchars( "\x{2159}", '1/6' );                           # 1/6
+    composeinitchars( "\x{215A}", '5/6' );                           # 5/6
+    composeinitchars( "\x{2150}", '1/7' );                           # 1/7
+    composeinitchars( "\x{215B}", '1/8' );                           # 1/8
+    composeinitchars( "\x{215C}", '3/8' );                           # 3/8
+    composeinitchars( "\x{215D}", '5/8' );                           # 5/8
+    composeinitchars( "\x{215E}", '7/8' );                           # 7/8
+    composeinitchars( "\x{2151}", '1/9' );                           # 1/9
+    composeinitsyms( "\x{A1}",   '!',  '!' );                        # inverted !
+    composeinitsyms( "\x{BF}",   '?',  '?' );                        # inverted ?
+    composeinitsyms( "\x{AB}",   '<',  '<' );                        # left angle quotes
+    composeinitsyms( "\x{BB}",   '>',  '>' );                        # right angle quotes
+    composeinitsyms( "\x{2018}", '\'', '<', '\'', '6' );             # left single quote
+    composeinitsyms( "\x{2019}", '\'', '>', '\'', '9' );             # right single quote
+    composeinitsyms( "\x{201C}", '"',  '<', '"',  '6' );             # left double quote
+    composeinitsyms( "\x{201D}", '"',  '>', '"',  '9' );             # right double quote
+    composeinitsyms( "\x{201A}", '\'', ',' );                        # low single quote
+    composeinitsyms( "\x{201B}", '\'', '^' );                        # high reversed single quote
+    composeinitsyms( "\x{201E}", '"',  ',' );                        # low double quote
+    composeinitsyms( "\x{201F}", '"',  '^' );                        # high reversed double quote
+    composeinitsyms( "\x{B1}",   '+',  '-' );                        # plus/minus
+    composeinitsyms( "\x{B7}",   '.',  '^', '*', '.' );              # middle dot
+    composeinitsyms( "\x{D7}",   'x',  'x', '*', 'x' );              # multiplication
+    composeinitsyms( "\x{F7}",   ':',  '-' );                        # division
+    composeinitsyms( "\x{B0}",   'o',  'o',  '*', 'o' );             # degree
+    composeinitsyms( "\x{2032}", '*',  '\'', '1', '\'' );            # single prime
+    composeinitsyms( "\x{2033}", '*',  '"',  '2', '\'' );            # double prime
+    composeinitsyms( "\x{2034}", '3',  '\'' );                       # triple prime
+    composeinitsyms( "\x{2030}", '%',  '0', '%', 'o' );              # per mille
+    composeinitsyms( "\x{B9}",   '^',  '1' );                        # superscript 1
+    composeinitsyms( "\x{B2}",   '^',  '2' );                        # superscript 2
+    composeinitsyms( "\x{B3}",   '^',  '3' );                        # superscript 3
+    composeinitsyms( "\x{A0}",   ' ',  ' ', '*', ' ' );              # non-breaking space
+    composeinitsyms( "\x{2014}", '-',  '-' );                        # emdash
+    composeinitsyms( "\x{2013}", '-',  ' ' );                        # endash
+    composeinitsyms( "\x{2042}", '*',  '*' );                        # asterism
+    composeinitsyms( "\x{BA}",   'o',  '_' );                        # masculine ordinal
+    composeinitsyms( "\x{AA}",   'a',  '_' );                        # feminine ordinal
+    composeinitsyms( "\x{2016}", '|',  '|' );                        # double vertical line
     composeinitcase( 'Æ',        'æ',        'AE' );                 # ae ligature
     composeinitcase( "\x{152}",  "\x{153}",  'OE' );                 # oe ligature
     composeinitcase( "\x{1E9E}", 'ß',        'SS' );                 # eszett

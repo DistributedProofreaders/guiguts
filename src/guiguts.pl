@@ -119,7 +119,7 @@ our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang          = 'en';
-our $composepopbinding = 'Alt_R';    # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
+our $composepopbinding = 'Alt_R';               # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
 $composepopbinding = 'Control-m' if $OS_MAC;    # Default to Ctrl+m on a Mac - Alt+RightArrow does the same indent operation
 our %composehash;                               # Keystrokes to insert character
 our $cssvalidationlevel  = 'css3';              # CSS level checked by validator (css3 or css21)
@@ -208,14 +208,14 @@ our %pagenumbers;
 our %projectdict;
 our %reghints = ();
 our %scannoslist;
-our %geometryhash;    #Geometry of some windows in one hash.
+our %geometryhash;                #Geometry of some windows in one hash.
 $geometryhash{wfpop} = q{};
-our %positionhash;    #Position of other windows in one hash.
-our %manualhash;      # subpage of manual for each dialog
+our %positionhash;                #Position of other windows in one hash.
+our %manualhash;                  # subpage of manual for each dialog
 our @bookmarks  = ( 0, 0, 0, 0, 0, 0 );
 our @multidicts = ();
 our @mygcview;
-our %operationshash;    # New format {operation, time}
+our %operationshash;              # New format {operation, time}
 our @pageindex;
 our @recentfile;
 @recentfile = ('README.md');
@@ -267,7 +267,7 @@ our @extops = (
         'command' => "$globalbrowserstart https://validator.w3.org/#validate_by_upload+with_options"
     },
     {
-        'label' => 'W3C CSS Validation Service',
+        'label'   => 'W3C CSS Validation Service',
         'command' =>
           "$globalbrowserstart https://jigsaw.w3.org/css-validator/#validate_by_upload+with_options"
     },

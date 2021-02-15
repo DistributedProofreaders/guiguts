@@ -390,8 +390,8 @@ sub runProgram {
     sub NEWgifsize {
         my ($GIF) = @_;
         my ( $cmapsize, $a, $b, $c, $d, $e ) = 0;
-        my ( $type, $s ) = ( 0, 0 );
-        my ( $x,    $y ) = ( 0, 0 );
+        my ( $type, $s )                     = ( 0, 0 );
+        my ( $x, $y )                        = ( 0, 0 );
         my ($dummy) = '';
 
         return ( $x, $y ) if ( !defined $GIF );
@@ -434,15 +434,15 @@ sub runProgram {
                     if ( $e == 0xF9 ) {    # Graphic Control Extension (GIF89a 23.c.ii)
                         read( $GIF, $dummy, 6 );    # Skip it
                         next FINDIMAGE;             # Look again for Image Descriptor
-                    } elsif ( $e == 0xFE ) {        # Comment Extension (GIF89a 24.c.ii)
+                    } elsif ( $e == 0xFE ) {    # Comment Extension (GIF89a 24.c.ii)
                         &gif_blockskip( $GIF, 0, "Comment" );
-                        next FINDIMAGE;             # Look again for Image Descriptor
-                    } elsif ( $e == 0x01 ) {        # Plain Text Label (GIF89a 25.c.ii)
+                        next FINDIMAGE;         # Look again for Image Descriptor
+                    } elsif ( $e == 0x01 ) {    # Plain Text Label (GIF89a 25.c.ii)
                         &gif_blockskip( $GIF, 12, "text data" );
-                        next FINDIMAGE;             # Look again for Image Descriptor
-                    } elsif ( $e == 0xFF ) {        # Application Extension Label (GIF89a 26.c.ii)
+                        next FINDIMAGE;         # Look again for Image Descriptor
+                    } elsif ( $e == 0xFF ) {    # Application Extension Label (GIF89a 26.c.ii)
                         &gif_blockskip( $GIF, 11, "application data" );
-                        next FINDIMAGE;             # Look again for Image Descriptor
+                        next FINDIMAGE;         # Look again for Image Descriptor
                     } else {
                         printf STDERR "Invalid/Corrupted GIF (Unknown extension %#x)\n", $e;
                         return ( $x, $y );
@@ -528,11 +528,11 @@ sub runProgram {
     }
 
     sub logprint {    # print message to logfile, formatted to suit GG or "normal" output
-                                                      # $_[0] is the body of the message
-                                                      # S_[1] is the source line number
-                                                      # $_[2] is "KEY" if message should be used in "terse" mode
-                                                      # $_[3] is non-GG prefix
-                                                      # $_[4] is non-GG postfix
+                      # $_[0] is the body of the message
+                      # S_[1] is the source line number
+                      # $_[2] is "KEY" if message should be used in "terse" mode
+                      # $_[3] is non-GG prefix
+                      # $_[4] is non-GG postfix
         if ( not($terse) || ( $_[2] eq "KEY" ) ) {    # generate message
             if ($gg) {
                 printf LOGFILE "line %-5d", $_[1];
@@ -543,23 +543,23 @@ sub runProgram {
         }
     }
 ##################################
-    sub imgcheck {                                    # partially parse <img> tag and report
+    sub imgcheck {    # partially parse <img> tag and report
         print LOGFILE ("\n---------- checking <img> images ----------\n");
         my $img        = "";
         my $imgtail    = "";
         my $sourceline = 0;
         my $reportline = 0;
-        foreach $_ (@book) {                          # find <img> tags and filenames
+        foreach $_ (@book) {    # find <img> tags and filenames
             $sourceline++;
             $img     = $img . " " . $_;
             $imgtail = "";
-            if ( $img =~ m/<img/i ) {                 # start of <img> tag
+            if ( $img =~ m/<img/i ) {    # start of <img> tag
                 $reportline = $sourceline;
-                $img =~ s/^.*?<img/<img/i;            # trim preceding crap
+                $img =~ s/^.*?<img/<img/i;    # trim preceding crap
                 $imgtail = $img;
-                while ( $img =~ m/>/ ) {              # complete <img> tag present
-                    $img     =~ s/^(.*?>).*$/$1/;     # now just the <img>
-                    $imgtail =~ s/^.*?>//;            # the rest if any
+                while ( $img =~ m/>/ ) {      # complete <img> tag present
+                    $img     =~ s/^(.*?>).*$/$1/;    # now just the <img>
+                    $imgtail =~ s/^.*?>//;           # the rest if any
                     if ( not( $img =~ m/\/>$/ ) ) {
                         logprint( "img tag not properly closed",
                             $reportline, "INFO", "--> $img\n  WARNING: ", "" );
@@ -579,7 +579,7 @@ sub runProgram {
                                 $errline, "KEY", "  WARNING:", "" );
                         }
                         my $usedimg = $src;
-                        $usedimg =~ s/images\/(.*)/$1/;            # NB case sensitive: "images" must be lowerecase
+                        $usedimg =~ s/images\/(.*)/$1/;                                  # NB case sensitive: "images" must be lowerecase
                         push( @imagelist, $usedimg );
                         if ( ( $usedimg =~ m/cover/ ) or ( $usedimg =~ m/title/ ) ) {    # potential epub cover page
                             if ( $imgcover eq "" ) {
@@ -591,13 +591,13 @@ sub runProgram {
                     my $idspec = $img;
                     $idspec =~ s/^.*id *= *(['"].*$)/$1/i;
                     my $idqt = substr( $idspec, 0, 1 );
-                    if ( length($idqt) > 0 ) {                                           # check if this is a coverpage
+                    if ( length($idqt) > 0 ) {    # check if this is a coverpage
                         if    ( $idqt eq '\'' ) { $idspec =~ s/'([^']*)'.*$/$1/; }
                         elsif ( $idqt eq '"' )  { $idspec =~ s/"([^"]*)".*$/$1/; }
                         if    ( $idspec eq "coverpage" ) {
                             $imgcover     = $src;
                             $imgcoverline = $reportline;
-                        }                                                                # note id=coverpage has higher precedence
+                        }                         # note id=coverpage has higher precedence
                     }
                     my $alt = $img;
                     $alt =~ s/^.*alt *= *(['"].*$)/$1/i;
@@ -831,8 +831,8 @@ sub runProgram {
         my $reportline = 0;
         my $bgimg      = "";
         my $bgimgtail  = "";
-        $wd = "X";    # suppress comparison with coded width in imgdimens
-        $ht = "X";    # suppress comparison with coded height in imgdimens
+        $wd = "X";              # suppress comparison with coded width in imgdimens
+        $ht = "X";              # suppress comparison with coded height in imgdimens
         foreach $_ (@book) {    # find background-image spec and filenames
             $sourceline++;
             $bgimg     = $bgimg . " " . $_;
@@ -909,7 +909,7 @@ sub runProgram {
             $usedimgtail = "";
             if ( $usedimg =~ m/href/i ) {    # found a link
                 $reportline = $sourceline;
-                $usedimg =~ s/^.*?href/href/i;    # trim preceding crap
+                $usedimg =~ s/^.*?href/href/i;                                    # trim preceding crap
                 $usedimgtail = $usedimg;
                 while ( $usedimg =~ m/href *= *['"]?images\/[^'" ]*['"]?/i ) {    # /images link
                     $usedimg     =~ s/^.*?href *= *['"]?images\/([^'" ]*)['"]?.*$/$1/i;    # first image linked
@@ -1004,7 +1004,7 @@ sub runProgram {
                 $linkrel = "";
             }
         }
-        if ( $imgcoverline == 0 ) {                                                                # no epub cover
+        if ( $imgcoverline == 0 ) {    # no epub cover
             print LOGFILE ( "\n\n" . NOLINEINDENT . "*** WARNING: no epub cover image found\n" );
         } else {
             print LOGFILE ("\n\n");

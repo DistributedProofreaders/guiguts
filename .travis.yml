@@ -1,6 +1,6 @@
 language: perl
 perl:
-  - "5.30"
+  - "5.32"
 install:
   - cpanm --quiet --installdeps --notest --with-develop .
 script:

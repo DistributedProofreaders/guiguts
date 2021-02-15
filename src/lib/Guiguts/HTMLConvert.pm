@@ -2,7 +2,7 @@ package Guiguts::HTMLConvert;
 use strict;
 use warnings;
 
-my $EMPX = 16.0;    # 1em in px assumed to be 16
+my $EMPX = 16.0;                     # 1em in px assumed to be 16
 my ( $LANDX, $LANDY ) = ( 4, 3 );    # Common aspect ratio of landscape screen
 
 BEGIN {
@@ -129,7 +129,7 @@ sub html_string_convert_utf {
     my ( $string, $leave_utf, $keep_latin1 ) = @_;
     return                                                         unless $string;
     $string =~ s/([\x{100}-\x{65535}])/sprintf("&x%x;",ord($1))/eg unless $leave_utf;
-    $string = html_string_convert_latin1($string) unless $keep_latin1;
+    $string = html_string_convert_latin1($string)                  unless $keep_latin1;
     return $string;
 }
 
@@ -632,7 +632,7 @@ sub html_convert_body {
             my $indent = 0;
 
             # indent based on number of spaces
-            $indent = length($1) if $selection =~ s/^(\s+)//;
+            $indent = length($1)                                if $selection =~ s/^(\s+)//;
             $textwindow->ntdelete( "$step.0", "$step.$indent" ) if $indent;
             unless ($unindentedpoetry) {
                 $indent -= 4;
@@ -1213,7 +1213,7 @@ sub html_convert_pageanchors {
 
     # Work through all the text markers
     while ( $mark = $textwindow->markNext($mark) ) {
-        next unless $mark =~ m{Pg(\S+)};    # Only look at page markers
+        next unless $mark =~ m{Pg(\S+)};              # Only look at page markers
         my $markindex = $textwindow->index($mark);    # Get page marker's index
 
         # This is the custom page label
@@ -1222,7 +1222,7 @@ sub html_convert_pageanchors {
 
         # Use the marker unless there is a custom page label
         $num = $1 unless $::pagenumbers{$mark}{action};
-        next unless length $num;
+        next      unless length $num;
 
         # Strip leading zeroes
         $num =~ s/^0+(\d)/$1/;
@@ -1411,15 +1411,15 @@ sub html_parse_header {
         $step++;
         last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
         $selection = $textwindow->get( "$step.0", "$step.end" );
-        next if ( $selection =~ /^\[Illustr/i );                                        # Skip Illustrations
-        next if ( $selection =~ /^\/[\$fx]/i );                                         # Skip /$|/F tags
+        next if ( $selection =~ /^\[Illustr/i );    # Skip Illustrations
+        next if ( $selection =~ /^\/[\$fx]/i );     # Skip /$|/F tags
         if (    ($intitle)
             and ( ( not length($selection) or ( $selection =~ /^f\//i ) ) ) ) {
             $step--;
             $textwindow->ntinsert( "$step.end", '</h1>' );
             last;
-        }                                                                               #done finding title
-        next if ( $selection =~ /^\/[\$fx]/i );                                         # Skip /$|/F tags
+        }                                           #done finding title
+        next if ( $selection =~ /^\/[\$fx]/i );     # Skip /$|/F tags
         next unless length($selection);
         if ( $intitle == 0 ) {
             $textwindow->ntinsert( "$step.0", '<h1>' );
@@ -1641,7 +1641,7 @@ sub htmlimage {
 
                 # Need to check it's a number if it has changed and is non-empty,
                 $ok = looks_like_number($newval) if ( $change and $newval );
-                htmlimageupdateheight($newval) if $ok;    # Update the height field
+                htmlimageupdateheight($newval)   if $ok;                       # Update the height field
                 return $ok;
             },
         )->pack( -side => 'left' );
@@ -1805,7 +1805,7 @@ sub htmlimageok {
             # Find end of last class definition in CSS
             $insertpoint = $textwindow->search( '-backwards', '--', '}', $insertpoint, '10.0' );
             if ($insertpoint) {
-                $insertpoint = $insertpoint . ' +1l';    # default position for first ever illow class
+                $insertpoint = $insertpoint . ' +1l';       # default position for first ever illow class
                 my $length     = 0;
                 my $classpoint = $insertpoint;
                 my $classreg   = '\.illow[pex][0-9\.]+';    # Match any automatically added illow classes
@@ -2622,9 +2622,9 @@ sub markupconfig {
         'Class name or attributes: '
     );
 
-    markupconfiglabel( $w, $typ );                  # Adjust label to show presence of class/attributes
+    markupconfiglabel( $w, $typ );    # Adjust label to show presence of class/attributes
 
-    ::savesettings();                               # Ensure new definition gets saved in setting file
+    ::savesettings();                 # Ensure new definition gets saved in setting file
 
     # stop class callback being called - possible due to binding reordering in markupbindconfig
     $w->break;
@@ -2992,8 +2992,8 @@ sub clearmarkupinselection {
         my $stepend = 'end';
 
         while ( $step <= $ler ) {
-            $lsc     = 0    if ( $step > $lsr );
-            $stepend = $lec if ( $step == $ler );
+            $lsc       = 0    if ( $step > $lsr );
+            $stepend   = $lec if ( $step == $ler );
             $selection = $textwindow->get( "$step.$lsc", "$step.$stepend" );
             $edited++ if ( $selection =~ s/<\/td>/  /g );
             $edited++ if ( $selection =~ s/<\/?body>//g );
@@ -3058,7 +3058,7 @@ sub makeanchor {
         my $notlatin = 1;
         $phrase   = '-X-' unless ( $phrase and $phrase =~ /(LETTER|DIGIT|LIGATURE)/ );
         $case     = 'uc' if $phrase =~ /CAPITAL|^-X-$/;
-        $notlatin = 0 if $phrase =~ /LATIN/;
+        $notlatin = 0    if $phrase =~ /LATIN/;
         $phrase =~ s/.+(LETTER|DIGIT|LIGATURE) //;
         $phrase =~ s/ WITH.+//;
         $phrase = lc($phrase) if $case eq 'lc';
