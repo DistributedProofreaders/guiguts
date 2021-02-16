@@ -234,7 +234,7 @@ sub footnotepop {
         my $frame6 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame6->Button(
             -activebackground => $::activecolor,
-            -command          => sub { setlz() },
+            -command          => sub { setlz('insert') },
             -text             => 'Set LZ @ cursor',
             -width            => 14
         )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
@@ -874,61 +874,90 @@ sub getlz {
     }
 }
 
+#
+# Adds a footnote landing zone at the end of every chapter (4 blank lines)
 sub autochaptlz {
     my $textwindow = $::textwindow;
     $::lglobal{zoneindex} = 0;
     $::lglobal{fnlzs}     = ();
-    my $char;
     $textwindow->addGlobStart;
+
+    # Ensure end of file has two blank lines
     while (1) {
-        $char = $textwindow->get('end-2c');
+        my $char = $textwindow->get('end-2c');
         last if ( $char =~ /\S/ );
         $textwindow->delete('end-2c');
-        $textwindow->update;
     }
     $textwindow->insert( 'end', "\n\n" );
-    my $index = '200.0';
+
+    my $index = '200.0';    # Skip first 200 lines to avoid title page, etc.
+
+    # Loop round finding 4 consecutive blank lines and insert a landing zone
     while (1) {
         $index = $textwindow->search( '-regex', '--', '^$', $index, 'end' );
-        last unless ($index);
-        last if ( $index < '100.0' );
+        last if not $index or $textwindow->compare( "$index+3l", '>=', 'end' );
+
+        # If next three lines also empty, insert landing zone before the 4 blank lines
         if (   ( $textwindow->index("$index+1l") ) eq ( $textwindow->index("$index+1c") )
             && ( $textwindow->index("$index+2l") ) eq ( $textwindow->index("$index+2c") )
             && ( $textwindow->index("$index+3l") ) eq ( $textwindow->index("$index+3c") ) ) {
-            $textwindow->markSet( 'insert', "$index+1l" );
-            setlz();
-            $index .= '+4l';
+            setlz($index);
+            $index = $textwindow->index("$index+6l");    # Skip past inserted landing zone
         } else {
-            $index .= '+1l';
-            next;
+            $index = $textwindow->index("$index+1l");    # Advance to avoid finding same one again
         }
     }
     $textwindow->addGlobEnd;
 }
 
+#
+# Adds a footnote landing zone at the end of the file
 sub autoendlz {
     my $textwindow = $::textwindow;
-    $textwindow->markSet( 'insert', 'end -1c' );
-
-    #$textwindow->insert( 'insert', "FOOTNOTES:\n\n" );
-    setlz();
+    setlz('end -1c');
 }
 
+#
+# Adds a footnote landing zone at the given index position
 sub setlz {
     my $textwindow = $::textwindow;
+    my $lzindex    = $textwindow->index(shift);
 
-    # Put footnotes at the end of the previous page before a chapter <-- not working
-    my $markindex = $textwindow->markPrevious('insert');
-    if ( $textwindow->compare( $markindex, '<', 'insert-2l' ) ) {
-        $textwindow->insert( 'insert', "FOOTNOTES:\n\n" );
-    } else {
+    # Check if there is a page marker in the lines above/below, in which case,
+    # insert landing zone before page marker instead of given position so that
+    # footnotes go at bottom of previous page, not top of this one (especially for chapter)
+    my $prevMark = $textwindow->markPrevious("$lzindex +1l lineend");
 
-        #$textwindow->insert( $markindex.'-1c', "\n\nFOOTNOTES:" );
-        $textwindow->insert( $markindex, "\n\nFOOTNOTES:" );
+    # Skip non-page marks
+    while ( $prevMark ne ""
+        and $prevMark !~ /Pg/
+        and $textwindow->compare( $prevMark, '>=', "$lzindex-1l linestart" ) ) {
+        $prevMark = $textwindow->markPrevious($prevMark);
     }
+
+    # If we found a nearby page mark, then use it (unless it's within text)
+    if ( $prevMark =~ /Pg/ and $textwindow->compare( $prevMark, '>=', "$lzindex-1l linestart" ) ) {
+        $textwindow->markGravity( $prevMark, 'right' );    # Ensure mark stays to the right of inserted text
+
+        # Cope with page mark being at start of first chapter blank line or at end of last chapter's text
+        if ( $textwindow->compare( $prevMark, '==', "$prevMark lineend" ) ) {    # Page mark at end of line
+            if ( $textwindow->compare( $prevMark, '==', "$prevMark linestart" ) ) {    # Also at start means on empty line
+                $textwindow->insert( $prevMark, "\n\nFOOTNOTES:\n" );
+            } else {                                                                   # At end of line with text on it
+                $textwindow->delete($prevMark);                                        # Delete newline character that follows the mark
+                $textwindow->insert( $prevMark, "\n\n\nFOOTNOTES:\n" );                # Add replacement newline before the mark
+            }
+        } else {    # Page mark within text - use given point instead
+            $textwindow->insert( $lzindex, "\n\nFOOTNOTES:\n" );
+        }
+        $textwindow->markGravity( $prevMark, 'left' );
+    } else {
+        $textwindow->insert( $lzindex, "\n\nFOOTNOTES:\n" );
+    }
+
     $::lglobal{fnmvbutton}->configure( '-state' => 'normal' )
       if ( ( $::lglobal{fnsecondpass} ) && ( $::lglobal{footstyle} eq 'end' ) );
-    $textwindow->see('insert');
+    $textwindow->see($lzindex);
 }
 
 sub footnotemove {
