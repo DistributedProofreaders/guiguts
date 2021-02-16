@@ -74,8 +74,8 @@ sub selectrewrap {
         ::savesettings();
     }
     $textwindow->addGlobStart;
-    my $end = pop(@ranges);     #get the end index of the selection
-    $start = pop(@ranges);      #get the start index of the selection
+    my $end = pop(@ranges);                                     #get the end index of the selection
+    $start = pop(@ranges);                                      #get the start index of the selection
     my @marklist = $textwindow->dump( -mark, $start, $end );    #see if there any page markers set
     my ( $markname, @savelist, $markindex );
     while (@marklist) {                                         #save the pagemarkers if they have been set
@@ -122,7 +122,7 @@ sub selectrewrap {
 
     if ( $textend eq $end ) {
         $textwindow->tagAdd( 'blockend', "$end-1c" )    #set a marker at the end of the selection, or one charecter less
-    } else {                                            #if the selection ends at the text end
+    } else {    #if the selection ends at the text end
         $textwindow->tagAdd( 'blockend', $end );
     }
     if ( $textwindow->get( '1.0', '1.end' ) eq '' ) {    #trap top line delete bug
@@ -137,8 +137,8 @@ sub selectrewrap {
         $thisblockend =
           $textwindow->search( '-regex', '--',
             '(^' . $TEMPPAGEMARK . '*$)|([' . $blockwraptypes . ']/)',
-            $thisblockstart, $end );                     # find end of paragraph or end of markup
-                                                         # if two start rewrap block markers aren't separated by a blank line, just let it become added
+            $thisblockstart, $end );    # find end of paragraph or end of markup
+                                        # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
           if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c" ) =~
             /^\/[$::allblocktypes]$/ );
@@ -148,9 +148,9 @@ sub selectrewrap {
         } else {
             $thisblockend = $end;
         }
-        ;                                                #or end of text if end of selection
+        ;                               #or end of text if end of selection
         $selection = $textwindow->get( $thisblockstart, $thisblockend )
-          if $thisblockend;                              #get the paragraph of text
+          if $thisblockend;             #get the paragraph of text
         unless ($selection) {
             $thisblockstart = $thisblockend;
             $thisblockstart = $textwindow->index("$thisblockstart+1c");
@@ -233,7 +233,7 @@ sub selectrewrap {
                                     '--', '^\s+', "$line.0", "$line.end"
                                 );
                                 unless ($spaces) { $spaces = 0 }
-                                if ( $spaces < $offset ) {
+                                if     ( $spaces < $offset ) {
                                     $offset = $spaces;
                                 }
                                 $spaces = 0;
@@ -602,7 +602,7 @@ sub flood {
 sub floodfill {
     my ( $textwindow, $ffchar ) = @_;
     my @ranges = $textwindow->tagRanges('sel');
-    return unless @ranges;
+    return        unless @ranges;
     $ffchar = ' ' unless length $ffchar;
     $textwindow->addGlobStart;
     while (@ranges) {

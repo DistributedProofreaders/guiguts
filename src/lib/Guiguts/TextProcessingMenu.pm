@@ -336,10 +336,10 @@ sub fixup {
     ::enable_interrupt();
 
     while ( $lastindex < $end ) {
-        my $edited = 0;     # if current line has been edited
+        my $edited = 0;    # if current line has been edited
         $line = $textwindow->get( $lastindex, $index );
-        if ( $line =~ /\/[\$\*Xx]/ ) { $inblock = 1 }
-        if ( $line =~ /[\$\*]\// )   { $inblock = 0 }
+        if     ( $line =~ /\/[\$\*Xx]/ ) { $inblock = 1 }
+        if     ( $line =~ /[\$\*]\// )   { $inblock = 0 }
         unless ( $inblock && ${ $::lglobal{fixopt} }[0] ) {
 
             # remove multiple spaces

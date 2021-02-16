@@ -234,7 +234,7 @@ sub searchtext {
     unless ($::searchstartindex) {
         $foundone = 0;
         unless ( $::lglobal{selectionsearch} ) { $start = '1.0'; $end = 'end' }
-        if ( $::sopt[2] ) {
+        if     ( $::sopt[2] ) {
             $::searchstartindex = $end;
 
             unless ($silentcountmode) {
@@ -696,7 +696,7 @@ sub replaceeval {
     my ( $searchterm, $replaceterm ) = @_;
     my @replarray = ();
     my ( $replaceseg, $seg1,   $seg2,   $replbuild );
-    my ( $m1,         $m2,     $m3,     $m4, $m5, $m6, $m7, $m8 );
+    my ( $m1,         $m2,     $m3,     $m4,     $m5,     $m6,     $m7,     $m8 );
     my ( $cfound,     $lfound, $ufound, $tfound, $xfound, $bfound, $gfound, $afound, $rfound );
 
     #check for control codes before the $1 codes for text found are inserted
@@ -815,13 +815,13 @@ sub replaceevalaction {
 
     # Split into segments delimited by \type
     my @replarray = split /\\$type/, $replaceterm;
-    my $replbuild = shift @replarray;                # start with replace term up to first \type (may be empty)
+    my $replbuild = shift @replarray;    # start with replace term up to first \type (may be empty)
 
     # For each segment that began with \type, split into 2 segments: before/after next \E
     while ( my $replaceseg = shift @replarray ) {
         my ( $seg1, $seg2 ) = split /\\E/, $replaceseg, 2;
-        $replbuild .= &$callback($seg1);             # Append segment after processing according to \type
-        $replbuild .= $seg2 if $seg2;                # Append segment after \E without processing
+        $replbuild .= &$callback($seg1);    # Append segment after processing according to \type
+        $replbuild .= $seg2 if $seg2;       # Append segment after \E without processing
     }
     return $replbuild;
 }

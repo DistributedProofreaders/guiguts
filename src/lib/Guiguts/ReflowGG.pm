@@ -86,7 +86,7 @@ sub reflow_trial($$$$$$$$$$) {
                 $penalty = 0;
             }
             $interval += $space_len->[ $k + 1 ];
-            $penalty  += $totalpenalty[$k] if ( $k >= 0 );
+            $penalty  += $totalpenalty[$k]      if ( $k >= 0 );
             $penalty  += $shortlast * $semantic if ( $wordcount - $k - 1 <= 2 );
             if ( $penalty <= $bestsofar ) {
                 $bestsofar = $penalty;
@@ -632,18 +632,18 @@ sub reflow_penalties {
             $extra[ $j + 1 ] -= $sentence;
             $words[$j] = $words[$j] . " " unless ( $frenchspacing =~ /[Yy]/ );
         }
-        if ( $words[$j] =~ /\,$/ ) {                             # Comma after word
+        if ( $words[$j] =~ /\,$/ ) {    # Comma after word
             $extra[$j]       += $dependent / 2;
             $extra[ $j - 1 ] -= $dependent if ( $j > 0 );
             $extra[ $j + 1 ] -= $dependent;
         }
-        if ( $words[$j] =~ /[\;\"\'\)]$|--$/ ) {                 # Punctuation after word
+        if ( $words[$j] =~ /[\;\"\'\)]$|--$/ ) {    # Punctuation after word
             $extra[$j]       += $independent / 2;
             $extra[ $j - 1 ] -= $independent if ( $j > 0 );
             $extra[ $j + 1 ] -= $independent;
         }
         if (   ( $j < $#words )
-            && ( $words[ $j + 1 ] =~ /^\(/ ) ) {                 # Next word has opening parenthesis
+            && ( $words[ $j + 1 ] =~ /^\(/ ) ) {    # Next word has opening parenthesis
             $extra[$j]       += $independent / 2;
             $extra[ $j - 1 ] -= $independent if ( $j > 0 );
             $extra[ $j + 1 ] -= $independent;
@@ -654,14 +654,14 @@ sub reflow_penalties {
                 && $words[$j] !~ /\./
                 && $words[ $j + 1 ] =~ /[A-Z]/ )
         ) {
-            $extra[$j] -= $namebreak;                            # Don't break "United States"
+            $extra[$j] -= $namebreak;               # Don't break "United States"
         }
         $extra[$j] -= $connectives{ $words[$j] } * $connpenalty
           if ( defined( $connectives{ $words[$j] } ) );
     }
 
-    @word_len  = ();                                             # Length of each word (excluding spaces)
-    @space_len = ();                                             # Length the space after this word
+    @word_len  = ();    # Length of each word (excluding spaces)
+    @space_len = ();    # Length the space after this word
     for ( $j = 0 ; $j < $wordcount ; $j++ ) {
         if ( !$gg && $words[$j] =~ /--$/ ) {
             $word_len[$j]  = length( $words[$j] );

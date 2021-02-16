@@ -2622,7 +2622,7 @@ sub add_entry_history {
 
     # add the other terms from the list in order
     for (@temparray) {
-        next if $_ eq $term;    # omit current term if previously in list
+        next if $_ eq $term;                               # omit current term if previously in list
         push @$history_array_ref, $_;
         last if @$history_array_ref >= $::history_size;    # don't exceed maximum history size
     }
