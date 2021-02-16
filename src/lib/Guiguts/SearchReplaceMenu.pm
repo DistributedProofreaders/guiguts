@@ -112,124 +112,131 @@ sub searchtext {
     my $length = '0';
     my ($tempindex);
 
-    # Search across line boundaries with regexp "this\nand"
-    if ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) ) {
-        unless ( $searchterm eq $::lglobal{lastsearchterm} ) {
-            {
-                $top->Busy;
+    # Can't find anything if last search ended at end of file - avoid bug regex searching for "^"
+    if ( $textwindow->compare( $::searchendindex, '>=', 'end-1c' ) ) {
+        $::searchstartindex = 0;
+    } else {
 
-                # have to search on the whole file
-                my $wholefile = $textwindow->get( '1.0', $end );
+        # Search across line boundaries with regexp "this\nand"
+        if ( ( $searchterm =~ m/\\n/ ) && ( $::sopt[3] ) ) {
+            unless ( $searchterm eq $::lglobal{lastsearchterm} ) {
+                {
+                    $top->Busy;
 
-                # search is case sensitive if $::sopt[1] is set
-                if ( $::sopt[1] ) {
-                    while ( $wholefile =~ m/$searchterm/smgi ) {
-                        push @{ $::lglobal{nlmatches} }, [ $-[0], ( $+[0] - $-[0] ) ];
+                    # have to search on the whole file
+                    my $wholefile = $textwindow->get( '1.0', $end );
+
+                    # search is case sensitive if $::sopt[1] is set
+                    if ( $::sopt[1] ) {
+                        while ( $wholefile =~ m/$searchterm/smgi ) {
+                            push @{ $::lglobal{nlmatches} }, [ $-[0], ( $+[0] - $-[0] ) ];
+                        }
+                    } else {
+                        while ( $wholefile =~ m/$searchterm/smg ) {
+                            push @{ $::lglobal{nlmatches} }, [ $-[0], ( $+[0] - $-[0] ) ];
+                        }
                     }
-                } else {
-                    while ( $wholefile =~ m/$searchterm/smg ) {
-                        push @{ $::lglobal{nlmatches} }, [ $-[0], ( $+[0] - $-[0] ) ];
+                    $top->Unbusy;
+                }
+                my $matchidx = 0;
+                my $lineidx  = 1;
+                my $matchacc = 0;
+                foreach my $match ( @{ $::lglobal{nlmatches} } ) {
+                    while (1) {
+                        my $linelen =
+                          length( $textwindow->get( "$lineidx.0", "$lineidx.end" ) ) + 1;
+                        last if ( ( $matchacc + $linelen ) > $match->[0] );
+                        $matchacc += $linelen;
+                        $lineidx++;
                     }
+                    $matchidx++;
+                    my $offset = $match->[0] - $matchacc;
+                    $textwindow->markSet( "nls${matchidx}q" . $match->[1], "$lineidx.$offset" );
                 }
-                $top->Unbusy;
+                $::lglobal{lastsearchterm} = $searchterm;
             }
-            my $matchidx = 0;
-            my $lineidx  = 1;
-            my $matchacc = 0;
-            foreach my $match ( @{ $::lglobal{nlmatches} } ) {
-                while (1) {
-                    my $linelen = length( $textwindow->get( "$lineidx.0", "$lineidx.end" ) ) + 1;
-                    last if ( ( $matchacc + $linelen ) > $match->[0] );
-                    $matchacc += $linelen;
-                    $lineidx++;
-                }
-                $matchidx++;
-                my $offset = $match->[0] - $matchacc;
-                $textwindow->markSet( "nls${matchidx}q" . $match->[1], "$lineidx.$offset" );
-            }
-            $::lglobal{lastsearchterm} = $searchterm;
-        }
-        my $mark;
-        if ( $::sopt[2] ) {
-            $mark = getmark($::searchstartindex);
-        } else {
-            $mark = getmark($::searchendindex);
-        }
-        while ($mark) {
-            if ( $mark =~ /nls\d+q(\d+)/ ) {
-                $length = $1;
-
-                $::searchstartindex = $textwindow->index($mark);
-                last;
+            my $mark;
+            if ( $::sopt[2] ) {
+                $mark = getmark($::searchstartindex);
             } else {
-                $mark = getmark($mark) if $mark;
-                next;
+                $mark = getmark($::searchendindex);
+            }
+            while ($mark) {
+                if ( $mark =~ /nls\d+q(\d+)/ ) {
+                    $length = $1;
+
+                    $::searchstartindex = $textwindow->index($mark);
+                    last;
+                } else {
+                    $mark = getmark($mark) if $mark;
+                    next;
+                }
+            }
+            $::searchstartindex        = 0       unless $mark;
+            $::lglobal{lastsearchterm} = 'reset' unless $mark;
+        } else {    # not a search across line boundaries
+            my $exactsearch = $searchterm;
+            $exactsearch = ::escape_regexmetacharacters($exactsearch);
+            $searchterm  = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})'
+              if $::sopt[0];
+            my ( $direction, $searchstart, $mode );
+            if   ( $::sopt[2] ) { $searchstart = $::searchstartindex }
+            else                { $searchstart = $::searchendindex }
+            if   ( $::sopt[2] ) { $direction = '-backwards' }
+            else                { $direction = '-forwards' }
+            if   ( $::sopt[0] or $::sopt[3] ) { $mode = '-regexp' }
+            else                              { $mode = '-exact' }
+
+            if ($::debug) {
+                print "$mode:$direction:$length:$searchterm:$searchstart:$end\n";
+            }
+
+            #finally we actually do some searching
+            if ( $::sopt[1] ) {
+                $::searchstartindex = $textwindow->search(
+                    $mode, $direction, '-nocase',
+                    '-count' => \$length,
+                    '--', $searchterm, $searchstart, $end
+                );
+            } else {
+                $::searchstartindex = $textwindow->search(
+                    $mode, $direction,
+                    '-count' => \$length,
+                    '--', $searchterm, $searchstart, $end
+                );
             }
         }
-        $::searchstartindex        = 0       unless $mark;
-        $::lglobal{lastsearchterm} = 'reset' unless $mark;
-    } else {    # not a search across line boundaries
-        my $exactsearch = $searchterm;
-        $exactsearch = ::escape_regexmetacharacters($exactsearch);
-        $searchterm  = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})'
-          if $::sopt[0];
-        my ( $direction, $searchstart, $mode );
-        if   ( $::sopt[2] ) { $searchstart = $::searchstartindex }
-        else                { $searchstart = $::searchendindex }
-        if   ( $::sopt[2] ) { $direction = '-backwards' }
-        else                { $direction = '-forwards' }
-        if   ( $::sopt[0] or $::sopt[3] ) { $mode = '-regexp' }
-        else                              { $mode = '-exact' }
+        if ($::searchstartindex) {
+            $tempindex = $::searchstartindex;
 
-        if ($::debug) {
-            print "$mode:$direction:$length:$searchterm:$searchstart:$end\n";
-        }
+            my ( $row, $col ) = split /\./, $tempindex;
 
-        #finally we actually do some searching
-        if ( $::sopt[1] ) {
-            $::searchstartindex = $textwindow->search(
-                $mode, $direction, '-nocase',
-                '-count' => \$length,
-                '--', $searchterm, $searchstart, $end
-            );
-        } else {
-            $::searchstartindex = $textwindow->search(
-                $mode, $direction,
-                '-count' => \$length,
-                '--', $searchterm, $searchstart, $end
-            );
-        }
-    }
-    if ($::searchstartindex) {
-        $tempindex = $::searchstartindex;
+            $col += $length;
+            $::searchendindex = "$row.$col" if $length;
 
-        my ( $row, $col ) = split /\./, $tempindex;
+            $::searchendindex = $textwindow->index("$::searchstartindex +${length}c")
+              if ( $searchterm =~ m/\\n/ );
 
-        $col += $length;
-        $::searchendindex = "$row.$col" if $length;
+            $::searchendindex = $textwindow->index("$::searchstartindex +1c")
+              unless $length;
 
-        $::searchendindex = $textwindow->index("$::searchstartindex +${length}c")
-          if ( $searchterm =~ m/\\n/ );
+            unless ($silentcountmode) {
+                $textwindow->markSet( 'insert', $::searchstartindex )
+                  if $::searchstartindex;    # position the cursor at the index
+                $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
+                  if $::searchstartindex;    # highlight the text
 
-        $::searchendindex = $textwindow->index("$::searchstartindex +1c")
-          unless $length;
-
-        unless ($silentcountmode) {
-            $textwindow->markSet( 'insert', $::searchstartindex )
-              if $::searchstartindex;    # position the cursor at the index
-            $textwindow->tagAdd( 'highlight', $::searchstartindex, $::searchendindex )
-              if $::searchstartindex;    # highlight the text
-
-            # scroll text window, to make found text visible
-            unless ($silentmode) {
-                $textwindow->yviewMoveto(1);
-                $textwindow->see($::searchstartindex)
-                  if ( $::searchendindex && $::sopt[2] );
-                $textwindow->see($::searchendindex)
-                  if ( $::searchendindex && !$::sopt[2] );
+                # scroll text window, to make found text visible
+                unless ($silentmode) {
+                    $textwindow->yviewMoveto(1);
+                    $textwindow->see($::searchstartindex)
+                      if ( $::searchendindex && $::sopt[2] );
+                    $textwindow->see($::searchendindex)
+                      if ( $::searchendindex && !$::sopt[2] );
+                }
             }
+            $::searchendindex = $::searchstartindex unless $length;
         }
-        $::searchendindex = $::searchstartindex unless $length;
     }
     unless ($::searchstartindex) {
         $foundone = 0;
