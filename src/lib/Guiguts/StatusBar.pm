@@ -16,7 +16,7 @@ sub update_indicators {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
-    my ( $line,      $column )   = split( /\./, $textwindow->index('insert') );
+    my ( $line, $column )        = split( /\./, $textwindow->index('insert') );
     $::lglobal{current_line_label}
       ->configure( -text => "L:$line/" . ( $last_line - 1 ) . " C:$column" )
       if ( $::lglobal{current_line_label} );

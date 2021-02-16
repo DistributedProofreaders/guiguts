@@ -573,8 +573,8 @@ sub buildwordlist {
         for my $word (@words) {
             $word =~ s/ //g;
             if ( length($word) == 0 ) { next; }
-            $word =~ s/[\.',-]+$//;                                # throw away punctuation at end
-            $word =~ s/^[\.,'-]+//;                                #and at the beginning
+            $word =~ s/[\.',-]+$//;    # throw away punctuation at end
+            $word =~ s/^[\.,'-]+//;    #and at the beginning
             next if ( $word eq '' );
             $wc++;
             $distinctwords{$word}++;

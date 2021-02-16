@@ -22,7 +22,7 @@ sub spellcheckfirst {
 
     # get list of misspelled words in selection (or file if nothing selected)
     spellget_misspellings();
-    my $term = $::lglobal{misspelledlist}[0];    # get first misspelled term
+    my $term = $::lglobal{misspelledlist}[0];               # get first misspelled term
     $::lglobal{misspelledentry}->delete( '0', 'end' );
     $::lglobal{misspelledentry}->insert( 'end', $term );    # put it in the appropriate text box
     $::lglobal{suggestionlabel}->configure( -text => 'Suggestions:' );
@@ -141,11 +141,11 @@ sub spellchecknext {
         my $proper_case      = lc($cur_word);
         $proper_case =~ s/(^\w)/\U$1\E/;
         $spell_count_case += ( $::lglobal{seenwords}->{ uc($cur_word) } || 0 )
-          if $cur_word ne uc($cur_word);                                        # Add the full-uppercase version to the count
+          if $cur_word ne uc($cur_word);    # Add the full-uppercase version to the count
         $spell_count_case += ( $::lglobal{seenwords}->{ lc($cur_word) } || 0 )
-          if $cur_word ne lc($cur_word);                                        # Add the full-lowercase version to the count
+          if $cur_word ne lc($cur_word);    # Add the full-lowercase version to the count
         $spell_count_case += ( $::lglobal{seenwords}->{$proper_case} || 0 )
-          if $cur_word ne $proper_case;                                         # Add the propercase version to the count
+          if $cur_word ne $proper_case;     # Add the propercase version to the count
 
         foreach my $hyword ( keys %{ $::lglobal{hyphen_words} } ) {
             next if $hyword !~ /$cur_word/;
@@ -310,8 +310,8 @@ sub aspellstop {
     }
 }
 
-sub spellguesses {         #feed aspell a word to get a list of guess
-    my $word = shift;      # word to get guesses for
+sub spellguesses {    #feed aspell a word to get a list of guess
+    my $word = shift;                   # word to get guesses for
     @{ $::lglobal{guesslist} } = ();    # clear the guesslist
     utf8::encode($word);
     print OUT $word, "\n";              # send the word to the stdout file handle
@@ -355,7 +355,7 @@ sub spellcheckrange {
 
 sub spellget_misspellings {    # get list of misspelled words
     my $textwindow = $::textwindow;
-    spellcheckrange();         # get chunk of text to process
+    spellcheckrange();                                                                           # get chunk of text to process
     return if ( $::lglobal{spellindexstart} eq $::lglobal{spellindexend} );
     my $section = $textwindow->get( $::lglobal{spellindexstart}, $::lglobal{spellindexend} );    # get selection
     $section =~ s/^-----File:.*//g;
@@ -424,7 +424,7 @@ sub getmisspelledwords {
 sub spellignoreall {
     my $textwindow = $::textwindow;
     my $next;
-    my $word = $::lglobal{misspelledentry}->get;        # get word you want to ignore
+    my $word = $::lglobal{misspelledentry}->get;    # get word you want to ignore
     unless ($word) {
         ::soundbell();
         return;
@@ -439,13 +439,13 @@ sub spellignoreall {
     spellmyaddword($word);
 }
 
-sub spelladjust_index {                                  # get the index of the match start (row column)
+sub spelladjust_index {    # get the index of the match start (row column)
     my $textwindow = $::textwindow;
     my ( $idx, $match ) = @_;
-    my ( $mr,  $mc )    = split /\./, $idx;
+    my ( $mr, $mc ) = split /\./, $idx;
     $mc += 1;
     $textwindow->markSet( 'spellindex', "$mr.$mc" );
-    return "$mr.$mc";                                    # and return the index of the end of the match
+    return "$mr.$mc";      # and return the index of the end of the match
 }
 
 # add highlighting to selected word
@@ -492,14 +492,14 @@ sub spellchecker {    # Set up spell check window
     ::operationadd('Spellcheck');
     ::hidepagenums();
     if ( defined( $::lglobal{spellpopup} ) ) {    # If window already exists
-        $::lglobal{spellpopup}->deiconify;        # pop it up off the task bar
-        $::lglobal{spellpopup}->raise;            # put it on top
-        $::lglobal{spellpopup}->focus;            # and give it focus
+        $::lglobal{spellpopup}->deiconify;                       # pop it up off the task bar
+        $::lglobal{spellpopup}->raise;                           # put it on top
+        $::lglobal{spellpopup}->focus;                           # and give it focus
         spelloptions()
           unless $::globalspellpath && -e $::globalspellpath;    # Whoops, don't know where to find Aspell
         spellclearvars();
         spellcheckfirst();                                       # Start checking the spelling
-    } else {                                                     # window doesn't exist so set it up
+    } else {    # window doesn't exist so set it up
         $::lglobal{spellpopup} = $top->Toplevel;
         $::lglobal{spellpopup}
           ->title( 'Current Dictionary - ' . $::globalspelldictopt || 'No dictionary!' );
@@ -725,9 +725,9 @@ sub spellchecker {    # Set up spell check window
 sub endaspell {
     my $textwindow = $::textwindow;
     @{ $::lglobal{misspelledlist} } = ();
-    ::killpopup('spellpopup');                                   # completely remove spellcheck window
-    print OUT "\cC\n" if $::lglobal{spellpid};                   # send quit signal to aspell
-    aspellstop();                                                # and remove the process
+    ::killpopup('spellpopup');                    # completely remove spellcheck window
+    print OUT "\cC\n" if $::lglobal{spellpid};    # send quit signal to aspell
+    aspellstop();                                 # and remove the process
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
 }
 
@@ -766,8 +766,8 @@ sub spelloptions {
         -title   => 'Spell Check Options',
         -buttons => ['OK']
     );
-    my $spellpathlabel = $spellop->add( 'Label', -text  => 'Aspell executable file:' )->pack;
-    my $spellpathentry = $spellop->add( 'Entry', -width => 60, -background => $::bkgcolor )->pack;
+    my $spellpathlabel  = $spellop->add( 'Label', -text  => 'Aspell executable file:' )->pack;
+    my $spellpathentry  = $spellop->add( 'Entry', -width => 60, -background => $::bkgcolor )->pack;
     my $spellpathbrowse = $spellop->add(
         'Button',
         -text    => 'Locate Aspell Executable',

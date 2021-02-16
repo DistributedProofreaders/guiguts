@@ -27,9 +27,9 @@ sub keybindings {
     # Select, copy, paste
     keybind( '<Control-a>',     sub { $textwindow->selectAll; } );
     keybind( '<Control-c>',     sub { ::textcopy(); }, '<<Copy>>' );
-    keybind( '<Control-x>',     sub { ::cut(); }, '<<Cut>>' );
+    keybind( '<Control-x>',     sub { ::cut(); },      '<<Cut>>' );
     keybind( '<Control-v>',     sub { ::paste(); } );
-    keybind( '<Control-Alt-v>', sub { ::paste('alternative'); } );     # to avoid Perl/Tk paste bug
+    keybind( '<Control-Alt-v>', sub { ::paste('alternative'); } );    # to avoid Perl/Tk paste bug
     keybind( '<F1>',            sub { ::colcopy($textwindow); } );
     keybind( '<F2>',            sub { ::colcut($textwindow); } );
     keybind( '<F3>',            sub { ::colpaste($textwindow); } );

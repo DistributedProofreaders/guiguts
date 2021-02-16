@@ -628,7 +628,7 @@ sub linkcheckrun {
         }
     }
     for ( keys %link ) {
-        $badlink{$_} = $_ if ( $_ =~ m/\\|\%5C|\s|\%20/ );
+        $badlink{$_} = $_      if ( $_ =~ m/\\|\%5C|\s|\%20/ );
         delete $imagefiles{$_} if ( defined $imagefiles{$_} );
     }
     for ( ::natural_sort_alpha( keys %link ) ) {

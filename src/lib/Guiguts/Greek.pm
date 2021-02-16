@@ -996,7 +996,7 @@ sub greekbeta {
     return fromgreektr($phrase);    #Un-marked & specials
 }
 
-sub betaascii {                     #Actually it's beta->ANSI
+sub betaascii {    #Actually it's beta->ANSI
 
     # Discards the accents
     my ($phrase) = @_;

@@ -33,7 +33,7 @@ To install Guiguts see [INSTALL.md](INSTALL.md).
 
 Guiguts uses [perltidy](https://metacpan.org/pod/Perl::Tidy) for consistent
 styling using configuration options in `.perltidyrc`. You can install perltidy
-with `cpanm --install --notest Perl::Tidy@20200619`.
+with `cpanm --installdeps --notest --with-develop .` including the dot at the end.
 
 `format_files.sh` can be used to format one or more files. If used with
 `--check` it will validate that the files match the perltidy format.

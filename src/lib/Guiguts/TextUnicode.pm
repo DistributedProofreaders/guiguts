@@ -246,17 +246,17 @@ sub ReplaceSelectionsWith {
             push( @lengths, $fmlen );
         }
 
-        if ( !@lengths ) {                                # No page markers, so simply insert new and delete old text
+        if ( !@lengths ) {    # No page markers, so simply insert new and delete old text
             $w->insert( $last, $new_text );
             $w->delete( $first, $last );
-        } else {                                          # We found page markers, so need to place text round them
-                                                          # Scale string lengths based on ratio of new and old text lengths
+        } else {              # We found page markers, so need to place text round them
+                              # Scale string lengths based on ratio of new and old text lengths
             my $newlen = length $new_text;
             my $oldlen = length $w->get( $first, $last );
             foreach (@lengths) {
                 $_ = int( $_ * $newlen / $oldlen + 0.5 );
             }
-            unshift( @lengths, $newlen );                 # first element is whole length of new string
+            unshift( @lengths, $newlen );    # first element is whole length of new string
 
             # Second pass through page markers to replace the text in chunks
             # In reverse order to avoid one replace affecting positions for the next
@@ -264,7 +264,7 @@ sub ReplaceSelectionsWith {
             my $prev = $last;
             my $idx  = 0;
             while ( $mark = $w->markPrevious($mark) ) {
-                next unless ( $mark =~ m{Pg(\S+)} );    # Only look at page markers
+                next unless ( $mark =~ m{Pg(\S+)} );          # Only look at page markers
                 last if $w->compare( $mark, '<', $first );    # Stop if before start of old string
                 next if ( $mark eq $prev );                   # Skip if we find same position again
 
@@ -282,10 +282,10 @@ sub ReplaceSelectionsWith {
             }
 
             # delete final (first) chunk and insert remainder
-            $w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );        # Keep page marker to right of replaced string
+            $w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );    # Keep page marker to right of replaced string
             $w->delete( $first, $prev );
             $w->insert( $first, substr( $new_text, 0, $lengths[$idx] ) );
-            $w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );         # Restore page marker behaviour
+            $w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );     # Restore page marker behaviour
         }
     }
 

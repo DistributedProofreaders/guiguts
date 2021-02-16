@@ -473,7 +473,7 @@ sub storedefaultcolor_autosave {
     $::lglobal{savetoolcolor} = $::lglobal{savetool}->cget('-background');
 }
 
-sub setcolor {                              # Color picking routine
+sub setcolor {    # Color picking routine
     my $top     = $::top;
     my $initial = shift;
     return (
@@ -630,7 +630,7 @@ sub filePathsPopup {
             -anchor => 'w',
         )->pack( -side => 'left' );
         $f6->Button(
-            -text => 'Locate HTML Validator...',
+            -text    => 'Locate HTML Validator...',
             -command =>
               sub { ::locateExecutable( 'W3C HTML Validator (onsgmls)', \$::validatecommand ); },
             -width => 24,
