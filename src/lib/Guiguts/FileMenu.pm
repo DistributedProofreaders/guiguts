@@ -67,6 +67,7 @@ sub file_saveas {
             -initialdir  => $::globallastpath,
             -initialfile => $initialfile,
         );
+        last if bad_filename_chars($name);    # break out of block if bad filename
 
         if ( defined($name) and length($name) ) {
             $::top->Busy( -recurse => 1 );
@@ -386,6 +387,7 @@ sub savefile {
 
         my ( $textwindow, $top ) = ( $::textwindow, $::top );
         my $filename = $::lglobal{global_filename};
+        last if bad_filename_chars($filename);    # break out of block if bad filename
 
         # If no filename, do "Save As".
         if ( $filename =~ /No File Loaded/ ) {
@@ -716,6 +718,7 @@ sub openfile {    # and open it
     my $textwindow = $::textwindow;
     return if ( $name eq '*empty*' );
     return if ( ::confirmempty() =~ /cancel/i );
+    return if bad_filename_chars($name);
     unless ( -e $name ) {
         my $dbox = $top->Dialog(
             -text    => 'Could not find file. Perhaps it has been moved or deleted.',
@@ -772,6 +775,21 @@ sub openfile {    # and open it
     ::setedited(0);
     ::savesettings();
     ::reset_autosave();
+}
+
+#
+# Return true if filename contains invalid characters - currently allows only printable ASCII.
+# On failure, pops a dialog to warn the user.
+sub bad_filename_chars {
+    my $name = shift;
+    return 0 if $name !~ /[^\x20-\x7F]/;
+    $::top->Dialog(
+        -text    => 'Only ASCII characters are permitted in filenames.',
+        -bitmap  => 'error',
+        -title   => 'Invalid filename characters',
+        -buttons => ['Ok']
+    )->Show;
+    return 1;
 }
 
 #
