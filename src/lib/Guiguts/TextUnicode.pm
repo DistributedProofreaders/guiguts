@@ -189,6 +189,46 @@ sub ntdelete {    # no undo tracking delete
     $w->Tk::Text::delete( $start, $end );
 }
 
+# Override TextUndo::insert_UNDO to avoid bug when undoing multi-line insert in the case
+# when the string ends in a newline character. See code for details.
+sub insert_UNDO {
+    my $w      = shift;
+    my $index  = shift;
+    my $string = '';
+
+    # This possible call: ->insert (index, string, tag, string, tag...);
+    # if more than one string, keep reading strings in (discarding tags)
+    # until all strings are read in and $string contains entire text inserted.
+    while (@_) {
+        $string .= shift;
+        shift if (@_);    # discard tag
+    }
+
+    # calculate index
+    # possible things to insert:
+    # carriage return
+    # single character (not CR)
+    # single line of characters (not ending in CR)
+    # single line of characters ending with a CR
+    # multi-line characters. last line does not end with CR
+    # multi-line characters, last line does end with CR.
+    my ( $line, $col ) = split( /\./, $index );
+
+    # START of changed code
+    # In Tk::TextUndo original, $string is tested against /\n(.*)$/ to check for newlines in the
+    # string, and sets $col to length($1). However, this does not correctly give 0 when last char
+    # is newline, giving length of last full line instead. This causes undo to delete too much.
+    my $lastnl = rindex( $string, "\n" );
+    if ( $lastnl >= 0 ) {
+        $line += $string =~ tr/\n/\n/;
+        $col = length($string) - $lastnl - 1;
+    }    # END of changed code
+    else {
+        $col += length($string);
+    }
+    return [ 'delete', $index, $line . '.' . $col ];
+}
+
 sub replacewith {    #One step cut and insert without undo tracking
     my ( $w, $start, $end, $string ) = @_;
     $w->tagRemove( 'sel', '1.0', 'end' );
