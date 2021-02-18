@@ -161,7 +161,11 @@ sub handleautomaticonrefresh {
                     $linebefore = $textwindow->get( "page -10c",       "page -1c" );
                     $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +5c" );
                 }
-                if ( $lineafter =~ /^\n/ ) {    # can be reached if closeupmarkup did something
+                if ( $lineafter =~ /^\n\n\n\n/ ) {    # can be reached if closeupmarkup did something
+                    processpageseparator('h');
+                } elsif ( $lineafter =~ /^\n\n/ ) {
+                    processpageseparator('t');
+                } elsif ( $lineafter =~ /^\n/ ) {
                     processpageseparator('l');
                 } elsif ( $lineafter =~ /^\// ) {
                     last;
