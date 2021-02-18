@@ -305,6 +305,7 @@ sub errorcheckpop_up {
 
         } elsif ( $errorchecktype eq "Bookloupe" ) {
             next if $line =~ /^File: /;
+            next if $line =~ /^\s*-->.+ Not reporting/;
             if ( $line =~ /^\s*Line (\d+) column (\d+)\s*/ ) {
 
                 # Adjust column number to start from 0 for most bookloupe errors
