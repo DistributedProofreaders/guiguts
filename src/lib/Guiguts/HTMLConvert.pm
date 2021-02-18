@@ -3886,12 +3886,18 @@ sub pageadjust {
     }
 }
 
+#
+# Convert numbers to page links in given text only where the numbers are less than 1000
+# (to help avoid dates) and where the formatting guidelines have been followed.
+# Modified text is returned.
+# The rules are as follows:
+# 1. Number must be preceded by a comma then one or more spaces
+# 2. Number must be no more than 3 digits (word boundary \b used to avoid partial matches with 4 digit numbers)
+# 3. Page range may be specified by hyphen between two numbers
 sub addpagelinks {
     my $selection = shift;
-    $selection =~ s/(\d{1,3})-(\d{1,3})/<a href="#$::htmllabels{pglabel}$1">$1-$2<\/a>/g;
-    $selection =~ s/(\d{1,3})([,;\.])/<a href="#$::htmllabels{pglabel}$1">$1<\/a>$2/g;
-    $selection =~ s/\s(\d{1,3})\s/ <a href="#$::htmllabels{pglabel}$1">$1<\/a> /g;
-    $selection =~ s/(\d{1,3})$/<a href="#$::htmllabels{pglabel}$1">$1<\/a>/;
+    $selection =~ s/, +(\d{1,3})-\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1-$2<\/a>/g;
+    $selection =~ s/, +\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1<\/a>/g;
     return $selection;
 }
 1;
