@@ -724,7 +724,7 @@ sub initialize {
     $::geometryhash{pagesephelppop}   = '+191+132'        unless $::geometryhash{pagesephelppop};
     $::positionhash{pageseppop}       = '+334+176'        unless $::positionhash{pageseppop};
     $::geometryhash{regexrefpop}      = '+106+72'         unless $::geometryhash{regexrefpop};
-    $::positionhash{searchpop}        = '+10+10'          unless $::positionhash{searchpop};
+    $::geometryhash{searchpop}        = '+10+10'          unless $::geometryhash{searchpop};
     $::positionhash{selectionpop}     = '+10+10'          unless $::positionhash{selectionpop};
     $::positionhash{spellpopup}       = '+152+97'         unless $::positionhash{spellpopup};
     $::positionhash{srchhistsizepop}  = '+152+97'         unless $::positionhash{srchhistsizepop};

@@ -10,7 +10,7 @@ BEGIN {
       &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
-      &loadscannos &replace_incr_counter &countmatches);
+      &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry);
 }
 
 # Update both the search and replace histories from their dialog fields
@@ -945,11 +945,11 @@ sub searchpopup {
     } else {
         $::lglobal{searchpop} = $top->Toplevel;
         $::lglobal{searchpop}->title('Search & Replace');
-        my $sf1 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $sf1 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 1 );
         my $searchlabel =
           $sf1->Label( -text => 'Search Text', )
-          ->pack( -side => 'left', -anchor => 'n', -padx => 80 );
-        $sf1->Button(
+          ->pack( -side => 'left', -anchor => 'w', -padx => 80 );
+        $::lglobal{searchpopcountbutton} = $sf1->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 update_sr_histories();
@@ -957,7 +957,7 @@ sub searchpopup {
             },
             -text  => 'Count',
             -width => 6
-        )->pack( -side => 'right', -anchor => 'e', -padx => 1, -pady => 1 );
+        )->pack( -side => 'right', -anchor => 'e', -padx => 1 );
         $::lglobal{searchnumlabel} = $sf1->Label(
             -text    => '',
             -width   => 20,
@@ -966,8 +966,9 @@ sub searchpopup {
         )->pack( -side => 'right', -anchor => 'e', -padx => 1 );
         my $sf11 = $::lglobal{searchpop}->Frame->pack(
             -side   => 'top',
-            -anchor => 'w',
+            -anchor => 'nw',
             -padx   => 3,
+            -pady   => 1,
             -expand => 'y',
             -fill   => 'x'
         );
@@ -991,23 +992,10 @@ sub searchpopup {
             -width => 6
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
             -anchor => 'w'
         );
         search_shiftreverse( $::lglobal{searchbutton} );
-        $::lglobal{searchentry} = $sf11->Entry(
-            -background => $::bkgcolor,
-            -foreground => 'black',
-            -width      => 40,
-            -validate   => 'all',
-            -vcmd       => sub { reg_check(shift); }
-        )->pack(
-            -side   => 'right',
-            -anchor => 'w',
-            -expand => 'y',
-            -fill   => 'x'
-        );
         $sf11->Button(
             -activebackground => $::activecolor,
             -command          => sub {
@@ -1016,48 +1004,61 @@ sub searchpopup {
             -image  => $::lglobal{hist_img},
             -width  => 9,
             -height => 15,
-        )->pack( -side => 'right', -anchor => 'w' );
-        my $sf2 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'w' );
+        )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{searchentry} = $sf11->Entry(
+            -background => $::bkgcolor,
+            -foreground => 'black',
+            -validate   => 'all',
+            -vcmd       => sub { reg_check(shift); }
+        )->pack(
+            -side   => 'left',
+            -anchor => 'w',
+            -expand => 'y',
+            -fill   => 'x'
+        );
+        my $sf2 = $::lglobal{searchpop}->Frame->pack(
+            -side   => 'top',
+            -anchor => 'n',
+            -expand => 'y',
+            -fill   => 'x',
+            -pady   => 1
+        );
         $::lglobal{searchop1} = $sf2->Checkbutton(
             -variable    => \$::sopt[1],
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Case Insensitive'
-        )->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+        )->grid( -row => 1, -column => 1, -padx => 1 );
         $::lglobal{searchop0} = $sf2->Checkbutton(
             -variable    => \$::sopt[0],
             -command     => [ \&searchoptset, 'x', 'x', 'x', 0 ],
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Whole Word'
-        )->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+        )->grid( -row => 1, -column => 2, -padx => 1 );
         $::lglobal{searchop3} = $sf2->Checkbutton(
             -variable    => \$::sopt[3],
             -command     => [ \&searchoptset, 0, 'x', 'x', 'x' ],
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Regex'
-        )->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+        )->grid( -row => 1, -column => 3, -padx => 1 );
         $::lglobal{searchop2} = $sf2->Checkbutton(
             -variable    => \$::sopt[2],
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Reverse'
-        )->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+        )->grid( -row => 1, -column => 4, -padx => 1 );
         $::lglobal{searchop4} = $sf2->Checkbutton(
             -variable    => \$::sopt[4],
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Start at Beginning'
-        )->pack( -side => 'left', -anchor => 'n', -pady => 1 );
+        )->grid( -row => 1, -column => 5, -padx => 1 );
 
-        #$::lglobal{searchop5} = $sf2->Checkbutton( # if this comes back, make sure it syncs properly with the statusbar
-        #	-variable    => \$::auto_show_images,
-        #	-selectcolor => $::lglobal{checkcolor},
-        #	-text        => 'Show Images'
-        #)->pack( -side => 'left', -anchor => 'n', -pady => 1 );
         my $sf5;
         my @multisearch;
         my $sf10 = $::lglobal{searchpop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
             -expand => '1',
-            -fill   => 'x'
+            -fill   => 'x',
+            -pady   => 1
         );
         my $replacelabel =
           $sf10->Label( -text => "Replacement Text\t\t", )->grid( -row => 1, -column => 1 );
@@ -1070,13 +1071,17 @@ sub searchpopup {
                 for ( 0 .. $::multisearchsize - 2 ) {
                     $multisearch[$_]->packForget;
                 }
+                setsearchpopgeometry();
             },
         )->grid( -row => 1, -column => 3 );
         $::lglobal{searchmulti} = $sf10->Radiobutton(
             -text     => 'multi  ',
             -variable => \$::multiterm,
             -value    => 1,
-            -command  => sub { searchshowterms( \@multisearch, 0, $::multisearchsize - 2, $sf5 ); },
+            -command  => sub {
+                searchshowterms( \@multisearch, 0, $::multisearchsize - 2, $sf5 );
+                setsearchpopgeometry();
+            },
         )->grid( -row => 1, -column => 4 );
 
         # Button to increment number of multiterms (also switches to multi)
@@ -1099,10 +1104,10 @@ sub searchpopup {
                     $::lglobal{searchmulti}->select;
                     $::multiterm = 1;
                 }
+                setsearchpopgeometry();
             },
-            -text   => '+',
-            -width  => 3,
-            -height => 1
+            -text  => '+',
+            -width => 3,
         )->grid( -row => 1, -column => 5 );
 
         # Button to decrement number of multiterms (also switches to multi)
@@ -1123,17 +1128,18 @@ sub searchpopup {
                     $::lglobal{searchmulti}->select;
                     $::multiterm = 1;
                 }
+                setsearchpopgeometry();
             },
-            -text   => '-',
-            -width  => 3,
-            -height => 1
+            -text  => '-',
+            -width => 3,
         )->grid( -row => 1, -column => 6 );
         my $sf12 = $::lglobal{searchpop}->Frame->pack(
             -side   => 'top',
             -anchor => 'w',
             -padx   => 3,
             -expand => 'y',
-            -fill   => 'x'
+            -fill   => 'x',
+            -pady   => 1
         );
         $sf12->Button(
             -activebackground => $::activecolor,
@@ -1145,9 +1151,8 @@ sub searchpopup {
             -width => 5
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
+            -anchor => 'w'
         );
         my $sf12rs = $sf12->Button(
             -activebackground => $::activecolor,
@@ -1160,9 +1165,8 @@ sub searchpopup {
             -width => 5
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
+            -anchor => 'w'
         );
         search_shiftreverse($sf12rs);
         $sf12->Button(
@@ -1175,19 +1179,8 @@ sub searchpopup {
             -width => 6
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
-        );
-        $::lglobal{replaceentry} = $sf12->Entry(
-            -background => $::bkgcolor,
-            -width      => 40,
-        )->pack(
-            -side   => 'right',
-            -anchor => 'w',
-            -padx   => 1,
-            -expand => 'y',
-            -fill   => 'x'
+            -anchor => 'w'
         );
         $sf12->Button(
             -activebackground => $::activecolor,
@@ -1197,7 +1190,14 @@ sub searchpopup {
             -image  => $::lglobal{hist_img},
             -width  => 9,
             -height => 15,
-        )->pack( -side => 'right', -anchor => 'w' );
+        )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{replaceentry} = $sf12->Entry( -background => $::bkgcolor, )->pack(
+            -side   => 'left',
+            -anchor => 'w',
+            -padx   => 1,
+            -expand => 'y',
+            -fill   => 'x'
+        );
 
         searchaddterms( \@multisearch, $::multisearchsize - 2 );
         if ($::multiterm) {
@@ -1207,11 +1207,12 @@ sub searchpopup {
                     -anchor => 'w',
                     -padx   => 3,
                     -expand => 'y',
-                    -fill   => 'x'
+                    -fill   => 'x',
+                    -pady   => 1
                 );
             }
         }
-        $sf5 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        $sf5 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 1 );
         if ( $::lglobal{doscannos} ) {
             my $nextbutton = $sf5->Button(
                 -activebackground => $::activecolor,
@@ -1224,7 +1225,6 @@ sub searchpopup {
                 -width => 15
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1237,7 +1237,6 @@ sub searchpopup {
                 -width => 15
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1253,7 +1252,6 @@ sub searchpopup {
                 -width => 15
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1264,7 +1262,6 @@ sub searchpopup {
                 -width            => 15
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1275,7 +1272,6 @@ sub searchpopup {
                 -width            => 5
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1286,14 +1282,13 @@ sub searchpopup {
                 -width            => 5
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
-            my $sf6 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+            my $sf6 =
+              $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 1 );
             $::lglobal{regtracker} = $sf6->Label( -width => 15 )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
@@ -1302,22 +1297,22 @@ sub searchpopup {
                 -variable => \$::lglobal{regaa},
             )->pack(
                 -side   => 'left',
-                -pady   => 5,
                 -padx   => 2,
                 -anchor => 'w'
             );
         }
         $::lglobal{searchpop}->resizable( 'yes', 'no' );
+        setsearchpopgeometry();
         ::initialize_popup_without_deletebinding( 'searchpop',
             $::lglobal{doscannos} ? 'scannos' : 'search' );
-        $::lglobal{searchpop}->minsize( 460, 127 );
         $::lglobal{searchentry}->focus;
 
         $::lglobal{searchpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 ::killpopup('searchpop');
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-                undef $::lglobal{hintpop} if $::lglobal{hintpop};
+                undef $::lglobal{hintpop}    if $::lglobal{hintpop};
+                undef $::lglobal{regtracker} if $::lglobal{regtracker};
                 $::scannosearch = 0;    #no longer in a scanno search
             }
         );
@@ -1500,9 +1495,8 @@ sub searchaddterms {
             -width => 5
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
+            -anchor => 'w'
         );
         my $rsbtn = $msref->[$_]->Button(
             -activebackground => $::activecolor,
@@ -1515,9 +1509,8 @@ sub searchaddterms {
             -width => 5
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
+            -anchor => 'w'
         );
         search_shiftreverse($rsbtn);
         $msref->[$_]->Button(
@@ -1530,23 +1523,9 @@ sub searchaddterms {
             -width => 6
         )->pack(
             -side   => 'right',
-            -pady   => 1,
             -padx   => 2,
-            -anchor => 'nw'
+            -anchor => 'w'
         );
-        $::lglobal{$replaceentry} = $msref->[$_]->Entry(
-            -background => $::bkgcolor,
-            -width      => 40,
-        )->pack(
-            -side   => 'right',
-            -anchor => 'w',
-            -padx   => 1,
-            -expand => 'y',
-            -fill   => 'x'
-        );
-        $::lglobal{$replaceentry}->{_MENU_} = ();
-        $::lglobal{$replaceentry}->bind( '<FocusIn>',
-            eval " sub { \$::lglobal{hasfocus} = \$::lglobal{$replaceentry}; } " );
         $msref->[$_]->Button(
             -activebackground => $::activecolor,
             -command          => sub {
@@ -1555,11 +1534,20 @@ sub searchaddterms {
             -image  => $::lglobal{hist_img},
             -width  => 9,
             -height => 15,
-        )->pack( -side => 'right', -anchor => 'w' );
+        )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{$replaceentry} = $msref->[$_]->Entry( -background => $::bkgcolor, )->pack(
+            -side   => 'left',
+            -anchor => 'w',
+            -padx   => 1,
+            -expand => 'y',
+            -fill   => 'x'
+        );
+        $::lglobal{$replaceentry}->{_MENU_} = ();
+        $::lglobal{$replaceentry}->bind( '<FocusIn>',
+            eval " sub { \$::lglobal{hasfocus} = \$::lglobal{$replaceentry}; } " );
     }
 }
 
-#
 sub searchshowterms {
     my ( $msref, $start, $end, $before ) = @_;
     for ( $start .. $end ) {
@@ -1572,6 +1560,34 @@ sub searchshowterms {
             -fill   => 'x'
         );
     }
+}
+
+#
+# Set search dialog height by adding all widget heights and override the value
+# in the geometry hash. This allows the user to vary the width, but allows the
+# program to keep the height correct when widgets are added/removed
+sub setsearchpopgeometry {
+    return unless $::lglobal{searchpop};
+    $::lglobal{searchpop}->update;    # dialog must be drawn to get heights
+
+    # Some rows have button, some have entry field, some have toggle - all have padding of 1 above and below
+    my $buttonheight = $::lglobal{searchpopcountbutton}->height + 2;
+    my $rowheight    = $::lglobal{searchentry}->height + 2;
+    $rowheight = $buttonheight if $buttonheight > $rowheight;
+    my $toggleheight = $::lglobal{searchop1}->height + 2;
+
+    my $height = $buttonheight +                                  # Count row
+      $rowheight +                                                # Search row
+      $toggleheight +                                             # Toggles row
+      $buttonheight +                                             # Multi row
+      $rowheight * ( $::multiterm ? $::multisearchsize : 1 ) +    # Replace rows
+      2;                                                          # Padding on final frame
+
+    # Extra button row and toggle row if scannos widgets are shown (not the same as checking $::lglobal{doscannos})
+    $height += $buttonheight + $toggleheight if $::lglobal{regtracker};
+
+    $::geometryhash{searchpop} =~ s/x\d+/x$height/;
+    $::lglobal{searchpop}->geometry( $::geometryhash{searchpop} );
 }
 
 sub stealthscanno {

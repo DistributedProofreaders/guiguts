@@ -262,6 +262,7 @@ sub setfontrow {
         -label     => $label . ": ",
         -browsecmd => sub {
             $top->fontConfigure( $name, -family => $$rfamily );
+            ::setsearchpopgeometry();
         },
         -variable => $rfamily,
     )->grid( -row => $row, -column => 1, -padx => 5, -pady => 5, -sticky => 'e' );
@@ -283,6 +284,7 @@ sub setfontrow {
         $sizeentry->bind(
             "<$_>" => sub {
                 $::top->fontConfigure( $name, -size => $$rsize );
+                ::setsearchpopgeometry();
             }
         );
     }
@@ -294,6 +296,7 @@ sub setfontrow {
         -offvalue => 'normal',
         -command  => sub {
             $::top->fontConfigure( $name, -weight => $$rweight );
+            ::setsearchpopgeometry();
         },
         -text => 'Bold'
     )->grid( -row => $row, -column => 3, -pady => 5 );
@@ -315,7 +318,10 @@ sub fontsizevalidate {
     return 0 if $val =~ /\D/ or $val < 1;    # invalid font size
 
     # don't update if user is just editing; use $val as $::fontsize isn't set yet
-    $::top->fontConfigure( $font, -size => $val ) unless $useredit;
+    unless ($useredit) {
+        $::top->fontConfigure( $font, -size => $val );
+        ::setsearchpopgeometry();
+    }
     return 1;
 }
 
@@ -329,6 +335,7 @@ sub textentryfontconfigure {
         -size   => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemsize}   : $::txtfontsize ),
         -weight => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemweight} : $::txtfontweight ),
     );
+    ::setsearchpopgeometry();
 }
 
 #
