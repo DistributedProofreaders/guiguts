@@ -353,7 +353,7 @@ sub pgrenum {    # Re sequence page markers
 
 sub pgprevious {    #move focus to previous page marker
     my $textwindow = $::textwindow;
-    $::auto_show_images = 0;    # turn off so no interference
+    ::set_auto_img(0);    # turn off so no interference
     my $mark;
     my $num = $::lglobal{pagenumentry}->get;
     $num  = $textwindow->index('insert') unless $num;
@@ -375,11 +375,11 @@ sub pgprevious {    #move focus to previous page marker
 
 sub pgnext {    #move focus to next page marker
     my $textwindow = $::textwindow;
+    ::set_auto_img(0);    # turn off so no interference
     my $mark;
     my $num = $::lglobal{pagenumentry}->get;
-    $::auto_show_images = 0;                                          # turn off so no interference
-    $num                = $textwindow->index('insert') unless $num;
-    $mark               = $num;
+    $num  = $textwindow->index('insert') unless $num;
+    $mark = $num;
     while ( $num = $textwindow->markNext($num) ) {
         if ( $num =~ /Pg\S+/ ) { $mark = $num; last; }
     }

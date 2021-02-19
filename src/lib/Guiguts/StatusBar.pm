@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&update_indicators &_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
-      &setlang &selection &gotoline &gotopage &gotolabel);
+      &setlang &selection &gotoline &gotopage &gotolabel &set_auto_img);
 }
 
 # Routine to update the status bar when something has changed.
@@ -492,51 +492,40 @@ sub update_next_img_button {
     }
 }
 
+#
+# Create Auto Img button in status bar
 sub update_auto_img_button {
     my $textwindow = $::textwindow;
-    unless ( defined( $::lglobal{autoimagebutton} ) ) {
-        $::lglobal{autoimagebutton} = $::counter_frame->Label(
-            -text       => 'Auto Img',
-            -width      => 9,
-            -relief     => 'ridge',
-            -background => 'gray',
-        )->grid( -row => 1, -column => 6 );
-        if ($::auto_show_images) {
-            $::lglobal{autoimagebutton}->configure( -background => $::highlightcolor );
+    return if defined( $::lglobal{autoimagebutton} );
+    $::lglobal{autoimagebutton} = $::counter_frame->Label(
+        -text       => 'Auto Img',
+        -width      => 9,
+        -relief     => 'ridge',
+        -background => 'gray',
+    )->grid( -row => 1, -column => 6 );
+
+    set_auto_img($::auto_show_images);
+
+    $::lglobal{autoimagebutton}->bind( '<1>', sub { set_auto_img( 1 - $::auto_show_images ); } );
+    _butbind( $::lglobal{autoimagebutton} );
+    $::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
+        -balloonmsg => "Toggle automatically showing the image for the current page." );
+    $::lglobal{autoimagebutton}->bind(
+        '<Leave>',
+        sub {
+            set_auto_img($::auto_show_images);
+            $::lglobal{autoimagebutton}->configure( -relief => 'ridge' );
         }
-        $::lglobal{autoimagebutton}->bind(
-            '<1>',
-            sub {
-                $::auto_show_images = 1 - $::auto_show_images;
-                if ($::auto_show_images) {
-                    $::lglobal{autoimagebutton}->configure( -relief     => 'sunken' );
-                    $::lglobal{autoimagebutton}->configure( -background => $::highlightcolor );
-                    $::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
-                        -balloonmsg =>
-                          "Stop automatically showing the image for the current page." );
-                } else {
-                    $::lglobal{autoimagebutton}->configure( -relief     => 'sunken' );
-                    $::lglobal{autoimagebutton}->configure( -background => 'gray' );
-                    $::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
-                        -balloonmsg =>
-                          "Automatically show the image for the current page (focus shifts to image window)."
-                    );
-                }
-            }
-        );
-        _butbind( $::lglobal{autoimagebutton} );
-        $::lglobal{statushelp}->attach( $::lglobal{autoimagebutton},
-            -balloonmsg =>
-              "Automatically show the image for the current page (focus shifts to image window)." );
-        $::lglobal{autoimagebutton}->bind(
-            '<Leave>',
-            sub {
-                $::lglobal{autoimagebutton}
-                  ->configure( -background => $::auto_show_images ? $::highlightcolor : 'gray' );
-                $::lglobal{autoimagebutton}->configure( -relief => 'ridge' );
-            }
-        );
-    }
+    );
+}
+
+#
+# Set the global Auto Img flag and color the status button accordingly
+sub set_auto_img {
+    $::auto_show_images = shift;
+    return unless $::lglobal{autoimagebutton};
+    $::lglobal{autoimagebutton}
+      ->configure( -background => ( $::auto_show_images ? $::highlightcolor : 'gray' ) );
 }
 
 # New subroutine "update_img_lbl_values" extracted - Tue Mar 22 00:08:26 2011.
