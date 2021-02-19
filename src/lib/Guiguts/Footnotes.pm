@@ -739,10 +739,22 @@ sub footnotefixup {
         last unless $start;
         $::lglobal{fntotal}++;
         $::lglobal{fnindex} = $::lglobal{fntotal};
-        ( $start, $end ) = (
-            $textwindow->index("fns$::lglobal{fnindex}"),
-            $textwindow->index("fne$::lglobal{fnindex}")
-        ) if $::lglobal{fnsecondpass};
+        if ( $::lglobal{fnsecondpass} ) {
+            unless ($textwindow->markExists("fns$::lglobal{fnindex}")
+                and $textwindow->markExists("fne$::lglobal{fnindex}") ) {
+                $::top->Dialog(
+                    -text    => "Undo, then re-run First Pass and check for errors.",
+                    -bitmap  => 'error',
+                    -title   => 'Unexpected end of footnotes',
+                    -buttons => ['Ok']
+                )->Show;
+                last;
+            }
+            ( $start, $end ) = (
+                $textwindow->index("fns$::lglobal{fnindex}"),
+                $textwindow->index("fne$::lglobal{fnindex}")
+            );
+        }
         $pointer = '';
         $anchor  = '';
         $textwindow->see($start) if $start and not ::updatedrecently();
@@ -1131,8 +1143,17 @@ sub footnoteadjust {
         $textwindow->markSet( 'fnindex', $::lglobal{ftnoteindexstart} );
     }
 
-    #print "\n$start|$end|$::lglobal{fnindex}, $::lglobal{ftnoteindexstart}\n";
     ( $start, $end ) = footnotefind();
+    if ( $start == 0 and $end == 0 ) {
+        $::top->Dialog(
+            -text    => "Undo, then re-run First Pass and check for errors.",
+            -bitmap  => 'error',
+            -title   => 'Unexpected end of footnotes',
+            -buttons => ['Ok']
+        )->Show;
+        return ( 0, 0 );
+    }
+
     $textwindow->markSet( "fns$::lglobal{fnindex}", $start );
     $textwindow->markSet( "fne$::lglobal{fnindex}", $end );
     $::lglobal{ftnoteindexstart} = $tempsave;
