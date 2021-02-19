@@ -286,6 +286,18 @@ sub ReplaceSelectionsWith {
             push( @lengths, $fmlen );
         }
 
+        # Set gravity of page marker after string to "right" to keep it after string
+        # It doesn't matter if it's not immediately after - no harmful effect since restored later
+        my $end_mark = "";    # Assume there isn't one
+        $mark = $last;
+        while ( $mark = $w->markNext($mark) ) {
+            if ( $mark =~ m{Pg(\S+)} ) {    # Only look at page markers
+                $end_mark = $mark;
+                $w->markGravity( $end_mark, 'right' );
+                last;
+            }
+        }
+
         if ( !@lengths ) {    # No page markers, so simply insert new and delete old text
             $w->insert( $last, $new_text );
             $w->delete( $first, $last );
@@ -327,6 +339,9 @@ sub ReplaceSelectionsWith {
             $w->insert( $first, substr( $new_text, 0, $lengths[$idx] ) );
             $w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );     # Restore page marker behaviour
         }
+
+        # restore gravity for page mark after replaced text
+        $w->markGravity( $end_mark, 'left' ) if $end_mark;
     }
 
     # set the insert cursor to the end of the last insertion mark
