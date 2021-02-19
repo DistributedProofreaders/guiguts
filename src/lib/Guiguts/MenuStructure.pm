@@ -795,7 +795,8 @@ sub menu_preferences_appearance {
             Checkbutton => 'Auto Show Page Images',
             -variable   => \$::auto_show_images,
             -onvalue    => 1,
-            -offvalue   => 0
+            -offvalue   => 0,
+            -command    => sub { ::set_auto_img($::auto_show_images); },
         ],
         [
             Checkbutton => 'Do Not Center Page Markers',
