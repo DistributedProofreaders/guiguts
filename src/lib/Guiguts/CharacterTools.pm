@@ -2,6 +2,8 @@ package Guiguts::CharacterTools;
 use strict;
 use warnings;
 
+use Unicode::UCD 'prop_invmap';
+
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
@@ -339,7 +341,21 @@ sub utfcharsearchpopup {
         $::lglobal{utfsearchpop}->deiconify;
         $::lglobal{utfsearchpop}->raise;
     } else {
-        require q(unicore/Name.pl);
+
+        # Get codepoints for all names and aliases and store in hash
+        # Code taken from Unicode::UCD docs under "Getting every available name"
+        my %cphash;
+        foreach my $cat (qw( Name Name_Alias )) {
+            my ( $codepoints, $names, $format, $default ) = Unicode::UCD::prop_invmap($cat);
+            foreach my $i ( 0 .. @$codepoints - 2 ) {
+                my ( $cp, $n ) = ( $codepoints->[$i], $names->[$i] );
+
+                # If $n is a ref, the same codepoint has multiple names
+                foreach my $name ( ref $n ? @$n : $n ) {
+                    $cphash{$name} //= $cp;
+                }
+            }
+        }
         my $stopit = 0;
 
         # get lists of supported blocks and unicode characters at start
@@ -348,7 +364,6 @@ sub utfcharsearchpopup {
         # Add Basic Latin block - not in list of unicode blocks displayed
         $blocks{'Basic Latin'} = [ '0000', '007F' ];
 
-        my @lines = split /\n/, do 'unicore/Name.pl';
         $::lglobal{utfsearchpop} = $top->Toplevel;
         $::lglobal{utfsearchpop}->title('Unicode Character Search');
         ::initialize_popup_with_deletebinding('utfsearchpop');
@@ -373,6 +388,7 @@ sub utfcharsearchpopup {
             -width      => 40,
             -background => $::bkgcolor
         )->grid( -row => 1, -column => 2 );
+        $characteristics->focus;
         my $doit = $frame0->Button(
             -text    => 'Search',
             -command => sub {
@@ -387,10 +403,9 @@ sub utfcharsearchpopup {
                 my @chars = split /\s+/, uc( $characteristics->get );
 
                 # check all the character names
-                for (@lines) {
-                    my @items = split /\t+/, $_;
-                    my ( $ord, $name ) = ( $items[0], $items[-1] );
-                    last if ( hex $ord > 65535 );
+                for my $name ( sort { $cphash{$a} <=> $cphash{$b} } keys %cphash ) {
+                    my $ord = $cphash{$name};
+                    last if ( $ord > 65535 );
                     if ($stopit) { $stopit = 0; last; }
 
                     # find character names that match all the user's characteristics
@@ -406,15 +421,15 @@ sub utfcharsearchpopup {
                             my $block = '';
                             for ( keys %blocks ) {
                                 next if not $_;
-                                if (   hex( $blocks{$_}[0] ) <= hex($ord)
-                                    && hex( $blocks{$_}[1] ) >= hex($ord) ) {
+                                if (   hex( $blocks{$_}[0] ) <= $ord
+                                    && hex( $blocks{$_}[1] ) >= $ord ) {
                                     $block = $_;
                                     last;
                                 }
                             }
                             next if not $block;    # character is not in a known block
                             $textchars[$row] = $pane->Label(
-                                -text       => chr( hex $ord ),
+                                -text       => chr($ord),
                                 -font       => 'unicode',
                                 -background => $::bkgcolor,
                             )->grid(
@@ -424,7 +439,9 @@ sub utfcharsearchpopup {
                             );
                             utfchar_bind( $textchars[$row] );
                             $textlabels[$row] = $pane->Label(
-                                -text       => "$name  -  Ordinal $ord  -  $block",
+                                -text => "$name  -  Ordinal "
+                                  . sprintf( "%04X", $ord )
+                                  . "  -  $block",
                                 -background => $::bkgcolor,
                             )->grid(
                                 -row    => $row,
