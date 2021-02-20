@@ -454,42 +454,27 @@ sub fnjoin {
     $textwindow->tagRemove( 'footnote',  '1.0', 'end' );
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
 
-    # Find the colon in this footnote
-    my $start = $textwindow->search(
-        '--', ':',
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} ][0],
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} ][1]
-    );
+    return if $::lglobal{fnindex} < 2;    # Can't join with previous if not at least the second footnote
 
-    # $end is the ending index of this footnote -1 character
-    my $end = $::lglobal{fnarray}->[ $::lglobal{fnindex} ][1] . '-1c';
+    my $thisbeg = $textwindow->index( 'fns' . $::lglobal{fnindex} );
+    my $thisend = $textwindow->index( 'fne' . $::lglobal{fnindex} );
+    my $prevend = $textwindow->index( 'fne' . ( $::lglobal{fnindex} - 1 ) );
+
+    # Find the colon in this footnote
+    $thisbeg = $textwindow->search( '--', ':', $thisbeg, $thisend );
 
     # delete '*' at end of previous footnote
-    $textwindow->delete( $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] )
-      if ( $textwindow->get( $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] ) eq '*' );
+    $textwindow->delete($prevend) if $textwindow->get($prevend) eq '*';
 
     # Insert the text of this footnote at the end of the previous one
-    $textwindow->insert( $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '-1c',
-        "\n" . $textwindow->get( "$start+2c", $end ) );
+    $textwindow->insert( "$prevend-1c", "\n" . $textwindow->get( "$thisbeg+2c", "$thisend-1c" ) );
 
-    # delete markup
-    my $markupl = $textwindow->get(
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '-4c',
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1]
-    );
-    my $markupn = $textwindow->get(
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '+1c',
-        $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '+4c'
-    );
+    # delete markup that is continued across the join
+    my $markupl = $textwindow->get( $prevend . '-4c', $prevend );
+    my $markupn = $textwindow->get( $prevend . '+1c', $prevend . '+4c' );
     if ( ( $markupl =~ /<\/([ibgf])>/i ) && ( $markupn =~ /<$1>/i ) ) {
-        $textwindow->delete(
-            $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '-4c',
-            $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1]
-        );
-        $textwindow->delete(
-            $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '+1c',
-            $::lglobal{fnarray}->[ $::lglobal{fnindex} - 1 ][1] . '+4c'
-        );
+        $textwindow->delete( $prevend . '+1c', $prevend . '+4c' );
+        $textwindow->delete( $prevend . '-4c', $prevend );
     }
     footnoteadjust();
 
@@ -754,10 +739,22 @@ sub footnotefixup {
         last unless $start;
         $::lglobal{fntotal}++;
         $::lglobal{fnindex} = $::lglobal{fntotal};
-        ( $start, $end ) = (
-            $textwindow->index("fns$::lglobal{fnindex}"),
-            $textwindow->index("fne$::lglobal{fnindex}")
-        ) if $::lglobal{fnsecondpass};
+        if ( $::lglobal{fnsecondpass} ) {
+            unless ($textwindow->markExists("fns$::lglobal{fnindex}")
+                and $textwindow->markExists("fne$::lglobal{fnindex}") ) {
+                $::top->Dialog(
+                    -text    => "Undo, then re-run First Pass and check for errors.",
+                    -bitmap  => 'error',
+                    -title   => 'Unexpected end of footnotes',
+                    -buttons => ['Ok']
+                )->Show;
+                last;
+            }
+            ( $start, $end ) = (
+                $textwindow->index("fns$::lglobal{fnindex}"),
+                $textwindow->index("fne$::lglobal{fnindex}")
+            );
+        }
         $pointer = '';
         $anchor  = '';
         $textwindow->see($start) if $start and not ::updatedrecently();
@@ -1146,8 +1143,17 @@ sub footnoteadjust {
         $textwindow->markSet( 'fnindex', $::lglobal{ftnoteindexstart} );
     }
 
-    #print "\n$start|$end|$::lglobal{fnindex}, $::lglobal{ftnoteindexstart}\n";
     ( $start, $end ) = footnotefind();
+    if ( $start == 0 and $end == 0 ) {
+        $::top->Dialog(
+            -text    => "Undo, then re-run First Pass and check for errors.",
+            -bitmap  => 'error',
+            -title   => 'Unexpected end of footnotes',
+            -buttons => ['Ok']
+        )->Show;
+        return ( 0, 0 );
+    }
+
     $textwindow->markSet( "fns$::lglobal{fnindex}", $start );
     $textwindow->markSet( "fne$::lglobal{fnindex}", $end );
     $::lglobal{ftnoteindexstart} = $tempsave;
