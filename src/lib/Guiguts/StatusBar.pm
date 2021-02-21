@@ -421,10 +421,8 @@ sub update_prev_img_button {
             '<1>',
             sub {
                 $::lglobal{previmagebutton}->configure( -relief => 'sunken' );
-                $::lglobal{showthispageimage} = 1;
                 ::displaypagenums();
-                $textwindow->focus;
-                ::pgprevious();
+                ::pgfocus( -1, 'show' );
             }
         );
         _butbind( $::lglobal{previmagebutton} );
@@ -478,10 +476,8 @@ sub update_next_img_button {
             '<1>',
             sub {
                 $::lglobal{nextimagebutton}->configure( -relief => 'sunken' );
-                $::lglobal{showthispageimage} = 1;
                 ::displaypagenums();
-                $textwindow->focus;
-                ::pgnext();
+                ::pgfocus( +1, 'show' );
             }
         );
         _butbind( $::lglobal{nextimagebutton} );
