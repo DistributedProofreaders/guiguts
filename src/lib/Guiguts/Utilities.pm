@@ -956,7 +956,6 @@ sub initialize {
     $::lglobal{selmaxlength}       = 1;
     $::lglobal{shorthtmlfootnotes} = 1;                           # HTML convert - Footnote_3 rather than Footnote_3_3
     $::lglobal{showblocksize}      = 1;
-    $::lglobal{showthispageimage}  = 0;
     $::lglobal{spellencoding}      = "iso8859-1";
     $::lglobal{stepmaxwidth}       = 70;
     $::lglobal{suspects_only}      = 0;
