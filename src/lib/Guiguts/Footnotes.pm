@@ -1238,10 +1238,16 @@ sub setanchor {
         $textwindow->insert( $textwindow->index("fna$::lglobal{fnindex}"), $fn )
           if $textwindow->compare( $textwindow->index("fna$::lglobal{fnindex}"),
             '>', $textwindow->index("fns$::lglobal{fnindex}") );
-        $textwindow->delete(
-            $textwindow->index("fns$::lglobal{fnindex}"),
-            $textwindow->index("fne$::lglobal{fnindex}")
-        );
+
+        # Delete blank line before footnote if there is one
+        my $start = $textwindow->index("fns$::lglobal{fnindex}");
+        $start = "$start -1l" if $textwindow->get( "$start -1l", "$start -1l lineend" ) eq "";
+
+        # Delete trailing newline after footnote if there is one
+        my $end = $textwindow->index("fne$::lglobal{fnindex}");
+        $end = "$end +1c" if $textwindow->get($end) eq "\n";
+        $textwindow->delete( $start, $end );
+
         $textwindow->insert( $textwindow->index("fna$::lglobal{fnindex}"), $fn )
           if $textwindow->compare( $textwindow->index("fna$::lglobal{fnindex}"),
             '<=', $textwindow->index("fns$::lglobal{fnindex}") );
