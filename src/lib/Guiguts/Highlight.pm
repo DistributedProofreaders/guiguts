@@ -13,10 +13,7 @@ BEGIN {
 # Routine to find highlight word list
 sub scannosfile {
     my $top = $::top;
-    if ($::debug) { print "sub scannosfile\n"; }
-    if ($::debug) { print "scannoslistpath=$::scannoslistpath\n"; }
     $::scannoslistpath = ::os_normal($::scannoslistpath);
-    if ($::debug) { print "sub scannosfile1\n"; }
     my $types       = [ [ 'Text file', [ '.txt', ] ], [ 'All Files', ['*'] ], ];
     my $scannosfile = $top->getOpenFile(
         -title      => 'List of words to highlight?',
@@ -27,32 +24,18 @@ sub scannosfile {
         $::scannoslist = $scannosfile;
         my ( $name, $path, $extension ) = ::fileparse( $::scannoslist, '\.[^\.]*$' );
         $::scannoslistpath = $path;
-        if ($::debug) {
-            print "sub scannosfile1.5:" . $::scannoslistpath . "\n";
-        }
         ::highlight_scannos() if ($::scannos_highlighted);
         %{ $::lglobal{wordlist} } = ();
         ::highlight_scannos();
         read_word_list();
     }
-    if ($::debug) { print "sub scannosfile2:" . $::scannoslist . "\n"; }
     return;
 }
 ##routine to automatically highlight words in the text
 sub highlightscannos {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    if ($::debug) { print "sub highlightscannos\n"; }
     return 0 unless $::scannos_highlighted;
-    if ($::debug) {
-        print $::scannoslist . ":wdlist\n";
-        if ( -e $::scannoslist ) {
-            print $::scannoslist . ":exists\n";
-        } else {
-            print $::scannoslist . ":does not exist\n";
-        }
-        print $::lglobal{wordlist} . ":lglob wordlist\n";
-    }
     unless ( $::lglobal{wordlist} ) { read_word_list(); }
     my ( $fileend, undef ) = split /\./, $textwindow->index('end');
     if ( $::lglobal{hl_index} < $fileend ) {
@@ -145,12 +128,9 @@ sub read_word_list {
     my $top = $::top;
     ::scannosfile() unless ( defined $::scannoslist && -e $::scannoslist );
     return 0        unless $::scannoslist;
-    if ($::debug) { print "opening scannos list\n"; }
     if ( open my $fh, '<', $::scannoslist ) {
-        if ($::debug) { print "opened scannos list\n"; }
         while (<$fh>) {
             utf8::decode($_);
-            if ($::debug) { print "$_ :scanno read "; }
             if ( $_ =~ 'scannoslist' ) {
                 my $dialog = $top->Dialog(
                     -text    => 'Warning: File must contain only a list of words.',

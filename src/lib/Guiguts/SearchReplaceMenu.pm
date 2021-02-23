@@ -187,10 +187,6 @@ sub searchtext {
             if   ( $::sopt[0] or $::sopt[3] ) { $mode = '-regexp' }
             else                              { $mode = '-exact' }
 
-            if ($::debug) {
-                print "$mode:$direction:$length:$searchterm:$searchstart:$end\n";
-            }
-
             #finally we actually do some searching
             if ( $::sopt[1] ) {
                 $::searchstartindex = $textwindow->search(

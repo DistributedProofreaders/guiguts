@@ -9,7 +9,7 @@ BEGIN {
     @ISA    = qw(Exporter);
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
       &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup &textentrydialogpopup
-      &win32_is_exe &win32_create_process &dos_path &runner &debug_dump &run &launchurl &escape_regexmetacharacters
+      &win32_is_exe &win32_create_process &dos_path &runner &run &launchurl &escape_regexmetacharacters
       &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
@@ -480,69 +480,6 @@ sub runner {
         # Return any error from the external program
         return $?;
     }
-}
-
-# just working out how to do things
-# prints everything I can think of to debug.txt
-# prints seenwords to words.txt
-sub debug_dump {
-    open my $save, '>', 'debug.txt';
-    print $save "\%lglobal values:\n";
-    for my $key ( keys %::lglobal ) {
-        if   ( $::lglobal{$key} ) { print $save "$key => $::lglobal{$key}\n"; }
-        else                      { print $save "$key x=>\n"; }
-    }
-    print $save "\n\@ARGV command line arguments:\n";
-    for my $element (@ARGV) {
-        print $save "$element\n";
-    }
-    print $save "\n\%SIG variables:\n";
-    for my $key ( keys %SIG ) {
-        if ( $SIG{$key} ) {
-            print $save "$key => $SIG{$key}\n";
-        } else {
-            print $save "$key x=>\n";
-        }
-    }
-    print $save "\n\%ENV environment variables:\n";
-    for my $key ( keys %ENV ) {
-        print $save "$key => $ENV{$key}\n";
-    }
-    print $save "\n\@INC include path:\n";
-    for my $element (@INC) {
-        print $save "$element\n";
-    }
-    print $save "\n\%INC included filenames:\n";
-    for my $key ( keys %INC ) {
-        print $save "$key => $INC{$key}\n";
-    }
-    close $save;
-    my $section = "\%lglobal{seenwords}\n";
-    open $save, '>:bytes', 'words.txt';
-    for my $key ( keys %{ $::lglobal{seenwords} } ) {
-        $section .= "$key => $::lglobal{seenwords}{$key}\n";
-    }
-    utf8::encode($section);
-    print $save $section;
-    close $save;
-    $section = "\%lglobal{seenwordslang}\n";
-    open $save, '>:bytes', 'words2.txt';
-    for my $key ( keys %{ $::lglobal{seenwords} } ) {
-        if ( $::lglobal{seenwordslang}{$key} ) {
-            $section .= "$key => $::lglobal{seenwordslang}{$key}\n";
-        } else {
-            $section .= "$key x=>\n";
-        }
-    }
-    utf8::encode($section);
-    print $save $section;
-    close $save;
-    open $save, '>', 'project.txt';
-    print $save "\%projectdict\n";
-    for my $key ( keys %::projectdict ) {
-        print $save "$key => $::projectdict{$key}\n";
-    }
-    close $save;
 }
 
 sub escape_regexmetacharacters {

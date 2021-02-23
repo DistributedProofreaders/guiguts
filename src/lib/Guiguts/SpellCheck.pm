@@ -376,7 +376,6 @@ sub spellget_misspellings {    # get list of misspelled words
 }
 
 sub getmisspelledwords {
-    if ($::debug) { print "sub getmisspelledwords\n"; }
     $::lglobal{misspelledlist} = ();
     my $section = shift;
     my ( $word, @templist );
@@ -390,16 +389,7 @@ sub getmisspelledwords {
     my $runner = ::runner::withfiles( 'checkfil.txt', 'temp.txt' );
     $runner->run( $::globalspellpath, @spellopt );
 
-    if ($::debug) {
-        print "\$::globalspellpath ", $::globalspellpath, "\n";
-        print "\@spellopt\n";
-        for my $element (@spellopt) {
-            print "$element\n";
-        }
-        print "checkfil.txt retained\n";
-    } else {
-        unlink 'checkfil.txt';
-    }
+    unlink 'checkfil.txt';
     open my $infile, '<', 'temp.txt';
     my ( $ln, $tmp );
     while ( $ln = <$infile> ) {
@@ -409,11 +399,7 @@ sub getmisspelledwords {
         push( @templist, $ln );
     }
     close $infile;
-    if ($::debug) {
-        print "temp.txt retained\n";
-    } else {
-        unlink 'temp.txt';
-    }
+    unlink 'temp.txt';
     foreach my $word (@templist) {
         next if ( exists( $::projectdict{$word} ) );
         push @{ $::lglobal{misspelledlist} }, $word;    # filter out project dictionary word list.

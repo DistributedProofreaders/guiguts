@@ -22,8 +22,6 @@ our $VERSION = '1.2.4';
 
 # DON'T FORGET to update the version number in makefile too
 
-# To debug use Devel::ptkdb perl -d:ptkdb guiguts.pl
-our $debug = 0;    # turn on to report debug messages. Do not commit with $debug on
 use FindBin;
 use lib $FindBin::Bin . "/lib";
 
