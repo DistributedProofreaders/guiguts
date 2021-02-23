@@ -257,7 +257,6 @@ sub errorcheckpop_up {
             $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
 
         } elsif ( ( $errorchecktype eq "W3C Validate" )
-            or ( $errorchecktype eq "W3C Validate Remote" )
             or ( $errorchecktype eq "pphtml" )
             or ( $errorchecktype eq "ppvimage" ) ) {
             $line =~ s/^.*:(\d+):(\d+)\s*/$1:$2 /;
@@ -403,8 +402,7 @@ sub errorcheckrun {    # Runs error checks
             ::locateExecutable( 'HTML Tidy', \$::tidycommand );
             return 1 unless $::tidycommand;
         }
-    } elsif ( ( $errorchecktype eq "W3C Validate" )
-        and ( $::w3cremote == 0 ) ) {
+    } elsif ( $errorchecktype eq "W3C Validate" ) {
         unless ($::validatecommand) {
             ::locateExecutable( 'W3C HTML Validator (onsgmls)', \$::validatecommand );
             return 1 unless $::validatecommand;
@@ -429,63 +427,17 @@ sub errorcheckrun {    # Runs error checks
             ::run( $::tidycommand, "-f", $errname, "-e", $tmpfname );
         }
     } elsif ( $errorchecktype eq 'W3C Validate' ) {
-        if ( $::w3cremote == 0 ) {
-            my $validatepath = ::dirname($::validatecommand);
-            $ENV{SP_BCTF} = 'UTF-8' if $unicode;
-            ::run(
-                $::validatecommand,
-                "--directory=$validatepath",
-                "--catalog=" . ( $::OS_WIN ? "xhtml.soc" : "tools/W3C/xhtml.soc" ),
-                "--no-output",
-                "--open-entities",
-                "--error-file=$errname",
-                $tmpfname
-            );
-        }
-    } elsif ( $errorchecktype eq 'W3C Validate Remote' ) {
-        my $validator = WebService::Validator::HTML::W3C->new( detailed => 1 );
-        if ( $validator->validate_file($tmpfname) ) {
-            if ( open my $td, '>', $errname ) {
-                if ( $validator->is_valid ) {
-                } else {
-                    my $errors   = $validator->errors();
-                    my $warnings = $validator->warnings();
-                    my $warnidx  = 0;
-
-                    # print all the errors and warnings in correct line order
-                    foreach my $error (@$errors) {
-
-                        # print any warnings that should come before the next error
-                        while ( $warnidx < @$warnings ) {
-                            my $warn = $warnings->[$warnidx];
-                            last
-                              if $warn->line > $error->line
-                              or $warn->line == $error->line and $warn->col > $error->line;
-                            printf $td ( "%s:%s:W: %s\n", $warn->line, $warn->col, $warn->msg );
-                            ++$warnidx;
-                        }
-
-                        # print next error
-                        printf $td ( "%s:%s:E: %s\n", $error->line, $error->col, $error->msg );
-                    }
-
-                    # print any remaining warnings beyond the last error
-                    while ( $warnidx < @$warnings ) {
-                        my $warn = $warnings->[$warnidx];
-                        printf $td ( "%s:%s:W: %s\n", $warn->line, $warn->col, $warn->msg );
-                        ++$warnidx;
-                    }
-                    print $td "Remote response complete";
-                }
-                close $td;
-            }
-        } else {
-            if ( open my $td, '>', $errname ) {
-                print $td $validator->validator_error() . "\n";
-                print $td "Try using local validator onsgmls\n";
-                close $td;
-            }
-        }
+        my $validatepath = ::dirname($::validatecommand);
+        $ENV{SP_BCTF} = 'UTF-8' if $unicode;
+        ::run(
+            $::validatecommand,
+            "--directory=$validatepath",
+            "--catalog=" . ( $::OS_WIN ? "xhtml.soc" : "tools/W3C/xhtml.soc" ),
+            "--no-output",
+            "--open-entities",
+            "--error-file=$errname",
+            $tmpfname
+        );
     } elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel",

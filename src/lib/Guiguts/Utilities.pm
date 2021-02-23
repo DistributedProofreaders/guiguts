@@ -691,11 +691,10 @@ sub initialize {
     $::manualhash{'elinkpop'}                = '/HTML_Menu#The_HTML_Markup_Dialog';
     $::manualhash{'errorcheckpop+Bookloupe'} = '/Tools_Menu#Bookloupe';
     $::manualhash{'errorcheckpop+Jeebies'}   = '/Tools_Menu#Jeebies';
-    $::manualhash{'errorcheckpop+Load Checkfile'}      = '/Tools_Menu#Load_Checkfile';
-    $::manualhash{'errorcheckpop+pptxt'}               = '/Text_Menu#PPtxt';
-    $::manualhash{'errorcheckpop+W3C Validate Remote'} = '/HTML_Menu#HTML_Validator_.28local.29';
-    $::manualhash{'errorcheckpop+W3C Validate'}        = '/HTML_Menu#HTML_Validator_.28local.29';
-    $::manualhash{'errorcheckpop+W3C Validate CSS'}    = '/HTML_Menu#CSS_Validator';
+    $::manualhash{'errorcheckpop+Load Checkfile'}   = '/Tools_Menu#Load_Checkfile';
+    $::manualhash{'errorcheckpop+pptxt'}            = '/Text_Menu#PPtxt';
+    $::manualhash{'errorcheckpop+W3C Validate'}     = '/HTML_Menu#HTML_Validator_.28local.29';
+    $::manualhash{'errorcheckpop+W3C Validate CSS'} = '/HTML_Menu#CSS_Validator';
     $::manualhash{'errorcheckpop+Link Check'} =
       '/HTML_Menu#Check_for_link_errors_.28HTML_Link_Checker.29';
     $::manualhash{'errorcheckpop+HTML Tidy'} = '/HTML_Menu#HTML_Tidy';

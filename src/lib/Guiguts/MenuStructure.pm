@@ -613,13 +613,9 @@ sub menu_html {
         [ 'separator', '' ],
         [
             'command',
-            'HTML ~Validator (' . ( $::w3cremote ? 'online' : 'local' ) . ')',
+            'HTML ~Validator',
             -command => sub {
-                if ($::w3cremote) {
-                    ::errorcheckpop_up( $textwindow, $top, 'W3C Validate Remote' );
-                } else {
-                    ::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
-                }
+                ::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
             }
         ],
         [
@@ -747,14 +743,6 @@ sub menu_preferences_filepaths {
     [
         [
             'command', 'Set ~File Paths...', -command => sub { ::filePathsPopup(); },
-        ],
-        [ 'separator', '' ],
-        [
-            Checkbutton => 'Do W3C Validation Remotely',
-            -command    => \&::menurebuild,
-            -variable   => \$::w3cremote,
-            -onvalue    => 1,
-            -offvalue   => 0
         ],
         [ 'command', 'Set DP ~URLs...', -command => \&::setDPurls, ],
     ];
