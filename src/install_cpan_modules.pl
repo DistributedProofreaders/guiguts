@@ -17,10 +17,6 @@ my @modules = (
 
     # Needed for update checking
     "LWP::UserAgent",
-
-    # Needed for remote HTML validation
-    "WebService::Validator::HTML::W3C",
-    "XML::XPath",
 );
 
 # Windows-specific modules

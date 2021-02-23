@@ -61,7 +61,6 @@ use Tk::widgets qw{Balloon
   TextEdit
   ToolBar
 };
-use WebService::Validator::HTML::W3C;
 
 our $APP_NAME     = 'Guiguts';
 our $window_title = $APP_NAME . '-' . $VERSION;
@@ -192,7 +191,6 @@ our $utffontweight         = 'normal';
 our $utf8save              = 1;               # True = always save utf8, false = only if unicode characters in file
 our $verboseerrorchecks    = 0;
 our $vislnnm               = 0;
-our $w3cremote             = 0;
 our $wfstayontop           = 0;
 
 # These are set to the default values in initialize()

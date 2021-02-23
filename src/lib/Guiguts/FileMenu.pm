@@ -908,7 +908,7 @@ EOM
             txtfontname txtfontsize txtfontweight txtfontsystemuse
             twowordsinhyphencheck utf8save utfcharentrybase utffontname utffontsize utffontweight
             urlprojectpage urlprojectdiscussion
-            verboseerrorchecks vislnnm w3cremote wfstayontop/
+            verboseerrorchecks vislnnm wfstayontop/
         ) {
             print $save_handle "\$$_", ' ' x ( 25 - length $_ ), "= '", eval '$::' . $_, "';\n";
         }
