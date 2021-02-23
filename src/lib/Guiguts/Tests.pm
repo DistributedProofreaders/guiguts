@@ -34,8 +34,6 @@ sub runtests {
 
     ok( ( ::entity(255) eq '&yuml;' ), "entity(255) eq '&yuml;'" );
 
-    ok( $::debug == 0, "Do not release with \$debug = 1" );
-
     ok( 1 == do { 1 }, "do block" );
 
     runtesterrorcheck( "Bookloupe",        "textcheck.txt",   "bookloupebaseline.txt" );
