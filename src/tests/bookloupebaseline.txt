@@ -1,10 +1,5 @@
 Beginning check: Bookloupe
-  --> 1694 lines in this file contain '.,'. Not reporting them.
-  --> 515 lines in this file contain forward slashes. Not reporting them.
-  --> 27 lines in this file contain unpunctuated endquotes. Not reporting them.
-  --> 543 lines in this file contain standalone 0s and 1s. Not reporting them.
   --> 26 lines in this file are VERY long!
-  --> There are a lot of foreign letters here. Not reporting them.
   *** Verbose output is ON -- you asked for it! ***
 
   --> 5585 queries.
