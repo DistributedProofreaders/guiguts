@@ -1029,8 +1029,11 @@ sub footnotemove {
     while (1) {
         $index = $textwindow->search( '-regex', '--', 'FOOTNOTES:', $index, 'end' );
         last unless ($index);
-        unless ( $textwindow->get("$index +2l") =~ /^\[/ ) {
-            $textwindow->delete( $index, "$index+12c" );
+        unless ( $textwindow->get("$index +2l") =~ /^\[/ ) {    # Remove unused landing zones
+            my $start = $index;                                 # Also remove up to 2 blank lines before landing zone
+            $start = "$start -1l" if $textwindow->get( "$start -1l", "$start -1l lineend" ) eq "";
+            $start = "$start -1l" if $textwindow->get( "$start -1l", "$start -1l lineend" ) eq "";
+            $textwindow->delete( $start, "$index +1l linestart" );
         }
         $index .= '+4l';
     }
