@@ -1243,6 +1243,7 @@ sub html_convert_pageanchors {
         # If no more marks (reached end of file) or next mark page marker at least a line
         # beyond the current one, then convert batch of accumulated page markers to a string
         my $pagereference = '';
+        my $lastref       = '';
         if (
             not $marknext    # no next marker - end of file
             or $textwindow->compare( $textwindow->index($marknext), '>=', "$markindex+1l" )
@@ -1251,9 +1252,9 @@ sub html_convert_pageanchors {
             my $numrefs = scalar @pagerefs;
             my $count   = 0;
             for (
-                sort {                        # Sort Roman numerals correctly too
-                    ( looks_like_number($a) ? $a : ::arabic($a) )
-                      <=> ( looks_like_number($b) ? $b : ::arabic($b) )
+                sort {                        # Roman numbered pages come before Arabic numbered
+                    ( looks_like_number($a) ? $a : ::arabic($a) - 1000 )
+                      <=> ( looks_like_number($b) ? $b : ::arabic($b) - 1000 )
                 } @pagerefs
             ) {
                 ++$count;
@@ -1269,21 +1270,22 @@ sub html_convert_pageanchors {
                       "$br" . "$idtxt$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
                     $br = "<br />";    # Insert br before any subsequent markers
                 }
+                $lastref = $_;
             }
             @pagerefs = ();
         }
 
         # comment only
-        $textwindow->ntinsert( $markindex, "<!-- Page $num -->" )
-          if ( $::pagecmt and $num );
+        $textwindow->ntinsert( $markindex, "<!-- Page $lastref -->" )
+          if ( $::pagecmt and $lastref );
         if ($pagereference) {
 
             # If exporting with page markers, insert where found
             $textwindow->ntinsert( $markindex, $pagereference )
-              if ( $::lglobal{exportwithmarkup} and $num );
+              if ( $::lglobal{exportwithmarkup} and $lastref );
 
             # If skipping coincident pagenums, we know there is just one id to insert in the span
-            my $idtxt = $::lglobal{pageskipco} ? " id=\"$::htmllabels{pglabel}$num\"" : "";
+            my $idtxt = $::lglobal{pageskipco} ? " id=\"$::htmllabels{pglabel}$lastref\"" : "";
 
             # Otherwise may need to insert elsewhere
             my $insertpoint = $markindex;
