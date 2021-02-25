@@ -534,26 +534,102 @@ sub readlabels {
     $::convertcharsdisplaysearch = join( '', keys %::convertcharsdisplay );
     $::convertcharsmultisearch   = join( '', keys %::convertcharssort );
 
-    # Contains accented characters from Latin-1 Supplement block and DP's Extended European Latin character suites
-    $::convertcharssinglesearch = "¿¡¬√ƒ≈∆‡·‚„‰ÂÊ«Á–»… ÀËÈÍÎÃÕŒœÏÌÓÔ“”‘’÷ÿÚÛÙıˆ¯—Òﬂﬁ˛Ÿ⁄€‹˘˙˚¸›ˇ˝" # Latin-1 Supplement
-      . "\x{102}\x{103}\x{108}\x{109}\x{11c}\x{11d}\x{15c}\x{15d}\x{16c}\x{16d}\x{124}\x{125}\x{134}\x{135}" # EEL A row 1
-      . "\x{150}\x{151}\x{166}\x{167}\x{170}\x{171}\x{174}\x{175}\x{176}\x{177}\x{218}\x{219}\x{21a}\x{21b}" # EEL A row 2
-      . "\x{100}\x{101}\x{10c}\x{10d}\x{10e}\x{10f}\x{112}\x{113}\x{11a}\x{11b}\x{122}\x{123}\x{12a}\x{12b}\x{136}\x{137}" # EEL B row 1
-      . "\x{139}\x{13a}\x{13b}\x{13c}\x{13d}\x{13e}\x{145}\x{146}\x{147}\x{148}\x{14c}\x{14d}\x{154}\x{155}\x{156}\x{157}" # EEL B row 2
-      . "\x{158}\x{159}\x{160}\x{161}\x{164}\x{165}\x{16a}\x{16b}\x{16e}\x{16f}\x{17d}\x{17e}"    # EEL B row 3
-      . "\x{104}\x{105}\x{106}\x{107}\x{10a}\x{10b}\x{10c}\x{10d}\x{110}\x{111}\x{116}\x{117}\x{118}\x{119}\x{120}\x{121}" # EEL C row 1
-      . "\x{126}\x{127}\x{12e}\x{12f}\x{141}\x{142}\x{143}\x{144}\x{15a}\x{15b}\x{160}\x{161}\x{16a}\x{16b}\x{172}\x{173}" # EEL C row 2
-      . "\x{179}\x{17a}\x{17b}\x{17c}\x{17d}\x{17e}";    # EEL C row 3
+    # Contains the accented characters from the Latin Unicode blocks
+    $::convertcharssinglesearch =
+
+      # Latin-1 Supplement
+      "¿¡¬√ƒ≈∆‡·‚„‰ÂÊ«Á–»… ÀËÈÍÎÃÕŒœÏÌÓÔ“”‘’÷ÿÚÛÙıˆ¯—Òﬂﬁ˛Ÿ⁄€‹˘˙˚¸›ˇ˝"
+
+      # Latin Extended A
+      . "\x{100}\x{101}\x{102}\x{103}\x{104}\x{105}\x{106}\x{107}\x{108}\x{109}\x{10a}\x{10b}\x{10c}\x{10d}\x{10e}\x{10f}"
+      . "\x{110}\x{111}\x{112}\x{113}\x{114}\x{115}\x{116}\x{117}\x{118}\x{119}\x{11a}\x{11b}\x{11c}\x{11d}\x{11e}\x{11f}"
+      . "\x{120}\x{121}\x{122}\x{123}\x{124}\x{125}\x{126}\x{127}\x{128}\x{129}\x{12a}\x{12b}\x{12c}\x{12d}\x{12e}\x{12f}"
+      . "\x{130}\x{131}\x{134}\x{135}\x{136}\x{137}\x{139}\x{13a}\x{13b}\x{13c}\x{13d}\x{13e}\x{13f}"
+      . "\x{140}\x{141}\x{142}\x{143}\x{144}\x{145}\x{146}\x{147}\x{148}\x{149}\x{14c}\x{14d}\x{14e}\x{14f}"
+      . "\x{150}\x{151}\x{154}\x{155}\x{156}\x{157}\x{158}\x{159}\x{15a}\x{15b}\x{15c}\x{15d}\x{15e}\x{15f}"
+      . "\x{160}\x{161}\x{162}\x{163}\x{164}\x{165}\x{166}\x{167}\x{168}\x{169}\x{16a}\x{16b}\x{16c}\x{16d}\x{16e}\x{16f}"
+      . "\x{170}\x{171}\x{172}\x{173}\x{174}\x{175}\x{176}\x{177}\x{178}\x{179}\x{17a}\x{17b}\x{17c}\x{17d}\x{17e}"
+
+      # Latin Extended B
+      . "\x{180}\x{181}\x{187}\x{188}\x{189}\x{18a}\x{18b}\x{18c}"
+      . "\x{191}\x{192}\x{193}\x{197}\x{198}\x{199}\x{19a}\x{19d}\x{19e}\x{19f}"
+      . "\x{1a0}\x{1a1}\x{1a4}\x{1a5}\x{1ab}\x{1ac}\x{1ad}\x{1ae}\x{1af}"
+      . "\x{1b0}\x{1b2}\x{1b3}\x{1b4}\x{1b5}\x{1b6}"
+      . "\x{1cd}\x{1ce}\x{1cf}"
+      . "\x{1d0}\x{1d1}\x{1d2}\x{1d3}\x{1d4}\x{1d5}\x{1d6}\x{1d7}\x{1d8}\x{1d9}\x{1da}\x{1db}\x{1dc}\x{1de}\x{1df}"
+      . "\x{1e0}\x{1e1}\x{1e2}\x{1e3}\x{1e4}\x{1e5}\x{1e6}\x{1e7}\x{1e8}\x{1e9}\x{1ea}\x{1eb}\x{1ec}\x{1ed}"
+      . "\x{1f0}\x{1f4}\x{1f5}\x{1f8}\x{1f9}\x{1fa}\x{1fb}\x{1fc}\x{1fd}\x{1fe}\x{1ff}"
+      . "\x{200}\x{201}\x{202}\x{203}\x{204}\x{205}\x{206}\x{207}\x{208}\x{209}\x{20a}\x{20b}\x{20c}\x{20d}\x{20e}\x{20f}"
+      . "\x{210}\x{211}\x{212}\x{213}\x{214}\x{215}\x{216}\x{217}\x{218}\x{219}\x{21a}\x{21b}\x{21e}\x{21f}"
+      . "\x{224}\x{225}\x{226}\x{227}\x{228}\x{229}\x{22a}\x{22b}\x{22c}\x{22d}\x{22e}\x{22f}"
+      . "\x{230}\x{231}\x{232}\x{233}\x{234}\x{235}\x{236}\x{237}\x{23a}\x{23b}\x{23c}\x{23d}\x{23e}\x{23f}"
+      . "\x{243}\x{244}\x{246}\x{247}\x{248}\x{249}\x{24a}\x{24b}\x{24c}\x{24d}\x{24e}\x{24f}"
+
+      # Latin Extended Additional
+      . "\x{1e00}\x{1e01}\x{1e02}\x{1e03}\x{1e04}\x{1e05}\x{1e06}\x{1e07}\x{1e08}\x{1e09}\x{1e0a}\x{1e0b}\x{1e0c}\x{1e0d}\x{1e0e}\x{1e0f}"
+      . "\x{1e10}\x{1e11}\x{1e12}\x{1e13}\x{1e14}\x{1e15}\x{1e16}\x{1e17}\x{1e18}\x{1e19}\x{1e1a}\x{1e1b}\x{1e1c}\x{1e1d}\x{1e1e}\x{1e1f}"
+      . "\x{1e20}\x{1e21}\x{1e22}\x{1e23}\x{1e24}\x{1e25}\x{1e26}\x{1e27}\x{1e28}\x{1e29}\x{1e2a}\x{1e2b}\x{1e2c}\x{1e2d}\x{1e2e}\x{1e2f}"
+      . "\x{1e30}\x{1e31}\x{1e32}\x{1e33}\x{1e34}\x{1e35}\x{1e36}\x{1e37}\x{1e38}\x{1e39}\x{1e3a}\x{1e3b}\x{1e3c}\x{1e3d}\x{1e3e}\x{1e3f}"
+      . "\x{1e40}\x{1e41}\x{1e42}\x{1e43}\x{1e44}\x{1e45}\x{1e46}\x{1e47}\x{1e48}\x{1e49}\x{1e4a}\x{1e4b}\x{1e4c}\x{1e4d}\x{1e4e}\x{1e4f}"
+      . "\x{1e50}\x{1e51}\x{1e52}\x{1e53}\x{1e54}\x{1e55}\x{1e56}\x{1e57}\x{1e58}\x{1e59}\x{1e5a}\x{1e5b}\x{1e5c}\x{1e5d}\x{1e5e}\x{1e5f}"
+      . "\x{1e60}\x{1e61}\x{1e62}\x{1e63}\x{1e64}\x{1e65}\x{1e66}\x{1e67}\x{1e68}\x{1e69}\x{1e6a}\x{1e6b}\x{1e6c}\x{1e6d}\x{1e6e}\x{1e6f}"
+      . "\x{1e70}\x{1e71}\x{1e72}\x{1e73}\x{1e74}\x{1e75}\x{1e76}\x{1e77}\x{1e78}\x{1e79}\x{1e7a}\x{1e7b}\x{1e7c}\x{1e7d}\x{1e7e}\x{1e7f}"
+      . "\x{1e80}\x{1e81}\x{1e82}\x{1e83}\x{1e84}\x{1e85}\x{1e86}\x{1e87}\x{1e88}\x{1e89}\x{1e8a}\x{1e8b}\x{1e8c}\x{1e8d}\x{1e8e}\x{1e8f}"
+      . "\x{1e90}\x{1e91}\x{1e92}\x{1e93}\x{1e94}\x{1e95}\x{1e96}\x{1e97}\x{1e98}\x{1e99}\x{1e9a}"
+      . "\x{1ea0}\x{1ea1}\x{1ea2}\x{1ea3}\x{1ea4}\x{1ea5}\x{1ea6}\x{1ea7}\x{1ea8}\x{1ea9}\x{1eaa}\x{1eab}\x{1eac}\x{1ead}\x{1eae}\x{1eaf}"
+      . "\x{1eb0}\x{1eb1}\x{1eb2}\x{1eb3}\x{1eb4}\x{1eb5}\x{1eb6}\x{1eb7}\x{1eb8}\x{1eb9}\x{1eba}\x{1ebb}\x{1ebc}\x{1ebd}\x{1ebe}\x{1ebf}"
+      . "\x{1ec0}\x{1ec1}\x{1ec2}\x{1ec3}\x{1ec4}\x{1ec5}\x{1ec6}\x{1ec7}\x{1ec8}\x{1ec9}\x{1eca}\x{1ecb}\x{1ecc}\x{1ecd}\x{1ece}\x{1ecf}"
+      . "\x{1ed0}\x{1ed1}\x{1ed2}\x{1ed3}\x{1ed4}\x{1ed5}\x{1ed6}\x{1ed7}\x{1ed8}\x{1ed9}\x{1eda}\x{1edb}\x{1edc}\x{1edd}\x{1ede}\x{1edf}"
+      . "\x{1ee0}\x{1ee1}\x{1ee2}\x{1ee3}\x{1ee4}\x{1ee5}\x{1ee6}\x{1ee7}\x{1ee8}\x{1ee9}\x{1eea}\x{1eeb}\x{1eec}\x{1eed}\x{1eee}\x{1eef}"
+      . "\x{1ef0}\x{1ef1}\x{1ef2}\x{1ef3}\x{1ef4}\x{1ef5}\x{1ef6}\x{1ef7}\x{1ef8}\x{1ef9}\x{1efe}\x{1eff}";
+
+    # Contains the non-accented forms of the accented characters above
     $::convertcharssinglereplace =
-      "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy"    # Latin-1 Supplement
-      . "AaCcGgSsUuHhJj"                                                  # EEL A row 1
-      . "OoTtUuWwYySsTt"                                                  # EEL A row 2
-      . "AsCcDdEeEeGgIiKk"                                                # EEL B row 1
-      . "LlLlLlNnNnOoRrRr"                                                # EEL B row 2
-      . "RrSsTtUuUuZz"                                                    # EEL B row 3
-      . "AaCcCcCcDdEeEeGg"                                                # EEL C row 1
-      . "HhIiLlNnSsSsUuUu"                                                # EEL C row 2
-      . "ZzZzZz";                                                         # EEL C row 3
+
+      # Latin-1 Supplement
+      "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy"
+
+      # Latin Extended A
+      . "AaAaAaCcCcCcCcDd"
+      . "DdEeEeEeEeEeGgGg"
+      . "GgGgHhHhIiIiIiIi"
+      . "IiJjKkLlLlLlL"
+      . "lLlNnNnNnnOoOo"
+      . "OoRrRrRrSsSsSs"
+      . "SsTtTtTtUuUuUuUu"
+      . "UuUuWwYyYZzZzZz"
+
+      # Latin Extended B
+      . "bBBbDdDd"
+      . "FfGIKklNnO"
+      . "OoPptTtTU"
+      . "uVYyZz" . "AaI"
+      . "iOoUuUuUuUuUuAa"
+      . "Aa∆ÊGgGgKkOoOo"
+      . "jGgNnAa∆ÊOo"
+      . "AaAaEeEeIiIiOoOo"
+      . "RrRrUuUuSsTtHh"
+      . "ZzAaEeOoOoOo"
+      . "OoYylntjACcLTs"
+      . "BUEeJjQqRrYy"
+
+      # Latin Extended Additional
+      . "AaBbBbBbCcDdDdDd"
+      . "DdDdEeEeEeEeEeFf"
+      . "GgHhHhHhHhHhIiIi"
+      . "KkKkKkLlLlLlLlMm"
+      . "MmMmNnNnNnNnOoOo"
+      . "OoOoPpPpRrRrRrRr"
+      . "SsSsSsSsSsTtTtTt"
+      . "TtUuUuUuUuUuVvVv"
+      . "WwWwWwWwWwXxXxYy"
+      . "ZzZzZzhtwya"
+      . "AaAaAaAaAaAaAaAa"
+      . "AaAaAaAaEeEeEeEe"
+      . "EeEeEeEeIiIiOoOo"
+      . "OoOoOoOoOoOoOoOo"
+      . "OoOoUuUuUuUuUuUu"
+      . "UuYyYyYyYy";
 
     my @chararray = keys %::convertcharssort;
     for ( my $i = 0 ; $i < @chararray ; $i++ ) {
