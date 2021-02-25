@@ -491,7 +491,7 @@ sub escape_regexmetacharacters {
 
 sub deaccentsort {
     my $phrase = shift;
-    return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
+    return $phrase unless ( $phrase =~ /[$::convertcharssinglesearch]/ );
     eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
     $phrase =~ s/([$::convertcharsmultisearch])/$::convertcharssort{$1}/g;
     return $phrase;
@@ -534,8 +534,27 @@ sub readlabels {
     $::convertcharsdisplaysearch = join( '', keys %::convertcharsdisplay );
     $::convertcharsmultisearch   = join( '', keys %::convertcharssort );
 
-    $::convertcharssinglesearch  = "ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı";
-    $::convertcharssinglereplace = "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy";
+    # Contains accented characters from Latin-1 Supplement block and DP's Extended European Latin character suites
+    $::convertcharssinglesearch = "ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı" # Latin-1 Supplement
+      . "\x{102}\x{103}\x{108}\x{109}\x{11c}\x{11d}\x{15c}\x{15d}\x{16c}\x{16d}\x{124}\x{125}\x{134}\x{135}" # EEL A row 1
+      . "\x{150}\x{151}\x{166}\x{167}\x{170}\x{171}\x{174}\x{175}\x{176}\x{177}\x{218}\x{219}\x{21a}\x{21b}" # EEL A row 2
+      . "\x{100}\x{101}\x{10c}\x{10d}\x{10e}\x{10f}\x{112}\x{113}\x{11a}\x{11b}\x{122}\x{123}\x{12a}\x{12b}\x{136}\x{137}" # EEL B row 1
+      . "\x{139}\x{13a}\x{13b}\x{13c}\x{13d}\x{13e}\x{145}\x{146}\x{147}\x{148}\x{14c}\x{14d}\x{154}\x{155}\x{156}\x{157}" # EEL B row 2
+      . "\x{158}\x{159}\x{160}\x{161}\x{164}\x{165}\x{16a}\x{16b}\x{16e}\x{16f}\x{17d}\x{17e}"    # EEL B row 3
+      . "\x{104}\x{105}\x{106}\x{107}\x{10a}\x{10b}\x{10c}\x{10d}\x{110}\x{111}\x{116}\x{117}\x{118}\x{119}\x{120}\x{121}" # EEL C row 1
+      . "\x{126}\x{127}\x{12e}\x{12f}\x{141}\x{142}\x{143}\x{144}\x{15a}\x{15b}\x{160}\x{161}\x{16a}\x{16b}\x{172}\x{173}" # EEL C row 2
+      . "\x{179}\x{17a}\x{17b}\x{17c}\x{17d}\x{17e}";    # EEL C row 3
+    $::convertcharssinglereplace =
+      "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy"    # Latin-1 Supplement
+      . "AaCcGgSsUuHhJj"                                                  # EEL A row 1
+      . "OoTtUuWwYySsTt"                                                  # EEL A row 2
+      . "AsCcDdEeEeGgIiKk"                                                # EEL B row 1
+      . "LlLlLlNnNnOoRrRr"                                                # EEL B row 2
+      . "RrSsTtUuUuZz"                                                    # EEL B row 3
+      . "AaCcCcCcDdEeEeGg"                                                # EEL C row 1
+      . "HhIiLlNnSsSsUuUu"                                                # EEL C row 2
+      . "ZzZzZz";                                                         # EEL C row 3
+
     my @chararray = keys %::convertcharssort;
     for ( my $i = 0 ; $i < @chararray ; $i++ ) {
         my $index = index( $::convertcharssinglesearch, $chararray[$i] );
