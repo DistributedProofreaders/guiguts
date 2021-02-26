@@ -1932,6 +1932,7 @@ sub seeindex {
 # Run EBookMaker tool on current HTML file to create epub and mobi versions
 sub ebookmaker {
 
+    ::busy();    # Change cursor to show user something is happening
     unless ($::ebookmakercommand) {
         ::locateExecutable( 'EBookMaker', \$::ebookmakercommand );
         return unless $::ebookmakercommand;
@@ -1939,14 +1940,19 @@ sub ebookmaker {
 
     my ( $fname, $d, $ext ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
     if ( $ext !~ /^(\.htm|\.html)$/ ) {
-        print "Not an HTML file\n";
+        $::top->Dialog(
+            -text    => "Not an HTML file",
+            -bitmap  => 'error',
+            -title   => 'Ebookmaker error',
+            -buttons => ['Ok']
+        )->Show;
         return;
     }
     my $filepath  = $::lglobal{global_filename};
     my $outputdir = $::globallastpath;
 
-    print "\nBeginning ebookmaker\n";
-    print "Files will appear in the directory $::globallastpath.\n";
+    infoerror("Beginning ebookmaker");
+    infoerror("Files will appear in the directory $::globallastpath");
 
     # EBookMaker needs to use Tidy and Kindlegen, so temporarily append to the path
     my $tidypath      = ::catdir( $::lglobal{guigutsdirectory}, 'tools', 'tidy' );
@@ -1955,8 +1961,41 @@ sub ebookmaker {
     # local variable means global value will be restored at end of sub
     local $ENV{PATH} = pathcatdir( pathcatdir( $ENV{PATH}, $tidypath ), $kindlegenpath );
 
-    ::runner( $::ebookmakercommand, "--verbose", "--max-depth=3", "--make=epub.images",
+    # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
+    my $tmpfile = 'ebookmaker.tmp';
+    my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
+    $runner->run( $::ebookmakercommand, "--verbose", "--max-depth=3", "--make=epub.images",
         "--make=kindle.images", "--output-dir=$outputdir.", "--title=$fname", "$filepath" );
+
+    # Check for errors or warnings in ebookmaker output
+    open my $ebmout, '<', $tmpfile;
+    my $err  = 0;
+    my $warn = 0;
+    while ( my $line = <$ebmout> ) {
+        $err++ if $line =~ "^ERROR:";
+        $warn++
+          if $line  =~ "^WARNING:"
+          and $line !~ "No gnu dbm support found"                         # ignore some warnings
+          and $line !~ "elements having class .* have been rewritten.";
+        adderror($line);                                                  # Send all ebookmaker output to message log
+    }
+    close $ebmout;
+    unlink $tmpfile;
+
+    # Restore cursor, but only pop message log if there are errors or warnings
+    ::unbusy();
+    if ($err) {
+        infoerror(
+            "Ebookmaker finished with $err " . ( $err > 1 ? "errors" : "error" ) . " to check" );
+        poperror();
+    } elsif ($warn) {
+        infoerror( "Ebookmaker finished with $warn "
+              . ( $warn > 1 ? "warnings" : "warning" )
+              . " to check" );
+        poperror();
+    } else {
+        infoerror("Ebookmaker finished succesfully");
+    }
 }
 
 # Concatenate given directories using OS-specific path separator
