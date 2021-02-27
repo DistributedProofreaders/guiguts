@@ -33,7 +33,10 @@ sub knuth_wrapper {
     elsif ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes])|| )             { $pre = "$1\n"; }
 
     # if close rewrap markup, remove (including any newline), then append once rewrapped
-    if ( $paragraph =~ s|([$blockwraptypes]/$TEMPPAGEMARK*)(\n?)$|| ) { $post = "$1$2"; }
+    # (note that look-behind group is not captured, so $1 refers to large capturing group)
+    if ( $paragraph =~ s|(?<=\n)($TEMPPAGEMARK*[$blockwraptypes]/$TEMPPAGEMARK*)(\n?)$|| ) {
+        $post = "$1$2";
+    }
     my $maxwidth = $rightmargin;
     my $optwidth = $rightmargin - $::rmargindiff;
     $paragraph =~ s/-\n/-/g unless $rwhyphenspace;
@@ -135,12 +138,11 @@ sub selectrewrap {
     while (1) {
         $indent = $::defaultindent;
         $thisblockend =
-          $textwindow->search( '-regex', '--',
-            '(^' . $TEMPPAGEMARK . '*$)|([' . $blockwraptypes . ']/)',
+          $textwindow->search( '-regex', '--', '(^' . $TEMPPAGEMARK . '*$)',
             $thisblockstart, $end );    # find end of paragraph or end of markup
                                         # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
-          if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c" ) =~
+          if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l lineend" ) =~
             /^\/[$::allblocktypes]$/ );
 
         if ($thisblockend) {
@@ -289,7 +291,9 @@ sub selectrewrap {
             $enableindent = 0;
             $poem         = 0;
         }
-        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
+        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\/[\n$TEMPPAGEMARK]*$/ ) {
+            $::blockwrap = 0;
+        }
         last unless $end;
         $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
         $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
