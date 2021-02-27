@@ -499,14 +499,13 @@ sub deaccentsort {
 
 sub deaccentdisplay {
     my $phrase = shift;
-    return $phrase unless ( $phrase =~ y/\xC0-\xFF// );
+    return $phrase unless ( $phrase =~ /[$::convertcharssinglesearch]/ );
 
     # first convert the characters specified by the language
     $phrase =~ s/([$::convertcharsdisplaysearch])/$::convertcharsdisplay{$1}/g;
 
-    # then convert anything that hasn't been converted already, using the default one character substitute
-    $phrase =~
-      tr/ÀÁÂÃÄÅàáâãäåÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı/AAAAAAaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy/;
+    # then convert anything that hasn't been converted already
+    eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
     return $phrase;
 }
 
@@ -538,7 +537,7 @@ sub readlabels {
     $::convertcharssinglesearch =
 
       # Latin-1 Supplement
-      "ÀÁÂÃÄÅÆàáâãäåæÇçĞğÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñßŞşÙÚÛÜùúûüİÿı"
+      "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ" . "ĞÑÒÓÔÕÖØÙÚÛÜİŞß" . "àáâãäåæçèéêëìíîï" . "ğñòóôõöøùúûüışÿ"
 
       # Latin Extended A
       . "\x{100}\x{101}\x{102}\x{103}\x{104}\x{105}\x{106}\x{107}\x{108}\x{109}\x{10a}\x{10b}\x{10c}\x{10d}\x{10e}\x{10f}"
@@ -587,7 +586,7 @@ sub readlabels {
     $::convertcharssinglereplace =
 
       # Latin-1 Supplement
-      "AAAAAAAaaaaaaaCcDdEEEEeeeeIIIIiiiiOOOOOOooooooNnsTtUUUUuuuuYyy"
+      "AAAAAAACEEEEIIII" . "DNOOOOOOUUUUYTs" . "aaaaaaaceeeeiiii" . "dnoooooouuuuyty"
 
       # Latin Extended A
       . "AaAaAaCcCcCcCcDd"
