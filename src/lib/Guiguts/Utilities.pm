@@ -2025,7 +2025,7 @@ sub seeindex {
 
 # Run EBookMaker tool on current HTML file to create epub and mobi versions
 sub ebookmaker {
-
+    my $textwindow = $::textwindow;
     ::busy();    # Change cursor to show user something is happening
     unless ($::ebookmakercommand) {
         ::locateExecutable( 'EBookMaker', \$::ebookmakercommand );
@@ -2042,6 +2042,34 @@ sub ebookmaker {
         )->Show;
         return;
     }
+
+    # Get title and author information
+    my $ttitle  = $fname;      # Title defaults to base filename
+    my $tauthor = 'Unknown';
+    my $tbeg    = $textwindow->search( '-exact', '--', '<title>',  '1.0', '20.0' );
+    my $tend    = $textwindow->search( '-exact', '--', '</title>', '1.0', '20.0' );
+    if ( $tbeg & $tend ) {
+        my $tstring = $textwindow->get( $tbeg . '+7c', $tend );    # Get whole title/author string
+        $tstring =~ s/\s+/ /g;                                     # Join into one line, single spaced
+        if (
+            $tstring =~ s/The Project Gutenberg EBook of//         # Strip PG part - 2 formats
+            or $tstring =~ s/&mdash;A Project Gutenberg eBook//
+        ) {
+            HTML::Entities::decode_entities($tstring);             # HTML entities need converting to characters
+            $tstring = deaccentdisplay($tstring);                  # Remove accents since passing as argument in shell
+            $tstring =~ s/[^[:ascii:]]/_/g;                        # Substitute "_" for any remaining non-ASCII characters
+
+            # Split into title/author - use last "by" in case "by" is in the book title
+            my $byidx = rindex( $tstring, ", by " );
+            if ( $byidx > -1 ) {
+                $ttitle = substr( $tstring, 0, $byidx );
+                $ttitle =~ s/^\s+|\s+$//g;
+                $tauthor = substr( $tstring, $byidx + 5 );
+                $tauthor =~ s/^\s+|\s+$//g;
+            }
+        }
+    }
+
     my $filepath  = $::lglobal{global_filename};
     my $outputdir = $::globallastpath;
 
@@ -2058,8 +2086,13 @@ sub ebookmaker {
     # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
     my $tmpfile = 'ebookmaker.tmp';
     my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
-    $runner->run( $::ebookmakercommand, "--verbose", "--max-depth=3", "--make=epub.images",
-        "--make=kindle.images", "--output-dir=$outputdir.", "--title=$fname", "$filepath" );
+    $runner->run(
+        $::ebookmakercommand,   "--verbose",
+        "--max-depth=3",        "--make=epub.images",
+        "--make=kindle.images", "--output-dir=$outputdir.",
+        "--title=$ttitle",      "--author=$tauthor",
+        "$filepath"
+    );
 
     # Check for errors or warnings in ebookmaker output
     open my $ebmout, '<', $tmpfile;

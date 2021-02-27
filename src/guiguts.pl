@@ -37,6 +37,7 @@ use File::Spec::Functions qw(catdir);
 use File::Copy;
 use File::Compare;
 use File::Which;
+use HTML::Entities;
 use HTML::TokeParser;
 use Image::Size;
 use IPC::Open2;
