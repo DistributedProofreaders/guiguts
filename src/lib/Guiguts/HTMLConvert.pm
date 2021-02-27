@@ -722,7 +722,7 @@ sub html_convert_body {
         }
 
         # list
-        if ( $selection =~ /^\/[Ll]/ ) {
+        if ( $selection =~ /^\/[Ll]$/ ) {
             $listmark = 1;
             $ital     = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
@@ -756,7 +756,7 @@ sub html_convert_body {
         }
 
         #close list
-        if ( $selection =~ /^[Ll]\// ) {
+        if ( $selection =~ /^[Ll]\/$/ ) {
             $listmark = 0;
             $ital     = 0;
 
@@ -823,8 +823,8 @@ sub html_convert_body {
             next;
         }
 
-        # Start of index (/I)
-        if ( $selection =~ /^\/[Ii]/ ) {
+        # Start of index (/I) including possible [n.n,n] rewrap margin settings
+        if ( $selection =~ /^\/[Ii]$/ or $selection =~ /^\/[Ii]\[[\d\.,]+]/ ) {
             $indexline = 1;
             $textwindow->ntdelete( "$step.0", "$step.end" );
             $textwindow->ntinsert( "$step.0", '<ul class="index">' );
@@ -842,7 +842,7 @@ sub html_convert_body {
         }
 
         # End of index (I/)
-        if ( $selection =~ /^[Ii]\// ) {
+        if ( $selection =~ /^[Ii]\/$/ ) {
             $indexline = 0;
 
             # Insert first to avoid subsequent page marker moving back inside list
