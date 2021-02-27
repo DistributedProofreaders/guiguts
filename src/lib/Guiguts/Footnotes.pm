@@ -862,11 +862,12 @@ sub getlz {
         $textwindow->markUnset($mark);
     }
     while (1) {
-        $index = $textwindow->search( '-regex', '--', '^FOOTNOTES:$', $index, 'end' );
+        $index =
+          $textwindow->search( '-regex', '--', "^$::htmllabels{fnheading}:\$", $index, 'end' );
         last unless $index;
         push @{ $::lglobal{fnlzs} }, $index;
         $textwindow->markSet( "LZ$zone", $index );
-        $index = $textwindow->index("$index +10c");
+        $index = $textwindow->index("$index +1l");
         $zone++;
     }
 }
@@ -939,17 +940,17 @@ sub setlz {
         # Cope with page mark being at start of first chapter blank line or at end of last chapter's text
         if ( $textwindow->compare( $prevMark, '==', "$prevMark lineend" ) ) {    # Page mark at end of line
             if ( $textwindow->compare( $prevMark, '==', "$prevMark linestart" ) ) {    # Also at start means on empty line
-                $textwindow->insert( $prevMark, "\n\nFOOTNOTES:\n" );
+                $textwindow->insert( $prevMark, "\n\n$::htmllabels{fnheading}:\n" );
             } else {                                                                   # At end of line with text on it
-                $textwindow->delete($prevMark);                                        # Delete newline character that follows the mark
-                $textwindow->insert( $prevMark, "\n\n\nFOOTNOTES:\n" );                # Add replacement newline before the mark
+                $textwindow->delete($prevMark);                                           # Delete newline character that follows the mark
+                $textwindow->insert( $prevMark, "\n\n\n$::htmllabels{fnheading}:\n" );    # Add replacement newline before the mark
             }
         } else {    # Page mark within text - use given point instead
-            $textwindow->insert( $lzindex, "\n\nFOOTNOTES:\n" );
+            $textwindow->insert( $lzindex, "\n\n$::htmllabels{fnheading}:\n" );
         }
         $textwindow->markGravity( $prevMark, 'left' );
     } else {
-        $textwindow->insert( $lzindex, "\n\nFOOTNOTES:\n" );
+        $textwindow->insert( $lzindex, "\n\n$::htmllabels{fnheading}:\n" );
     }
 
     $::lglobal{fnmvbutton}->configure( '-state' => 'normal' )
@@ -994,8 +995,9 @@ sub footnotemove {
         $::lglobal{fnindex}--;
     }
     $zone = 0;
+    my $fnheadinglen = length("$::htmllabels{fnheading}:");
     foreach my $lz ( @{ $::lglobal{fnlzs} } ) {
-        $textwindow->insert( $textwindow->index("LZ$zone +10c"), $footnotes{$lz} )
+        $textwindow->insert( $textwindow->index("LZ$zone +${fnheadinglen}c"), $footnotes{$lz} )
           if $footnotes{$lz};
         $footnotes{$lz} = '';
         $zone++;
@@ -1027,7 +1029,7 @@ sub footnotemove {
     $::lglobal{fnindex} = 0;
     $::lglobal{fntotal} = 0;
     while (1) {
-        $index = $textwindow->search( '-regex', '--', 'FOOTNOTES:', $index, 'end' );
+        $index = $textwindow->search( '-regex', '--', "$::htmllabels{fnheading}:", $index, 'end' );
         last unless ($index);
         unless ( $textwindow->get("$index +2l") =~ /^\[/ ) {    # Remove unused landing zones
             my $start = $index;                                 # Also remove up to 2 blank lines before landing zone

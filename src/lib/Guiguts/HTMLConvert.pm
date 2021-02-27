@@ -1111,15 +1111,22 @@ sub html_convert_footnoteblocks {
     my ($textwindow) = @_;
     my $thisblockstart = '1.0';
     ::working("Marking footnote blocks");
-    while ( $thisblockstart =
-        $textwindow->search( '-exact', '--', '<p>FOOTNOTES:', $thisblockstart, 'end' ) ) {
-        $textwindow->ntdelete( $thisblockstart, "$thisblockstart+17c" );
-        $textwindow->insert( $thisblockstart, '<div class="footnotes"><h3>FOOTNOTES:</h3>' );
+    my $fnheadinglen = length("<p>$::htmllabels{fnheading}:</p>");
+    while (
+        $thisblockstart = $textwindow->search(
+            '-exact',        '--', "<p>$::htmllabels{fnheading}:",
+            $thisblockstart, 'end'
+        )
+    ) {
+        $textwindow->ntdelete( $thisblockstart, "$thisblockstart+${fnheadinglen}c" );
+        $textwindow->insert( $thisblockstart,
+            "<div class=\"footnotes\"><h3>$::htmllabels{fnheading}:</h3>" );
 
         # Improved logic for finding end of footnote block: find
         # the next footnote block
         my $nextfootnoteblock =
-          $textwindow->search( '-exact', '--', 'FOOTNOTES:', $thisblockstart . '+1l', 'end' );
+          $textwindow->search( '-exact', '--', "$::htmllabels{fnheading}:",
+            $thisblockstart . '+1l', 'end' );
         $nextfootnoteblock = 'end' unless $nextfootnoteblock;
 
         # find the start of last footnote in this block
