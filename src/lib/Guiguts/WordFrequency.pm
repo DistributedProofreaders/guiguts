@@ -185,15 +185,15 @@ sub wordfrequency {
             ],
             [ 'Stealtho Check', sub { stealthcheck() } ],
             [ 'Ligatures',      sub { ligaturecheck() } ],
-            [ 'RegExpEntry',    [ \&anythingwfcheck, 'dummy entry', 'dummy' ] ],
             [
-                '<--RegExp',
+                'RegExp-->',
                 [
                     sub {
                         anythingwfcheck( 'words matching regular expression', $::regexpentry );
                     }
                 ]
             ],
+            [ 'RegExpEntry', [ \&anythingwfcheck, 'dummy entry', 'dummy' ] ],
         );
         my ( $row, $col, $inc ) = ( 0, 0, 0 );
         for (@wfbuttons) {
@@ -217,8 +217,12 @@ sub wordfrequency {
                 $::lglobal{regexpentry} = $wordfreqseframe1->Entry(
                     -background   => $::bkgcolor,
                     -textvariable => \$::regexpentry,
-                    -width        => 13,
-                )->grid( -row => $row, -column => $col );
+                )->grid(
+                    -row        => $row,
+                    -column     => $col,
+                    -columnspan => 3,
+                    -sticky     => "nsew"
+                );
             }
         }
         my $wcframe = $::lglobal{wfpop}->Frame->pack( -fill => 'both', -expand => 'both', );
