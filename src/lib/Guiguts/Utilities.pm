@@ -2052,7 +2052,7 @@ sub ebookmaker {
         my $tstring = $textwindow->get( $tbeg . '+7c', $tend );    # Get whole title/author string
         $tstring =~ s/\s+/ /g;                                     # Join into one line, single spaced
         if (
-            $tstring =~ s/The Project Gutenberg EBook of//i         # Strip PG part - 2 formats
+            $tstring =~ s/The Project Gutenberg EBook of//i        # Strip PG part - 2 formats
             or $tstring =~ s/&mdash;A Project Gutenberg eBook//i
         ) {
             HTML::Entities::decode_entities($tstring);             # HTML entities need converting to characters
