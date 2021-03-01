@@ -155,6 +155,7 @@ our $nobell                 = 0;
 our $donotcenterpagemarkers = 0;
 our $nohighlights           = 0;
 our $notoolbar              = 0;
+our $pagesepauto            = 3;                           # How automatically to fix page separators
 our $intelligentWF          = 0;
 our $defaultpngspath        = ::os_normal('pngs/');
 our $pngspath               = q{};
