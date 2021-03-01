@@ -60,6 +60,48 @@ sub knuth_wrapper {
     return $pre . $reflowed . $post;
 }
 
+#
+# Rewraps an index, assuming DP formatting, i.e.
+# |
+# |/i[8.2.72] (optional wrap margins similar to block margins)
+# |A main entry, 12, 23, ... all on one line
+# |  subentry indented by 2, 45, 56, ...
+# |
+# |Next main entry after blank line, 78, 89 ...
+# etc.
+#
+# First line of each entry or subentry will be indented by $firstmargin plus amount already
+# indented by user to signify sublevel
+# Continuation lines will all be indented to $leftmargin - user's responsibility to ensure this
+# is big enough to avoid confusion on index with deep sublevels
+#
+sub indexwrapper {
+    my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
+
+    # Split paragraph (entry plus subentries) into lines (single entry or subentry)
+    my @lines = split( /\n/, $paragraph );
+
+    # Rewrap each line (entry) independently and append to a single string to return.
+    my $rewrapped = '';
+    for my $line (@lines) {
+
+        # if start and end of markup - just preserve - don't indent
+        if ( $line =~ /^$TEMPPAGEMARK*([Ii]\/|\/[Ii])$TEMPPAGEMARK*$/ ) {
+            $rewrapped .= $line . "\n";
+            next;
+        }
+
+        # see how far user has indented line to signify depth of sublevel
+        $line =~ /^( *)/;
+        my $firstindent = $firstmargin + length($1);
+
+        # Wrap entry and append to string
+        $line = wrapper( $leftmargin, $firstindent, $rightmargin, $line, $rwhyphenspace );
+        $rewrapped .= $line;
+    }
+    return $rewrapped;
+}
+
 sub selectrewrap {
     my $silentmode = shift;
     my $textwindow = $::textwindow;
@@ -145,6 +187,7 @@ sub selectrewrap {
           if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l lineend" ) =~
             /^\/[$::allblocktypes]$/ );
 
+        $thisblockstart = $textwindow->index( $thisblockstart . ' linestart' );
         if ($thisblockend) {
             $thisblockend = $textwindow->index( $thisblockend . ' lineend' );
         } else {
@@ -165,12 +208,18 @@ sub selectrewrap {
             || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
 
         # Check for block types that support blockwrap
+        $::blockwrap = 0 unless $::blockwrap;
         if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
             $::blockwrap = 1;
-            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {                      # block
                 $leftmargin  = $::blocklmargin;
                 $firstmargin = $::blocklmargin;
                 $rightmargin = $::blockrmargin;
+            } elsif ( $selection =~ /^$TEMPPAGEMARK*\/[iI]/ ) {               #index
+                $leftmargin  = 8;                                             # All continuation lines aligned here
+                $firstmargin = 2;                                             # All first lines indented by existing indent, plus this figure
+                $rightmargin = 72;                                            # Right hand limit
+                $::blockwrap = 2;
             }
 
             # Check if there are any parameters following blockwrap markup [n...
@@ -271,10 +320,13 @@ sub selectrewrap {
                     $inblock      = 0;
                 }
             } else {
-                if ($::blockwrap) {
+                if ( $::blockwrap == 1 ) {    # block wrap
                     $rewrapped = wrapper( $leftmargin, $firstmargin, $rightmargin,
                         $selection, $::rwhyphenspace );
-                } else {    #rewrap the paragraph
+                } elsif ( $::blockwrap == 2 ) {    # index wrap
+                    $rewrapped = indexwrapper( $leftmargin, $firstmargin, $rightmargin,
+                        $selection, $::rwhyphenspace );
+                } else {                           #rewrap the paragraph
                     $rewrapped =
                       wrapper( $::lmargin, $::lmargin, $::rmargin, $selection, $::rwhyphenspace );
                 }
