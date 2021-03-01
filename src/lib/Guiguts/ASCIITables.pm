@@ -9,7 +9,10 @@ BEGIN {
     @EXPORT = qw(&tablefx);
 }
 
-## ASCII Table Special Effects
+my $TEMPPAGEMARK = "\x7f";
+
+#
+# Pop the ASCII Table Special Effects dialog
 sub tablefx {
     ::hidepagenums();
     my $textwindow = $::textwindow;
@@ -205,6 +208,8 @@ sub tablefx {
     }
 }
 
+#
+# Mark the selected region as a table to be worked on
 sub tblselect {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'table', '1.0', 'end' );
@@ -228,6 +233,8 @@ sub tblselect {
     undef $::lglobal{selectedline};
 }
 
+#
+# Remove selected column dividing line
 sub tlineremove {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('linesel');
@@ -249,6 +256,8 @@ sub tlineremove {
     $textwindow->addGlobEnd;
 }
 
+#
+# Select a column dividing line as being the active one
 sub tlineselect {
     my $textwindow = $::textwindow;
     return unless $textwindow->index('tblstart');
@@ -297,6 +306,8 @@ sub tlineselect {
     return 1;
 }
 
+#
+# Calculate the width of a column to show in the dialog
 sub colcalc {
     my $srow       = shift;
     my $textwindow = $::textwindow;
@@ -309,6 +320,8 @@ sub colcalc {
     $::lglobal{colwidthlbl}->configure( -text => "Width $::lglobal{columnspaces}" );
 }
 
+#
+# Add empty lines between table rows
 sub tblspace {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('table');
@@ -337,6 +350,8 @@ sub tblspace {
     }
 }
 
+#
+# Remove the empty lines between table rows
 sub tblcompress {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('table');
@@ -362,6 +377,8 @@ sub tblcompress {
     }
 }
 
+#
+# Add a column dividing line
 sub insertline {
     my $op         = shift;
     my $textwindow = $::textwindow;
@@ -398,6 +415,8 @@ sub insertline {
     $textwindow->addGlobEnd;
 }
 
+#
+# Move a column dividing line left or right
 sub coladjust {
     my $dir        = shift;
     my $textwindow = $::textwindow;
@@ -436,15 +455,8 @@ sub coladjust {
         my $row   = 0;
         my $blankline;
         for (@table) {
-
-            #print "Dollar:".$_."\n";
-            #print "colindex:".$colindex."\n";
             my $temp = $col[ ($colindex) ];
-
-            #print "colcolindex:"."$temp"."\n";
             $temp = $col[ ( $colindex - 1 ) ];
-
-            #print "colcolindex-1:"."$temp"."\n";
             my $cell = substr(
                 $_,
                 ( $col[ ( $colindex - 1 ) ] ),
@@ -582,10 +594,12 @@ sub coladjust {
             }
         }
         $textwindow->addGlobStart;
+        my %pgindex = tblgetpg();    # Save page markers to restore them later
         $textwindow->delete( 'tblstart', 'tblend' );
         for ( reverse @table ) {
             $textwindow->insert( 'tblstart', $_ );
         }
+        tblsetpg(%pgindex);          # Restore page markers
         $dir++;
     } else {
         my ( $srow, $scol ) = split( /\./, $textwindow->index('tblstart') );
@@ -618,6 +632,8 @@ sub coladjust {
     return 1;
 }
 
+#
+# Convert table from grid format to step format
 sub grid2step {
     my $textwindow = $::textwindow;
     my ( @table, @tbl, @trows, @tlines, @twords );
@@ -628,6 +644,23 @@ sub grid2step {
         $textwindow->markSet( 'insert', 'tblstart' );
         insertline('i');
     }
+
+    # Get page markers within table and convert to actual table rows (1st row is row 0)
+    my %pgindex = tblgetpg();
+    for my $mark ( keys %pgindex ) {
+        my $tmpmark = 'tblstart';
+        my $row     = 0;
+        while ( $tmpmark = $textwindow->search( '-regex', '--', '^[ |]+$', $tmpmark, 'tblend' ) ) {
+            if ( $textwindow->compare( $tmpmark, '>', $textwindow->index($mark) ) ) {
+                $pgindex{$mark} = $row;
+                last;
+            }
+            $tmpmark .= '+1l';
+            $row++;
+        }
+        $pgindex{$mark} = $row + 1 if not $tmpmark;
+    }
+
     $::lglobal{stepmaxwidth} = 70
       if ( ( $::lglobal{stepmaxwidth} =~ /\D/ )
         || ( $::lglobal{stepmaxwidth} < 15 ) );
@@ -636,7 +669,6 @@ sub grid2step {
     @trows = split( /^[ |]+$/ms, $selection );
     for my $trow (@trows) {
         @tlines = split( /\n/, $trow );
-        my @temparray;
         for my $tline (@tlines) {
             $tline =~ s/^\|//;
             if ( $selection =~ /.\|/ ) {
@@ -656,6 +688,11 @@ sub grid2step {
     $selection = '';
     my $cell = 0;
     for my $row ( 0 .. $#tbl ) {
+
+        # Check if a page marker needs inserting here and add a temporary marker
+        for my $mark ( keys %pgindex ) {
+            push @table, $TEMPPAGEMARK if $row == $pgindex{$mark};
+        }
         for ( 0 .. $cols ) {
             my $wrapped;
             $wrapped = ::wrapper(
@@ -678,22 +715,56 @@ sub grid2step {
         push @table, '    |' x ($cols);
         $cell = 0;
     }
+
+    # Handle any page markers at end of table
+    for my $mark ( sort keys %pgindex ) {
+        push @table, $TEMPPAGEMARK if $pgindex{$mark} > $#tbl;
+    }
     $textwindow->addGlobStart;
     $textwindow->delete( 'tblstart', 'tblend' );
     for ( reverse @table ) {
         $textwindow->insert( 'tblstart', "$_\n" );
+    }
+
+    # Set new page marker positions and delete temporary page marker characters
+    for my $mark ( sort keys %pgindex ) {
+        my $tmpmark = $textwindow->search( '-exact', '--', $TEMPPAGEMARK, 'tblstart', 'tblend' );
+        last unless $tmpmark;
+        $textwindow->markSet( $mark, $tmpmark );
+        $textwindow->delete( $tmpmark, "$tmpmark+1l linestart" );
     }
     $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
     undef $::lglobal{selectedline};
     $textwindow->addGlobEnd;
 }
 
+#
+# Convert table from step format to grid format
 sub step2grid {
     my $textwindow = $::textwindow;
     my ( @table, @tbl, @tcols );
     my $row = 0;
     my $col;
     return 0 unless ( $textwindow->markExists('tblstart') );
+
+    # Work out which row each page marker is on
+    my %pgindex = tblgetpg();
+    for my $mark ( keys %pgindex ) {
+        my $tmpmark = 'tblstart';
+        my $row     = 0;
+
+        # Count table rows (lines starting with non-space) & store row number when arrive at page marker
+        while ( $tmpmark = $textwindow->search( '-regex', '--', '^[^ ]', $tmpmark, 'tblend' ) ) {
+            if ( $textwindow->compare( $tmpmark, '>=', $pgindex{$mark} ) ) {
+                $pgindex{$mark} = $row;
+                last;
+            }
+            $row++;
+            $tmpmark .= '+1c';
+        }
+        $pgindex{$mark} = $row + 1 if not $tmpmark;    # Page marker is beyond last row
+    }
+
     my $selection = $textwindow->get( 'tblstart', 'tblend' );
     @tcols = split( /\n[ |\n]+\n/, $selection );
     for my $tcol (@tcols) {
@@ -741,13 +812,30 @@ sub step2grid {
     }
     $textwindow->addGlobStart;
     $textwindow->delete( 'tblstart', 'tblend' );
-    for ( reverse @table ) {
-        $textwindow->insert( 'tblstart', "$_\n" );
+
+    # Insert table a row at a time, setting page markers at appropriate points
+    $row = 0;
+    for my $line (@table) {
+        if ( $line =~ /^\S/ ) {
+            for my $mark ( sort keys %pgindex ) {    # sorted to ensure correct order of coincident markers
+                $textwindow->markSet( $mark, $textwindow->index('tblend') )
+                  if $pgindex{$mark} == $row;        # Found position for page marker
+            }
+            $row++;
+        }
+        $textwindow->insert( 'tblend', "$line\n" );
+    }
+
+    # Handle any page markers at end of table
+    for my $mark ( sort keys %pgindex ) {
+        $textwindow->markSet( $mark, $textwindow->index('tblend') ) if $pgindex{$mark} >= $row;
     }
     $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
     $textwindow->addGlobEnd;
 }
 
+#
+# Automatically split text into table columns at multiple-space points
 sub tblautoc {
     my $textwindow = $::textwindow;
     my ( @table, @tbl, @trows, @tlines, @twords );
@@ -784,11 +872,46 @@ sub tblautoc {
         }
     }
     $textwindow->addGlobStart;
+    my %pgindex = tblgetpg();    # Save page markers to restore them later
     $textwindow->delete( 'tblstart', 'tblend' );
     for ( reverse @table ) {
         $textwindow->insert( 'tblstart', "$_\n" );
     }
+    tblsetpg(%pgindex);          # Restore page markers
     $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
     $textwindow->addGlobEnd;
 }
+
+#
+# Get any page markers within the table, store and return their indexes.
+sub tblgetpg {
+    my $textwindow = $::textwindow;
+    my %pgindex    = ();
+    return %pgindex unless $textwindow->markExists('tblstart');
+
+    my $mark = 'tblstart';
+    while ( ( $mark = $textwindow->markNext($mark) ) and $mark ne 'tblend' ) {
+        next unless $mark =~ m{Pg(\S+)};    # Only look at page markers
+        $pgindex{$mark} = $textwindow->index($mark);
+
+        # If any are at end of line, store lineend rather than specific column
+        $pgindex{$mark} .= ' lineend'
+          if $mark !~ /\.0/
+          and $textwindow->compare( $pgindex{$mark}, '>=', "$pgindex{$mark} lineend" );
+    }
+    return %pgindex;
+}
+
+#
+# Set any page markers that should be within the table from the given hash
+sub tblsetpg {
+    my $textwindow = $::textwindow;
+    my %pgindex    = @_;
+    return unless $textwindow->markExists('tblstart');
+
+    for my $mark ( keys %pgindex ) {
+        $textwindow->markSet( $mark, $pgindex{$mark} );
+    }
+}
+
 1;
