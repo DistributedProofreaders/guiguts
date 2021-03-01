@@ -2904,6 +2904,7 @@ sub infoerror {
     my $message = stamperror(shift);
     printerror($message);
     adderror($message);
+    refresherror();    # in case dialog is already popped
 }
 
 #
@@ -2968,8 +2969,13 @@ sub printerror {
             ::drag( $::lglobal{msgbox} );
             $::lglobal{msgbox}->focus;
         }
+        refresherror();
+    }
 
-        # Refresh message box with all messages issued so far
+    #
+    # Refresh message box with all messages issued so far if it is popped
+    sub refresherror {
+        return unless defined $::lglobal{messagespop};
         $::lglobal{msgbox}->delete( '1.0', 'end' );
         $::lglobal{msgbox}->insert( 'end', join( "\n", @errormessages ) . "\n" );
         $::lglobal{msgbox}->see('end');
