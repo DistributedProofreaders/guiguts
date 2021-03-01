@@ -74,7 +74,7 @@ sub refreshpageseparator {
       if $::searchstartindex;
 
     # Handle Automatic
-    if ( $::lglobal{pagesepauto} >= 2 and $::searchstartindex ) {
+    if ( $::pagesepauto >= 2 and $::searchstartindex ) {
         handleautomaticonrefresh() unless $noauto;
     }
     $textwindow->xviewMoveto(.0);
@@ -109,7 +109,7 @@ sub handleautomaticonrefresh {
         }
         $textwindow->insert( $index, "\n" );
 
-        if ( $::lglobal{pagesepauto} == 2 ) {
+        if ( $::pagesepauto == 2 ) {
             my $nothingdone = 1;
 
             # If the last character is a word, ";" or ","
@@ -145,7 +145,7 @@ sub handleautomaticonrefresh {
             }
             last if $nothingdone;
 
-        } elsif ( $::lglobal{pagesepauto} == 3 ) {
+        } elsif ( $::pagesepauto == 3 ) {
             my $linebefore = $textwindow->get( "page -10c",       "page -1c" );
             my $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +5c" );
             if ( $lineafter =~ /^\n\n\n\n/ ) {
@@ -277,7 +277,7 @@ sub processpageseparatorrefresh {
     $textwindow->addGlobStart;    # Single undo around all edits made from this click
     ::hidepagenums();
     processpageseparator($op);
-    refreshpageseparator() if $::lglobal{pagesepauto} >= 1;
+    refreshpageseparator() if $::pagesepauto >= 1;
     $textwindow->addGlobEnd;
 }
 
@@ -485,7 +485,6 @@ sub separatorpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     ::operationadd('Begin Fixup Page Separators');
-    $::lglobal{pagesepauto} = 1 if !defined $::lglobal{pagesepauto} || $::lglobal{pagesepauto} >= 2;
     if ( defined( $::lglobal{pageseppop} ) ) {
         $::lglobal{pageseppop}->deiconify;
         $::lglobal{pageseppop}->raise;
@@ -537,25 +536,25 @@ sub separatorpopup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf3 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         $sf3->Radiobutton(
-            -variable    => \$::lglobal{pagesepauto},
+            -variable    => \$::pagesepauto,
             -value       => 0,
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'No Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::lglobal{pagesepauto},
+            -variable    => \$::pagesepauto,
             -value       => 1,
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Auto Advance',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::lglobal{pagesepauto},
+            -variable    => \$::pagesepauto,
             -value       => 2,
             -selectcolor => $::lglobal{checkcolor},
             -text        => '80% Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::lglobal{pagesepauto},
+            -variable    => \$::pagesepauto,
             -value       => 3,
             -selectcolor => $::lglobal{checkcolor},
             -text        => '99% Auto',
@@ -615,8 +614,8 @@ sub separatorpopup {
         $::lglobal{pageseppop}->Tk::bind( '<h>'            => sub { $chjoinbutton->invoke; } );
         $::lglobal{pageseppop}->Tk::bind(
             '<a>' => sub {
-                $::lglobal{pagesepauto}++;
-                $::lglobal{pagesepauto} = 0 if $::lglobal{pagesepauto} == 4;
+                $::pagesepauto++;
+                $::pagesepauto = 0 if $::pagesepauto == 4;
             }
         );
         $::lglobal{pageseppop}->Tk::bind( '<v>' => sub { $viewbutton->invoke; } );
