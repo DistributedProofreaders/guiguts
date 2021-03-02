@@ -220,10 +220,9 @@ sub tblselect {
     } else {
         my $end   = pop(@ranges);
         my $start = pop(@ranges);
+        $start .= ' linestart';                            # Always start at beginning of line
+        $end   .= '+1l linestart' unless $end =~ /\.0/;    # Always end at start of next line (unless already there)
         $textwindow->markSet( 'tblstart', $start );
-        if ( $textwindow->index('tblstart') !~ /\.0/ ) {
-            $textwindow->markSet( 'tblstart', $start . ' linestart' );
-        }
         $textwindow->markGravity( 'tblstart', 'left' );
         $textwindow->markSet( 'tblend', $end );
         $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
@@ -451,9 +450,9 @@ sub coladjust {
             return 0;
         }
         $selection =~ s/\n +$/\n/g;
-        my @table = split( /\n/, $selection );
-        my $row   = 0;
-        my $blankline;
+        my @table     = split( /\n/, $selection );
+        my $row       = 0;
+        my $blankline = '';
         for (@table) {
             my $temp = $col[ ($colindex) ];
             $temp = $col[ ( $colindex - 1 ) ];
@@ -537,7 +536,8 @@ sub coladjust {
                     push @temptable, "$templine\n";
                 }
                 for (@temparray) {
-                    my $pad  = $width - length($_);
+                    my $pad = $width - length($_);
+                    return 0 if $pad < 0;
                     my $padl = int( $pad / 2 );
                     my $padr = int( $pad / 2 + .5 );
                     if ( $::lglobal{tblcoljustify} eq 'l' ) {
@@ -557,7 +557,8 @@ sub coladjust {
             }
             if ( $diff > 0 ) {
                 for (@temparray) {
-                    my $pad  = $width - length($_);
+                    my $pad = $width - length($_);
+                    return 0 if $pad < 0;
                     my $padl = int( $pad / 2 );
                     my $padr = int( $pad / 2 + .5 );
                     if ( $::lglobal{tblcoljustify} eq 'l' ) {
@@ -770,11 +771,11 @@ sub step2grid {
     for my $tcol (@tcols) {
         $col = 0;
         while ($tcol) {
-            if ( $tcol =~ s/^(\S[^\n|]*)// ) {
+            if ( $tcol =~ s/^ *([^ |][^\n|]*)// ) {    # table text (possibly preceded by space)
                 $tbl[$row][$col] .= $1 . ' ';
                 $tcol =~ s/^[ |]+//;
                 $tcol =~ s/^\n//;
-            } else {
+            } else {                                   #   indentation with | character
                 $tcol =~ s/^ +\|//smg;
                 $col++;
             }
