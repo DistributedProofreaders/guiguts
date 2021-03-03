@@ -79,6 +79,7 @@ F8 -- open Stealth Scannos search
 <ctrl>+, -- highlight all apostrophes in selection
 <ctrl>+. -- highlight all double quotes in selection
 <ctrl>+<alt>+h -- highlight arbitrary characters in selection
+<ctrl>+<shift>+a -- toggle highlighting of vertical column at cursor
 <ctrl>+0 -- remove all highlights
 
 <ctrl>+1,2,3,4,5 -- go to bookmark 1,2,3,4,5

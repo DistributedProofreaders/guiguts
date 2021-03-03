@@ -14,10 +14,11 @@ sub keybindings {
     my $top        = $::top;
 
     # Highlight
-    keybind( '<Control-comma>',  sub { ::hilitesinglequotes(); } );
-    keybind( '<Control-period>', sub { ::hilitedoublequotes(); } );
-    keybind( '<Control-Alt-h>',  sub { ::hilitepopup(); } );
-    keybind( '<Control-0>',      sub { ::hiliteremove(); } );
+    keybind( '<Control-comma>',   sub { ::hilitesinglequotes(); } );
+    keybind( '<Control-period>',  sub { ::hilitedoublequotes(); } );
+    keybind( '<Control-Alt-h>',   sub { ::hilitepopup(); } );
+    keybind( '<Control-Shift-a>', sub { ::hilite_alignment_toggle(); } );
+    keybind( '<Control-0>',       sub { ::hiliteremove(); } );
 
     # File
     keybind( '<Control-o>',       sub { ::file_open($textwindow); } );
