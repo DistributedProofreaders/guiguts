@@ -1090,6 +1090,7 @@ sub initialize {
     $textwindow->tagConfigure( 'quotemark', -background => '#CCCCFF' );
     $textwindow->tagConfigure( 'highlight', -background => 'orange' );
     $textwindow->tagConfigure( 'linesel',   -background => '#8EFD94' );
+    $textwindow->tagConfigure( 'alignment', -background => '#8EFD94' );
     $textwindow->tagConfigure(
         'pagenum',
         -background  => 'yellow',

@@ -7,7 +7,8 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA = qw(Exporter);
     @EXPORT =
-      qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos);
+      qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
+      &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle);
 }
 
 # Routine to find highlight word list
@@ -199,6 +200,7 @@ sub hiliteremove {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     $textwindow->tagRemove( 'quotemark', '1.0', 'end' );
+    hilite_alignment_stop();
 }
 
 # Highlight straight and curly single quotes in selection
@@ -301,4 +303,56 @@ sub highlight_scannos {    # Enable / disable word highlighting in the text
     ::update_indicators();
     ::savesettings();
 }
+
+#
+# Start alignment highlighter at column of current insert position
+sub hilite_alignment_start {
+    hilite_alignment_stop();    # Cancel any previous highlight repeat
+
+    # Set global variable to contain current column
+    return unless $::lglobal{highlightalignmentcolumn} = $::textwindow->index('insert');
+    $::lglobal{highlightalignmentcolumn} =~ s/.+\.//;
+
+    # Repeatedly call highlighting routine to keep up to date
+    $::lglobal{align_id}           = $::top->repeat( 200, \&hilite_alignment );
+    $::lglobal{highlightalignment} = 1;
+}
+
+#
+# Stop alignment highlighter
+sub hilite_alignment_stop {
+    $::lglobal{align_id}->cancel if $::lglobal{align_id};
+    undef $::lglobal{align_id};
+    $::lglobal{highlightalignment} = 0;
+    $::textwindow->tagRemove( 'alignment', '1.0', 'end' );    # Remove any existing tags
+}
+
+#
+# Toggle alignment highlighter
+sub hilite_alignment_toggle {
+    if ( $::lglobal{highlightalignment} ) {
+        ::hilite_alignment_stop();
+    } else {
+        ::hilite_alignment_start();
+    }
+}
+
+#
+# Refresh alignment highlight
+sub hilite_alignment {
+    my $textwindow = $::textwindow;
+
+    $textwindow->tagRemove( 'alignment', '1.0', 'end' );    # Remove any existing tags
+    my $top = $textwindow->index('@0,0');                   # Find top line visible on screen (line at pixel 0,0)
+    my ( $line, $col ) = split( /\./, $top );
+    $col = $::lglobal{highlightalignmentcolumn};            # Set column from saved global
+
+    # Add tags to each subsequent line that is visible on-screen, unless line is too short
+    while ( $textwindow->compare( "$line.0", "<", "end" ) and $textwindow->dlineinfo("$line.0") ) {
+        $textwindow->tagAdd( 'alignment', "$line.$col" )
+          unless $textwindow->get("$line.$col") eq "\n";
+        $line++;
+    }
+}
+
 1;

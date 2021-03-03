@@ -318,6 +318,20 @@ sub menu_search {
             -command     => \&::hilitepopup,
         ],
         [
+            Checkbutton  => 'Highlight Al~ignment Column',
+            -accelerator => 'Ctrl+Shift+a',
+            -variable    => \$::lglobal{highlightalignment},
+            -onvalue     => 1,
+            -offvalue    => 0,
+            -command     => sub {
+                if ( $::lglobal{highlightalignment} ) {
+                    ::hilite_alignment_start();
+                } else {
+                    ::hilite_alignment_stop();
+                }
+            }
+        ],
+        [
             'command', 'Re~move Highlights',
             -accelerator => 'Ctrl+0',
             -command     => \&::hiliteremove,
