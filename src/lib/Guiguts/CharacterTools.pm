@@ -9,7 +9,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni
-      &composepopup  &composeinitialize &composeref);
+      &composepopup  &composeinitialize &composeref &fractionconvert);
 }
 
 #
@@ -998,4 +998,101 @@ sub composeref {
 sub composesort {
     $::composehash{$a} cmp $::composehash{$b} or $a cmp $b;
 }
+
+#
+# Convert DP-style fractions to Unicode fraction character or to
+# Unicode superscript/subscript form using the Fraction Slash character
+# Input argument is:
+#   'unicode'- only convert what can be represented as a Unicode fractions
+#   'mixed' - convert to Unicode fraction if exists, otherwise use sup/sub
+#   'supsub' - convert all to sup/sub form
+sub fractionconvert {
+    my $type       = shift;
+    my $textwindow = $::textwindow;
+
+    my $fracslash        = "\x{2044}";
+    my $anyslash         = "[/$fracslash]";
+    my %unicode_fraction = (
+        "1/4"  => "\x{00BC}",
+        "1/2"  => "\x{00BD}",
+        "3/4"  => "\x{00BE}",
+        "1/7"  => "\x{2150}",
+        "1/9"  => "\x{2151}",
+        "1/10" => "\x{2152}",
+        "1/3"  => "\x{2153}",
+        "2/3"  => "\x{2154}",
+        "1/5"  => "\x{2155}",
+        "2/5"  => "\x{2156}",
+        "3/5"  => "\x{2157}",
+        "4/5"  => "\x{2158}",
+        "1/6"  => "\x{2159}",
+        "5/6"  => "\x{215A}",
+        "1/8"  => "\x{215B}",
+        "3/8"  => "\x{215C}",
+        "5/8"  => "\x{215D}",
+        "7/8"  => "\x{215E}",
+    );
+
+    $textwindow->addGlobStart;
+
+    # Either do whole file or selected region
+    my $finish = 'end';
+    my $start  = '1.0';
+    my @ranges = $textwindow->tagRanges('sel');
+    if ( @ranges > 0 ) {
+        $finish = pop(@ranges);
+        $start  = pop(@ranges);
+    }
+
+    my $length;
+
+    # Loop finding all fractions
+    while (
+        $start = $textwindow->search(
+            '-regexp',
+            '-count' => \$length,
+            '--', '-?\d+' . $anyslash . '\d+', $start, $finish
+        )
+    ) {
+        my $end        = "$start+${length}c";
+        my $infraction = $textwindow->get( $start, $end );
+        $infraction =~ /^-?(\d+)$anyslash(\d+)/;
+
+        # If character before fraction was a letter, don't convert, e.g. "B1/2"
+        if ( $textwindow->get( $start . '-1c', $start ) =~ /[[:alpha:]]/ ) {
+            $start = $end;
+            next;
+        }
+        my $numerator   = $1;
+        my $denominator = $2;
+
+        # For types unicode and mixed, try first to convert straight to unicode fraction
+        my $outfraction = '';
+        my $outlen      = $length;    # number of characters used to replace fraction
+        if ( $type eq 'unicode' or $type eq 'mixed' ) {
+            $outfraction = $unicode_fraction{"$numerator/$denominator"};
+            $outlen      = 1;
+        }
+
+        # If not converted to a unicode fraction, and type isn't unicode, use subscript/superscript
+        if ( not $outfraction and $type ne 'unicode' ) {
+            $numerator =~
+              tr/0123456789/\x{2070}\x{B9}\x{B2}\x{B3}\x{2074}\x{2075}\x{2076}\x{2077}\x{2078}\x{2079}/;
+            $denominator =~
+              tr/0123456789/\x{2080}\x{2081}\x{2082}\x{2083}\x{2084}\x{2085}\x{2086}\x{2087}\x{2088}\x{2089}/;
+            $outfraction = "$numerator$fracslash$denominator";
+            $outlen      = length($outfraction);
+        }
+        if ($outfraction) {
+            my $advance = '+' . length($outfraction) . 'c';
+            $textwindow->insert( $start, $outfraction );    # insert first to avoid page marker slippage
+            $textwindow->delete( $start . $advance, $end . $advance );
+            $start .= $advance;                             # Step over converted fraction
+        } else {
+            $start .= "+${length}c";                        # Step over skipped fraction
+        }
+    }
+    $textwindow->addGlobEnd;
+}
+
 1;
