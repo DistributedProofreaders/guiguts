@@ -3904,10 +3904,12 @@ sub pageadjust {
 # The rules are as follows:
 # 1. Number must be preceded by a comma then one or more spaces
 # 2. Number must be no more than 3 digits (word boundary \b used to avoid partial matches with 4 digit numbers)
-# 3. Page range may be specified by hyphen between two numbers
+# 3. Page range may be specified by hyphen or ndash between two numbers
 sub addpagelinks {
     my $selection = shift;
-    $selection =~ s/, +(\d{1,3})-\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1-$2<\/a>/g;
+    my $ndash     = "\x{2013}";
+    $selection =~
+      s/, +(\d{1,3})([-$ndash])\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1$2$3<\/a>/g;
     $selection =~ s/, +\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1<\/a>/g;
     return $selection;
 }
