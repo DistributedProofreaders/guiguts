@@ -465,10 +465,15 @@ sub menu_tools_charactertools {
             'command', 'Convert ~Windows CP 1252 characters to Unicode',
             -command => \&::cp1252toUni
         ],
-        [ 'command',   'Search for ~Transliterations...', -command => \&::find_transliterations ],
-        [ 'command',   'Common~ly-Used Characters Chart', -command => \&::commoncharspopup ],
-        [ 'command',   'Unicode Character ~Entry',        -command => \&::utfcharentrypopup ],
-        [ 'command',   'Unicode Character ~Search',       -command => \&::utfcharsearchpopup ],
+        [ 'command', 'Search for ~Transliterations...', -command => \&::find_transliterations ],
+        [ 'command', 'Common~ly-Used Characters Chart', -command => \&::commoncharspopup ],
+        [ 'command', 'Unicode Character ~Entry',        -command => \&::utfcharentrypopup ],
+        [ 'command', 'Unicode Character ~Search',       -command => \&::utfcharsearchpopup ],
+        [
+            'command', 'C~ompose Sequence',
+            -accelerator => 'AltGr / Ctrl+m',
+            -command     => \&::composepopup
+        ],
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],
         [ 'command',   'Find and ~Convert Greek...', -command => \&::findandextractgreek ],
