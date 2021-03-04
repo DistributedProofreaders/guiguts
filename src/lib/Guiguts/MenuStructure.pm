@@ -415,6 +415,7 @@ sub menu_tools {
                 $textwindow->addGlobEnd;
             }
         ],
+        menu_cascade( 'Con~vert Fractions', &menu_tools_convertfractions ),
         [ 'separator', '' ],
         [
             'command',
@@ -477,6 +478,22 @@ sub menu_tools_charactertools {
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],
         [ 'command',   'Find and ~Convert Greek...', -command => \&::findandextractgreek ],
+    ];
+}
+
+sub menu_tools_convertfractions {
+    [
+        [ 'command', 'Unicode fractions only', -command => sub { ::fractionconvert('unicode'); } ],
+        [
+            'command',
+            'Unicode fractions or superscript/subscript',
+            -command => sub { ::fractionconvert('mixed'); }
+        ],
+        [
+            'command',
+            'All to superscript/subscript',
+            -command => sub { ::fractionconvert('supsub'); }
+        ],
     ];
 }
 
