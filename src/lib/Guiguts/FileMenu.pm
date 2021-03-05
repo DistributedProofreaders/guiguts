@@ -67,9 +67,9 @@ sub file_saveas {
             -initialdir  => $::globallastpath,
             -initialfile => $initialfile,
         );
-        last if bad_filename_chars($name);    # break out of block if bad filename
 
         if ( defined($name) and length($name) ) {
+            last if bad_filename_chars($name);    # break out of block if bad filename
             $::top->Busy( -recurse => 1 );
             $textwindow->SaveUTF($name);
             my ( $fname, $extension, $filevar );
@@ -81,7 +81,7 @@ sub file_saveas {
             _bin_save();
             ::_recentupdate($name);
             $::top->Unbusy( -recurse => 1 );
-            $textwindow->ResetUndo;    #necessary to reset edited flag
+            $textwindow->ResetUndo;               #necessary to reset edited flag
             ::setedited(0);
             ::update_indicators();
         }
@@ -154,8 +154,6 @@ sub file_import_preptext {
                 utf8::decode($line);
                 $line =~ s/^\x{FEFF}?//;
                 $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
-                #$line = eol_convert($line);
                 $line =~ s/[\t \xA0]+$//smg;
                 $textwindow->ntinsert( 'end', $line );
                 close $file;
@@ -782,7 +780,7 @@ sub openfile {    # and open it
 # On failure, pops a dialog to warn the user.
 sub bad_filename_chars {
     my $name = shift;
-    return 0 if $name !~ /[^\x20-\x7F]/;
+    return 0 if not $name or $name !~ /[^\x20-\x7F]/;
     $::top->Dialog(
         -text    => 'Only ASCII characters are permitted in filenames.',
         -bitmap  => 'error',

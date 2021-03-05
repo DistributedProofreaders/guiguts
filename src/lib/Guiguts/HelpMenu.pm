@@ -134,8 +134,6 @@ sub regexref {
             if ( open my $ref, '<', 'regref.txt' ) {
                 while (<$ref>) {
                     $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
-                    #$_ = eol_convert($_);
                     $regtext->insert( 'end', $_ );
                 }
             } else {
