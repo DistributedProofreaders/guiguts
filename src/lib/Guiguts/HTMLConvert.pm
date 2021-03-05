@@ -1388,8 +1388,6 @@ sub html_parse_header {
           or warn "Could not open header file. $!\n";
         while (<$infile>) {
             $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
-            # FIXME: $_ = eol_convert($_);
             $headertext .= $_;
         }
         close $infile;
@@ -1519,8 +1517,6 @@ sub html_wrapup {
         open my $infile, '<', 'footer.txt';
         while (<$infile>) {
             $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-
-            # FIXME: $_ = eol_convert($_);
             $footertext .= $_;
         }
         close $infile;
