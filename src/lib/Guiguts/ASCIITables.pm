@@ -94,8 +94,8 @@ sub tablefx {
         }
         my $f1 = $::lglobal{tblfxpop}->LabFrame( -label => 'Adjust Column' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
-        my $f1a = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
-        my $f1aj = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20  );
+        my $f1a  = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $f1aj = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20 );
         $f1aj->Label( -text => 'Justify', )->pack( -side => 'left', -anchor => 'w' );
         my $rb1 = $f1aj->Radiobutton(
             -text        => 'L',
@@ -569,7 +569,7 @@ sub coladjust {
             }
 
             my ( $lm, $fm ) = ( 0, 0 );
-            ($::lglobal{tblhanging} ? $lm : $fm) = $::lglobal{tblindent};
+            ( $::lglobal{tblhanging} ? $lm : $fm ) = $::lglobal{tblindent};
             my $wrapped =
               ::wrapper( $lm, $fm, ( $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir ),
                 $templine, $::rwhyphenspace );
