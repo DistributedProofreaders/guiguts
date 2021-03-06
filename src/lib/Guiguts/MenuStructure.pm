@@ -592,6 +592,13 @@ sub menu_txt {
         [ 'separator', '' ],
         [ 'command',   'Dra~w ASCII Boxes...',    -command => \&::asciibox_popup ],
         [ 'command',   'ASCII Table E~ffects...', -command => \&::tablefx ],
+        [
+            'command',
+            'Ins~ert Page Labels',
+            -command => sub {
+                ::pagetextinsert('labels');
+            }
+        ],
         [ 'separator', '' ],
         [
             'command',

@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw( &hidepagenums &displaypagenums &togglepagenums
-      &pnumadjust &pgfocus &pgrenum &pageadd &pageremove );
+      &pnumadjust &pgfocus &pgrenum &pageadd &pageremove &pagetextinsert );
 }
 
 sub hidepagenums {
@@ -178,21 +178,16 @@ sub pnumadjust {
         my $frame6 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         $frame6->Button(
             -activebackground => $::activecolor,
-            -command          => sub {
-                ::togglepagenums();
-                $textwindow->addGlobStart;
-                my @marks = $textwindow->markNames;
-                for ( sort @marks ) {
-                    if ( $_ =~ /Pg(\S+)/ ) {
-                        my $pagenum = '[Pg ' . $1 . ']';
-                        $textwindow->insert( $_, $pagenum );
-                    }
-                }
-                $textwindow->addGlobEnd;
-            },
-            -text  => 'Insert Page Markers',
-            -width => 20,
+            -command          => sub { pagetextinsert('markers'); },
+            -text             => 'Insert Page Markers',
+            -width            => 16,
         )->grid( -row => 1, -column => 1 );
+        $frame6->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { pagetextinsert('labels'); },
+            -text             => 'Insert Page Labels',
+            -width            => 16,
+        )->grid( -row => 1, -column => 2 );
         $::lglobal{pagemarkerpop}->bind( '<Up>'     => sub { $upbutton->invoke; } );
         $::lglobal{pagemarkerpop}->bind( '<Left>'   => sub { $leftbutton->invoke; } );
         $::lglobal{pagemarkerpop}->bind( '<Right>'  => sub { $rightbutton->invoke; } );
@@ -220,6 +215,28 @@ sub pnumadjust {
             );
         }
     }
+}
+
+#
+# Insert the text of either the page markers or page labels (if configured)
+sub pagetextinsert {
+    my $type       = shift;           # 'markers' or 'labels'
+    my $textwindow = $::textwindow;
+    ::hidepagenums();
+    $textwindow->addGlobStart;
+    my @marks = $textwindow->markNames;
+    for my $page ( reverse sort @marks ) {    # Reverse ensures coincident markers end up in correct order
+        if ( $page =~ /(Pg)(\S+)/ ) {         # Only use page marks
+            my $pagetxt;
+            if ( $type eq 'labels' and $::pagenumbers{$page}{label} ) {    # Label configured for this mark
+                $pagetxt = $::pagenumbers{$page}{label};
+            } else {
+                $pagetxt = "$1 $2";                                        # Just insert marker with a space
+            }
+            $textwindow->insert( $page, '[' . $pagetxt . ']' );
+        }
+    }
+    $textwindow->addGlobEnd;
 }
 
 sub pageremove {    # Delete a page marker
