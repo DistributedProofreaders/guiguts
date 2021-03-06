@@ -1014,9 +1014,7 @@ sub searchpopup {
         );
         my $sf2 = $::lglobal{searchpop}->Frame->pack(
             -side   => 'top',
-            -anchor => 'n',
-            -expand => 'y',
-            -fill   => 'x',
+            -anchor => 'w',
             -pady   => 1
         );
         $::lglobal{searchop1} = $sf2->Checkbutton(
