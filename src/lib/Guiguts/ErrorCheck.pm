@@ -25,64 +25,64 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop}->title($errorchecktype);
 
     # All types have a button to re-run the check
-    my $ptopframe   = $::lglobal{errorcheckpop}->Frame->pack;
+    my $ptopframe = $::lglobal{errorcheckpop}->Frame->pack( -fill => 'x' );
+    $::lglobal{eccountlabel} = $ptopframe->Label( -justify => 'left', )->pack(
+        -side   => 'left',
+        -pady   => 10,
+        -padx   => 10,
+        -anchor => 'nw'
+    );
+    my $ptopframeb = $ptopframe->Frame->pack(
+        -side   => 'left',
+        -anchor => 'n',
+        -padx   => 20,
+        -pady   => 10,
+        -expand => 'yes',
+        -fill   => 'x'
+    );
     my $buttonlabel = 'Run Checks';
     $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
-    my $opsbutton = $ptopframe->Button(
+    my $gcol      = 0;
+    my $opsbutton = $ptopframeb->Button(
         -activebackground => $::activecolor,
         -command          => sub {
             errorcheckpop_up( $textwindow, $top, $errorchecktype );
         },
         -text  => $buttonlabel,
         -width => 16
-    )->pack(
-        -side   => 'left',
-        -pady   => 10,
-        -padx   => 20,
-        -anchor => 'n'
-    );
+    )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
     # Add verbose checkbox only for certain error check types
     if (   $errorchecktype eq 'Link Check'
         or $errorchecktype eq 'W3C Validate CSS'
         or $errorchecktype eq 'ppvimage'
         or $errorchecktype eq 'pphtml' ) {
-        $ptopframe->Checkbutton(
+        $ptopframeb->Checkbutton(
             -variable    => \$::verboseerrorchecks,
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Verbose'
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
+        )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
         # Bookloupe has button to change View Options
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
-        $ptopframe->Button(
+        $ptopframeb->Button(
             -activebackground => $::activecolor,
             -command          => sub { gcviewopts(); },
             -text             => 'View Options',
             -width            => 16
-        )->pack(
-            -side   => 'left',
-            -pady   => 10,
-            -padx   => 2,
-            -anchor => 'n'
-        );
+        )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
         # Jeebies has paranoia level radio buttons
     } elsif ( $errorchecktype eq 'Jeebies' ) {
-        $ptopframe->Label( -text => 'Search mode:', )->pack( -side => 'left', -padx => 2 );
+        $ptopframeb->Label( -text => 'Search mode:', )->grid( -row => 0, -column => $gcol++ );
         my @rbutton = ( [ 'Paranoid', 'p' ], [ 'Normal', '' ], [ 'Tolerant', 't' ], );
         for (@rbutton) {
-            $ptopframe->Radiobutton(
+            $ptopframeb->Radiobutton(
                 -text     => $_->[0],
                 -variable => \$::jeebiesmode,
                 -value    => $_->[1],
                 -command  => \&::savesettings,
-            )->pack( -side => 'left', -padx => 2 );
+            )->grid( -row => 0, -column => $gcol++ );
         }
     }
 
@@ -132,11 +132,14 @@ sub errorcheckpop_up {
             my $yy = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
             my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
             $::lglobal{errorchecklistbox}->activate($idx);
-            $textwindow->markUnset( $::errors{ $::lglobal{errorchecklistbox}->get('active') } );
-            undef $::errors{ $::lglobal{errorchecklistbox}->get('active') };
+            my $rmvmsg = $::lglobal{errorchecklistbox}->get('active');
+            $textwindow->markUnset( $::errors{$rmvmsg} );
+            undef $::errors{$rmvmsg};
             $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
+
+            eccountupdate(-1) if $rmvmsg =~ /^(\d+):(\d+)/;    # If deleted line is a query, update the query count
             errorcheckview();
             ::unbusy();
         }
@@ -376,8 +379,7 @@ sub errorcheckpop_up {
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
     }
-    $::lglobal{errorchecklistbox}->insert( 2, "  --> $mark queries" )
-      if $errorchecktype eq 'Jeebies';
+    eccountupdate($mark);
 
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
@@ -703,13 +705,15 @@ sub gcwindowpopulate {
         ( $line =~ /^\s*-->/ or $line =~ /^\s*\*\*\*/ ) ? $headr++ : $error++;
         $::lglobal{errorchecklistbox}->insert( 'end', $line );
     }
+    eccountupdate($error);
 
-    # Tell user how many queries and how many error types are hidden
+    # Tell user how many error types are hidden
     my $hidden = 0;
     $hidden += ( $::gsopt[$_] ? 1 : 0 ) for ( 0 .. $#{ $::lglobal{gcarray} } );
-    my $hidtxt = "";
-    $hidtxt .= " ($hidden error " . ( $hidden > 1 ? "types" : "type" ) . " hidden)" if $hidden > 0;
-    $::lglobal{errorchecklistbox}->insert( $headr, '', "  --> $error queries$hidtxt.", '' );
+    if ( $hidden > 0 ) {
+        my $hidtxt = "  --> $hidden error " . ( $hidden > 1 ? "types" : "type" ) . " hidden.";
+        $::lglobal{errorchecklistbox}->insert( $headr, '', $hidtxt, '' );
+    }
 
     # Add start/end messages
     $::lglobal{errorchecklistbox}->insert( 0,     "Beginning check: Bookloupe" );
@@ -900,4 +904,15 @@ sub booklouperun {
     $runner->run( $::gutcommand, '-eyvd', $tempfname );
 }
 
+#
+# Update query count in dialog
+# Positive value sets the count, negative value is subtracted (e.g. when error removed)
+sub eccountupdate {
+    my $num = shift;
+    $::lglobal{eccountvalue} = $num if $num >= 0;
+    $::lglobal{eccountvalue} += $num if $num < 0;
+    $::lglobal{eccountvalue} = 0     if $::lglobal{eccountvalue} < 0;
+    $::lglobal{eccountlabel}->configure( -text => $::lglobal{eccountvalue}
+          . ( $::lglobal{eccountvalue} == 1 ? " query" : " queries" ) );
+}
 1;
