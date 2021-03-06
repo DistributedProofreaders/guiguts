@@ -40,17 +40,7 @@ sub tablefx {
             [ 'Insert Vertical Line', sub { insertline('i'); } ],
             [ 'Add Vertical Line',    sub { insertline('a'); } ],
             [ 'Space Out Table',      sub { tblspace(); } ],
-            [ 'Auto Columns',         sub { tblautoc(); } ],
             [ 'Compress Table',       sub { tblcompress(); } ],
-            [ 'Select Prev Line',     sub { tlineselect('p'); } ],
-            [ 'Select Next Line',     sub { tlineselect('n'); } ],
-            [
-                'Line Deselect',
-                sub {
-                    $textwindow->tagRemove( 'linesel', '1.0', 'end' );
-                    undef $::lglobal{selectedline};
-                }
-            ],
             [
                 'Delete Sel. Line',
                 sub {
@@ -74,6 +64,16 @@ sub tablefx {
                 }
             ],
             [ 'Remove Sel. Line', sub { tlineremove(); } ],
+            [ 'Select Prev Line', sub { tlineselect('p'); } ],
+            [ 'Select Next Line', sub { tlineselect('n'); } ],
+            [
+                'Line Deselect',
+                sub {
+                    $textwindow->tagRemove( 'linesel', '1.0', 'end' );
+                    undef $::lglobal{selectedline};
+                }
+            ],
+            [ 'Auto Columns', sub { tblautoc(); } ],
         );
         my ( $inc, $row, $col ) = ( 0, 0, 0 );
         for (@tb_buttons) {
@@ -92,27 +92,39 @@ sub tablefx {
             );
             ++$inc;
         }
-        my $f1 = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        $f1->Label( -text => 'Justify', )->grid( -row => 1, -column => 0, -padx => 1, -pady => 2 );
-        my $rb1 = $f1->Radiobutton(
+        my $f1 = $::lglobal{tblfxpop}->LabFrame( -label => 'Adjust Column' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        my $f1a = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
+        $f1a->Label( -text => 'Justify', )->pack( -side => 'left', -anchor => 'w' );
+        my $rb1 = $f1a->Radiobutton(
             -text        => 'L',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'l',
-        )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-        my $rb2 = $f1->Radiobutton(
+        )->pack( -side => 'left', -anchor => 'w' );
+        my $rb2 = $f1a->Radiobutton(
             -text        => 'C',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'c',
-        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
-        my $rb3 = $f1->Radiobutton(
+        )->pack( -side => 'left', -anchor => 'w' );
+        my $rb3 = $f1a->Radiobutton(
             -text        => 'R',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'r',
-        )->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
-        $f1->Checkbutton(
+        )->pack( -side => 'left', -anchor => 'w' );
+        my $f1ah = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 10 );
+        $f1ah->Label( -text => 'Hanging Indent', )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{tblhangingindent} = 0 unless $::lglobal{tblhangingindent};
+        my $hientry = $f1ah->Entry(
+            -width        => 4,
+            -background   => $::bkgcolor,
+            -textvariable => \$::lglobal{tblhangingindent},
+            -validate     => 'all',
+            -vcmd         => sub { return $_[0] =~ /^[-\d]*$/; }
+        )->pack( -side => 'left', -anchor => 'w', -pady => 2 );
+        $f1a->Checkbutton(
             -variable    => \$::lglobal{tblrwcol},
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Rewrap Cols',
@@ -121,43 +133,55 @@ sub tablefx {
                     $rb1->configure( -state => 'active' );
                     $rb2->configure( -state => 'active' );
                     $rb3->configure( -state => 'active' );
+                    $hientry->configure( -state => 'normal' );
                 } else {
                     $rb1->configure( -state => 'disabled' );
                     $rb2->configure( -state => 'disabled' );
                     $rb3->configure( -state => 'disabled' );
+                    $hientry->configure( -state => 'disabled' );
                 }
             },
-        )->grid( -row => 1, -column => 4, -padx => 1, -pady => 2 );
-        $::lglobal{colwidthlbl} = $f1->Label(
-            -text  => "Width $::lglobal{columnspaces}",
-            -width => 8,
-        )->grid( -row => 1, -column => 5, -padx => 1, -pady => 2 );
-        $f1->Button(
+        )->pack( -side => 'left', -anchor => 'w', -padx => 5 );
+        my $f1b = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
+        $f1b->Button(
             -activebackground => $::activecolor,
             -command          => sub { coladjust(-1) },
             -text             => 'Move Left',
             -width            => 10
-        )->grid( -row => 1, -column => 6, -padx => 1, -pady => 2 );
-        $f1->Button(
+        )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
+        $f1b->Button(
             -activebackground => $::activecolor,
             -command          => sub { coladjust(1) },
             -text             => 'Move Right',
             -width            => 10
-        )->grid( -row => 1, -column => 7, -padx => 1, -pady => 2 );
-        my $f3 = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
+        $::lglobal{colwidthlbl} = $f1b->Label(
+            -text  => "Width $::lglobal{columnspaces}",
+            -width => 8,
+        )->pack( -side => 'left', -anchor => 'n', -padx => 5 );
+        my $f3 = $::lglobal{tblfxpop}->LabFrame( -label => 'Grid <=> Step' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $f3->Label( -text => 'Table Right Column', )
           ->grid( -row => 1, -column => 0, -padx => 1, -pady => 2 );
         $f3->Entry(
-            -width        => 6,
+            -width        => 4,
             -background   => $::bkgcolor,
             -textvariable => \$::lglobal{stepmaxwidth},
+            -validate     => 'all',
+            -vcmd         => sub { return $_[0] =~ /^\d*$/; }
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f3->Button(
             -activebackground => $::activecolor,
             -command          => sub { grid2step() },
             -text             => 'Convert Grid to Step',
             -width            => 16
-        )->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
+        )->grid( -row => 1, -column => 3, -padx => 5, -pady => 2 );
+        $f3->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { step2grid() },
+            -text             => 'Convert Step to Grid',
+            -width            => 16
+        )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
         my $f4 = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f4->Button(
             -activebackground => $::activecolor,
@@ -175,12 +199,6 @@ sub tablefx {
             -text             => 'Redo',
             -width            => 10
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
-        $f4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { step2grid() },
-            -text             => 'Convert Step to Grid',
-            -width            => 16
-        )->grid( -row => 1, -column => 3, -padx => 1, -pady => 2 );
         ::initialize_popup_without_deletebinding('tblfxpop');
 
         $::lglobal{tblfxpop}->bind( '<Control-Left>',  sub { coladjust(-1) } );
@@ -259,7 +277,7 @@ sub tlineremove {
 # Select a column dividing line as being the active one
 sub tlineselect {
     my $textwindow = $::textwindow;
-    return unless $textwindow->index('tblstart');
+    return 0 unless ( $textwindow->markExists('tblstart') );
     my $op         = shift;
     my @lineranges = $textwindow->tagRanges('linesel');
     $textwindow->tagRemove( 'linesel', '1.0', 'end' );
@@ -270,11 +288,35 @@ sub tlineselect {
         my $nextcolumn;
         if ( $op and ( $op eq 'p' ) ) {
             $textwindow->markSet( 'insert', $lineranges[0] ) if @lineranges;
+
+            # If insert position is before start of table, set it to end of first row
+            $textwindow->markSet( 'insert', 'tblstart lineend' )
+              if $textwindow->compare( 'insert', '<', 'tblstart' );
+
+            # Find previous '|' column divider
             $nextcolumn =
               $textwindow->search( '-backward', '-exact', '--', '|', 'insert', 'insert linestart' );
+
+            # if no previous '|' on this row, wrap by looking again from the end of the row
+            $nextcolumn = $textwindow->search(
+                '-backward', '-exact', '--', '|',
+                'insert lineend',
+                'insert linestart'
+            ) unless $nextcolumn;
         } else {
             $textwindow->markSet( 'insert', $lineranges[1] ) if @lineranges;
+
+            # If insert position is after end of table, set it to start of last row
+            $textwindow->markSet( 'insert', 'tblend -1l linestart' )
+              if $textwindow->compare( 'insert', '>', 'tblend' );
+
+            # Find next '|' column divider
             $nextcolumn = $textwindow->search( '-exact', '--', '|', 'insert', 'insert lineend' );
+
+            # if no next '|' on this row, wrap by looking again from the beginning of the row
+            $nextcolumn =
+              $textwindow->search( '-exact', '--', '|', 'insert linestart', 'insert lineend' )
+              unless $nextcolumn;
         }
         return 0 unless $nextcolumn;
         push @ranges, $nextcolumn;
@@ -470,6 +512,17 @@ sub coladjust {
             $tbl[$row] .= $cell;
             $row++;
         }
+
+        # If no blank lines found in table, make one up from the first line that contains '|'.
+        unless ($blankline) {
+            for my $line (@table) {
+                if ( $line =~ /\|/ ) {
+                    $blankline = $line;
+                    $blankline =~ s/[^\|]/ /g;
+                    last;
+                }
+            }
+        }
         my @cells      = ();
         my $cellheight = 1;
         my $cellflag   = 0;
@@ -499,13 +552,21 @@ sub coladjust {
         push @cells, $cellheight;
         shift @cells unless $cells[0];
         my @tblwr;
+        $::lglobal{tblhangingindent} = 0
+          unless Scalar::Util::looks_like_number( $::lglobal{tblhangingindent} );
         for my $cellcnt (@cells) {
             $templine = '';
             for ( 1 .. $cellcnt ) {
                 last unless @tbl;
                 $templine .= shift @tbl;
             }
-            my $wrapped = ::wrapper( 0, 0, ( $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir ),
+
+            # If negative hanging indent specified, use its absolute value as an indent
+            my ( $lm, $fm ) = ( 0, 0 );
+            $lm = $::lglobal{tblhangingindent}  if $::lglobal{tblhangingindent} > 0;
+            $fm = -$::lglobal{tblhangingindent} if $::lglobal{tblhangingindent} < 0;
+            my $wrapped =
+              ::wrapper( $lm, $fm, ( $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir ),
                 $templine, $::rwhyphenspace );
             push @tblwr, $wrapped;
         }
@@ -547,10 +608,12 @@ sub coladjust {
                     } elsif ( $::lglobal{tblcoljustify} eq 'r' ) {
                         $_ = ' ' x ($pad) . $_;
                     }
+                    return 0 unless $blankline;    # No blank line after row to wrap down into
                     my $templine = $blankline;
                     substr( $templine, $col[ $colindex - 1 ], 0, $_ );
                     push @temptable, "$templine\n";
                 }
+                return 0 unless $blankline;        # No blank line after row to wrap down into
                 my $templine = $blankline;
                 substr( $templine, $col[ $colindex - 1 ], 0, ' ' x $width );
                 push @temptable, "$templine\n";
@@ -607,15 +670,15 @@ sub coladjust {
         my ( $erow, $ecol ) = split( /\./, $textwindow->index('tblend') );
         $textwindow->addGlobStart;
         if ( $dir > 0 ) {
-            for ( $srow .. $erow ) {
+            for ( $srow .. $erow - 1 ) {
                 $textwindow->insert( "$_.$::lglobal{selectedline}", ' ' );
             }
         } else {
-            for ( $srow .. $erow ) {
+            for ( $srow .. $erow - 1 ) {
                 return 0
                   if ( $textwindow->get("$_.@{[$::lglobal{selectedline}-1]}") ne ' ' );
             }
-            for ( $srow .. $erow ) {
+            for ( $srow .. $erow - 1 ) {
                 $textwindow->delete("$_.@{[$::lglobal{selectedline}-1]}");
             }
         }
@@ -663,7 +726,7 @@ sub grid2step {
     }
 
     $::lglobal{stepmaxwidth} = 70
-      if ( ( $::lglobal{stepmaxwidth} =~ /\D/ )
+      if ( ( $::lglobal{stepmaxwidth} !~ /^\d+$/ )
         || ( $::lglobal{stepmaxwidth} < 15 ) );
     my $selection = $textwindow->get( 'tblstart', 'tblend' );
     $selection =~ s/\n +/\n/g;
