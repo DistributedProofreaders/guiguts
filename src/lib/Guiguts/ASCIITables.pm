@@ -95,36 +95,43 @@ sub tablefx {
         my $f1 = $::lglobal{tblfxpop}->LabFrame( -label => 'Adjust Column' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         my $f1a = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
-        $f1a->Label( -text => 'Justify', )->pack( -side => 'left', -anchor => 'w' );
-        my $rb1 = $f1a->Radiobutton(
+        my $f1aj = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20  );
+        $f1aj->Label( -text => 'Justify', )->pack( -side => 'left', -anchor => 'w' );
+        my $rb1 = $f1aj->Radiobutton(
             -text        => 'L',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'l',
         )->pack( -side => 'left', -anchor => 'w' );
-        my $rb2 = $f1a->Radiobutton(
+        my $rb2 = $f1aj->Radiobutton(
             -text        => 'C',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'c',
         )->pack( -side => 'left', -anchor => 'w' );
-        my $rb3 = $f1a->Radiobutton(
+        my $rb3 = $f1aj->Radiobutton(
             -text        => 'R',
             -variable    => \$::lglobal{tblcoljustify},
             -selectcolor => $::lglobal{checkcolor},
             -value       => 'r',
         )->pack( -side => 'left', -anchor => 'w' );
-        my $f1ah = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 10 );
-        $f1ah->Label( -text => 'Hanging Indent', )->pack( -side => 'left', -anchor => 'w' );
-        $::lglobal{tblhangingindent} = 0 unless $::lglobal{tblhangingindent};
-        my $hientry = $f1ah->Entry(
+        my $f1ah = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20 );
+        $f1ah->Label( -text => 'Indent', )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{tblindent} = 0 unless $::lglobal{tblindent};
+        my $ientry = $f1ah->Entry(
             -width        => 4,
             -background   => $::bkgcolor,
-            -textvariable => \$::lglobal{tblhangingindent},
+            -textvariable => \$::lglobal{tblindent},
             -validate     => 'all',
-            -vcmd         => sub { return $_[0] =~ /^[-\d]*$/; }
+            -vcmd         => sub { return $_[0] =~ /^\d*$/; }
         )->pack( -side => 'left', -anchor => 'w', -pady => 2 );
-        $f1a->Checkbutton(
+        my $hitog = $f1ah->Checkbutton(
+            -variable    => \$::lglobal{tblhanging},
+            -selectcolor => $::lglobal{checkcolor},
+            -text        => 'Hanging',
+        )->pack( -side => 'left', -anchor => 'w', -pady => 5 );
+        my $f1b = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
+        $f1b->Checkbutton(
             -variable    => \$::lglobal{tblrwcol},
             -selectcolor => $::lglobal{checkcolor},
             -text        => 'Rewrap Cols',
@@ -133,16 +140,17 @@ sub tablefx {
                     $rb1->configure( -state => 'active' );
                     $rb2->configure( -state => 'active' );
                     $rb3->configure( -state => 'active' );
-                    $hientry->configure( -state => 'normal' );
+                    $ientry->configure( -state => 'normal' );
+                    $hitog->configure( -state => 'active' );
                 } else {
                     $rb1->configure( -state => 'disabled' );
                     $rb2->configure( -state => 'disabled' );
                     $rb3->configure( -state => 'disabled' );
-                    $hientry->configure( -state => 'disabled' );
+                    $ientry->configure( -state => 'disabled' );
+                    $hitog->configure( -state => 'disabled' );
                 }
             },
-        )->pack( -side => 'left', -anchor => 'w', -padx => 5 );
-        my $f1b = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
+        )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
         $f1b->Button(
             -activebackground => $::activecolor,
             -command          => sub { coladjust(-1) },
@@ -157,7 +165,7 @@ sub tablefx {
         )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
         $::lglobal{colwidthlbl} = $f1b->Label(
             -text  => "Width $::lglobal{columnspaces}",
-            -width => 8,
+            -width => 12,
         )->pack( -side => 'left', -anchor => 'n', -padx => 5 );
         my $f3 = $::lglobal{tblfxpop}->LabFrame( -label => 'Grid <=> Step' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
@@ -552,8 +560,7 @@ sub coladjust {
         push @cells, $cellheight;
         shift @cells unless $cells[0];
         my @tblwr;
-        $::lglobal{tblhangingindent} = 0
-          unless Scalar::Util::looks_like_number( $::lglobal{tblhangingindent} );
+        $::lglobal{tblindent} = 0 unless $::lglobal{tblindent};
         for my $cellcnt (@cells) {
             $templine = '';
             for ( 1 .. $cellcnt ) {
@@ -561,10 +568,8 @@ sub coladjust {
                 $templine .= shift @tbl;
             }
 
-            # If negative hanging indent specified, use its absolute value as an indent
             my ( $lm, $fm ) = ( 0, 0 );
-            $lm = $::lglobal{tblhangingindent}  if $::lglobal{tblhangingindent} > 0;
-            $fm = -$::lglobal{tblhangingindent} if $::lglobal{tblhangingindent} < 0;
+            ($::lglobal{tblhanging} ? $lm : $fm) = $::lglobal{tblindent};
             my $wrapped =
               ::wrapper( $lm, $fm, ( $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir ),
                 $templine, $::rwhyphenspace );
