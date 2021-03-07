@@ -920,14 +920,16 @@ sub setlz {
     my $prevMark = $textwindow->markPrevious("$lzindex +1l lineend");
 
     # Skip non-page marks
-    while ( $prevMark ne ""
+    while ( $prevMark
         and $prevMark !~ /Pg/
         and $textwindow->compare( $prevMark, '>=', "$lzindex-1l linestart" ) ) {
         $prevMark = $textwindow->markPrevious($prevMark);
     }
 
     # If we found a nearby page mark, then use it (unless it's within text)
-    if ( $prevMark =~ /Pg/ and $textwindow->compare( $prevMark, '>=', "$lzindex-1l linestart" ) ) {
+    if (    $prevMark
+        and $prevMark =~ /Pg/
+        and $textwindow->compare( $prevMark, '>=', "$lzindex-1l linestart" ) ) {
         $textwindow->markGravity( $prevMark, 'right' );    # Ensure mark stays to the right of inserted text
 
         # Cope with page mark being at start of first chapter blank line or at end of last chapter's text
@@ -1031,6 +1033,7 @@ sub footnotemove {
             $textwindow->delete( $start, "$index +1l linestart" );
         }
         $index .= '+4l';
+        last if $textwindow->compare( $index, '>=', 'end' );
     }
     ::delblanklines();
     $textwindow->addGlobEnd;
