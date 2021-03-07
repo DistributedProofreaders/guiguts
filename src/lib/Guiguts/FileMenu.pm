@@ -360,6 +360,7 @@ sub clearvars {
     ::setedited(0);
     ::hidepagenums();
     @{ $::lglobal{fnarray} } = ();
+    $::lglobal{fntotal} = 0;
     undef $::lglobal{prepfile};
     return;
 }
