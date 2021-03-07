@@ -740,16 +740,9 @@ sub footnotefixup {
         $::lglobal{fntotal}++;
         $::lglobal{fnindex} = $::lglobal{fntotal};
         if ( $::lglobal{fnsecondpass} ) {
-            unless ($textwindow->markExists("fns$::lglobal{fnindex}")
-                and $textwindow->markExists("fne$::lglobal{fnindex}") ) {
-                $::top->Dialog(
-                    -text    => "Undo, then re-run First Pass and check for errors.",
-                    -bitmap  => 'error',
-                    -title   => 'Unexpected end of footnotes',
-                    -buttons => ['Ok']
-                )->Show;
-                last;
-            }
+            last
+              unless $textwindow->markExists("fns$::lglobal{fnindex}")
+              and $textwindow->markExists("fne$::lglobal{fnindex}");
             ( $start, $end ) = (
                 $textwindow->index("fns$::lglobal{fnindex}"),
                 $textwindow->index("fne$::lglobal{fnindex}")
@@ -1259,6 +1252,9 @@ sub setanchor {
         $::lglobal{fnarray}->[ $::lglobal{fnindex} ][3] = '';
         $::lglobal{fnarray}->[ $::lglobal{fnindex} ][6] = '';
         footnoteadjust();
+
+        # Ensure "current footnote" mark is set correctly after moving footnote
+        $textwindow->markSet( 'fnindex', $textwindow->index( 'fns' . $::lglobal{fnindex} ) );
     } else {
         $::lglobal{fnarray}->[ $::lglobal{fnindex} ][2] = $insert;
         if (
