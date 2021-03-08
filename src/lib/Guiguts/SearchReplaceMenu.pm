@@ -729,7 +729,7 @@ sub replaceeval {
         my $match = $matches[ $idx - 1 ];
         next unless defined $match;
         $match       =~ s/\\/\\\\/g;
-        $match       =~ s/\$/\\\$/;
+        $match       =~ s/\$/\\\$/g;
         $replaceterm =~ s/(?<!\\)\$$idx/$match/g;
     }
     $replaceterm =~ s/\\\$/\$/g;    # Unescape dollars
