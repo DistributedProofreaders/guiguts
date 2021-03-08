@@ -3292,8 +3292,7 @@ sub autotable {
     $selection =~ s/ +/ /g;
 
     $textwindow->addGlobStart;
-    $textwindow->delete( "$lsr.0", "$ler.end" );
-    $textwindow->insert( "$lsr.0", $selection );
+    $textwindow->replacewith( "$lsr.0", "$ler.end", $selection );
     $textwindow->addGlobEnd;
 }
 
