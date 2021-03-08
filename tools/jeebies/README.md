@@ -5,8 +5,14 @@ https://www.pgdp.net/wiki/PPTools/Jeebies
 
 ## Packaging
 
-We include pre-built binaries for Windows and MacOS. For other platforms we
+We include a pre-built binary for Windows. For other platforms we
 ship the files necessary to build Jeebies.
+
+We no longer include a macOS binary in the Guiguts download. In modern
+versions of macOS, binaries downloaded from the internet won't run unless
+signed by a developer certificate. Since Guiguts is maintained by volunteers
+(and we don't maintain the Jeebies code), we're including the source code for
+users to build themselves.
 
 ## Building
 

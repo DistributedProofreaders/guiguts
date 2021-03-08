@@ -206,6 +206,8 @@ brew install tidy-html5
 brew install open-sp
 ```
 
+See also the [Jeebies installation instructions](tools/jeebies/README.md).
+
 See also the [EBookMaker installation instructions](tools/ebookmaker/README.md).
 
 ## Other
