@@ -147,7 +147,7 @@ sub handleautomaticonrefresh {
 
         } elsif ( $::pagesepauto == 3 ) {
             my $linebefore = $textwindow->get( "page -10c",       "page -1c" );
-            my $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +5c" );
+            my $lineafter  = $textwindow->get( "page1 linestart", "page1 linestart +9c" );
             if ( $lineafter =~ /^\n\n\n\n/ ) {
                 processpageseparator('h');
             } elsif ( $lineafter =~ /^\n\n/ ) {
@@ -155,7 +155,7 @@ sub handleautomaticonrefresh {
             } elsif ( $lineafter =~ /^\n/ ) {
                 processpageseparator('l');
             } elsif ( $lineafter =~ /^-----File/ ) {
-                processpageseparator('l');
+                processpageseparator('d');
             } elsif ( $lineafter =~ /^\S/ ) {
                 if ( closeupmarkup() ) {
                     $linebefore = $textwindow->get( "page -10c",       "page -1c" );
