@@ -18,7 +18,7 @@ BASE_DIR=$(pwd)
 TOOLS_DIR=$(dirname $0)
 
 if [[ $OS != "win" ]]; then
-    cp build-tools.sh $DEST
+    cp $(TOOLS_DIR)/build-tools.sh $DEST
 fi
 
 PACKAGES=$(find $TOOLS_DIR -name package.sh)
