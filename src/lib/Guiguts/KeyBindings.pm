@@ -309,6 +309,22 @@ sub keybindings {
     # Alternative paste to give user a second option if Perl/Tk utf8 bug strikes
     $textwindow->MainWindow->bind( 'Tk::Entry',
         '<Control-Alt-v>' => sub { ::entrypaste( shift, 'alternative' ); }, );
+
+    # Override bindings relating to word movement/selection in Entry fields
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Control-Left>', [ \&entrysetcursorword, 'backward' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Control-Right>', [ \&entrysetcursorword, 'forward' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Shift-Control-Left>', [ \&entrykeyselectword, 'backward' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Shift-Control-Right>', [ \&entrykeyselectword, 'forward' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Double-1>', [ \&entrymouseselect, Tk::Ev('x'), 'word', 'sel.first' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<Double-Shift-1>', [ \&entrymouseselect, Tk::Ev('x'), 'word' ] );
+    $textwindow->MainWindow->bind( 'Tk::Entry',
+        '<B1-Motion>', [ \&entrymousemotion, Tk::Ev('x'), Tk::Ev('y') ] );
 }
 
 # Bind a key-combination to a sub allowing for capslock on/off.
@@ -360,5 +376,134 @@ sub keybind {
 #	my @tags = $widget->bindtags;
 #	$widget->bindtags([@tags[1, 0, 2, 3]]);
 # Finish instance callback with $widget->break so class callback won't be called
+
+##
+## Start of Entry overrides for word navigation/selection
+## Entry widgets only consider spaces to be word boundaries. This is particularly a
+## problem with hyphenated words, where the Text widget considers them two separate words.
+## The default Text widget also has inconsistencies, but they are not dealt with here.
+## The routines below are bound to Ctrl-arrow and double-mouse-clicks and treat word
+## boundaries the same as Notepad++.
+##
+
+#
+# Positions the cursor backward or forward one word from its current point
+sub entrysetcursorword {
+    my $w         = shift;
+    my $direction = shift;
+    my $new       = entryindexword( $w, $direction, 'insert' );    # Backward or forward one word from insert
+    $w->icursor($new);
+    $w->selectionClear;
+    $w->SeeInsert;
+}
+
+#
+# Selects backward or forward one word, or extends selection by a word
+sub entrykeyselectword {
+    my $w         = shift;
+    my $direction = shift;
+    my $new       = entryindexword( $w, $direction, 'insert' );    # Backward or forward one word from insert
+    if ( !$w->selectionPresent ) {
+        $w->selectionFrom('insert');
+        $w->selectionTo($new);
+    } else {
+        $w->selectionAdjust($new);
+    }
+    $w->icursor($new);
+    $w->SeeInsert;
+}
+
+#
+# Code taken from Entry.pm MouseSelect
+# Handles character and line selection and mouse dragging
+sub entrymouseselect {
+    my $w = shift;
+    my $x = shift;    # x-coordinate of mouse
+
+    return if UNIVERSAL::isa( $w, 'Tk::Spinbox' ) and $w->{_element} ne 'entry';
+    $Tk::selectMode = shift if (@_);    # char, word or line selection
+    my $cur = $w->index( $w->ClosestGap($x) );
+    return unless defined $cur;
+    my $anchor = $w->index('anchor');
+    return unless defined $anchor;
+    $Tk::pressX ||= $x;
+
+    if ( ( $cur != $anchor ) || ( abs( $Tk::pressX - $x ) >= 3 ) ) {
+        $Tk::mouseMoved = 1;
+    }
+    my $mode = $Tk::selectMode;
+    return unless $mode;
+    if ( $mode eq 'char' ) {
+        if ($Tk::mouseMoved) {
+            if ( $cur < $anchor ) {
+                $w->selectionTo($cur);
+            } else {
+                $w->selectionTo( $cur + 1 );
+            }
+        }
+    } elsif ( $mode eq 'word' ) {    # Use our routine to find the start/end of the word
+        my ( $start, $end );
+        if ( $cur < $w->index('anchor') ) {
+            $start = entryindexword( $w, 'backward', $cur );
+            $end   = entryindexword( $w, 'forward',  $anchor - 1 );
+
+            # Don't include trailing spaces
+            $end-- while substr( $w->get(), $end - 1, 1 ) eq ' ' and $end > $start;
+        } else {
+            $start = entryindexword( $w, 'backward', $anchor );
+            $end   = entryindexword( $w, 'forward',  $cur );
+
+            # Don't include trailing spaces
+            $end-- while substr( $w->get(), $end - 1, 1 ) eq ' ' and $end > $start;
+        }
+        $w->selectionRange( $start, $end );
+    } elsif ( $mode eq 'line' ) {
+        $w->selectionRange( 0, 'end' );
+    }
+    if (@_) {
+        my $ipos = shift;
+        eval { local $SIG{__DIE__}; $w->icursor($ipos) };
+    }
+    $w->idletasks;
+}
+
+#
+# Code taken from Entry widget - handles mouse drag, with the change in behaviour
+# needed after double-click, which extends select in word chunks
+sub entrymousemotion {
+    my ( $w, $x, $y ) = @_;
+    $Tk::x = $x;
+    entrymouseselect( $w, $x );    # Use our routine instead of the default
+}
+
+#
+# Given an Entry widget and a direction, returns the index
+# either backward or forward one "word" from the given index
+sub entryindexword {
+    my $w         = shift;
+    my $direction = shift;              # 'backward' or 'forward'
+    my $index     = $w->index(shift);
+
+    my $string = $w->get();
+    if ( $direction eq 'backward' ) {
+        --$index while $index > 0 and substr( $string, $index - 1, 1 ) =~ '\s';    # skip spaces before cursor
+        if ( substr( $string, $index - 1, 1 ) =~ '\w' ) {                          # prev char is a word character
+            --$index while $index > 0 and substr( $string, $index - 1, 1 ) =~ '\w';    # skip rest of word
+        } else {    # currently on a non-word character (not a space)
+            --$index while $index > 0 and substr( $string, $index - 1, 1 ) !~ '[ \w]';    # skip rest of non-word
+        }
+    } else {
+        my $len = length($string);
+        if ( substr( $string, $index, 1 ) =~ '\w' ) {                                     # currently on a word character
+            ++$index while $index < $len and substr( $string, $index, 1 ) =~ '\w';        # skip rest of word
+        } else {    # currently on a non-word character
+            ++$index while $index < $len and substr( $string, $index, 1 ) !~ '[ \w]';    # skip rest of non-word
+        }
+        ++$index while $index < $len and substr( $string, $index, 1 ) =~ ' ';            # skip spaces after word/non-word
+    }
+    return $index;
+}
+
+## End of Entry overrides for word navigation/selection
 
 1;
