@@ -17,6 +17,10 @@ set -e
 BASE_DIR=$(pwd)
 TOOLS_DIR=$(dirname $0)
 
+if [[ $OS != "win" ]]; then
+    cp ${TOOLS_DIR}/build-tools.sh $DEST
+fi
+
 PACKAGES=$(find $TOOLS_DIR -name package.sh)
 for package in $PACKAGES; do
     package=$(dirname $package)

@@ -22,3 +22,12 @@ including the tool's `README.md`.
 * win
 * mac
 * generic
+
+## Building scripts
+`build.sh` scripts are passed one argument: `OS`. The script is expected to
+perform the reasonable build steps for that platform.
+
+`OS` values that the script can expect:
+* win
+* mac
+* generic
