@@ -174,6 +174,7 @@ our $scannosearch           = 0;
 our $scrollupdatespd        = 40;
 our $searchendindex         = 'end';
 our $searchstartindex       = '1.0';
+our $searchstickyoptions    = 1;
 our $multiterm              = 0;
 our $spellcheckwithenchant  = 0;
 our $spellindexbkmrk        = q{};

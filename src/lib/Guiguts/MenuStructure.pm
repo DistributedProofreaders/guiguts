@@ -1015,6 +1015,12 @@ sub menu_preferences_processing {
                 ::savesettings();
             }
         ],
+        [
+            Checkbutton => 'Sticky Search Options',
+            -variable   => \$::searchstickyoptions,
+            -onvalue    => 1,
+            -offvalue   => 0
+        ],
         [ 'separator', '' ],
         [ 'command',   'Set Spell Check Options...', -command => sub { ::spelloptions() } ],
         [ 'separator', '' ],
