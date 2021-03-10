@@ -939,6 +939,12 @@ sub searchpopup {
         $::lglobal{searchpop}->focus;
         $::lglobal{searchentry}->focus;
     } else {
+
+        # If popping dialog when it has previously been dismissed, decide whether search options
+        # should be retained from last search (i.e. sticky) or reset
+        unless ($::searchstickyoptions) {
+            $::sopt[0] = $::sopt[1] = $::sopt[2] = $::sopt[3] = 0;
+        }
         $::lglobal{searchpop} = $top->Toplevel;
         $::lglobal{searchpop}->title('Search & Replace');
         my $sf1 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 1 );
