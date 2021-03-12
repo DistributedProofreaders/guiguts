@@ -537,6 +537,9 @@ sub menu_txt {
         [
             'command', "Auto-Convert ~Options...", -command => sub { ::text_convert_options($top); }
         ],
+        [
+            'command', "Convert to Curly ~Quotes...", -command => sub { ::text_quotes_convert(); }
+        ],
         [ 'separator', '' ],
         [
             'command',
