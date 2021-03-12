@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT =
       qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
       &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
-      &txt_manual_sc_conversion &endofline &cleanup);
+      &txt_manual_sc_conversion &endofline &cleanup &text_quotes_convert);
 }
 
 sub text_convert_italic {
@@ -539,6 +539,163 @@ sub cleanup {
     }
     $textwindow->addGlobEnd;
     $top->Unbusy( -recurse => 1 );
+}
+
+##
+## Routines to convert straight quotes to curly quotes
+## Algorithm from ppsmq -  https://github.com/DistributedProofreaders/ppwb/blob/master/bin/ppsmq.py
+##
+
+my $LDQ  = "\x{201c}";
+my $RDQ  = "\x{201d}";
+my $LSQ  = "\x{2018}";
+my $RSQ  = "\x{2019}";
+my $FLAG = "@";
+
+#
+# Top-level routine for converting straight quotes to curly quotes
+sub text_quotes_convert {
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+    $top->Busy( -recurse => 1 );
+    $textwindow->addGlobStart;
+
+    $::lglobal{quotesflagcount} = 0;
+    text_quotes_double();
+    text_quotes_single();
+
+    $textwindow->addGlobEnd;
+    $top->Unbusy( -recurse => 1 );
+}
+
+#
+# Convert double quotes from straight to curly
+# Algorithm is to alternate left and right quotes, but resetting at end of paragraph
+# Subsequent checks mark potential errors with "@"
+sub text_quotes_double {
+    my $textwindow = $::textwindow;
+    my $linenum    = 0;
+    my $lineend    = $textwindow->index('end');
+    $lineend =~ s/\..+//;
+
+    my $dqlevel = 0;
+    while ( $linenum < $lineend ) {
+        $linenum++;
+        my $line = $textwindow->get( "$linenum.0", "$linenum.end" );
+
+        # expect dqlevel == 0 on an empty line unless next line starts with open quote
+        if ( $line =~ /^$/ ) {
+            if (    $dqlevel != 0
+                and $linenum + 1 < $lineend
+                and $textwindow->get("$linenum.0 +1l") ne '"' ) {
+                $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
+                $::lglobal{quotesflagcount}++;
+            }
+            $dqlevel = 0;
+            next;
+        }
+
+        # replace straight with curly quotes, one at a time
+        my $edited = 0;
+        while (1) {
+            if ( $dqlevel == 0 ) {
+                if ( $line =~ s/"/$LDQ/ ) {
+                    $dqlevel = 1;
+                    $edited  = 1;
+                } else {
+                    last;
+                }
+            } else {
+                if ( $line =~ s/"/$RDQ/ ) {
+                    $dqlevel = 0;
+                    $edited  = 1;
+                } else {
+                    last;
+                }
+
+            }
+        }
+        next unless $edited;
+
+        # Check for various errors and flag them
+        if ( $line =~ /$LDQ$/ ) {    # open quote end of line
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+        if ( $line =~ /^$RDQ/ ) {    # close quote start of line
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+        if ( $line =~ /\w$LDQ/ ) {    # open quote preceded by word char
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+        if ( $line =~ /$RDQ\w/ ) {    # close quote followed by word char
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+        if ( $line =~ /$LDQ / ) {     # floating open quote
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+        if ( $line =~ / $RDQ/ ) {     # floating close quote
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+        }
+
+        $textwindow->replacewith( "$linenum.0", "$linenum.end", $line );
+    }
+}
+
+#
+# Convert single quotes from straight to curly
+# First by converting specific words with apostrophes at the start
+# Then by applying rules regarding quote placement
+sub text_quotes_single {
+    my $textwindow = $::textwindow;
+    my $linenum    = 0;
+    my $lineend    = $textwindow->index('end');
+    $lineend =~ s/\..+//;
+
+    # Prepare word list and replacements
+    my @words = (
+        "'em",        "'Tis",  "'Tisn't", "'Tweren't", "'Twere", "'Twould",
+        "'Twouldn't", "'Twas", "'Im",     "'Twixt",    "'Til",   "'Scuse",
+        "'Gainst",    "'Twon't"
+    );
+    my @replc = ();
+    for my $word (@words) {
+        my $repl = $word;
+        $repl =~ s/'/$RSQ/g;
+        push( @replc, $repl );
+    }
+
+    while ( $linenum < $lineend ) {
+        $linenum++;
+        my $edited = 0;
+        my $line   = $textwindow->get( "$linenum.0", "$linenum.end" );
+
+        # Replace using word list
+        for my $ii ( 0 .. $#words ) {
+            my $wmix = $words[$ii];
+            my $rmix = $replc[$ii];
+            $edited = 1 if $line =~ s/$wmix\b/$rmix/g;    # replace mixed case version
+            my $wlow = lc $words[$ii];
+            my $rlow = lc $replc[$ii];
+            $edited = 1 if $line =~ s/$wlow\b/$rlow/g;    # replace lower case version
+        }
+
+        # Replace using rules
+        $edited = 1 if $line =~ s/(\w)'(\w)/$1$RSQ$2/g;    # letter-'-letter
+        $edited = 1 if $line =~ s/([\.,\w])'/$1$RSQ/g;     # period, comma or letter followed by '
+        $edited = 1 if $line =~ s/(\w)'\./$1$RSQ\./g;      # letter-apostrophe-period
+        $edited = 1 if $line =~ s/'$/$RSQ/;                # at end of line
+        $edited = 1 if $line =~ s/' /$RSQ /g;              # followed by a space
+        $edited = 1 if $line =~ s/'$RDQ/$RSQ$RDQ/g;        # followed by a right double quote
+
+        $textwindow->replacewith( "$linenum.0", "$linenum.end", $line ) if $edited;
+    }
+
 }
 
 1;
