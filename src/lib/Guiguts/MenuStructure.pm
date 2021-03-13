@@ -540,8 +540,9 @@ sub menu_txt {
             'command', "Auto-Convert ~Options...", -command => sub { ::text_convert_options($top); }
         ],
         [
-            'command', "Convert to Curly ~Quotes...", -command => sub { ::text_quotes_convert(); }
+            'command', "Convert to Curly ~Quotes", -command => sub { ::text_quotes_convert(); }
         ],
+        menu_cascade( 'Curly Quote Corrections', &menu_txt_curlycorrections ),
         [ 'separator', '' ],
         [
             'command',
@@ -604,6 +605,44 @@ sub menu_txt {
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'pptxt' );
             },
+        ],
+    ];
+}
+
+sub menu_txt_curlycorrections {
+    [
+        [ 'command', '~Select Next @ Line', -command => sub { ::text_quotes_select(); } ],
+        [ 'command', '~Flip Double Quotes', -command => sub { ::text_quotes_flipdouble(); } ],
+        [
+            'command',
+            '~Use Spaces To Correct Double Quotes',
+            -command => sub { ::text_quotes_usespaces(); }
+        ],
+        [
+            'command',
+            'R~emove @ Symbols From Selection',
+            -command => sub { ::text_quotes_removeat(); }
+        ],
+        [ 'separator', '' ],
+        [
+            'command',
+            'Insert ~Left Double Quote',
+            -command => sub { ::text_quotes_insert("\x{201c}"); }
+        ],
+        [
+            'command',
+            'Insert ~Right Double Quote',
+            -command => sub { ::text_quotes_insert("\x{201d}"); }
+        ],
+        [
+            'command',
+            'Insert L~eft Single Quote',
+            -command => sub { ::text_quotes_insert("\x{2018}"); }
+        ],
+        [
+            'command',
+            'Insert R~ight Single Quote/Apostrophe',
+            -command => sub { ::text_quotes_insert("\x{2019}"); }
         ],
     ];
 }

@@ -9,7 +9,8 @@ BEGIN {
     @EXPORT =
       qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
       &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
-      &txt_manual_sc_conversion &endofline &cleanup &text_quotes_convert);
+      &txt_manual_sc_conversion &endofline &cleanup &text_quotes_convert &text_quotes_select &text_quotes_flipdouble
+      &text_quotes_usespaces &text_quotes_removeat &text_quotes_insert);
 }
 
 sub text_convert_italic {
@@ -581,7 +582,8 @@ sub text_quotes_double {
     my $dqlevel = 0;
     while ( $linenum < $lineend ) {
         $linenum++;
-        my $line = $textwindow->get( "$linenum.0", "$linenum.end" );
+        my $line   = $textwindow->get( "$linenum.0", "$linenum.end" );
+        my $edited = 0;
 
         # expect dqlevel == 0 on an empty line unless next line starts with open quote
         if ( $line =~ /^$/ ) {
@@ -595,8 +597,21 @@ sub text_quotes_double {
             next;
         }
 
+        # Catch ditto marks first (double space both sides unless end of line)
+        $edited = 1 if $line =~ s/(?<=  )"(?=  )/$RDQ/g;    # look-arounds necessary for multiple matches to work
+        $edited = 1 if $line =~ s/  "$/  $RDQ/;
+
+        # if quotes at start of line, must be open quotes
+        if ( $line =~ s/^"/$LDQ/ ) {
+            $edited = 1;
+            if ( $dqlevel != 0 ) {                          # flag previous line if open not expected
+                $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
+                $::lglobal{quotesflagcount}++;
+            }
+            $dqlevel = 1;
+        }
+
         # replace straight with curly quotes, one at a time
-        my $edited = 0;
         while (1) {
             if ( $dqlevel == 0 ) {
                 if ( $line =~ s/"/$LDQ/ ) {
@@ -615,30 +630,28 @@ sub text_quotes_double {
 
             }
         }
+
         next unless $edited;
 
-        # Check for various errors and flag them
-        if ( $line =~ /$LDQ$/ ) {    # open quote end of line
+        # Check for various errors and flag/correct them
+        if ( $line =~ s/$LDQ$/$RDQ/ ) {    # open quote end of line - change to close quote
+            $line .= $FLAG;
+            $::lglobal{quotesflagcount}++;
+            $dqlevel = 0;
+        }
+        if ( $line =~ /\w$LDQ/ ) {         # open quote preceded by word char
             $line .= $FLAG;
             $::lglobal{quotesflagcount}++;
         }
-        if ( $line =~ /^$RDQ/ ) {    # close quote start of line
+        if ( $line =~ /$RDQ\w/ ) {         # close quote followed by word char
             $line .= $FLAG;
             $::lglobal{quotesflagcount}++;
         }
-        if ( $line =~ /\w$LDQ/ ) {    # open quote preceded by word char
+        if ( $line =~ /$LDQ / ) {          # floating open quote
             $line .= $FLAG;
             $::lglobal{quotesflagcount}++;
         }
-        if ( $line =~ /$RDQ\w/ ) {    # close quote followed by word char
-            $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
-        }
-        if ( $line =~ /$LDQ / ) {     # floating open quote
-            $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
-        }
-        if ( $line =~ / $RDQ/ ) {     # floating close quote
+        if ( $line =~ / $RDQ(?!(  |$))/ ) {    # floating close quote
             $line .= $FLAG;
             $::lglobal{quotesflagcount}++;
         }
@@ -698,4 +711,118 @@ sub text_quotes_single {
 
 }
 
+#
+# Select next line containing @
+sub text_quotes_select {
+    my $textwindow = $::textwindow;
+    $textwindow->tagRemove( 'sel', '1.0', 'end' );
+
+    my $atindex = $textwindow->search( '-exact', '--', '@', 'insert', 'end' );
+    if ($atindex) {
+        $textwindow->tagAdd( 'sel', "$atindex linestart", "$atindex lineend" );
+        $textwindow->markSet( 'insert' => "$atindex lineend" );
+        $textwindow->see('insert');
+        $textwindow->focus;
+    } else {
+        ::soundbell();
+    }
+}
+
+#
+# Flip the double quote types left<-->right in the current selection
+sub text_quotes_flipdouble {
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
+    return if ( @ranges == 0 );
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+
+    $textwindow->addGlobStart;
+    my $index = $start;
+    while ( $index = $textwindow->search( '-regexp', '--', "[$LDQ$RDQ]", $index, $end ) ) {
+
+        # use Win32::Unicode;
+        # Win32::Unicode::printW $textwindow->get($index). "\n";
+        my $ch = $textwindow->get($index) eq $RDQ ? $LDQ : $RDQ;
+        $textwindow->insert( $index, $ch );
+        $textwindow->delete( "$index+1c", "$index+2c" );
+        $index .= "+1c";
+    }
+    $textwindow->addGlobEnd;
+
+    $textwindow->tagAdd( 'sel', $start, $end );    # Reselect region
+    $textwindow->focus;
+}
+
+#
+# Use space/non-space to choose correct double quotes in current selection
+sub text_quotes_usespaces {
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
+    return if ( @ranges == 0 );
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+
+    $textwindow->addGlobStart;
+
+    # Find open quotes that need changing to close quotes
+    my $index = $start;
+    while ( $index = $textwindow->search( '-exact', '--', $LDQ, $index, $end ) ) {
+        my $ch = $textwindow->get( "$index-1c", "$index+2c" );
+        if ( $ch =~ /\S$LDQ[\s@]/ ) {    # Allow @ as it might have been appended to line as flag
+            $textwindow->insert( $index, $RDQ );
+            $textwindow->delete( "$index+1c", "$index+2c" );
+        }
+        $index .= "+1c";
+    }
+
+    # Find close quotes that need changing to open quotes
+    $index = $start;
+    while ( $index = $textwindow->search( '-exact', '--', $RDQ, $index, $end ) ) {
+        my $ch = $textwindow->get( "$index-1c", "$index+2c" );
+        if ( $ch =~ /\s$RDQ\S/ ) {
+            $textwindow->insert( $index, $LDQ );
+            $textwindow->delete( "$index+1c", "$index+2c" );
+        }
+        $index .= "+1c";
+    }
+    $textwindow->addGlobEnd;
+
+    $textwindow->tagAdd( 'sel', $start, $end );    # Reselect region
+    $textwindow->focus;
+}
+
+#
+# Remove all @ symbols in current selection
+sub text_quotes_removeat {
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
+    return if ( @ranges == 0 );
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+
+    $textwindow->addGlobStart;
+    my $length;
+    my $index = $start;
+    while ( $index =
+        $textwindow->search( '-regexp', '-count' => \$length, '--', '@+', $index, $end ) ) {
+        $textwindow->delete( $index, "$index+${length}c" );
+    }
+    $textwindow->addGlobEnd;
+
+    $textwindow->tagAdd( 'sel', $start, $end );    # Reselect region
+    $textwindow->focus;
+}
+
+#
+# Insert the given type of quote, keeping the focus on the main window
+sub text_quotes_insert {
+    my $textwindow = $::textwindow;
+
+    $textwindow->addGlobStart;
+    $::textwindow->insert( 'insert', shift );
+    $textwindow->addGlobEnd;
+
+    $textwindow->focus;
+}
 1;
