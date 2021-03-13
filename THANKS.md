@@ -8,6 +8,7 @@ alphabetical order:
 
 * cpeel
 * crb11
+* dlowe
 * Frau Sma
 * hannne
 * hmonroe
