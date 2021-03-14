@@ -395,6 +395,7 @@ sub menu_tools {
             'Replace [::] with I~ncremental Counter',
             -command => \&::replace_incr_counter
         ],
+        menu_cascade( 'Con~vert Fractions', &menu_tools_convertfractions ),
         [ 'separator', '' ],
         [ 'command',   'Fixup ~Page Separators...', -command => \&::separatorpopup ],
         [
@@ -415,7 +416,6 @@ sub menu_tools {
                 $textwindow->addGlobEnd;
             }
         ],
-        menu_cascade( 'Con~vert Fractions', &menu_tools_convertfractions ),
         [ 'separator', '' ],
         [
             'command',
@@ -595,13 +595,6 @@ sub menu_txt {
         [ 'separator', '' ],
         [ 'command',   'Dra~w ASCII Boxes...',    -command => \&::asciibox_popup ],
         [ 'command',   'ASCII Table E~ffects...', -command => \&::tablefx ],
-        [
-            'command',
-            'Ins~ert Page Labels',
-            -command => sub {
-                ::pagetextinsert('labels');
-            }
-        ],
         [ 'separator', '' ],
         [
             'command',
