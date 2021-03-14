@@ -570,7 +570,8 @@ sub coladjust {
         }
         my $rowcount = 0;
         $cellheight = 0;
-        my $width     = $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir;
+        my $width = $col[$colindex] - $col[ ( $colindex - 1 ) ] + $dir;
+        return 0 if $width < 0;
         my @temptable = ();
         for (@tblwr) {
             my @temparray  = split( /\n/, $_ );
