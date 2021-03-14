@@ -228,10 +228,11 @@ sub pagetextinsert {
     for my $page ( reverse sort @marks ) {    # Reverse ensures coincident markers end up in correct order
         if ( $page =~ /(Pg)(\S+)/ ) {         # Only use page marks
             my $pagetxt;
-            if ( $type eq 'labels' and $::pagenumbers{$page}{label} ) {    # Label configured for this mark
+            if ( $type eq 'labels' ) {
+                next unless $::pagenumbers{$page}{label};    # No label, so skip
                 $pagetxt = $::pagenumbers{$page}{label};
             } else {
-                $pagetxt = "$1 $2";                                        # Just insert marker with a space
+                $pagetxt = "$1 $2";                          # Insert marker with a space
             }
             $textwindow->insert( $page, '[' . $pagetxt . ']' );
         }
