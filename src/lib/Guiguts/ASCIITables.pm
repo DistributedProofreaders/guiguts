@@ -190,8 +190,8 @@ sub tablefx {
             -text             => 'Convert Step to Grid',
             -width            => 16
         )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
-        my $f4 = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
-        $f4->Button(
+        my $f4   = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $ubtn = $f4->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 $textwindow->undo;
@@ -201,7 +201,7 @@ sub tablefx {
             -text  => 'Undo',
             -width => 10
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-        $f4->Button(
+        my $rbtn = $f4->Button(
             -activebackground => $::activecolor,
             -command          => sub { $textwindow->redo; $textwindow->see('insert'); },
             -text             => 'Redo',
@@ -209,19 +209,12 @@ sub tablefx {
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
         ::initialize_popup_without_deletebinding('tblfxpop');
 
-        $::lglobal{tblfxpop}->bind( '<Control-Left>',  sub { coladjust(-1) } );
-        $::lglobal{tblfxpop}->bind( '<Control-Right>', sub { coladjust(1) } );
-        $::lglobal{tblfxpop}->bind( '<Left>',          sub { tlineselect('p') } );
-        $::lglobal{tblfxpop}->bind( '<Right>',         sub { tlineselect('n') } );
-        $::lglobal{tblfxpop}->bind(
-            '<Control-z>',
-            sub {
-                $textwindow->undo;
-                $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-                $textwindow->see('insert');
-            }
-        );
-        $::lglobal{tblfxpop}->bind( '<Delete>', sub { tlineremove() } );
+        $::lglobal{tblfxpop}->bind( '<l>',         sub { coladjust(-1) } );
+        $::lglobal{tblfxpop}->bind( '<r>',         sub { coladjust(1) } );
+        $::lglobal{tblfxpop}->bind( '<p>',         sub { tlineselect('p') } );
+        $::lglobal{tblfxpop}->bind( '<n>',         sub { tlineselect('n') } );
+        $::lglobal{tblfxpop}->bind( '<Control-z>', sub { $ubtn->invoke; } );
+        $::lglobal{tblfxpop}->bind( '<Control-y>', sub { $rbtn->invoke; } );
         $::lglobal{tblfxpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
                 $textwindow->tagRemove( 'table',   '1.0', 'end' );
