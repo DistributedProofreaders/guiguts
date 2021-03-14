@@ -3897,15 +3897,16 @@ sub pageadjust {
 # (to help avoid dates) and where the formatting guidelines have been followed.
 # Modified text is returned.
 # The rules are as follows:
-# 1. Number must be preceded by a comma then one or more spaces
+# 1. Number must be preceded by a comma (optionally close quote) then one or more spaces
 # 2. Number must be no more than 3 digits (word boundary \b used to avoid partial matches with 4 digit numbers)
 # 3. Page range may be specified by hyphen or ndash between two numbers
 sub addpagelinks {
     my $selection = shift;
     my $ndash     = "\x{2013}";
+    my $rdblq     = "\x{201d}";
     $selection =~
-      s/, +(\d{1,3})([-$ndash])\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1$2$3<\/a>/g;
-    $selection =~ s/, +\b(\d{1,3})\b/, <a href="#$::htmllabels{pglabel}$1">$1<\/a>/g;
+      s/(,["$rdblq]?) +(\d{1,3})([-$ndash])\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2$3$4<\/a>/g;
+    $selection =~ s/(,["$rdblq]?) +\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2<\/a>/g;
     return $selection;
 }
 1;
