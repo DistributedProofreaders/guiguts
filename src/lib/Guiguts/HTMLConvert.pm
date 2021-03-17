@@ -3709,188 +3709,385 @@ sub fracconv {
     }
 }
 
-sub pageadjust {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    if ( defined $::lglobal{pagelabelpop} ) {
-        $::lglobal{pagelabelpop}->deiconify;
-        $::lglobal{pagelabelpop}->raise;
-    } else {
-        my @marks = $textwindow->markNames;
-        my @pages = sort grep ( /^Pg\S+$/, @marks );
-        my %pagetrack;
+{    # Start of block to localise page label variables
+    my @pages   = ();
+    my %numbers = ();
+    my %styles  = ();
+    my %actions = ();
+    my %bases   = ();
+    my %labels  = ();
+
+    #
+    # Pop the Configure Page Labels dialog
+    sub pageadjust {
+        if ( defined $::lglobal{pagelabelpop} ) {
+            $::lglobal{pagelabelpop}->deiconify;
+            $::lglobal{pagelabelpop}->raise;
+            return;
+        }
+
+        my $textwindow = $::textwindow;
+        my $top        = $::top;
+        my @marks      = $textwindow->markNames;
+        @pages = sort grep ( /^Pg\S+$/, @marks );
+
+        # Initialise balloon help
+        $::lglobal{pagelabelballoon} = $top->Balloon() unless $::lglobal{pagelabelballoon};
+
         $::lglobal{pagelabelpop} = $top->Toplevel;
         $::lglobal{pagelabelpop}->title('Configure Page Labels');
         ::initialize_popup_with_deletebinding('pagelabelpop');
-        my $frame0 =
-          $::lglobal{pagelabelpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 4 );
 
-        unless (@pages) {
-            $frame0->Label(
-                -text       => 'No Page Markers Found',
-                -background => $::bkgcolor,
-            )->pack;
-            return;
-        }
-        my $recalc = $frame0->Button(
-            -text    => 'Recalculate',
-            -width   => 15,
-            -command => sub {
-                my $index = 1;
-                my $style = 'Arabic';
-                for my $page (@pages) {
-                    my ($num) = $page =~ /Pg(\S+)/;
-                    if ( $pagetrack{$num}[4]->cget( -text ) eq 'Start @' ) {
-                        my $start = $pagetrack{$num}[5]->get;
-                        $index = $start unless $start eq '';
-                    }
-                    if ( $pagetrack{$num}[3]->cget( -text ) eq 'Arabic' ) {
-                        $style = 'Arabic';
-                    } elsif ( $pagetrack{$num}[3]->cget( -text ) eq 'Roman' ) {
-                        $style = 'Roman';
-                    }
-                    if ( $pagetrack{$num}[4]->cget( -text ) eq 'No Count' ) {
-                        $pagetrack{$num}[2]->configure( -text => '' );
-                    } else {
-                        my $label;
-                        if ( $style eq 'Roman' ) {
-                            $label = lc( ::roman($index) or '' );    # blank if roman can't convert
-                        } else {
-                            $label = $index;
-                            $label =~ s/^0+// if $label and length $label;
-                        }
-                        $pagetrack{$num}[2]->configure( -text => "Pg $label" );
-                        $index++;
-                    }
-                }
-            },
-        )->grid( -row => 1, -column => 1, -padx => 5, -pady => 4 );
-        $frame0->Button(
-            -text    => 'Use These Values',
-            -width   => 15,
-            -command => sub {
-                %::pagenumbers = ();
-                for my $page (@pages) {
-                    my ($num) = $page =~ /Pg(\S+)/;
-                    $::pagenumbers{$page}{label} =
-                      $pagetrack{$num}[2]->cget( -text );
-                    $::pagenumbers{$page}{style} =
-                      $pagetrack{$num}[3]->cget( -text );
-                    $::pagenumbers{$page}{action} =
-                      $pagetrack{$num}[4]->cget( -text );
-                    $::pagenumbers{$page}{base} = $pagetrack{$num}[5]->get;
-                }
-                $recalc->invoke;
-                ::setedited(1);
-                ::killpopup('pagelabelpop');
-            }
-        )->grid( -row => 1, -column => 2, -padx => 5 );
-        my $frame1 = $::lglobal{pagelabelpop}->Scrolled(
-            'Pane',
-            -scrollbars => 'se',
-            -background => $::bkgcolor,
-        )->pack(
-            -expand => 1,
-            -fill   => 'both',
+        my $frame0 = $::lglobal{pagelabelpop}->Frame->pack(
+            -fill   => 'x',
             -side   => 'top',
             -anchor => 'n'
         );
-        ::drag($frame1);
-        $top->update;
-        my $updatetemp;
-        $top->Busy( -recurse => 1 );
-        my $row = 0;
+
+        unless (@pages) {
+            $frame0->Label( -text => 'No Page Markers Found' )->pack;
+            return;
+        }
+
+        # Top section shows details for selected page label
+        $::lglobal{pagelabelimgbtn} = $frame0->Button(
+            -text    => "View\nImg\n",
+            -width   => 8,
+            -height  => 3,
+            -command => sub {
+                ::openpng( $textwindow, $numbers{ $::lglobal{pagelabelselected} } )
+                  if defined $::lglobal{pagelabelselected}
+                  and exists $numbers{ $::lglobal{pagelabelselected} };
+            }
+        )->pack( -side => 'left', -anchor => 'w' );
+
+        # Label style - Arabic/Roman
+        my $fstyle = $frame0->Frame->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{pagelabelballoon}
+          ->attach( $fstyle, -msg => 'Shift-click on page list to cycle style' );
+        my $fstylea = $fstyle->Radiobutton(
+            -text        => 'Arabic',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelstyle},
+            -value       => 'Arabic',
+            -command     => sub { pagelabelsetstyle(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+        my $fstyler = $fstyle->Radiobutton(
+            -text        => 'Roman',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelstyle},
+            -value       => 'Roman',
+            -command     => sub { pagelabelsetstyle(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+        my $fstyled = $fstyle->Radiobutton(
+            -text        => '"',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelstyle},
+            -value       => '"',
+            -command     => sub { pagelabelsetstyle(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+
+        # Label action - Start @/+1/No Count
+        my $faction = $frame0->Frame->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{pagelabelballoon}
+          ->attach( $faction, -msg => 'Control-click on page list to cycle action' );
+        my $factions = $faction->Radiobutton(
+            -text        => 'Start @',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelaction},
+            -value       => 'Start @',
+            -command     => sub { pagelabelsetaction(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+        my $factionp = $faction->Radiobutton(
+            -text        => '+1',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelaction},
+            -value       => '+1',
+            -command     => sub { pagelabelsetaction(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+        my $factionn = $faction->Radiobutton(
+            -text        => 'No Count',
+            -selectcolor => $::lglobal{checkcolor},
+            -variable    => \$::lglobal{pagelabelaction},
+            -value       => 'No Count',
+            -command     => sub { pagelabelsetaction(); },
+        )->pack( -side => 'top', -anchor => 'nw' );
+
+        # Label base - only used with 'Start @' action
+        $::lglobal{pagelabelbaseentry} = $frame0->Entry(
+            -width        => 6,
+            -validate     => 'key',
+            -vcmd         => sub { pagelabelsetbase( $_[0] ); },
+            -textvariable => \$::lglobal{pagelabelbase},
+        )->pack( -side => 'left', -anchor => 'n' );
+
+        # Scrolled listbox to display the label information
+        $::lglobal{pagelabellist} = $::lglobal{pagelabelpop}->Scrolled(
+            'Listbox',
+            -scrollbars  => 'osoe',
+            -background  => $::bkgcolor,
+            -font        => 'proofing',
+            -selectmode  => 'browse',
+            -activestyle => 'none',
+        )->pack(
+            -anchor => 'n',
+            -fill   => 'both',
+            -expand => 1,
+            -padx   => 2,
+            -pady   => 2
+        );
+
+        # Recalculate and apply buttons
+        my $frame1 = $::lglobal{pagelabelpop}->Frame->pack(
+            -fill   => 'x',
+            -side   => 'top',
+            -anchor => 'n'
+        );
+        my $recalc = $frame1->Button(
+            -text    => 'Recalculate',
+            -width   => 15,
+            -command => sub { labelrecalculate(); }
+        )->grid( -row => 1, -column => 1, -padx => 5, -pady => 4 );
+        $frame1->Button(
+            -text    => 'Use These Values',
+            -width   => 15,
+            -command => sub { labeluse(); }
+        )->grid( -row => 1, -column => 2, -padx => 5 );
+
+        ::drag( $::lglobal{pagelabellist} );
+
+        # Bindings for list box - basic selection first
+        $::lglobal{pagelabellist}->bind( '<<ListboxSelect>>', sub { labellistselect(); } );
+
+        # Shift mouse 1 cycles round styles
+        $::lglobal{pagelabellist}->bind(
+            '<Shift-1>',
+            sub {
+                labellistselectxy();
+                if    ( $::lglobal{pagelabelstyle} eq 'Arabic' ) { $fstyler->invoke; }
+                elsif ( $::lglobal{pagelabelstyle} eq 'Roman' )  { $fstyled->invoke; }
+                else                                             { $fstylea->invoke; }
+            }
+        );
+
+        # Control mouse 1 cycles round actions
+        $::lglobal{pagelabellist}->bind(
+            '<Control-1>',
+            sub {
+                labellistselectxy();
+                if    ( $::lglobal{pagelabelaction} eq 'Start @' ) { $factionp->invoke; }
+                elsif ( $::lglobal{pagelabelaction} eq '+1' )      { $factionn->invoke; }
+                else                                               { $factions->invoke; }
+            }
+        );
+
+        labellistload();
+        labellistupdate();
+    }
+
+    #
+    # Load the label information into the dialog variables
+    sub labellistload {
+        %numbers = ();
+        %styles  = ();
+        %actions = ();
+        %bases   = ();
+        %labels  = ();
+
         for my $page (@pages) {
-            my ($num) = $page =~ /Pg(\S+)/;
-            $updatetemp++;
-            $::lglobal{pagelabelpop}->update if ( $updatetemp == 20 );
-            $pagetrack{$num}[0] = $frame1->Button(
-                -text    => "Image# $num",
-                -width   => 12,
-                -command => [
-                    sub {
-                        ::openpng( $textwindow, $num );
-                    },
-                ],
-            )->grid( -row => $row, -column => 0, -padx => 2 );
-            $pagetrack{$num}[1] = $frame1->Label(
-                -text       => "Label -->",
-                -background => $::bkgcolor,
-            )->grid( -row => $row, -column => 1 );
+            my $num = $page;
+            $num =~ s/Pg//;
+            $numbers{$page} = $num;
+            $styles{$page} =
+              $::pagenumbers{$page}{style} || ( $page eq $pages[0] ? 'Arabic' : '"' );
+            $actions{$page} =
+              $::pagenumbers{$page}{action} || ( $page eq $pages[0] ? 'Start @' : '+1' );
             my $temp = $num;
             $temp =~ s/^0+//;
-            $pagetrack{$num}[2] = $frame1->Label(
-                -text       => "Pg $temp",
-                -background => 'yellow',
-            )->grid( -row => $row, -column => 2 );
-            $pagetrack{$num}[3] = $frame1->Button(
-                -text    => ( $page eq $pages[0] ) ? 'Arabic' : '"',
-                -width   => 8,
-                -command => [
-                    sub {
-                        if ( $pagetrack{ $_[0] }[3]->cget( -text ) eq 'Arabic' ) {
-                            $pagetrack{ $_[0] }[3]->configure( -text => 'Roman' );
-                        } elsif ( $pagetrack{ $_[0] }[3]->cget( -text ) eq 'Roman' ) {
-                            $pagetrack{ $_[0] }[3]->configure( -text => '"' );
-                        } elsif ( $pagetrack{ $_[0] }[3]->cget( -text ) eq '"' ) {
-                            $pagetrack{ $_[0] }[3]->configure( -text => 'Arabic' );
-                        } else {
-                            $pagetrack{ $_[0] }[3]->configure( -text => '"' );
-                        }
-                    },
-                    $num
-                ],
-            )->grid( -row => $row, -column => 3, -padx => 2 );
-            $pagetrack{$num}[4] = $frame1->Button(
-                -text    => ( $page eq $pages[0] ) ? 'Start @' : '+1',
-                -width   => 8,
-                -command => [
-                    sub {
-                        if ( $pagetrack{ $_[0] }[4]->cget( -text ) eq 'Start @' ) {
-                            $pagetrack{ $_[0] }[4]->configure( -text => '+1' );
-                        } elsif ( $pagetrack{ $_[0] }[4]->cget( -text ) eq '+1' ) {
-                            $pagetrack{ $_[0] }[4]->configure( -text => 'No Count' );
-                        } elsif ( $pagetrack{ $_[0] }[4]->cget( -text ) eq 'No Count' ) {
-                            $pagetrack{ $_[0] }[4]->configure( -text => 'Start @' );
-                        } else {
-                            $pagetrack{ $_[0] }[4]->configure( -text => '+1' );
-                        }
-                    },
-                    $num
-                ],
-            )->grid( -row => $row, -column => 4, -padx => 2 );
-            $pagetrack{$num}[5] = $frame1->Entry(
-                -width    => 8,
-                -validate => 'all',
-                -vcmd     => sub {
-                    return 0 if ( $_[0] =~ /\D/ );
-                    return 1;
-                }
-            )->grid( -row => $row, -column => 5, -padx => 2 );
-            if ( $page eq $pages[0] ) {
-                $pagetrack{$num}[5]->insert( 'end', $num );
-            }
-            $row++;
+            $bases{$page}  = $::pagenumbers{$page}{base}  || ( $page eq $pages[0] ? $temp : '' );
+            $labels{$page} = $::pagenumbers{$page}{label} || '';
         }
-        $top->Unbusy( -recurse => 1 );
-        if ( defined $::pagenumbers{ $pages[0] }{action}
-            and length $::pagenumbers{ $pages[0] }{action} ) {
-            for my $page (@pages) {
-                my ($num) = $page =~ /Pg(\S+)/;
-                $pagetrack{$num}[2]->configure( -text => $::pagenumbers{$page}{label} );
-                $pagetrack{$num}[3]
-                  ->configure( -text => ( $::pagenumbers{$page}{style} or 'Arabic' ) );
-                $pagetrack{$num}[4]
-                  ->configure( -text => ( $::pagenumbers{$page}{action} or '+1' ) );
-                $pagetrack{$num}[5]->delete( '0', 'end' );
-                $pagetrack{$num}[5]->insert( 'end', $::pagenumbers{$page}{base} );
-            }
-        }
-        $frame1->yview( 'scroll', => 1, 'units' );
-        $top->update;
-        $frame1->yview( 'scroll', -1, 'units' );
     }
-}
+
+    #
+    # Refresh the whole list of label information
+    sub labellistupdate {
+        my @labelinfolist = ();
+        for my $page (@pages) {
+            push @labelinfolist, labelinfo($page);
+        }
+        $::lglobal{pagelabellist}->delete( '0', 'end' );
+        $::lglobal{pagelabellist}->insert( 'end', @labelinfolist );
+
+        # Select first page in list
+        if ( $::lglobal{pagelabellist}->size > 0 ) {
+            $::lglobal{pagelabellist}->selectionSet(0);
+            labellistselect();
+        }
+    }
+
+    #
+    # For the given page, return a formatted string for the list
+    sub labelinfo {
+        my $page = shift;
+        my $num  = $numbers{$page};
+        my $sty  = $styles{$page};
+        my $act  = $actions{$page};
+        my $bas  = $bases{$page};
+        my $lab  = $labels{$page};
+
+        my $string = "$num: ";
+
+        my $tmp = 'Arabic';
+        $tmp = 'Roman ' if $sty eq 'Roman';
+        $tmp = '  "   ' if $sty eq '"';
+        $string .= $tmp . ' ';
+
+        $tmp = '   +1   ';
+        $tmp = 'Start @ ' if $act eq 'Start @';
+        $tmp = 'No Count' if $act eq 'No Count';
+        $string .= $tmp . ' ';
+
+        $tmp = '   ';
+        $tmp = sprintf( "%-3d", $bas ) if looks_like_number($bas);
+        $string .= $tmp . ' ';
+
+        $string .= '--> ' . $lab;
+
+        return $string;
+    }
+
+    #
+    # Select current page and display details
+    sub labellistselect {
+        my $index = $::lglobal{pagelabellist}->index( $::lglobal{pagelabellist}->curselection );
+        $::lglobal{pagelabelselected} = $pages[$index];
+        labellistdetails();
+    }
+
+    #
+    # Select a page from the list using the current pointer position
+    sub labellistselectxy {
+        my $xx    = $::lglobal{pagelabellist}->pointerx - $::lglobal{pagelabellist}->rootx;
+        my $yy    = $::lglobal{pagelabellist}->pointery - $::lglobal{pagelabellist}->rooty;
+        my $index = $::lglobal{pagelabellist}->index("\@$xx,$yy");
+        $::lglobal{pagelabellist}->selectionClear( 0, 'end' );
+        $::lglobal{pagelabellist}->selectionSet($index);
+        labellistselect();
+    }
+
+    #
+    # Show the label details of the selected page
+    sub labellistdetails {
+        if ( defined $::lglobal{pagelabelselected}
+            and exists $numbers{ $::lglobal{pagelabelselected} } ) {
+            $::lglobal{pagelabelimgbtn}
+              ->configure( -text => "View\nImg\n$numbers{$::lglobal{pagelabelselected}}" );
+            $::lglobal{pagelabelstyle}  = $styles{ $::lglobal{pagelabelselected} };
+            $::lglobal{pagelabelaction} = $actions{ $::lglobal{pagelabelselected} };
+            $::lglobal{pagelabelbase}   = $bases{ $::lglobal{pagelabelselected} };
+            $::lglobal{pagelabelbaseentry}->configure(
+                -state => ( $::lglobal{pagelabelaction} eq 'Start @' ? 'normal' : 'disabled' ) );
+        } else {
+            $::lglobal{pagelabelimgbtn}->configure( -text => "View\nImg\n" );
+            $::lglobal{pagelabelstyle}  = '';
+            $::lglobal{pagelabelaction} = '';
+            $::lglobal{pagelabelbase}   = '';
+            $::lglobal{pagelabelbaseentry}->configure( -state => 'disabled' );
+        }
+    }
+
+    #
+    # Update the currently selected item in the list
+    sub pagelabelupdateselected {
+        if ( defined $::lglobal{pagelabelselected}
+            and exists $numbers{ $::lglobal{pagelabelselected} } ) {
+            my $index =
+              $::lglobal{pagelabellist}->index( $::lglobal{pagelabellist}->curselection );
+            $::lglobal{pagelabellist}->delete($index);
+            $::lglobal{pagelabellist}->insert( $index, labelinfo( $::lglobal{pagelabelselected} ) );
+            $::lglobal{pagelabellist}->selectionClear( 0, 'end' );
+            $::lglobal{pagelabellist}->selectionSet($index);
+            labellistdetails();
+        }
+    }
+
+    #
+    # Set the style for the currently selected page
+    sub pagelabelsetstyle {
+        if ( defined $::lglobal{pagelabelselected}
+            and exists $numbers{ $::lglobal{pagelabelselected} } ) {
+            $styles{ $::lglobal{pagelabelselected} } = $::lglobal{pagelabelstyle};
+            pagelabelupdateselected();
+        }
+    }
+
+    #
+    # Set the action for the currently selected page
+    sub pagelabelsetaction {
+        if ( defined $::lglobal{pagelabelselected}
+            and exists $numbers{ $::lglobal{pagelabelselected} } ) {
+            $actions{ $::lglobal{pagelabelselected} } = $::lglobal{pagelabelaction};
+            pagelabelupdateselected();
+        }
+    }
+
+    #
+    # Set the base for the currently selected page
+    # This is also the validation routine
+    sub pagelabelsetbase {
+        my $base = shift;
+        if (
+            defined $::lglobal{pagelabelselected}
+            and exists $numbers{ $::lglobal{pagelabelselected} }    # page number exists
+            and $base !~ /\D/
+        ) {
+            $bases{ $::lglobal{pagelabelselected} } = $base;                         # $::lglobal{pagelabelbase} hasn't been set yet
+            pagelabelupdateselected() if Tk::Exists( $::lglobal{pagelabellist} );    # list widget exists (can be called early for validation)
+            return 1;
+        } else {
+            return 0;                                                                # Non-digits not allowed
+        }
+    }
+
+    #
+    # Recalculate all the labels based on current values, and display
+    sub labelrecalculate {
+        my $index = 1;
+        my $style = 'Arabic';
+        for my $page (@pages) {
+            $index = $bases{$page} if $bases{$page} and $actions{$page} eq 'Start @';
+            $style = $styles{$page} unless $styles{$page} eq '"';
+            if ( $actions{$page} eq 'No Count' ) {
+                $labels{$page} = '';
+            } else {
+                if ( $style eq 'Roman' ) {
+                    $labels{$page} = "Pg " . lc( ::roman($index) or '' );    # blank if roman can't convert
+                } else {
+                    $labels{$page} = "Pg $index";
+                    $labels{$page} =~ s/ 0+/ /;
+                }
+                $index++;
+            }
+        }
+        labellistupdate();
+    }
+
+    #
+    # Store the temporary values in the global hash and close the dialog
+    sub labeluse {
+        %::pagenumbers = ();
+        for my $page (@pages) {
+            $::pagenumbers{$page}{style}  = $styles{$page};
+            $::pagenumbers{$page}{action} = $actions{$page};
+            $::pagenumbers{$page}{base}   = $bases{$page};
+            $::pagenumbers{$page}{label}  = $labels{$page};
+        }
+        ::setedited(1);
+        ::killpopup('pagelabelpop');
+    }
+
+}    # End of block to localise page label variables
 
 #
 # Convert numbers to page links in given text only where the numbers are less than 1000
