@@ -752,7 +752,8 @@ sub menu_html {
                 ::errorcheckpop_up( $textwindow, $top, 'ppvimage' );
             }
         ],
-        [ 'command', 'EB~ookMaker', -command => sub { ::ebookmaker(); } ],
+        [ 'separator', '' ],
+        [ 'command',   'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker(); } ],
     ];
 }
 
