@@ -894,7 +894,7 @@ sub initialize {
         -weight => $::txtfontweight,
     );
     ::textentryfontconfigure();    # may need to set to system default
-    my $xxfont = $top->fontCreate(
+    $top->fontCreate(
         'global',
         -family => $::gblfontname,
         -size   => $::gblfontsize,
