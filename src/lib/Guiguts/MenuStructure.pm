@@ -13,7 +13,9 @@ BEGIN {
 # rebuild every time it is modified
 sub menurebuild {
 
-    $::menubar->delete( 0, 'last' );    # Delete any current menus
+    return unless Tk::Exists($::menubar);    # Abort calls made before menubar is created
+
+    $::menubar->delete( 0, 'last' );         # Delete any current menus
 
     menu_toplevel( '~File',        &menu_file );
     menu_toplevel( '~Edit',        &menu_edit );

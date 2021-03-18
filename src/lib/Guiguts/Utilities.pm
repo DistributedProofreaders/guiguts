@@ -863,6 +863,15 @@ sub initialize {
     $de->fontDelete($font);
     $de->destroy();
 
+    # Similarly for the font used for labels, menus, etc.
+    my $dl = $top->Label();
+    $font                           = $de->fontCreate( $dl->cget( -font ) );
+    $::lglobal{gblfontsystemfamily} = $dl->fontActual( $font, -family );
+    $::lglobal{gblfontsystemsize}   = $dl->fontActual( $font, -size );
+    $::lglobal{gblfontsystemweight} = $dl->fontActual( $font, -weight );
+    $dl->fontDelete($font);
+    $dl->destroy();
+
     # Create named fonts
     $::fontweight = 'normal' unless $::fontweight;    # cope with old settings file
     $top->fontCreate(
@@ -885,8 +894,16 @@ sub initialize {
         -weight => $::txtfontweight,
     );
     ::textentryfontconfigure();    # may need to set to system default
+    my $xxfont = $top->fontCreate(
+        'global',
+        -family => $::gblfontname,
+        -size   => $::gblfontsize,
+        -weight => $::gblfontweight,
+    );
+    ::globalfontconfigure();       # may need to set to system default
 
-    # Use option database to set font for all Entry widgets
+    # Use option database to set font for all widgets, then override for Entry fields
+    $top->optionAdd( '*font'       => 'global' );
     $top->optionAdd( '*Entry*font' => 'textentry' );
 
     # Set up Main window size

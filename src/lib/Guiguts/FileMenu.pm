@@ -906,8 +906,8 @@ EOM
             qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
             blocklmargin blockrmargin bold_char composepopbinding cssvalidationlevel
             defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
-            font_char fontname fontsize fontweight geometry
-            gesperrt_char globalaspellmode highlightcolor history_size htmlimageallowpixels ignoreversionnumber
+            font_char fontname fontsize fontweight gblfontname gblfontsize gblfontweight gblfontsystemuse
+            geometry gesperrt_char globalaspellmode highlightcolor history_size htmlimageallowpixels ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin markupthreshold
             multisearchsize multiterm nobell nohighlights pagesepauto projectfileslocation notoolbar poetrylmargin projectfileslocation
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted

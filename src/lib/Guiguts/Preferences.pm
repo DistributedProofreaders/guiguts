@@ -8,7 +8,8 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA = qw(Exporter);
     @EXPORT =
-      qw(&setdefaultpath &setmargins &setfonts &setfontrow &textentryfontconfigure &setpngspath &storedefaultcolor_autosave
+      qw(&setdefaultpath &setmargins &setfonts &setfontrow &textentryfontconfigure &globalfontconfigure
+      &fontgeometryupdate &setpngspath &storedefaultcolor_autosave
       &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls &composekeypopup);
 }
 
@@ -200,17 +201,30 @@ sub setfonts {
         my ( $txtnamew, $txtsizew, $txtweightw ) =
           setfontrow( 'textentry', \$::txtfontname, \$::txtfontsize, \$::txtfontweight,
             'Text Entry Fields',
-            $tframe, 3 );
-        textentryfontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
-
-        $::lglobal{fontpop}->Checkbutton(
+            $tframe, 3, \$::txtfontsystemuse );
+        fontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
+        $tframe->Checkbutton(
             -variable => \$::txtfontsystemuse,
             -text     => 'Use System Default For Text Entry Fields',
             -command  => sub {
                 textentryfontconfigure();
-                textentryfontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
+                fontfieldsstate( $::txtfontsystemuse, $txtnamew, $txtsizew, $txtweightw );
             },
-        )->pack;
+        )->grid( -row => 4, -column => 1, -columnspan => 3, -padx => 5, -pady => 5 );
+        my ( $gblnamew, $gblsizew, $gblweightw ) =
+          setfontrow( 'global', \$::gblfontname, \$::gblfontsize, \$::gblfontweight,
+            'Menus, Labels, Buttons, etc.',
+            $tframe, 5, \$::gblfontsystemuse );
+        fontfieldsstate( $::gblfontsystemuse, $gblnamew, $gblsizew, $gblweightw );
+        $tframe->Checkbutton(
+            -variable => \$::gblfontsystemuse,
+            -text     => 'Use System Default For Menus, Labels, Buttons, etc.',
+            -command  => sub {
+                globalfontconfigure();
+                fontfieldsstate( $::gblfontsystemuse, $gblnamew, $gblsizew, $gblweightw );
+                ::menurebuild();
+            },
+        )->grid( -row => 6, -column => 1, -columnspan => 3, -padx => 5, -pady => 5 );
 
         my $button_ok = $::lglobal{fontpop}->Button(
             -activebackground => $::activecolor,
@@ -254,6 +268,7 @@ sub setfontrow {
     my $label   = shift;
     my $tframe  = shift;
     my $row     = shift;
+    my $rsystem = shift;
 
     my $top = $::top;
 
@@ -262,7 +277,7 @@ sub setfontrow {
         -label     => $label . ": ",
         -browsecmd => sub {
             $top->fontConfigure( $name, -family => $$rfamily );
-            ::setsearchpopgeometry();
+            fontgeometryupdate();
         },
         -variable => $rfamily,
     )->grid( -row => $row, -column => 1, -padx => 5, -pady => 5, -sticky => 'e' );
@@ -276,7 +291,7 @@ sub setfontrow {
         -from         => 1,
         -to           => 1000,
         -validate     => 'all',
-        -vcmd         => sub { fontsizevalidate( $name, @_ ); },
+        -vcmd         => sub { fontsizevalidate( $name, $$rsystem, @_ ); },
     )->grid( -row => $row, -column => 2, -pady => 5 );
 
     # User can hit Return/Enter to apply the font size they have typed
@@ -284,7 +299,7 @@ sub setfontrow {
         $sizeentry->bind(
             "<$_>" => sub {
                 $::top->fontConfigure( $name, -size => $$rsize );
-                ::setsearchpopgeometry();
+                fontgeometryupdate();
             }
         );
     }
@@ -296,7 +311,7 @@ sub setfontrow {
         -offvalue => 'normal',
         -command  => sub {
             $::top->fontConfigure( $name, -weight => $$rweight );
-            ::setsearchpopgeometry();
+            fontgeometryupdate();
         },
         -text => 'Bold'
     )->grid( -row => $row, -column => 3, -pady => 5 );
@@ -311,16 +326,18 @@ sub setfontrow {
 # Note: accepts empty string because user might be in the process of editing.
 sub fontsizevalidate {
     my $font     = shift;
+    my $system   = shift;
     my $val      = shift;
     my $useredit = defined shift;
     my $top      = $::top;
+
+    return 1 if $system;                     # No need to validate if using system font
     return 1 if $val eq '';                  # OK - user might delete then type new number
     return 0 if $val =~ /\D/ or $val < 1;    # invalid font size
-
-    # don't update if user is just editing; use $val as $::fontsize isn't set yet
+                                             # don't update if user is just editing; use $val as $::fontsize isn't set yet
     unless ($useredit) {
         $::top->fontConfigure( $font, -size => $val );
-        ::setsearchpopgeometry();
+        fontgeometryupdate();
     }
     return 1;
 }
@@ -335,16 +352,37 @@ sub textentryfontconfigure {
         -size   => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemsize}   : $::txtfontsize ),
         -weight => ( $::txtfontsystemuse ? $::lglobal{txtfontsystemweight} : $::txtfontweight ),
     );
-    ::setsearchpopgeometry();
+    fontgeometryupdate();
 }
 
 #
 # Set state of given widgets to disabled/normal depending on if system font is being used
-sub textentryfontfieldsstate {
+sub fontfieldsstate {
     my $sysuse = shift;
     while ( my $w = shift ) {
         $w->configure( -state => ( $sysuse ? 'disabled' : 'normal' ) );
     }
+}
+
+#
+# Configure the global font - used for all widgets except those specifically overridden,
+# i.e. text entry fields, the main window, and a few others that use the proofing font or the unicode font
+# Either set to the system default stored previously or to the user's choice
+sub globalfontconfigure {
+    $::top->fontConfigure(
+        'global',
+        -family => ( $::gblfontsystemuse ? $::lglobal{gblfontsystemfamily} : $::gblfontname ),
+        -size   => ( $::gblfontsystemuse ? $::lglobal{gblfontsystemsize}   : $::gblfontsize ),
+        -weight => ( $::gblfontsystemuse ? $::lglobal{gblfontsystemweight} : $::gblfontweight ),
+    );
+    fontgeometryupdate();
+}
+
+#
+# Update widgets that need to be alerted to font size change
+sub fontgeometryupdate {
+    ::menurebuild();
+    ::setsearchpopgeometry();
 }
 
 sub setpngspath {

@@ -128,6 +128,10 @@ our $fontname            = 'Courier New';
 our $fontsize            = 10;
 our $fontweight          = 'normal';
 our $geometry;
+our $gblfontname        = 'Helvetica';
+our $gblfontsize        = 10;
+our $gblfontweight      = 'normal';
+our $gblfontsystemuse   = 1;                    # Default to use system font
 our $globalaspellmode   = 'normal';
 our $globalbrowserstart = $ENV{BROWSER};
 if ( !$globalbrowserstart ) { $globalbrowserstart = 'xdg-open'; }
