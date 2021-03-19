@@ -1798,6 +1798,10 @@ sub htmlimageok {
           ? "\n.x-ebookmaker .$classname {width: 100%;}"
           : "";
 
+        # Don't write the same override CSS twice
+        $cssovr = ""
+          if $cssovr and $textwindow->search( '-exact', '--', substr( $cssovr, 1 ), '1.0', 'end' );
+
         # If this class has been added already, write it again (override may have changed)
         if ( my $samepoint =
             $textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' ) ) {
