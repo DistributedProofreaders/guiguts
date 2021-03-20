@@ -131,7 +131,9 @@ sub file_import_preptext {
     my ( $textwindow, $top ) = @_;
     return if ( ::confirmempty() =~ /cancel/i );
     my $directory = $top->chooseDirectory(
-        -title => 'Choose the directory containing the text files to be imported', );
+        -title      => 'Choose the directory containing the text files to be imported',
+        -initialdir => "$::globallastpath",
+    );
     return 0
       unless ( defined $directory and -d $directory and $directory ne '' );
     $top->Busy( -recurse => 1 );
@@ -173,6 +175,9 @@ sub file_import_preptext {
     $tmppath .= $slash unless substr( $tmppath, -1 ) eq $slash;
     $::pngspath = $tmppath if ( -e $tmppath );
     $top->Unbusy( -recurse => 1 );
+
+    # give user chance to save combined file - necessary for operations like character count
+    file_saveas($textwindow);
     return;
 }
 
@@ -181,8 +186,10 @@ sub file_export_preptext {
     my $top              = $::top;
     my $textwindow       = $::textwindow;
     my $midwordpagebreak = 0;
-    my $directory =
-      $top->chooseDirectory( -title => 'Choose the directory to export the text files to', );
+    my $directory        = $top->chooseDirectory(
+        -title      => 'Choose the directory to export the text files to',
+        -initialdir => "$::globallastpath",
+    );
     return 0 unless ( defined $directory and $directory ne '' );
     unless ( -e $directory ) {
         mkdir $directory or warn "Could not make directory $!\n" and return;
