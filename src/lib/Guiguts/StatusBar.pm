@@ -234,7 +234,16 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
             ::highlight_scannos();
         }
     );
-    $::lglobal{highlightlabel}->bind( '<3>', sub { ::scannosfile() } );
+    $::lglobal{highlightlabel}->bind(
+        '<3>',
+        sub {
+            ::scannosfile();
+            return unless $::scannoslist;                         # abort if failed to load list
+            $::scannos_highlighted = 1;                           # turn on highlighting
+            $::lglobal{highlighttempcolor} = $::highlightcolor;
+            ::highlight_scannos();
+        }
+    );
     $::lglobal{highlightlabel}->bind(
         '<Enter>',
         sub {

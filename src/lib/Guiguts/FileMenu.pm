@@ -766,6 +766,7 @@ sub openfile {    # and open it
             $::pngspath = '';
         }
     }
+    ::highlight_scannos();
     ::update_indicators();
     file_mark_pages() if $::auto_page_marks;
     ::readlabels();
