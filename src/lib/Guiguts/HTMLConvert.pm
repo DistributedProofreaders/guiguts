@@ -3732,7 +3732,8 @@ sub fracconv {
         @pages = sort grep ( /^Pg\S+$/, @marks );
 
         # Initialise balloon help
-        $::lglobal{pagelabelballoon} = $top->Balloon() unless $::lglobal{pagelabelballoon};
+        $::lglobal{pagelabelballoon}      = $top->Balloon() unless $::lglobal{pagelabelballoon};
+        $::lglobal{pagelabelprevselected} = "";
 
         $::lglobal{pagelabelpop} = $top->Toplevel;
         $::lglobal{pagelabelpop}->title('Configure Page Labels');
@@ -3750,7 +3751,19 @@ sub fracconv {
         }
 
         # Top section shows details for selected page label
-        $::lglobal{pagelabelimgbtn} = $frame0->Button(
+        my $fimg = $frame0->LabFrame( -label => 'Img' )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{pagelabelballoon}
+          ->attach( $fimg, -msg => 'Double-click on page list to show image' );
+        $::lglobal{pagelabelautoimgbtn} = $fimg->Checkbutton(
+            -variable    => \$::lglobal{pagelabelautoimg},
+            -selectcolor => $::lglobal{checkcolor},
+            -text        => 'Auto Img',
+            -anchor      => 'w',
+            -command     => sub {
+                $::lglobal{pagelabelimgbtn}->invoke if $::lglobal{pagelabelautoimg};
+            },
+        )->pack( -side => 'top', -anchor => 'nw' );
+        $::lglobal{pagelabelimgbtn} = $fimg->Button(
             -text    => "View\nImg\n",
             -width   => 8,
             -height  => 3,
@@ -3759,10 +3772,11 @@ sub fracconv {
                   if defined $::lglobal{pagelabelselected}
                   and exists $numbers{ $::lglobal{pagelabelselected} };
             }
-        )->pack( -side => 'left', -anchor => 'w' );
+        )->pack( -side => 'bottom', -anchor => 'sw', -fill => 'y', -padx => 2, -pady => 5 );
 
         # Label style - Arabic/Roman
-        my $fstyle = $frame0->Frame->pack( -side => 'left', -anchor => 'w' );
+        my $fstyle = $frame0->LabFrame( -label => 'Style' )
+          ->pack( -side => 'left', -anchor => 'w', -fill => 'y' );
         $::lglobal{pagelabelballoon}
           ->attach( $fstyle, -msg => 'Shift-click on page list to cycle style' );
         my $fstylea = $fstyle->Radiobutton(
@@ -3771,24 +3785,25 @@ sub fracconv {
             -variable    => \$::lglobal{pagelabelstyle},
             -value       => 'Arabic',
             -command     => sub { pagelabelsetstyle(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 1, -column => 1, -sticky => 'w' );
         my $fstyler = $fstyle->Radiobutton(
             -text        => 'Roman',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{pagelabelstyle},
             -value       => 'Roman',
             -command     => sub { pagelabelsetstyle(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 2, -column => 1, -sticky => 'w' );
         my $fstyled = $fstyle->Radiobutton(
             -text        => '"',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{pagelabelstyle},
             -value       => '"',
             -command     => sub { pagelabelsetstyle(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 3, -column => 1, -sticky => 'w' );
 
         # Label action - Start @/+1/No Count
-        my $faction = $frame0->Frame->pack( -side => 'left', -anchor => 'w' );
+        my $faction = $frame0->LabFrame( -label => 'Action' )
+          ->pack( -side => 'left', -anchor => 'w', -fill => 'y' );
         $::lglobal{pagelabelballoon}
           ->attach( $faction, -msg => 'Control-click on page list to cycle action' );
         my $factions = $faction->Radiobutton(
@@ -3797,38 +3812,39 @@ sub fracconv {
             -variable    => \$::lglobal{pagelabelaction},
             -value       => 'Start @',
             -command     => sub { pagelabelsetaction(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 1, -column => 1, -sticky => 'w' );
         my $factionp = $faction->Radiobutton(
             -text        => '+1',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{pagelabelaction},
             -value       => '+1',
             -command     => sub { pagelabelsetaction(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 2, -column => 1, -sticky => 'w' );
         my $factionn = $faction->Radiobutton(
             -text        => 'No Count',
             -selectcolor => $::lglobal{checkcolor},
             -variable    => \$::lglobal{pagelabelaction},
             -value       => 'No Count',
             -command     => sub { pagelabelsetaction(); },
-        )->pack( -side => 'top', -anchor => 'nw' );
+        )->grid( -row => 3, -column => 1, -sticky => 'w' );
 
         # Label base - only used with 'Start @' action
-        $::lglobal{pagelabelbaseentry} = $frame0->Entry(
+        $::lglobal{pagelabelbaseentry} = $faction->Entry(
             -width        => 6,
             -validate     => 'key',
-            -vcmd         => sub { pagelabelsetbase( $_[0] ); },
+            -vcmd         => sub { pagelabelsetbase(@_); },
             -textvariable => \$::lglobal{pagelabelbase},
-        )->pack( -side => 'left', -anchor => 'n' );
+        )->grid( -row => 1, -column => 2, -sticky => 'w' );
 
         # Scrolled listbox to display the label information
         $::lglobal{pagelabellist} = $::lglobal{pagelabelpop}->Scrolled(
             'Listbox',
-            -scrollbars  => 'osoe',
-            -background  => $::bkgcolor,
-            -font        => 'proofing',
-            -selectmode  => 'browse',
-            -activestyle => 'none',
+            -scrollbars => 'osoe',
+            -background => $::bkgcolor,
+            -font       => 'proofing',
+            -selectmode => 'browse',
+
+            #-activestyle => 'none',
         )->pack(
             -anchor => 'n',
             -fill   => 'both',
@@ -3857,11 +3873,28 @@ sub fracconv {
         ::drag( $::lglobal{pagelabellist} );
 
         # Bindings for list box - basic selection first
-        $::lglobal{pagelabellist}->bind( '<<ListboxSelect>>', sub { labellistselect(); } );
-
-        # Shift mouse 1 cycles round styles
         $::lglobal{pagelabellist}->bind(
-            '<Shift-1>',
+            '<<ListboxSelect>>',
+            sub {
+                $::lglobal{pagelabellist}->activate( $::lglobal{pagelabellist}->curselection );
+                labellistselect();
+            }
+        );
+
+        # Double click shows image (if auto img is on, first click will have shown it)
+        $::lglobal{pagelabellist}->bind(
+            '<Double-1>',
+            sub {
+                $::lglobal{pagelabelimgbtn}->invoke unless $::lglobal{pagelabelautoimg};
+            }
+        );
+
+        # Ensure binding of Shift/Control mouse clicks catches double clicks or the above
+        # double click binding is executed. Also note double clicks do single click binding first.
+        # Shift mouse 1 cycles round styles
+        $::lglobal{pagelabellist}->eventAdd( '<<CycleStyle>>' => '<Shift-1>', '<Shift-Double-1>' );
+        $::lglobal{pagelabellist}->bind(
+            '<<CycleStyle>>',
             sub {
                 labellistselectxy();
                 if    ( $::lglobal{pagelabelstyle} eq 'Arabic' ) { $fstyler->invoke; }
@@ -3871,8 +3904,10 @@ sub fracconv {
         );
 
         # Control mouse 1 cycles round actions
+        $::lglobal{pagelabellist}
+          ->eventAdd( '<<CycleAction>>' => '<Control-1>', '<Control-Double-1>' );
         $::lglobal{pagelabellist}->bind(
-            '<Control-1>',
+            '<<CycleAction>>',
             sub {
                 labellistselectxy();
                 if    ( $::lglobal{pagelabelaction} eq 'Start @' ) { $factionp->invoke; }
@@ -3921,6 +3956,7 @@ sub fracconv {
 
         # Select first page in list
         if ( $::lglobal{pagelabellist}->size > 0 ) {
+            $::lglobal{pagelabellist}->activate(0);
             $::lglobal{pagelabellist}->selectionSet(0);
             labellistselect();
         }
@@ -3936,12 +3972,12 @@ sub fracconv {
         my $bas  = $bases{$page};
         my $lab  = $labels{$page};
 
-        my $string = "$num: ";
+        my $string = "$num:  ";
 
         my $tmp = 'Arabic';
         $tmp = 'Roman ' if $sty eq 'Roman';
         $tmp = '  "   ' if $sty eq '"';
-        $string .= $tmp . ' ';
+        $string .= $tmp . '  ';
 
         $tmp = '   +1   ';
         $tmp = 'Start @ ' if $act eq 'Start @';
@@ -3960,9 +3996,15 @@ sub fracconv {
     #
     # Select current page and display details
     sub labellistselect {
-        my $index = $::lglobal{pagelabellist}->index( $::lglobal{pagelabellist}->curselection );
+        my $index = $::lglobal{pagelabellist}->index('active');
         $::lglobal{pagelabelselected} = $pages[$index];
         labellistdetails();
+
+        # Consider auto-show image if changing which page is selected
+        if ( $::lglobal{pagelabelprevselected} ne $::lglobal{pagelabelselected} ) {
+            $::lglobal{pagelabelimgbtn}->invoke if $::lglobal{pagelabelautoimg};
+            $::lglobal{pagelabelprevselected} = $::lglobal{pagelabelselected};
+        }
     }
 
     #
@@ -3972,6 +4014,7 @@ sub fracconv {
         my $yy    = $::lglobal{pagelabellist}->pointery - $::lglobal{pagelabellist}->rooty;
         my $index = $::lglobal{pagelabellist}->index("\@$xx,$yy");
         $::lglobal{pagelabellist}->selectionClear( 0, 'end' );
+        $::lglobal{pagelabellist}->activate($index);
         $::lglobal{pagelabellist}->selectionSet($index);
         labellistselect();
     }
@@ -3986,8 +4029,13 @@ sub fracconv {
             $::lglobal{pagelabelstyle}  = $styles{ $::lglobal{pagelabelselected} };
             $::lglobal{pagelabelaction} = $actions{ $::lglobal{pagelabelselected} };
             $::lglobal{pagelabelbase}   = $bases{ $::lglobal{pagelabelselected} };
-            $::lglobal{pagelabelbaseentry}->configure(
-                -state => ( $::lglobal{pagelabelaction} eq 'Start @' ? 'normal' : 'disabled' ) );
+            if ( $::lglobal{pagelabelaction} eq 'Start @' ) {
+                $::lglobal{pagelabelbaseentry}->configure( -state => 'normal' );
+                $::lglobal{pagelabelbaseentry}->focus;
+                $::lglobal{pagelabelbaseentry}->icursor('end');
+            } else {
+                $::lglobal{pagelabelbaseentry}->configure( -state => 'disabled' );
+            }
         } else {
             $::lglobal{pagelabelimgbtn}->configure( -text => "View\nImg\n" );
             $::lglobal{pagelabelstyle}  = '';
@@ -3998,17 +4046,16 @@ sub fracconv {
     }
 
     #
-    # Update the currently selected item in the list
-    sub pagelabelupdateselected {
+    # Update the currently active item in the list
+    sub pagelabelupdateactive {
         if ( defined $::lglobal{pagelabelselected}
             and exists $numbers{ $::lglobal{pagelabelselected} } ) {
-            my $index =
-              $::lglobal{pagelabellist}->index( $::lglobal{pagelabellist}->curselection );
+            my $index = $::lglobal{pagelabellist}->index('active');
             $::lglobal{pagelabellist}->delete($index);
             $::lglobal{pagelabellist}->insert( $index, labelinfo( $::lglobal{pagelabelselected} ) );
+            $::lglobal{pagelabellist}->activate($index);
             $::lglobal{pagelabellist}->selectionClear( 0, 'end' );
             $::lglobal{pagelabellist}->selectionSet($index);
-            labellistdetails();
         }
     }
 
@@ -4018,7 +4065,8 @@ sub fracconv {
         if ( defined $::lglobal{pagelabelselected}
             and exists $numbers{ $::lglobal{pagelabelselected} } ) {
             $styles{ $::lglobal{pagelabelselected} } = $::lglobal{pagelabelstyle};
-            pagelabelupdateselected();
+            pagelabelupdateactive();
+            labellistdetails();
         }
     }
 
@@ -4028,7 +4076,8 @@ sub fracconv {
         if ( defined $::lglobal{pagelabelselected}
             and exists $numbers{ $::lglobal{pagelabelselected} } ) {
             $actions{ $::lglobal{pagelabelselected} } = $::lglobal{pagelabelaction};
-            pagelabelupdateselected();
+            pagelabelupdateactive();
+            labellistdetails();
         }
     }
 
@@ -4036,17 +4085,18 @@ sub fracconv {
     # Set the base for the currently selected page
     # This is also the validation routine
     sub pagelabelsetbase {
+        return 1 unless defined $_[1];
         my $base = shift;
         if (
             defined $::lglobal{pagelabelselected}
             and exists $numbers{ $::lglobal{pagelabelselected} }    # page number exists
             and $base !~ /\D/
         ) {
-            $bases{ $::lglobal{pagelabelselected} } = $base;                         # $::lglobal{pagelabelbase} hasn't been set yet
-            pagelabelupdateselected() if Tk::Exists( $::lglobal{pagelabellist} );    # list widget exists (can be called early for validation)
+            $bases{ $::lglobal{pagelabelselected} } = $base;                       # $::lglobal{pagelabelbase} hasn't been set yet
+            pagelabelupdateactive() if Tk::Exists( $::lglobal{pagelabellist} );    # list widget exists (can be called early for validation)
             return 1;
         } else {
-            return 0;                                                                # Non-digits not allowed
+            return 0;                                                              # Non-digits not allowed
         }
     }
 
@@ -4070,7 +4120,18 @@ sub fracconv {
                 $index++;
             }
         }
+        my $saveautoimg = $::lglobal{pagelabelautoimg};
+        $::lglobal{pagelabelautoimg} = 0;
+        my $prevpage = $::lglobal{pagelabellist}->index('active');
         labellistupdate();
+
+        # Re-select page in list
+        $::lglobal{pagelabellist}->selectionClear( 0, 'end' );
+        $::lglobal{pagelabellist}->activate($prevpage);
+        $::lglobal{pagelabellist}->selectionSet($prevpage);
+        $::lglobal{pagelabellist}->see($prevpage);
+        labellistselect();
+        $::lglobal{pagelabelautoimg} = $saveautoimg;
     }
 
     #
