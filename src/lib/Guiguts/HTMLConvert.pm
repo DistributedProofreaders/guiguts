@@ -3839,12 +3839,11 @@ sub fracconv {
         # Scrolled listbox to display the label information
         $::lglobal{pagelabellist} = $::lglobal{pagelabelpop}->Scrolled(
             'Listbox',
-            -scrollbars => 'osoe',
-            -background => $::bkgcolor,
-            -font       => 'proofing',
-            -selectmode => 'browse',
-
-            #-activestyle => 'none',
+            -scrollbars  => 'osoe',
+            -background  => $::bkgcolor,
+            -font        => 'proofing',
+            -selectmode  => 'browse',
+            -activestyle => 'none',
         )->pack(
             -anchor => 'n',
             -fill   => 'both',
@@ -3871,6 +3870,7 @@ sub fracconv {
         )->grid( -row => 1, -column => 2, -padx => 5 );
 
         ::drag( $::lglobal{pagelabellist} );
+        ::BindMouseWheel( $::lglobal{pagelabelpop}, $::lglobal{pagelabellist} );
 
         # Bindings for list box - basic selection first
         $::lglobal{pagelabellist}->bind(

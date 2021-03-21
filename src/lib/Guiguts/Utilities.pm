@@ -19,7 +19,7 @@ BEGIN {
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
-      &dieerror &warnerror &infoerror &poperror);
+      &dieerror &warnerror &infoerror &poperror &BindMouseWheel);
 
 }
 
@@ -2983,5 +2983,45 @@ sub printerror {
     }
 
 }    # End of block to localise error message array
+
+#
+# Subroutine to bind mouse wheel to scrolling behaviour so that the wheel scrolls
+# a list widget whenever focus is in the containing dialog.
+# Requires a widget to bind to (typically the dialog) and a Scrolled widget.
+# Adapted from https://docstore.mik.ua/orelly/perl3/tk/ch15_02.htm
+sub BindMouseWheel {
+    my $bindwidget = shift;
+    my $listwidget = shift;
+
+    if ( $^O eq 'MSWin32' ) {
+        $bindwidget->bind(
+            '<MouseWheel>' => [
+                sub {
+                    $listwidget->yview( 'scroll', -( $_[1] / 120 ) * 3, 'units' )
+                      unless $listwidget->focusCurrent == $listwidget->Subwidget('scrolled');
+                },
+                Tk::Ev('D')
+            ]
+        );
+    } else {
+
+        # Support for mousewheels on Linux commonly comes through
+        # mapping the wheel to buttons 4 and 5.  If you have a
+        # mousewheel ensure that the mouse protocol is set to
+        # "IMPS/2" in your /etc/X11/XF86Config (or XF86Config-4)
+        # file:
+        #
+        # Section "InputDevice"
+        #     Identifier  "Mouse0"
+        #     Driver      "mouse"
+        #     Option      "Device" "/dev/mouse"
+        #     Option      "Protocol" "IMPS/2"
+        #     Option      "Emulate3Buttons" "off"
+        #     Option      "ZAxisMapping" "4 5"
+        # EndSection
+        $bindwidget->bind( '<4>' => sub { $listwidget->yview( 'scroll', -3, 'units' ); } );
+        $bindwidget->bind( '<5>' => sub { $listwidget->yview( 'scroll', +3, 'units' ); } );
+    }
+}
 
 1;
