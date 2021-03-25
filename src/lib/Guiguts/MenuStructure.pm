@@ -620,8 +620,26 @@ sub menu_txt_curlycorrections {
         ],
         [
             'command',
-            'R~emove @ Symbols From Selection',
+            'Re~move @ Symbols From Selection',
             -command => sub { ::text_quotes_removeat(); }
+        ],
+        [ 'separator', '' ],
+        [
+            'command',
+            'Select Ne~xt Straight Single Quote',
+            -command => sub { ::text_straight_quote_select(); }
+        ],
+        [
+            'command',
+            'Convert to Left Single ~Quote and Select Next',
+            -command =>
+              sub { ::text_straight_quote_convert("\x{2018}"); ::text_straight_quote_select(); }
+        ],
+        [
+            'command',
+            'Convert to Right Single/~Apostrophe and Select Next',
+            -command =>
+              sub { ::text_straight_quote_convert("\x{2019}"); ::text_straight_quote_select(); }
         ],
         [ 'separator', '' ],
         [
