@@ -619,6 +619,26 @@ sub clipboardColumnPaste {
     $w->markSet( 'insert', $current_index );
 }
 
+#
+# Find the bounding box for a character, but never returns undefined values
+# Must only be used when the character is known to be visible on-screen
+# Avoids bug where a Zero Width No-Break Space / or Byte Order Mark returns
+# undefined values instead of sensible ones
+# In that case, this routine returns x,y and height of whole line, and zero width
+sub bbox_safe {
+    my $w     = shift;
+    my $index = shift;
+    my ( $bx, $by, $bw, $bh ) = $w->bbox($index);
+    if ( not defined $bx ) {    # zero-width character - use line measures except for width
+        my ( $lx, $ly, $lw, $lh ) = $w->dlineinfo($index);
+        $bx = $lx;
+        $by = $ly;
+        $bw = 0;
+        $bh = $lh;
+    }
+    return ( $bx, $by, $bw, $bh );
+}
+
 sub UpDownLine {
     my ( $w, $n ) = @_;
     $w->see('insert');
@@ -626,7 +646,7 @@ sub UpDownLine {
     my ( $line, $char ) = split( /\./, $i );
     my $testX;    #used to check the "new" position
     my $testY;    #used to check the "new" position
-    my ( $bx, $by, $bw, $bh ) = $w->bbox($i);
+    my ( $bx, $by, $bw, $bh ) = $w->bbox_safe($i);
     my ( $lx, $ly, $lw, $lh ) = $w->dlineinfo($i);
 
     if ( ( $n == -1 ) and ( $by <= $bh ) ) {
@@ -638,7 +658,7 @@ sub UpDownLine {
             #first line of entire text - keep same position.
             return $i;
         }
-        ( $bx, $by, $bw, $bh ) = $w->bbox($i);
+        ( $bx, $by, $bw, $bh ) = $w->bbox_safe($i);
         ( $lx, $ly, $lw, $lh ) = $w->dlineinfo($i);
     } elsif ( ( $n == 1 )
         and ( $ly + $lh ) >
@@ -646,7 +666,7 @@ sub UpDownLine {
 
         #On last display line.. so scroll down and recalculate..
         $w->yview( 'scroll', 1, 'units' );
-        ( $bx, $by, $bw, $bh ) = $w->bbox($i);
+        ( $bx, $by, $bw, $bh ) = $w->bbox_safe($i);
         ( $lx, $ly, $lw, $lh ) = $w->dlineinfo($i);
     }
 
@@ -673,7 +693,7 @@ sub UpDownLine {
     # Get the coordinates of the possible new position
     my $testindex = $w->index("\@$testX,$testY");
     $w->see($testindex);
-    my ( $nx, $ny, $nw, $nh ) = $w->bbox($testindex);
+    my ( $nx, $ny, $nw, $nh ) = $w->bbox_safe($testindex);
 
     # Which side of the character should we position the cursor -
     # mainly for a proportional font
