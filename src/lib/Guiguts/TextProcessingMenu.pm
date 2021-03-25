@@ -10,7 +10,8 @@ BEGIN {
       qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
       &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
       &txt_manual_sc_conversion &endofline &cleanup &text_quotes_convert &text_quotes_select &text_quotes_flipdouble
-      &text_quotes_usespaces &text_quotes_removeat &text_quotes_insert);
+      &text_quotes_usespaces &text_quotes_removeat &text_straight_quote_select &text_straight_quote_convert
+      &text_quotes_insert);
 }
 
 sub text_convert_italic {
@@ -812,6 +813,36 @@ sub text_quotes_removeat {
 
     $textwindow->tagAdd( 'sel', $start, $end );    # Reselect region
     $textwindow->focus;
+}
+
+#
+# Select next straight quote
+sub text_straight_quote_select {
+    my $textwindow = $::textwindow;
+    $textwindow->tagRemove( 'sel', '1.0', 'end' );
+
+    my $atindex = $textwindow->search( '-exact', '--', "'", 'insert', 'end' );
+    if ($atindex) {
+        $textwindow->tagAdd( 'sel', "$atindex", "$atindex+1c" );
+        $textwindow->markSet( 'insert' => "$atindex+1c" );
+        $textwindow->see('insert');
+        $textwindow->focus;
+    } else {
+        ::soundbell();
+    }
+}
+
+#
+# Replace selected text (normally a straight quote) with a left/right curly quote
+sub text_straight_quote_convert {
+    my $quote      = shift;
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
+    return if ( @ranges == 0 );
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+    $textwindow->insert( $start, $quote );
+    $textwindow->delete( "$start+1c", "$end+1c" );
 }
 
 #
