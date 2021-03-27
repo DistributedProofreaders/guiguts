@@ -13,23 +13,46 @@ BEGIN {
       &saveinterval &reset_autosave &setcolor &locateExecutable &filePathsPopup &setDPurls &composekeypopup);
 }
 
+#
+# Find path to tool, either from suggested default path, or on the system path.
+# If user already has a path set up for this tool, then we may not want to override it.
+# However, we do if the path is in the "same" location under another previous release.
 sub setdefaultpath {
-    my ( $pathname, $path ) = @_;
-    if ($pathname)  { return $pathname }
-    if ( -e $path ) { return $path; }
+    my ( $oldpath, $path ) = @_;
+    my $newpath = '';
+    if ( -e $path )    # If suggested path exists, consider it for new path
+    {
+        $newpath = $path;
+    } else {           # Otherwise check for no-extension version or elsewhere on path
+        my ( $basename, $filepath, $suffix ) = fileparse( $path, ( ".exe", ".com", ".bat" ) );
+        my $filename = "$basename$suffix";
 
-    my ( $basename, $filepath, $suffix ) = fileparse( $path, ( ".exe", ".com", ".bat" ) );
-    my $filename = "$basename$suffix";
-
-    # Does the file exist in the same location without the extension (ala *nix)?
-    if ( -e ::catfile( $filepath, $basename ) ) {
-        $pathname = ::catfile( $filepath, $basename );
-    } else {    # Is it on the path somewhere - check both with and without extension
-        $pathname = File::Which::which($filename) or File::Which::which($basename);
+        # Does the file exist in the same location without the extension (ala *nix)?
+        if ( -e ::catfile( $filepath, $basename ) ) {
+            $newpath = ::catfile( $filepath, $basename );
+        } else {    # Is it on the path somewhere - check both with and without extension
+            $newpath = File::Which::which($filename) or File::Which::which($basename);
+        }
     }
+    $newpath = $oldpath unless $newpath;    # Use oldpath if new path not found
 
-    if ( $pathname && -x $pathname ) {
-        return $pathname;
+    if ( $newpath && -e $newpath ) {
+        my $index = index( $newpath, 'tools' );
+        if ( $index >= 0 ) {                # Under tools subfolder
+            my $newtail = substr( $newpath, $index );
+            if ($oldpath) {
+                my $oldtail = '';
+                $index = index( $oldpath, 'tools' );
+                if ( $index >= 0 ) {    # Old path was under tools subfolder
+                    my $oldtail = substr( $oldpath, $index );
+                    return $oldpath unless $newtail eq $oldtail;    # old path was different so keep it
+                }
+            }
+            return $newtail;                                        # No suitable old path, or new and old similar - just return relative path.
+        } else {    # Not under tools subfolder
+            return $oldpath if $oldpath && -e $oldpath;
+            return $newpath;
+        }
     } else {
         return '';
     }
