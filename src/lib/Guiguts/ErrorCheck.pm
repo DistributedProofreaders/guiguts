@@ -139,7 +139,7 @@ sub errorcheckpop_up {
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
 
-            eccountupdate(-1) if $rmvmsg =~ /^(\d+):(\d+)/;    # If deleted line is a query, update the query count
+            eccountupdate(-1) if $rmvmsg =~ /^(\d+):(\d+)/ or $rmvmsg =~ /^\+.+:/;    # If deleted line is a query, update the query count
             errorcheckview();
             ::unbusy();
         }
@@ -205,6 +205,7 @@ sub errorcheckpop_up {
     }
 
     my $countblank = 0;             # number of blank lines
+    my $countplus  = 0;             # number of queries flagged with +string:
 
     # Read and process one line at a time
     while ( $line = <$fh> ) {
@@ -342,6 +343,9 @@ sub errorcheckpop_up {
             my $markname = "t" . ++$mark;
             $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
             $::errors{$line} = $markname;                                # cross-ref error with mark
+        } elsif ( $line =~ /^\+.+:/ )    # +string: indicates query to resolve by search not line number
+        {
+            $countplus++;
         }
 
         # Add all lines to the output, even those without line/column numbers
@@ -379,7 +383,7 @@ sub errorcheckpop_up {
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
     }
-    eccountupdate($mark);
+    eccountupdate( $mark + $countplus );
 
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
