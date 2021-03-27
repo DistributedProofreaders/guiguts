@@ -1,5 +1,124 @@
 # Changelog
 
+## Version 1.3.0-beta
+
+### Changes
+- Configure Page Labels has been redesigned and can now cope with thousands of
+  pages. Label can be selected and edited in the dialog, or by using the
+  following shortcuts: Shift+Mouse-1 cycles Arabic/Roman/ditto; Control+Mouse-1
+  cycles Start@/+1/No Count; Double-click show page image. An Auto-Img button
+  enables automatic page image display when a page is selected. Click and drag
+  in the list to select and scroll, or use middle button drag for rapid scroll.
+- Indent/Hanging Indent rewrapping is now supported in ASCII Tables. Also other
+  minor bug fixes and improvements. Shortcut keys in the ASCII Table Effects
+  dialog have been changed: instead of arrow keys, use the first character of
+  Next, Previous, Left and Right.
+- Straight to curly quote conversion has been added to the Txt menu and is only
+  intended for use on text files, not HTML files. This uses an enhanced version
+  of the ppsmq algorithm: it detects ditto marks if they have double spaces
+  before and after; quotes at start and end of line are always selected
+  correctly. A Curly Quote Correction submenu has been added, which can be
+  torn off to make a mini-dialog. It allows selection of the next @ line,
+  flipping all double quotes in selection, rechoosing double quotes based solely
+  on spacing, removal of @ signs, selection and conversion of unconverted single
+  quotes, and insertion of four types of quote.
+- The font used in the menus, for labels, checkboxes, radio buttons, etc., can
+  now be configured in Preferences-->Appearance-->Set Fonts. The default is to
+  continue to use the system default. Note that it is not possible to change
+  the font for the top menu bar.
+- A fraction conversion submenu has been added to the Tools menu, allowing
+  conversion to Unicode fractions only, superscript/subscript form, or a
+  mixture (Unicode fraction if it exists, otherwise superscript/subscript form)
+- Auto Illus Search now has the option to insert code for the current
+  illustration and automatically load the next image file alphabetically,
+  speeding up the insert of illustration code.
+- Error checks, e.g. Bookloupe, Jeebies, Tidy, etc. have a live count of the
+  number of queries remaining in the list displayed in the top left corner.
+- Insert Page Labels (as opposed to markers) added to the Adjust Page Markers
+  dialog and the Txt menu.
+- Import and Export Prep Text Files now remember the most recent folder used
+- After Import Prep Text Files, the Save As dialog is popped to allow the user
+  to load the full file prior to beginning checks.
+- User is warned if suspect footnote markup is spotted, e.g. missing opening
+  bracket, during First Pass processing.
+- Improved icon shipped with release to be used for desktop shortcuts, etc.
+- 99% Auto Page Separator Fixup removes adjacent consecutive page separators
+- Packaging and installation for Mac platforms improved to avoid issues running
+  unsigned binaries. Mac users can now easily build their own Jeebies binary.
+- The stickiness of Case, Regex, Whole word and Reverse can now be turned off
+  in the Preferences menu.
+- When ebookmaker is run, Guiguts now displays the busy cursor until it is
+  completed. Any messages output by ebookmaker will be stored in the message
+  log. If there are errors, the message log will be popped, but not if the
+  conversion is successful.
+- Check Accents in the Word Frequency dialog now includes all accented
+  characters from the Latin Extended A and B, and Latin Extended Additional
+  Unicode blocks.
+- The Regex entry field in Word Frequency has been made wider
+- Book title and author are passed to ebookmaker, so that they are
+  included in the epub/Kindle files created.
+- The Auto level used during Page Separator Fixup now defaults to 99%,
+  and the last-used setting is saved between runs of the program.
+- Wrapping of indexes enclosed in `/I...I/` markup now assumes the text
+  is formatted according to DP guidelines.
+- A Highlight Alignment Column feature has been added to the Search menu,
+  with shortcut Ctrl+Shift+a toggling it on and off. This displays a
+  highlighted vertical line at the cursor for use when aligning
+  frontmatter, tables, etc.
+- Greek characters with and without accents and breathing can be typed with
+  Compose Key. All Greek letters are composed with `=`, followed by breathing,
+  accent, subscript, letter if applicable, e.g. Compose=a for alpha,
+  Compose=(a for alpha with breathing, etc.
+- Compose Sequence has been added to the Tools->Character Tools menu.
+- Paths to tools are preserved better if the settings are copied from a
+  previous release.
+- Version 0.10.3 of ebookmaker is now included with Guiguts.
+- Alt-up/down text moving feature removed
+- Remote W3C Validation has been removed.
+
+### Bug Fixes
+- Index page numbers were not linked if the text entry ended in quotes.
+- Auto-Index tried to convert some numbers to page links that it should not.
+- An error was output if an ASCII table column shrank smaller than zero width.
+- Scanno highlighting was not turned on when a scannos file was loaded, nor if
+  the program was restarted, despite appearing to be enabled in the status bar.
+- The line of CSS that handled overriding the image width on handheld devices
+  was duplicated for every image with the same width dimensions.
+- Cancelling Save As caused undefined variable errors.
+- Several minor bugs could occur when moving footnotes inline.
+- Running Auto Table HTML conversion used to lose page marker positions.
+- ASCII table operations used to lose page marker positions.
+- A dollar sign in matched search and replace text was sometimes deleted.
+- Hyphens were not treated as word boundaries in entry fields, unlike in the
+  main window.
+- HTML page numbering was occasionally wrong when two page numbers were
+  adjacent due to a blank page.
+- Text such as `I/` could be mistakenly interpreted as markup.
+- The FOOTNOTES heading was not translated according to the language rc file.
+- Ndashes were not treated as hyphens when converting indexes to HTML.
+- Ampersand could not be included in Custom URLs.
+- Guiguts lost focus when the Image Viewer was used.
+- Regex replace for `^` or `$` did not work.
+- Footnotes without closing `]` were not always flagged.
+- `$t` in the Custom Menu couldn't handle utf-8 characters.
+- Word Frequency Ligatures did not respect Suspects Only flag.
+- Footnotes were not always placed correctly in chapter landing zones.
+- Using Count on a regex of `^` would cause an infinite loop.
+- Unhelpful error message when using non-ascii characters in filenames.
+- Searching and replacing with a multi-line string terminating in a
+  newline caused a subsequent Undo to lose text.
+- Search and Replace dialog could not have its width resized.
+- Bookloupe said it would not report some things and then did report them.
+- If a 2-blank-line section heading inside block markup followed a page break,
+  99% Auto Page Separator Fixup lost one of the blank lines.
+- Auto Img button could appear on when it had been turned off.
+- If a page marker followed immediately after a replaced string, it would
+  jump to the start of the string.
+- Joining footnotes to previous could fail if text was edited after First Pass.
+- Unicode Character Search caused an infinite loop under Perl 5.32.
+- A zero-width non-breaking space or BOM could cause an error when scrolling.
+
+
 ## Version 1.2.4
 
 ### Changes
