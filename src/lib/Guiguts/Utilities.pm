@@ -740,7 +740,7 @@ sub initialize {
     $::geometryhash{hotkeyspop}       = '+144+119'        unless $::geometryhash{hotkeyspop};
     $::geometryhash{hpopup}           = '300x400+584+211' unless $::geometryhash{hpopup};
     $::positionhash{htmlgenpop}       = '+145+37'         unless $::positionhash{htmlgenpop};
-    $::positionhash{htmlimpop}        = '+45+37'          unless $::positionhash{htmlimpop};
+    $::geometryhash{htmlimpop}        = '+45+37'          unless $::geometryhash{htmlimpop};
     $::positionhash{intervalpop}      = '+300+137'        unless $::positionhash{intervalpop};
     $::geometryhash{linkpop}          = '+224+72'         unless $::geometryhash{linkpop};
     $::positionhash{marginspop}       = '+145+137'        unless $::positionhash{marginspop};
