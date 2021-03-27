@@ -1583,13 +1583,14 @@ sub insert_paragraph_open {
 }
 
 sub htmlimage {
-    my ( $textwindow, $top, $thisblockstart, $thisblockend ) = @_;
-    $thisblockstart = 'insert'        unless $thisblockstart;
-    $thisblockend   = $thisblockstart unless $thisblockend;
-    $textwindow->markSet( 'thisblockstart', $thisblockstart );
-    $textwindow->markSet( 'thisblockend',   $thisblockend );
-    my $selection;
-    $selection            = $textwindow->get( $thisblockstart, $thisblockend ) if @_;
+    my $filename   = shift;
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+    $::lglobal{imarkupstart} = 'insert'                 unless $::lglobal{imarkupstart};
+    $::lglobal{imarkupend}   = $::lglobal{imarkupstart} unless $::lglobal{imarkupend};
+    $textwindow->markSet( 'thisblockstart', $::lglobal{imarkupstart} );
+    $textwindow->markSet( 'thisblockend',   $::lglobal{imarkupend} );
+    my $selection = $textwindow->get( $::lglobal{imarkupstart}, $::lglobal{imarkupend} );
     $selection            = '' unless $selection;
     $::lglobal{preservep} = '';
     $::lglobal{preservep} = "\n<p>" if $selection !~ /<\/p>$/;
@@ -1613,24 +1614,28 @@ sub htmlimage {
         ::initialize_popup_without_deletebinding('htmlimpop');
         my $f1 =
           $::lglobal{htmlimpop}->LabFrame( -label => 'File Name' )
-          ->pack( -side => 'top', -anchor => 'n', -padx => 2 );
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $::lglobal{imgname} =
-          $f1->Entry( -width => 45, )->pack( -side => 'left' );
+          $f1->Entry()->pack( -side => 'left', -expand => 'yes', -fill => 'x' );
+        $f1->Button(
+            -text    => 'Browse...',
+            -command => sub { thumbnailbrowse(); }
+        )->pack( -side => 'left' );
         my $f3 =
           $::lglobal{htmlimpop}->LabFrame( -label => 'Alt text' )
-          ->pack( -side => 'top', -anchor => 'n' );
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $::lglobal{alttext} =
-          $f3->Entry( -width => 45, )->pack( -side => 'left' );
+          $f3->Entry()->pack( -side => 'left', -expand => 'yes', -fill => 'x' );
         my $f4a =
           $::lglobal{htmlimpop}->LabFrame( -label => 'Caption text' )
-          ->pack( -side => 'top', -anchor => 'n' );
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $::lglobal{captiontext} =
-          $f4a->Entry( -width => 45, )->pack( -side => 'left' );
+          $f4a->Entry()->pack( -side => 'left', -expand => 'yes', -fill => 'x' );
         my $f4 =
           $::lglobal{htmlimpop}->LabFrame( -label => 'Title text' )
-          ->pack( -side => 'top', -anchor => 'n' );
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $::lglobal{titltext} =
-          $f4->Entry( -width => 45, )->pack( -side => 'left' );
+          $f4->Entry()->pack( -side => 'left', -expand => 'yes', -fill => 'x' );
         my $f5 =
           $::lglobal{htmlimpop}->LabFrame( -label => 'Geometry' )
           ->pack( -side => 'top', -anchor => 'n' );
@@ -1713,24 +1718,138 @@ sub htmlimage {
         $censel->select;
         my $f8 = $::lglobal{htmlimpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f8->Button(
+            -text    => 'Prev File',
+            -width   => 8,
+            -command => sub {
+                my $nextfile = htmlimagefilenext(-1);
+                if ($nextfile) {
+                    htmlimage($nextfile);
+                } else {
+                    ::soundbell();
+                }
+            }
+        )->pack( -side => 'left', -padx => 5 );
+        $f8->Button(
+            -text    => 'Insert & Load Next',
+            -width   => 14,
+            -command => sub {
+                htmlimageok($textwindow);
+                my $nextfile = htmlimagenext();
+                if ($nextfile) {
+                    htmlimage($nextfile);
+                } else {
+                    htmlimagedestroy();
+                }
+            }
+        )->pack( -side => 'left', -padx => 5 );
+        $f8->Button(
+            -text    => 'Next File',
+            -width   => 8,
+            -command => sub {
+                my $nextfile = htmlimagefilenext(+1);
+                if ($nextfile) {
+                    htmlimage($nextfile);
+                } else {
+                    ::soundbell();
+                }
+            }
+        )->pack( -side => 'left', -padx => 5 );
+        my $f9 = $::lglobal{htmlimpop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        $f9->Button(
+            -text    => 'Cancel',
+            -width   => 8,
+            -command => sub { htmlimagedestroy(); }
+        )->pack( -side => 'left', -padx => 5 );
+        $f9->Button(
             -text    => 'OK',
-            -width   => 10,
-            -command => sub { htmlimageok($textwindow); }
-        )->pack;
+            -width   => 8,
+            -command => sub { htmlimageok($textwindow); htmlimagedestroy(); }
+        )->pack( -side => 'left', -padx => 5, -pady => 5 );
         my $f = $::lglobal{htmlimpop}->Frame->pack;
         $::lglobal{imagelbl} = $f->Label(
             -text       => 'Thumbnail',
             -justify    => 'center',
             -background => $::bkgcolor,
         )->grid( -row => 1, -column => 1 );
-        $::lglobal{imagelbl}->bind( $::lglobal{imagelbl}, '<1>', \&thumbnailbrowse );
+        $::lglobal{imagelbl}->bind( '<1>', sub { thumbnailbrowse(); } );
         $::lglobal{htmlimpop}->protocol( 'WM_DELETE_WINDOW' => sub { htmlimagedestroy(); } );
         $::lglobal{htmlimpop}->transient($top);
     }
     $::lglobal{alttext}->delete( 0, 'end' )                       if $::lglobal{alttext};
     $::lglobal{titltext}->delete( 0, 'end' )                      if $::lglobal{titltext};
+    $::lglobal{captiontext}->delete( 0, 'end' )                   if $::lglobal{captiontext};
     $::lglobal{captiontext}->insert( 'end', "<p>$selection</p>" ) if $selection;
-    &thumbnailbrowse();
+
+    # Either load given filename or if none given let user browse for one
+    thumbnailbrowse($filename);
+}
+
+#
+# Find the next [Illustration] markup and load the next image after the currently loaded one
+# Relies on the image order in the file matching alphabetical order of filenames
+sub htmlimagenext {
+    my $textwindow = $::textwindow;
+
+    # Find next [Illustration] or exit
+    $::lglobal{imarkupstart} =
+      $textwindow->search( '-regexp', '--', '(<p>)?\[Illustration', $::lglobal{imarkupend}, 'end' );
+    unless ( $::lglobal{imarkupstart} ) {
+        ::soundbell();
+        return "";
+    }
+    $textwindow->see( $::lglobal{imarkupstart} );
+    my $length;
+    $::lglobal{imarkupend} = $textwindow->search(
+        '-regexp',
+        '-count' => \$length,
+        '--', '\](<\/p>)?', $::lglobal{imarkupstart}, 'end'
+    );
+    $::lglobal{imarkupend} = $textwindow->index( $::lglobal{imarkupend} . ' +' . $length . 'c' );
+    unless ( $::lglobal{imarkupend} ) {
+        ::soundbell();
+        return "";
+    }
+    $textwindow->tagAdd( 'highlight', $::lglobal{imarkupstart}, $::lglobal{imarkupend} );
+    $textwindow->markSet( 'insert', $::lglobal{imarkupstart} );
+
+    return htmlimagefilenext(+1);
+}
+
+#
+# Get current image name from dialog and find prev/next one alphabetically
+sub htmlimagefilenext {
+    my $dir      = shift;
+    my $thisfile = $::lglobal{imgname}->get;
+    unless ($thisfile) {
+        ::soundbell();
+        return "";
+    }
+
+    # Get sorted list of files in the current image file's directory
+    my $dirname = ::dirname($thisfile);
+    $thisfile = ::basename($thisfile);
+    opendir( my $dh, $dirname ) || die "Can't opendir $dirname: $!";
+    my @files = sort grep { -f "$dirname/$_" } readdir($dh);
+    closedir $dh;
+
+    # Find "previous" by just reversing the list
+    @files = reverse @files if $dir < 0;
+
+    # Find current file in the list and return the next one
+    my $nextfile = "";
+    my $found    = 0;
+    for my $file (@files) {
+        if ($found) {    # Found current file on last loop so this is the next file
+            $nextfile = $file;
+            last;
+        }
+        $found = 1 if $thisfile eq $file;    # Flag when find current file in list
+    }
+    unless ($nextfile) {                     # Didn't find a next file - reached end of list
+        ::soundbell();
+        return "";
+    }
+    return ::catfile( $dirname, $nextfile );
 }
 
 sub htmlimageok {
@@ -1849,7 +1968,6 @@ sub htmlimageok {
         }
     }
     $textwindow->addGlobEnd;
-    htmlimagedestroy();
 }
 
 sub htmlimagedestroy {
@@ -1932,7 +2050,9 @@ sub htmlimages {
     $textwindow->tagAdd( 'highlight', $start, $end );
     $textwindow->markSet( 'insert', $start );
     ::update_indicators();
-    htmlimage( $textwindow, $top, $start, $end );
+    $::lglobal{imarkupstart} = $start;
+    $::lglobal{imarkupend}   = $end;
+    htmlimage();
 }
 
 sub htmlautoconvert {
@@ -1987,15 +2107,29 @@ sub htmlautoconvert {
     ::setedited(1);
 }
 
+#
+# Optionally takes a filename instead of letting user browse for one
 sub thumbnailbrowse {
-    my $types = [ [ 'Image Files', [ '.gif', '.jpg', '.png' ] ], [ 'All Files', ['*'] ], ];
-    my $name  = $::lglobal{htmlimpop}->getOpenFile(
-        -filetypes  => $types,
-        -title      => 'File Load',
-        -initialdir => $::globalimagepath
-    );
-    return unless ($name);
+    my $name = shift;
+    unless ($name) {
+        my $types = [ [ 'Image Files', [ '.gif', '.jpg', '.png' ] ], [ 'All Files', ['*'] ], ];
+        $name = $::lglobal{htmlimpop}->getOpenFile(
+            -filetypes  => $types,
+            -title      => 'File Load',
+            -initialdir => $::globalimagepath
+        );
+        return unless ($name);
+    }
     ( $::lglobal{htmlimagesizex}, $::lglobal{htmlimagesizey} ) = Image::Size::imgsize($name);
+    unless ( $::lglobal{htmlimagesizex} and $::lglobal{htmlimagesizey} ) {
+        $::top->messageBox(
+            -icon    => 'error',
+            -message => "Unable to get image width and height.",
+            -title   => 'Image Error.',
+            -type    => 'Ok',
+        );
+        return;
+    }
     $::lglobal{htmlimggeom}->configure( -text => "File size: "
           . $::lglobal{htmlimagesizex} / $EMPX . " x "
           . $::lglobal{htmlimagesizey} / $EMPX . " em "
@@ -2728,7 +2862,9 @@ sub markup {
             }
         }
     } elsif ( $mark eq 'img' ) {
-        htmlimage( $textwindow, $top, $thisblockstart, $thisblockend );
+        $::lglobal{imarkupstart} = $thisblockstart;
+        $::lglobal{imarkupend}   = $thisblockend;
+        htmlimage();
     } elsif ( $mark eq 'elink' ) {
         my ( $name, $tempname );
         $name = '';

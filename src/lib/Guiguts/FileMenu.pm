@@ -836,7 +836,7 @@ sub readsettings {
 
         # for dialogs that previously just stored position but now need geometry,
         # retain the position and delete the position hash entry
-        for ( 'gotolabpop', 'gotolinepop', 'gotopagpop', 'grpop', 'searchpop' ) {
+        for ( 'gotolabpop', 'gotolinepop', 'gotopagpop', 'grpop', 'searchpop', 'htmlimpop' ) {
             if ( $::positionhash{$_} and $::geometryhash{$_} ) {
                 $::geometryhash{$_} =~ s/^(\d+x\d+).*/$1$::positionhash{$_}/;
                 delete $::positionhash{$_};
