@@ -2797,44 +2797,40 @@ sub textentrydialogpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
-    if ( $::lglobal{$key} ) {
-        $::lglobal{$key}->deiconify;
-        $::lglobal{$key}->raise;
-    } else {
-        $::lglobal{$key} = $top->Toplevel;
-        $::lglobal{$key}->title($title);
+    ::killpopup($key) if $::lglobal{$key};
 
-        my $frame1 =
-          $::lglobal{$key}->Frame->pack( -expand => 1, -fill => 'x', -padx => 5, -pady => 5 );
-        $$varref = $defaulttext unless $$varref;
-        my $entryw = $frame1->Entry(
-            -background   => $::bkgcolor,
-            -width        => 12,
-            -textvariable => $varref,
-        )->pack( -expand => 1, -fill => 'x', -side => 'right' );
-        $frame1->Label( -text => $label )->pack( -side => 'right' );
+    $::lglobal{$key} = $top->Toplevel;
+    $::lglobal{$key}->title($title);
 
-        my $frame2 = $::lglobal{$key}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
-        my $okbtn  = $frame2->Button(
-            -text    => 'OK',
-            -width   => 8,
-            -command => sub { &$commandref(); ::killpopup($key); },
-        )->grid( -row => 1, -column => 1, -padx => 5 );
-        my $cancelbtn = $frame2->Button(
-            -text    => 'Cancel',
-            -width   => 8,
-            -command => sub { ::killpopup($key); },
-        )->grid( -row => 1, -column => 2, -padx => 5, );
-        $::lglobal{$key}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
-        $::lglobal{$key}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
+    my $frame1 =
+      $::lglobal{$key}->Frame->pack( -expand => 1, -fill => 'x', -padx => 5, -pady => 5 );
+    $$varref = $defaulttext unless $$varref;
+    my $entryw = $frame1->Entry(
+        -background   => $::bkgcolor,
+        -width        => 12,
+        -textvariable => $varref,
+    )->pack( -expand => 1, -fill => 'x', -side => 'right' );
+    $frame1->Label( -text => $label )->pack( -side => 'right' );
 
-        $::lglobal{$key}->resizable( 'yes', 'no' );
-        ::initialize_popup_with_deletebinding($key);
-        $entryw->focus;
-        $entryw->selectionRange( $len, 'end' );
-        $entryw->icursor($len);    # place cursor at end of default text
+    my $frame2 = $::lglobal{$key}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
+    my $okbtn  = $frame2->Button(
+        -text    => 'OK',
+        -width   => 8,
+        -command => sub { &$commandref(); ::killpopup($key); },
+    )->grid( -row => 1, -column => 1, -padx => 5 );
+    my $cancelbtn = $frame2->Button(
+        -text    => 'Cancel',
+        -width   => 8,
+        -command => sub { ::killpopup($key); },
+    )->grid( -row => 1, -column => 2, -padx => 5, );
+    $::lglobal{$key}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
+    $::lglobal{$key}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
 
-    }
+    $::lglobal{$key}->resizable( 'yes', 'no' );
+    ::initialize_popup_with_deletebinding($key);
+    $entryw->focus;
+    $entryw->selectionRange( $len, 'end' );
+    $entryw->icursor($len);    # place cursor at end of default text
 }
 
 #
