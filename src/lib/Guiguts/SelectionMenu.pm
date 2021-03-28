@@ -917,7 +917,7 @@ sub tocalignselection {
 
     while ( $index < $thisblockend ) {
         my $line = $textwindow->get( $index, "$index lineend" );
-        if ( $line =~ /^(.*)  +(\d+\.?)$/ ) {
+        if ( $line =~ /^(.*)  +(\d+(, *\d+)*\.?)$/ ) {
             my $len1     = length($1);
             my $len2     = length($2);
             my $spacelen = length($line) - $len1 - $len2;
