@@ -15,16 +15,23 @@ BEGIN {
 
 #
 # Find path to tool, either from suggested default path, or on the system path.
-# If user already has a path set up for this tool, then we may not want to override it.
-# However, we do if the path is in the "same" location under another previous release.
+# If user already has a path set up for this tool, then we may not want to override it,
+# since perhaps it is a modified or updated version they keep on their system.
+# However, a frequent reason for the user having a path already in their setting.rc
+# is if they copied the setting.rc from another installed release, for example when they
+# upgraded. In that case, the tail end of the saved path will match the tail end of
+# the default path for the tool, e.g. "...tools\jeebies\jeebies.exe". In this case,
+# we just keep the tail end (relative) path which will work wherever this release
+# is installed.
 sub setdefaultpath {
-    my ( $oldpath, $path ) = @_;
+    my ( $oldpath, $defaultpath ) = @_;
     my $newpath = '';
-    if ( -e $path )    # If suggested path exists, consider it for new path
+    if ( -e $defaultpath )    # If default path exists, consider it for new path
     {
-        $newpath = $path;
-    } else {           # Otherwise check for no-extension version or elsewhere on path
-        my ( $basename, $filepath, $suffix ) = fileparse( $path, ( ".exe", ".com", ".bat" ) );
+        $newpath = $defaultpath;
+    } else {                  # Otherwise check for no-extension version or elsewhere on path
+        my ( $basename, $filepath, $suffix ) =
+          fileparse( $defaultpath, ( ".exe", ".com", ".bat" ) );
         my $filename = "$basename$suffix";
 
         # Does the file exist in the same location without the extension (ala *nix)?
@@ -38,18 +45,20 @@ sub setdefaultpath {
 
     if ( $newpath && -e $newpath ) {
         my $index = index( $newpath, 'tools' );
-        if ( $index >= 0 ) {                # Under tools subfolder
-            my $newtail = substr( $newpath, $index );
+        if ( $index >= 0 ) {                # New path is under tools subfolder
+            my $newtail = substr( $newpath, $index );    # Get the relative tail-end of the path
             if ($oldpath) {
                 my $oldtail = '';
                 $index = index( $oldpath, 'tools' );
-                if ( $index >= 0 ) {    # Old path was under tools subfolder
+                if ( $index >= 0 ) {                     # Old path was under tools subfolder
                     my $oldtail = substr( $oldpath, $index );
-                    return $oldpath unless $newtail eq $oldtail;    # old path was different so keep it
+                    return $oldpath unless $newtail eq $oldtail;    # Old path was different so keep it
                 }
             }
-            return $newtail;                                        # No suitable old path, or new and old similar - just return relative path.
-        } else {    # Not under tools subfolder
+
+            # Either new and old have matching tails, or no suitable old - return relative path tail
+            return $newtail;
+        } else {    # Not under tools subfolder - use old if it exists, otherwise use new default
             return $oldpath if $oldpath && -e $oldpath;
             return $newpath;
         }
