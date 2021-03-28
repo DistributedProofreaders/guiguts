@@ -45,14 +45,18 @@ sub setdefaultpath {
 
     if ( $newpath && -e $newpath ) {
         my $index = index( $newpath, 'tools' );
-        if ( $index >= 0 ) {                # New path is under tools subfolder
+        $index = index( $newpath, 'scannos' ) if $index < 0;
+        if ( $index >= 0 ) {                # New path is in tools or scannos under the release
             my $newtail = substr( $newpath, $index );    # Get the relative tail-end of the path
-            if ($oldpath) {
+            if ( $oldpath && -e $oldpath ) {
                 my $oldtail = '';
                 $index = index( $oldpath, 'tools' );
-                if ( $index >= 0 ) {                     # Old path was under tools subfolder
+                $index = index( $oldpath, 'scannos' ) if $index < 0;
+                if ( $index >= 0 ) {                     # Old path was in tools or scannos under the release
                     my $oldtail = substr( $oldpath, $index );
                     return $oldpath unless $newtail eq $oldtail;    # Old path was different so keep it
+                } else {
+                    return $oldpath;                                # Old path was not under release, so keep it
                 }
             }
 
@@ -586,6 +590,28 @@ sub locateExecutable {
     ::savesettings();
 }
 
+#
+# Allow user to choose a new directory containing scannos, tools, etc.
+# Accepts current setting and displays the directory that contains it
+sub locateDirectory {
+    my ( $dirname, $dirpathref ) = @_;
+    my $textwindow = $::textwindow;
+    $::lglobal{pathtemp} = $textwindow->chooseDirectory(
+        -title      => "Where is your $dirname folder?",
+        -initialdir => ::dirname( ${$dirpathref} ),
+        -mustexist  => 1,
+    );
+    ${$dirpathref} = $::lglobal{pathtemp} if $::lglobal{pathtemp};
+    return unless ${$dirpathref};
+    ${$dirpathref} = ::os_normal( ${$dirpathref} );
+
+    # If possible, convert to relative path by trimming release root directory and slash from start
+    if ( index( ${$dirpathref}, $::lglobal{guigutsdirectory} ) == 0 ) {
+        ${$dirpathref} = substr( ${$dirpathref}, length( $::lglobal{guigutsdirectory} ) + 1 );
+    }
+    ::savesettings();
+}
+
 sub filePathsPopup {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     if ( defined( $::lglobal{filepathspop} ) ) {
@@ -758,6 +784,26 @@ sub filePathsPopup {
         )->pack( -side => 'right' );
         $f8->Entry(
             -textvariable => \$::ebookmakercommand,
+            -relief       => 'sunken',
+            -background   => $::bkgcolor,
+        )->pack( -expand => 'y', -fill => 'x' );
+        my $f9 = $::lglobal{filepathspop}->Frame->pack(
+            -side   => 'top',
+            -anchor => 'n',
+            -fill   => 'x'
+        );
+        $f9->Label(
+            -text   => "Scannos folder:",
+            -width  => 22,
+            -anchor => 'w',
+        )->pack( -side => 'left' );
+        $f9->Button(
+            -text    => 'Locate Scannos...',
+            -command => sub { locateDirectory( 'scannos', \$::scannospath ); },
+            -width   => 24,
+        )->pack( -side => 'right' );
+        $f9->Entry(
+            -textvariable => \$::scannospath,
             -relief       => 'sunken',
             -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
