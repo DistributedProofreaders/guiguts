@@ -1076,11 +1076,12 @@ sub initialize {
 
     $::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) )
       unless defined $::lglobal{guigutsdirectory};
-    $::scannospath = ::catfile( $::lglobal{guigutsdirectory}, 'scannos' )
-      unless $::scannospath;
 
     # Find tool locations. setdefaultpath handles differences in *nix/Windows
     # executable names and looks on the search path.
+    $::scannospath =~ s/[\/\\]$//;    # Remove trailing slash from scannos path
+    $::scannospath =
+      ::setdefaultpath( $::scannospath, ::catfile( $::lglobal{guigutsdirectory}, 'scannos' ) );
     $::ebookmakercommand = ::setdefaultpath( $::ebookmakercommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'ebookmaker', 'ebookmaker.exe' ) );
     $::validatecsscommand = ::setdefaultpath( $::validatecsscommand,

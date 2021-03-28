@@ -2070,7 +2070,6 @@ sub loadscannos {
     @{ $::lglobal{scannosarray} } = ();
     $::lglobal{scannosindex} = 0;
     my $types = [ [ 'Scannos', ['.rc'] ], [ 'All Files', ['*'] ], ];
-    $::scannospath = ::os_normal($::scannospath);
     $::lglobal{scannosfilename} = $top->getOpenFile(
         -filetypes  => $types,
         -title      => 'Scannos list?',
@@ -2078,9 +2077,6 @@ sub loadscannos {
     );
 
     if ( $::lglobal{scannosfilename} ) {
-        my ( $name, $path, $extension ) =
-          ::fileparse( $::lglobal{scannosfilename}, '\.[^\.]*$' );
-        $::scannospath = $path;
         unless ( my $return = ::dofile( $::lglobal{scannosfilename} ) ) {    # load scannos list
             unless ( defined $return ) {
                 if ($@) {
