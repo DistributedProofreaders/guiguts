@@ -40,27 +40,38 @@ _Note that you must do step 6, even if you have done it previously, as
 the version of Guiguts you are installing may require additional Perl modules
 to any previous versions._
 
-1. Download the latest `guiguts-win-n.n.n.zip` from the
-   [Guiguts releases](https://github.com/DistributedProofreaders/guiguts/releases) page.
-2. Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double click
-   the zip file). A common place for this is `c:\guiguts` although it can be placed
-   anywhere.
-3. Download [Strawberry Perl](http://strawberryperl.com/).
-4. Double click the downloaded file to install Strawberry Perl. It is
+1. Download [Strawberry Perl](http://strawberryperl.com/).
+2. Double click the downloaded file to install Strawberry Perl. It is
    recommended that you install in the default folder `c:\Strawberry`.
+3. Download the latest `guiguts-win-n.n.n.zip` from the
+   [Guiguts releases](https://github.com/DistributedProofreaders/guiguts/releases) page.
+4. Unzip `guiguts-win-n.n.n.zip` to some location on your computer (double
+   click the zip file). A common place for this is `c:\guiguts` although it can
+   be placed anywhere.
 5. Using File Explorer, navigate to the `guiguts` folder you unzipped earlier.
-6. Double click the file `install_cpan_modules.pl`. This should display a command
-   window listing the Perl modules as it installs them. Note that this can take
-   several minutes to complete.
-   (If instead, Windows says it does not know how to run that file, then right-click
-   `install_cpan_modules.pl`, and choose `Open with`. Then choose `More apps`,
-   scroll to the bottom then choose `Look for another app on this PC`, navigate to
-   `c:\Strawberry\perl\bin` and choose `perl.exe`.)
-7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts should
-   start up and be ready for use.
+6. Double click the file `install_cpan_modules.pl`. This should display a
+   command window listing the Perl modules as it installs them. Note that this
+   can take several minutes to complete.
+   If instead, Windows says it does not know how to run that file, or it opens
+   the file in a text editor like Notepad, follow the additional instructions
+   at the end of this list, then return to re-try this step.
+7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts
+   should start up and be ready for use.
 8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
-   wiki page for information on installing the Aspell spell checker and an image
-   viewer to display scans and edit images.
+   wiki page for information on installing the Aspell spell checker and an
+   image viewer to display scans and edit images.
+
+_Only if step 6 above was unsuccessful,_ then do the following to re-associate
+`.pl` files with the Perl program/app. These instructions may vary slightly
+for different versions of Windows:
+ * Close Notepad if it is running.
+ * Right-click `install_cpan_modules.pl` in File Explorer, and choose
+   `Open with`.
+ * Choose `More apps` (may say "Choose Default Program" on some systems)
+ * Scroll to the bottom then choose `Look for another app on this PC`
+   (may say "Browse" on some systems)
+ * Navigate to `c:\Strawberry\perl\bin` and choose `perl.exe`.
+ * Now return to reattempt step 6.
 
 
 ### Other Perl distributions
