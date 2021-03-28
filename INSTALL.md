@@ -53,25 +53,24 @@ to any previous versions._
    command window listing the Perl modules as it installs them. Note that this
    can take several minutes to complete.
    If instead, Windows says it does not know how to run that file, or it opens
-   the file in a text editor like Notepad, follow the additional instructions
-   at the end of this list, then return to re-try this step.
+   the file in a text editor like Notepad, you will need to re-associate `.pl` 
+   files with the Perl program/app. Follow the steps in the footnote below[^1],
+   then return to re-try this step.
 7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts
    should start up and be ready for use.
 8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
    wiki page for information on installing the Aspell spell checker and an
    image viewer to display scans and edit images.
 
-_Only if step 6 above was unsuccessful,_ then do the following to re-associate
-`.pl` files with the Perl program/app. These instructions may vary slightly
-for different versions of Windows:
- * Close Notepad if it is running.
- * Right-click `install_cpan_modules.pl` in File Explorer, and choose
-   `Open with`.
- * Choose `More apps` (may say "Choose Default Program" on some systems)
- * Scroll to the bottom then choose `Look for another app on this PC`
-   (may say "Browse" on some systems)
- * Navigate to `c:\Strawberry\perl\bin` and choose `perl.exe`.
- * Now return to reattempt step 6.
+[^1]: _Only needed if double-clicking `install_cpan_modules.pl` was
+unsuccessful,_ (may vary slightly for different versions of Windows):
+   1. Right-click `install_cpan_modules.pl` in File Explorer, and choose
+      `Open with`.
+   2. Choose `More apps` (may say "Choose Default Program" on some systems)
+   3. Scroll to the bottom then choose `Look for another app on this PC`
+      (may say "Browse" on some systems)
+   4. Navigate to `c:\Strawberry\perl\bin` and choose `perl.exe`.
+   5. Return to re-attempt the "Double-click `install_cpan_modules.pl`" step.
 
 
 ### Other Perl distributions
