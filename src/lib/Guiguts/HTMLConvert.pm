@@ -1765,11 +1765,11 @@ sub htmlimage {
             -width   => 8,
             -command => sub { htmlimageok($textwindow); htmlimagedestroy(); }
         )->pack( -side => 'left', -padx => 5, -pady => 5 );
-        my $f = $::lglobal{htmlimpop}->Frame->pack;
+        my $f = $::lglobal{htmlimpop}->LabFrame( -label => 'Thumbnail' )->pack;
         $::lglobal{imagelbl} = $f->Label(
-            -text       => 'Thumbnail',
-            -justify    => 'center',
-            -background => $::bkgcolor,
+            -justify => 'center',
+            -height  => 200,
+            -width   => 200
         )->grid( -row => 1, -column => 1 );
         $::lglobal{imagelbl}->bind( '<1>', sub { thumbnailbrowse(); } );
         $::lglobal{htmlimpop}->protocol( 'WM_DELETE_WINDOW' => sub { htmlimagedestroy(); } );
