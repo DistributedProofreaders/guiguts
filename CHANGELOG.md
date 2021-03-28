@@ -70,8 +70,10 @@
   accent, subscript, letter if applicable, e.g. Compose=a for alpha,
   Compose=(a for alpha with breathing, etc.
 - Compose Sequence has been added to the Tools->Character Tools menu.
-- Paths to tools are preserved better if the settings are copied from a
-  previous release.
+- Paths to tools and scannos are preserved better if the settings are copied
+  from a previous release.
+- Right-Align Numbers in Selection will now right align several numbers
+  separated by commas, hyphens and ndashes.
 - Version 0.10.3 of ebookmaker is now included with Guiguts.
 - Alt-up/down text moving feature removed
 - Remote W3C Validation has been removed.
