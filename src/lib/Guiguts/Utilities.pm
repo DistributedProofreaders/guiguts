@@ -491,9 +491,15 @@ sub escape_regexmetacharacters {
 
 sub deaccentsort {
     my $phrase = shift;
-    return $phrase unless ( $phrase =~ /[$::convertcharssinglesearch]/ );
-    eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
-    $phrase =~ s/([$::convertcharsmultisearch])/$::convertcharssort{$1}/g;
+    if ( $phrase =~ /[$::convertcharssinglesearch]/ ) {    # do we need the slow tr?
+        eval
+          "\$phrase =~ tr/$::convertlatinsinglesearch$::convertcharssinglesearch/$::convertlatinsinglereplace$::convertcharssinglereplace/";
+    } elsif ( $phrase =~ /[$::convertlatinsinglesearch]/ ) {    # do we need tr at all?
+        eval "\$phrase =~ tr/$::convertlatinsinglesearch/$::convertlatinsinglereplace/";
+    } elsif ( $phrase !~ /[$::convertcharsmultisearch]/ ) {     # Contains no chars we need to treat specially
+        return $phrase;
+    }
+    $phrase =~ s/([$::convertcharsmultisearch])/$::convertcharssort{$1}/g;    # Handle user-defined sort character substitutions
     return $phrase;
 }
 
@@ -527,20 +533,24 @@ sub readlabels {
     }
 
     # Prepare the strings to be used for deaccenting:
+    # - Latin1 versions used for speed if more exotic accents not needed in deaccentsort
     # - Single-char-search and single-char-replace to be used in tr/single-char-search/single-char-replace/ in deaccentsort
     # - Multi-char-search to be used together with convertcharssort in s/// in deaccentsort
     # - Display-multi-char-search to be used with convertcharsdisplay in s/// in deaccentdisplay
     $::convertcharsdisplaysearch = join( '', keys %::convertcharsdisplay );
     $::convertcharsmultisearch   = join( '', keys %::convertcharssort );
 
-    # Contains the accented characters from the Latin Unicode blocks
+    # Latin-1 only
+    $::convertlatinsinglesearch =
+      "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ" . "ĞÑÒÓÔÕÖØÙÚÛÜİŞß" . "àáâãäåæçèéêëìíîï" . "ğñòóôõöøùúûüışÿ";
+    $::convertlatinsinglereplace =
+      "AAAAAAACEEEEIIII" . "DNOOOOOOUUUUYTs" . "aaaaaaaceeeeiiii" . "dnoooooouuuuyty";
+
+    # Contains the accented characters from the Latin Unicode blocks (slower to use)
     $::convertcharssinglesearch =
 
-      # Latin-1 Supplement
-      "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ" . "ĞÑÒÓÔÕÖØÙÚÛÜİŞß" . "àáâãäåæçèéêëìíîï" . "ğñòóôõöøùúûüışÿ"
-
       # Latin Extended A
-      . "\x{100}\x{101}\x{102}\x{103}\x{104}\x{105}\x{106}\x{107}\x{108}\x{109}\x{10a}\x{10b}\x{10c}\x{10d}\x{10e}\x{10f}"
+      "\x{100}\x{101}\x{102}\x{103}\x{104}\x{105}\x{106}\x{107}\x{108}\x{109}\x{10a}\x{10b}\x{10c}\x{10d}\x{10e}\x{10f}"
       . "\x{110}\x{111}\x{112}\x{113}\x{114}\x{115}\x{116}\x{117}\x{118}\x{119}\x{11a}\x{11b}\x{11c}\x{11d}\x{11e}\x{11f}"
       . "\x{120}\x{121}\x{122}\x{123}\x{124}\x{125}\x{126}\x{127}\x{128}\x{129}\x{12a}\x{12b}\x{12c}\x{12d}\x{12e}\x{12f}"
       . "\x{130}\x{131}\x{134}\x{135}\x{136}\x{137}\x{139}\x{13a}\x{13b}\x{13c}\x{13d}\x{13e}\x{13f}"
@@ -585,11 +595,8 @@ sub readlabels {
     # Contains the non-accented forms of the accented characters above
     $::convertcharssinglereplace =
 
-      # Latin-1 Supplement
-      "AAAAAAACEEEEIIII" . "DNOOOOOOUUUUYTs" . "aaaaaaaceeeeiiii" . "dnoooooouuuuyty"
-
       # Latin Extended A
-      . "AaAaAaCcCcCcCcDd"
+      "AaAaAaCcCcCcCcDd"
       . "DdEeEeEeEeEeGgGg"
       . "GgGgHhHhIiIiIiIi"
       . "IiJjKkLlLlLlL"
@@ -630,11 +637,19 @@ sub readlabels {
       . "OoOoUuUuUuUuUuUu"
       . "UuYyYyYyYy";
 
+    # Remove characters from the default sort strings if they exist in the user's language .rc file
     my @chararray = keys %::convertcharssort;
     for ( my $i = 0 ; $i < @chararray ; $i++ ) {
-        my $index = index( $::convertcharssinglesearch, $chararray[$i] );
-        substr $::convertcharssinglesearch,  $index, 1, '';
-        substr $::convertcharssinglereplace, $index, 1, '';
+        my $index = index( $::convertlatinsinglesearch, $chararray[$i] );
+        if ( $index >= 0 ) {
+            substr $::convertlatinsinglesearch,  $index, 1, '';
+            substr $::convertlatinsinglereplace, $index, 1, '';
+        }
+        $index = index( $::convertcharssinglesearch, $chararray[$i] );
+        if ( $index >= 0 ) {
+            substr $::convertcharssinglesearch,  $index, 1, '';
+            substr $::convertcharssinglereplace, $index, 1, '';
+        }
     }
 }
 
