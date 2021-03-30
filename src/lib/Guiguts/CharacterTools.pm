@@ -698,8 +698,13 @@ sub composekeyaction {
             insertit( chr( hex($str) ) );
         } elsif ( $str =~ s/^#(\d{2,})$/$1/ and $str >= 32 and $str < 65536 ) {          # decimal
             insertit( chr($str) );
-        } else {                                                                         # insert string
-            insertit($str);
+        } else {
+            my $term = "\n";
+            if ( $::composehash{ $str . $term } ) {                                      # Is it a string with a forced terminator, e.g. Greek betacode
+                insertit( $::composehash{ $str . $term } );
+            } else {
+                insertit($str);                                                          # just insert the string as it is
+            }
         }
         ::killpopup('composepop');
     }
@@ -736,66 +741,66 @@ sub composeinitialize {
     composeinitaccent( 'Ñ',       'ñ',      'N', '~' );
     composeinitaccent( "\x{178}", 'ÿ',      'Y', '"',  ':' );
     composeinitaccent( 'Ý',       'ý',      'Y', '\'', '/' );
-    composeinitaccent( "\x{A3}",  "\x{A3}", 'L', '-' );              # pound
-    composeinitaccent( "\x{A2}",  "\x{A2}", 'C', '/', '|' );         # cent
-    composeinitchars( "\x{BD}",   '1/2' );                           # 1/2
-    composeinitchars( "\x{2153}", '1/3' );                           # 1/3
-    composeinitchars( "\x{2154}", '2/3' );                           # 1/3
-    composeinitchars( "\x{BC}",   '1/4' );                           # 1/4
-    composeinitchars( "\x{BE}",   '3/4' );                           # 3/4
-    composeinitchars( "\x{2155}", '1/5' );                           # 1/5
-    composeinitchars( "\x{2156}", '2/5' );                           # 2/5
-    composeinitchars( "\x{2157}", '3/5' );                           # 3/5
-    composeinitchars( "\x{2158}", '4/5' );                           # 4/5
-    composeinitchars( "\x{2159}", '1/6' );                           # 1/6
-    composeinitchars( "\x{215A}", '5/6' );                           # 5/6
-    composeinitchars( "\x{2150}", '1/7' );                           # 1/7
-    composeinitchars( "\x{215B}", '1/8' );                           # 1/8
-    composeinitchars( "\x{215C}", '3/8' );                           # 3/8
-    composeinitchars( "\x{215D}", '5/8' );                           # 5/8
-    composeinitchars( "\x{215E}", '7/8' );                           # 7/8
-    composeinitchars( "\x{2151}", '1/9' );                           # 1/9
-    composeinitsyms( "\x{A1}",   '!',  '!' );                        # inverted !
-    composeinitsyms( "\x{BF}",   '?',  '?' );                        # inverted ?
-    composeinitsyms( "\x{AB}",   '<',  '<' );                        # left angle quotes
-    composeinitsyms( "\x{BB}",   '>',  '>' );                        # right angle quotes
-    composeinitsyms( "\x{2018}", '\'', '<', '\'', '6' );             # left single quote
-    composeinitsyms( "\x{2019}", '\'', '>', '\'', '9' );             # right single quote
-    composeinitsyms( "\x{201C}", '"',  '<', '"',  '6' );             # left double quote
-    composeinitsyms( "\x{201D}", '"',  '>', '"',  '9' );             # right double quote
-    composeinitsyms( "\x{201A}", '\'', ',' );                        # low single quote
-    composeinitsyms( "\x{201B}", '\'', '^' );                        # high reversed single quote
-    composeinitsyms( "\x{201E}", '"',  ',' );                        # low double quote
-    composeinitsyms( "\x{201F}", '"',  '^' );                        # high reversed double quote
-    composeinitsyms( "\x{B1}",   '+',  '-' );                        # plus/minus
-    composeinitsyms( "\x{B7}",   '.',  '^', '*', '.' );              # middle dot
-    composeinitsyms( "\x{D7}",   'x',  'x', '*', 'x' );              # multiplication
-    composeinitsyms( "\x{F7}",   ':',  '-' );                        # division
-    composeinitsyms( "\x{B0}",   'o',  'o',  '*', 'o' );             # degree
-    composeinitsyms( "\x{2032}", '*',  '\'', '1', '\'' );            # single prime
-    composeinitsyms( "\x{2033}", '*',  '"',  '2', '\'' );            # double prime
-    composeinitsyms( "\x{2034}", '3',  '\'' );                       # triple prime
-    composeinitsyms( "\x{2030}", '%',  '0', '%', 'o' );              # per mille
-    composeinitsyms( "\x{B9}",   '^',  '1' );                        # superscript 1
-    composeinitsyms( "\x{B2}",   '^',  '2' );                        # superscript 2
-    composeinitsyms( "\x{B3}",   '^',  '3' );                        # superscript 3
-    composeinitsyms( "\x{A0}",   ' ',  ' ', '*', ' ' );              # non-breaking space
-    composeinitsyms( "\x{2014}", '-',  '-' );                        # emdash
-    composeinitsyms( "\x{2013}", '-',  ' ' );                        # endash
-    composeinitsyms( "\x{2042}", '*',  '*' );                        # asterism
-    composeinitsyms( "\x{BA}",   'o',  '_' );                        # masculine ordinal
-    composeinitsyms( "\x{AA}",   'a',  '_' );                        # feminine ordinal
-    composeinitsyms( "\x{2016}", '|',  '|' );                        # double vertical line
-    composeinitcase( 'Æ',        'æ',        'AE' );                 # ae ligature
-    composeinitcase( "\x{152}",  "\x{153}",  'OE' );                 # oe ligature
-    composeinitcase( "\x{1E9E}", 'ß',        'SS' );                 # eszett
-    composeinitcase( 'Ð',        'ð',        'DH', 'ETH' );          # eth
-    composeinitcase( 'þ',        'Þ',        'TH' );                 # thorn
-    composeinitcase( "\x{A9}",   "\x{A9}",   'CO', '(C)' );          # copyright
-    composeinitcase( "\x{2020}", "\x{2020}", 'DAG' );                # dagger
-    composeinitcase( "\x{2021}", "\x{2021}", 'DDAG' );               # double dagger
-    composeinitcase( "\x{A7}",   "\x{A7}",   'SEC', 'S*', '*S' );    # section
-    composeinitcase( "\x{B6}",   "\x{B6}",   'PIL', 'P*', '*P' );    # pilcrow
+    composeinitaccent( "\x{A3}",  "\x{A3}", 'L', '/',  '\\' );          # pound
+    composeinitaccent( "\x{A2}",  "\x{A2}", 'C', '/',  '|' );           # cent
+    composeinitchars( "\x{BD}",   '1/2' );                              # 1/2
+    composeinitchars( "\x{2153}", '1/3' );                              # 1/3
+    composeinitchars( "\x{2154}", '2/3' );                              # 1/3
+    composeinitchars( "\x{BC}",   '1/4' );                              # 1/4
+    composeinitchars( "\x{BE}",   '3/4' );                              # 3/4
+    composeinitchars( "\x{2155}", '1/5' );                              # 1/5
+    composeinitchars( "\x{2156}", '2/5' );                              # 2/5
+    composeinitchars( "\x{2157}", '3/5' );                              # 3/5
+    composeinitchars( "\x{2158}", '4/5' );                              # 4/5
+    composeinitchars( "\x{2159}", '1/6' );                              # 1/6
+    composeinitchars( "\x{215A}", '5/6' );                              # 5/6
+    composeinitchars( "\x{2150}", '1/7' );                              # 1/7
+    composeinitchars( "\x{215B}", '1/8' );                              # 1/8
+    composeinitchars( "\x{215C}", '3/8' );                              # 3/8
+    composeinitchars( "\x{215D}", '5/8' );                              # 5/8
+    composeinitchars( "\x{215E}", '7/8' );                              # 7/8
+    composeinitchars( "\x{2151}", '1/9' );                              # 1/9
+    composeinitsyms( "\x{A1}",   '!',  '!' );                           # inverted !
+    composeinitsyms( "\x{BF}",   '?',  '?' );                           # inverted ?
+    composeinitsyms( "\x{AB}",   '<',  '<' );                           # left angle quotes
+    composeinitsyms( "\x{BB}",   '>',  '>' );                           # right angle quotes
+    composeinitsyms( "\x{2018}", '\'', '<', '\'', '6' );                # left single quote
+    composeinitsyms( "\x{2019}", '\'', '>', '\'', '9' );                # right single quote
+    composeinitsyms( "\x{201C}", '"',  '<', '"',  '6' );                # left double quote
+    composeinitsyms( "\x{201D}", '"',  '>', '"',  '9' );                # right double quote
+    composeinitsyms( "\x{201A}", '\'', ',' );                           # low single quote
+    composeinitsyms( "\x{201B}", '\'', '^' );                           # high reversed single quote
+    composeinitsyms( "\x{201E}", '"',  ',' );                           # low double quote
+    composeinitsyms( "\x{201F}", '"',  '^' );                           # high reversed double quote
+    composeinitsyms( "\x{B1}",   '+',  '-' );                           # plus/minus
+    composeinitsyms( "\x{B7}",   '.',  '^', '*', '.' );                 # middle dot
+    composeinitsyms( "\x{D7}",   'x',  'x', '*', 'x' );                 # multiplication
+    composeinitsyms( "\x{F7}",   ':',  '-' );                           # division
+    composeinitsyms( "\x{B0}",   'o',  'o',  '*', 'o' );                # degree
+    composeinitsyms( "\x{2032}", '*',  '\'', '1', '\'' );               # single prime
+    composeinitsyms( "\x{2033}", '*',  '"',  '2', '\'' );               # double prime
+    composeinitsyms( "\x{2034}", '3',  '\'' );                          # triple prime
+    composeinitsyms( "\x{2030}", '%',  '0', '%', 'o' );                 # per mille
+    composeinitsyms( "\x{B9}",   '^',  '1' );                           # superscript 1
+    composeinitsyms( "\x{B2}",   '^',  '2' );                           # superscript 2
+    composeinitsyms( "\x{B3}",   '^',  '3' );                           # superscript 3
+    composeinitsyms( "\x{A0}",   ' ',  ' ', '*', ' ' );                 # non-breaking space
+    composeinitsyms( "\x{2014}", '-',  '-' );                           # emdash
+    composeinitsyms( "\x{2013}", '-',  ' ' );                           # endash
+    composeinitsyms( "\x{2042}", '*',  '*' );                           # asterism
+    composeinitsyms( "\x{BA}",   'o',  '_' );                           # masculine ordinal
+    composeinitsyms( "\x{AA}",   'a',  '_' );                           # feminine ordinal
+    composeinitsyms( "\x{2016}", '|',  '|' );                           # double vertical line
+    composeinitcase( 'Æ',        'æ',        'AE' );                    # ae ligature
+    composeinitcase( "\x{152}",  "\x{153}",  'OE' );                    # oe ligature
+    composeinitcase( "\x{1E9E}", 'ß',        'SS' );                    # eszett
+    composeinitcase( 'Ð',        'ð',        'DH', 'ETH' );             # eth
+    composeinitcase( 'þ',        'Þ',        'TH' );                    # thorn
+    composeinitcase( "\x{A9}",   "\x{A9}",   'CO', '(C)' );             # copyright
+    composeinitcase( "\x{2020}", "\x{2020}", 'DAG' );                   # dagger
+    composeinitcase( "\x{2021}", "\x{2021}", 'DDAG' );                  # double dagger
+    composeinitcase( "\x{A7}",   "\x{A7}",   'SEC', 'S*', '*S' );       # section
+    composeinitcase( "\x{B6}",   "\x{B6}",   'PIL', 'P*', '*P' );       # pilcrow
     composegreekalphabet( "\x{391}", "\x{3b1}", 'ABGDEZHQIKLMNXOPRJSTUFCYW' );
     composegreekaccent( "\x{1FBA}", "\x{1F70}", 'A' );
     composegreekaccent( "\x{1FC8}", "\x{1F72}", 'E' );
@@ -817,9 +822,10 @@ sub composeinitialize {
     composegreekbreathing( "\x{1F80}", 'A', 'iota' );
     composegreekbreathing( "\x{1F90}", 'H', 'iota' );
     composegreekbreathing( "\x{1FA0}", 'W', 'iota' );
-    $::composehash{"=)r"} = "\x{1FE4}";
-    $::composehash{"=(r"} = "\x{1FE5}";
-    $::composehash{"=(R"} = "\x{1FEC}";                              # No smooth breathing upper case rho
+    my $term = "\n";                                                    # Sequences require terminating with Enter/OK if betacode ordering is used
+    $::composehash{"=)r"} = $::composehash{"-r)$term"} = "\x{1FE4}";
+    $::composehash{"=(r"} = $::composehash{"-r($term"} = "\x{1FE5}";
+    $::composehash{"=(R"} = $::composehash{"-R($term"} = "\x{1FEC}";    # No smooth breathing upper case rho
 }
 
 #
@@ -901,12 +907,13 @@ sub composegreekalphabet {
     my $ustart   = ord(shift);
     my $lstart   = ord(shift);
     my $alphabet = shift;
+    my $term     = "\n";         # Sequences require terminating with Enter/OK if betacode ordering is used
 
     for my $ch ( split( //, $alphabet ) ) {
-        $::composehash{"=$ch"} = chr( $ustart++ );
+        $::composehash{"=$ch"} = $::composehash{"-$ch$term"} = chr( $ustart++ );
     }
     for my $ch ( split( //, lc $alphabet ) ) {
-        $::composehash{"=$ch"} = chr( $lstart++ );
+        $::composehash{"=$ch"} = $::composehash{"-$ch$term"} = chr( $lstart++ );
     }
 }
 
@@ -920,23 +927,26 @@ sub composegreekaccent {
     my $ustart = ord(shift);
     my $lstart = ord(shift);
     my $base   = shift;
-    my $iota   = shift;
-
-    $base = '|' . $base if $iota;
+    my $iota   = ( shift ? "|" : "" );
+    my $term   = "\n";                   # Sequences require terminating with Enter/OK if betacode ordering is used
 
     # Uppercase
-    if ($iota) {    # Either accents or iota, not both for uppercase
-        $::composehash{"=$base"} = chr( $ustart++ );
+    if ($iota) {                         # Either accents or iota, not both for uppercase
+        $::composehash{"=$iota$base"} = $::composehash{"=$base$iota$term"} = chr( $ustart++ );
     } else {
-        $::composehash{"=`$base"} = $::composehash{"=\\$base"} = chr( $ustart++ );
-        $::composehash{"='$base"} = $::composehash{"=/$base"}  = chr( $ustart++ );
+        $::composehash{"=`$base"} = $::composehash{"=\\$base"} = $::composehash{"-$base`$term"} =
+          $::composehash{"-$base\\$term"} = chr( $ustart++ );
+        $::composehash{"='$base"} = $::composehash{"=/$base"} = $::composehash{"-$base'$term"} =
+          $::composehash{"-$base/$term"} = chr( $ustart++ );
     }
 
     # Lowercase
-    $base                     = lc $base;
-    $::composehash{"=`$base"} = $::composehash{"=\\$base"} = chr( $lstart++ );
-    $::composehash{"=$base"}  = chr( $lstart++ ) if $iota;
-    $::composehash{"='$base"} = $::composehash{"=/$base"} = chr( $lstart++ );
+    $base = lc $base;
+    $::composehash{"=`$iota$base"} = $::composehash{"=\\$iota$base"} =
+      $::composehash{"-$base`$iota$term"} = $::composehash{"-$base\\$iota$term"} = chr( $lstart++ );
+    $::composehash{"=$iota$base"}  = $::composehash{"-$base$iota$term"} = chr( $lstart++ ) if $iota;
+    $::composehash{"='$iota$base"} = $::composehash{"=/$iota$base"} =
+      $::composehash{"-$base'$iota$term"} = $::composehash{"-$base/$iota$term"} = chr( $lstart++ );
 }
 
 #
@@ -947,20 +957,32 @@ sub composegreekaccent {
 sub composegreekbreathing {
     my $start = ord(shift);
     my $ubase = shift;
-    my $iota  = shift;
+    my $iota  = ( shift ? '|' : '' );
+    my $term  = "\n";                   # Sequences require terminating with Enter/OK if betacode ordering is used
 
-    $ubase = '|' . $ubase if $iota;
     my $lbase = lc $ubase;
 
     for my $base ( $lbase, $ubase ) {
-        $::composehash{"=)$base"}  = chr( $start++ );
-        $::composehash{"=($base"}  = chr( $start++ );
-        $::composehash{"=)`$base"} = $::composehash{"=)\\$base"} = chr( $start++ );
-        $::composehash{"=(`$base"} = $::composehash{"=(\\$base"} = chr( $start++ );
-        $::composehash{"=)'$base"} = $::composehash{"=)/$base"}  = chr( $start++ );
-        $::composehash{"=('$base"} = $::composehash{"=(/$base"}  = chr( $start++ );
-        $::composehash{"=)^$base"} = $::composehash{"=)~$base"}  = chr( $start++ );
-        $::composehash{"=(^$base"} = $::composehash{"=(~$base"}  = chr( $start++ );
+        $::composehash{"=)$iota$base"}  = $::composehash{"-$base)$iota$term"} = chr( $start++ );
+        $::composehash{"=($iota$base"}  = $::composehash{"-$base($iota$term"} = chr( $start++ );
+        $::composehash{"=)`$iota$base"} = $::composehash{"=)\\$iota$base"} =
+          $::composehash{"-$base)`$iota$term"} = $::composehash{"-$base)\\$iota$term"} =
+          chr( $start++ );
+        $::composehash{"=(`$iota$base"} = $::composehash{"=(\\$iota$base"} =
+          $::composehash{"-$base(`$iota$term"} = $::composehash{"-$base(\\$iota$term"} =
+          chr( $start++ );
+        $::composehash{"=)'$iota$base"} = $::composehash{"=)/$iota$base"} =
+          $::composehash{"-$base)'$iota$term"} = $::composehash{"-$base)/$iota$term"} =
+          chr( $start++ );
+        $::composehash{"=('$iota$base"} = $::composehash{"=(/$iota$base"} =
+          $::composehash{"-$base('$iota$term"} = $::composehash{"-$base(/$iota$term"} =
+          chr( $start++ );
+        $::composehash{"=)^$iota$base"} = $::composehash{"=)~$iota$base"} =
+          $::composehash{"-$base)^$iota$term"} = $::composehash{"-$base)~$iota$term"} =
+          chr( $start++ );
+        $::composehash{"=(^$iota$base"} = $::composehash{"=(~$iota$base"} =
+          $::composehash{"-$base(^$iota$term"} = $::composehash{"-$base(~$iota$term"} =
+          chr( $start++ );
     }
 }
 
@@ -989,7 +1011,9 @@ sub composeref {
         ::initialize_popup_with_deletebinding('composerefpop');
         ::drag($comtext);
         for my $key ( sort composesort keys %::composehash ) {
-            $comtext->insert( 'end', $::composehash{$key} . " <= " . $key . "\n" );
+            my $display = $key;
+            $display =~ s/\n/ OK\/Enter/;    # Some sequences require OK/Enter
+            $comtext->insert( 'end', $::composehash{$key} . " <= " . $display . "\n" );
         }
     }
 }
