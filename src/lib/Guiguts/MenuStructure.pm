@@ -915,11 +915,12 @@ sub menu_preferences_appearance {
         ],
         [
             'command',
-            'Set Scanno Highlight Color...',
+            'Set Scanno/Quote Highlight Color...',
             -command => sub {
                 my $thiscolor = ::setcolor($::highlightcolor);
                 $::highlightcolor = $thiscolor if $thiscolor;
-                $textwindow->tagConfigure( 'scannos', -background => $::highlightcolor );
+                $textwindow->tagConfigure( 'scannos',   -background => $::highlightcolor );
+                $textwindow->tagConfigure( 'quotemark', -background => $::highlightcolor );
                 ::savesettings();
             }
         ],
