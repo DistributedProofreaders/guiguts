@@ -64,7 +64,8 @@ sub openpng {
         my $grabperiod   = 200;                         # try to get focus back for 200 milliseconds
         my $grabinterval = 10;                          # try to get focus back every 10 milliseconds
         for ( 1 .. ( $grabperiod / $grabinterval ) ) {
-            $focuswidget->after($grabinterval);
+            $textwindow->after($grabinterval);
+            $focuswidget = $textwindow unless Tk::Exists($focuswidget);    # in case focus widget has been destroyed during delay
             $focuswidget->focusForce;
         }
     } else {
