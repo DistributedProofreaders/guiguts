@@ -1924,8 +1924,8 @@ sub htmlimageok {
         # If this class has been added already, write it again (override may have changed)
         if ( my $samepoint =
             $textwindow->search( '-backwards', '--', $cssdef, $insertpoint, '10.0' ) ) {
-            $textwindow->ntdelete( $samepoint . ' linestart', $samepoint . ' lineend' );
-            $textwindow->ntinsert( $samepoint . ' linestart', $cssdef . $cssovr );
+            $textwindow->delete( $samepoint . ' linestart', $samepoint . ' lineend' );
+            $textwindow->insert( $samepoint . ' linestart', $cssdef . $cssovr );
 
             # Otherwise, find correct place to insert line
         } else {
@@ -1954,14 +1954,14 @@ sub htmlimageok {
                         last;
                     }
                 }
-                $textwindow->ntinsert( $insertpoint . ' linestart', $cssdef . $cssovr . "\n" );
+                $textwindow->insert( $insertpoint . ' linestart', $cssdef . $cssovr . "\n" );
 
                 # Unless it already exists, add heading before first illow class
                 my $heading = '/* Illustration classes */';
                 unless ( $textwindow->search( '--', $heading, '10.0', $insertpoint ) ) {
                     $insertpoint =
                       $textwindow->search( '-regexp', '--', $classreg, '10.0', $insertpoint );
-                    $textwindow->ntinsert( $insertpoint . ' linestart', "\n$heading\n" )
+                    $textwindow->insert( $insertpoint . ' linestart', "\n$heading\n" )
                       if ($insertpoint);
                 }
             }
