@@ -2827,7 +2827,7 @@ sub textentrydialogpopup {
     $::lglobal{$key}->Tk::bind( '<Return>', sub { $okbtn->invoke(); } );
     $::lglobal{$key}->Tk::bind( '<Escape>', sub { $cancelbtn->invoke(); } );
 
-    $::lglobal{$key}->resizable( 'yes', 'no' );
+    $::lglobal{$key}->resizable( 'yes', 'yes' );
     ::initialize_popup_with_deletebinding($key);
     $entryw->focus;
     $entryw->selectionRange( $len, 'end' );
