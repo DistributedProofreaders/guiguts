@@ -924,9 +924,13 @@ sub tocalignselection {
             my $len1     = length($1);
             my $len2     = length($2);
             my $spacelen = length($line) - $len1 - $len2;
-            if ( $len1 + $len2 + 2 < $::rmargin ) {
+            if ( $len1 + $len2 + 2 <= $::rmargin ) {
                 my $paddval = $::rmargin - $len1 - $len2 - $spacelen + $indentval;
-                $textwindow->insert( $index . "+$len1 c", ' ' x $paddval );
+                if ( $paddval >= 0 ) {
+                    $textwindow->insert( $index . "+$len1 c", ' ' x $paddval );
+                } else {
+                    $textwindow->delete( $index . "+$len1 c", $index . "+$len1 c" . "-$paddval c" );
+                }
             }
         }
         $index++;
