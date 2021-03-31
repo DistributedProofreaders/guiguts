@@ -1121,7 +1121,7 @@ sub initialize {
     $textwindow->tagConfigure( 'bkmk',     -background => 'green' );
     $textwindow->tagConfigure( 'table',    -background => '#E7B696' );
     $textwindow->tagRaise('sel');
-    $textwindow->tagConfigure( 'quotemark', -background => '#CCCCFF' );
+    $textwindow->tagConfigure( 'quotemark', -background => $::highlightcolor );
     $textwindow->tagConfigure( 'highlight', -background => 'orange' );
     $textwindow->tagConfigure( 'linesel',   -background => '#8EFD94' );
     $textwindow->tagConfigure( 'alignment', -background => '#8EFD94' );
