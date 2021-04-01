@@ -1108,10 +1108,23 @@ sub initialize {
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'jeebies', 'jeebies.exe' ) );
     $::tidycommand = ::setdefaultpath( $::tidycommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'tidy', 'tidy.exe' ) );
-    $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
-        ::catfile( '\Program Files', 'XnView', 'xnview.exe' ) );
-    $::globalspellpath = ::setdefaultpath( $::globalspellpath,
-        ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+
+    # If XnView or Aspell are installed under "Program Files (x86)",
+    # set that as the default, otherwise use "Program Files"
+    my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
+    if ( -e $trypath ) {
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
+    } else {
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
+            ::catfile( '\Program Files', 'XnView', 'xnview.exe' ) );
+    }
+    $trypath = ::catfile( '\Program Files (x86)', 'Aspell', 'bin', 'aspell.exe' );
+    if ( -e $trypath ) {
+        $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
+    } else {
+        $::globalspellpath = ::setdefaultpath( $::globalspellpath,
+            ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+    }
     $::validatecommand = ::setdefaultpath( $::validatecommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'onsgmls.exe' ) );
 
