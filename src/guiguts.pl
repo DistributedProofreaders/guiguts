@@ -207,6 +207,7 @@ our $tidycommand        = '';
 our $validatecommand    = '';
 our $validatecsscommand = '';
 our $ebookmakercommand  = '';
+our $kindlegencommand   = '';
 our %pagenumbers;
 our %projectdict;
 our %reghints = ();

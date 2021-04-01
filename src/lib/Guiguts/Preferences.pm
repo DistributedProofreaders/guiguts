@@ -67,7 +67,7 @@ sub setdefaultpath {
             return $newpath;
         }
     } else {
-        return '';
+        return ( $oldpath ? $oldpath : $defaultpath );    # If all else fails return old path, or if empty, the default path
     }
 }
 
@@ -784,6 +784,26 @@ sub filePathsPopup {
         )->pack( -side => 'right' );
         $f8->Entry(
             -textvariable => \$::ebookmakercommand,
+            -relief       => 'sunken',
+            -background   => $::bkgcolor,
+        )->pack( -expand => 'y', -fill => 'x' );
+        my $f8b = $::lglobal{filepathspop}->Frame->pack(
+            -side   => 'top',
+            -anchor => 'n',
+            -fill   => 'x'
+        );
+        $f8b->Label(
+            -text   => "Kindlegen:",
+            -width  => 22,
+            -anchor => 'w',
+        )->pack( -side => 'left' );
+        $f8b->Button(
+            -text    => 'Locate Kindlegen...',
+            -command => sub { ::locateExecutable( 'kindlegen', \$::kindlegencommand ); },
+            -width   => 24,
+        )->pack( -side => 'right' );
+        $f8b->Entry(
+            -textvariable => \$::kindlegencommand,
             -relief       => 'sunken',
             -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
