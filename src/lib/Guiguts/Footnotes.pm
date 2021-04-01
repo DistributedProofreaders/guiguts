@@ -836,8 +836,6 @@ sub footnotefixup {
     }
     $textwindow->addGlobEnd;
 
-    # Warn about badly marked up footnotes
-    footnotecheckup() unless $::lglobal{fnsecondpass};
     $::lglobal{fnindex}      = 1;
     $::lglobal{fnsecondpass} = 1;
     if ( $::lglobal{footpop} ) {
@@ -846,27 +844,6 @@ sub footnotefixup {
     }
     footnoteshow();
     ::restorelinenumbers();
-}
-
-#
-# Try to warn user if some footnotes are badly marked up, e.g. missing "["
-sub footnotecheckup {
-    my $match = '1.0';
-    my $count = 0;
-    while ( $match = $::textwindow->search( '-regexp', '--', 'Footnote +\w+:', $match, 'end' ) ) {
-        $count++;
-        $match .= '+8c';
-    }
-    if ( $count != $::lglobal{fntotal} ) {
-        $::top->Dialog(
-            -text => "Check footnote markup!\n"
-              . "Number of occurrences of Footnote...: does not match "
-              . "number of marked-up footnotes found by First Pass.",
-            -bitmap  => 'warning',
-            -title   => 'Footnote mismatch',
-            -buttons => ['OK'],
-        )->Show;
-    }
 }
 
 sub getlz {
