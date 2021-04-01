@@ -2,6 +2,7 @@ package Guiguts::Utilities;
 use strict;
 use warnings;
 use POSIX qw /strftime /;
+use File::HomeDir qw /home/;
 
 BEGIN {
     use Exporter();
@@ -1128,6 +1129,14 @@ sub initialize {
     }
     $::validatecommand = ::setdefaultpath( $::validatecommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'onsgmls.exe' ) );
+    $::kindlegencommand = ::setdefaultpath(
+        $::kindlegencommand,
+        ::catfile(
+            File::HomeDir::home(), 'AppData', 'Local', 'Amazon',
+            'Kindle Previewer 3',  'lib',     'fc',    'bin',
+            'kindlegen.exe'
+        )
+    );
 
     my $textwindow = $::textwindow;
     $textwindow->tagConfigure( 'footnote', -background => 'cyan' );
@@ -2126,20 +2135,28 @@ sub ebookmaker {
     infoerror("Files will appear in the directory $::globallastpath");
 
     # EBookMaker needs to use Tidy and Kindlegen, so temporarily append to the path
-    my $tidypath      = ::catdir( $::lglobal{guigutsdirectory}, 'tools', 'tidy' );
-    my $kindlegenpath = ::catdir( $::lglobal{guigutsdirectory}, 'tools', 'kindlegen' );
-
     # local variable means global value will be restored at end of sub
-    local $ENV{PATH} = pathcatdir( pathcatdir( $ENV{PATH}, $tidypath ), $kindlegenpath );
+    local $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::tidycommand) );
+
+    # Only use kindlegen if it exists
+    my $kindleoption = "";
+    if ( -e $::kindlegencommand ) {
+        $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::kindlegencommand) );
+        $kindleoption = "--make=kindle.images";
+    } else {
+        infoerror(
+            "For mobi files, use Set File Paths to locate kindlegen which you can obtain by installing Kindle Previewer 3"
+        );
+    }
 
     # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
     my $tmpfile = 'ebookmaker.tmp';
     my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
     $runner->run(
-        $::ebookmakercommand,   "--verbose",
-        "--max-depth=3",        "--make=epub.images",
-        "--make=kindle.images", "--output-dir=$outputdir.",
-        "--title=$ttitle",      "--author=$tauthor",
+        $::ebookmakercommand, "--verbose",
+        "--max-depth=3",      "--make=epub.images",
+        $kindleoption,        "--output-dir=$outputdir.",
+        "--title=$ttitle",    "--author=$tauthor",
         "$filepath"
     );
 
