@@ -506,13 +506,14 @@ sub deaccentsort {
 
 sub deaccentdisplay {
     my $phrase = shift;
-    return $phrase unless ( $phrase =~ /[$::convertcharssinglesearch]/ );
+    return $phrase unless ( $phrase =~ /[$::convertlatinsinglesearch$::convertcharssinglesearch]/ );
 
     # first convert the characters specified by the language
     $phrase =~ s/([$::convertcharsdisplaysearch])/$::convertcharsdisplay{$1}/g;
 
     # then convert anything that hasn't been converted already
-    eval "\$phrase =~ tr/$::convertcharssinglesearch/$::convertcharssinglereplace/";
+    eval
+      "\$phrase =~ tr/$::convertlatinsinglesearch$::convertcharssinglesearch/$::convertlatinsinglereplace$::convertcharssinglereplace/";
     return $phrase;
 }
 

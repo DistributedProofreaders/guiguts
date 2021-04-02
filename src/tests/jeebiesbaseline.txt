@@ -1,6 +1,5 @@
 Beginning check: Jeebies
   --> There are 214 "be"s and 142 "he"s. Calibrating...
-  --> 46 queries
 288:59 - Query phrase "trench he shot" 
 328:33 - Query phrase "when he narrowly" 
 426:0 - Query phrase "There he summoned" 
