@@ -1120,9 +1120,8 @@ sub initialize {
         $::kindlegencommand = ::setdefaultpath(
             $::kindlegencommand,
             ::catfile(
-                ' Applications',
-                'Kindle Previewer 3.app',
-                'Contents', 'lib', 'fc', 'bin', 'kindlegen'
+                'Applications', 'Kindle Previewer 3.app',
+                'Contents',     'lib', 'fc', 'bin', 'kindlegen'
             )
         );
     } else {
