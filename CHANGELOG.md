@@ -1,5 +1,33 @@
 # Changelog
 
+## Version 1.3.1
+
+### Changes
+- Betacode-style polytonic Greek entry implemented with Compose Key. The
+  introducing character is hyphen/minus instead of equal sign
+- Quote and arbitrary highlighting now uses the same colour as scannos
+  highlighting, and is therefore configurable
+- `Program Files (x86)` and `Program Files` will be checked automatically
+  as default folders on Windows systems to find Aspell and XnView
+- Recently added Mismatched Footnote warning has been removed.
+- Kindlegen is no longer bundled with the release. Instead, the user can
+  either just create epub, not mobi, files when using ebookmaker locally,
+  or can use Set File Paths to locate kindlegen which is included when
+  Kindle Previewer 3 is installed. If no kindlegen is set up, an message
+  is output to the log informing the user how they can get mobi files if
+  they want them.
+
+### Bug Fixes
+- Incorrect wrapping when block markup ends and restarts without blank line
+- Very slow sorting in Word Frequency dialog
+- If user increased font size, Compose and Goto dialogs didn't resize, causing
+  clipping of OK button
+- Auto Img sometimes output an error message about "undefined" widget
+- Undo failed to remove all inserted code after inserting HTML illo markup
+- Right-align Numbers failed if the line length already exceeded the wrap
+  length
+
+
 ## Version 1.3.0-beta
 
 ### Changes
