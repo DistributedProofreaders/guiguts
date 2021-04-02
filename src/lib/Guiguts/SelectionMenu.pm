@@ -191,9 +191,10 @@ sub selectrewrap {
 
         $thisblockend = $end unless $thisblockend;    # if no end found, finish at end of selection
 
-        # Always start/end at beginning/end of lines
+        # Always start/end at beginning of lines
         $thisblockstart = $textwindow->index( $thisblockstart . ' linestart' );
-        $thisblockend   = $textwindow->index( $thisblockend . ' lineend' );
+        my ( $ll, $cc ) = split( /\./, $textwindow->index($thisblockend) );
+        $thisblockend = $textwindow->index( $thisblockend . ' +1l linestart' ) unless $cc == 0;
 
         $selection = $textwindow->get( $thisblockstart, $thisblockend ) if $thisblockend;    # get the paragraph of text
         unless ($selection) {

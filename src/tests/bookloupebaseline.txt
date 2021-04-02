@@ -1,9 +1,6 @@
 Beginning check: Bookloupe
   --> 26 lines in this file are VERY long!
   *** Verbose output is ON -- you asked for it! ***
-
-  --> 5585 queries.
-
 14:38 - Double punctuation?
 16:25 - Non-ASCII character 183
 21:31 - Non-ASCII character 183
