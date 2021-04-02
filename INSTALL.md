@@ -12,8 +12,8 @@ See also https://www.pgdp.net/wiki/PPTools/Guiguts/Install
 
 Using Guiguts on Windows requires installing the following pieces:
 
-* Guiguts
 * Perl
+* Guiguts
 * [Perl modules](#perl-modules)
 
 These instructions walk you through using
@@ -60,7 +60,9 @@ to any previous versions._
    should start up and be ready for use.
 8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
    wiki page for information on installing the Aspell spell checker and an
-   image viewer to display scans and edit images.
+   image viewer to display scans and edit images. You can also find out how
+   to obtain and link to the kindlegen tool if you want your local version
+   of ebookmaker to create mobi files in addition to epub files.
 
 [^1]: _Only needed if double-clicking `install_cpan_modules.pl` was
 unsuccessful,_ (may vary slightly for different versions of Windows):
@@ -219,6 +221,13 @@ brew install open-sp
 See also the [Jeebies installation instructions](tools/jeebies/README.md).
 
 See also the [EBookMaker installation instructions](tools/ebookmaker/README.md).
+
+You will also need to obtain and link to the kindlegen tool if you want your
+local version of ebookmaker to create mobi files in addition to epub files.
+Kindlegen is included when you install [Kindle Previewer](https://www.amazon.com/gp/feature.html?docId=1000765261).
+You can tell Guiguts where kindlegen is installed using the Preferences ->
+Set File Paths dialog.
+
 
 ## Other
 
