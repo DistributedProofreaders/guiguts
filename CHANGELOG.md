@@ -1,34 +1,6 @@
 # Changelog
 
-## Version 1.3.1
-
-### Changes
-- Betacode-style polytonic Greek entry implemented with Compose Key. The
-  introducing character is hyphen/minus instead of equal sign
-- Quote and arbitrary highlighting now uses the same colour as scannos
-  highlighting, and is therefore configurable
-- `Program Files (x86)` and `Program Files` will be checked automatically
-  as default folders on Windows systems to find Aspell and XnView
-- Recently added Mismatched Footnote warning has been removed.
-- Kindlegen is no longer bundled with the release. Instead, the user can
-  either just create epub, not mobi, files when using ebookmaker locally,
-  or can use Set File Paths to locate kindlegen which is included when
-  Kindle Previewer 3 is installed. If no kindlegen is set up, an message
-  is output to the log informing the user how they can get mobi files if
-  they want them.
-
-### Bug Fixes
-- Incorrect wrapping when block markup ends and restarts without blank line
-- Very slow sorting in Word Frequency dialog
-- If user increased font size, Compose and Goto dialogs didn't resize, causing
-  clipping of OK button
-- Auto Img sometimes output an error message about "undefined" widget
-- Undo failed to remove all inserted code after inserting HTML illo markup
-- Right-align Numbers failed if the line length already exceeded the wrap
-  length
-
-
-## Version 1.3.0-beta
+## Version 1.3.0
 
 ### Changes
 - Configure Page Labels has been redesigned and can now cope with thousands of
@@ -67,8 +39,6 @@
 - Import and Export Prep Text Files now remember the most recent folder used
 - After Import Prep Text Files, the Save As dialog is popped to allow the user
   to load the full file prior to beginning checks.
-- User is warned if suspect footnote markup is spotted, e.g. missing opening
-  bracket, during First Pass processing.
 - Improved icon shipped with release to be used for desktop shortcuts, etc.
 - 99% Auto Page Separator Fixup removes adjacent consecutive page separators
 - Packaging and installation for Mac platforms improved to avoid issues running
@@ -96,17 +66,35 @@
 - Greek characters with and without accents and breathing can be typed with
   Compose Key. All Greek letters are composed with `=`, followed by breathing,
   accent, subscript, letter if applicable, e.g. Compose=a for alpha,
-  Compose=(a for alpha with breathing, etc.
+  Compose=(a for alpha with breathing, etc. Betacode-style polytonic Greek
+  entry also implemented. The introducing character is hyphen/minus instead
+  of equal sign.
 - Compose Sequence has been added to the Tools->Character Tools menu.
 - Paths to tools and scannos are preserved better if the settings are copied
   from a previous release.
 - Right-Align Numbers in Selection will now right align several numbers
   separated by commas, hyphens and ndashes.
+- Quote and arbitrary highlighting now uses the same colour as scannos
+  highlighting, and is therefore configurable.
+- `Program Files (x86)` and `Program Files` will be checked automatically
+  as default folders on Windows systems to find Aspell and XnView.
 - Version 0.10.3 of ebookmaker is now included with Guiguts.
-- Alt-up/down text moving feature removed
+- Kindlegen is no longer bundled with the release. Instead, the user can
+  either just create epub, not mobi, files when using ebookmaker locally,
+  or can use Set File Paths to locate kindlegen which is included when
+  Kindle Previewer 3 is installed. If no kindlegen is set up, an message
+  is output to the log informing the user how they can get mobi files if
+  they want them.
+- Alt-up/down text moving feature removed.
 - Remote W3C Validation has been removed.
 
 ### Bug Fixes
+- If user increased font size, Compose and Goto dialogs didn't resize, causing
+  clipping of OK button
+- Auto Img sometimes output an error message about "undefined" widget
+- Undo failed to remove all inserted code after inserting HTML illo markup
+- Right-align Numbers failed if the line length already exceeded the wrap
+  length
 - Index page numbers were not linked if the text entry ended in quotes.
 - Auto-Index tried to convert some numbers to page links that it should not.
 - An error was output if an ASCII table column shrank smaller than zero width.
