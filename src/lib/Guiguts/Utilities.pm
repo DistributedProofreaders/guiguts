@@ -1129,14 +1129,26 @@ sub initialize {
     }
     $::validatecommand = ::setdefaultpath( $::validatecommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'onsgmls.exe' ) );
-    $::kindlegencommand = ::setdefaultpath(
-        $::kindlegencommand,
-        ::catfile(
-            File::HomeDir::home(), 'AppData', 'Local', 'Amazon',
-            'Kindle Previewer 3',  'lib',     'fc',    'bin',
-            'kindlegen.exe'
-        )
-    );
+
+    if ($::OS_MAC) {
+        $::kindlegencommand = ::setdefaultpath(
+            $::kindlegencommand,
+            ::catfile(
+                ' Applications',
+                'Kindle Previewer 3.app',
+                'Contents', 'lib', 'fc', 'bin', 'kindlegen'
+            )
+        );
+    } else {
+        $::kindlegencommand = ::setdefaultpath(
+            $::kindlegencommand,
+            ::catfile(
+                File::HomeDir::home(), 'AppData', 'Local', 'Amazon',
+                'Kindle Previewer 3',  'lib',     'fc',    'bin',
+                'kindlegen.exe'
+            )
+        );
+    }
 
     my $textwindow = $::textwindow;
     $textwindow->tagConfigure( 'footnote', -background => 'cyan' );
