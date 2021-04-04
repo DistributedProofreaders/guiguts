@@ -183,6 +183,7 @@ sub selectrewrap {
           $textwindow->search( '-regex', '--',
             "(^$TEMPPAGEMARK*\$|^$TEMPPAGEMARK*[$::allblocktypes]/$TEMPPAGEMARK*\$)",
             $thisblockstart, $end );    # find end of paragraph or end of markup
+        $thisblockend = "$thisblockend lineend" if $thisblockend;
 
         # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
