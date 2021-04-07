@@ -1911,9 +1911,9 @@ sub htmlimageok {
     if ( $insertpoint and $::lglobal{htmlimgwidthtype} ne 'px' ) {    # px type uses style, not class
         my $cssdef = ".$classname {width: " . $width . "$::lglobal{htmlimgwidthtype};}";
 
-        # If % width and override flag set, then also add CSS to override width to 100% for epub
+        # If % width and override flag set (and not already 100%), then also add CSS to override width to 100% for epub
         my $cssovr =
-          ( $::lglobal{htmlimgwidthtype} eq '%' and $::epubpercentoverride )
+          ( $::lglobal{htmlimgwidthtype} eq '%' and $::epubpercentoverride and $width ne 100 )
           ? "\n.x-ebookmaker .$classname {width: 100%;}"
           : "";
 
