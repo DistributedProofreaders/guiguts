@@ -78,7 +78,7 @@
   highlighting, and is therefore configurable.
 - `Program Files (x86)` and `Program Files` will be checked automatically
   as default folders on Windows systems to find Aspell and XnView.
-- Version 0.10.3 of ebookmaker is now included with Guiguts.
+- Version 0.10.5 of ebookmaker is now included with Guiguts.
 - Kindlegen is no longer bundled with the release. Instead, the user can
   either just create epub, not mobi, files when using ebookmaker locally,
   or can use Set File Paths to locate kindlegen which is included when
