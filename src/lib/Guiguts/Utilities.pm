@@ -796,9 +796,9 @@ sub initialize {
     $::manualhash{'brkpop'}                  = '/Tools_Menu#Check_Orphaned_Brackets';
     $::manualhash{'comcharspop'}             = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'comcharsconfigpop'}       = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
-    $::manualhash{'composekeypop'}           = '/Preferences_Menu#Processing';
-    $::manualhash{'composepop'}              = '/Help_Menu';
-    $::manualhash{'composerefpop'}           = '/Help_Menu';
+    $::manualhash{'composekeypop'}           = '/Preferences_Menu#setcomposekey';
+    $::manualhash{'composepop'}              = '/Tools_Menu#Compose_Sequence';
+    $::manualhash{'composerefpop'}           = '/Help_Menu#composekey';
     $::manualhash{'defurlspop'}              = '/Preferences_Menu#File_Paths';
     $::manualhash{'elinkpop'}                = '/HTML_Menu#The_HTML_Markup_Dialog';
     $::manualhash{'errorcheckpop+Bookloupe'} = '/Tools_Menu#Bookloupe';
