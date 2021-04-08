@@ -379,11 +379,11 @@ sub errorcheckpop_up {
 
     ::working();
     if ( $errorchecktype eq 'Bookloupe' ) {
-        gcwindowpopulate();
+        gcwindowpopulate();    # Also handles query count display since it depends on shown/hidden error types
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
+        eccountupdate( $mark + $countplus );
     }
-    eccountupdate( $mark + $countplus );
 
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
