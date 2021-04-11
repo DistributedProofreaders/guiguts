@@ -55,7 +55,7 @@ EOM
             -text             => 'OK',
             -command          => sub { ::killpopup('aboutpop'); }
         )->pack( -pady => 6 );
-        $::lglobal{aboutpop}->resizable( 'no', 'no' );
+        $::lglobal{aboutpop}->resizable( 'yes', 'yes' );
         $::lglobal{aboutpop}->raise;
         $::lglobal{aboutpop}->focus;
     }
