@@ -1968,6 +1968,8 @@ sub htmlimageok {
         }
     }
     $textwindow->addGlobEnd;
+    $textwindow->markSet( 'insert', 'thisblockstart' );
+    $textwindow->see('insert');
 }
 
 sub htmlimagedestroy {
