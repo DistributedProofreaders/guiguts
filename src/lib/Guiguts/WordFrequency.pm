@@ -1264,7 +1264,9 @@ sub sortanddisplaywords {
         for ( ::natural_sort_alpha( keys %$href ) ) {
             my $line = sprintf( "%-8d %s", $$href{$_}, $_ );    # Print to the file
             $::lglobal{wclistbox}->insert( 'end', $line );
-            my $firstletter = lc( ::deaccentsort( substr( $_, 0, 1 ) ) );
+
+            # Get the first letter of the deaccented form of the word's first letter
+            my $firstletter = substr( lc( ::deaccentsort( substr( $_, 0, 1 ) ) ), 0, 1 );
             if ( $firstletter ne $lastletter && $firstletter =~ /[a-z]/ ) {
                 $lastletter = $firstletter;
                 my $thispos = $::lglobal{wclistbox}->size;
@@ -1272,7 +1274,7 @@ sub sortanddisplaywords {
                     '<Key-' . $firstletter . '>' => eval {
                         sub { \$::lglobal{wclistbox}->yview( $thispos - 2 ) }
                     }
-                ) unless length($firstletter) > 1;
+                );
             }
         }
     } elsif ( $::alpha_sort eq 'l' ) {    # Sorted by word length
