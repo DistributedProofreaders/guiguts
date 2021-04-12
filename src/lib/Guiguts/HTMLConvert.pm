@@ -1862,11 +1862,13 @@ sub htmlimageok {
     my ( $fname, $extension );
     ( $fname, $::globalimagepath, $extension ) = ::fileparse($name);
     $::globalimagepath = ::os_normal($::globalimagepath);
+
+    # Convert image path to relative path by removing project directory path from start if possible
     $name =~ s/[\/\\]/\;/g;
     my $tempname = $::globallastpath;
     $tempname =~ s/[\/\\]/\;/g;
-    $name     =~ s/$tempname//;
-    $name     =~ s/;/\//g;
+    $name = substr( $name, length($tempname) ) if index( $name, $tempname ) == 0;
+    $name =~ s/;/\//g;
     my $selection = $::lglobal{captiontext}->get;
     $selection ||= '';
     my $alt = $::lglobal{alttext}->get;
