@@ -2,6 +2,8 @@ package Guiguts::Tests;
 use strict;
 use warnings;
 
+my $TESTDIR = '../tests'; # Location of test files relative to guiguts.pl
+
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
@@ -57,9 +59,9 @@ sub runtests {
     ok( 1 == do { ::file_close($textwindow); 1 }, "close $READMEFILE" );
 
     # Test of rewrapping
-    my $WRAPINFILE   = "tests/testfile.txt";
-    my $WRAPOUTFILE  = "tests/testfilewrapped.txt";
-    my $WRAPBASEFILE = "tests/testfilebaseline.txt";
+    my $WRAPINFILE   = "$TESTDIR/testfile.txt";
+    my $WRAPOUTFILE  = "$TESTDIR/testfilewrapped.txt";
+    my $WRAPBASEFILE = "$TESTDIR/testfilebaseline.txt";
     ok( -e $WRAPINFILE, "$WRAPINFILE exists" );
 
     ok( 1 == do { ::openfile($WRAPINFILE); 1 }, "openfile on $WRAPINFILE" );
@@ -95,10 +97,10 @@ sub runtests {
 # Run an HTML conversion test with filenames determined by input argument
 sub runtesthtml {
     my $number       = shift;
-    my $HTMLINFILE   = "tests/testhtml${number}.txt";
-    my $HTMLOUTFILE  = "tests/testhtml${number}.html";
-    my $HTMLBASEFILE = "tests/testhtml${number}baseline.html";
-    my $HTMLBAKFILE  = "tests/testhtml${number}-htmlbak.txt";
+    my $HTMLINFILE   = "$TESTDIR/testhtml${number}.txt";
+    my $HTMLOUTFILE  = "$TESTDIR/testhtml${number}.html";
+    my $HTMLBASEFILE = "$TESTDIR/testhtml${number}baseline.html";
+    my $HTMLBAKFILE  = "$TESTDIR/testhtml${number}-htmlbak.txt";
 
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -132,8 +134,8 @@ sub runtesthtml {
 # input filename and baseline output filename
 sub runtesterrorcheck {
     my $TESTTYPE      = shift;
-    my $CHECKINFILE   = "tests/" . shift;
-    my $CHECKBASEFILE = "tests/" . shift;
+    my $CHECKINFILE   = "$TESTDIR/" . shift;
+    my $CHECKBASEFILE = "$TESTDIR/" . shift;
 
     my $textwindow = $::textwindow;
     my $top        = $::top;

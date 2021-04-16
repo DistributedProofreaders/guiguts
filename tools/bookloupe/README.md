@@ -1,6 +1,6 @@
 # bookloupe
 
-bookloupe is a fork of guiguts that has been updated to support UTF-8.
+bookloupe is a fork of gutcheck that has been updated to support UTF-8.
 
 http://www.juiblex.co.uk/pgdp/bookloupe/
 
