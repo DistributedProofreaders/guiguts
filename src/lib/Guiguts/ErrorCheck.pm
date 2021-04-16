@@ -13,7 +13,7 @@ my @errorchecklines;
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
-# pphtml, pptxt and Load External Checkfile,
+# pphtml, pptxt, ppvimage and Load External Checkfile,
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( $line, $lincol );
@@ -139,7 +139,7 @@ sub errorcheckpop_up {
             $::lglobal{errorchecklistbox}->delete('active');
             $::lglobal{errorchecklistbox}->selectionSet('active');
 
-            eccountupdate(-1) if $rmvmsg =~ /^(\d+):(\d+)/ or $rmvmsg =~ /^\+.+:/;    # If deleted line is a query, update the query count
+            eccountupdate(-1) unless ignorequery( $errorchecktype, $rmvmsg );    # If deleted line is a query, update the query count
             errorcheckview();
             ::unbusy();
         }
@@ -204,8 +204,8 @@ sub errorcheckpop_up {
         $lineadjust =~ s/\..*//;    # strip column from 'row.column'
     }
 
-    my $countblank = 0;             # number of blank lines
-    my $countplus  = 0;             # number of queries flagged with +string:
+    my $countblank   = 0;           # number of blank lines
+    my $countqueries = 0;           # number of queries to be reported
 
     # Read and process one line at a time
     while ( $line = <$fh> ) {
@@ -343,10 +343,8 @@ sub errorcheckpop_up {
             my $markname = "t" . ++$mark;
             $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
             $::errors{$line} = $markname;                                # cross-ref error with mark
-        } elsif ( $line =~ /^\+.+:/ )    # +string: indicates query to resolve by search not line number
-        {
-            $countplus++;
         }
+        $countqueries++ unless ignorequery( $errorchecktype, $line );
 
         # Add all lines to the output, even those without line/column numbers
         push @errorchecklines, $line;
@@ -382,12 +380,44 @@ sub errorcheckpop_up {
         gcwindowpopulate();    # Also handles query count display since it depends on shown/hidden error types
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
-        eccountupdate( $mark + $countplus );
+        eccountupdate($countqueries);
     }
 
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
     $::lglobal{errorcheckpop}->raise;
+}
+
+#
+# Return if this query message should be ignored
+sub ignorequery {
+    my $errorchecktype = shift;
+    my $query          = shift;
+
+    # All +string: messages indicate query to be resolved by search
+    return 0 if $query =~ /^\+.+:/;
+
+    # Don't ignore ppvimage warnings/errors
+    return 0 if $errorchecktype eq "ppvimage" and $query =~ /(WARNING|ERROR):/;
+
+    # Ignore any other queries without line:column numbers
+    return 1 if $query !~ /^\d+:\d+/;
+
+    # Only some ppvimage queries are ignored at the moment
+    return 0 unless $errorchecktype eq "ppvimage";
+
+    # Certain specific ppvimage queries need to be ignored - they are just for information
+    if ( $errorchecktype eq "ppvimage" ) {
+        return (
+                 $query =~ /^\d+:\d+ Image: /
+              or $query =~ /^\d+:\d+ natural width=/
+              or $query =~ /^\d+:\d+ coded width=/
+              or $query =~ /^\d+:\d+ Filesize: +\d+ KB$/
+              or $query =~ /^\d+:\d+ Linked image: /
+              or $query =~ /^\d+:\d+ NOTE: /
+        );
+    }
+    return 0;    # All other tools' line:column queries need counting
 }
 
 sub errorcheckrun {    # Runs error checks
