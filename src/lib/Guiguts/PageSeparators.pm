@@ -53,12 +53,14 @@ EOM
     }
 }
 
-# Called by "Refresh" on Separator popup.
+# Called by "Refresh" and when dialog first popped
 # Wraps single undo around all changes made from this click
+# If 'noauto' argument specified, then don't start processing yet
 sub refreshpageseparatorwrapper {
+    my $noauto     = shift;
     my $textwindow = $::textwindow;
     $textwindow->addGlobStart;
-    refreshpageseparator();
+    refreshpageseparator($noauto);
     $textwindow->addGlobEnd;
 }
 
@@ -624,7 +626,7 @@ sub separatorpopup {
         $::lglobal{pageseppop}->Tk::bind( '<u>' => sub { $undobutton->invoke; } );
         $::lglobal{pageseppop}->Tk::bind( '<e>' => sub { $redobutton->invoke; } );
     }
-    refreshpageseparatorwrapper();
+    refreshpageseparatorwrapper('noauto');    # Don't start automatically when dialog has only just been popped
 }
 
 # Delete blank lines before page separators
