@@ -15,6 +15,7 @@ if [[ $OS == "win" ]]; then
     curl -L -o bookloupe.zip $URL
     unzip bookloupe.zip -d $DEST
     rm -rf bookloupe.zip
+    rm -f $DEST/loupe-test.* $DEST/*.tst    # Don't package test files
 fi
 
 # bookloupe is available via Homebrew on MacOS

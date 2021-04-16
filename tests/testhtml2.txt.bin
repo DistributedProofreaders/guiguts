@@ -1,0 +1,57 @@
+%pagenumbers = (
+ 'Pg001' => {'offset' => '1.0', 'label' => 'Pg i', 'style' => 'Roman', 'action' => 'Start @', 'base' => '001'},
+ 'Pg002' => {'offset' => '15.0', 'label' => 'Pg ii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg003' => {'offset' => '53.0', 'label' => 'Pg iii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg004' => {'offset' => '53.0', 'label' => 'Pg iv', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg005' => {'offset' => '56.0', 'label' => 'Pg v', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg006' => {'offset' => '78.0', 'label' => 'Pg vi', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg007' => {'offset' => '78.0', 'label' => 'Pg vii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg008' => {'offset' => '117.0', 'label' => 'Pg viii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg009' => {'offset' => '153.0', 'label' => 'Pg ix', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg010' => {'offset' => '174.0', 'label' => 'Pg x', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg011' => {'offset' => '174.0', 'label' => 'Pg xi', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg012' => {'offset' => '221.0', 'label' => 'Pg xii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg013' => {'offset' => '238.0', 'label' => 'Pg xiii', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg014' => {'offset' => '246.0', 'label' => 'Pg xiv', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg015' => {'offset' => '246.0', 'label' => 'Pg 3', 'style' => 'Arabic', 'action' => 'Start @', 'base' => '3'},
+ 'Pg016' => {'offset' => '287.65', 'label' => 'Pg 4', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg017' => {'offset' => '330.62', 'label' => 'Pg 5', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg018' => {'offset' => '330.62', 'label' => 'Pg 6', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg019' => {'offset' => '381.0', 'label' => 'Pg 7', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg020' => {'offset' => '426.0', 'label' => 'Pg 8', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg021' => {'offset' => '470.57', 'label' => 'Pg 9', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg022' => {'offset' => '470.57', 'label' => 'Pg 10', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg023' => {'offset' => '520.59', 'label' => 'Pg 11', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg024' => {'offset' => '535.0', 'label' => 'Pg 12', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg025' => {'offset' => '539.0', 'label' => 'Pg 13', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg026' => {'offset' => '571.0', 'label' => 'Pg 14', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg027' => {'offset' => '573.0', 'label' => 'Pg 15', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg028' => {'offset' => '619.0', 'label' => 'Pg 16', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg029' => {'offset' => '635.0', 'label' => 'Pg 17', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg030' => {'offset' => '635.0', 'label' => 'Pg 18', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg031' => {'offset' => '637.0', 'label' => 'Pg 19', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg032' => {'offset' => '686.63', 'label' => 'Pg 20', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg033' => {'offset' => '686.63', 'label' => 'Pg 21', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg034' => {'offset' => '745.61', 'label' => 'Pg 22', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg035' => {'offset' => '788.64', 'label' => 'Pg 23', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg036' => {'offset' => '788.64', 'label' => 'Pg 24', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg037' => {'offset' => '832.61', 'label' => 'Pg 25', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg038' => {'offset' => '832.61', 'label' => 'Pg 26', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg039' => {'offset' => '860.0', 'label' => 'Pg 27', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg040' => {'offset' => '910.0', 'label' => 'Pg 28', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg041' => {'offset' => '959.58', 'label' => 'Pg 29', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg042' => {'offset' => '1006.0', 'label' => 'Pg 30', 'style' => '"', 'action' => '+1', 'base' => ''},
+ 'Pg043' => {'offset' => '1048.0', 'label' => 'Pg 31', 'style' => '"', 'action' => '+1', 'base' => ''},
+);
+
+$main::bookmarks[0] = '1069.2';
+
+$main::spellindexbkmrk = '';
+
+$projectid = '';
+
+$booklang = 'en';
+
+$scannoslistpath = '';
+
+1;
