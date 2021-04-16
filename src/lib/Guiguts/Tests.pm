@@ -2,7 +2,7 @@ package Guiguts::Tests;
 use strict;
 use warnings;
 
-my $TESTDIR = '../tests'; # Location of test files relative to guiguts.pl
+my $TESTDIR = '../tests';    # Location of test files relative to guiguts.pl
 
 BEGIN {
     use Exporter();
