@@ -639,7 +639,7 @@ sub accentcheck {
     my $wordwo = 0;
 
     foreach my $word ( keys %{ $::lglobal{seenwords} } ) {
-        if ( $word =~ /[$::convertcharssinglesearch]/ ) {
+        if ( $word =~ /[$::convertlatinsinglesearch$::convertcharssinglesearch]/ ) {
             $wordw++;
             my $wordtemp = $word;
             $display{$word} = $::lglobal{seenwords}->{$word}
