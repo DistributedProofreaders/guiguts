@@ -10,7 +10,8 @@ BEGIN {
       qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
       &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
-      &file_import_markup &operationadd &isedited &setedited &cpcharactersubs);
+      &file_import_markup &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
+      &cpcharactersubs);
 }
 
 sub file_open {    # Find a text file to open
@@ -337,6 +338,11 @@ sub _bin_save {
         print $fh "\$::booklang = '$::booklang';\n\n";
         print $fh
           "\$scannoslistpath = '@{[::escape_problems(::os_normal($::scannoslistpath))]}';\n\n";
+        foreach ( sort keys %::charsuiteenabled ) {
+            next unless $::charsuiteenabled{$_};
+            print $fh "\$::charsuiteenabled{'" . ::escape_problems($_) . "'} = 1;\n";
+        }
+        print $fh "\n";
         print $fh '1;';
         $fh->close;
         chmod $permsave, $binname if $permsave;    # copy file permissions if overwriting
@@ -362,6 +368,7 @@ sub clearvars {
     $::lglobal{fnarray}       = ();
     %::pagenumbers            = ();
     %::operationshash         = ();
+    %::charsuiteenabled       = ( 'Basic Latin' => 1 );    # All projects allow Basic Latin character suite
     @::bookmarks              = ();
     $::pngspath               = q{};
     ::setedited(0);
@@ -904,7 +911,7 @@ EOM
         # otherwise we can't have a default value of 1 without overwriting the user's setting
         for (
             qw/alpha_sort activecolor auto_page_marks auto_show_images autobackup autosave autosaveinterval bkgcolor
-            blocklmargin blockrmargin bold_char composepopbinding cssvalidationlevel
+            blocklmargin blockrmargin bold_char charsuitewfhighlight composepopbinding cssvalidationlevel
             defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
             font_char fontname fontsize fontweight gblfontname gblfontsize gblfontweight gblfontsystemuse
             geometry gesperrt_char globalaspellmode highlightcolor history_size htmlimageallowpixels ignoreversionnumber
@@ -1144,6 +1151,71 @@ sub setedited {
     my $textwindow = $::textwindow;
     $::lglobal{isedited} = $val;
     $textwindow->ResetUndo unless $val;
+}
+
+#
+# Pop the Enable Character Suites dialog
+sub charsuitespopup {
+    my $top = $::top;
+    if ( defined( $::lglobal{charsuitespopup} ) ) {
+        $::lglobal{charsuitespopup}->deiconify;
+        $::lglobal{charsuitespopup}->raise;
+        $::lglobal{charsuitespopup}->focus;
+    } else {
+        $::lglobal{charsuitespopup} = $top->Toplevel;
+        $::lglobal{charsuitespopup}->title('Enabled Character Suites');
+        ::initialize_popup_with_deletebinding('charsuitespopup');
+
+        # Create a checkbutton for each character suite
+        my $f0  = $::lglobal{charsuitespopup}->Frame->pack;
+        my $row = 1;
+        for my $suite ( sort keys %{ $::lglobal{dpcharsuite} } ) {
+            $::charsuiteenabled{$suite} = 0 unless defined $::charsuiteenabled{$suite};
+            $f0->Checkbutton(
+                -variable    => \$::charsuiteenabled{$suite},
+                -selectcolor => $::lglobal{checkcolor},
+                -text        => $suite,
+                -state       => ( $suite eq 'Basic Latin' ? 'disabled' : 'normal' ),    # User can't turn off Basic Latin
+                -command     => sub { ::sortanddisplayhighlight(); },
+            )->grid(
+                -row    => $row++,
+                -column => 1,
+                -sticky => 'w'
+            );
+        }
+
+        $::lglobal{charsuitespopup}->resizable( 'no', 'no' );
+        $::lglobal{charsuitespopup}->raise;
+        $::lglobal{charsuitespopup}->focus;
+    }
+}
+
+#
+# Check if given character is in an enabled character suite
+sub charsuitecheck {
+    my $char = shift;
+    for my $suite ( keys %{ $::lglobal{dpcharsuite} } ) {
+        next unless $::charsuiteenabled{$suite};    # Only check enabled suites
+        return 1 if index( $::lglobal{dpcharsuite}{$suite}, $char ) >= 0;
+    }
+    return 0;
+}
+
+#
+# Return which character suite contains given character (or empty string if none)
+sub charsuitefind {
+    my $char = shift;
+    for my $suite ( sort keys %{ $::lglobal{dpcharsuite} } ) {    # Check suites in alphabetical order
+        return $suite if index( $::lglobal{dpcharsuite}{$suite}, $char ) >= 0;
+    }
+    return '';
+}
+
+#
+# Enable the given character suite
+sub charsuiteenable {
+    my $suite = shift;
+    $::charsuiteenabled{$suite} = 1;
 }
 
 #

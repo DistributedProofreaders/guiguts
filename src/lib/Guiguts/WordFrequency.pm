@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&wordfrequencybuildwordlist &wordfrequency &ital_adjust);
+    @EXPORT = qw(&wordfrequencybuildwordlist &wordfrequency &ital_adjust &sortanddisplayhighlight);
 }
 
 # build lists of words, word pairs, and double hyphenated words
@@ -120,7 +120,7 @@ sub wordfrequency {
             -command          => sub {
                 return unless ( $::lglobal{wclistbox}->curselection );
                 $::lglobal{harmonics} = 1;
-                harmonicspop($top);
+                harmonicspop();
             },
             -text => '1st Harm',
         )->pack(
@@ -134,7 +134,7 @@ sub wordfrequency {
             -command          => sub {
                 return unless ( $::lglobal{wclistbox}->curselection );
                 $::lglobal{harmonics} = 2;
-                harmonicspop($top);
+                harmonicspop();
             },
             -text => '2nd Harm',
         )->pack(
@@ -355,35 +355,20 @@ sub wordfrequency {
                 $top->raise;
             }
         );
-        $::lglobal{wclistbox}->eventAdd( '<<harm>>' => '<Control-Button-1>' );
+
+        # If showing character counts, Ctrl-Mouse-1 allows containing character suite to be selected
+        # For other displays, Ctrl-Mouse-1 pops the harmonics dialog
         $::lglobal{wclistbox}->bind(
-            '<<harm>>',
+            '<Control-ButtonRelease-1>',
             sub {
-                return unless ( $::lglobal{wclistbox}->curselection );
-                harmonics( $::lglobal{wclistbox}->get('active') );
-                harmonicspop();
-            }
-        );
-        $::lglobal{wclistbox}->eventAdd(
-            '<<adddict>>' => '<Control-Button-2>',
-            '<Control-Button-3>'
-        );
-        $::lglobal{wclistbox}->bind(
-            '<<adddict>>',
-            sub {
-                return unless ( $::lglobal{wclistbox}->curselection );
-                return unless $::lglobal{wclistbox}->index('active');
-                my $sword = $::lglobal{wclistbox}->get('active');
-                $sword =~ s/\d+\s+([\w'-]*)/$1/;
-                $sword =~ s/\*\*\*\*$//;
-                $sword =~ s/\s//g;
-                return if ( $sword =~ /[^\p{Alnum}']/ );
-                ::spellmyaddword($sword);
-                delete( $::lglobal{spellsort}->{$sword} );
-                $::lglobal{wfsaveheader} =
-                  scalar( keys %{ $::lglobal{spellsort} } )
-                  . ' words not recognised by the spellchecker.';
-                sortanddisplaywords( \%{ $::lglobal{spellsort} } );
+                my $line = $::lglobal{wclistbox}->get('active');
+                return unless $line;
+                if ( $::lglobal{wfsaveheader} =~ /characters in the file/ ) {
+                    charsortsuitecontrol($line) if $::charsuitewfhighlight;
+                } else {
+                    harmonics($line);
+                    harmonicspop();
+                }
             }
         );
         add_navigation_events( $::lglobal{wclistbox} );
@@ -992,6 +977,41 @@ sub charsortcheck {
     $top->Unbusy;
 }
 
+#
+# Handle charsuite enabling relating to given character.
+# If character is in a selected charsuite, do nothing.
+# If in another charsuite, offer to select that suite
+# If in none, pop error dialog
+sub charsortsuitecontrol {
+    my $top  = $::top;
+    my $char = shift;             # Line from WF dialog containing character to be checked
+    $char =~ s/\d+\s+(\S)/$1/;    # Extract the character to be checked
+    return if ::charsuitecheck($char);
+    my $suite = ::charsuitefind($char);
+    if ($suite) {
+        my $reply = $top->messageBox(
+            -icon    => 'question',
+            -title   => 'Enable Character Suite',
+            -type    => 'YesNo',
+            -default => 'yes',
+            -message =>
+              "Character is in the $suite character suite.\nWould you like to enable that suite?",
+        );
+        if ( $reply =~ /yes/i ) {
+            ::charsuiteenable($suite);
+            sortanddisplayhighlight();    # Update highlighting
+        }
+    } else {
+        $top->messageBox(
+            -icon    => 'warning',
+            -title   => 'No Character Suite',
+            -type    => 'OK',
+            -default => 'ok',
+            -message => "No character suite found containing that character.",
+        );
+    }
+}
+
 sub stealthcheck {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -1068,7 +1088,7 @@ sub ligaturecheck {
 }
 
 sub harmonicspop {
-    my $top = shift;
+    my $top = $::top;
     my ( $line, $word, $sword, $snum, @savesets, $wc );
     if ( $::lglobal{hpopup} ) {
         $::lglobal{hpopup}->deiconify;
@@ -1285,7 +1305,36 @@ sub sortanddisplaywords {
     }
     $::lglobal{wclistbox}->delete('0');
     $::lglobal{wclistbox}->insert( '0', $::lglobal{wfsaveheader} );
+    sortanddisplayhighlight();
     $::lglobal{wclistbox}->update;
+}
+
+#
+# Handling highlighting in the word frequency dialog list
+# Currently only used for Character Count, but safe to call any time
+sub sortanddisplayhighlight {
+    my $force = shift;    # Force highlighting clear even if highlight flag is off
+
+    return
+      unless Tk::Exists( $::lglobal{wclistbox} )                   # Only highlight if dialog is popped
+      and $::lglobal{wfsaveheader} =~ /characters in the file/;    # Only highlight if showing Character Count
+    return unless $::charsuitewfhighlight or $force;               # Only highlight if flag on, or being forced
+
+    my $numentries = $::lglobal{wclistbox}->size();
+    return if $numentries < 1;
+
+    # Get default background color from first (summary) line
+    my $defaultcolor = $::lglobal{wclistbox}->itemcget( 0, -background );
+
+    for my $entry ( 1 .. $numentries - 1 ) {
+        my $char = $::lglobal{wclistbox}->get($entry);
+        $char =~ s/\d+ +(.+)/$1/;
+        next if length($char) > 1;    # Only consider highlight for single character entries
+
+        my $color = ::charsuitecheck($char) ? $defaultcolor : 'yellow';
+        $color = $defaultcolor if $force and not $::charsuitewfhighlight;    # Override flag if forcing
+        $::lglobal{wclistbox}->itemconfigure( $entry, -background => $color );
+    }
 }
 
 sub nofileloaded {
