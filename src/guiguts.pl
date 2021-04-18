@@ -116,8 +116,9 @@ our $blocklmargin     = 1;
 our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
-our $booklang          = 'en';
-our $composepopbinding = 'Alt_R';               # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
+our $booklang             = 'en';
+our $charsuitewfhighlight = 0;                  # Don't do charsuite availability highlighting in WF dialog
+our $composepopbinding    = 'Alt_R';            # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
 $composepopbinding = 'Control-m' if $OS_MAC;    # Default to Ctrl+m on a Mac - Alt+RightArrow does the same indent operation
 our %composehash;                               # Keystrokes to insert character
 our $cssvalidationlevel  = 'css3';              # CSS level checked by validator (css3 or css21)
@@ -208,31 +209,32 @@ our $validatecommand    = '';
 our $validatecsscommand = '';
 our $ebookmakercommand  = '';
 our $kindlegencommand   = '';
+our %charsuiteenabled   = ( 'Basic Latin' => 1 );    # All projects allow Basic Latin character suite
 our %pagenumbers;
 our %projectdict;
 our %reghints = ();
 our %scannoslist;
-our %geometryhash;                #Geometry of some windows in one hash.
+our %geometryhash;                                   #Geometry of some windows in one hash.
 $geometryhash{wfpop} = q{};
-our %positionhash;                #Position of other windows in one hash.
-our %manualhash;                  # subpage of manual for each dialog
+our %positionhash;                                   #Position of other windows in one hash.
+our %manualhash;                                     # subpage of manual for each dialog
 our @bookmarks  = ( 0, 0, 0, 0, 0, 0 );
 our @multidicts = ();
 our @mygcview;
-our %operationshash;              # New format {operation, time}
+our %operationshash;                                 # New format {operation, time}
 our @pageindex;
 our @recentfile;
 @recentfile = ('README.md');
 our @replace_history;
 our @search_history;
-our @sopt = ( 0, 0, 0, 0, 0 );    # default is not whole word search
+our @sopt = ( 0, 0, 0, 0, 0 );                       # default is not whole word search
 our @wfsearchopt;
-our @userchars;                   # user defined chars for common characters dialog
+our @userchars;                                      # user defined chars for common characters dialog
 
 # html markup dialog
-our @htmlentry = ('') x 4;        # class/attributes for each div, span, i button
-our @htmlentryhistory;            # single shared history list htmlentry
-our %htmlentryattribhash;         # class/attributes for each element button
+our @htmlentry = ('') x 4;                           # class/attributes for each div, span, i button
+our @htmlentryhistory;                               # single shared history list htmlentry
+our %htmlentryattribhash;                            # class/attributes for each element button
 
 our %htmllabels;
 our %convertcharsdisplay;

@@ -733,6 +733,7 @@ sub initialize {
     $::geometryhash{alignpop}         = '+338+83'         unless $::geometryhash{alignpop};
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
+    $::positionhash{charsuitespopup}  = '+50+50'          unless $::positionhash{charsuitespopup};
     $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
     $::positionhash{composekeypop}    = '+200+52'         unless $::positionhash{composekeypop};
     $::geometryhash{composepop}       = '200x70+100+10'   unless $::geometryhash{composepop};
@@ -794,6 +795,7 @@ sub initialize {
     $::manualhash{'alignpop'}                = '/Text_Menu#Align_text_on_string';
     $::manualhash{'asciiboxpop'}             = '/Text_Menu#Draw_ASCII_Boxes';
     $::manualhash{'brkpop'}                  = '/Tools_Menu#Check_Orphaned_Brackets';
+    $::manualhash{'charsuitespopup'}         = '/File_Menu#Content_Providing';
     $::manualhash{'comcharspop'}             = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'comcharsconfigpop'}       = '/Unicode_Menu#The_Commonly-Used_Characters_Dialog';
     $::manualhash{'composekeypop'}           = '/Preferences_Menu#setcomposekey';
@@ -1510,6 +1512,124 @@ sub initialize {
         "\x{1FAD}" => 'Ô(/|',
         "\x{1FAE}" => 'Ô~)|',
         "\x{1FAF}" => 'Ô~(|',
+    );
+
+    # DP character suites (easier to copy and edit with regexes from the tables on
+    # https://www.pgdp.net/c/tools/charsuites.php than from the DP code)
+    # Note that combining characters are used in some of the character suites. They are
+    # not included here since tools such as Character Count do not treat the characters
+    # in a combined way, so allowing "s + combinining diaresis below" would inadvertently
+    # allow "combinining diaresis below" and thus "x + combinining diaresis below"
+    # where x is any other permitted letter.
+    # Combining characters appear as standalone characters in Character Count, as they always
+    # have, and will be flagged as not being in any character suite, thus warning the
+    # user to check how they are used in the file.
+    %{ $::lglobal{dpcharsuite} } = (
+        "Basic Greek" =>
+          "\x{0391}\x{0392}\x{0393}\x{0394}\x{0395}\x{0396}\x{0397}\x{0398}\x{0399}\x{039a}"
+          . "\x{039b}\x{039c}\x{039d}\x{039e}\x{039f}\x{03a0}\x{03a1}\x{03a3}\x{03a4}\x{03a5}"
+          . "\x{03a6}\x{03a7}\x{03a8}\x{03a9}\x{03b1}\x{03b2}\x{03b3}\x{03b4}\x{03b5}\x{03b6}"
+          . "\x{03b7}\x{03b8}\x{03b9}\x{03ba}\x{03bb}\x{03bc}\x{03bd}\x{03be}\x{03bf}\x{03c0}"
+          . "\x{03c1}\x{03c2}\x{03c3}\x{03c4}\x{03c5}\x{03c6}\x{03c7}\x{03c8}\x{03c9}",
+
+        "Basic Latin" =>
+          "\x{0020}\x{0021}\x{0022}\x{0023}\x{0024}\x{0025}\x{0026}\x{0027}\x{0028}\x{0029}"
+          . "\x{002a}\x{002b}\x{002c}\x{002d}\x{002e}\x{002f}\x{0030}\x{0031}\x{0032}\x{0033}"
+          . "\x{0034}\x{0035}\x{0036}\x{0037}\x{0038}\x{0039}\x{003a}\x{003b}\x{003c}\x{003d}"
+          . "\x{003e}\x{003f}\x{0040}\x{0041}\x{0042}\x{0043}\x{0044}\x{0045}\x{0046}\x{0047}"
+          . "\x{0048}\x{0049}\x{004a}\x{004b}\x{004c}\x{004d}\x{004e}\x{004f}\x{0050}\x{0051}"
+          . "\x{0052}\x{0053}\x{0054}\x{0055}\x{0056}\x{0057}\x{0058}\x{0059}\x{005a}\x{005b}"
+          . "\x{005c}\x{005d}\x{005e}\x{005f}\x{0060}\x{0061}\x{0062}\x{0063}\x{0064}\x{0065}"
+          . "\x{0066}\x{0067}\x{0068}\x{0069}\x{006a}\x{006b}\x{006c}\x{006d}\x{006e}\x{006f}"
+          . "\x{0070}\x{0071}\x{0072}\x{0073}\x{0074}\x{0075}\x{0076}\x{0077}\x{0078}\x{0079}"
+          . "\x{007a}\x{007b}\x{007c}\x{007d}\x{007e}\x{00a1}\x{00a2}\x{00a3}\x{00a4}\x{00a5}"
+          . "\x{00a6}\x{00a7}\x{00a8}\x{00a9}\x{00aa}\x{00ab}\x{00ac}\x{00ae}\x{00af}\x{00b0}"
+          . "\x{00b1}\x{00b2}\x{00b3}\x{00b4}\x{00b5}\x{00b6}\x{00b7}\x{00b8}\x{00b9}\x{00ba}"
+          . "\x{00bb}\x{00bc}\x{00bd}\x{00be}\x{00bf}\x{00c0}\x{00c1}\x{00c2}\x{00c3}\x{00c4}"
+          . "\x{00c5}\x{00c6}\x{00c7}\x{00c8}\x{00c9}\x{00ca}\x{00cb}\x{00cc}\x{00cd}\x{00ce}"
+          . "\x{00cf}\x{00d0}\x{00d1}\x{00d2}\x{00d3}\x{00d4}\x{00d5}\x{00d6}\x{00d7}\x{00d8}"
+          . "\x{00d9}\x{00da}\x{00db}\x{00dc}\x{00dd}\x{00de}\x{00df}\x{00e0}\x{00e1}\x{00e2}"
+          . "\x{00e3}\x{00e4}\x{00e5}\x{00e6}\x{00e7}\x{00e8}\x{00e9}\x{00ea}\x{00eb}\x{00ec}"
+          . "\x{00ed}\x{00ee}\x{00ef}\x{00f0}\x{00f1}\x{00f2}\x{00f3}\x{00f4}\x{00f5}\x{00f6}"
+          . "\x{00f7}\x{00f8}\x{00f9}\x{00fa}\x{00fb}\x{00fc}\x{00fd}\x{00fe}\x{00ff}\x{0152}"
+          . "\x{0153}\x{0160}\x{0161}\x{017d}\x{017e}\x{0178}\x{0192}\x{2039}\x{203a}",
+
+        "Extended European Latin A" =>
+          "\x{0102}\x{0103}\x{0108}\x{0109}\x{011c}\x{011d}\x{014a}\x{014b}\x{015c}\x{015d}"
+          . "\x{016c}\x{016d}\x{0124}\x{0125}\x{0134}\x{0135}\x{0150}\x{0151}\x{0166}\x{0167}"
+          . "\x{0170}\x{0171}\x{0174}\x{0175}\x{0176}\x{0177}\x{0218}\x{0219}\x{021a}\x{021b}",
+
+        "Extended European Latin B" =>
+          "\x{0100}\x{0101}\x{010c}\x{010d}\x{010e}\x{010f}\x{0112}\x{0113}\x{011a}\x{011b}"
+          . "\x{0122}\x{0123}\x{012a}\x{012b}\x{0136}\x{0137}\x{0139}\x{013a}\x{013b}\x{013c}"
+          . "\x{013d}\x{013e}\x{0145}\x{0146}\x{0147}\x{0148}\x{014c}\x{014d}\x{0154}\x{0155}"
+          . "\x{0156}\x{0157}\x{0158}\x{0159}\x{0160}\x{0161}\x{0164}\x{0165}\x{016a}\x{016b}"
+          . "\x{016e}\x{016f}\x{017d}\x{017e}",
+
+        "Extended European Latin C" =>
+          "\x{0104}\x{0105}\x{0106}\x{0107}\x{010a}\x{010b}\x{010c}\x{010d}\x{0110}\x{0111}"
+          . "\x{0116}\x{0117}\x{0118}\x{0119}\x{0120}\x{0121}\x{0126}\x{0127}\x{012e}\x{012f}"
+          . "\x{0141}\x{0142}\x{0143}\x{0144}\x{015a}\x{015b}\x{0160}\x{0161}\x{016a}\x{016b}"
+          . "\x{0172}\x{0173}\x{0179}\x{017a}\x{017b}\x{017c}\x{017d}\x{017e}",
+
+        "Medievalist supplement" =>
+          "\x{0100}\x{0101}\x{0102}\x{0103}\x{0111}\x{0112}\x{0113}\x{0114}\x{0115}\x{0118}"
+          . "\x{0119}\x{0127}\x{012a}\x{012b}\x{012c}\x{012d}\x{014c}\x{014d}\x{014e}\x{014f}"
+          . "\x{016a}\x{016b}\x{016c}\x{016d}\x{017f}\x{0180}\x{01bf}\x{01e2}\x{01e3}\x{01ea}"
+          . "\x{01eb}\x{01f7}\x{01fc}\x{01fd}\x{021c}\x{021d}\x{0232}\x{0233}\x{204a}\x{a734}"
+          . "\x{a735}\x{a751}\x{a753}\x{a755}\x{a75d}\x{a765}\x{a76b}\x{a76d}\x{a770}",
+
+        "Polytonic Greek" =>
+          "\x{02b9}\x{0375}\x{0391}\x{0392}\x{0393}\x{0394}\x{0395}\x{0396}\x{0397}\x{0398}"
+          . "\x{0399}\x{039a}\x{039b}\x{039c}\x{039d}\x{039e}\x{039f}\x{03a0}\x{03a1}\x{03a3}"
+          . "\x{03a4}\x{03a5}\x{03a6}\x{03a7}\x{03a8}\x{03a9}\x{03aa}\x{03ab}\x{03b1}\x{03b2}"
+          . "\x{03b3}\x{03b4}\x{03b5}\x{03b6}\x{03b7}\x{03b8}\x{03b9}\x{03ba}\x{03bb}\x{03bc}"
+          . "\x{03bd}\x{03be}\x{03bf}\x{03c0}\x{03c1}\x{03c2}\x{03c3}\x{03c4}\x{03c5}\x{03c6}"
+          . "\x{03c7}\x{03c8}\x{03c9}\x{03ca}\x{03cb}\x{03db}\x{03dc}\x{03dd}\x{03f2}\x{03f9}"
+          . "\x{0386}\x{0388}\x{0389}\x{038a}\x{038c}\x{038e}\x{038f}\x{0390}\x{03ac}\x{03ad}"
+          . "\x{03ae}\x{03af}\x{03b0}\x{03cc}\x{03cd}\x{03ce}\x{1f00}\x{1f01}\x{1f02}\x{1f03}"
+          . "\x{1f04}\x{1f05}\x{1f06}\x{1f07}\x{1f08}\x{1f09}\x{1f0a}\x{1f0b}\x{1f0c}\x{1f0d}"
+          . "\x{1f0e}\x{1f0f}\x{1f10}\x{1f11}\x{1f12}\x{1f13}\x{1f14}\x{1f15}\x{1f18}\x{1f19}"
+          . "\x{1f1a}\x{1f1b}\x{1f1c}\x{1f1d}\x{1f20}\x{1f21}\x{1f22}\x{1f23}\x{1f24}\x{1f25}"
+          . "\x{1f26}\x{1f27}\x{1f28}\x{1f29}\x{1f2a}\x{1f2b}\x{1f2c}\x{1f2d}\x{1f2e}\x{1f2f}"
+          . "\x{1f30}\x{1f31}\x{1f32}\x{1f33}\x{1f34}\x{1f35}\x{1f36}\x{1f37}\x{1f38}\x{1f39}"
+          . "\x{1f3a}\x{1f3b}\x{1f3c}\x{1f3d}\x{1f3e}\x{1f3f}\x{1f40}\x{1f41}\x{1f42}\x{1f43}"
+          . "\x{1f44}\x{1f45}\x{1f48}\x{1f49}\x{1f4a}\x{1f4b}\x{1f4c}\x{1f4d}\x{1f50}\x{1f51}"
+          . "\x{1f52}\x{1f53}\x{1f54}\x{1f55}\x{1f56}\x{1f57}\x{1f59}\x{1f5b}\x{1f5d}\x{1f5f}"
+          . "\x{1f60}\x{1f61}\x{1f62}\x{1f63}\x{1f64}\x{1f65}\x{1f66}\x{1f67}\x{1f68}\x{1f69}"
+          . "\x{1f6a}\x{1f6b}\x{1f6c}\x{1f6d}\x{1f6e}\x{1f6f}\x{1f70}\x{1f72}\x{1f74}\x{1f76}"
+          . "\x{1f78}\x{1f7a}\x{1f7c}\x{1f80}\x{1f81}\x{1f82}\x{1f83}\x{1f84}\x{1f85}\x{1f86}"
+          . "\x{1f87}\x{1f88}\x{1f89}\x{1f8a}\x{1f8b}\x{1f8c}\x{1f8d}\x{1f8e}\x{1f8f}\x{1f90}"
+          . "\x{1f91}\x{1f92}\x{1f93}\x{1f94}\x{1f95}\x{1f96}\x{1f97}\x{1f98}\x{1f99}\x{1f9a}"
+          . "\x{1f9b}\x{1f9c}\x{1f9d}\x{1f9e}\x{1f9f}\x{1fa0}\x{1fa1}\x{1fa2}\x{1fa3}\x{1fa4}"
+          . "\x{1fa5}\x{1fa6}\x{1fa7}\x{1fa8}\x{1fa9}\x{1faa}\x{1fab}\x{1fac}\x{1fad}\x{1fae}"
+          . "\x{1faf}\x{1fb0}\x{1fb1}\x{1fb2}\x{1fb3}\x{1fb4}\x{1fb6}\x{1fb7}\x{1fb8}\x{1fb9}"
+          . "\x{1fba}\x{1fbc}\x{1fc2}\x{1fc3}\x{1fc4}\x{1fc6}\x{1fc7}\x{1fc8}\x{1fca}\x{1fcc}"
+          . "\x{1fd0}\x{1fd1}\x{1fd2}\x{1fd6}\x{1fd7}\x{1fd8}\x{1fd9}\x{1fda}\x{1fe0}\x{1fe1}"
+          . "\x{1fe2}\x{1fe4}\x{1fe5}\x{1fe6}\x{1fe7}\x{1fe8}\x{1fe9}\x{1fea}\x{1fec}\x{1ff2}"
+          . "\x{1ff3}\x{1ff4}\x{1ff6}\x{1ff7}\x{1ff8}\x{1ffa}\x{1ffc}",
+
+        "Semitic and Indic transcriptions" =>
+          "\x{0100}\x{0101}\x{0112}\x{0113}\x{012a}\x{012b}\x{014c}\x{014d}\x{015a}\x{015b}"
+          . "\x{0160}\x{0161}\x{016a}\x{016b}\x{02be}\x{02bf}\x{1e0c}\x{1e0d}\x{1e24}\x{1e25}"
+          . "\x{1e2a}\x{1e2b}\x{1e32}\x{1e33}\x{1e37}\x{1e39}\x{1e40}\x{1e41}\x{1e42}\x{1e43}"
+          . "\x{1e44}\x{1e45}\x{1e46}\x{1e47}\x{1e5a}\x{1e5b}\x{1e5c}\x{1e5d}\x{1e62}\x{1e63}"
+          . "\x{1e6c}\x{1e6d}\x{1e92}\x{1e93}\x{1e94}\x{1e95}\x{1e96}",
+
+        # Characters s, t & z with combining diaresis below are in the Semitic/Indic charsuite
+        # They are not included for the reason explained in the comment above
+        #\x{0053}\x{0324}\x{0054}\x{0324}\x{005a}\x{0324}\x{0073}\x{0324}\x{0074}\x{0324}\x{007a}\x{0324}
+
+        "Symbols collection" =>
+          "\x{0292}\x{2108}\x{2114}\x{211e}\x{2125}\x{2609}\x{260a}\x{260b}\x{260c}\x{260d}"
+          . "\x{263d}\x{263e}\x{263f}\x{2640}\x{2641}\x{2642}\x{2643}\x{2644}\x{2645}\x{2646}"
+
+          # In the symbols charsuite, these 12 astrological signs are followed by \x{fe0e},
+          # a variation selector, to force them to be displayed in text rather than image form
+          # The variation selectors are omitted for the reason explained in the comment above
+          . "\x{2648}\x{2649}\x{264a}\x{264b}\x{264c}\x{264d}\x{264e}\x{264f}\x{2650}\x{2651}\x{2652}\x{2653}"
+
+          . "\x{2669}\x{266a}\x{266d}\x{266e}\x{266f}",
     );
 
     $::lglobal{checkcolor} = ($::OS_WIN) ? 'white' : $::activecolor;

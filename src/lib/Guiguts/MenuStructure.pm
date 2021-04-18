@@ -125,6 +125,17 @@ sub menu_file_content_providing {
         ],
         [ 'separator', '' ],
         [
+            Checkbutton => '~Highlight WF Characters Not in Selected Suites',
+            -command    => sub { ::sortanddisplayhighlight('force'); },
+            -variable   => \$::charsuitewfhighlight,
+            -onvalue    => 1,
+            -offvalue   => 0
+        ],
+        [
+            'command', 'Manage ~Character Suites...', -command => sub { ::charsuitespopup(); }
+        ],
+        [ 'separator', '' ],
+        [
             'command', 'CP Character Substitutions', -command => sub { ::cpcharactersubs(); },
         ],
     ];
