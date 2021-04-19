@@ -23,6 +23,8 @@
 - The Help->About dialog could not be resized if the font size was changed.
 - Adding illustration markup to the HTML file caused the cursor to jump to the
   CSS section.
+- Typo in regex scanno file added a space when correcting a period followed by
+  a lowercase letter on the following line.
 
 
 ## Version 1.3.0
