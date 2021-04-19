@@ -123,6 +123,10 @@ sub menu_file_content_providing {
             'E~xport One File with Page Sep. Markup...',
             -command => sub { ::file_export_pagemarkup(); }
         ],
+        [ 'separator', '' ],
+        [
+            'command', 'CP Character Substitutions', -command => sub { ::cpcharactersubs(); },
+        ],
     ];
 }
 

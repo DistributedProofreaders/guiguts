@@ -10,7 +10,7 @@ BEGIN {
       qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
       &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
-      &file_import_markup &operationadd &isedited &setedited);
+      &file_import_markup &operationadd &isedited &setedited &cpcharactersubs);
 }
 
 sub file_open {    # Find a text file to open
@@ -1144,6 +1144,20 @@ sub setedited {
     my $textwindow = $::textwindow;
     $::lglobal{isedited} = $val;
     $textwindow->ResetUndo unless $val;
+}
+
+#
+# Does several global substitutions required by Content Providers
+sub cpcharactersubs {
+    my $textwindow = $::textwindow;
+    $textwindow->addGlobStart;
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{0009}", " " );     # tab --> space
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2014}", "--" );    # emdash --> double hyphen
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2018}", "'" );     # left single quote --> straight
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2019}", "'" );     # right single quote --> straight
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{201c}", "\"" );    # left double quote --> straight
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{201d}", "\"" );    # right double quote --> straight
+    $textwindow->addGlobEnd;
 }
 
 1;
