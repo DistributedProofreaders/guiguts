@@ -2,6 +2,9 @@
 
 my @modules = (
 
+    # Needed for locating tools
+    "File::HomeDir",
+
     # Needed for user interface
     "Tk",
     "Tk::ToolBar",
