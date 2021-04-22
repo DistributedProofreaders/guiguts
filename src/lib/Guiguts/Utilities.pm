@@ -733,7 +733,7 @@ sub initialize {
     $::geometryhash{alignpop}         = '+338+83'         unless $::geometryhash{alignpop};
     $::geometryhash{asciiboxpop}      = '+358+187'        unless $::geometryhash{asciiboxpop};
     $::positionhash{brkpop}           = '+482+131'        unless $::positionhash{brkpop};
-    $::positionhash{charsuitespopup}  = '+50+50'          unless $::positionhash{charsuitespopup};
+    $::geometryhash{charsuitespopup}  = '+50+50'          unless $::geometryhash{charsuitespopup};
     $::positionhash{comcharspop}      = '+10+10'          unless $::positionhash{comcharspop};
     $::positionhash{composekeypop}    = '+200+52'         unless $::positionhash{composekeypop};
     $::geometryhash{composepop}       = '200x70+100+10'   unless $::geometryhash{composepop};

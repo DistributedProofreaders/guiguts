@@ -1184,7 +1184,7 @@ sub charsuitespopup {
             );
         }
 
-        $::lglobal{charsuitespopup}->resizable( 'no', 'no' );
+        $::lglobal{charsuitespopup}->resizable( 'yes', 'yes' );
         $::lglobal{charsuitespopup}->raise;
         $::lglobal{charsuitespopup}->focus;
     }
