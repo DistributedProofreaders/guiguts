@@ -12,77 +12,87 @@ BEGIN {
 
 # Routine to update the status bar when something has changed.
 #
-sub update_indicators {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
-    my ( $line, $column )        = split( /\./, $textwindow->index('insert') );
-    $::lglobal{current_line_label}
-      ->configure( -text => "L:$line/" . ( $last_line - 1 ) . " C:$column" )
-      if ( $::lglobal{current_line_label} );
-    my $mode             = $textwindow->OverstrikeMode;
-    my $overstrke_insert = ' I ';
-    if ($mode) {
-        $overstrke_insert = ' O ';
-    }
-    $::lglobal{insert_overstrike_mode_label}->configure( -text => " $overstrke_insert " )
-      if ( $::lglobal{insert_overstrike_mode_label} );
-    my $filename = $textwindow->FileName;
-    $filename = 'No File Loaded' unless ( defined($filename) );
-    $::lglobal{highlightlabel}->configure( -background => $::highlightcolor )
-      if ($::scannos_highlighted);
-    if ( $::lglobal{highlightlabel} ) {
-        $::lglobal{highlightlabel}->configure( -background => 'gray' )
-          unless ($::scannos_highlighted);
-    }
-    $filename = ::os_normal($filename);
-    $::lglobal{global_filename} = $filename;
-    my $edit_flag = '';
-    if ( ::isedited() ) {
-        $edit_flag = 'edited';
-    }
+{    # Start of block to localise persistent variables
+    my $prev_line   = -1;
+    my $prev_column = -1;
+    my $pnum        = 0;
 
-    # window label format: GG-version - [edited] - [file name]
-    if ($edit_flag) {
-        $top->configure( -title => $::window_title . " - " . $edit_flag . " - " . $filename );
-    } else {
-        $top->configure( -title => $::window_title . " - " . $filename );
-    }
-    update_ordinal_button();
-
-    #FIXME: need some logic behind this
-    $textwindow->idletasks;
-    my ( $mark, $pnum );
-    $pnum = ::get_page_number();
-    my $markindex = $textwindow->index('insert');
-    if ( $filename ne 'No File Loaded' or defined $::lglobal{prepfile} ) {
-        $::lglobal{img_num_label}->configure( -text => 'Img:001' )
-          if defined $::lglobal{img_num_label};
-        $::lglobal{page_label}->configure( -text => ("Lbl: None ") )
-          if defined $::lglobal{page_label};
-        if (   $::auto_show_images
-            && $pnum ) {
-            if (   ( not defined $::lglobal{pageimageviewed} )
-                or ( $pnum ne "$::lglobal{pageimageviewed}" ) ) {
-                $::lglobal{pageimageviewed} = $pnum;
-                ::openpng( $textwindow, $pnum );
-            }
+    sub update_indicators {
+        my $textwindow = $::textwindow;
+        my $top        = $::top;
+        my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
+        my ( $line, $column )        = split( /\./, $textwindow->index('insert') );
+        $::lglobal{current_line_label}
+          ->configure( -text => "L:$line/" . ( $last_line - 1 ) . " C:$column" )
+          if ( $::lglobal{current_line_label} );
+        my $mode             = $textwindow->OverstrikeMode;
+        my $overstrke_insert = ' I ';
+        if ($mode) {
+            $overstrke_insert = ' O ';
         }
-        update_img_button($pnum);
-        update_prev_img_button();
-        update_see_img_button();
-        update_next_img_button();
-        update_auto_img_button();
-        update_label_button();
-        update_lang_button();
-        update_img_lbl_values($pnum);
+        $::lglobal{insert_overstrike_mode_label}->configure( -text => " $overstrke_insert " )
+          if ( $::lglobal{insert_overstrike_mode_label} );
+        my $filename = $textwindow->FileName;
+        $filename = 'No File Loaded' unless ( defined($filename) );
+        $::lglobal{highlightlabel}->configure( -background => $::highlightcolor )
+          if ($::scannos_highlighted);
+        if ( $::lglobal{highlightlabel} ) {
+            $::lglobal{highlightlabel}->configure( -background => 'gray' )
+              unless ($::scannos_highlighted);
+        }
+        $filename = ::os_normal($filename);
+        $::lglobal{global_filename} = $filename;
+        my $edit_flag = '';
+        if ( ::isedited() ) {
+            $edit_flag = 'edited';
+        }
+
+        # window label format: GG-version - [edited] - [file name]
+        if ($edit_flag) {
+            $top->configure( -title => $::window_title . " - " . $edit_flag . " - " . $filename );
+        } else {
+            $top->configure( -title => $::window_title . " - " . $filename );
+        }
+        update_ordinal_button();
+        $textwindow->idletasks;
+
+        # get_page_number() can take a significant time to execute, so check if line/column
+        # have changed since previous call - if not, page number is also unchanged.
+        $pnum        = ::get_page_number() if $line != $prev_line or $column != $prev_column;
+        $prev_line   = $line;
+        $prev_column = $column;
+
+        my $markindex = $textwindow->index('insert');
+        if ( $filename ne 'No File Loaded' or defined $::lglobal{prepfile} ) {
+            $::lglobal{img_num_label}->configure( -text => 'Img:001' )
+              if defined $::lglobal{img_num_label};
+            $::lglobal{page_label}->configure( -text => ("Lbl: None ") )
+              if defined $::lglobal{page_label};
+            if (   $::auto_show_images
+                && $pnum ) {
+                if (   ( not defined $::lglobal{pageimageviewed} )
+                    or ( $pnum ne "$::lglobal{pageimageviewed}" ) ) {
+                    $::lglobal{pageimageviewed} = $pnum;
+                    ::openpng( $textwindow, $pnum );
+                }
+            }
+            update_img_button($pnum);
+            update_prev_img_button();
+            update_see_img_button();
+            update_next_img_button();
+            update_auto_img_button();
+            update_label_button();
+            update_lang_button();
+            update_img_lbl_values($pnum);
+        }
+        $textwindow->tagRemove( 'bkmk', '1.0', 'end' ) unless $::bkmkhl;
+        if ( $::lglobal{geometryupdate} ) {
+            ::savesettings();
+            $::lglobal{geometryupdate} = 0;
+        }
     }
-    $textwindow->tagRemove( 'bkmk', '1.0', 'end' ) unless $::bkmkhl;
-    if ( $::lglobal{geometryupdate} ) {
-        ::savesettings();
-        $::lglobal{geometryupdate} = 0;
-    }
-}
+}    # End of block to localise persistent variables
+
 ## Bindings to make label in status bar act like buttons
 sub _butbind {
     my $widget = shift;
