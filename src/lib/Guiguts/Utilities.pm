@@ -1983,12 +1983,9 @@ perl/Tk Version: $Tk::VERSION
 Tk patchLevel: $Tk::patchLevel
 Tk libraries: $Tk::library
 END
-    my $dialog = $top->Dialog(
-        -title   => 'Versions',
-        -popover => $top,
-        -justify => 'center',
-        -text    => $message,
-    );
+    my $dialog = $top->DialogBox( -title => 'Versions', -popover => $top );
+    my $text   = $dialog->add( 'ROText', -height => 10, -width => 40 )->pack;
+    $text->insert( 'end', $message );
     $dialog->Show;
 }
 
