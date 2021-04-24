@@ -488,6 +488,7 @@ sub text_remove_smallcaps_markup {
 sub txt_manual_sc_conversion {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
+    $::lglobal{searchmultiadd}->invoke while $::multisearchsize < 3;    # Ensure sufficient replacement fields
     $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{replaceentry}->delete( '1.0', 'end' );
     $::lglobal{replaceentry1}->delete( '1.0', 'end' );

@@ -1086,7 +1086,7 @@ sub searchpopup {
 
         # Button to increment number of multiterms (also switches to multi)
         # Add frame/field/buttons if necessary
-        $sf10->Button(
+        $::lglobal{searchmultiadd} = $sf10->Button(
             -activebackground => $::activecolor,
             -command          => sub {
                 if ( $::multisearchsize < 10 ) {    # don't go above 10 in multi-term mode
