@@ -1902,9 +1902,10 @@ sub htmlimageok {
     my $style = "";
     $style = " style=\"max-width: ${maxwidth}em;\"" if $::lglobal{htmlimgwidthtype} eq '%';
     $style = " style=\"width: ${width}px;\""        if $::lglobal{htmlimgwidthtype} eq 'px';
+    my $wclass = $::lglobal{htmlimgwidthtype} eq 'px' ? '' : ' class="w100"';
     $textwindow->insert( 'thisblockstart',
             "<div class=\"fig$::lglobal{htmlimgalignment}$divclass\" id=\"$idname\"$style>\n"
-          . "  <img class=\"w100\" src=\"$name\"$sizexy$alt$title />\n"
+          . "  <img$wclass src=\"$name\"$sizexy$alt$title />\n"
           . "$selection</div>"
           . $::lglobal{preservep} );
 
