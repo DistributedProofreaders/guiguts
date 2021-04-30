@@ -181,23 +181,21 @@ sub selectrewrap {
         $indent = $::defaultindent;
         $thisblockend =
           $textwindow->search( '-regex', '--',
-            "(^$TEMPPAGEMARK*\$|^$TEMPPAGEMARK*[$::allblocktypes]/$TEMPPAGEMARK*\$)",
+            '(^' . $TEMPPAGEMARK . '*$)|([' . $blockwraptypes . ']/)',
             $thisblockstart, $end );    # find end of paragraph or end of markup
-        $thisblockend = "$thisblockend lineend" if $thisblockend;
-
-        # if two start rewrap block markers aren't separated by a blank line, just let it become added
+                                        # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
-          if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l lineend" ) =~
+          if ( $textwindow->get( "$thisblockstart +1l", "$thisblockstart +1l+2c" ) =~
             /^\/[$::allblocktypes]$/ );
 
-        $thisblockend = $end unless $thisblockend;    # if no end found, finish at end of selection
-
-        # Always start/end at beginning of lines
-        $thisblockstart = $textwindow->index( $thisblockstart . ' linestart' );
-        my ( $ll, $cc ) = split( /\./, $textwindow->index($thisblockend) );
-        $thisblockend = $textwindow->index( $thisblockend . ' +1l linestart' ) unless $cc == 0;
-
-        $selection = $textwindow->get( $thisblockstart, $thisblockend ) if $thisblockend;    # get the paragraph of text
+        if ($thisblockend) {
+            $thisblockend = $textwindow->index( $thisblockend . ' lineend' );
+        } else {
+            $thisblockend = $end;
+        }
+        ;                               #or end of text if end of selection
+        $selection = $textwindow->get( $thisblockstart, $thisblockend )
+          if $thisblockend;             #get the paragraph of text
         unless ($selection) {
             $thisblockstart = $thisblockend;
             $thisblockstart = $textwindow->index("$thisblockstart+1c");
@@ -345,18 +343,17 @@ sub selectrewrap {
             $enableindent = 0;
             $poem         = 0;
         }
-        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\/[\n$TEMPPAGEMARK]*$/ ) {
-            $::blockwrap = 0;
-        }
+        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
         last unless $end;
         $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
         $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
 
         # if there are blank lines before the next paragraph, advance past them
         while (1) {
+            $thisblockstart = $textwindow->index("$thisblockstart+1l");
             last if $textwindow->compare( $thisblockstart, '>=', 'end' );
-            last if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) ne '';
-            $thisblockstart = $textwindow->index("$thisblockstart+1l linestart");
+            next if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '';
+            last;
         }
 
         # reset blockwrap and quit if interrupted
@@ -364,11 +361,7 @@ sub selectrewrap {
             $::blockwrap = 0;
             last;
         }
-
-        # finish if next paragraph start is at/past end of selection or end of file
-        last
-          if $textwindow->compare( $thisblockstart, '>=', $end )
-          or $textwindow->compare( $thisblockstart, '>=', 'end' );
+        last if $thisblockstart eq $end;    # finish if next paragraph starts at end of selection
 
         $textwindow->update unless $silentmode or ::updatedrecently();    # Too slow if update window after every paragraph
     }
