@@ -1,5 +1,45 @@
 # Changelog
 
+## Version 1.3.1
+
+### Changes
+- New option in File-->Content Providing menu to replace tabs, curly quotes
+  and emdashes with acceptable equivalents.
+- Content-providing option to highlight characters in WF Character Count that
+  are not in a list of enabled DP character suites. Also, ability to manage
+  which charsuites are enabled/disabled. Characters in WF dialog can be 
+  Control-clicked to rapidly enable the appropriate character suite.
+- 99% Auto page separator fixup now waits for the user to click Refresh
+  before beginning processing.
+- Guiguts and Bookloupe Test files removed from release package.
+- User can now copy information from the Software Versions dialog
+
+### Bug Fixes
+- Word Frequency Check Accents was not checking Latin-1 characters
+- Queries from ppvimage were not counted correctly
+- If the path to an image contained parentheses, the wrong path was entered in
+  the HTML file.
+- The `a` shortcut to jump to words beginning with `a` in Word Frequency failed
+  when there were also words beginning with `æ`.
+- The Help->About dialog could not be resized if the font size was changed.
+- Adding illustration markup to the HTML file caused the cursor to jump to the
+  CSS section.
+- Typo in regex scanno file added a space when correcting a period followed by
+  a lowercase letter on the following line.
+- An error could be caused by using Manual Smallcaps conversion when the Search
+  dialog had only two replacement fields.
+- Some files could cause the update of the status bar to take so long that the
+  program became unresponsive.
+- Some e-readers showed illustrations with widths in pixels at 100% width.
+- Block wrap markup with custom margins failed to rewrap correctly if nested
+  within no-wrap markup.
+- Page numbers could be combined or skipped in HTML output if page contained
+  only one line of main text, e.g. due to long footnote.
+- Joining lines could cause a page boundary to appear mid-word, leading to
+  pagenum spans appearing mid-word in HTML, and spaces appearing mid-word in
+  epub versions.
+
+
 ## Version 1.3.0
 
 ### Changes
