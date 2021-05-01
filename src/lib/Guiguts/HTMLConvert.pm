@@ -1247,13 +1247,13 @@ sub html_convert_pageanchors {
             last if $marknext =~ m{Pg(\S+)};
         }
 
-        # If no more marks (reached end of file) or next mark page marker at least a line
-        # beyond the current one, then convert batch of accumulated page markers to a string
+        # If no more marks (reached end of file) or there are word characters between the
+        # current mark and the next, then convert batch of accumulated page markers to a string
         my $pagereference = '';
         my $lastref       = '';
         if (
             not $marknext    # no next marker - end of file
-            or $textwindow->compare( $textwindow->index($marknext), '>=', "$markindex+1l" )
+            or $textwindow->get( $markindex, $marknext ) =~ /\w/
         ) {
             my $br      = "";                 # No br before first marker in batch
             my $numrefs = scalar @pagerefs;
