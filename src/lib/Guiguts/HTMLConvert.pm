@@ -1282,6 +1282,9 @@ sub html_convert_pageanchors {
             @pagerefs = ();
         }
 
+        # if marker is not at whitespace, move it forward so pagenum span doesn't end up mid-word
+        $markindex = ::safemark($markindex);
+
         # comment only
         $textwindow->ntinsert( $markindex, "<!-- Page $lastref -->" )
           if ( $::pagecmt and $lastref );
