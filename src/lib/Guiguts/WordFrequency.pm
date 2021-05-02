@@ -288,6 +288,12 @@ sub wordfrequency {
                     ::searchoptset(qw/0 x x 1/);
                 } elsif ( $sword =~ /\W/ ) {
                     $sword =~ s/([^\w\s\\])/\\$1/g;
+
+                    # Force whole word search via regex - can't use \b because underscore is a "word" character in Perl
+                    $sword .= '(?![[:alnum:]])'
+                      if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
+                    $sword = '(?<![[:alnum:]])' . $sword
+                      if ( ( length $sword gt 1 ) && ( $sword =~ /^\w/ ) );
                     ::searchoptset(qw/0 x x 1/);
                 }
                 $::lglobal{searchentry}->delete( 0, 'end' );
@@ -323,10 +329,10 @@ sub wordfrequency {
                     $sword =~ s/\*space\*/ /;
                     $sword =~ s/([^\w\s\\])/\\$1/g;
 
-                    #$sword = ::escape_regexmetacharacters($sword);
-                    $sword .= '\b'
+                    # Force whole word search via regex - can't use \b because underscore is a "word" character in Perl
+                    $sword .= '(?![[:alnum:]])'
                       if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
-                    $sword = '\b' . $sword
+                    $sword = '(?<![[:alnum:]])' . $sword
                       if ( ( length $sword gt 1 ) && ( $sword =~ /^\w/ ) );
                     ::searchoptset(qw/0 0 x 1/);    # Case sensitive
                 }
