@@ -181,7 +181,7 @@ sub selectrewrap {
         $indent = $::defaultindent;
         $thisblockend =
           $textwindow->search( '-regex', '--',
-            '(^' . $TEMPPAGEMARK . '*$)|([' . $blockwraptypes . ']/)',
+            "(^$TEMPPAGEMARK*\$|^$TEMPPAGEMARK*[$blockwraptypes]/$TEMPPAGEMARK*\$)",
             $thisblockstart, $end );    # find end of paragraph or end of markup
                                         # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
