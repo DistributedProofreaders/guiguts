@@ -12,7 +12,8 @@
 - 99% Auto page separator fixup now waits for the user to click Refresh
   before beginning processing.
 - Guiguts and Bookloupe Test files removed from release package.
-- User can now copy information from the Software Versions dialog
+- User can now copy information from the Software Versions dialog.
+- Image width type: percent, em or px is now saved between runs of the program.
 
 ### Bug Fixes
 - Word Frequency Check Accents was not checking Latin-1 characters
@@ -38,7 +39,11 @@
 - Joining lines could cause a page boundary to appear mid-word, leading to
   pagenum spans appearing mid-word in HTML, and spaces appearing mid-word in
   epub versions.
-
+- Word Frequency searching could fail when a MiXeD-CasE word had underscore
+  markup surrounding it.
+- Bookloupe View Options dialog failed to resize when font was changed.
+- Error check files with line:column at start of line did not get interpreted
+  correctly.
 
 ## Version 1.3.0
 
