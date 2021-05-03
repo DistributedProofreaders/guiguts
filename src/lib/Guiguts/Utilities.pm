@@ -751,7 +751,7 @@ sub initialize {
     $::geometryhash{gotolabpop}       = '265x70+400+400'  unless $::geometryhash{gotolabpop};
     $::geometryhash{gotolinepop}      = '265x70+400+400'  unless $::geometryhash{gotolinepop};
     $::geometryhash{gotopagpop}       = '265x70+400+400'  unless $::geometryhash{gotopagpop};
-    $::geometryhash{gcviewoptspop}    = '+264+72'         unless $::geometryhash{gcviewoptspop};
+    $::positionhash{gcviewoptspop}    = '+264+72'         unless $::positionhash{gcviewoptspop};
     $::geometryhash{grpop}            = '750x540+100+100' unless $::geometryhash{grpop};
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
     $::positionhash{hilitepop}        = '+150+150'        unless $::positionhash{hilitepop};
