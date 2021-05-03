@@ -45,6 +45,7 @@
 - Error check files with line:column at start of line did not get interpreted
   correctly.
 
+
 ## Version 1.3.0
 
 ### Changes
