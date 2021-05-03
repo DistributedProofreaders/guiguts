@@ -677,7 +677,8 @@ sub findascanno {
     ::soundbell('noflash')          unless ( $word || $::lglobal{regaa} );
     $::lglobal{searchbutton}->flash unless ( $word || $::lglobal{regaa} );
     $::lglobal{regtracker}->configure(
-        -text => ( $::lglobal{scannosindex} + 1 ) . '/' . ( $#{ $::lglobal{scannosarray} } + 1 ) );
+        -text => ( $::lglobal{scannosindex} + 1 ) . '/' . ( $#{ $::lglobal{scannosarray} } + 1 ) )
+      if Tk::Exists( $::lglobal{regtracker} );
     $::lglobal{hintmessage}->delete( '1.0', 'end' )
       if ( defined( $::lglobal{hintpop} ) );
     return 0 unless $word;
