@@ -304,7 +304,8 @@ sub errorcheckpop_up {
             $line =~ s/\&gt;/>/g;
 
             # if line has a number at the start, assume it is the error line number
-            $line =~ s/^\s*(\d+)\s*/$1:0 /;
+            # unless it already has a column number, set the column number to zero
+            $line =~ s/^\s*(\d+)[:\s]*/$1:0 / unless $line =~ /^\s*(\d+):(\d+)/;
 
         } elsif ( $errorchecktype eq "Bookloupe" ) {
             next if $line =~ /^File: /;
