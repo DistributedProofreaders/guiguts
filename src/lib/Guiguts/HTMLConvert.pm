@@ -1283,7 +1283,7 @@ sub html_convert_pageanchors {
         }
 
         # if marker is not at whitespace, move it forward so pagenum span doesn't end up mid-word
-        $markindex = ::safemark($markindex);
+        $markindex = ::safemark( $markindex, '<' );    # don't advance past '<' (HTML tag), e.g. abc<br />
 
         # comment only
         $textwindow->ntinsert( $markindex, "<!-- Page $lastref -->" )
