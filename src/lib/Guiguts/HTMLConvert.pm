@@ -1407,10 +1407,8 @@ sub html_parse_header {
     $headertext =~ s/BOOKLANG/$::booklang/g;
     if ( $::lglobal{leave_utf} && ::currentfileisunicode() ) {
         $headertext =~ s/BOOKCHARSET/utf-8/;
-    } elsif ( $::lglobal{keep_latin1} && ::currentfileislatin1() ) {
-        $headertext =~ s/BOOKCHARSET/iso-8859-1/;
     } else {
-        $headertext =~ s/BOOKCHARSET/ascii/;
+        $headertext =~ s/BOOKCHARSET/iso-8859-1/;
     }
     eval( '$headertext =~ s#\{LANG=' . uc($::booklang) . '\}(.*?)\{/LANG\}#$1#gs' );    # code duplicated near footertext
 

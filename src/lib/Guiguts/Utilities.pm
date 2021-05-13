@@ -16,7 +16,7 @@ BEGIN {
       &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
       &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
-      &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode &currentfileislatin1
+      &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
@@ -2725,13 +2725,6 @@ sub currentfileisunicode {
     return 1 if $::utf8save;    # treat as unicode regardless of contents
     my $textwindow = $::textwindow;
     return $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
-}
-
-sub currentfileislatin1 {
-    my $textwindow = $::textwindow;
-    return $textwindow->search( '-regexp', '--',
-        '[\xC0-\xCF\xD1-\xD6\xD9-\xDD\xE0-\xEF\xF1-\xF6\xF9-\xFD]',
-        '1.0', 'end' );
 }
 
 #FIXME: doesnt work quite right if multiple volumes held in same directory
