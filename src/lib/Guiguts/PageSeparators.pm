@@ -472,11 +472,11 @@ sub processpageseparator {
 # Given the index of a page marker return the index of a safe place for it,
 # specifically move it forward if it is mid-word
 sub safemark {
-    my $markindex = shift;
-    my $blockers  = shift // '';        # Additional characters that page marker must not be advanced beyond
+    my $markindex  = shift;
+    my $blockers   = shift // '';     # Additional characters that page marker must not be advanced beyond
     my $textwindow = $::textwindow;
     my ( $markrow, $markcol ) = split /\./, $markindex;
-    unless ( $markcol == 0 ) {    # No need to move if at beginning of line
+    unless ( $markcol == 0 ) {        # No need to move if at beginning of line
         my $chkstr = $textwindow->get( "$markindex -1c", "$markindex lineend" );    # Get from preceding character to end of line
 
         # length of 1 means mark is already at end of line
