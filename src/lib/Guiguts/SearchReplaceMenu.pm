@@ -1569,6 +1569,11 @@ sub searchshowterms {
 # program to keep the height correct when widgets are added/removed
 sub setsearchpopgeometry {
     return unless $::lglobal{searchpop};
+
+    # Without the following line to set the geometry before the update,
+    # Linux versions may pop the dialog in the old location and not
+    # correct it when the geometry is set at the end of the routine
+    $::lglobal{searchpop}->geometry( $::geometryhash{searchpop} );
     $::lglobal{searchpop}->update;    # dialog must be drawn to get heights
 
     # Some rows have button, some have entry field, some have toggle - all have padding of 1 above and below
