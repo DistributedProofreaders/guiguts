@@ -127,23 +127,53 @@ sub errorcheckpop_up {
     $::lglobal{errorchecklistbox}->bind(
         '<<remove>>',
         sub {
-            ::busy();
-            my $xx = $::lglobal{errorchecklistbox}->pointerx - $::lglobal{errorchecklistbox}->rootx;
-            my $yy = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
-            my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
-            $::lglobal{errorchecklistbox}->activate($idx);
-            my $rmvmsg = $::lglobal{errorchecklistbox}->get('active');
-            $textwindow->markUnset( $::errors{$rmvmsg} );
-            undef $::errors{$rmvmsg};
-            $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
-            $::lglobal{errorchecklistbox}->delete('active');
-            $::lglobal{errorchecklistbox}->selectionSet('active');
-
-            eccountupdate(-1) unless ignorequery( $errorchecktype, $rmvmsg );    # If deleted line is a query, update the query count
+            errorchecksetactive();
+            errorcheckremove($errorchecktype);
             errorcheckview();
-            ::unbusy();
         }
     );
+
+    # Ctrl + button 1 attempts to view and process the clicked error
+    $::lglobal{errorchecklistbox}->eventAdd( '<<process>>' => '<Control-ButtonRelease-1>' );
+    $::lglobal{errorchecklistbox}->bind(
+        '<<process>>',
+        sub {
+            errorchecksetactive();
+            errorcheckprocess($errorchecktype);
+            errorcheckview();
+        }
+    );
+
+    # Ctrl + buttons 2 & 3 attempt to process the clicked error, then remove it and view the next error
+    $::lglobal{errorchecklistbox}->eventAdd(
+        '<<processremove>>' => '<Control-ButtonRelease-2>',
+        '<Control-ButtonRelease-3>'
+    );
+    $::lglobal{errorchecklistbox}->bind(
+        '<<processremove>>',
+        sub {
+            errorchecksetactive();
+            errorcheckprocess($errorchecktype);
+            errorcheckremove($errorchecktype);
+            errorcheckview();
+        }
+    );
+
+    # Ctrl + Shift + buttons 2 & 3 remove all similar errors (e.g. suggesting same spelling correction)
+    # and view the next error
+    $::lglobal{errorchecklistbox}->eventAdd(
+        '<<processremovesimilar>>' => '<Control-Shift-ButtonRelease-2>',
+        '<Control-Shift-ButtonRelease-3>'
+    );
+    $::lglobal{errorchecklistbox}->bind(
+        '<<processremovesimilar>>',
+        sub {
+            errorchecksetactive();
+            errorcheckremovesimilar($errorchecktype);
+            errorcheckview();
+        }
+    );
+
     $::lglobal{errorcheckpop}->update;
 
     # End presentation; begin logic
@@ -717,13 +747,135 @@ sub errorcheckview {
     $::lglobal{errorcheckpop}->raise;
 }
 
+#
+# Activate the item under the mouse cursor
+sub errorchecksetactive {
+    my $xx  = $::lglobal{errorchecklistbox}->pointerx - $::lglobal{errorchecklistbox}->rootx;
+    my $yy  = $::lglobal{errorchecklistbox}->pointery - $::lglobal{errorchecklistbox}->rooty;
+    my $idx = $::lglobal{errorchecklistbox}->index("\@$xx,$yy");
+    $::lglobal{errorchecklistbox}->activate($idx);
+}
+
+#
+# Remove the active item
+sub errorcheckremove {
+    my $errorchecktype = shift;
+
+    my $rmvmsg = $::lglobal{errorchecklistbox}->get('active');
+    return unless defined $rmvmsg;
+
+    $::textwindow->markUnset( $::errors{$rmvmsg} );
+    undef $::errors{$rmvmsg};
+    $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
+    $::lglobal{errorchecklistbox}->delete('active');
+    $::lglobal{errorchecklistbox}->selectionSet('active');
+
+    eccountupdate(-1) unless ignorequery( $errorchecktype, $rmvmsg );    # If deleted line is a query, update the query count
+}
+
+#
+# Process the active item if possible, making the suggested change to the text
+sub errorcheckprocess {
+    my $textwindow     = $::textwindow;
+    my $errorchecktype = shift;
+
+    my $line = $::lglobal{errorchecklistbox}->get('active');
+    return if not defined $::errors{$line};
+
+    my ( $begmatch, $endmatch, $match, $replacement );
+
+    # Process the line appropriately for the type
+    if ( $errorchecktype eq 'Load Checkfile' ) {
+        ( $begmatch, $endmatch, $match, $replacement ) = errorcheckprocesssuggest($line);
+    } elsif ( $errorchecktype eq 'Jeebies' ) {
+        ( $begmatch, $endmatch, $match, $replacement ) = errorcheckprocessjeebies($line);
+    } else {
+        return;
+    }
+
+    return unless $begmatch;
+
+    # Check match string is still in text before replacing it (might have already been corrected)
+    my $matchstr = $textwindow->get( $begmatch, $endmatch );
+    if ( $matchstr ne $match ) {
+        ::soundbell();
+        return;
+    }
+
+    $textwindow->addGlobStart;
+    $textwindow->insert( $endmatch, $replacement );    # Append so new text ends up after mark
+    $textwindow->delete( $begmatch, $endmatch );       # Then delete old text
+    $textwindow->addGlobEnd;
+}
+
+#
+# Process "Suggest 'X' for 'Y'" by replacing string 'Y' with string 'X'
+sub errorcheckprocesssuggest {
+    my $line = shift;
+    my ( $begmatch, $endmatch, $match, $replacement );
+    if ( $line =~ /^\d+:\d+ Suggest '(.+)' for '(.+)'/ ) {
+        $replacement = $1;
+        $match       = $2;
+
+        $begmatch = $::errors{$line};
+        $endmatch = $::errors{$line} . "+" . length($match) . "c";
+    }
+    return ( $begmatch, $endmatch, $match, $replacement );
+}
+
+#
+# Process Jeebies output 'Query phrase "xxx he/be xxx' by swapping  he/be
+sub errorcheckprocessjeebies {
+    my $line = shift;
+    my ( $begmatch, $endmatch, $match, $replacement );
+    if ( $line =~ /^\d+:\d+ - Query phrase ".*\b([HhBb]e)\b.*"/ ) {
+        $match       = $1;
+        $replacement = "be" if $match eq "he";
+        $replacement = "he" if $match eq "be";
+        $replacement = "Be" if $match eq "He";
+        $replacement = "He" if $match eq "Be";
+
+        # find first he/be as a whole word from the marked location
+        $begmatch = $::textwindow->search( '-regexp', '--', '\b' . $match . '\b',
+            $::errors{$line}, $::errors{$line} . "+1l" );
+        $endmatch = $begmatch . "+" . length($match) . "c" if $begmatch;
+    }
+    return ( $begmatch, $endmatch, $match, $replacement );
+}
+
+#
+# Remove the active item and similar items
+sub errorcheckremovesimilar {
+    my $textwindow     = $::textwindow;
+    my $errorchecktype = shift;
+    my $line           = $::lglobal{errorchecklistbox}->get('active');
+    return unless defined $line;
+    return unless defined $::errors{$line} and $line =~ s/^\d+:\d+ (.+)/$1/;
+
+    # Reverse through list deleting lines that are identical to the chosen one apart from line:column
+    my $index = $::lglobal{errorchecklistbox}->size();
+    while ( $index > 0 ) {
+        $index--;
+        my $rmvmsg = $::lglobal{errorchecklistbox}->get($index);
+        next unless $rmvmsg =~ /^\d+:\d+ \Q$line\E$/;    # Quote $line in case it contains regex special characters
+
+        $::textwindow->markUnset( $::errors{$rmvmsg} );
+        undef $::errors{$rmvmsg};
+        $::lglobal{errorchecklistbox}->delete($index);
+
+        eccountupdate(-1) unless ignorequery( $errorchecktype, $rmvmsg );    # If deleted line is a query, update the query count
+    }
+    $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
+    $::lglobal{errorchecklistbox}->selectionSet('active');
+}
+
 sub gcwindowpopulate {
     return unless defined $::lglobal{errorcheckpop};
     my $headr = 0;
     my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     foreach my $line (@errorchecklines) {
-        next if $line =~ /^\s*$/;    # Skip blank lines
+        next if $line =~ /^\s*$/;                                            # Skip blank lines
         next unless defined $::errors{$line};
 
         # Check if error type has been hidden
