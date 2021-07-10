@@ -460,7 +460,7 @@ sub text_uppercase_smallcaps {
     ::searchoptset(qw/0 x x 1/);
     $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
-    $::lglobal{replaceentry}->delete( '1.0', 'end' );
+    $::lglobal{replaceentry}->delete( 0, 'end' );
     $::lglobal{replaceentry}->insert( 'end', "\\U\$1\\E" );
 }
 
@@ -481,7 +481,7 @@ sub text_remove_smallcaps_markup {
     ::searchoptset(qw/0 x x 1/);
     $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
-    $::lglobal{replaceentry}->delete( '1.0', 'end' );
+    $::lglobal{replaceentry}->delete( 0, 'end' );
     $::lglobal{replaceentry}->insert( 'end', "\$1" );
 }
 
@@ -490,9 +490,9 @@ sub txt_manual_sc_conversion {
     ::searchoptset(qw/0 x x 1/);
     $::lglobal{searchmultiadd}->invoke while $::multisearchsize < 3;    # Ensure sufficient replacement fields
     $::lglobal{searchentry}->delete( 0, 'end' );
-    $::lglobal{replaceentry}->delete( '1.0', 'end' );
-    $::lglobal{replaceentry1}->delete( '1.0', 'end' );
-    $::lglobal{replaceentry2}->delete( '1.0', 'end' );
+    $::lglobal{replaceentry}->delete( 0, 'end' );
+    $::lglobal{replaceentry1}->delete( 0, 'end' );
+    $::lglobal{replaceentry2}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', '<sc>(\\n?[^<]+)</sc>' );
     $::lglobal{replaceentry}->insert( 'end', '$1' );
     $::lglobal{replaceentry1}->insert( 'end', '\U$1\E' );
