@@ -785,7 +785,7 @@ sub initialize {
     $::positionhash{utfentrypop}      = '+191+132'        unless $::positionhash{utfentrypop};
     $::geometryhash{utfpop}           = '420x315+46+46'   unless $::geometryhash{utfpop};
     $::geometryhash{utfsearchpop}     = '550x450+53+87'   unless $::geometryhash{utfsearchpop};
-    $::geometryhash{versionbox}       = '300x250+80+80'   unless $::geometryhash{versionbox};
+    $::positionhash{versionbox}       = '+80+80'          unless $::positionhash{versionbox};
     $::geometryhash{wfpop}            = '+365+63'         unless $::geometryhash{wfpop};
     $::positionhash{workpop}          = '+30+30'          unless $::positionhash{workpop};
 
