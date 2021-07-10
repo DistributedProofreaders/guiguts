@@ -1600,6 +1600,7 @@ sub stealthscanno {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     $::lglobal{doscannos} = 1;
+    ::killpopup('hintpop');
     ::killpopup('searchpop');
     searchoptset(qw/1 x x 0 1/);    # force search to begin at start of doc, whole word
     if ( ::loadscannos() ) {
