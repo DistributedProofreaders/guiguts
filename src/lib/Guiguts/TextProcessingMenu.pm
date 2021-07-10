@@ -270,7 +270,7 @@ sub fixpopup {
         my $pframe1 = $::lglobal{fixpop}->Frame->pack;
         ${ $::lglobal{fixopt} }[15] = 1;
         my @rbuttons = (
-            'Skip /* */, /$ $/, and /X X/ marked blocks.',
+            'Skip /* */, /$ $/, /X X/, and /F F/ marked blocks.',
             'Fix up spaces around hyphens.',
             'Convert multiple spaces to single spaces.',
             'Remove spaces before periods.',
@@ -331,22 +331,38 @@ sub fixup {
     ::operationadd('Fixup Routine');
     ::hidepagenums();
     my ($line);
-    my $index     = '1.0';
-    my $lastindex = '1.0';
-    my $inblock   = 0;
-    my $end       = $textwindow->index('end');
+    my $index      = '1.0';
+    my $lastindex  = '1.0';
+    my $inblock    = 0;
+    my $BLOCKTYPES = quotemeta '$*XxFf';
+    my $inpoem     = 0;
+    my $POEMTYPES  = quotemeta 'Pp';
+    my $TEMPPOEMLN = "\x7f";
+    my $end        = $textwindow->index('end');
     ::enable_interrupt();
 
     while ( $lastindex < $end ) {
         my $edited = 0;    # if current line has been edited
-        $line = $textwindow->get( $lastindex, $index );
-        if     ( $line =~ /\/[\$\*Xx]/ ) { $inblock = 1 }
-        if     ( $line =~ /[\$\*]\// )   { $inblock = 0 }
+        $line    = $textwindow->get( $lastindex, $index );
+        $inblock = 1 if $line =~ /\/[$BLOCKTYPES]/;
+        $inblock = 0 if $line =~ /[$BLOCKTYPES]\//;
+        $inpoem  = 1 if $line =~ /\/[$POEMTYPES]/;
+        $inpoem  = 0 if $line =~ /[$POEMTYPES]\//;
         unless ( $inblock && ${ $::lglobal{fixopt} }[0] ) {
 
             # remove multiple spaces
             if ( ${ $::lglobal{fixopt} }[2] ) {
+                my $poetrylinenum = '';
+
+                # if poem line number replace with temporary character
+                # preserve whitespace space after line number (includes newline) - spaces will be dealt with later
+                $poetrylinenum = $1 if $inpoem and $line =~ s/(\s\s+\d+)(\s*)$/$TEMPPOEMLN$2/;
+
+                # replace other multiple spaces with a single space
                 while ( $line =~ s/(?<=\S)\s\s+(?=\S)/ / ) { $edited++ }
+
+                # restore saved line number with its preceding spaces
+                $line =~ s/$TEMPPOEMLN/$poetrylinenum/ if $inpoem;
             }
             if ( ${ $::lglobal{fixopt} }[1] ) {
 
