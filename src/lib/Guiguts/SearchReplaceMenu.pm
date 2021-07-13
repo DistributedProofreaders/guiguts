@@ -2109,7 +2109,7 @@ sub loadscannos {
             push @{ $::lglobal{scannosarray} }, $_;
         }
         if ( $::lglobal{scannosfilename} =~ /reg/i ) {
-            searchoptset(qw/0 x x 1/);
+            searchoptset(qw/0 0 x 1/);    # For a regex scannos file, force regex flag and case-sensitive
         } else {
             searchoptset(qw/x x x 0/);
         }
