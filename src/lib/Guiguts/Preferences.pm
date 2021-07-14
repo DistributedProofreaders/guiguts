@@ -606,7 +606,8 @@ sub locateDirectory {
     ${$dirpathref} = ::os_normal( ${$dirpathref} );
 
     # If possible, convert to relative path by trimming release root directory and slash from start
-    if ( index( ${$dirpathref}, $::lglobal{guigutsdirectory} ) == 0 ) {
+    if ( index( ${$dirpathref}, $::lglobal{guigutsdirectory} ) == 0
+        and length( ${$dirpathref} ) > length( $::lglobal{guigutsdirectory} ) ) {
         ${$dirpathref} = substr( ${$dirpathref}, length( $::lglobal{guigutsdirectory} ) + 1 );
     }
     ::savesettings();
