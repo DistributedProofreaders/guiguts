@@ -371,6 +371,10 @@ sub errorcheckpop_up {
             my $colnum = $2 + $columnadjust;
             $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
 
+            # Skip if already have identical error at same location already, since firstly it is not necessary,
+            # and secondly it would break logic using errors hash to store references to marks in file.
+            next if $::errors{$line};
+
             my $markname = "t" . ++$mark;
             $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
             $::errors{$line} = $markname;                                # cross-ref error with mark
