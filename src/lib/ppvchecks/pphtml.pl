@@ -12,6 +12,7 @@ my $vnum = "1.16";
 
 my @book         = ();
 my @css          = ();
+my @cssline      = ();
 my %classes_used = ();
 
 my $help    = 0;              # set true if help requested
@@ -282,9 +283,12 @@ sub runProgram {
 
     sub css_block {
         print LOGFILE ("----- CSS block definitions -----\n");
-        my @splitcss = ();
-        my $incss    = 0;
+        my @splitcss     = ();
+        my @splitcssline = ();    # Keep track of line number where CSS was defined
+        my $incss        = 0;
+        my $count        = 0;
         foreach $_ (@book) {
+            $count++;
             if (/text\/css/) {
                 $incss = 1;
             }
@@ -292,31 +296,37 @@ sub runProgram {
                 $incss = 0;
             }
             if ( $incss and /{/ ) {
-                @css = ( @css, $_ );
+                push @css,     $_;
+                push @cssline, $count;
             }
         }
 
         # strip definition
         my $ccount = 0;
-        foreach $_ (@css) {
-            s/^(.*?)\{.*$/$1/;
-            $_ = trim($_);
-            my @sp = split( /,/, $_ );
+        foreach my $idx ( 0 .. $#css ) {
+            my $cssdef = $css[$idx];
+            my $count  = $cssline[$idx];
+            $cssdef =~ s/^(.*?)\{.*$/$1/;
+            $cssdef = trim($cssdef);
+            my @sp = split( /,/, $cssdef );
             foreach my $t (@sp) {
                 printf LOGFILE ( "- %-19s", $t );
                 $ccount++;
                 if ( $ccount % 4 == 3 ) {
                     print LOGFILE ("\n");
                 }
-                unshift( @splitcss, $t );
+                unshift( @splitcss,     $t );
+                unshift( @splitcssline, $count )    # Continue to align CSS array with line number array
             }
         }
-        @css = @splitcss;
+        @css     = @splitcss;
+        @cssline = @splitcssline;
     }
 
     sub css_crosscheck {
         print LOGFILE ("----- CSS crosscheck -----\n");
-        foreach my $cssdef (@css) {
+        foreach my $idx ( 0 .. $#css ) {
+            my $cssdef = $css[$idx];
             $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
             if ( $cssdef =~ /\b(p|body)\b/ ) {
                 next;
@@ -328,7 +338,7 @@ sub runProgram {
                 }
             }
             if ( not $found ) {
-                print LOGFILE "+$cssdef: CSS possibly not used\n";
+                printf LOGFILE ( "%d:0 CSS possibly not used: %s\n", $cssline[$idx], $cssdef );
             }
         }
 
