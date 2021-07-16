@@ -551,7 +551,7 @@ sub surround {
         my $f1      = $::lglobal{surpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $surstrt = $f1->Entry(
             -textvariable => \$::lglobal{surstrt},
-            -width        => 8,
+            -width        => 12,
             -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->pack(
@@ -560,9 +560,15 @@ sub surround {
             -padx   => 2,
             -anchor => 'n'
         );
+        $surstrt->bind(
+            '<FocusIn>',
+            sub {
+                $::lglobal{hasfocus} = $surstrt;
+            }
+        );
         my $surend = $f1->Entry(
             -textvariable => \$::lglobal{surend},
-            -width        => 8,
+            -width        => 12,
             -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->pack(
@@ -570,6 +576,12 @@ sub surround {
             -pady   => 5,
             -padx   => 2,
             -anchor => 'n'
+        );
+        $surend->bind(
+            '<FocusIn>',
+            sub {
+                $::lglobal{hasfocus} = $surend;
+            }
         );
         my $f2    = $::lglobal{surpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $gobut = $f2->Button(
@@ -634,6 +646,7 @@ sub flood {
             -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::lglobal{ffchar},
+            -width        => 24,
         )->pack(
             -side   => 'left',
             -pady   => 5,
@@ -641,6 +654,12 @@ sub flood {
             -anchor => 'w',
             -expand => 'y',
             -fill   => 'x'
+        );
+        $floodch->bind(
+            '<FocusIn>',
+            sub {
+                $::lglobal{hasfocus} = $floodch;
+            }
         );
         my $f2    = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $gobut = $f2->Button(

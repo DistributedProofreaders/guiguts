@@ -43,7 +43,8 @@ sub commoncharspopup {
             -text        => 'HTML Entity',
         )->grid( -row => 1, -column => 2 );
         $charradio->select;
-        my $frame       = $::lglobal{comcharspop}->Frame( -background => $::bkgcolor )->pack;
+        my $frame = $::lglobal{comcharspop}->Frame( -background => $::bkgcolor )
+          ->pack( -padx => 10, -pady => 10 );
         my @commonchars = (
             [ 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', ],
             [    # OE ligature and capital Y with diaresis not in allowed range for Perl source code
@@ -212,6 +213,8 @@ sub insertit {
     my $letter  = shift;
     my $isatext = 0;
     my $spot;
+
+    return unless Tk::Exists( $::lglobal{hasfocus} );    # Ensure saved focus widget still exists
 
     # Tk::Text/Tk::Entry match various text entry boxes
     $isatext = $::lglobal{hasfocus}->isa('Tk::Text') || $::lglobal{hasfocus} == $::textwindow;
