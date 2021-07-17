@@ -51,11 +51,32 @@ div.chapter {page-break-before: always;}
 h2.nobreak  {page-break-before: avoid;}
 
 ul.index { list-style-type: none; }
-li.ifrst { margin-top: 1em; }
-li.indx { margin-top: .5em; }
-li.isub1 {text-indent: 1em;}
-li.isub2 {text-indent: 2em;}
-li.isub3 {text-indent: 3em;}
+li.ifrst {
+    margin-top: 1em;
+    text-indent: -2em;
+    padding-left: 1em;
+}
+li.indx  {
+    margin-top: .5em;
+    text-indent: -2em;
+    padding-left: 1em;
+}
+li.isub1 {
+    text-indent: -2em;
+    padding-left: 2em;
+}
+li.isub2 {
+    text-indent: -2em;
+    padding-left: 3em;
+}
+li.isub3 {
+    text-indent: -2em;
+    padding-left: 4em;
+}
+li.isub4 {
+    text-indent: -2em;
+    padding-left: 5em;
+}
 
 table {
     margin-left: auto;
