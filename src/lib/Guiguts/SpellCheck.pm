@@ -18,35 +18,13 @@ sub spellcheckfirst {
     ::hidepagenums();
     $::globalspelldictopt = $::booklang;
     spellloadprojectdict();
-    $::lglobal{lastmatchindex} = '1.0';
 
     # get list of misspelled words in selection (or file if nothing selected)
     spellget_misspellings();
-    my $term = $::lglobal{misspelledlist}[0];               # get first misspelled term
-    $::lglobal{misspelledentry}->delete( '0', 'end' );
-    $::lglobal{misspelledentry}->insert( 'end', $term );    # put it in the appropriate text box
-    $::lglobal{suggestionlabel}->configure( -text => 'Suggestions:' );
-    return unless $term;                                    # no misspellings found, bail
-    $::lglobal{matchlength} = '0';
-    $::lglobal{matchindex}  = $textwindow->search(
-        -forwards,
-        -count => \$::lglobal{matchlength},
-        $term, $::lglobal{spellindexstart}, 'end'
-    );                                                      # search for the misspelled word in the text
-    $::lglobal{lastmatchindex} = spelladjust_index( $::lglobal{matchindex}, $term );    # find the index of the end of the match
-    spelladdtexttags();                                                                 # highlight the word in the text
-    ::update_indicators();                                                              # update the status bar
-    aspellstart();                                                                      # initialize the guess function
-    spellguesses($term);                                                                # get the guesses for the misspelling
-    spellshow_guesses();                                                                # populate the listbox with guesses
-    $::lglobal{hyphen_words} = ();                                                      # hyphenated list of words
 
+    # collect hyphenated words for faster, more accurate spell-check later
+    $::lglobal{hyphen_words} = ();
     if ( scalar( $::lglobal{seenwords} ) ) {
-        $::lglobal{misspelledlabel}
-          ->configure( -text => "Not in Dictionary:  -  $::lglobal{seenwords}->{$term} in text." )
-          if $::lglobal{seenwords}->{$term};
-
-        # collect hyphenated words for faster, more accurate spell-check later
         foreach my $word ( keys %{ $::lglobal{seenwords} } ) {
             if ( $::lglobal{seenwords}->{$word} >= 1 && $word =~ /-/ ) {
                 $::lglobal{hyphen_words}->{$word} =
@@ -54,7 +32,13 @@ sub spellcheckfirst {
             }
         }
     }
-    $::lglobal{nextmiss} = 0;
+
+    # initialise variables for first call to spellchecknext
+    $textwindow->markSet( 'spellindex', $::lglobal{spellindexstart} );
+    $::lglobal{matchlength} = '0';
+    $::lglobal{nextmiss}    = 0;
+    aspellstart();
+    spellchecknext();
 }
 
 sub spellloadprojectdict {
@@ -168,12 +152,13 @@ sub spellchecknext {
                 $::lglobal{seenwords}->{ $::lglobal{misspelledlist}[ $::lglobal{nextmiss} ] }
                   || '0'
               )
+              . ' exact'
               . (
                 $spell_count_case + $spell_count_non_poss > 0
-                ? ", $spell_count_case, $spell_count_non_poss"
+                ? ", $spell_count_case case, $spell_count_non_poss possessive"
                 : ''
               )
-              . ( $hyphen_count > 0 ? ", $hyphen_count hyphens" : '' )
+              . ( $hyphen_count > 0 ? ", $hyphen_count hyphen" : '' )
               . ' in text.'
         );
     }
