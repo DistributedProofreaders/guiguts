@@ -941,10 +941,11 @@ sub menu_preferences_appearance {
         ],
         [ 'separator', '' ],
         [
-            Checkbutton => 'Enable Quotes Highlighting',
+            Checkbutton => 'Enable Quotes/Brackets Highlighting',
             -variable   => \$::nohighlights,
             -onvalue    => 1,
-            -offvalue   => 0
+            -offvalue   => 0,
+            -command    => \&::highlight_quotbrac
         ],
         [
             Checkbutton => 'Enable Scanno Highlighting',

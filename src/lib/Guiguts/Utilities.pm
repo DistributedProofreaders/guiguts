@@ -967,15 +967,7 @@ sub initialize {
     $top->configure( -menu => $::menubar = $top->Menu );
 
     # routines to call every time the text is edited
-    $::textwindow->SetGUICallbacks(
-        [
-            \&::update_indicators,
-            sub {
-                return unless $::nohighlights;
-                $::textwindow->HighlightAllPairsBracketingCursor;
-            },
-        ]
-    );
+    $::textwindow->SetGUICallbacks( [ \&::update_indicators, ] );
 
     # Ignore any watchdog timer alarms. Subroutines that take a long time to
     # complete can trip it
@@ -1160,6 +1152,17 @@ sub initialize {
     $textwindow->tagConfigure( 'highlight', -background => 'orange' );
     $textwindow->tagConfigure( 'linesel',   -background => '#8EFD94' );
     $textwindow->tagConfigure( 'alignment', -background => '#8EFD94' );
+    $textwindow->tagConfigure(
+        'CURSOR_HIGHLIGHT_DOUBLECURLY',
+        -foreground => 'black',
+        -background => 'green'
+    );    # From TextEdit.pm
+    $textwindow->tagConfigure(
+        'CURSOR_HIGHLIGHT_SINGLECURLY',
+        -foreground => 'black',
+        -background => 'grey'
+    );    # From TextEdit.pm
+
     $textwindow->tagConfigure(
         'pagenum',
         -background  => 'yellow',
