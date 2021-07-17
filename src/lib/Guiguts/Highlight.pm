@@ -8,7 +8,7 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
-      &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle);
+      &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle);
 }
 
 # Routine to find highlight word list
@@ -302,6 +302,71 @@ sub highlight_scannos {    # Enable / disable word highlighting in the text
     }
     ::update_indicators();
     ::savesettings();
+}
+
+#
+# Enable/disable quote/bracket highlighting in the text
+sub highlight_quotbrac {
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+    if ($::nohighlights) {
+        highlightquotbrac();
+        $::lglobal{quotbrac_highlightedid} = $top->repeat( 400, \&highlightquotbrac );
+    } else {
+        $::lglobal{quotbrac_highlightedid}->cancel if $::lglobal{quotbrac_highlightedid};
+        undef $::lglobal{quotbrac_highlightedid};
+        highlight_quotbrac_remove();
+    }
+    ::update_indicators();
+    ::savesettings();
+}
+
+#
+# Action routine to highlight quotes/brackets
+# Calls to HighlightSinglePairBracketingCursor adapted from TextEdit.pm
+sub highlightquotbrac {
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+    return 0 unless $::nohighlights;
+    $textwindow->HighlightSinglePairBracketingCursor( '(', ')', '[()]', 'CURSOR_HIGHLIGHT_PARENS',
+        'CURSOR_HIGHLIGHT_PARENS', 0 );
+    $textwindow->HighlightSinglePairBracketingCursor( '{', '}', '[{}]', 'CURSOR_HIGHLIGHT_CURLIES',
+        'CURSOR_HIGHLIGHT_CURLIES', 0 );
+    $textwindow->HighlightSinglePairBracketingCursor( '[', ']', '[][]', 'CURSOR_HIGHLIGHT_BRACES',
+        'CURSOR_HIGHLIGHT_BRACES', 0 );
+    $textwindow->HighlightSinglePairBracketingCursor(
+        '"', '"', '"',
+        'CURSOR_HIGHLIGHT_DOUBLEQUOTE',
+        'CURSOR_HIGHLIGHT_DOUBLEQUOTE', 0
+    );
+    $textwindow->HighlightSinglePairBracketingCursor(
+        "\x{201c}", "\x{201d}", "[\x{201c}\x{201d}]",
+        'CURSOR_HIGHLIGHT_DOUBLECURLY',
+        'CURSOR_HIGHLIGHT_DOUBLECURLY', 0
+    );
+    $textwindow->HighlightSinglePairBracketingCursor(
+        "'", "'", "'",
+        'CURSOR_HIGHLIGHT_SINGLEQUOTE',
+        'CURSOR_HIGHLIGHT_SINGLEQUOTE', 0
+    );
+    $textwindow->HighlightSinglePairBracketingCursor(
+        "\x{2018}", "\x{2019}", "[\x{2018}\x{2019}]",
+        'CURSOR_HIGHLIGHT_SINGLECURLY',
+        'CURSOR_HIGHLIGHT_SINGLECURLY', 0
+    );
+}
+
+#
+# Remove quote/bracket highlighting tags from file
+sub highlight_quotbrac_remove {
+    my $textwindow = $::textwindow;
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_PARENS',      '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_CURLIES',     '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_BRACES',      '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_DOUBLEQUOTE', '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_DOUBLECURLY', '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_SINGLEQUOTE', '1.0', 'end' );
+    $textwindow->tagRemove( 'CURSOR_HIGHLIGHT_SINGLECURLY', '1.0', 'end' );
 }
 
 #

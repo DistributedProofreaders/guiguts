@@ -781,6 +781,7 @@ sub openfile {    # and open it
         }
     }
     ::highlight_scannos();
+    ::highlight_quotbrac();
     ::update_indicators();
     file_mark_pages() if $::auto_page_marks;
     ::readlabels();
