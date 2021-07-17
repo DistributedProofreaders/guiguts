@@ -1777,69 +1777,93 @@ sub orphanedbrackets {
             -text        => '(  )',
         )->grid( -row => 1, -column => 1 );
         $psel->select;
-        my $ssel = $frame->Radiobutton(
+        $frame->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '[\[\]]',
             -text        => '[  ]',
         )->grid( -row => 1, -column => 2 );
-        my $csel = $frame->Radiobutton(
+        $frame->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '[\{\}]',
             -text        => '{  }',
         )->grid( -row => 1, -column => 3, -pady => 5 );
-        my $asel = $frame->Radiobutton(
+        $frame->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '[<>]',
             -text        => '<  >',
         )->grid( -row => 1, -column => 4, -pady => 5 );
         my $frame1 = $::lglobal{brkpop}->Frame->pack;
-        my $dsel   = $frame1->Radiobutton(
+        $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '\/\*|\*\/',
             -text        => '/* */',
-        )->grid( -row => 1, -column => 1, -pady => 5 );
-        my $nsel = $frame1->Radiobutton(
+        )->grid( -row => 1, -column => 1 );
+        $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '\/#|#\/',
             -text        => '/# #/',
-        )->grid( -row => 1, -column => 2, -pady => 5 );
-        my $stsel = $frame1->Radiobutton(
+        )->grid( -row => 1, -column => 2 );
+        $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '\/\$|\$\/',
             -text        => '/$ $/',
-        )->grid( -row => 1, -column => 3, -pady => 5 );
-        my $parasel = $frame1->Radiobutton(
+        )->grid( -row => 1, -column => 3 );
+        $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '^\/[Pp]|[Pp]\/',
-            -text        => '/p p/',
-        )->grid( -row => 1, -column => 4, -pady => 5 );
+            -text        => '/P P/',
+        )->grid( -row => 1, -column => 4 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Xx]|[Xx]\/',
+            -text        => '/X X/',
+        )->grid( -row => 2, -column => 1 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Ff]|[Ff]\/',
+            -text        => '/F F/',
+        )->grid( -row => 2, -column => 2 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Ll]|[Ll]\/',
+            -text        => '/L L/',
+        )->grid( -row => 2, -column => 3 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Ii]|[Ii]\/',
+            -text        => '/I I/',
+        )->grid( -row => 2, -column => 4 );
         my $frame3 = $::lglobal{brkpop}->Frame->pack;
-        my $qusel  = $frame3->Radiobutton(
+        $frame3->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => "«|»",
             -text        => 'French angle quotes « »',
         )->grid( -row => 2, -column => 2, -pady => 1, -sticky => 'w' );
-        my $gqusel = $frame3->Radiobutton(
+        $frame3->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '»|«',
             -text        => 'German angle quotes » «',
         )->grid( -row => 3, -column => 2, -pady => 1, -sticky => 'w' );
-        my $cqsel = $frame3->Radiobutton(
+        $frame3->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => "\x{201c}|\x{201d}",
             -text        => "English curly quotes \x{201c} \x{201d}",
         )->grid( -row => 4, -column => 2, -pady => 1, -sticky => 'w' );
-        my $gcqsel = $frame3->Radiobutton(
+        $frame3->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => "\x{201e}|\x{201c}",
@@ -1940,6 +1964,9 @@ sub orphanedbrackets {
             $brackets = $1;
             $brackets =~ s/\\//g;
             $brackets = "/$brackets/";
+            if ( $brackets =~ /\^?\/\[([A-Z])([a-z])]\|\[\g1\g2\]\// ) {    # e.g. "^/[Pp]|[Pp]/"
+                $brackets = "/$1 $1/";
+            }
         }
         $brackets =~ s/\|/ /;
         return $brackets;
