@@ -1,5 +1,69 @@
 # Changelog
 
+
+## Version 1.3.2
+
+- New auto-correction features added to error check dialog, primarily for
+  Load Checkfile (to support OCRfixr output), but some features can be used
+  for other error checks. 
+  - Ctrl+Mouse-1 makes the change suggested by the query/error (for Jeebies,
+    this swaps he/be; for OCRfixr it makes the suggested correction). 
+  - Ctrl+Mouse-2/3 does the same, but also removes the query from the list
+    (as Mouse-2/3 currently do). 
+  - Ctrl+Shift+Mouse-2/3 discards all queries that are identical to the
+    clicked one but on a different line number. This is to quickly get rid of
+    multiple wrong suggestions, and may be useful for other tools, such as
+    Bookloupe. Note it does not remove all errors of that type, just the ones
+    that match exactly, e.g. it can remove all occurrences of "Query digit in
+    4to", but retain other digit queries.
+- Regex scannos now clear the case insensitive flag by default
+- The pphtml tool now outputs the line number where CSS was defined if it is
+  warning about it potentially being unused.
+- The Common Character dialog now has a small border to make it easier to click
+  on and pop it to the front without inserting a character
+- The Surround and Flood dialogs are now wider to allow them to be picked up
+  and moved
+- The Surround and Flood dialogs now accept input from the Common Character and
+  Compose Character dialogs
+- The display of match variants in the Spell Check dialog has been made clearer
+  by adding additional words to the label instead of just a list of numbers,
+  e.g. `3 exact, 2 case, 1 possessive, 4 hyphen in text.` instead of
+  `3, 2, 1, 4 hyphens in text.`
+- Check Orphaned Brackets can now check `/X X/`, `/F F/`, `/I I/` and `/L L/`.
+- The default CSS header file has improved support for indexes, indenting
+  wrapped lines more clearly
+- The Preferences->Enable Quotes/Brackets Highlighting option now highlights
+  quotes and brackets that surround the cursor, rather than the previous
+  behavior where it was necessary to edit the text to make the highlighting
+  show. Also, quotes no longer need to be on the same line, and curly single
+  and double quotes are supported.
+
+### Bug Fixes
+- Search/Replace dialog did not remember its position correctly under Linux
+- When smallcaps tools popped the Search/Replace dialog, they did not
+  completely clear existing search/replace strings
+- Running Stealth Scannos for a second time while the Hints dialog was popped
+  would generate an error
+- Check for Updates dialog did not expand to show all its contents if the font
+  size was increased
+- Basic Fixup checks were not skipped for /F markup as they were for /X
+- An opening /X caused Basic Fixup checks to be skipped for the rest of the
+  file, rather than resuming at X/
+- Spacing before poetry line numbers inside /P markup was removed by Basic
+  Fixup
+- Scannos directory selection could generate an error if the directory name
+  was too short
+- Duplicate errors output by Bookloupe could cause an error when the user
+  attempted to remove them both from the list
+- When using Common Characters or Compose Character, an error could be
+  generated if the dialog accepting input was dismissed leaving the focus in
+  another dialog that could not accept that input
+- The Spell Check dialog did not display the different types of matching
+  (case, possessive or hyphen variants) for the first word found
+- For the /P check, the Check Orphaned Brackets dialog displayed the raw regex
+  string `/[Pp]|[Pp]/` instead of a friendly version `/P P/`.
+
+
 ## Version 1.3.1
 
 ### Changes
