@@ -1770,7 +1770,9 @@ sub orphanedbrackets {
         $::lglobal{brkpop}->title('Find orphan brackets');
         $::lglobal{brkpop}->Label( -text => 'Bracket or Markup Style' )->pack;
         my $frame = $::lglobal{brkpop}->Frame->pack;
-        my $psel  = $frame->Radiobutton(
+
+        # The list of radio buttons below must be the same as the matches in sub brsel
+        my $psel = $frame->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '[\(\)]',
@@ -1978,6 +1980,8 @@ sub orphanedbrackets {
         ::hidepagenums();
         $textwindow->tagRemove( 'highlight', '1.0', 'end' );
         while (1) {
+
+            # The list of matches below must be the same as the radio buttons in sub orphanedbrackets
             if ( $::lglobal{brsel} eq '»|«' ) {
                 last
                   unless ( $::lglobal{brbrackets}[0] eq '»'
@@ -2003,12 +2007,18 @@ sub orphanedbrackets {
                     )
                     || (   ( $::lglobal{brbrackets}[0] =~ m{^/\*} )
                         && ( $::lglobal{brbrackets}[1] =~ m{^\*/} ) )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/\$} )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^\$/} ) )
-                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/[p]}i )
-                        && ( $::lglobal{brbrackets}[1] =~ m{^[p]/}i ) )
                     || (   ( $::lglobal{brbrackets}[0] =~ m{^/#} )
                         && ( $::lglobal{brbrackets}[1] =~ m{^#/} ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/\$} )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^\$/} ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/p}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^p/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/x}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^x/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/f}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^f/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/l}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^l/}i ) )
                   );
             }
             shift @{ $::lglobal{brbrackets} };
