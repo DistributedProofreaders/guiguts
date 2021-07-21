@@ -1981,6 +1981,8 @@ sub orphanedbrackets {
         $textwindow->tagRemove( 'highlight', '1.0', 'end' );
         while (1) {
 
+            last unless defined $::lglobal{brbrackets}[1];    # No attempt to close markup
+
             # The list of matches below must be the same as the radio buttons in sub orphanedbrackets
             if ( $::lglobal{brsel} eq '»|«' ) {
                 last
@@ -2019,6 +2021,8 @@ sub orphanedbrackets {
                         && ( $::lglobal{brbrackets}[1] =~ m{^f/}i ) )
                     || (   ( $::lglobal{brbrackets}[0] =~ m{^/l}i )
                         && ( $::lglobal{brbrackets}[1] =~ m{^l/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/i}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^i/}i ) )
                   );
             }
             shift @{ $::lglobal{brbrackets} };
