@@ -335,6 +335,14 @@ sub menu_search {
             -command     => \&::hilitepopup,
         ],
         [
+            Checkbutton  => 'Highlight Quotes & Brackets',
+            -variable    => \$::nohighlights,
+            -onvalue     => 1,
+            -offvalue    => 0,
+            -accelerator => "Ctrl+;",
+            -command     => \&::highlight_quotbrac
+        ],
+        [
             Checkbutton  => 'Highlight Al~ignment Column',
             -accelerator => 'Ctrl+Shift+a',
             -variable    => \$::lglobal{highlightalignment},
@@ -940,13 +948,6 @@ sub menu_preferences_appearance {
             }
         ],
         [ 'separator', '' ],
-        [
-            Checkbutton => 'Enable Quotes/Brackets Highlighting',
-            -variable   => \$::nohighlights,
-            -onvalue    => 1,
-            -offvalue   => 0,
-            -command    => \&::highlight_quotbrac
-        ],
         [
             Checkbutton => 'Enable Scanno Highlighting',
             -variable   => \$::scannos_highlighted,

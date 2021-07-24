@@ -201,6 +201,8 @@ sub hiliteremove {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     $textwindow->tagRemove( 'quotemark', '1.0', 'end' );
     hilite_alignment_stop();
+    $::nohighlights = 0;
+    ::highlight_quotbrac();
 }
 
 # Highlight straight and curly single quotes in selection
