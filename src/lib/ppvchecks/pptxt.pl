@@ -51,11 +51,11 @@ sub runProgram {
         $outfile = dirname($srctext) . "/pptxt.log";
     }
 
-    open LOGFILE, "> $outfile" || die "output file error\n";
+    open LOGFILE, ">:encoding(UTF-8)", $outfile || die "output file error\n";
 
     printf LOGFILE ( "%s\n", "-" x 80 );
 
-    open INFILE, $srctext;
+    open INFILE, "<:encoding(UTF-8)", $srctext;
 
     my ( $ln, $tmp );
     while ( $ln = <INFILE> ) {
@@ -67,7 +67,7 @@ sub runProgram {
 
     # read the book again, this time a paragraph at a time.
     @para = ();
-    open INFILE, $srctext;
+    open INFILE, "<:encoding(UTF-8)", $srctext;
 
     $tmp = "";
     while ( $ln = <INFILE> ) {
