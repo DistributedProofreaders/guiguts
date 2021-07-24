@@ -19,6 +19,13 @@ sub keybindings {
     keybind( '<Control-Alt-h>',   sub { ::hilitepopup(); } );
     keybind( '<Control-Shift-a>', sub { ::hilite_alignment_toggle(); } );
     keybind( '<Control-0>',       sub { ::hiliteremove(); } );
+    keybind(
+        '<Control-semicolon>',
+        sub {
+            $::nohighlights = 1 - $::nohighlights;
+            ::highlight_quotbrac();
+        }
+    );
 
     # File
     keybind( '<Control-o>',       sub { ::file_open($textwindow); } );
