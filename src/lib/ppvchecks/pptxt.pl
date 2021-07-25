@@ -11,7 +11,7 @@ use Getopt::Long;
 # http://www.opensource.org/licenses/mit-license.php
 # last edit: 03-Sep-2009 10:41 PM
 
-my $vnum = "1.19k";
+my $vnum = "1.20";
 
 my ( @book, @para );
 my $outfile = "xxx";
@@ -246,22 +246,34 @@ sub linelength_check {
     # find short line that does not end a paragraph and is not in poetry or bq.
     # find longest line of text.
     my $shortlen = 1000;
-    my $longlen  = 0;
+    my $longlen  = $lineln[0];    # Initialise longest line to be the first line
     my $shortln  = 0;
     my $longln   = 0;
-    for ( my $lc = 0 ; $lc <= $#lineld - 2 ; $lc++ ) {
+
+    # The loop logic assumes that the last line of the file is either
+    # zero length (i.e. a blank line) or must be last line of a paragraph
+
+    for ( my $lc = 1 ; $lc <= $#lineld ; $lc++ ) {
+
+        # Long lines check
         if ( $lineln[$lc] > $longlen ) {
             $longln  = $lc;
             $longlen = $lineln[$lc];
         }
-        if (    $lineln[$lc] > $lineln[ $lc + 1 ]
-            and $lineln[ $lc + 1 ] < $lineln[ $lc + 2 ]
-            and $lineln[ $lc + 1 ] > 0
-            and $lineld[ $lc + 1 ] == 0 ) {
-            if ( $lineln[ $lc + 1 ] < $shortlen ) {
-                $shortlen = $lineln[ $lc + 1 ];
-                $shortln  = $lc + 1;
-            }
+
+        # Current line is zero length so ignore previous line as it
+        # is last line of a paragraph or another blank line
+        next if $lineln[$lc] == 0;
+
+        # Current line is poetry/bq so ignore previous line as its either
+        # another poetry/bq line, a blank line or the last line of a paragraph.
+        next if $lineld[$lc] > 0;
+
+        # If we get here, current line is neither a blank line nor a poetry/bq line.
+        # It may also be the last line. Is the previous line the shortest and not blank?
+        if ( $lineln[ $lc - 1 ] < $shortlen and $lineln[ $lc - 1 ] > 0 ) {
+            $shortlen = $lineln[ $lc - 1 ];
+            $shortln  = $lc - 1;
         }
     }
 
