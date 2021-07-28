@@ -10,6 +10,7 @@ BEGIN {
 }
 
 my @errorchecklines;
+my %errors;
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
@@ -17,7 +18,6 @@ my @errorchecklines;
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( $line, $lincol );
-    my %errors;
 
     ::hidepagenums();
 
@@ -69,7 +69,7 @@ sub errorcheckpop_up {
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
         $ptopframeb->Button(
             -activebackground => $::activecolor,
-            -command          => sub { gcviewopts( \%errors ); },
+            -command          => sub { gcviewopts(); },
             -text             => 'View Options',
             -width            => 16
         )->grid( -padx => 10, -row => 0, -column => $gcol++ );
@@ -119,7 +119,7 @@ sub errorcheckpop_up {
 
     # button 1 views the error
     $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
-    $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview( \%errors ); } );
+    $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview(); } );
 
     # buttons 2 & 3 remove the clicked error and view the next error
     $::lglobal{errorchecklistbox}->eventAdd(
@@ -130,8 +130,8 @@ sub errorcheckpop_up {
         '<<remove>>',
         sub {
             errorchecksetactive();
-            errorcheckremove( \%errors, $errorchecktype );
-            errorcheckview( \%errors );
+            errorcheckremove($errorchecktype);
+            errorcheckview();
         }
     );
 
@@ -141,8 +141,8 @@ sub errorcheckpop_up {
         '<<process>>',
         sub {
             errorchecksetactive();
-            errorcheckprocess( \%errors, $errorchecktype );
-            errorcheckview( \%errors );
+            errorcheckprocess($errorchecktype);
+            errorcheckview();
         }
     );
 
@@ -155,9 +155,9 @@ sub errorcheckpop_up {
         '<<processremove>>',
         sub {
             errorchecksetactive();
-            errorcheckprocess( \%errors, $errorchecktype );
-            errorcheckremove( \%errors, $errorchecktype );
-            errorcheckview( \%errors );
+            errorcheckprocess($errorchecktype);
+            errorcheckremove($errorchecktype);
+            errorcheckview();
         }
     );
 
@@ -171,8 +171,8 @@ sub errorcheckpop_up {
         '<<processremovesimilar>>',
         sub {
             errorchecksetactive();
-            errorcheckremovesimilar( \%errors, $errorchecktype );
-            errorcheckview( \%errors );
+            errorcheckremovesimilar($errorchecktype);
+            errorcheckview();
         }
     );
 
@@ -180,6 +180,7 @@ sub errorcheckpop_up {
 
     # End presentation; begin logic
     @errorchecklines = ();
+    %errors          = ();
     my $mark  = 0;
     my @marks = $textwindow->markNames;
     for (@marks) {
@@ -285,7 +286,6 @@ sub errorcheckpop_up {
         }
 
         my $columnadjust = 0;
-        $errors{$line} = '';
         if ( $errorchecktype eq 'HTML Tidy' ) {
             last
               if $line =~ /^No warnings or errors were found/
@@ -380,6 +380,8 @@ sub errorcheckpop_up {
             my $markname = "t" . ++$mark;
             $textwindow->markSet( $markname, "${linnum}.${colnum}" );    # add mark in main text
             $errors{$line} = $markname;                                  # cross-ref error with mark
+        } else {
+            $errors{$line} = '';
         }
         $countqueries++ unless ignorequery( $errorchecktype, $line );
 
@@ -414,7 +416,7 @@ sub errorcheckpop_up {
 
     ::working();
     if ( $errorchecktype eq 'Bookloupe' ) {
-        gcwindowpopulate( \%errors );    # Also handles query count display since it depends on shown/hidden error types
+        gcwindowpopulate();    # Also handles query count display since it depends on shown/hidden error types
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
         eccountupdate($countqueries);
@@ -715,18 +717,17 @@ sub linkcheckrun {
 
 # When user clicks on an error, show and highlight the correct place in the main text window
 sub errorcheckview {
-    my $errorsref  = shift;
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     my $line = $::lglobal{errorchecklistbox}->get('active');
     return if not defined $line;
     if ( $line =~ /^\d+:\d+/ ) {    # normally line and column number of error is shown
-        $textwindow->see( ${$errorsref}{$line} );
-        $textwindow->markSet( 'insert', ${$errorsref}{$line} );
+        $textwindow->see( $errors{$line} );
+        $textwindow->markSet( 'insert', $errors{$line} );
 
         # Highlight from error to end of line
-        my $start = ${$errorsref}{$line};
-        my $end   = ${$errorsref}{$line} . " lineend";
+        my $start = $errors{$line};
+        my $end   = $errors{$line} . " lineend";
 
         # Ensure at least 1 character is highlighted
         if ( $textwindow->index($start) == $textwindow->index($end) ) {
@@ -766,14 +767,13 @@ sub errorchecksetactive {
 #
 # Remove the active item
 sub errorcheckremove {
-    my $errorsref      = shift;
     my $errorchecktype = shift;
 
     my $rmvmsg = $::lglobal{errorchecklistbox}->get('active');
     return unless defined $rmvmsg;
 
-    $::textwindow->markUnset( ${$errorsref}{$rmvmsg} );
-    undef ${$errorsref}{$rmvmsg};
+    $::textwindow->markUnset( $errors{$rmvmsg} );
+    undef $errors{$rmvmsg};
     $::lglobal{errorchecklistbox}->selectionClear( 0, 'end' );
     $::lglobal{errorchecklistbox}->delete('active');
     $::lglobal{errorchecklistbox}->selectionSet('active');
@@ -785,21 +785,18 @@ sub errorcheckremove {
 # Process the active item if possible, making the suggested change to the text
 sub errorcheckprocess {
     my $textwindow     = $::textwindow;
-    my $errorsref      = shift;
     my $errorchecktype = shift;
 
     my $line = $::lglobal{errorchecklistbox}->get('active');
-    return if not defined ${$errorsref}{$line};
+    return if not defined $errors{$line};
 
     my ( $begmatch, $endmatch, $match, $replacement );
 
     # Process the line appropriately for the type
     if ( $errorchecktype eq 'Load Checkfile' ) {
-        ( $begmatch, $endmatch, $match, $replacement ) =
-          errorcheckprocesssuggest( $errorsref, $line );
+        ( $begmatch, $endmatch, $match, $replacement ) = errorcheckprocesssuggest($line);
     } elsif ( $errorchecktype eq 'Jeebies' ) {
-        ( $begmatch, $endmatch, $match, $replacement ) =
-          errorcheckprocessjeebies( $errorsref, $line );
+        ( $begmatch, $endmatch, $match, $replacement ) = errorcheckprocessjeebies($line);
     } else {
         return;
     }
@@ -822,15 +819,14 @@ sub errorcheckprocess {
 #
 # Process "Suggest 'X' for 'Y'" by replacing string 'Y' with string 'X'
 sub errorcheckprocesssuggest {
-    my $errorsref = shift;
-    my $line      = shift;
+    my $line = shift;
     my ( $begmatch, $endmatch, $match, $replacement );
     if ( $line =~ /^\d+:\d+ Suggest '(.+)' for '(.+)'/ ) {
         $replacement = $1;
         $match       = $2;
 
-        $begmatch = ${$errorsref}{$line};
-        $endmatch = ${$errorsref}{$line} . "+" . length($match) . "c";
+        $begmatch = $errors{$line};
+        $endmatch = $errors{$line} . "+" . length($match) . "c";
     }
     return ( $begmatch, $endmatch, $match, $replacement );
 }
@@ -838,8 +834,7 @@ sub errorcheckprocesssuggest {
 #
 # Process Jeebies output 'Query phrase "xxx he/be xxx' by swapping  he/be
 sub errorcheckprocessjeebies {
-    my $errorsref = shift;
-    my $line      = shift;
+    my $line = shift;
     my ( $begmatch, $endmatch, $match, $replacement );
     if ( $line =~ /^\d+:\d+ - Query phrase ".*\b([HhBb]e)\b.*"/ ) {
         $match       = $1;
@@ -849,12 +844,8 @@ sub errorcheckprocessjeebies {
         $replacement = "He" if $match eq "Be";
 
         # find first he/be as a whole word from the marked location
-        $begmatch = $::textwindow->search(
-            '-regexp', '--',
-            '\b' . $match . '\b',
-            ${$errorsref}{$line},
-            ${$errorsref}{$line} . "+1l"
-        );
+        $begmatch = $::textwindow->search( '-regexp', '--', '\b' . $match . '\b',
+            $errors{$line}, $errors{$line} . "+1l" );
         $endmatch = $begmatch . "+" . length($match) . "c" if $begmatch;
     }
     return ( $begmatch, $endmatch, $match, $replacement );
@@ -864,11 +855,10 @@ sub errorcheckprocessjeebies {
 # Remove the active item and similar items
 sub errorcheckremovesimilar {
     my $textwindow     = $::textwindow;
-    my $errorsref      = shift;
     my $errorchecktype = shift;
     my $line           = $::lglobal{errorchecklistbox}->get('active');
     return unless defined $line;
-    return unless defined ${$errorsref}{$line} and $line =~ s/^\d+:\d+ (.+)/$1/;
+    return unless defined $errors{$line} and $line =~ s/^\d+:\d+ (.+)/$1/;
 
     # Reverse through list deleting lines that are identical to the chosen one apart from line:column
     my $index = $::lglobal{errorchecklistbox}->size();
@@ -877,8 +867,8 @@ sub errorcheckremovesimilar {
         my $rmvmsg = $::lglobal{errorchecklistbox}->get($index);
         next unless $rmvmsg =~ /^\d+:\d+ \Q$line\E$/;    # Quote $line in case it contains regex special characters
 
-        $::textwindow->markUnset( ${$errorsref}{$rmvmsg} );
-        undef ${$errorsref}{$rmvmsg};
+        $::textwindow->markUnset( $errors{$rmvmsg} );
+        undef $errors{$rmvmsg};
         $::lglobal{errorchecklistbox}->delete($index);
 
         eccountupdate(-1) unless ignorequery( $errorchecktype, $rmvmsg );    # If deleted line is a query, update the query count
@@ -888,14 +878,13 @@ sub errorcheckremovesimilar {
 }
 
 sub gcwindowpopulate {
-    my $errorsref = shift;
     return unless defined $::lglobal{errorcheckpop};
     my $headr = 0;
     my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     foreach my $line (@errorchecklines) {
-        next if $line =~ /^\s*$/;    # Skip blank lines
-        next unless defined ${$errorsref}{$line};
+        next if $line =~ /^\s*$/;                                            # Skip blank lines
+        next unless defined $errors{$line};
 
         # Check if error type has been hidden
         my $flag = 0;
@@ -928,8 +917,7 @@ sub gcwindowpopulate {
 }
 
 sub gcviewopts {
-    my $errorsref = shift;
-    my $top       = $::top;
+    my $top = $::top;
     my @gsoptions;
     my $gcrows = int( ( @{ $::lglobal{gcarray} } / 3 ) + .9 );
     if ( defined( $::lglobal{gcviewoptspop} ) ) {
@@ -949,7 +937,7 @@ sub gcviewopts {
             $::gsopt[$_]   = 0 unless defined $::gsopt[$_];
             $gsoptions[$_] = $pframe1->Checkbutton(
                 -variable    => \$::gsopt[$_],
-                -command     => sub { gcwindowpopulate($errorsref); },
+                -command     => sub { gcwindowpopulate(); },
                 -selectcolor => $::lglobal{checkcolor},
                 -text        => $::lglobal{gcarray}->[$_],
             )->grid( -row => $gcrow, -column => $gccol, -sticky => 'nw' );
@@ -961,7 +949,7 @@ sub gcviewopts {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->select;
                 }
-                gcwindowpopulate($errorsref);
+                gcwindowpopulate();
             },
             -text  => 'Hide All',
             -width => 14
@@ -977,7 +965,7 @@ sub gcviewopts {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->deselect;
                 }
-                gcwindowpopulate($errorsref);
+                gcwindowpopulate();
             },
             -text  => 'See All',
             -width => 14
@@ -998,7 +986,7 @@ sub gcviewopts {
                             $gsoptions[$_]->deselect;
                         }
                     }
-                    gcwindowpopulate($errorsref);
+                    gcwindowpopulate();
                 },
                 -text  => "Load View: '$::booklang'",
                 -width => 14
@@ -1015,7 +1003,7 @@ sub gcviewopts {
                     for ( 0 .. $#gsoptions ) {
                         $gsoptions[$_]->toggle;
                     }
-                    gcwindowpopulate($errorsref);
+                    gcwindowpopulate();
                 },
                 -text  => 'Toggle View',
                 -width => 14
@@ -1036,7 +1024,7 @@ sub gcviewopts {
                         $gsoptions[$_]->deselect;
                     }
                 }
-                gcwindowpopulate($errorsref);
+                gcwindowpopulate();
             },
             -text  => 'Load Defaults',
             -width => 14
