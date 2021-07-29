@@ -253,10 +253,10 @@ sub keybindings {
     # Try to trap odd right click error under OSX and Linux
     keybind(
         '<3>',
-        sub {
-            ::scrolldismiss();
-            $::menubar->Popup( -popover => 'cursor' ) if ($::OS_WIN);
-        }
+        [
+            sub { ::scrolldismiss(); $::menubar->post( $_[1], $_[2] ) if ($::OS_WIN); },
+            ::Ev('X'), ::Ev('Y')
+        ]
     );
 
     # Extra bindings for Mac
