@@ -250,14 +250,7 @@ sub keybindings {
     keybind( '<<ScrollDismiss>>', sub { ::scrolldismiss(); } );
     keybind( '<FocusIn>',         sub { $::lglobal{hasfocus} = $textwindow; } );
 
-    # Try to trap odd right click error under OSX and Linux
-    keybind(
-        '<3>',
-        [
-            sub { ::scrolldismiss(); $::menubar->post( $_[1], $_[2] ) if ($::OS_WIN); },
-            ::Ev('X'), ::Ev('Y')
-        ]
-    );
+    keybind( '<3>', [ \&::showcontextmenu, ::Ev('X'), ::Ev('Y') ] );
 
     # Extra bindings for Mac
     if ($::OS_MAC) {
