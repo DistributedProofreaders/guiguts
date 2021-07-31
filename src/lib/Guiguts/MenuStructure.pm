@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw( &menurebuild );
+    @EXPORT = qw( &menurebuild &showcontextmenu );
 }
 
 # Menus are not easily modifiable in place. Easier to just destroy and
@@ -155,21 +155,7 @@ sub menu_edit {
             -command     => sub { $textwindow->redo; $textwindow->see('insert'); },
         ],
         [ 'separator', '' ],
-        [
-            'command', 'Cut',
-            -accelerator => 'Ctrl+x',
-            -command     => sub { ::cut(); },
-        ],
-        [
-            'command', 'Copy',
-            -accelerator => 'Ctrl+c',
-            -command     => sub { ::textcopy(); },
-        ],
-        [
-            'command', 'Paste',
-            -accelerator => 'Ctrl+v',
-            -command     => sub { ::paste(); },
-        ],
+        menu_edit_cutcopypaste(),
         [
             'command', 'Alternative Paste',
             -accelerator => 'Ctrl+Alt+v',
@@ -232,6 +218,24 @@ sub menu_edit {
             -command     => sub { ::flood(); }
         ],
     ];
+}
+
+sub menu_edit_cutcopypaste {
+    [
+        'command', 'Cut',
+        -accelerator => 'Ctrl+x',
+        -command     => sub { ::cut(); },
+    ],
+      [
+        'command', 'Copy',
+        -accelerator => 'Ctrl+c',
+        -command     => sub { ::textcopy(); },
+      ],
+      [
+        'command', 'Paste',
+        -accelerator => 'Ctrl+v',
+        -command     => sub { ::paste(); },
+      ];
 }
 
 sub menu_search {
@@ -1183,6 +1187,38 @@ sub menu_cascade {
         -tearoff   => 1,
         -menuitems => shift,
     ];
+}
+
+#
+# Show reduced menu when the text window is right-clicked
+my $contextmenu;
+
+sub showcontextmenu {
+    ::scrolldismiss();    # Cancel any middle button/mouse wheel scrolling
+
+    # Create the menu when it is first requested
+    unless ($contextmenu) {
+        $contextmenu =
+          $::top->Menu( -menuitems => [ menu_edit_cutcopypaste(), [ 'separator', '' ], ] );
+        $contextmenu->cascade(
+            -label     => '~Bookmarks',
+            -tearoff   => 1,
+            -menuitems => menu_bookmarks(),
+        );
+    }
+
+    # Convert mouse root xy to location in text widget and position insert cursor there
+    # so that Paste & other operations get the right location
+    # Can't call Text::SetCursor directly since it cancels any current text selection
+    my ( $w, $x, $y ) = @_;
+    my $wx  = $x - $w->rootx;
+    my $wy  = $y - $w->rooty;
+    my $pos = "\@$wx,$wy";
+    $pos = 'end - 1 chars' if $w->compare( $pos, '==', 'end' );
+    $w->markSet( 'insert', $pos );
+
+    # Finally post the menu
+    $contextmenu->post( $x, $y );
 }
 
 1;
