@@ -32,11 +32,16 @@
 - Check Orphaned Brackets can now check `/X X/`, `/F F/`, `/I I/` and `/L L/`.
 - The default CSS header file has improved support for indexes, indenting
   wrapped lines more clearly
-- The Preferences->Enable Quotes/Brackets Highlighting option now highlights
-  quotes and brackets that surround the cursor, rather than the previous
-  behavior where it was necessary to edit the text to make the highlighting
-  show. Also, quotes no longer need to be on the same line, and curly single
-  and double quotes are supported.
+- The Preferences->Enable Quotes Highlighting option has been moved to the
+  Search menu with the other highlighting options. Ctrl+semicolon toggles the
+  highlighting of quotes and brackets that surround the cursor, rather than
+  the previous behavior where it was necessary to edit the text to make the
+  highlighting show. Also, quotes no longer need to be on the same line, and
+  curly single and double quotes are supported
+- A new right-click menu has been added, containing Cut, Copy and Paste options
+  as well as the Bookmarks submenu. In addition, the location of the
+  right-click is used for the bookmark, the Paste position, and whether to
+  overwrite previously selected text
 
 ### Bug Fixes
 - Search/Replace dialog did not remember its position correctly under Linux
@@ -61,7 +66,11 @@
 - The Spell Check dialog did not display the different types of matching
   (case, possessive or hyphen variants) for the first word found
 - For the /P check, the Check Orphaned Brackets dialog displayed the raw regex
-  string `/[Pp]|[Pp]/` instead of a friendly version `/P P/`.
+  string `/[Pp]|[Pp]/` instead of a friendly version `/P P/`
+- The line length check in pptext did not count multibyte characters correctly,
+  such as emdashes. The shortest line determination was also incorrect
+- Right-clicking the text window over 100 times would cause an error, and
+  eventually the program would exit
 
 
 ## Version 1.3.1
