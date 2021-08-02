@@ -71,6 +71,9 @@
   such as emdashes. The shortest line determination was also incorrect
 - Right-clicking the text window over 100 times would cause an error, and
   eventually the program would exit
+- Checkbox backgrounds on Windows changed color instead of remaining white when
+  Preferences->Appearance->Set Button Highlight Color was used, even if the
+  color choosing was cancelled
 
 
 ## Version 1.3.1
