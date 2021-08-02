@@ -934,9 +934,7 @@ sub menu_preferences_appearance {
             -command => sub {
                 my $thiscolor = ::setcolor($::activecolor);
                 $::activecolor = $thiscolor if $thiscolor;
-                $::OS_WIN
-                  ? $::lglobal{checkcolor} = 'white'
-                  : $::lglobal{checkcolor} = $::activecolor;
+                $::lglobal{checkcolor} = $::OS_WIN ? 'white' : $::activecolor;
                 ::savesettings();
             }
         ],
