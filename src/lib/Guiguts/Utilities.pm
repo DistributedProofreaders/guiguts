@@ -1025,7 +1025,7 @@ sub initialize {
     $::lglobal{wflastsearchterm}   = '';
     $::lglobal{zoneindex}          = 0;
     @{ $::lglobal{ascii} }  = qw/+ - + | | | + - +/;
-    @{ $::lglobal{fixopt} } = ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
+    @{ $::lglobal{fixopt} } = ( 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 );
 
     # Bookloupe error types
     @{ $::lglobal{gcarray} } = (
