@@ -42,6 +42,8 @@
   as well as the Bookmarks submenu. In addition, the location of the
   right-click is used for the bookmark, the Paste position, and whether to
   overwrite previously selected text
+- Basic Fixup options to "Fix up spaces around hyphens" and "Format ellipses
+  correctly" are now unchecked by default
 
 ### Bug Fixes
 - Search/Replace dialog did not remember its position correctly under Linux
