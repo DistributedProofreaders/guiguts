@@ -350,98 +350,97 @@ sub fixup {
         $inpoem  = 0 if $line =~ /[$POEMTYPES]\//;
         unless ( $inblock && ${ $::lglobal{fixopt} }[0] ) {
 
-            # remove multiple spaces
-            if ( ${ $::lglobal{fixopt} }[2] ) {
+            if ( ${ $::lglobal{fixopt} }[2] ) {    # remove multiple spaces
                 my $poetrylinenum = '';
 
                 # if poem line number replace with temporary character
-                # preserve whitespace space after line number (includes newline) - spaces will be dealt with later
+                # preserve whitespace after line number (includes newline) - trailing spaces will be dealt with later
                 $poetrylinenum = $1 if $inpoem and $line =~ s/(\s\s+\d+)(\s*)$/$TEMPPOEMLN$2/;
 
                 # replace other multiple spaces with a single space
-                while ( $line =~ s/(?<=\S)\s\s+(?=\S)/ / ) { $edited++ }
+                $edited++ while ( $line =~ s/(?<=\S)\s\s+(?=\S)/ / );
 
                 # restore saved line number with its preceding spaces
                 $line =~ s/$TEMPPOEMLN/$poetrylinenum/ if $inpoem;
             }
-            if ( ${ $::lglobal{fixopt} }[1] ) {
 
-                # Remove spaces before hyphen (only if hyphen isn't first on line, like poetry)
-                $edited++ if $line =~ s/(\S) +-/$1-/g;
-                $edited++ if $line =~ s/- /-/g;          # Remove space after hyphen
-                $edited++
-                  if $line =~ s/(?<![-])([-]*---)(?=[^\s\\"F-])/$1 /g;    # Except leave a space after a string of three or more hyphens
+            # Fix up spaces around hyphens
+            if ( ${ $::lglobal{fixopt} }[1] ) {
+                $edited++ if $line =~ s/(\S) +-/$1-/g;                            # Remove spaces before hyphen (only if hyphen isn't first on line, like poetry)
+                $edited++ if $line =~ s/- /-/g;                                   # Remove space after hyphen
+                $edited++ if $line =~ s/(?<![-])([-]*---)(?=[^\s\\"F-])/$1 /g;    # Except leave a space after a string of three or more hyphens
             }
+
+            # Remove space before single periods (only if not first on line and not decimal point before digits)
             if ( ${ $::lglobal{fixopt} }[3] ) {
-                ;                                                         # Remove space before single periods (only if not first on line and not decimal point before digits)
                 $edited++ if $line =~ s/(\S) +\.(?![\d\.])/$1\./g;
             }
-            ;                                                             # Get rid of space before periods
-            if ( ${ $::lglobal{fixopt} }[4] ) {
-                $edited++
-                  if $line =~ s/ +!/!/g;
-            }
-            ;                                                             # Get rid of space before exclamation points
-            if ( ${ $::lglobal{fixopt} }[5] ) {
-                $edited++
-                  if $line =~ s/ +\?/\?/g;
-            }
-            ;                                                             # Get rid of space before question marks
-            if ( ${ $::lglobal{fixopt} }[6] ) {
-                $edited++
-                  if $line =~ s/ +\;/\;/g;
-            }
-            ;                                                             # Get rid of space before semicolons
-            if ( ${ $::lglobal{fixopt} }[7] ) {
-                $edited++
-                  if $line =~ s/ +:/:/g;
-            }
-            ;                                                             # Get rid of space before colons
-            if ( ${ $::lglobal{fixopt} }[8] ) {
-                $edited++
-                  if $line =~ s/ +,/,/g;
-            }
-            ;                                                             # Get rid of space before commas
-                                                                          # FIXME way to go on managing quotes
-            if ( ${ $::lglobal{fixopt} }[9] ) {
-                $edited++
-                  if $line =~ s/^\" +/\"/;                                # Remove space after doublequote if it is the first character on a line
-                $edited++
-                  if $line =~ s/ +\"$/\"/;                                # Remove space before doublequote if it is the last character on a line
-            }
-            if ( ${ $::lglobal{fixopt} }[10] ) {
-                $edited++
-                  if $line =~ s/(?<=(\(|\{|\[)) //g;                      # Get rid of space after opening brackets
-                $edited++
-                  if $line =~ s/ (?=(\)|\}|\]))//g;                       # Get rid of space before closing brackets
-            }
-            ;                                                             # FIXME format to standard thought breaks - changed to <tb>
-            if ( ${ $::lglobal{fixopt} }[11] ) {
-                $edited++
 
-                  #				  if $line =~
-                  # s/^\s*(\*\s*){5}$/       \*       \*       \*       \*       \*\n/;
-                  if $line =~ s/^\s*(\*\s*){4,}$/<tb>\n/;
+            # Get rid of space before exclamation points
+            if ( ${ $::lglobal{fixopt} }[4] ) {
+                $edited++ if $line =~ s/ +!/!/g;
             }
+
+            # Get rid of space before question marks
+            if ( ${ $::lglobal{fixopt} }[5] ) {
+                $edited++ if $line =~ s/ +\?/\?/g;
+            }
+
+            # Get rid of space before semicolons
+            if ( ${ $::lglobal{fixopt} }[6] ) {
+                $edited++ if $line =~ s/ +\;/\;/g;
+            }
+
+            # Get rid of space before colons
+            if ( ${ $::lglobal{fixopt} }[7] ) {
+                $edited++ if $line =~ s/ +:/:/g;
+            }
+
+            # Get rid of space before commas
+            if ( ${ $::lglobal{fixopt} }[8] ) {
+                $edited++ if $line =~ s/ +,/,/g;
+            }
+
+            # Remove spaces after beginning and before ending double quote
+            if ( ${ $::lglobal{fixopt} }[9] ) {
+                $edited++ if $line =~ s/^\" +/\"/;
+                $edited++ if $line =~ s/ +\"$/\"/;
+            }
+
+            # Remove spaces after opening and before closing brackets
+            if ( ${ $::lglobal{fixopt} }[10] ) {
+                $edited++ if $line =~ s/(?<=(\(|\{|\[)) //g;
+                $edited++ if $line =~ s/ (?=(\)|\}|\]))//g;
+            }
+
+            # Fix thought breaks: asterisks to <tb>
+            if ( ${ $::lglobal{fixopt} }[11] ) {
+                $edited++ if $line =~ s/^\s*(\*\s*){4,}$/<tb>\n/;
+            }
+
+            # Remove trailing spaces
             $edited++ if ( $line =~ s/ +$// );
-            ;    # Fix llth, lst
+
+            # Fix llth, lst
             if ( ${ $::lglobal{fixopt} }[12] ) {
                 $edited++ if $line =~ s/llth/11th/g;
                 $edited++ if $line =~ s/(?<=\d)lst/1st/g;
                 $edited++ if $line =~ s/(?<=\s)lst/1st/g;
                 $edited++ if $line =~ s/^lst/1st/;
             }
-            ;    # format ellipses correctly - add space before unless already one, or sentence-ending punctuation is present
+
+            # format ellipses correctly - add space before unless already one, or sentence-ending punctuation is present
             if ( ${ $::lglobal{fixopt} }[13] ) {
                 $edited++ if $line =~ s/(?<=[^\.\!\? ])\.{3}(?![\.\!\?])/ \.\.\./g;
             }
-            ;    # format guillemets correctly
-            ;    # french guillemets
+
+            # format french guillemets correctly
             if ( ${ $::lglobal{fixopt} }[14] and ${ $::lglobal{fixopt} }[15] ) {
                 $edited++ if $line =~ s/«\s+/«/g;
                 $edited++ if $line =~ s/\s+»/»/g;
             }
-            ;    # german guillemets
+
+            # format german guillemets correctly
             if ( ${ $::lglobal{fixopt} }[14] and !${ $::lglobal{fixopt} }[15] ) {
                 $edited++ if $line =~ s/\s+«/«/g;
                 $edited++ if $line =~ s/»\s+/»/g;
