@@ -271,7 +271,7 @@ sub fixpopup {
         ${ $::lglobal{fixopt} }[15] = 1;
         my @rbuttons = (
             'Skip /* */, /$ $/, /X X/, and /F F/ marked blocks.',
-            'Fix up spaces around hyphens.',
+            'Fix up spaces around single hyphens.',
             'Convert multiple spaces to single spaces.',
             'Remove spaces before single periods.',
             'Remove spaces before exclamation marks.',
@@ -364,11 +364,10 @@ sub fixup {
                 $line =~ s/$TEMPPOEMLN/$poetrylinenum/ if $inpoem;
             }
 
-            # Fix up spaces around hyphens
+            # Fix up spaces around single hyphens
             if ( ${ $::lglobal{fixopt} }[1] ) {
-                $edited++ if $line =~ s/(\S) +-/$1-/g;                            # Remove spaces before hyphen (only if hyphen isn't first on line, like poetry)
-                $edited++ if $line =~ s/- /-/g;                                   # Remove space after hyphen
-                $edited++ if $line =~ s/(?<![-])([-]*---)(?=[^\s\\"F-])/$1 /g;    # Except leave a space after a string of three or more hyphens
+                $edited++ if $line =~ s/(\S) +-(?!-)/$1-/g;    # Don't remove spaces before hyphen if start of line, like poetry
+                $edited++ if $line =~ s/(?<!-)- +/-/g;
             }
 
             # Remove space before single periods (only if not first on line and not decimal point before digits)
