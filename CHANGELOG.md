@@ -43,7 +43,10 @@
   right-click is used for the bookmark, the Paste position, and whether to
   overwrite previously selected text
 - Basic Fixup options to "Fix up spaces around hyphens" and "Format ellipses
-  correctly" are now unchecked by default
+  correctly" are now unchecked by default. "Remove space before periods" now
+  only affects single periods, not ellipses. Correction of ellipses is also
+  more conservative in its approach, not adding a space before if there is
+  one already, or if ellipsis is followed by sentence-ending punctuation.
 
 ### Bug Fixes
 - Search/Replace dialog did not remember its position correctly under Linux

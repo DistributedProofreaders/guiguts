@@ -273,7 +273,7 @@ sub fixpopup {
             'Skip /* */, /$ $/, /X X/, and /F F/ marked blocks.',
             'Fix up spaces around hyphens.',
             'Convert multiple spaces to single spaces.',
-            'Remove spaces before periods.',
+            'Remove spaces before single periods.',
             'Remove spaces before exclamation marks.',
             'Remove spaces before question marks.',
             'Remove spaces before semicolons.',
@@ -373,8 +373,8 @@ sub fixup {
                   if $line =~ s/(?<![-])([-]*---)(?=[^\s\\"F-])/$1 /g;    # Except leave a space after a string of three or more hyphens
             }
             if ( ${ $::lglobal{fixopt} }[3] ) {
-                ;                                                         # Remove space before periods (only if not first on line, like poetry's ellipses)
-                $edited++ if $line =~ s/(\S) +\.(?=\D)/$1\./g;
+                ;                                                         # Remove space before single periods (only if not first on line and not decimal point before digits)
+                $edited++ if $line =~ s/(\S) +\.(?![\d\.])/$1\./g;
             }
             ;                                                             # Get rid of space before periods
             if ( ${ $::lglobal{fixopt} }[4] ) {
@@ -431,10 +431,9 @@ sub fixup {
                 $edited++ if $line =~ s/(?<=\s)lst/1st/g;
                 $edited++ if $line =~ s/^lst/1st/;
             }
-            ;    # format ellipses correctly
+            ;    # format ellipses correctly - add space before unless already one, or sentence-ending punctuation is present
             if ( ${ $::lglobal{fixopt} }[13] ) {
-                $edited++ if $line =~ s/(?<![\.\!\?])\.{3}(?!\.)/ \.\.\./g;
-                $edited++ if $line =~ s/^ \./\./;
+                $edited++ if $line =~ s/(?<=[^\.\!\? ])\.{3}(?![\.\!\?])/ \.\.\./g;
             }
             ;    # format guillemets correctly
             ;    # french guillemets
