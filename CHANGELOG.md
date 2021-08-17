@@ -47,7 +47,9 @@
   affects single hyphens, not longer dashes. "Remove space before periods"
   only affects single periods, not ellipses.  Correction of ellipses is also
   more conservative in its approach, not adding a space before if there is
-  one already, or if the ellipsis is followed by sentence-ending punctuation.
+  one already, or if there are adjacent quotes or sentence-ending punctuation.
+- Quick Count feature added to Search menu, with Shift+Ctrl+b shortcut, that
+  reports the number of occurrences of the currently selected word.
 
 ### Bug Fixes
 - Search/Replace dialog did not remember its position correctly under Linux

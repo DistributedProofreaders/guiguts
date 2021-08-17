@@ -14,6 +14,12 @@ BEGIN {
       &text_quotes_insert);
 }
 
+my $LDQ  = "\x{201c}";
+my $RDQ  = "\x{201d}";
+my $LSQ  = "\x{2018}";
+my $RSQ  = "\x{2019}";
+my $FLAG = "@";
+
 sub text_convert_italic {
     my ( $textwindow, $italic_char ) = @_;
     my $italic  = qr/<\/?i>/;
@@ -428,9 +434,10 @@ sub fixup {
                 $edited++ if $line =~ s/^lst/1st/;
             }
 
-            # format ellipses correctly - add space before unless already one, or sentence-ending punctuation is present
+            # format ellipses correctly - add space before unless already one,
+            # or sentence-ending punctuation is present, or at start of quoted text
             if ( ${ $::lglobal{fixopt} }[13] ) {
-                $edited++ if $line =~ s/(?<=[^\.\!\? ])\.{3}(?![\.\!\?])/ \.\.\./g;
+                $edited++ if $line =~ s/(?<=[^\.\!\? \"'$LDQ$LSQ])\.{3}(?![\.\!\?])/ \.\.\./g;
             }
 
             # format french guillemets correctly
@@ -561,12 +568,6 @@ sub cleanup {
 ## Routines to convert straight quotes to curly quotes
 ## Algorithm from ppsmq -  https://github.com/DistributedProofreaders/ppwb/blob/master/bin/ppsmq.py
 ##
-
-my $LDQ  = "\x{201c}";
-my $RDQ  = "\x{201d}";
-my $LSQ  = "\x{2018}";
-my $RSQ  = "\x{2019}";
-my $FLAG = "@";
 
 #
 # Top-level routine for converting straight quotes to curly quotes
