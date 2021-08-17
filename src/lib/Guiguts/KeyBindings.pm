@@ -161,6 +161,7 @@ sub keybindings {
             }
         }
     );
+    keybind( '<Control-Shift-B>', sub { ::quickcount(); } );
 
     # Navigation
     keybind( '<Control-i>',       sub { ::seecurrentimage(); } );

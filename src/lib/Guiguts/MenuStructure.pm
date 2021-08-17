@@ -246,6 +246,11 @@ sub menu_search {
             -accelerator => 'Ctrl+f',
             -command     => \&::searchpopup
         ],
+        [
+            'command', '~Quick Count',
+            -accelerator => 'Shift+Ctrl+b',
+            -command     => \&::quickcount
+        ],
         [ 'separator', '' ],
         [
             'command',
