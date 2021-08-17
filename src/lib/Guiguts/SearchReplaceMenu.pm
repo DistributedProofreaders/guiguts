@@ -10,7 +10,7 @@ BEGIN {
       &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
-      &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry);
+      &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount);
 }
 
 # Update both the search and replace histories from their dialog fields
@@ -2174,4 +2174,45 @@ sub replace_incr_counter {
     $textwindow->addGlobEnd;
 }
 
+#
+# Quickly count & report number of occurrences of selected text (case-insensitive, whole-word)
+sub quickcount {
+    my $textwindow = $::textwindow;
+
+    # Get string to be searched for
+    my @ranges      = $textwindow->tagRanges('sel');
+    my $range_total = @ranges;
+    return unless @ranges;
+    my $end    = pop(@ranges);
+    my $start  = pop(@ranges);
+    my $string = $textwindow->get( $start, $end );
+
+    # Escape any regex metacharacters, and force whole-word searching
+    $string = '(?<!\p{Alnum})' . ::escape_regexmetacharacters($string) . '(?!\p{Alnum})';
+
+    # Loop through whole file, counting number of occurrences
+    my $length      = 0;
+    my $count       = 0;
+    my $searchstart = "1.0";
+    while (
+        $searchstart = $textwindow->search(
+            '-regexp', '-nocase',
+            '-count' => \$length,
+            '--', $string, $searchstart, 'end'
+        )
+    ) {
+        ++$count;
+        $searchstart = "$searchstart + $length c";
+    }
+
+    # Inform user
+    my $dlg = $::top->Dialog(
+        -text    => "Count: $count",
+        -bitmap  => "info",
+        -title   => "Count",
+        -buttons => ['Ok']
+    );
+    $dlg->Tk::bind( '<Escape>' => sub { $dlg->Subwidget('B_Ok')->invoke; } );
+    $dlg->Show;
+}
 1;
