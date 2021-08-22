@@ -733,7 +733,7 @@ sub text_quotes_select {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'sel', '1.0', 'end' );
 
-    my $atindex = $textwindow->search( '-exact', '--', '@', 'insert', 'end' );
+    my $atindex = $textwindow->search( '-exact', '--', '@', 'insert' );
     if ($atindex) {
         $textwindow->tagAdd( 'sel', "$atindex linestart", "$atindex lineend" );
         $textwindow->markSet( 'insert' => "$atindex lineend" );
@@ -836,7 +836,7 @@ sub text_straight_quote_select {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'sel', '1.0', 'end' );
 
-    my $atindex = $textwindow->search( '-exact', '--', "'", 'insert', 'end' );
+    my $atindex = $textwindow->search( '-exact', '--', "'", 'insert' );
     if ($atindex) {
         $textwindow->tagAdd( 'sel', "$atindex", "$atindex+1c" );
         $textwindow->markSet( 'insert' => "$atindex+1c" );
