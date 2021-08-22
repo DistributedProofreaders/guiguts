@@ -531,7 +531,8 @@ sub fnview {
             -background => 'yellow',
         )->grid( -row => 1, -column => 1 );
         $frame1->Label(
-            -text       => "No anchor found.\npossibly missing anchor,\nmissing colon, incorrect #",
+            -text =>
+              "No anchor found.\nmissing anchor/colon, incorrect #?\n(may need Unlimited Anchor Search)",
             -background => 'pink',
         )->grid( -row => 1, -column => 2 );
         $frame1->Label(
