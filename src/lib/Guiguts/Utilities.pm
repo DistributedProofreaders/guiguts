@@ -342,10 +342,10 @@ sub dos_path {
 sub run {
     my @args = @_;
     if ( !$::OS_WIN ) {
-        if ( -x $args[0] ) {
+        if ( File::Which::which( $args[0] ) ) {
             system { $args[0] } @args;
         } else {
-            warn "Executable file $args[0] not found";
+            warn "Executable $args[0] not found nor is it on the path";
         }
     } else {
         require Win32;
