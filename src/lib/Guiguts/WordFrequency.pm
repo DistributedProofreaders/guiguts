@@ -900,6 +900,7 @@ sub hyphencheck {
 
 sub wordfrequencygetmisspelled {
     $::lglobal{misspelledlist} = ();
+    $::lglobal{spellsort}      = ();
     my ( $words, $uwords );
     my $wordw = 0;
     foreach ( sort ( keys %{ $::lglobal{seenwords} } ) ) {
