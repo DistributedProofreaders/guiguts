@@ -310,7 +310,10 @@ sub html_convert_footnotes {
         $step++;
         last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
         last unless $fnarray->[$step][0];
-        next unless $fnarray->[$step][3];
+
+        # User's responsibility to ensure footnote markup is OK prior to HTML conversion
+        # If not, this may skip creating HTML footnote.
+        next unless $fnarray->[$step][3] and $fnarray->[$step][4];
 
         # insert first in case page marker directly follows footnote
         $textwindow->ntinsert( 'fne' . "$step" . '-1c', "\n\n</div>" );
@@ -1187,7 +1190,8 @@ sub html_convert_sidenotes {
         $textwindow->ntdelete( $thisblockstart, $thisblockstart . '+' . $length . 'c' );
         $textwindow->ntinsert( $thisblockstart, '<div class="sidenote">' );
         $thisnoteend = $textwindow->search( '--', ']', $thisblockstart, 'end' );
-        while ( $textwindow->get( "$thisblockstart+1c", $thisnoteend ) =~ /\[/ ) {
+        while ( $textwindow->compare( "$thisblockstart+1c", "<", $thisnoteend )
+            and $textwindow->get( "$thisblockstart+1c", $thisnoteend ) =~ /\[/ ) {
             $thisblockstart = $thisnoteend;
             $thisnoteend    = $textwindow->search( '--', ']</p>', $thisblockstart, 'end' );
         }
