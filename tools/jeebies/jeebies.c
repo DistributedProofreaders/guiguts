@@ -33,7 +33,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAXWORDLEN    50    /* max length of one word             */
+#define MAXWORDLEN   100    /* max length of one word             */
 #define LINEBUFSIZE 2048    /* buffer size for an input line      */
 #define USERSCANNO_FILE "jeebies.typ"
 
