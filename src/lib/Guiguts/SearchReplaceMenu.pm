@@ -725,7 +725,7 @@ sub replaceeval {
     # Handle regex grouping via () and $
     # Don't want dollars in text to be interpreted during substitution (e.g. $2 inserted
     # as a result of match 1 then being substituted for match 2), so escape dollars in match strings
-    my @matches = $::sopt[1] ? ( $found =~ m/$searchterm/mi ) : ( $found =~ m/$searchterm/m );
+    my @matches = $::sopt[1] ? ( $found =~ m/$searchterm/smi ) : ( $found =~ m/$searchterm/sm );
     for my $idx ( 1 .. 8 ) {    # Up to 8 groups supported
         my $match = $matches[ $idx - 1 ];
         next unless defined $match;
