@@ -127,6 +127,10 @@ sub searchtext {
                     my $wholefile = $textwindow->get( '1.0', $end );
 
                     # search is case sensitive if $::sopt[1] is set
+                    # Note that regex match options "sm" are needed here and when handling ()/$ grouping
+                    # in sub replaceeval. These options should match or weird behaviour will ensue.
+                    # The "g" option is only required here, and finds all matches of the searchterm
+                    # within the file via the while loop
                     if ( $::sopt[1] ) {
                         while ( $wholefile =~ m/$searchterm/smgi ) {
                             push @{ $::lglobal{nlmatches} }, [ $-[0], ( $+[0] - $-[0] ) ];
@@ -725,6 +729,10 @@ sub replaceeval {
     # Handle regex grouping via () and $
     # Don't want dollars in text to be interpreted during substitution (e.g. $2 inserted
     # as a result of match 1 then being substituted for match 2), so escape dollars in match strings
+    # Note that regex match options "sm" are needed here and in the "search on the whole file"
+    # section of sub searchtext - these options should match or weird behaviour will ensue.
+    # The "g" option is not required here since that is to support multiple matches of the searchterm
+    # within the file.
     my @matches = $::sopt[1] ? ( $found =~ m/$searchterm/smi ) : ( $found =~ m/$searchterm/sm );
     for my $idx ( 1 .. 8 ) {    # Up to 8 groups supported
         my $match = $matches[ $idx - 1 ];
