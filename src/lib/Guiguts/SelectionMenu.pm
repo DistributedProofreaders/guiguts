@@ -350,7 +350,7 @@ sub selectrewrap {
 
         # if there are blank lines before the next paragraph, advance past them
         while (1) {
-            $thisblockstart = $textwindow->index("$thisblockstart+1l");
+            $thisblockstart = $textwindow->index("$thisblockstart+1l linestart");
             last if $textwindow->compare( $thisblockstart, '>=', 'end' );
             next if $textwindow->get( $thisblockstart, "$thisblockstart lineend" ) eq '';
             last;
