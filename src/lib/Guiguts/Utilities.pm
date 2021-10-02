@@ -2215,8 +2215,11 @@ sub seeindex {
     }
 }
 
-# Run EBookMaker tool on current HTML file to create epub and mobi versions
+# Run ebookmaker tool on current HTML file to create epub and mobi or HTML version.
+# Note ebookmaker creates a subfolder "out" when output folder is the same as input
+# folder only when producing HTML version.
 sub ebookmaker {
+    my $makehtml   = shift =~ m/html/i;
     my $textwindow = $::textwindow;
     ::busy();    # Change cursor to show user something is happening
     unless ($::ebookmakercommand) {
@@ -2266,30 +2269,38 @@ sub ebookmaker {
     my $outputdir = $::globallastpath;
 
     infoerror("Beginning ebookmaker");
-    infoerror("Files will appear in the directory $::globallastpath");
+    infoerror(
+        "Files will appear in the directory $::globallastpath" . ( $makehtml ? "out" : "" ) );
 
     # EBookMaker needs to use Tidy and Kindlegen, so temporarily append to the path
     # local variable means global value will be restored at end of sub
     local $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::tidycommand) );
 
-    # Only use kindlegen if it exists
+    # Set up options for which files ebookmaker will generate
+    my $makeoption   = "--make=html.images";
     my $kindleoption = "";
-    if ( -e $::kindlegencommand ) {
-        $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::kindlegencommand) );
-        $kindleoption = "--make=kindle.images";
-    } else {
-        infoerror(
-            "For mobi files, use Set File Paths to locate kindlegen which you can obtain by installing Kindle Previewer 3"
-        );
+    unless ($makehtml) {
+        $makeoption = "--make=epub.images";
+
+        # Only use kindlegen if it exists
+        if ( -e $::kindlegencommand ) {
+            $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::kindlegencommand) );
+            $kindleoption = "--make=kindle.images";
+        } else {
+            infoerror(
+                "For mobi files, use Set File Paths to locate kindlegen which you can obtain by installing Kindle Previewer 3"
+            );
+        }
     }
 
     # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
     my $tmpfile = 'ebookmaker.tmp';
     my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
+    $outputdir =~ s/[\/\\]$//;    # Remove trailing slash from output dir to avoid confusing ebookmaker
     $runner->run(
         $::ebookmakercommand, "--verbose",
-        "--max-depth=3",      "--make=epub.images",
-        $kindleoption,        "--output-dir=$outputdir.",
+        "--max-depth=3",      $makeoption,
+        $kindleoption,        "--output-dir=$outputdir",
         "--title=$ttitle",    "--author=$tauthor",
         "$filepath"
     );

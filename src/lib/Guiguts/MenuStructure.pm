@@ -785,7 +785,10 @@ sub menu_html {
             }
         ],
         [ 'separator', '' ],
-        [ 'command',   'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker(); } ],
+        [
+            'command', 'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker("epub"); }
+        ],
+        [ 'command', 'EB~ookMaker HTML Generation', -command => sub { ::ebookmaker("html"); } ],
     ];
 }
 
