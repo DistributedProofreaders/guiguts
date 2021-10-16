@@ -307,9 +307,20 @@ sub footnotepop {
         my $frame8 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame8->Button(
             -activebackground => $::activecolor,
-            -command          => sub { footnotetidy() },
-            -text             => 'Tidy Up Footnotes',
-            -width            => 18
+            -command          => sub {
+                if ( $::lglobal{footstyle} eq 'inline' ) {
+                    $::top->Dialog(
+                        -text    => 'Inline footnotes cannot be tidied.',
+                        -bitmap  => 'error',
+                        -title   => 'Footnote Tidy Error',
+                        -buttons => ['Ok']
+                    )->Show;
+                    return;
+                }
+                footnotetidy();
+            },
+            -text  => 'Tidy Up Footnotes',
+            -width => 18
         )->grid( -row => 1, -column => 1, -padx => 6, -pady => 4 );
         ::initialize_popup_without_deletebinding('footpop');
         $::lglobal{footpop}->protocol(
