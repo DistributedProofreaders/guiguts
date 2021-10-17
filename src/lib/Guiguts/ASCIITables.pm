@@ -167,6 +167,31 @@ sub tablefx {
             -text  => "Width $::lglobal{columnspaces}",
             -width => 12,
         )->pack( -side => 'left', -anchor => 'n', -padx => 5 );
+        my $f2f = $::lglobal{tblfxpop}->LabFrame( -label => 'Leading/Trailing Spaces' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        $f2f->Label( -text => 'Character', )
+          ->grid( -row => 1, -column => 0, -padx => 1, -pady => 2 );
+        $::lglobal{tablefillchar} = '@'
+          unless defined $::lglobal{tablefillchar} and length( $::lglobal{tablefillchar} ) == 1;
+        $f2f->Entry(
+            -width        => 2,
+            -background   => $::bkgcolor,
+            -textvariable => \$::lglobal{tablefillchar},
+            -validate     => 'all',
+            -vcmd         => sub { return length( $_[0] ) <= 1; }
+        )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+        $f2f->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { leadtrailspaces('fill'); },
+            -text             => 'Fill',
+            -width            => 10
+        )->grid( -row => 1, -column => 3, -padx => 5, -pady => 2 );
+        $f2f->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { leadtrailspaces('restore'); },
+            -text             => 'Restore',
+            -width            => 10
+        )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
         my $f3 = $::lglobal{tblfxpop}->LabFrame( -label => 'Grid <=> Step' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $f3->Label( -text => 'Table Right Column', )
@@ -975,6 +1000,46 @@ sub tblsetpg {
     for my $mark ( keys %pgindex ) {
         $textwindow->markSet( $mark, $pgindex{$mark} );
     }
+}
+
+#
+# fill column's leading/trailing spaces with the table fill character or restore the spaces
+sub leadtrailspaces {
+    my $operation  = shift;           # fill or restore
+    my $textwindow = $::textwindow;
+    return unless $::lglobal{tablefillchar};
+    return unless defined $::lglobal{selectedline} or tlineselect();
+    $textwindow->addGlobStart;
+
+    # Loop through the rows of the table
+    my $linestart = $textwindow->index("tblstart linestart");
+    while ( $textwindow->compare( $linestart, '<', 'tblend' ) ) {
+        my $lineend    = $textwindow->index("$linestart lineend");
+        my $nextsearch = $linestart;
+
+        # Loop through the columns
+        while ( my $colend = $textwindow->search( '|', $nextsearch, $lineend ) ) {
+            if ( $colend =~ /.*\.$::lglobal{selectedline}$/ ) {    # Found selected column
+                my $colstart =
+                  $textwindow->search( '-backwards', '|', $colend, $linestart ) || $linestart;
+                my $string = $textwindow->get( $colstart, $colend );
+                last if $string =~ /^[ |]+$/;                      # ignore blank cells
+                if ( $operation eq 'fill' ) {                      # Replace leading/trailing spaces with same number of fill characters
+                    $string =~ s/\|( +)/"|" . $::lglobal{tablefillchar} x length($1)/e;
+                    $string =~ s/( +)$/$::lglobal{tablefillchar} x length($1)/e;
+                } else {                                           # Replace all fill characters with spaces
+                    $string =~ s/$::lglobal{tablefillchar}/ /g;
+                }
+                $textwindow->delete( $colstart, $colend );
+                $textwindow->insert( $colstart, $string );
+                last;                                              # All done for this row
+            }
+            $nextsearch = "$colend +1c";                           # Advance, so don't find the same divider next time
+        }
+        $linestart = "$linestart +1l linestart";                   # Move down to next line of table
+    }
+    $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
+    $textwindow->addGlobEnd;
 }
 
 1;
