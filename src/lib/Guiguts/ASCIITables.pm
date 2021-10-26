@@ -218,17 +218,13 @@ sub tablefx {
         my $f4   = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $ubtn = $f4->Button(
             -activebackground => $::activecolor,
-            -command          => sub {
-                $textwindow->undo;
-                $textwindow->tagRemove( 'highlight', '1.0', 'end' );
-                $textwindow->see('insert');
-            },
-            -text  => 'Undo',
-            -width => 10
+            -command          => sub { undoredo('undo'); },
+            -text             => 'Undo',
+            -width            => 10
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         my $rbtn = $f4->Button(
             -activebackground => $::activecolor,
-            -command          => sub { $textwindow->redo; $textwindow->see('insert'); },
+            -command          => sub { undoredo('redo'); },
             -text             => 'Redo',
             -width            => 10
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
@@ -399,7 +395,7 @@ sub tblspace {
         $textwindow->addGlobStart;
         my $cursor = $textwindow->index('insert');
         my ( $erow, $ecol ) =
-          split( /\./, ( $textwindow->index('tblend') ) );
+          split( /\./, ( $textwindow->index('tblend - 1l lineend') ) );    # tblend is immediately after the table
         my ( $srow, $scol ) =
           split( /\./, ( $textwindow->index('tblstart') ) );
         my $tline = $textwindow->get( "$srow.0", "$srow.end" );
@@ -1008,38 +1004,61 @@ sub leadtrailspaces {
     my $operation  = shift;           # fill or restore
     my $textwindow = $::textwindow;
     return unless $::lglobal{tablefillchar};
-    return unless defined $::lglobal{selectedline} or tlineselect();
+
+    # Get indexes of selected column divider
+    my @ranges      = $textwindow->tagRanges('linesel');
+    my $range_total = @ranges;
+    return if $range_total == 0;
+
     $textwindow->addGlobStart;
 
-    # Loop through the rows of the table
-    my $linestart = $textwindow->index("tblstart linestart");
-    while ( $textwindow->compare( $linestart, '<', 'tblend' ) ) {
-        my $lineend    = $textwindow->index("$linestart lineend");
-        my $nextsearch = $linestart;
-
-        # Loop through the columns
-        while ( my $colend = $textwindow->search( '|', $nextsearch, $lineend ) ) {
-            if ( $colend =~ /.*\.$::lglobal{selectedline}$/ ) {    # Found selected column
-                my $colstart =
-                  $textwindow->search( '-backwards', '|', $colend, $linestart ) || $linestart;
-                my $string = $textwindow->get( $colstart, $colend );
-                last if $string =~ /^[ |]+$/;                      # ignore blank cells
-                if ( $operation eq 'fill' ) {                      # Replace leading/trailing spaces with same number of fill characters
-                    $string =~ s/\|( +)/"|" . $::lglobal{tablefillchar} x length($1)/e;
-                    $string =~ s/( +)$/$::lglobal{tablefillchar} x length($1)/e;
-                } else {                                           # Replace all fill characters with spaces
-                    $string =~ s/$::lglobal{tablefillchar}/ /g;
-                }
-                $textwindow->delete( $colstart, $colend );
-                $textwindow->insert( $colstart, $string );
-                last;                                              # All done for this row
-            }
-            $nextsearch = "$colend +1c";                           # Advance, so don't find the same divider next time
+    # On each line, fill/restore between the selected column divider and the previous one
+    while (@ranges) {
+        my $ignore    = pop(@ranges);
+        my $colend    = pop(@ranges);
+        my $linestart = "$colend linestart";
+        my $colstart  = $textwindow->search( '-backwards', '|', $colend, $linestart ) || $linestart;
+        my $string    = $textwindow->get( $colstart, $colend );
+        next if $string =~ /^[ |]+$/;    # ignore blank cells
+        if ( $operation eq 'fill' ) {    # Replace leading/trailing spaces with same number of fill characters
+            $string =~ s/\|( +)/"|" . $::lglobal{tablefillchar} x length($1)/e;
+            $string =~ s/( +)$/$::lglobal{tablefillchar} x length($1)/e;
+        } else {                         # Replace all fill characters with spaces
+            $string =~ s/$::lglobal{tablefillchar}/ /g;
         }
-        $linestart = "$linestart +1l linestart";                   # Move down to next line of table
+        $textwindow->delete( $colstart, $colend );
+        $textwindow->insert( $colstart, $string );
     }
+
+    $textwindow->tagRemove( 'table', '1.0', 'end' );
     $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
     $textwindow->addGlobEnd;
 }
 
+#
+# Perform undo/redo and attempt to preserve table highlighting and selected column
+sub undoredo {
+    my $op         = shift;
+    my $textwindow = $::textwindow;
+
+    if ( $op eq 'undo' ) {
+        $textwindow->undo;
+    } else {
+        $textwindow->redo;
+    }
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+    $textwindow->tagRemove( 'table',     '1.0', 'end' );
+    $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
+    $textwindow->see('insert');
+
+    # Find selected column dividers and use to store column in global variable
+    my @ranges = $textwindow->tagRanges('linesel');
+    if ( @ranges == 0 ) {
+        tlineselect();    # No selected dividers, so select column based on cursor location
+    } else {
+        my $end = pop(@ranges);
+        $end =~ s/.*\.//;
+        $::lglobal{selectedline} = $end - 1;
+    }
+}
 1;
