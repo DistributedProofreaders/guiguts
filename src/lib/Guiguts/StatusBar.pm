@@ -786,13 +786,13 @@ sub gotolabel {
 }
 
 #
-# Callback for gotolabel dialog
+# Callback for gotolabel dialog - case insensitive
 sub gotolabelok {
     my $textwindow = $::textwindow;
     my $mark;
     for ( keys %::pagenumbers ) {
-        if (   $::pagenumbers{$_}{label}
-            && $::pagenumbers{$_}{label} eq $::lglobal{lastlabel} ) {
+        if ( $::pagenumbers{$_}{label}
+            && lc( $::pagenumbers{$_}{label} ) eq lc( $::lglobal{lastlabel} ) ) {
             $mark = $_;
             last;
         }
