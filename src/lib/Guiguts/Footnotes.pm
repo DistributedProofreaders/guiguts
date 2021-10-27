@@ -538,7 +538,7 @@ sub fnview {
               . "until you've addressed all warnings displayed here." )
           ->grid( -row => 0, -column => 1, -columnspan => 4 );
         $frame1->Label(
-            -text       => "Duplicate anchors.\nmore than one fn\npointing to same anchor",
+            -text       => "Duplicate footnotes.\nmore than one fn\npointing to same anchor",
             -background => 'yellow',
         )->grid( -row => 1, -column => 1 );
         $frame1->Label(
@@ -779,11 +779,18 @@ sub footnotefixup {
             $pointer = '';
             $textwindow->insert( "$start+9c", ':' );
         }
+
+        # Regexps below are to avoid mistaking /*[4], etc. for a footnote anchor,
+        # by checking the anchor is not preceded by /*, /#, /I, /i
         if ( $::lglobal{fnsearchlimit} ) {
-            $anchor = $textwindow->search( '-backwards', '--', "[$pointer]", $start, '1.0' )
+            $anchor =
+              $textwindow->search( '-regexp', '-backwards', '--', "(?<!/[*#Ii])\\[$pointer\\]",
+                $start, '1.0' )
               if $pointer;
         } else {
-            $anchor = $textwindow->search( '-backwards', '--', "[$pointer]", $start, "$start-80l" )
+            $anchor =
+              $textwindow->search( '-regexp', '-backwards', '--', "(?<!/[*#Ii])\\[$pointer\\]",
+                $start, "$start-80l" )
               if $pointer;
         }
         $textwindow->tagAdd( 'highlight', $anchor, $anchor . '+' . ( length($pointer) + 2 ) . 'c' )
