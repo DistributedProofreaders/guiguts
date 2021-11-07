@@ -1037,7 +1037,7 @@ sub initialize {
         'Begins with punctuation',
         'Broken em-dash',
         'Capital "S"',
-        'Carat character',
+        'Caret character',
         'CR without LF',
         'Double punctuation',
         'endquote missing punctuation',

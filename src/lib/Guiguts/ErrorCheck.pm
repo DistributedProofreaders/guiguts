@@ -349,6 +349,7 @@ sub errorcheckpop_up {
                 $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
             }
             $line =~ s/^\s*Line (\d+)\s*/$1:0 /;
+            $line =~ s/ - Carat character\?/ - Caret character?/    # Correct bookloupe misspelling
 
         } elsif ( $errorchecktype eq "Jeebies" ) {
             next if $line =~ /^File: /;
