@@ -402,8 +402,9 @@ sub utfcharsearchpopup {
                 my $row = 0;
                 @textlabels = @textchars = ();
 
-                # split user entry into individual characteristics
-                my @chars = split /\s+/, uc( $characteristics->get );
+                # split user entry into individual characteristics, escaping regex characters
+                my @chars = split /\s+/,
+                  ::escape_regexmetacharacters( uc( $characteristics->get ) );
 
                 # check all the character names
                 for my $name ( sort { $cphash{$a} <=> $cphash{$b} } keys %cphash ) {
