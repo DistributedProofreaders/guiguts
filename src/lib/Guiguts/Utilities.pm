@@ -2296,13 +2296,14 @@ sub ebookmaker {
     # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
     my $tmpfile = 'ebookmaker.tmp';
     my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
-    $outputdir =~ s/[\/\\]$//;    # Remove trailing slash from output dir to avoid confusing ebookmaker
+    $outputdir =~ s/[\/\\]$//;                          # Remove trailing slash from output dir to avoid confusing ebookmaker
+    my $configdir = ::dirname($::ebookmakercommand);    # Ebookmaker dir contains tidy.conf file
     $runner->run(
-        $::ebookmakercommand, "--verbose",
-        "--max-depth=3",      $makeoption,
-        $kindleoption,        "--output-dir=$outputdir",
-        "--title=$ttitle",    "--author=$tauthor",
-        "$filepath"
+        $::ebookmakercommand,      "--verbose",
+        "--max-depth=3",           $makeoption,
+        $kindleoption,             "--output-dir=$outputdir",
+        "--config-dir=$configdir", "--title=$ttitle",
+        "--author=$tauthor",       "$filepath"
     );
 
     # Check for errors or warnings in ebookmaker output

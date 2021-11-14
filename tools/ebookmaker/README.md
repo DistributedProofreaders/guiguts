@@ -9,6 +9,9 @@ https://github.com/gutenbergtools/ebookmaker
 
 We bundle a Windows binary of ebookmaker manually created by the 
 [ebm_builder](https://github.com/DistributedProofreaders/ebm_builder) tool.
+Also included is a tidy.conf file which is required by the ebookmaker process.
+If you intend to run the Windows binary outside of Guiguts, you may need to
+refer to the troubleshooting section below to direct it to the tidy.conf file.
 
 ### Installing the python version manually
 
@@ -82,3 +85,10 @@ been installed.
 EBookMaker requires Python 3.6 or later. If you have earlier versions of
 Python installed via Homebrew, you may get errors unless you uninstall them
 first.
+
+Ebookmaker requires a [tidy.conf file](https://github.com/gutenbergtools/ebookmaker/blob/master/ebookmaker/parsers/tidy.conf)
+to operate correctly. The default location it looks for this is the same
+directory as the main ebookmaker script resides. If ebookmaker is unable
+to find this file in your configuration, you can use the `--config-dir=<dir>`
+command line argument to point to the directory where a copy of tidy.conf
+is located.
