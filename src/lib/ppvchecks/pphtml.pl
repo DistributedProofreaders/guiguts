@@ -8,12 +8,13 @@ use Getopt::Long;
 # command line version of pphtml.pl
 # author: Roger Frank (DP:rfrank)
 
-my $vnum = "1.16";
+my $vnum = "1.17";
 
 my @book         = ();
 my @css          = ();
 my @cssline      = ();
 my %classes_used = ();
+my %classes_line = ();
 
 my $help    = 0;              # set true if help requested
 my $srctext = "book.html";    # default source file
@@ -205,7 +206,9 @@ sub runProgram {
     sub show_classes {
         print LOGFILE ("----- classes used -----\n");
         my $intextbody = 0;
+        my $count      = 0;
         foreach $_ (@book) {
+            $count++;
             if ( not $intextbody and not /<body/ ) {
                 next;
             }
@@ -217,18 +220,22 @@ sub runProgram {
 
                 #        $h =~ s/<(h\d).*$/$1/;
                 $classes_used{$h} += 1;
+                $classes_line{$h} = $count unless exists $classes_line{$h};
             }
 
-            # special case <h?>
+            # special case <table>
             if (/<table/) {
                 $classes_used{"table"} += 1;
+                $classes_line{"table"} = $count unless exists $classes_line{"table"};
             }
             if (/<(block[a-z]*)/) {
                 my $h = $1;
                 $classes_used{$h} += 1;
+                $classes_line{$h} = $count unless exists $classes_line{$h};
             }
             if (/<ins/) {
                 $classes_used{"ins"} += 1;
+                $classes_line{"ins"} = $count unless exists $classes_line{"ins"};
             }
             my $x = 0;
             while (/^.*? class=['"]([^'"]+)['"](.*)$/) {
@@ -237,6 +244,7 @@ sub runProgram {
                 my @sp  = split( / /, $1 );
                 foreach my $t (@sp) {
                     $classes_used{$t} += 1;
+                    $classes_line{$t} = $count unless exists $classes_line{$t};
                 }
                 $x = $x + 1;
                 $_ = $tmp;
@@ -356,7 +364,8 @@ sub runProgram {
                 }
             }
             if ( ( not $found ) and ( not $cssused eq "blockquote" ) ) {
-                print LOGFILE "+$cssused: CSS possibly not defined\n";
+                printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
+                    $cssused );
             }
         }
 
