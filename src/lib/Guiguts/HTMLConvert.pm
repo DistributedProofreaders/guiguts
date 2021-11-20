@@ -1153,8 +1153,9 @@ sub html_convert_footnoteblocks {
               $textwindow->search( '-exact', '--', '</div>', $endoflastfootnoteinblock );
             if ($endoflastfootnoteinblock) {
 
-                # Get 6 characters before </div> in case of blank line between </p> and </div>
-                my $pdiv = $textwindow->get( $endoflastfootnoteinblock . '-6c',
+                # Get 8 characters before </div> in case of blank lines between </p> and </div>
+                # Can be two blank lines if footnote ends in block markup
+                my $pdiv = $textwindow->get( $endoflastfootnoteinblock . '-8c',
                     $endoflastfootnoteinblock . '+6c' );
 
                 # If find </p> followed by </div> assume it's the end of this last footnote.
