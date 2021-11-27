@@ -2299,11 +2299,12 @@ sub ebookmaker {
     $outputdir =~ s/[\/\\]$//;                          # Remove trailing slash from output dir to avoid confusing ebookmaker
     my $configdir = ::dirname($::ebookmakercommand);    # Ebookmaker dir contains tidy.conf file
     $runner->run(
-        $::ebookmakercommand,      "--verbose",
-        "--max-depth=3",           $makeoption,
-        $kindleoption,             "--output-dir=$outputdir",
-        "--config-dir=$configdir", "--title=$ttitle",
-        "--author=$tauthor",       "$filepath"
+        $::ebookmakercommand,   "--verbose",
+        "--max-depth=3",        $makeoption,
+        $kindleoption,          "--output-dir=$outputdir",
+        "--output-file=$fname", "--config-dir=$configdir",
+        "--title=$ttitle",      "--author=$tauthor",
+        "$filepath"
     );
 
     # Check for errors or warnings in ebookmaker output
