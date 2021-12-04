@@ -788,7 +788,6 @@ sub menu_html {
         [
             'command', 'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker("epub"); }
         ],
-        [ 'command', 'EBookMa~ker HTML5 Generation', -command => sub { ::ebookmaker("html"); } ],
     ];
 }
 
