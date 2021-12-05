@@ -310,7 +310,8 @@ sub _bin_save {
 
             # output page and offset
             print $fh " '$page' => {";
-            print $fh "'offset' => '$::pagenumbers{$page}{offset}', ";
+            print $fh "'offset' => '$::pagenumbers{$page}{offset}', "
+              if defined $::pagenumbers{$page}{offset};
 
             # if labels have been set up, output label information too
             print $fh "'label' => '" .  ( $::pagenumbers{$page}{label}  || "" ) . "', ";
