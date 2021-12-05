@@ -1,6 +1,40 @@
 # Changelog
 
 
+## Version 1.3.3
+
+- New Character Fill and Restore options added to ASCII Table dialog. These
+  simplify some complex alignments, e.g. numbers aligned on decimal point and
+  centered with a table column.
+- Undo/Redo feature improved in ASCII Table dialog
+- Latest production version of ebookmaker included (0.11.28). Epub and mobi
+  filenames are now based on the HTML filename, not the book title.
+- Curly quote search operations now wrap on reaching end of file
+- Wording on Footnote Check dialog clarified
+- Goto Label dialog is now case insensitive, so accepts uppercase Roman
+  numerals
+- The pphtml tool now outputs the first line number where CSS was used if it
+  is warning about it potentially being undefined.
+
+### Bug Fixes
+- Under Linux, a missing tool, e.g. bookloupe, caused a crash
+- When Word Frequency spellcheck was re-run, previously misspelled words were
+  still reported, even though they had been corrected
+- Square brackets within sidenotes could cause HTML conversion to fail
+- Jeebies would hang if a word was longer than 50 characters
+- Newlines were not consistently included when `.` was used in a regex and
+  `$1` was used to indicate a parenthesised group
+- Index rewrapping could fail to include the first character on the first line
+  of a page
+- Attempting to tidy inline footnotes caused them to be corrupted
+- An extra spacer line was added after the `*/` table markup when Space Out
+  feature was used in the ASCII Table dialog
+- Markup `/*[4]` could be misinterpreted as a footnote anchor during First Pass
+- Unicode Character Search tool could error if `^`, `*` or `+` were typed
+- Caret is now spelled correctly in bookloupe checks
+- Certain footnote layouts could cause HTML generation to loop forever
+
+
 ## Version 1.3.2
 
 - New auto-correction features added to error check dialog, primarily for
