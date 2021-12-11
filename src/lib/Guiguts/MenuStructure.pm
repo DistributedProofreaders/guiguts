@@ -852,7 +852,9 @@ sub menu_custom {
     [
         map ( [
                 'command',
-                ( $_ < 9 ? '~' : '' ) . ( $_ == 9 ? '1~0' : $_ + 1 ) . ": $::extops[$_]{label}",
+                ( $_ < 9                   ? '~'                  : '' )
+                  . ( $_ == 9              ? '1~0'                : $_ + 1 ) . ": "
+                  . ( $::extops[$_]{label} ? $::extops[$_]{label} : "" ),
                 -command => [ \&::xtops, $_ ]
             ],
             ( 0 .. $#::extops ) ),

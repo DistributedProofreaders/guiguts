@@ -2516,7 +2516,7 @@ sub externalpopup {    # Set up the external commands menu
                 -row    => "$menutempvar" + 1,
                 -column => 1,
                 -padx   => 2,
-                -pady   => 4
+                -pady   => 2
             );
             $f1->Entry(
                 -width        => 80,
@@ -2527,7 +2527,7 @@ sub externalpopup {    # Set up the external commands menu
                 -row    => "$menutempvar" + 1,
                 -column => 2,
                 -padx   => 2,
-                -pady   => 4
+                -pady   => 2
             );
         }
         my $f2    = $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2535,16 +2535,8 @@ sub externalpopup {    # Set up the external commands menu
             -activebackground => $::activecolor,
             -command          => sub {
 
-                # remove any empty items in the list by building a fresh one
-                my @new_extops = qw();
-                for my $index ( 0 .. $#::extops ) {
-                    if ( $::extops[$index]{label} || $::extops[$index]{command} ) {
-                        push( @new_extops, $::extops[$index] );
-                    }
-                }
-                @::extops = @new_extops;
-
                 # save the settings and rebuild the menu
+                externalpopuptidy();
                 ::savesettings();
                 ::menurebuild();
                 ::killpopup('extoptpop');
@@ -2552,8 +2544,26 @@ sub externalpopup {    # Set up the external commands menu
             -text  => 'OK',
             -width => 8
         )->pack( -side => 'top', -padx => 2, -anchor => 'n' );
-        ::initialize_popup_with_deletebinding('extoptpop');
+        ::initialize_popup_without_deletebinding('extoptpop');
+        $::lglobal{extoptpop}->protocol( 'WM_DELETE_WINDOW' => sub { externalpopupdestroy(); } );
     }
+}
+
+# Tidy and destroy the custom external commands dialog
+sub externalpopupdestroy {
+    externalpopuptidy();
+    ::killpopup('extoptpop');
+}
+
+# Remove any empty items in the custom external commands list by building a fresh one
+sub externalpopuptidy {
+    my @new_extops = qw();
+    for my $index ( 0 .. $#::extops ) {
+        if ( $::extops[$index]{label} || $::extops[$index]{command} ) {
+            push( @new_extops, $::extops[$index] );
+        }
+    }
+    @::extops = @new_extops;
 }
 
 sub xtops {    # run an external program through the external commands menu
