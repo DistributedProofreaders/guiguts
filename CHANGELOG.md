@@ -33,6 +33,8 @@
 - Unicode Character Search tool could error if `^`, `*` or `+` were typed
 - Caret is now spelled correctly in bookloupe checks
 - Certain footnote layouts could cause HTML generation to loop forever
+- Custom Commands dialog added blank commands when cancelled
+- Occasional `uninitialised variable` errors fixed
 
 
 ## Version 1.3.2
