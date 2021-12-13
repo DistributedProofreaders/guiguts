@@ -262,8 +262,8 @@ sub selectrewrap {
         if ( $selection =~ /^$TEMPPAGEMARK*\/[fF]/ ) {
             $inblock = 1;
         }
-        $textwindow->markSet( 'rewrapend', $thisblockend );             #Set a mark at the end of the text so it can be found after rewrap
-        unless ( $selection =~ /^$TEMPPAGEMARK*\s*?(\*\s*){4}\*/ ) {    #skip rewrap if paragraph is a thought break
+        $textwindow->markSet( 'rewrapend', $thisblockend );                             # Set a mark at the end of the text so it can be found after rewrap
+        unless ( $selection =~ /^[$TEMPPAGEMARK\s]*?(\*[$TEMPPAGEMARK\s]*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
             if ($inblock) {
                 if ($enableindent) {
                     $indentblockend = $textwindow->search( '-regex', '--',
