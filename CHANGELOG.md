@@ -34,7 +34,8 @@
 - Caret is now spelled correctly in bookloupe checks
 - Certain footnote layouts could cause HTML generation to loop forever
 - Custom Commands dialog added blank commands when cancelled
-- Occasional `uninitialised variable` errors fixed
+- Occasional `uninitialised variable` errors were output by Custom Commands
+- Thought breaks at end of page could get rewrapped
 
 
 ## Version 1.3.2
