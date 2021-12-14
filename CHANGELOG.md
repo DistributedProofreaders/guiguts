@@ -7,7 +7,7 @@
   simplify some complex alignments, e.g. numbers aligned on decimal point and
   centered with a table column.
 - Undo/Redo feature improved in ASCII Table dialog
-- Latest production version of ebookmaker included (0.11.28). Epub and mobi
+- Latest production version of ebookmaker included (0.11.30). Epub and mobi
   filenames are now based on the HTML filename, not the book title.
 - Curly quote search operations now wrap on reaching end of file
 - Wording on Footnote Check dialog clarified
