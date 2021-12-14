@@ -5,7 +5,7 @@
 
 - New Character Fill and Restore options added to ASCII Table dialog. These
   simplify some complex alignments, e.g. numbers aligned on decimal point and
-  centered with a table column.
+  centered within a table column.
 - Undo/Redo feature improved in ASCII Table dialog
 - Latest production version of ebookmaker included (0.11.30). Epub and mobi
   filenames are now based on the HTML filename, not the book title.
