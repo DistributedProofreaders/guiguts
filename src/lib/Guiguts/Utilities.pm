@@ -16,7 +16,7 @@ BEGIN {
       &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
       &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
-      &xtops &toolbar_toggle &killpopup &expandselection &currentfileisunicode
+      &xtops &toolbar_toggle &killpopup &expandselection
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
@@ -1002,10 +1002,8 @@ sub initialize {
     $::lglobal{htmlimagesizey}     = 0;                           # HTML pixel height of file loaded in image dialog
     $::lglobal{isedited}           = 0;
     $::lglobal{wf_ignore_case}     = 0;
-    $::lglobal{keep_latin1}        = 1;                           # HTML convert - retain Latin1 characters
     $::lglobal{lastmatchindex}     = '1.0';
     $::lglobal{lastsearchterm}     = '';
-    $::lglobal{leave_utf}          = 1;                           # HTML convert - retain utf8 characters
     $::lglobal{longordlabel}       = 0;
     $::lglobal{ordmaxlength}       = 1;
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
@@ -2247,12 +2245,12 @@ sub ebookmaker {
         my $tstring = $textwindow->get( $tbeg . '+7c', $tend );    # Get whole title/author string
         $tstring =~ s/\s+/ /g;                                     # Join into one line, single spaced
         if (
-            $tstring =~ s/The Project Gutenberg EBook of//i        # Strip PG part - 2 formats
-            or $tstring =~ s/&mdash;A Project Gutenberg eBook//i
+            $tstring =~ s/The Project Gutenberg EBook of//i              # Strip PG part - 2 formats
+            or $tstring =~ s/(--|\x{2014})A Project Gutenberg eBook//i
         ) {
-            HTML::Entities::decode_entities($tstring);             # HTML entities need converting to characters
-            $tstring = deaccentdisplay($tstring);                  # Remove accents since passing as argument in shell
-            $tstring =~ s/[^[:ascii:]]/_/g;                        # Substitute "_" for any remaining non-ASCII characters
+            HTML::Entities::decode_entities($tstring);                   # HTML entities need converting to characters
+            $tstring = deaccentdisplay($tstring);                        # Remove accents since passing as argument in shell
+            $tstring =~ s/[^[:ascii:]]/_/g;                              # Substitute "_" for any remaining non-ASCII characters
 
             # Split into title/author - use last "by" in case "by" is in the book title
             my $byidx = rindex( $tstring, ", by " );
@@ -2749,12 +2747,6 @@ sub columnizeselection {
     for ( my $i = $lsr ; $i <= $ler ; $i++ ) {
         $textwindow->tagAdd( 'sel', "$i.$lsc", "$i.$lec" );
     }
-}
-
-sub currentfileisunicode {
-    return 1 if $::utf8save;    # treat as unicode regardless of contents
-    my $textwindow = $::textwindow;
-    return $textwindow->search( '-regexp', '--', '[\x{100}-\x{FFFE}]', '1.0', 'end' );
 }
 
 #FIXME: doesnt work quite right if multiple volumes held in same directory

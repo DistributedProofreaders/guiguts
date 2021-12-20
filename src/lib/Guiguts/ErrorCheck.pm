@@ -188,7 +188,6 @@ sub errorcheckpop_up {
             $textwindow->markUnset($_);
         }
     }
-    my $unicode = ::currentfileisunicode();
     ::working($errorchecktype);
 
     my $errname;
@@ -242,7 +241,7 @@ sub errorcheckpop_up {
 
     # Read and process one line at a time
     while ( $line = <$fh> ) {
-        utf8::decode($line) if $unicode;
+        utf8::decode($line);
 
         # Remove leading space and end-of-line characters
         $line =~ s/^\s//g;
@@ -494,17 +493,12 @@ sub errorcheckrun {    # Runs error checks
     ::savesettings();
     $top->Busy( -recurse => 1 );
 
-    my $unicode = ::currentfileisunicode();
     savetoerrortmpfile($tmpfname);
     if ( $errorchecktype eq 'HTML Tidy' ) {
-        if ($unicode) {
-            ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
-        } else {
-            ::run( $::tidycommand, "-f", $errname, "-e", $tmpfname );
-        }
+        ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
     } elsif ( $errorchecktype eq 'W3C Validate' ) {
         my $validatepath = ::dirname($::validatecommand);
-        $ENV{SP_BCTF} = 'UTF-8' if $unicode;
+        $ENV{SP_BCTF} = 'UTF-8';
         ::run(
             $::validatecommand,
             "--directory=$validatepath",
@@ -547,7 +541,6 @@ sub savetoerrortmpfile {
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
-    my $unicode = ::currentfileisunicode();
     open my $td, '>', $tmpfname or die "Could not open $tmpfname for writing. $!";
     my $count   = 0;
     my $index   = '1.0';
@@ -555,7 +548,7 @@ sub savetoerrortmpfile {
     while ( $textwindow->compare( $index, '<', 'end' ) ) {
         my $end     = $textwindow->index("$index  lineend +1c");
         my $gettext = $textwindow->get( $index, $end );
-        utf8::encode($gettext) if ($unicode);
+        utf8::encode($gettext);
         print $td $gettext;
         $index = $end;
     }

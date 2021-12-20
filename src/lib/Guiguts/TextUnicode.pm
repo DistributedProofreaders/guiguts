@@ -73,20 +73,13 @@ sub SaveUTF {
     my $progress;
     my $fileend = $w->index('end -1c');
     my ($lines) = $fileend =~ /^(\d+)\./;
-    my $unicode = ::currentfileisunicode();
 
-    # No BOM please
-    #if ($unicode) {
-    #	my $bom = "\x{FEFF}";
-    #	utf8::encode($bom);
-    #	print $tempfh $bom;
-    #}
     while ( $w->compare( $index, '<', $fileend ) ) {
         my $end  = $w->index("$index lineend +1c");
         my $line = $w->get( $index, $end );
         $line =~ s/[\t \xA0]+$//;
         $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g if (OS_Win);
-        utf8::encode($line) if $unicode;
+        utf8::encode($line);
         $w->BackTrace("Cannot write to temp file:$!\n") and return
           unless print $tempfh $line;
         $index = $end;

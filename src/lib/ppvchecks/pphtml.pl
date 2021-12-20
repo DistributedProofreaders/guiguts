@@ -100,10 +100,6 @@ sub runProgram {
             if ( $line =~ /\[Illustration/ ) {
                 printf LOGFILE ( "%d:0 Unconverted illustration: %s\n", $count, $line );
             }
-            if ( $line =~ /<table/
-                and ( ( $line !~ /summary/ ) or ( $line =~ /summary=""/ ) ) ) {
-                printf LOGFILE ( "%d:0 Missing table summary: %s\n", $count, $line );
-            }
             if ( $line =~ /Blank Page/ ) {
                 printf LOGFILE ( "%d:0 Blank page\n", $count );
             }

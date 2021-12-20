@@ -34,8 +34,6 @@ sub runtests {
         "deaccentdisplay('ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı')"
     );
 
-    ok( ( ::entity(255) eq '&yuml;' ), "entity(255) eq '&yuml;'" );
-
     ok( 1 == do { 1 }, "do block" );
 
     runtesterrorcheck( "Bookloupe",        "textcheck.txt",   "bookloupebaseline.txt" );
