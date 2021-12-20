@@ -390,7 +390,7 @@ sub wordfrequency {
                 if ( defined($name) and length($name) ) {
                     open( my $save, ">", "$name" );
                     my $list = join "\n", $::lglobal{wclistbox}->get( '0', 'end' );
-                    utf8::encode($list) if ::currentfileisunicode();
+                    utf8::encode($list);
                     print $save $list;
                 }
             }
@@ -405,15 +405,14 @@ sub wordfrequency {
                 );
 
                 if ( defined($name) and length($name) ) {
-                    my $unicode = ::currentfileisunicode();
-                    my $count   = $::lglobal{wclistbox}->index('end');
+                    my $count = $::lglobal{wclistbox}->index('end');
                     open( my $save, ">", "$name" );
                     for ( 1 .. $count ) {
                         my $word = $::lglobal{wclistbox}->get($_);
                         if ( ( defined $word ) && ( length $word ) ) {
                             $word =~ s/^\d+\s+//;
                             $word =~ s/\s+\*{4}\s*$//;
-                            utf8::encode($word) if $unicode;
+                            utf8::encode($word);
                             print $save $word, "\n";
                         }
                     }

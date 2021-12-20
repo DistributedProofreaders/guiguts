@@ -78,195 +78,18 @@ sub html_convert_ampersands {
     return;
 }
 
-# double hyphens go to character entity ref. FIXME: Add option for real emdash.
+# double hyphens go to emdash.
 sub html_convert_emdashes {
     ::working("Converting Emdashes");
 
     # Avoid converting double hyphens in HTML comments <!--  -->
     # Probably not strictly necessary, since no HTML comments in the file at this time
     # Use negative lookbehind for "<!" and negative lookahead for ">"
-    ::named( '(?<!<!)--(?!>)', '&mdash;' );
+    ::named( '(?<!<!)--(?!>)', "\x{2014}" );
 
-    ::named( "\x{A0}", '&nbsp;' );
+    # Convert non-breaking space character to numeric entity, since character looks just like a regular space
+    ::named( "\x{A0}", '&#160;' );
     return;
-}
-
-# convert latin1 and utf charactes to HTML Character Entity Reference's.
-sub html_convert_latin1 {
-    ::working("Converting Latin-1 Characters...");
-    for ( 128 .. 255 ) {
-        ::named( chr($_), ::entity($_) );
-    }
-    return;
-}
-
-sub html_convert_codepage {
-    ::working("Converting Windows Codepage 1252\ncharacters to Unicode");
-    ::cp1252toUni();
-    return;
-}
-
-sub html_convert_utf {
-    my ( $textwindow, $leave_utf, $keep_latin1 ) = @_;
-    my $blockstart;
-    unless ($leave_utf) {
-        ::working("Converting UTF-8...");
-        while ( $blockstart =
-            $textwindow->search( '-regexp', '--', '[\x{100}-\x{65535}]', '1.0', 'end' ) ) {
-            my $xchar = ord( $textwindow->get($blockstart) );
-            $textwindow->ntdelete($blockstart);
-            $textwindow->ntinsert( $blockstart, "&#$xchar;" );
-        }
-    }
-    ::working("Converting Named\n and Numeric Characters");
-    ::named( ' >', ' &gt;' );    # see html_convert_ampersands -- probably no effect
-    ::named( '< ', '&lt; ' );
-    if ( !$keep_latin1 ) { html_convert_latin1(); }
-    return;
-}
-
-sub html_string_convert_utf {
-    my ( $string, $leave_utf, $keep_latin1 ) = @_;
-    return                                                         unless $string;
-    $string =~ s/([\x{100}-\x{65535}])/sprintf("&x%x;",ord($1))/eg unless $leave_utf;
-    $string = html_string_convert_latin1($string)                  unless $keep_latin1;
-    return $string;
-}
-
-sub html_string_convert_latin1 {
-    my $string     = shift;
-    my %markuphash = (
-        "\x80" => "&#8364;",
-        "\x81" => "&#129;",
-        "\x82" => "&#8218;",
-        "\x83" => "&#402;",
-        "\x84" => "&#8222;",
-        "\x85" => "&#8230;",
-        "\x86" => "&#8224;",
-        "\x87" => "&#8225;",
-        "\x88" => "&#710;",
-        "\x89" => "&#8240;",
-        "\x8a" => "&#352;",
-        "\x8b" => "&#8249;",
-        "\x8c" => "&#338;",
-        "\x8d" => "&#141;",
-        "\x8e" => "&#381;",
-        "\x8f" => "&#143;",
-        "\x90" => "&#144;",
-        "\x91" => "&#8216;",
-        "\x92" => "&#8217;",
-        "\x93" => "&#8220;",
-        "\x94" => "&#8221;",
-        "\x95" => "&#8226;",
-        "\x96" => "&#8211;",
-        "\x97" => "&#8212;",
-        "\x98" => "&#732;",
-        "\x99" => "&#8482;",
-        "\x9a" => "&#353;",
-        "\x9b" => "&#8250;",
-        "\x9c" => "&#339;",
-        "\x9d" => "&#157;",
-        "\x9e" => "&#382;",
-        "\x9f" => "&#376;",
-        "\xa0" => "&nbsp;",
-        "\xa1" => "&iexcl;",
-        "\xa2" => "&cent;",
-        "\xa3" => "&pound;",
-        "\xa4" => "&curren;",
-        "\xa5" => "&yen;",
-        "\xa6" => "&brvbar;",
-        "\xa7" => "&sect;",
-        "\xa8" => "&uml;",
-        "\xa9" => "&textcopy;",
-        "\xaa" => "&ordf;",
-        "\xab" => "&laquo;",
-        "\xac" => "&not;",
-        "\xad" => "&shy;",
-        "\xae" => "&reg;",
-        "\xaf" => "&macr;",
-        "\xb0" => "&deg;",
-        "\xb1" => "&plusmn;",
-        "\xb2" => "&sup2;",
-        "\xb3" => "&sup3;",
-        "\xb4" => "&acute;",
-        "\xb5" => "&micro;",
-        "\xb6" => "&para;",
-        "\xb7" => "&middot;",
-        "\xb8" => "&cedil;",
-        "\xb9" => "&sup1;",
-        "\xba" => "&ordm;",
-        "\xbb" => "&raquo;",
-        "\xbc" => "&frac14;",
-        "\xbd" => "&frac12;",
-        "\xbe" => "&frac34;",
-        "\xbf" => "&iquest;",
-        "\xc0" => "&Agrave;",
-        "\xc1" => "&Aacute;",
-        "\xc2" => "&Acirc;",
-        "\xc3" => "&Atilde;",
-        "\xc4" => "&Auml;",
-        "\xc5" => "&Aring;",
-        "\xc6" => "&AElig;",
-        "\xc7" => "&Ccedil;",
-        "\xc8" => "&Egrave;",
-        "\xc9" => "&Eacute;",
-        "\xca" => "&Ecirc;",
-        "\xcb" => "&Euml;",
-        "\xcc" => "&Igrave;",
-        "\xcd" => "&Iacute;",
-        "\xce" => "&Icirc;",
-        "\xcf" => "&Iuml;",
-        "\xd0" => "&ETH;",
-        "\xd1" => "&Ntilde;",
-        "\xd2" => "&Ograve;",
-        "\xd3" => "&Oacute;",
-        "\xd4" => "&Ocirc;",
-        "\xd5" => "&Otilde;",
-        "\xd6" => "&Ouml;",
-        "\xd7" => "&times;",
-        "\xd8" => "&Oslash;",
-        "\xd9" => "&Ugrave;",
-        "\xda" => "&Uacute;",
-        "\xdb" => "&Ucirc;",
-        "\xdc" => "&Uuml;",
-        "\xdd" => "&Yacute;",
-        "\xde" => "&THORN;",
-        "\xdf" => "&szlig;",
-        "\xe0" => "&agrave;",
-        "\xe1" => "&aacute;",
-        "\xe2" => "&acirc;",
-        "\xe3" => "&atilde;",
-        "\xe4" => "&auml;",
-        "\xe5" => "&aring;",
-        "\xe6" => "&aelig;",
-        "\xe7" => "&ccedil;",
-        "\xe8" => "&egrave;",
-        "\xe9" => "&eacute;",
-        "\xea" => "&ecirc;",
-        "\xeb" => "&euml;",
-        "\xec" => "&igrave;",
-        "\xed" => "&iacute;",
-        "\xee" => "&icirc;",
-        "\xef" => "&iuml;",
-        "\xf0" => "&eth;",
-        "\xf1" => "&ntilde;",
-        "\xf2" => "&ograve;",
-        "\xf3" => "&oacute;",
-        "\xf4" => "&ocirc;",
-        "\xf5" => "&otilde;",
-        "\xf6" => "&ouml;",
-        "\xf7" => "&divide;",
-        "\xf8" => "&oslash;",
-        "\xf9" => "&ugrave;",
-        "\xfa" => "&uacute;",
-        "\xfb" => "&ucirc;",
-        "\xfc" => "&uuml;",
-        "\xfd" => "&yacute;",
-        "\xfe" => "&thorn;",
-        "\xff" => "&yuml;",
-    );
-    $string =~ s/([\x80-\xff])/$markuphash{$1}/g;
-    return $string;
 }
 
 sub html_cleanup_markers {
@@ -900,7 +723,7 @@ sub html_convert_body {
             if ( $selection =~ /^(\s+)/ ) {
                 $indent = ( length($1) / 2 );    # left margin of 1em for every 2 spaces
                 $selection =~ s/^\s+//;
-                $selection =~ s/  /&nbsp; /g;    # attempt to maintain multiple spaces
+                $selection =~ s/  /&#160; /g;    # attempt to maintain multiple spaces
                 $textwindow->ntdelete( "$step.0", "$step.end" );
                 $textwindow->ntinsert( "$step.0", $selection );
 
@@ -1367,7 +1190,7 @@ sub html_convert_pageanchors {
               if $::lglobal{pageanch};
         }
     }
-    ::working();
+    ::working("");
     return;
 }
 
@@ -1392,7 +1215,7 @@ sub html_parse_header {
         unless ( -e 'header.txt' ) {
             ::copy( 'headerdefault.txt', 'header.txt' );
         }
-        open my $infile, '<', 'header.txt'
+        open my $infile, '<:encoding(utf8)', 'header.txt'
           or warn "Could not open header file. $!\n";
         while (<$infile>) {
             $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
@@ -1401,21 +1224,10 @@ sub html_parse_header {
         close $infile;
     }
 
-    $author =~ s/&/&amp;/g if $author;
-    unless ( $::lglobal{leave_utf} ) {
-        $title = html_string_convert_utf( $title, $::lglobal{leave_utf}, $::lglobal{keep_latin1} );
-        $author =
-          html_string_convert_utf( $author, $::lglobal{leave_utf}, $::lglobal{keep_latin1} );
-    }
+    $author     =~ s/&/&amp;/g       if $author;
     $headertext =~ s/TITLE/$title/   if $title;
     $headertext =~ s/AUTHOR/$author/ if $author;
     $headertext =~ s/BOOKLANG/$::booklang/g;
-    if ( $::lglobal{leave_utf} && ::currentfileisunicode() ) {
-        $headertext =~ s/BOOKCHARSET/utf-8/;
-    } else {
-        $headertext =~ s/BOOKCHARSET/iso-8859-1/;
-    }
-    eval( '$headertext =~ s#\{LANG=' . uc($::booklang) . '\}(.*?)\{/LANG\}#$1#gs' );    # code duplicated near footertext
 
     # locate and markup title
     $step = 0;
@@ -1513,7 +1325,7 @@ sub get_title_author {
 }
 
 sub html_wrapup {
-    my ( $textwindow, $headertext, $leave_utf, $autofraction ) = @_;
+    my ( $textwindow, $headertext, $autofraction ) = @_;
     my $thisblockstart;
     ::fracconv( $textwindow, '1.0', 'end' ) if $autofraction;
     $textwindow->ntinsert( '1.0', $headertext );
@@ -2094,7 +1906,6 @@ sub htmlautoconvert {
     ::_bin_save();
     $::lglobal{global_filename} = $savefn;
     $textwindow->FileName($savefn);
-    html_convert_codepage();
     html_convert_ampersands($textwindow);
     $headertext = html_parse_header( $textwindow, $headertext, $title, $author );
     html_convert_emdashes();
@@ -2116,8 +1927,7 @@ sub htmlautoconvert {
     html_convert_sidenotes($textwindow);
     html_convert_pageanchors();
     html_convert_chapterdivs($textwindow);    # after page anchors, so they can be included in div
-    html_convert_utf( $textwindow, $::lglobal{leave_utf}, $::lglobal{keep_latin1} );
-    html_wrapup( $textwindow, $headertext, $::lglobal{leave_utf}, $::lglobal{autofraction} );
+    html_wrapup( $textwindow, $headertext, $::lglobal{autofraction} );
     $textwindow->ResetUndo;
     ::setedited(1);
 }
@@ -2280,48 +2090,6 @@ sub htmlgenpopup {
             -sticky => 'w'
         );
 
-        # Leave utf8 characters rather than convert to numeric entities
-        $f0->Checkbutton(
-            -variable    => \$::lglobal{leave_utf},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Keep UTF-8 Chars',
-            -anchor      => 'w',
-        )->grid(
-            -row    => 2,
-            -column => 1,
-            -padx   => 1,
-            -pady   => 2,
-            -sticky => 'w'
-        );
-
-        # Leave Latin-1 characters rather than convert to HTML entities
-        $f0->Checkbutton(
-            -variable    => \$::lglobal{keep_latin1},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Keep Latin-1 Chars',
-            -anchor      => 'w',
-        )->grid(
-            -row    => 2,
-            -column => 2,
-            -padx   => 1,
-            -pady   => 2,
-            -sticky => 'w'
-        );
-
-        # Automatically convert 1/2, 1/4, 3/4 to named entities
-        $f0->Checkbutton(
-            -variable    => \$::lglobal{autofraction},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Convert Fractions',
-            -anchor      => 'w',
-        )->grid(
-            -row    => 2,
-            -column => 3,
-            -padx   => 1,
-            -pady   => 2,
-            -sticky => 'w'
-        );
-
         # Use <div> with CSS class rather than HTML <blockquote> element
         $f0->Checkbutton(
             -variable    => \$::lglobal{cssblockmarkup},
@@ -2329,7 +2097,7 @@ sub htmlgenpopup {
             -text        => 'CSS blockquote',
             -anchor      => 'w',
         )->grid(
-            -row    => 3,
+            -row    => 2,
             -column => 1,
             -padx   => 1,
             -pady   => 2,
@@ -2343,8 +2111,22 @@ sub htmlgenpopup {
             -text        => 'Short FN Anchors',
             -anchor      => 'w',
         )->grid(
-            -row    => 3,
+            -row    => 2,
             -column => 2,
+            -padx   => 1,
+            -pady   => 2,
+            -sticky => 'w'
+        );
+
+        # Automatically convert 1/2, 1/4, 3/4 to entities
+        $f0->Checkbutton(
+            -variable    => \$::lglobal{autofraction},
+            -selectcolor => $::lglobal{checkcolor},
+            -text        => 'Convert Fractions',
+            -anchor      => 'w',
+        )->grid(
+            -row    => 2,
+            -column => 3,
             -padx   => 1,
             -pady   => 2,
             -sticky => 'w'
@@ -2861,15 +2643,15 @@ sub markup {
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
         ( $ler, $lec ) = split /\./, $thisblockend;
         if ( $lsr eq $ler ) {
-            $textwindow->insert( 'insert', '&nbsp;' );
+            $textwindow->insert( 'insert', '&#160;' );
         } else {
             $step = $lsr;
             while ( $step <= $ler ) {
                 $selection = $textwindow->get( "$step.0", "$step.end" );
                 if ( $selection =~ /\s\s/ ) {
-                    $selection =~ s/^\s/&nbsp;/;
-                    $selection =~ s/  /&nbsp; /g;
-                    $selection =~ s/&nbsp; /&nbsp;&nbsp;/g;
+                    $selection =~ s/^\s/&#160;/;
+                    $selection =~ s/  /&#160; /g;
+                    $selection =~ s/&#160; /&#160;&#160;/g;
                     $textwindow->delete( "$step.0", "$step.end" );
                     $textwindow->insert( "$step.0", $selection );
                 }
@@ -3163,7 +2945,7 @@ sub clearmarkupinselection {
               if ( $selection =~ s/<span.*?margin-left: (\d+\.?\d?)em.*?>/' ' x ($1 *2)/e );
             $edited++ if ( $selection =~ s/<\/?span[^>]*?>//g );
             $edited++ if ( $selection =~ s/<\/?[hscalupt].*?>//g );
-            $edited++ if ( $selection =~ s/&nbsp;/ /g );
+            $edited++ if ( $selection =~ s/&#160;/ /g );
             $edited++ if ( $selection =~ s/<\/?blockquote>//g );
             $textwindow->delete( "$step.$lsc", "$step.$stepend" ) if $edited;
             $textwindow->insert( "$step.$lsc", $selection )       if $edited;
@@ -3200,14 +2982,14 @@ sub hyperlinkpagenums {
 sub makeanchor {
     my $linkname = shift;
     return unless $linkname;
-    $linkname =~ s/-/\x00/g;              # preserve hyphens
-    $linkname =~ s/_/\x01/g;              # preserve underscores
-    $linkname =~ s/&amp;|&mdash;/\xFF/;
+    $linkname =~ s/-/\x00/g;             # preserve hyphens
+    $linkname =~ s/_/\x01/g;             # preserve underscores
+    $linkname =~ s/&amp;/\xFF/;
     $linkname =~ s/<sup>.*?<\/sup>//g;
     $linkname =~ s/<\/?[^>]+>//g;
     $linkname =~ s/\p{Punct}//g;
-    $linkname =~ s/\x00/-/g;              # restore hyphens
-    $linkname =~ s/\x01/_/g;              # restore underscores
+    $linkname =~ s/\x00/-/g;             # restore hyphens
+    $linkname =~ s/\x01/_/g;             # restore underscores
     $linkname =~ s/\s+/_/g;
 
     while ( $linkname =~ m/([\x{100}-\x{ffef}])/ ) {
@@ -3412,7 +3194,7 @@ sub autotable {
 
     my @cformat = split( //, $format ) if ($format);
 
-    $selection = '<table class="autotable" summary="">' . "\n";
+    $selection = '<table class="autotable">' . "\n";
 
     # Each row is a <tr>
     for my $row ( 0 .. $#tbl ) {
@@ -3609,7 +3391,7 @@ sub poetryhtml {
                 last;
             }
         }
-        $selection =~ s/&nbsp;/ /g;
+        $selection =~ s/&#160;/ /g;
         $selection =~ s/^(\s+)//;
         my $indent = 0;
         $indent = length($1) if $1;
@@ -3708,36 +3490,9 @@ sub linkpopulate {
 }
 
 #
-# Convert ordinal to a named or number HTML entity
+# Convert ordinal to a number HTML entity
 sub entity {
-    my $ord      = shift;
-    my @entities = (
-        '&#8364;',  '&#129;',   '&#8218;',  '&#402;',   '&#8222;',  '&#8230;',
-        '&#8224;',  '&#8225;',  '&#710;',   '&#8240;',  '&#352;',   '&#8249;',
-        '&#338;',   '&#141;',   '&#381;',   '&#143;',   '&#144;',   '&#8216;',
-        '&#8217;',  '&#8220;',  '&#8221;',  '&#8226;',  '&#8211;',  '&#8212;',
-        '&#732;',   '&#8482;',  '&#353;',   '&#8250;',  '&#339;',   '&#157;',
-        '&#382;',   '&#376;',   '&nbsp;',   '&iexcl;',  '&cent;',   '&pound;',
-        '&curren;', '&yen;',    '&brvbar;', '&sect;',   '&uml;',    '&textcopy;',
-        '&ordf;',   '&laquo;',  '&not;',    '&shy;',    '&reg;',    '&macr;',
-        '&deg;',    '&plusmn;', '&sup2;',   '&sup3;',   '&acute;',  '&micro;',
-        '&para;',   '&middot;', '&cedil;',  '&sup1;',   '&ordm;',   '&raquo;',
-        '&frac14;', '&frac12;', '&frac34;', '&iquest;', '&Agrave;', '&Aacute;',
-        '&Acirc;',  '&Atilde;', '&Auml;',   '&Aring;',  '&AElig;',  '&Ccedil;',
-        '&Egrave;', '&Eacute;', '&Ecirc;',  '&Euml;',   '&Igrave;', '&Iacute;',
-        '&Icirc;',  '&Iuml;',   '&ETH;',    '&Ntilde;', '&Ograve;', '&Oacute;',
-        '&Ocirc;',  '&Otilde;', '&Ouml;',   '&times;',  '&Oslash;', '&Ugrave;',
-        '&Uacute;', '&Ucirc;',  '&Uuml;',   '&Yacute;', '&THORN;',  '&szlig;',
-        '&agrave;', '&aacute;', '&acirc;',  '&atilde;', '&auml;',   '&aring;',
-        '&aelig;',  '&ccedil;', '&egrave;', '&eacute;', '&ecirc;',  '&euml;',
-        '&igrave;', '&iacute;', '&icirc;',  '&iuml;',   '&eth;',    '&ntilde;',
-        '&ograve;', '&oacute;', '&ocirc;',  '&otilde;', '&ouml;',   '&divide;',
-        '&oslash;', '&ugrave;', '&uacute;', '&ucirc;',  '&uuml;',   '&yacute;',
-        '&thorn;',  '&yuml;',
-    );
-    return $entities[ $ord - 128 ] if $ord >= 128 and $ord <= 255;
-
-    # If we don't have an HTML name, return the number form
+    my $ord = shift;
     return '&#' . $ord . ';';
 }
 
@@ -3778,11 +3533,10 @@ sub fromnamed {
         $textwindow->addGlobStart;
         $textwindow->markSet( 'srchend', $end );
         my ( $thisblockstart, $length );
-        ::named( '&amp;',   '&',  $start, 'srchend' );
-        ::named( '&quot;',  '"',  $start, 'srchend' );
-        ::named( '&mdash;', '--', $start, 'srchend' );
-        ::named( ' &gt;',   ' >', $start, 'srchend' );
-        ::named( '&lt; ',   '< ', $start, 'srchend' );
+        ::named( '&amp;',  '&',  $start, 'srchend' );
+        ::named( '&quot;', '"',  $start, 'srchend' );
+        ::named( ' &gt;',  ' >', $start, 'srchend' );
+        ::named( '&lt; ',  '< ', $start, 'srchend' );
 
         for ( 160 .. 255 ) {
             ::named( ::entity($_), chr($_), $start, 'srchend' );
@@ -3805,6 +3559,7 @@ sub fromnamed {
     }
 }
 
+# Note that double hyphen is converted to numeric (not named) emdash
 sub tonamed {
     my ($textwindow) = @_;
     my @ranges       = $textwindow->tagRanges('sel');
@@ -3819,9 +3574,9 @@ sub tonamed {
         ::named( '&(?![\w#])',           '&amp;',   $start, 'srchend' );
         ::named( '&$',                   '&amp;',   $start, 'srchend' );
         ::named( '"',                    '&quot;',  $start, 'srchend' );
-        ::named( '(?<=[^-!])--(?=[^>])', '&mdash;', $start, 'srchend' );
-        ::named( '(?<=[^-])--$',         '&mdash;', $start, 'srchend' );
-        ::named( '^--(?=[^-])',          '&mdash;', $start, 'srchend' );
+        ::named( '(?<=[^-!])--(?=[^>])', '&#8212;', $start, 'srchend' );
+        ::named( '(?<=[^-])--$',         '&#8212;', $start, 'srchend' );
+        ::named( '^--(?=[^-])',          '&#8212;', $start, 'srchend' );
         ::named( '& ',                   '&amp; ',  $start, 'srchend' );
         ::named( '&c\.',                 '&amp;c.', $start, 'srchend' );
         ::named( ' >',                   ' &gt;',   $start, 'srchend' );
@@ -3845,9 +3600,9 @@ sub tonamed {
 sub fracconv {
     my ( $textwindow, $start, $end ) = @_;
     my %frachash = (
-        '\b1\/2\b' => '&frac12;',
-        '\b1\/4\b' => '&frac14;',
-        '\b3\/4\b' => '&frac34;',
+        '\b1\/2\b' => '&#189;',
+        '\b1\/4\b' => '&#188;',
+        '\b3\/4\b' => '&#190;',
     );
     my ( $ascii, $html, $length );
     my $thisblockstart = 1;

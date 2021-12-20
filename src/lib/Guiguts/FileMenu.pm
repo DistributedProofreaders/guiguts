@@ -196,9 +196,8 @@ sub file_export_preptext {
         mkdir $directory or warn "Could not make directory $!\n" and return;
     }
     $top->Busy( -recurse => 1 );
-    my @marks   = $textwindow->markNames;
-    my @pages   = sort grep ( /^Pg\S+$/, @marks );
-    my $unicode = ::currentfileisunicode();
+    my @marks = $textwindow->markNames;
+    my @pages = sort grep ( /^Pg\S+$/, @marks );
     my ( $f, $globalfilename, $e ) =
       ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
     if ( $exporttype eq 'onefile' ) {
@@ -236,11 +235,7 @@ sub file_export_preptext {
         }
         $file =~ s/-*\s?File:\s?(\S+)\.(png|jpg)---[^\n]*\n//;
         $file =~ s/\n+$//;
-        if ($unicode) {
-
-            #$file = "\x{FEFF}" . $file;    # Add the BOM to beginning of file.
-            utf8::encode($file);
-        }
+        utf8::encode($file);
         if ( $exporttype eq 'onefile' ) {
             open my $fh, '>>', "$directory/prep.txt";
             print $fh $file;
@@ -923,7 +918,7 @@ EOM
             searchstickyoptions spellcheckwithenchant stayontop toolside
             trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb
             txtfontname txtfontsize txtfontweight txtfontsystemuse
-            twowordsinhyphencheck utf8save utfcharentrybase utffontname utffontsize utffontweight
+            twowordsinhyphencheck utfcharentrybase utffontname utffontsize utffontweight
             urlprojectpage urlprojectdiscussion
             verboseerrorchecks vislnnm wfstayontop/
         ) {
@@ -1056,9 +1051,8 @@ sub file_export_pagemarkup {
 
         # write the file with page markup
         open my $fh2, '>', "$name" or die "Could not write $name";
-        my $unicode      = ::currentfileisunicode();
         my $filecontents = $textwindow->get( '1.0', 'end -1c' );
-        utf8::encode($filecontents) if $unicode;
+        utf8::encode($filecontents);
         print $fh2 "##### Do not edit this line. File exported from guiguts #####\n";
         print $fh2 $filecontents;
 
