@@ -811,7 +811,8 @@ sub initialize {
     $::manualhash{'errorcheckpop+Jeebies'}   = '/Tools_Menu#Jeebies';
     $::manualhash{'errorcheckpop+Load Checkfile'}   = '/Tools_Menu#Load_Checkfile';
     $::manualhash{'errorcheckpop+pptxt'}            = '/Text_Menu#PPtxt';
-    $::manualhash{'errorcheckpop+W3C Validate'}     = '/HTML_Menu#HTML_Validator_.28local.29';
+    $::manualhash{'errorcheckpop+Nu HTML Check'}    = '/HTML_Menu#HTML_Validator_.28local.29';
+    $::manualhash{'errorcheckpop+Nu XHTML Check'}   = '/HTML_Menu#HTML_Validator_.28local.29';
     $::manualhash{'errorcheckpop+W3C Validate CSS'} = '/HTML_Menu#CSS_Validator';
     $::manualhash{'errorcheckpop+Link Check'} =
       '/HTML_Menu#Check_for_link_errors_.28HTML_Link_Checker.29';
@@ -1097,6 +1098,8 @@ sub initialize {
       ::setdefaultpath( $::scannospath, ::catfile( $::lglobal{guigutsdirectory}, 'scannos' ) );
     $::ebookmakercommand = ::setdefaultpath( $::ebookmakercommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'ebookmaker', 'ebookmaker.exe' ) );
+    $::validatecommand = ::setdefaultpath( $::validatecommand,
+        ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'vnu.jar' ) );
     $::validatecsscommand = ::setdefaultpath( $::validatecsscommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'css-validator.jar' ) );
     $::gutcommand = ::setdefaultpath( $::gutcommand,
@@ -1122,8 +1125,6 @@ sub initialize {
         $::globalspellpath = ::setdefaultpath( $::globalspellpath,
             ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
     }
-    $::validatecommand = ::setdefaultpath( $::validatecommand,
-        ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'onsgmls.exe' ) );
 
     if ($::OS_MAC) {
         $::kindlegencommand = ::setdefaultpath(

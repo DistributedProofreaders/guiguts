@@ -7,9 +7,6 @@
     </title>
     <link rel="icon" href="images/cover.jpg" type="image/x-cover" />
     <style> /* <![CDATA[ */
- 
-    <link rel="coverpage" href="images/cover.jpg" />
-    <style type="text/css">
 
 body {
     margin-left: 10%;

@@ -1,0 +1,5 @@
+Beginning check: Nu XHTML Check
+12:18 error: CSS: “margin-left”: Parse Error.
+22:4 error fatal: required character (found “p”) (expected “b”)
+Check is complete: Nu XHTML Check
+Don't forget to do the final validation at https://validator.w3.org

@@ -13,13 +13,13 @@ Usage:
 java -jar css-validator.jar https://www.pgdp.org/c/default.php
 ```
 
-## OpenSP / OpenJade
+## Nu HTML Checker
 
-XHTML validation tool. https://sourceforge.net/projects/openjade/
+(X)HTML/CSS checking tool. https://github.com/validator/validator
 
-We only bundle the Windows binaries. Mac users can install it via Homebrew:
+We bundle the jar file but it requires a pre-installed version of Java to run.
+
+Usage:
 ```
-brew install open-sp
+java -Xss512k -jar vnu.jar filename.html
 ```
-
-Linux users will need to download and install it from source.

@@ -1,5 +1,6 @@
-Beginning check: W3C Validate
-23:7 :E: end tag for element "p" which is not open
-26:64 :E: document type does not allow element "img" here; missing one of "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "address", "fieldset", "ins", "del" start-tag
-Check is complete: W3C Validate
+Beginning check: Nu HTML Check
+12:18 error: CSS: “margin-left”: Parse Error.
+22:4 error: No “p” element in scope but a “p” end tag seen.
+23:25 info warning: The “name” attribute is obsolete. Consider putting an “id” attribute on the nearest container instead.
+Check is complete: Nu HTML Check
 Don't forget to do the final validation at https://validator.w3.org

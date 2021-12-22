@@ -1,10 +1,10 @@
 Beginning check: pphtml
-7:0 Confirm title:
-7:0 <title>
-8:0 The Project Gutenberg eBook of The Streets Of Ascalon, by Robert W. Chambers.
-9:0 </title>
-15:0 CSS possibly not used: unusedcss
-25:0 CSS possibly not defined: h1
-24:0 CSS possibly not defined: pagenum
-27:0 Unconverted illustration: <p>[Illustration: "She excused the witness and turned her back to the
+5:0 Confirm title:
+5:0 <title>
+6:0 The Project Gutenberg eBook of The Streets Of Ascalon, by Robert W. Chambers.
+7:0 </title>
+14:0 CSS possibly not used: unusedcss
+24:0 CSS possibly not defined: h1
+23:0 CSS possibly not defined: pagenum
+26:0 Unconverted illustration: <p>[Illustration: "She excused the witness and turned her back to the
 Check is complete: pphtml
