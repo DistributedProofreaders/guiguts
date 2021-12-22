@@ -729,14 +729,16 @@ sub filePathsPopup {
             -fill   => 'x'
         );
         $f6->Label(
-            -text   => "W3C HTML Validator:",
+            -text   => "Nu HTML Checker:",
             -width  => 22,
             -anchor => 'w',
         )->pack( -side => 'left' );
+        my $jartypes = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
         $f6->Button(
-            -text    => 'Locate HTML Validator...',
-            -command =>
-              sub { ::locateExecutable( 'W3C HTML Validator (onsgmls)', \$::validatecommand ); },
+            -text    => 'Locate Nu HTML Checker...',
+            -command => sub {
+                ::locateExecutable( 'Nu HTML Checker (vnu.jar)', \$::validatecommand, $jartypes );
+            },
             -width => 24,
         )->pack( -side => 'right' );
         $f6->Entry(
@@ -757,9 +759,8 @@ sub filePathsPopup {
         $f7->Button(
             -text    => 'Locate CSS Validator...',
             -command => sub {
-                my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
                 ::locateExecutable( 'W3C CSS Validator (css-validate.jar)',
-                    \$::validatecsscommand, $types );
+                    \$::validatecsscommand, $jartypes );
             },
             -width => 24,
         )->pack( -side => 'right' );

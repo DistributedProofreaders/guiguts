@@ -204,7 +204,10 @@ sub errorcheckpop_up {
         # Temporary file in same folder as current file - needs .html extension for some tools
         # Error output in same folder, named errors.err
         my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
-        my $tmpfname = $d . 'tmpcheck' . ( $errorchecktype =~ 'W3C Validate' ? '.html' : '.tmp' );
+        my $tmpfname = $d . 'tmpcheck.tmp';
+        $tmpfname =~ s/tmp$/html/  if $errorchecktype eq 'W3C Validate CSS';
+        $tmpfname =~ s/tmp$/html/  if $errorchecktype eq 'Nu HTML Check';
+        $tmpfname =~ s/tmp$/xhtml/ if $errorchecktype eq 'Nu XHTML Check';
         $errname = $d . 'errors.err';
 
         if ( errorcheckrun( $errorchecktype, $tmpfname, $errname ) ) {    # exit if error check failed to run
@@ -291,8 +294,14 @@ sub errorcheckpop_up {
               or $line =~ /^Tidy found/;
             $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
 
-        } elsif ( ( $errorchecktype eq "W3C Validate" )
-            or ( $errorchecktype eq "pphtml" )
+        } elsif ( $errorchecktype eq "Nu HTML Check" or $errorchecktype eq "Nu XHTML Check" ) {
+            $line =~ s/^.*?"://;                 # remove filename
+            $line =~ s/-[0-9\.]+:/:/;            # remove end of line.col range
+            $line =~ s/^(\d+):/$1.1:/;           # flag first column if no column given
+            $line =~ s/^(\d+)\.(\d+):/$1:$2/;    # replace period with colon in line.col
+            $columnadjust = -1;                  # GG columns start from zero, Nu starts from 1
+
+        } elsif ( ( $errorchecktype eq "pphtml" )
             or ( $errorchecktype eq "ppvimage" ) ) {
             $line =~ s/^.*:(\d+):(\d+)\s*/$1:$2 /;
             $line =~ s/^\s*line (\d+)\s*/$1:0 /;
@@ -405,7 +414,7 @@ sub errorcheckpop_up {
     }
     push @errorchecklines, "Check is complete: " . $errorchecktype
       unless $errorchecktype eq 'Load Checkfile';
-    if ( $errorchecktype eq "W3C Validate" ) {
+    if ( $errorchecktype eq "Nu HTML Check" or $errorchecktype eq "Nu XHTML Check" ) {
         push @errorchecklines,
           "Don't forget to do the final validation at https://validator.w3.org";
     }
@@ -472,21 +481,21 @@ sub errorcheckrun {    # Runs error checks
     ::update_indicators();
     return 1 if ::nofileloadedwarning();
 
+    my $jartypes = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
     if ( $errorchecktype eq 'HTML Tidy' ) {
         unless ($::tidycommand) {
             ::locateExecutable( 'HTML Tidy', \$::tidycommand );
             return 1 unless $::tidycommand;
         }
-    } elsif ( $errorchecktype eq "W3C Validate" ) {
+    } elsif ( $errorchecktype eq "Nu HTML Check" or $errorchecktype eq "Nu XHTML Check" ) {
         unless ($::validatecommand) {
-            ::locateExecutable( 'W3C HTML Validator (onsgmls)', \$::validatecommand );
+            ::locateExecutable( 'Nu HTML Checker (vnu.jar)', \$::validatecommand, $jartypes );
             return 1 unless $::validatecommand;
         }
     } elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
         unless ($::validatecsscommand) {
-            my $types = [ [ 'JAR file', [ '.jar', ] ], [ 'All Files', ['*'] ], ];
             ::locateExecutable( 'W3C CSS Validator (css-validate.jar)',
-                \$::validatecsscommand, $types );
+                \$::validatecsscommand, $jartypes );
             return 1 unless $::validatecsscommand;
         }
     }
@@ -496,18 +505,9 @@ sub errorcheckrun {    # Runs error checks
     savetoerrortmpfile($tmpfname);
     if ( $errorchecktype eq 'HTML Tidy' ) {
         ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
-    } elsif ( $errorchecktype eq 'W3C Validate' ) {
-        my $validatepath = ::dirname($::validatecommand);
-        $ENV{SP_BCTF} = 'UTF-8';
-        ::run(
-            $::validatecommand,
-            "--directory=$validatepath",
-            "--catalog=" . ( $::OS_WIN ? "xhtml.soc" : "tools/W3C/xhtml.soc" ),
-            "--no-output",
-            "--open-entities",
-            "--error-file=$errname",
-            $tmpfname
-        );
+    } elsif ( $errorchecktype eq 'Nu HTML Check' or $errorchecktype eq "Nu XHTML Check" ) {
+        my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
+        $runner->run( "java", "-Xss512k", "-jar", $::validatecommand, "$tmpfname" );
     } elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel",

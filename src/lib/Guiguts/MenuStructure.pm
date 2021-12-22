@@ -743,9 +743,16 @@ sub menu_html {
         [ 'separator', '' ],
         [
             'command',
-            'HTML ~Validator',
+            'N~u HTML Checker',
             -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'W3C Validate' );
+                ::errorcheckpop_up( $textwindow, $top, 'Nu HTML Check' );
+            }
+        ],
+        [
+            'command',
+            'Nu ~XHTML Checker',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Nu XHTML Check' );
             }
         ],
         [

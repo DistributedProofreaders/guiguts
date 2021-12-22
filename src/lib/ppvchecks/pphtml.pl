@@ -293,7 +293,7 @@ sub runProgram {
         my $count        = 0;
         foreach $_ (@book) {
             $count++;
-            if (/text\/css/) {
+            if (/<style/) {
                 $incss = 1;
             }
             if ( $incss and /<\/style>/ ) {

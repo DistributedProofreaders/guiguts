@@ -1,6 +1,5 @@
 Beginning check: HTML Tidy
-23:5 - Warning: inserting implicit <p>
-23:5 - Warning: trimming empty <p>
-Info: Doctype given is "-//W3C//DTD XHTML 1.0 Strict//EN"
-Info: Document content looks like XHTML 1.0 Transitional
+22:5 - Warning: inserting implicit <p>
+22:5 - Warning: trimming empty <p>
+Info: Document content looks like HTML Proprietary
 Check is complete: HTML Tidy

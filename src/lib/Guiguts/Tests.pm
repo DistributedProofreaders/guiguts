@@ -39,7 +39,8 @@ sub runtests {
     runtesterrorcheck( "Bookloupe",        "textcheck.txt",   "bookloupebaseline.txt" );
     runtesterrorcheck( "Jeebies",          "textcheck.txt",   "jeebiesbaseline.txt" );
     runtesterrorcheck( "pptxt",            "textcheck.txt",   "pptxtbaseline.txt" );
-    runtesterrorcheck( "W3C Validate",     "errorcheck.html", "htmlvalidatebaseline.txt" );
+    runtesterrorcheck( "Nu HTML Check",    "errorcheck.html", "htmlvalidatebaseline.txt" );
+    runtesterrorcheck( "Nu XHTML Check",   "errorcheck.html", "xhtmlvalidatebaseline.txt" );
     runtesterrorcheck( "HTML Tidy",        "errorcheck.html", "tidybaseline.txt" );
     runtesterrorcheck( "ppvimage",         "errorcheck.html", "ppvimagebaseline.txt" );
     runtesterrorcheck( "Link Check",       "errorcheck.html", "linkcheckline.txt" );
