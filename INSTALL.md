@@ -263,23 +263,18 @@ other git activities.
 
 ## Perl Modules
 
-Guiguts requires the following Perl modules to be installed via CPAN:
-
-* Tk
-* Tk::ToolBar
-* Text::LevenshteinXS
-* File::Which
-* Image::Size
-* LWP::UserAgent
-* WebService::Validator::HTML::W3C
-* XML::XPath
+Guiguts requires several Perl modules to be installed via CPAN:
 
 The required Perl modules can be installed with the included helper script:
 ```
 perl install_cpan_modules.pl
 ```
 
-*Or* you can install them individually using `cpanm`. For example:
+*Or* you can install them individually using `cpanm`. You should refer to the
+helper script `install_cpan_modules.pl` for an up-to-date list of the modules
+required, and then install each one, for example:
 ```
-cpanm --notest --install LWP::UserAgent
+cpanm --notest --install File::HomeDir
+cpanm --notest --install Tk
+etc...
 ```
