@@ -128,8 +128,8 @@ to be done once. These instructions walk you through it.
 * Guiguts code
 * [Xcode Command Line Tools](https://developer.apple.com/library/archive/technotes/tn2339/_index.html)
 * [Homebrew](https://brew.sh/)
-* Perl & [Perl modules](#perl-modules)
 * [XQuartz](https://www.xquartz.org/)
+* Perl & [Perl modules](#perl-modules)
 
 This is necessary because the version of Perl that comes with MacOS does not
 have the necessary header files to build the Perl package dependencies that
@@ -169,6 +169,19 @@ Open Terminal.app and install Homebrew with:
 You will be prompted for your password and walked through the installation.
 You can accept the defaults it presents to you.
 
+### XQuartz
+
+[XQuartz](https://www.xquartz.org/) is an X11 windows manager. If you don't
+have it installed already, you can either download and install it manually
+via the link _or_ install it with Homebrew using:
+
+```
+brew install --cask xquartz
+```
+
+After you install XQuartz, you must **log out and back in** before Guiguts can
+use it as the X11 server.
+
 ### Perl & Perl modules
 
 Using Terminal.app, use Homebrew to install Perl and cpanm:
@@ -186,19 +199,6 @@ is most easily done by running the helper script:
 ```
 perl install_cpan_modules.pl
 ```
-
-### XQuartz
-
-[XQuartz](https://www.xquartz.org/) is an X11 windows manager. If you don't
-have it installed already, you can either download and install it manually
-via the link _or_ install it with Homebrew using:
-
-```
-brew cask install xquartz
-```
-
-After you install XQuartz, you must **log out and back in** before Guiguts can
-use it as the X11 server.
 
 ### Starting Guiguts
 
