@@ -7,7 +7,7 @@ Beginning check: ppvimage
 8:0 Linked image: images/cover.jpg
 8:0 image file cover.jpg not found
 ---------- checking cover image ----------
-          *** WARNING: no epub cover image found
+8:0 epub cover image not found
 ---------- checking for unused images ----------
           WARNING: /images folder not found
 Check is complete: ppvimage

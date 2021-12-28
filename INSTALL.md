@@ -15,6 +15,7 @@ Using Guiguts on Windows requires installing the following pieces:
 * Perl
 * Guiguts
 * [Perl modules](#perl-modules)
+* [Java](#java) (if you want to use the bundled HTML and CSS checkers)
 
 These instructions walk you through using
 [Strawberry Perl](http://strawberryperl.com/). Strawberry Perl is the
@@ -63,6 +64,8 @@ to any previous versions._
    image viewer to display scans and edit images. You can also find out how
    to obtain and link to the kindlegen tool if you want your local version
    of ebookmaker to create mobi files in addition to epub files.
+9. Install [Java](#java) to be able to check your HTML and CSS from within
+   Guiguts.
 
 [^1]: _Only needed if double-clicking `install_cpan_modules.pl` was
 unsuccessful,_ (may vary slightly for different versions of Windows):
@@ -228,11 +231,14 @@ Kindlegen is included when you install [Kindle Previewer](https://www.amazon.com
 You can tell Guiguts where kindlegen is installed using the Preferences ->
 Set File Paths dialog.
 
-
+Install [Java](#java) to be able to check your HTML and CSS from within
+Guiguts.
+   
 ## Other
 
-For other platforms, you will need to install Perl and the necessary
-[Perl modules](#perl-modules). Then extract `guiguts-generic-n.n.n.zip` and run
+For other platforms, you will need to install Perl, the necessary
+[Perl modules](#perl-modules) and possibly [Java](#java).
+Then extract `guiguts-generic-n.n.n.zip` and run
 ```
 perl guiguts.pl
 ```
@@ -278,3 +284,12 @@ cpanm --notest --install File::HomeDir
 cpanm --notest --install Tk
 etc...
 ```
+
+## Java
+
+Follow the instructions at [java.com](https://java.com) to install the
+Java Runtime Environment if you want to be able to check your HTML and CSS
+from within Guiguts. Java is free for personal use, and is used by many
+applications and some websites, so you may already have it installed on
+your system. Without Java, you will need to check your HTML and CSS using
+the W3C online validators.
