@@ -993,7 +993,8 @@ sub runProgram {
             } elsif ( $linkrel =~ m/<link/i ) {    # see if it's the right one
                 $linkrel =~ s/^.*?<link/<link/i;    # remove any leading stuff
                 if ( $linkrel =~
-                    m/<link *rel *= *['"]?(coverpage|icon)['"]? *href *= *['"]?images\/[^'" ]*['"]?/i ) { # got one
+                    m/<link *rel *= *['"]?(coverpage|icon)['"]? *href *= *['"]?images\/[^'" ]*['"]?/i
+                  ) {                               # got one
                     $imgcover = $linkrel;
                     $imgcover =~
                       s/^.*?<link *rel *= *['"]?(coverpage|icon)['"]? *href *= *['"]?(images\/[^'" ]*)['"]?.*$/$2/i;
