@@ -594,7 +594,7 @@ sub runProgram {
                     if ( length($idqt) > 0 ) {    # check if this is a coverpage
                         if    ( $idqt eq '\'' ) { $idspec =~ s/'([^']*)'.*$/$1/; }
                         elsif ( $idqt eq '"' )  { $idspec =~ s/"([^"]*)".*$/$1/; }
-                        if    ( $idspec eq "coverpage" ) {
+                        if    ( $idspec eq "coverpage" or $idspec eq "icon" ) {
                             $imgcover     = $src;
                             $imgcoverline = $reportline;
                         }                         # note id=coverpage has higher precedence
@@ -981,7 +981,7 @@ sub runProgram {
     sub checkepubcover {
         print LOGFILE ("\n---------- checking cover image ----------\n");
 
-        # first see if there's a <link rel="coverpage" in the header
+        # first see if there's a <link rel="icon" (or coverpage) in the header
         my $linkrel    = "";
         my $sourceline = 0;
         my $coverfile  = "";
@@ -993,10 +993,10 @@ sub runProgram {
             } elsif ( $linkrel =~ m/<link/i ) {    # see if it's the right one
                 $linkrel =~ s/^.*?<link/<link/i;    # remove any leading stuff
                 if ( $linkrel =~
-                    m/<link *rel *= *['"]?coverpage['"]? *href *= *['"]?images\/[^'" ]*['"]?/i ) { # got one
+                    m/<link *rel *= *['"]?(coverpage|icon)['"]? *href *= *['"]?images\/[^'" ]*['"]?/i ) { # got one
                     $imgcover = $linkrel;
                     $imgcover =~
-                      s/^.*?<link *rel *= *['"]?coverpage['"]? *href *= *['"]?(images\/[^'" ]*)['"]?.*$/$1/i;
+                      s/^.*?<link *rel *= *['"]?(coverpage|icon)['"]? *href *= *['"]?(images\/[^'" ]*)['"]?.*$/$2/i;
                     $imgcoverline = $sourceline;
                     last;
                 }

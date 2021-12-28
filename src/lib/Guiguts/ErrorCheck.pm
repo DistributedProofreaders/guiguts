@@ -295,6 +295,18 @@ sub errorcheckpop_up {
             $line =~ s/^\s*line (\d+) column (\d+)\s*/$1:$2 /;
 
         } elsif ( $errorchecktype eq "Nu HTML Check" or $errorchecktype eq "Nu XHTML Check" ) {
+            if ( $line =~ "StackOverflowError" ) {
+                push @errorchecklines, $line;
+                my $dialog = $top->Dialog(
+                    -text => "Could not check file locally - use W3C Validation web site.\n"
+                      . "Please report this 'Java Stack Overflow' error.",
+                    -bitmap  => 'warning',
+                    -title   => 'Java Stack Overflow',
+                    -buttons => [qw/OK/],
+                );
+                $dialog->Show;
+                last;
+            }
             $line =~ s/^.*?"://;                 # remove filename
             $line =~ s/-[0-9\.]+:/:/;            # remove end of line.col range
             $line =~ s/^(\d+):/$1.1:/;           # flag first column if no column given
@@ -507,7 +519,7 @@ sub errorcheckrun {    # Runs error checks
         ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
     } elsif ( $errorchecktype eq 'Nu HTML Check' or $errorchecktype eq "Nu XHTML Check" ) {
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
-        $runner->run( "java", "-Xss512k", "-jar", $::validatecommand, "$tmpfname" );
+        $runner->run( "java", "-Xss2048k", "-jar", $::validatecommand, "$tmpfname" );
     } elsif ( $errorchecktype eq 'W3C Validate CSS' ) {
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel",
