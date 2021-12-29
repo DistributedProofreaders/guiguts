@@ -2315,6 +2315,7 @@ sub ebookmaker {
         $warn++
           if $line  =~ "^WARNING:"
           and $line !~ "No gnu dbm support found"                         # ignore some warnings
+          and $line !~ '<table> lacks "summary" attribute'
           and $line !~ "elements having class .* have been rewritten.";
         adderror($line);                                                  # Send all ebookmaker output to message log
     }
