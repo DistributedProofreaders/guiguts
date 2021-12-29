@@ -1039,7 +1039,7 @@ sub initialize {
         'Caret character',
         'CR without LF',
         'Double punctuation',
-        'endquote missing punctuation',
+        'Endquote missing punctuation',
         'Extra period',
         'Forward slash',
         'HTML symbol',
