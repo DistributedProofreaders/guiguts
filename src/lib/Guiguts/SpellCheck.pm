@@ -233,6 +233,16 @@ sub spellmyaddword {
         return;
     }
     getprojectdic();
+    if ( not defined $::lglobal{projectdictname} ) {
+        my $dialog = $::top->Dialog(
+            -text    => "File must be saved before words can be added to project dictionary.",
+            -bitmap  => 'warning',
+            -title   => 'No Project Dictionary',
+            -buttons => [qw/OK/],
+        );
+        $dialog->Show;
+        return;
+    }
     $::projectdict{$term} = '';
     open( my $dic, '>:bytes', "$::lglobal{projectdictname}" );
     my $section = "\%projectdict = (\n";
