@@ -369,7 +369,8 @@ sub errorcheckpop_up {
                 $line =~ s/^\s*Line (\d+) column (\d+)\s*/$1:$2 /;
             }
             $line =~ s/^\s*Line (\d+)\s*/$1:0 /;
-            $line =~ s/ - Carat character\?/ - Caret character?/    # Correct bookloupe misspelling
+            $line =~ s/ - Carat character\?/ - Caret character?/;                              # Correct bookloupe misspelling
+            $line =~ s/ - endquote missing punctuation\?/ - Endquote missing punctuation?/;    # Correct capital letter inconsistency
 
         } elsif ( $errorchecktype eq "Jeebies" ) {
             next if $line =~ /^File: /;
