@@ -443,8 +443,9 @@ sub utfcharsearchpopup {
                             );
                             utfchar_bind( $textchars[$row] );
                             $textlabels[$row] = $pane->Label(
-                                -text => "$name  -  Ordinal "
-                                  . sprintf( "%04X", $ord )
+                                -text => "$name  -  "
+                                  . sprintf( "Hex %04X", $ord )
+                                  . sprintf( " Dec %d",  $ord )
                                   . "  -  $block",
                                 -background => $::bkgcolor,
                             )->grid(
