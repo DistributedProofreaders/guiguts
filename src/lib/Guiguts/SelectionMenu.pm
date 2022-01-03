@@ -27,6 +27,8 @@ sub wrapper {
 sub knuth_wrapper {
     my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
     my ( $pre, $post ) = ( '', '' );
+    my $NBSP     = "\x{a0}";      # Non-breaking space
+    my $TEMPNBSP = "\x{E123}";    # Private Use Area character won't appear in our books
 
     # if open rewrap markup, remove, then prepend once rewrapped
     if    ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
@@ -41,6 +43,7 @@ sub knuth_wrapper {
     my $optwidth = $rightmargin - $::rmargindiff;
     $paragraph =~ s/-\n/-/g unless $rwhyphenspace;
     $paragraph =~ s/\n/ /g;
+    $paragraph =~ s/$NBSP/$TEMPNBSP/g;               # use temp character for non-breaking space so reflow doesn't break there
     my $reflowed = ::reflow_string(
         $paragraph,
         maximum       => $maxwidth,
@@ -57,6 +60,7 @@ sub knuth_wrapper {
         connpenalty   => 0,
     );
     $reflowed =~ s/ *$//;
+    $reflowed =~ s/$TEMPNBSP/$NBSP/g;    # restore non-breaking spaces
     return $pre . $reflowed . $post;
 }
 
