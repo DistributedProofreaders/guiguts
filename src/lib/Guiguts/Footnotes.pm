@@ -769,11 +769,14 @@ sub footnotefixup {
           if $::lglobal{footpop};
         $::lglobal{footnotetotal}->configure( -text => "# $::lglobal{fnindex}/$::lglobal{fntotal}" )
           if $::lglobal{footpop};
-        $pointer =
-          $textwindow->get( $start,
-            ( $textwindow->search( '--', ':', $start, "$start lineend" ) ) );
-        $pointer =~ s/\[Footnote\s*//i;
-        $pointer =~ s/\s*:$//;
+
+        # Find the colon after the number - if none, then $pointer will be empty to flag the error
+        my $colonpos = $textwindow->search( '--', ':', $start, "$start lineend" );
+        if ($colonpos) {
+            $pointer = $textwindow->get( $start, $colonpos );
+            $pointer =~ s/\[Footnote\s*//i;
+            $pointer =~ s/\s*:$//;
+        }
 
         if ( length($pointer) > 20 ) {
             $pointer = '';
