@@ -33,13 +33,21 @@ steps below work for all operating systems.
      relevant ones to the new release. This will not apply to most users.
    * The file `headerdefault.txt` has had important changes made to it in this
      release. When you first run Guiguts, it copies this file to one named
-     `header.txt`. If you made changes to `header.txt`, or are unsure whether
-     you did or what they were:
+     `header.txt`. If you have customized your `header.txt` in a previous
+     release, you may want to retain those changes in the new release.
+     If you are upgrading from a 1.3.x release, you can copy `header.txt` from
+     the old release to the new one after you have run and exited Guiguts once.
+     If you are upgrading from an older release, e.g. 1.0.25, 1.1.x or 1.2.x,
+     you should follow the steps below to ensure you get all the updates:
      1. In the old directory compare `header.txt` with `headerdefault.txt`,
         making note of any differences.
      2. Run the newly installed Guiguts program to create the new `header.txt`
         then immediately exit.
      3. Edit `header.txt` in the new directory and make the changes you want
         to carry over from the old release.
+     If you were using `@media handheld` in your customized header file, please
+     note that it is now deprecated. The same effects can be achieved using
+     the `x-ebookmaker` class as described [here](https://www.pgdp.net/wiki/DP_Official_Documentation:PP_and_PPV/DP_HTML_Best_Practices/Case_Studies/Media_Types_and_Mobile_Formats).
+     Alternatively, ask in the [DP forum Help with: guiguts thread](https://www.pgdp.net/phpBB2/viewtopic.php?t=11466).
 
 You can now run Guiguts from the new installation directory.

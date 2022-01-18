@@ -1217,9 +1217,19 @@ sub html_parse_header {
         }
         open my $infile, '<:encoding(utf8)', 'header.txt'
           or warn "Could not open header file. $!\n";
-        while (<$infile>) {
-            $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-            $headertext .= $_;
+        while ( my $line = <$infile> ) {
+            $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
+
+            # Upgrade to HTML5 if old XHTML4 header
+            $line = "<!DOCTYPE html>\n" if $line =~ /<!DOCTYPE .* XHTML/;
+            next                        if $line =~ /DTD\/xhtml/;             # skip DTD line;
+            next                        if $line =~ /content="text\/css"/;    # skip content line
+            $line = "    <meta charset=\"UTF-8\" />\n" if $line =~ /charset=BOOKCHARSET/;
+            $line = "    <link rel=\"icon\" href=\"images/cover.jpg\" type=\"image/x-cover\" />\n"
+              if $line =~ /rel="coverpage"/;
+            $line = "    <style> /* <![CDATA[ */\n" if $line =~ /<style type="text\/css">/;
+            $line = "    /* ]]> */ </style>\n"      if $line =~ /<\/style>/;
+            $headertext .= $line;
         }
         close $infile;
     }
