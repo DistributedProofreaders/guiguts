@@ -45,7 +45,8 @@ steps below work for all operating systems.
         then immediately exit.
      3. Edit `header.txt` in the new directory and make the changes you want
         to carry over from the old release.
-     If you were using `@media handheld` in your customized header file, please
+
+   * If you were using `@media handheld` in your customized header file, please
      note that it is now deprecated. The same effects can be achieved using
      the `x-ebookmaker` class as described [here](https://www.pgdp.net/wiki/DP_Official_Documentation:PP_and_PPV/DP_HTML_Best_Practices/Case_Studies/Media_Types_and_Mobile_Formats).
      Alternatively, ask in the [DP forum Help with: guiguts thread](https://www.pgdp.net/phpBB2/viewtopic.php?t=11466).
