@@ -28,15 +28,19 @@ sub html_convert_tb {
     return 0;
 }
 
+# Convert subscripts in the textwindow at this line
+# Also return modified line so remainder of HTML conversion acts on the edited version
 sub html_convert_subscripts {
     my ( $textwindow, $selection, $step ) = @_;
     if ( $selection =~ s/_\{([^}]+?)\}/<sub>$1<\/sub>/g ) {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
     }
-    return;
+    return $selection;
 }
 
+# Convert superscripts in the textwindow at this line
+# Also return modified line so remainder of HTML conversion acts on the edited version
 # Doesn't convert Gen^rl; workaround Gen^{rl} - correct behaviour, not a bug, cf. the guidelines
 sub html_convert_superscripts {
     my ( $textwindow, $selection, $step ) = @_;
@@ -50,7 +54,7 @@ sub html_convert_superscripts {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
     }
-    return;
+    return $selection;
 }
 
 sub html_convert_simple_tag {
@@ -285,8 +289,8 @@ sub html_convert_body {
           if ( ( $step < 100 )
             && ( $selection =~ /contents/i )
             && ( $incontents eq '1.0' ) );
-        html_convert_subscripts( $textwindow, $selection, $step );
-        html_convert_superscripts( $textwindow, $selection, $step );
+        $selection = html_convert_subscripts( $textwindow, $selection, $step );
+        $selection = html_convert_superscripts( $textwindow, $selection, $step );
         next if html_convert_tb( $textwindow, $selection, $step );
 
         # /x|/X gets <pre>
