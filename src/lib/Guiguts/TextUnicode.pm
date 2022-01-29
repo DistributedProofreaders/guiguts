@@ -78,7 +78,7 @@ sub SaveUTF {
         my $end  = $w->index("$index lineend +1c");
         my $line = $w->get( $index, $end );
         $line =~ s/[\t \xA0]+$//;
-        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g if (OS_Win);
+        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g;    # Ensure DP-style (CRLF) line endings
         utf8::encode($line);
         $w->BackTrace("Cannot write to temp file:$!\n") and return
           unless print $tempfh $line;
