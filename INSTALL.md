@@ -285,6 +285,15 @@ cpanm --notest --install Tk
 etc...
 ```
 
+On some systems (reported by Ubuntu user) it may be necessary to install
+`perl-tk` and `zlib1g-dev` using the following commands before installing the
+Perl modules above, 
+```
+sudo apt-get update
+sudo apt-get install perl-tk 
+sudo apt-get install zlib1g-dev
+```
+
 ## Java
 
 Follow the instructions at [java.com](https://java.com) to install the
