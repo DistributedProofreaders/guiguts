@@ -123,6 +123,9 @@ sub menu_file_content_providing {
             'E~xport One File with Page Sep. Markup...',
             -command => sub { ::file_export_pagemarkup(); }
         ],
+        [
+            'command', 'Import ~TIA Abbyy OCR File...', -command => sub { ::file_import_ocr(); }
+        ],
         [ 'separator', '' ],
         [
             Checkbutton => '~Highlight WF Characters Not in Selected Suites',
@@ -136,7 +139,7 @@ sub menu_file_content_providing {
         ],
         [ 'separator', '' ],
         [
-            'command', 'CP Character Substitutions', -command => sub { ::cpcharactersubs(); },
+            'command', 'CP Character S~ubstitutions', -command => sub { ::cpcharactersubs(); },
         ],
     ];
 }

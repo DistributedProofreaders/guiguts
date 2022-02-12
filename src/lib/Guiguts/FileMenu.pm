@@ -10,7 +10,7 @@ BEGIN {
       qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
       &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
-      &file_import_markup &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
+      &file_import_markup &file_import_ocr &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
       &cpcharactersubs);
 }
 
@@ -1106,6 +1106,115 @@ sub file_import_markup {
     }
     ::working();
     interpretbinfile();    # place page markers with the above offsets
+}
+
+{    # Start of block to localise OCR file variables
+    my $ocr_pagenum;     # Current page number
+    my $ocr_textpage;    # buffer text extracted from current page to improve performance
+
+    # Import Abbyy OCR file from TIA (may be gzipped)
+    # Convert it to a simple text file and set the page markers ready for Prep File export
+    sub file_import_ocr {
+        my $textwindow = $::textwindow;
+        return if ( ::confirmempty() =~ /cancel/i );
+
+        my $directory = '';
+        my $name      = $textwindow->getOpenFile( -title => 'Open OCR File' );
+        return unless defined($name) and length($name);
+        clearvars($textwindow);
+        clearpopups();
+        ::working('Converting OCR File');
+        $ocr_pagenum = 0;
+
+        my $lines_read_ok = 0;
+        $ocr_textpage = '';
+
+        # If gzip is not available under Windows, this still creates a valid file handle
+        # but no lines will be read successfully
+        my $opencmd = ( $name =~ /\.gz$/ ) ? "gzip -cd '$name' |" : "< $name";    # Unzip if it's an Abbyy.gz file
+        open( my $fh, $opencmd );
+
+        # Read one line at a time and decode it
+        while ( my $line = <$fh> ) {
+            $lines_read_ok = 1;
+            utf8::decode($line);
+            ocrdecodetia($line);
+
+            unless ( ::updatedrecently() ) {    # Update screen occasionally so user can see progress
+                $textwindow->see('end');
+                $textwindow->update();
+            }
+        }
+
+        close $fh;
+        ocrpageflush();
+        $textwindow->see('end');
+        $textwindow->update();
+        file_mark_pages() if $::auto_page_marks;    # Interpret page separators to find page boundaries
+        ::working();
+
+        # give user chance to save combined file - necessary for operations like character count
+        if ($lines_read_ok) {
+            ::setedited(1);
+            file_saveas($textwindow);
+        } else {
+            my $msg = "Failed to read lines from file.";
+            $msg =
+                "Failed to read lines from .gz file.\n"
+              . "Check 'gzip' command is on your PATH,\n"
+              . "or unzip file manually and import again."
+              if $name =~ /\.gz$/;
+            $::top->Dialog(
+                -text    => $msg,
+                -bitmap  => 'error',
+                -title   => 'File Read Error',
+                -buttons => ['Ok']
+            )->Show;
+        }
+    }
+
+    # Decode a line of OCR from TIA
+    # Abbyy files have page, paragraph, line and characters marked with XML markup
+    sub ocrdecodetia {
+        my $line = shift;
+
+        my @strings = split( /<\/[^>]+>/, $line );    # Split long lines at closing tags
+        for my $string (@strings) {
+            if ( $string =~ /<page / ) {              # New page - output page text and add DP page separator
+                ocrpageflush( $ocr_pagenum++ );
+            } elsif ( $string =~ /<par / ) {          # New paragraph, so need extra newline
+                $ocr_textpage .= "\n";
+            } elsif ( $string =~ /<line / ) {         # New line
+                $ocr_textpage .= "\n";
+                if ( $string =~ /<charParams.*>([^<]+)$/ ) {    # Character can appear straight after <line>
+                    $ocr_textpage .= $1;
+                }
+            } elsif ( $string =~ /<charParams.*>([^<]+)$/ ) {    # Character
+                $ocr_textpage .= $1;
+            }
+        }
+    }
+
+    # Flush page buffer to screen and set up new page header
+    sub ocrpageflush {
+        my $textwindow = $::textwindow;
+        my $newpagenum = shift;
+        $newpagenum = 99999 unless defined $newpagenum;    # Final flush at end, new page separator will never get output
+
+        $ocr_textpage =~ s/&amp;/&/g;                      # Translate entities
+        $ocr_textpage =~ s/&lt;/</g;
+        $ocr_textpage =~ s/&gt;/>/g;
+        $ocr_textpage =~ s/&apos;/'/g;
+        $ocr_textpage =~ s/&quot;/"/g;
+        $ocr_textpage =~ s/ +\n/\n/g;                      # Remove trailing spaces on lines
+        $ocr_textpage =~ s/ +$//g;                         # Remove trailing spaces at end of page
+        $ocr_textpage =~ s/  +/ /g;                        # Compress multiple spaces to one
+        $ocr_textpage =~ s/\n\n+/\n\n/g;                   # Compress multiple blank lines to one
+        $ocr_textpage =~ s/\n+$//g;                        # Remove trailing blank lines
+
+        $textwindow->ntinsert( 'end', "$ocr_textpage" );
+        $ocr_textpage = sprintf "\n-----File: %05d.png---", $newpagenum;    # Start of next page
+    }
 }
 
 sub interpretbinfile {
