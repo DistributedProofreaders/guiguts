@@ -311,7 +311,7 @@ sub errorcheckpop_up {
             $line =~ s/-[0-9\.]+:/:/;            # remove end of line.col range
             $line =~ s/^(\d+):/$1.1:/;           # flag first column if no column given
             $line =~ s/^(\d+)\.(\d+):/$1:$2/;    # replace period with colon in line.col
-            $columnadjust = -1;                  # GG columns start from zero, Nu starts from 1
+            $columnadjust = -1;                  # GG columns start from zero, Nu starts from 1 (except for CSS errors)
 
         } elsif ( ( $errorchecktype eq "pphtml" )
             or ( $errorchecktype eq "ppvimage" ) ) {
@@ -393,6 +393,7 @@ sub errorcheckpop_up {
             # Some tools count lines/columns differently
             my $linnum = $1 + $lineadjust;
             my $colnum = $2 + $columnadjust;
+            $colnum = 0 if $colnum < 0;    # Nu CSS errors could end up as column -1
             $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
 
             # Skip if already have identical error at same location already, since firstly it is not necessary,
