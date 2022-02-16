@@ -97,6 +97,7 @@ table.autotable th { padding: 4px; }
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
+    text-indent: 0;
 } /* page numbers */
 
 .linenum {
