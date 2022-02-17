@@ -516,7 +516,14 @@ sub errorcheckrun {    # Runs error checks
     ::savesettings();
     $top->Busy( -recurse => 1 );
 
-    savetoerrortmpfile($tmpfname);
+    # Bookloupe strips /*, /$ and /#, but doesn't know about newer rewrap types,
+    # so strip them all here if they are the only text on the line,
+    # or if the open rewrap marker is optionally followed by margins in square brackets
+    my $striptext =
+      $errorchecktype eq 'Bookloupe'
+      ? "^(/[$::allblocktypes](?=[\[\n]))|([$::allblocktypes]/(?=[\n]))"
+      : "";
+    savetoerrortmpfile( $tmpfname, $striptext );
     if ( $errorchecktype eq 'HTML Tidy' ) {
         ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
     } elsif ( $errorchecktype eq 'Nu HTML Check' or $errorchecktype eq "Nu XHTML Check" ) {
@@ -550,8 +557,10 @@ sub errorcheckrun {    # Runs error checks
 }
 
 # Save current file to a temporary file in order to run a check on it
+# Second optional argument is regex to match text to be stripped before saving, e.g. rewrap markup
 sub savetoerrortmpfile {
     my $tmpfname   = shift;
+    my $striptext  = shift;
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
@@ -562,6 +571,7 @@ sub savetoerrortmpfile {
     while ( $textwindow->compare( $index, '<', 'end' ) ) {
         my $end     = $textwindow->index("$index  lineend +1c");
         my $gettext = $textwindow->get( $index, $end );
+        $gettext =~ s/$striptext//g if $striptext;
         utf8::encode($gettext);
         print $td $gettext;
         $index = $end;
