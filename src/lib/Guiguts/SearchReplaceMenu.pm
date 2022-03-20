@@ -50,7 +50,6 @@ sub searchtext {
 
     # to avoid next search finding same match
     my $stepforward = '+1c';
-    $stepforward = '' if $silentmode and $silentmode == 1;    # Don't step when doing a Replace All
 
     # this is starting a search within a selection
     if ( $range_total > 0 ) {
