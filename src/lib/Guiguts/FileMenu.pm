@@ -23,7 +23,7 @@ sub file_open {    # Find a text file to open
     $name = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => 'Open File',
-        -initialdir => $::globallastpath
+        -initialdir => getsafelastpath()
     );
     if ( defined($name) and length($name) ) {
         ::openfile($name);
@@ -41,7 +41,7 @@ sub file_include {    # FIXME: Should include even if no file loaded.
     $name = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => 'File Include',
-        -initialdir => $::globallastpath
+        -initialdir => getsafelastpath()
     );
     $textwindow->IncludeFile($name)
       if defined($name)
@@ -1031,7 +1031,7 @@ sub file_export_pagemarkup {
     ::savefile() if ( $textwindow->numberChanges );
     $name = $textwindow->getSaveFile(
         -title      => 'Export with Page Markers',
-        -initialdir => $::globallastpath
+        -initialdir => getsafelastpath()
     );
     return unless $name;
     $::lglobal{exportwithmarkup} = 1;
@@ -1076,7 +1076,7 @@ sub file_import_markup {
     $name = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => 'Open File',
-        -initialdir => $::globallastpath
+        -initialdir => getsafelastpath()
     );
     return unless defined($name) and length($name);
     ::openfile($name);
@@ -1335,6 +1335,19 @@ sub cpcharactersubs {
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{201c}", "\"" );    # left double quote --> straight
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{201d}", "\"" );    # right double quote --> straight
     $textwindow->addGlobEnd;
+}
+
+#
+# Return the last-accessed directory ($::globallastpath) unless it has
+# been deleted, in which case return the directory containing guiguts.pl
+# On Macs (maybe also Linux) attempting to open a File Selection Dialog
+# on a deleted folder gives an error.
+sub getsafelastpath {
+    if ( -d $::globallastpath ) {
+        return $::globallastpath;
+    } else {
+        return $::lglobal{guigutsdirectory};
+    }
 }
 
 1;
