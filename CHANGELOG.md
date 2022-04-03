@@ -1,6 +1,37 @@
 # Changelog
 
 
+## Version 1.4.0
+
+- HTML generation now generates HTML5 with XML serialization
+- Convert user's customized `header.txt` file to HTML5 if it has HTML4 header
+- W3C Nu HTML checker is bundled instead of the old HTML validator
+- Bundled version of W3C CSS validator updated to latest release
+- Linux/Mac users - note that Guiguts now always outputs DP-style line endings
+  (CRLF) when saving the main text file, even on non-Windows platforms
+- Text and HTML files always use utf-8 encoding
+- Unicode Character Search dialog shows decimal ordinal as well as hex
+- Respect non-breaking spaces when wrapping text file
+- New `Import TIA Abbyy OCR File` to enable PMs to use TIA scans without
+  needing to purchase OCR software
+
+### Bug Fixes
+
+- Install documentation had out-of-date list of perl modules
+- MacOS installation was failing due to change in homebrew install syntax
+- Uninitialized variable error was output when trying to add words to project
+  dictionary for an unsaved file
+- Uninitialized variable error sometimes output when joining footnotes
+- Bookloupe error `endquote missing punctuation` was wrongly capitalised
+- Missing colon in footnote could cause uninitialised variable errors
+- DP subscript and superscript markup inside block markup might not be
+  converted during HTML generation
+- Pagenums could misalign due to different `text-indent` values in the
+  containing paragraphs
+- Bookloupe only ignored `/*`, `/#`, `/$`, reporting `forward slash` warnings
+  for other rewrap markup
+
+
 ## Version 1.3.3
 
 - New Character Fill and Restore options added to ASCII Table dialog. These
