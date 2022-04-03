@@ -497,12 +497,14 @@ sub fnjoin {
     $::lglobal{fnarray}->[ $::lglobal{fnindex} ][0] = '';
     $::lglobal{fnarray}->[ $::lglobal{fnindex} ][1] = '';
     footnoteadjust();
-    $::lglobal{fncount}--
-      if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'n';
-    $::lglobal{fnalpha}--
-      if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'a';
-    $::lglobal{fnroman}--
-      if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'r';
+    if ( defined $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] ) {
+        $::lglobal{fncount}--
+          if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'n';
+        $::lglobal{fnalpha}--
+          if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'a';
+        $::lglobal{fnroman}--
+          if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][5] eq 'r';
+    }
     $::lglobal{fnindex}--;
 
     # reload the Check Footnotes window to update the list
