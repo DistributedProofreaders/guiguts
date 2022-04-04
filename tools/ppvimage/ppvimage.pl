@@ -38,8 +38,8 @@ use constant NOLINEINDENT => '           ';
 
 use constant MAXKBINLINE => 256;     # Maximum size of an inline image in KB
 use constant MAXKBLINKED => 1024;    # Maximum size of a linked image in KB
-use constant MINCOVERWD  => 650;     # Minimum width of cover image
-use constant MINCOVERHT  => 1000;    # Minimum height of cover image
+use constant MINCOVERWD  => 1600;    # Minimum width of cover image
+use constant MINCOVERHT  => 2560;    # Minimum height of cover image
 
 # allow commandline operation sans GUI (thanks Katt83)
 # perl -w ppvimage.pl [-csv] [-terse] [-gg] [-o logfile.txt] filename.html
