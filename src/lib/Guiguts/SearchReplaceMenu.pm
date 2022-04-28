@@ -1835,25 +1835,37 @@ sub orphanedbrackets {
             -selectcolor => $::lglobal{checkcolor},
             -value       => '^\/[Xx]|[Xx]\/',
             -text        => '/X X/',
-        )->grid( -row => 2, -column => 1 );
+        )->grid( -row => 1, -column => 5 );
         $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '^\/[Ff]|[Ff]\/',
             -text        => '/F F/',
-        )->grid( -row => 2, -column => 2 );
+        )->grid( -row => 2, -column => 1 );
         $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '^\/[Ll]|[Ll]\/',
             -text        => '/L L/',
-        )->grid( -row => 2, -column => 3 );
+        )->grid( -row => 2, -column => 2 );
         $frame1->Radiobutton(
             -variable    => \$::lglobal{brsel},
             -selectcolor => $::lglobal{checkcolor},
             -value       => '^\/[Ii]|[Ii]\/',
             -text        => '/I I/',
+        )->grid( -row => 2, -column => 3 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Cc]|[Cc]\/',
+            -text        => '/C C/',
         )->grid( -row => 2, -column => 4 );
+        $frame1->Radiobutton(
+            -variable    => \$::lglobal{brsel},
+            -selectcolor => $::lglobal{checkcolor},
+            -value       => '^\/[Rr]|[Rr]\/',
+            -text        => '/R R/',
+        )->grid( -row => 2, -column => 5 );
         my $frame3 = $::lglobal{brkpop}->Frame->pack;
         $frame3->Radiobutton(
             -variable    => \$::lglobal{brsel},
@@ -2031,6 +2043,10 @@ sub orphanedbrackets {
                         && ( $::lglobal{brbrackets}[1] =~ m{^l/}i ) )
                     || (   ( $::lglobal{brbrackets}[0] =~ m{^/i}i )
                         && ( $::lglobal{brbrackets}[1] =~ m{^i/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/c}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^c/}i ) )
+                    || (   ( $::lglobal{brbrackets}[0] =~ m{^/r}i )
+                        && ( $::lglobal{brbrackets}[1] =~ m{^r/}i ) )
                   );
             }
             shift @{ $::lglobal{brbrackets} };

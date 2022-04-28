@@ -98,7 +98,7 @@ use Guiguts::Utilities;
 use Guiguts::WordFrequency;
 
 ### Constants
-our $allblocktypes        = quotemeta '#$*FfIiLlPpXx';
+our $allblocktypes        = quotemeta '#$*FfIiLlPpXxCcRr';
 our $urlprojectpage       = 'https://www.pgdp.net/c/project.php?id=';
 our $urlprojectdiscussion = 'https://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
 
