@@ -106,6 +106,63 @@ sub indexwrapper {
     return $rewrapped;
 }
 
+# Wrap a center block marked with /c...c/
+# Center align each line between the left and right margins
+# Copes with /c nested inside /#
+sub centerblockwrapper {
+    my ( $leftmargin, $rightmargin, $paragraph ) = @_;
+
+    my @lines = split( /\n/, $paragraph );    # Split paragraph into lines
+
+    # Center each line independently and append to a single string to return.
+    my $rewrapped = '';
+    for my $line (@lines) {
+
+        # if start and end of markup - just preserve - don't indent
+        if ( $line =~ /^$TEMPPAGEMARK*(\/[#Cc]|[#Cc]\/)$TEMPPAGEMARK*$/ ) {
+            $rewrapped .= $line;
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/    # No extra newline for closing blockquote markup
+        } else {
+            $line =~ s/^\s*//;                                                        # Remove any existing indentation
+            my $len = length($line);
+            $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;           # Indentation required for centering
+            $rewrapped .= ' ' x $len . $line . "\n";
+        }
+    }
+    return $rewrapped;
+}
+
+# Wrap a right block marked with /r...r/
+# Right align the block, retaining relative indentation, i.e. longest line will touch right margin
+# Copes with /r nested inside /#
+sub rightblockwrapper {
+    my ( $rightmargin, $paragraph ) = @_;
+
+    my @lines = split( /\n/, $paragraph );    # Split paragraph into lines
+
+    # Find number of spaces needed to move longest line to right margin
+    my $minspc = 1000;
+    for my $line (@lines) {
+        my $spc = $rightmargin - length($line);
+        $spc    = 0    if $spc < 0;
+        $minspc = $spc if $spc < $minspc;
+    }
+
+    # Indent all lines by this amount, and append to a single string to return.
+    my $rewrapped = '';
+    for my $line (@lines) {
+
+        # if start and end of markup - just preserve - don't indent
+        if ( $line =~ /^$TEMPPAGEMARK*(\/[#Rr]|[#Rr]\/)$TEMPPAGEMARK*$/ ) {
+            $rewrapped .= $line;
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/    # No extra newline for closing blockquote markup
+        } else {
+            $rewrapped .= ' ' x $minspc . $line . "\n";
+        }
+    }
+    return $rewrapped;
+}
+
 sub selectrewrap {
     my $silentmode = shift;
     my $textwindow = $::textwindow;
@@ -152,6 +209,8 @@ sub selectrewrap {
     my $thisblockend   = $end;
     my $indentblockend = $end;
     my $inblock        = 0;
+    my $blockcenter    = 0;
+    my $blockright     = 0;
     my $infront        = 0;
     my $enableindent;
     my $fblock      = 0;
@@ -259,16 +318,14 @@ sub selectrewrap {
             $indent       = $::poetrylmargin;
         }
 
-        # if selection begins /x or /X or /$
-        if ( $selection =~ /^$TEMPPAGEMARK*\/[Xx\$]/ ) { $inblock = 1 }
+        # starting a block if selection begins /x /f /$ /c or /r
+        $inblock     = 1 if $selection =~ /^$TEMPPAGEMARK*\/[XxFf\$CcRr]/;
+        $blockcenter = 1 if $selection =~ /^$TEMPPAGEMARK*\/[cC]/;
+        $blockright  = 1 if $selection =~ /^$TEMPPAGEMARK*\/[rR]/;
 
-        # if selection begins /f or /F
-        if ( $selection =~ /^$TEMPPAGEMARK*\/[fF]/ ) {
-            $inblock = 1;
-        }
         $textwindow->markSet( 'rewrapend', $thisblockend );                             # Set a mark at the end of the text so it can be found after rewrap
         unless ( $selection =~ /^[$TEMPPAGEMARK\s]*?(\*[$TEMPPAGEMARK\s]*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
-            if ($inblock) {
+            if ( $inblock and not( $blockcenter or $blockright ) ) {
                 if ($enableindent) {
                     $indentblockend = $textwindow->search( '-regex', '--',
                         "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
@@ -324,28 +381,48 @@ sub selectrewrap {
                     $inblock      = 0;
                 }
             } else {
-                if ( $::blockwrap == 1 ) {    # block wrap
-                    $rewrapped = wrapper( $leftmargin, $firstmargin, $rightmargin,
-                        $selection, $::rwhyphenspace );
-                } elsif ( $::blockwrap == 2 ) {    # index wrap
+                my $skipit = ( $selection =~ /^(\/#|#\/)/ );    # Happens when /c or /r directly follows /# or blank line before #/
+                if ( $::blockwrap == 1 ) {                      # block wrap
+                    if ($blockcenter) {
+                        $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
+                    } elsif ($blockright) {
+                        $rewrapped = rightblockwrapper( $rightmargin, $selection );
+                    } else {
+                        $rewrapped = wrapper(
+                            $leftmargin, $firstmargin, $rightmargin,
+                            $selection,  $::rwhyphenspace
+                        );
+                    }
+                } elsif ( $::blockwrap == 2 ) {                 # index wrap
                     $rewrapped = indexwrapper( $leftmargin, $firstmargin, $rightmargin,
                         $selection, $::rwhyphenspace );
-                } else {                           #rewrap the paragraph
-                    $rewrapped =
-                      wrapper( $::lmargin, $::lmargin, $::rmargin, $selection, $::rwhyphenspace );
+                } else {                                        #rewrap the paragraph
+                    if ($blockcenter) {
+                        $rewrapped = centerblockwrapper( $::lmargin, $::rmargin, $selection );
+                    } elsif ($blockright) {
+                        $rewrapped = rightblockwrapper( $::rmargin, $selection );
+                    } else {
+                        $rewrapped =
+                          wrapper( $::lmargin, $::lmargin, $::rmargin, $selection,
+                            $::rwhyphenspace );
+                    }
                 }
-                $textwindow->delete( $thisblockstart, $thisblockend );    #delete the original paragraph
-                $textwindow->insert( $thisblockstart, $rewrapped );       #insert the rewrapped paragraph
-                my @endtemp = $textwindow->tagRanges('blockend');         #find the end of the rewrapped text
+                unless ($skipit) {
+                    $textwindow->delete( $thisblockstart, $thisblockend );    #delete the original paragraph
+                    $textwindow->insert( $thisblockstart, $rewrapped );       #insert the rewrapped paragraph
+                }
+                my @endtemp = $textwindow->tagRanges('blockend');             #find the end of the rewrapped text
                 $end = shift @endtemp;
             }
         }
-        if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$]\//m ) {
+        if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$CcRr]\//m ) {
             $inblock      = 0;
             $indent       = 0;
             $offset       = 0;
             $enableindent = 0;
             $poem         = 0;
+            $blockcenter  = 0;
+            $blockright   = 0;
         }
         if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
         last unless $end;

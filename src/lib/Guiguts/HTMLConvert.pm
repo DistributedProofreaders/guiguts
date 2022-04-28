@@ -245,6 +245,8 @@ sub html_convert_body {
     my $inheader   = 0;
     my $indexline  = 0;
     my $ital       = 0;
+    my $bold       = 0;
+    my $smcap      = 0;
     my $listmark   = 0;
     my $pgoffset   = 0;
     my $poetry     = 0;
@@ -260,6 +262,10 @@ sub html_convert_body {
     my ( $ler, $lec );
     $thisblockend = $textwindow->index('end');
     my ( $blkopen, $blkclose );
+    my $blkcenter = 0;
+    my $blkright  = 0;
+    my $blkrstart = 0;    # Value of $step when a block right starts
+    my @blkrlens  = ();
 
     if ($cssblockmarkup) {
         $blkopen  = '<div class="blockquot"><p>';
@@ -432,7 +438,7 @@ sub html_convert_body {
                 $ler  += 2;
                 push @last5, $selection;
                 shift @last5 while ( scalar(@last5) > 4 );
-                $ital = 0;
+                $ital = $bold = $smcap = 0;
                 $step++;
                 next;
             }
@@ -469,9 +475,9 @@ sub html_convert_body {
             }    # rewrapped poetry automatically has indent of 4
             $indent = 0 if ( $indent < 0 );
 
-            # italic markup cannot span lines, so may need to close & re-open per line
-            $ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
-                $textwindow, $step, $selection, $ital );
+            # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+            ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
+                $textwindow, $step, $selection, $ital, $bold, $smcap );
 
             # Default verse with no extra spaces has 3em padding, and -3em text-indent to
             # give hanging indent in case of a continuation line.
@@ -495,7 +501,7 @@ sub html_convert_body {
         if ( $selection =~ /^\/[pP]$/ ) {
             $poetry    = 1;
             $poetryend = $textwindow->search( '-regexp', '--', '^[pP]/$', $step . '.end', 'end' );
-            $ital      = 0;
+            $ital      = $bold = $smcap = 0;
 
             $unindentedpoetry = ispoetryunindented( $textwindow, $step . '.end', $poetryend );
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
@@ -528,8 +534,8 @@ sub html_convert_body {
             $selection = $textwindow->get( "$step.0", "$step.end" );
             $selection =~ s/^\s+//;
             my $blkopencopy = $blkopen;
-            if ( $selection =~ m|^/[\*\$]| ) {
-                $selection = "\n$selection";    # catch /* immediately following /#
+            if ( $selection =~ m|^/[\*\$rc]|i ) {
+                $selection = "\n$selection";    # catch /* /r or /c immediately following /#
                 $blkopencopy =~ s/<p>//;
             }
             $textwindow->ntdelete( "$step.0", "$step.end" );
@@ -554,7 +560,7 @@ sub html_convert_body {
         # list
         if ( $selection =~ /^\/[Ll]$/ ) {
             $listmark = 1;
-            $ital     = 0;
+            $ital     = $bold = $smcap = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
                 insert_paragraph_close( $textwindow, ( $step - 2 ) . ".end" )
                   unless (
@@ -588,7 +594,7 @@ sub html_convert_body {
         #close list
         if ( $selection =~ /^[Ll]\/$/ ) {
             $listmark = 0;
-            $ital     = 0;
+            $ital     = $bold = $smcap = 0;
 
             # insert first to avoid moving page marker into list
             $textwindow->ntinsert( "$step.0", '</ul>' );
@@ -603,9 +609,9 @@ sub html_convert_body {
         if ($listmark) {
             if ( $selection eq '' ) { $step++; next; }
 
-            # italic markup cannot span lines, so may need to close & re-open per line
-            $ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
-                $textwindow, $step, $selection, $ital );
+            # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+            ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
+                $textwindow, $step, $selection, $ital, $bold, $smcap );
 
             $textwindow->ntinsert( "$step.0",   '<li>' );
             $textwindow->ntinsert( "$step.end", '</li>' );
@@ -616,26 +622,62 @@ sub html_convert_body {
         }
 
         # delete spaces
-        if ($blkquot) {
+        if ( $blkquot and not $blkright ) {
             if ( $selection =~ s/^(\s+)// ) {
                 my $space = length $1;
                 $textwindow->ntdelete( "$step.0", "$step.0 +${space}c" );
             }
         }
 
-        # close para at $/ or */
-        if ( $selection =~ /^[\$\*]\// ) {
-            $inblock = 0;
-            $ital    = 0;
+        # close para at $/, */, c/ or r/
+        if ( $selection =~ /^[\$\*cr]\//i ) {
+            $inblock   = 0;
+            $ital      = $bold = $smcap = 0;
+            $blkcenter = 0 if $selection =~ /^c\//i;
+
+            # If closing a block right, shift whole block across so longest line touches right margin
+            if ( $blkright and $selection =~ /^r\//i ) {
+                my $blkrmaxlen = max(@blkrlens);
+                for my $stepidx ( 0 .. $#blkrlens ) {
+                    next if $blkrlens[$stepidx] == 0;    # Skip paragraph breaks
+                    my $steptmp    = $blkrstart + $stepidx;
+                    my $blkrindent = ( $blkrmaxlen - $blkrlens[$stepidx] ) / 2;
+                    next if $blkrindent == 0;
+                    $textwindow->ntinsert( "$steptmp.0",
+                        '<span style="margin-right: ' . $blkrindent . 'em;">' );
+
+                    # if line ends with a <br /> close the span before it (or it would fail on some epub readers)
+                    my $spancl = $textwindow->search( '-regexp', '--', '<br ?/>$', "$steptmp.0",
+                        "$steptmp.end" );
+                    $spancl = "$steptmp.end" unless $spancl;
+                    $textwindow->ntinsert( $spancl, '</span>' );
+                }
+                $blkright  = 0;
+                $blkrstart = 0;
+                @blkrlens  = ();
+            }
             $textwindow->replacewith( "$step.0", "$step.end", '</p>' );
             $step++;
             next;
         }
 
-        #insert close para, open para at /$ or /*
-        if ( $selection =~ /^\/[\$\*]/ ) {
-            $inblock = 1;
-            $ital    = 0;
+        # insert close para, open para at /$, /*, /c or /r
+        if ( $selection =~ /^\/[\$\*cr]/i ) {
+            if ($inblock) {    # Code structure does not cope with these types being nested
+                my $dialog = $::top->Dialog(
+                    -text => "Block markup is illegally nested near line $step in the source file",
+                    -bitmap  => 'warning',
+                    -title   => 'HTML Generation Failed',
+                    -buttons => [qw/OK/],
+                );
+                $dialog->Show;
+                ::restorelinenumbers();
+                return;
+            }
+            $inblock   = 1;
+            $blkcenter = ( $selection =~ /^\/c/i );
+            $blkright  = ( $selection =~ /^\/r/i );
+            $ital      = $bold = $smcap = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
                 insert_paragraph_close( $textwindow, ( $step - 2 ) . '.end' )
                   unless (
@@ -649,6 +691,23 @@ sub html_convert_body {
             #			$textwindow->replacewith( "$step.0", "$step.end", '<p>' );
             $textwindow->delete( "$step.0", "$step.end" );
             insert_paragraph_open( $textwindow, "$step.0" );
+
+            # Immediately inside a blockquote, the <p> has been placed on the end of the <div class="blockquot"> line
+            my $inspos = "$step.2";
+            if ( $textwindow->get( "$step.0", "$step.end" ) eq "" ) {
+                my $stepm = $step - 1;
+                my $idx   = index( $textwindow->get( "$stepm.0", "$stepm.end" ), "<p>" );
+                if ( $idx >= 0 ) {
+                    $idx += 2;
+                    $inspos = "$stepm.$idx";
+                }
+            }
+            $textwindow->ntinsert( "$inspos", ' class="center"' ) if $blkcenter;
+            $textwindow->ntinsert( "$inspos", ' class="right"' )  if $blkright;
+            if ($blkright) {
+                $blkrstart = $step + 1;
+                @blkrlens  = ();
+            }
             $step++;
             next;
         }
@@ -722,18 +781,71 @@ sub html_convert_body {
               );
         }
 
-        # in block or just an indented line, add margin-left span and <br />
+        # in block or just an indented line, add <br /> and
+        # 1. margin-right span for right aligned  - added later since need to know max line length in block
+        # 2. no extra span for center aligned
+        # 3. margin-left span for other cases
         if ( $inblock || ( $selection =~ /^\s/ ) ) {
-            if ( $selection =~ /^(\s+)/ ) {
-                $indent = ( length($1) / 2 );    # left margin of 1em for every 2 spaces
+            if ($blkcenter) {
                 $selection =~ s/^\s+//;
                 $selection =~ s/  /&#160; /g;    # attempt to maintain multiple spaces
+                                                 # TODO - remove this commented section if not needed
+                                                 # if ($selection =~ /^$/) { # Blank line - replace with a paragraph break unless first/last line in block
+                                                 # my $stepm = $step - 1;
+                                                 # my $stepp = $step + 1;
+                                                 # unless ( $textwindow->get( "$stepm.0", "$stepm.end" ) =~ /^<p class="center">$/ or
+                                                 # $textwindow->get( "$stepp.0", "$stepp.end" ) =~ /^[Cc]\/$/ ) {
+                                                 # $selection =~ s/^$/<\/p><p class="center">/;
+                                                 # $addbr = 0;
+                                                 # }
+                                                 # }
                 $textwindow->ntdelete( "$step.0", "$step.end" );
                 $textwindow->ntinsert( "$step.0", $selection );
 
-                # italic markup cannot span lines, so may need to close & re-open per line
-                $ital = doitalicperline( sub { $textwindow->ntinsert(@_) },
-                    $textwindow, $step, $selection, $ital );
+                # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+                ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
+                    $textwindow, $step, $selection, $ital, $bold, $smcap );
+            } elsif ($blkright) {
+
+                # store length of line to use for offsetting later
+                my $len = length($selection);
+
+                # adjust length for conversions that have been done since the user did their alignment
+                # For each conversion, count the occurrences of the converted entity on the line
+                # then adjust for the number of characters that the conversion added or removed.
+                my $cnt = () = $selection =~ /&#160;/g;     # instead of non-breaking space
+                $len -= $cnt * 5;
+                $cnt = () = $selection =~ /&amp;/g;         # instead of ampersand
+                $len -= $cnt * 4;
+                $cnt = () = $selection =~ /&[lg]t;/g;       # instead of < or >
+                $len -= $cnt * 3;
+                $cnt = () = $selection =~ /<sup>.</g;       # opening sup for a single character, i.e. instead of ^x
+                $len -= $cnt * 4;
+                $cnt = () = $selection =~ /<sup>.[^<]/g;    # opening sup for multiple characters, i.e. instead of ^{xy}
+                $len -= $cnt * 2;
+                $cnt = () = $selection =~ /<sub>.[^<]/g;    # opening sub instead of _{xy}
+                $len -= $cnt * 2;
+                $cnt = () = $selection =~ /<\/su[pb]>/g;    # closing /sup or /sub are all extra characters
+                $len -= $cnt * 6;
+                push( @blkrlens, $len );
+                $selection =~ s/^\s+//;
+                $selection =~ s/  /&#160; /g;               # attempt to maintain multiple spaces
+                $textwindow->ntdelete( "$step.0", "$step.end" );
+                $textwindow->ntinsert( "$step.0", $selection );
+
+                # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+                ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
+                    $textwindow, $step, $selection, $ital, $bold, $smcap );
+            } elsif ( $selection =~ /^(\s+)/ ) {
+                $indent = ( length($1) / 2 );               # left margin of 1em for every 2 spaces
+                $selection =~ s/^\s+//;
+                $selection =~ s/  /&#160; /g;               # attempt to maintain multiple spaces
+                $textwindow->ntdelete( "$step.0", "$step.end" );
+                $textwindow->ntinsert( "$step.0", $selection );
+
+                # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+                ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
+                    $textwindow, $step, $selection, $ital, $bold, $smcap );
 
                 $textwindow->ntinsert( "$step.0",
                     '<span style="margin-left: ' . $indent . 'em;">' );
@@ -1921,8 +2033,7 @@ sub htmlautoconvert {
     $::lglobal{global_filename} = $savefn;
     $textwindow->FileName($savefn);
     html_convert_ampersands($textwindow);
-    $headertext = html_parse_header( $textwindow, $headertext, $title, $author );
-    html_convert_emdashes();
+    $headertext               = html_parse_header( $textwindow, $headertext, $title, $author );
     $::lglobal{fnsecondpass}  = 0;
     $::lglobal{fnsearchlimit} = 1;
     html_convert_footnotes( $textwindow, $::lglobal{fnarray} );
@@ -1931,6 +2042,7 @@ sub htmlautoconvert {
         $::lglobal{cssblockmarkup},
         $::lglobal{poetrynumbers}
     );
+    html_convert_emdashes();
     html_cleanup_markers($textwindow);
     html_convert_underscoresmallcaps($textwindow);
     html_convert_simple_tag( 'i', $::lglobal{html_i} );
@@ -3372,10 +3484,10 @@ sub poetryhtml {
 
     my $end   = pop(@ranges);
     my $start = pop(@ranges);
-    my ( $lsr, $lsc, $ler, $lec, $step, $ital );
+    my ( $lsr, $lsc, $ler, $lec, $step, $ital, $bold, $smcap );
     ( $lsr, $lsc ) = split /\./, $start;
     ( $ler, $lec ) = split /\./, $end;
-    $ital = 0;    # Not in italics at start of poem
+    $ital = $bold = $smcap = 0;    # Not in italics/bold/smcap at start of poem
 
     my $unindentedpoetry = ispoetryunindented( $textwindow, "$lsr.0", "$ler.end" );
 
@@ -3415,9 +3527,9 @@ sub poetryhtml {
         }    # rewrapped poetry automatically has indent of 4
         $indent = 0 if ( $indent < 0 );
 
-        # italic markup cannot span lines, so may need to close & re-open per line
-        $ital =
-          doitalicperline( sub { $textwindow->insert(@_) }, $textwindow, $step, $selection, $ital );
+        # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
+        ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->insert(@_) },
+            $textwindow, $step, $selection, $ital, $bold, $smcap );
 
         $textwindow->insert( "$step.0",   "    <div class=\"verse indent$indent\">" );
         $textwindow->insert( "$step.end", '</div>' );
@@ -3452,30 +3564,38 @@ sub ispoetryunindented {
           and $textwindow->search( '-regexp', '--', '^(?!\\s{4}).{4}', $poetrystart, $poetryend ) );
 }
 
-# If italic markup spans across end of line, we have to close
+# If italic/bold/smcap markup spans across end of line, we have to close
 # at end of line and re-open at start of next.
 # First argument is temporary sub that calls textwindow->insert/ntinsert
-sub doitalicperline {
-    my ( $insertfunc, $textwindow, $step, $selection, $ital ) = @_;
 
-    # Find the last open & close italic markups in the line
-    my ( $op, $cl ) = ( -1, -1 );    # Default to not found
-    $op = $-[$#-] if ( $selection =~ /(<i>)/g );
-    $cl = $-[$#-] if ( $selection =~ /(<\/i>)/g );
+sub domarkupperline {
+    my ( $insertfunc, $textwindow, $step, $selection, $ital, $bold, $smcap ) = @_;
 
-    # Add open to start of this line if currently in italic
-    $insertfunc->( "$step.0", '<i>' ) if $ital;
+    my @flags = ( $ital, $bold, $smcap );
+    my @mrkps = ( "i", "b", "sc" );
 
-    # Italic left open by this line if open comes last
-    $ital = 1 if ( $op > $cl );
+    # Loop through each sort of markup
+    for my $typ ( 0 .. 2 ) {
 
-    # Italic left closed by this line if close comes last
-    $ital = 0 if ( $cl > $op );
+        # Find the last open & close markups of this type in the line
+        my ( $op, $cl ) = ( -1, -1 );    # Default to not found
+        $op = $-[$#-] if ( $selection =~ /(<$mrkps[$typ]>)/g );
+        $cl = $-[$#-] if ( $selection =~ /(<\/$mrkps[$typ]>)/g );
 
-    # Add close to end of this line if now in italic
-    $insertfunc->( "$step.end", '</i>' ) if $ital;
+        # Add open to start of this line if currently in markup
+        $insertfunc->( "$step.0", "<$mrkps[$typ]>" ) if $flags[$typ];
 
-    return $ital;    # So calling routine can remember for next line
+        # Markup left open by this line if open comes last
+        $flags[$typ] = 1 if ( $op > $cl );
+
+        # Markup left closed by this line if close comes last
+        $flags[$typ] = 0 if ( $cl > $op );
+
+        # Add close to end of this line if now in markup
+        $insertfunc->( "$step.end", "</$mrkps[$typ]>" ) if $flags[$typ];
+    }
+
+    return @flags;    # So calling routine can remember for next line
 }
 
 sub linkpopulate {
