@@ -15,9 +15,9 @@ Beginning check: Bookloupe
 78:13 - Query digit in M2ARCH
 78:41 - Query standalone 1
 88:10 - Query standalone 1
-145:30 - endquote missing punctuation?
-161:33 - endquote missing punctuation?
-163:36 - endquote missing punctuation?
+145:30 - Endquote missing punctuation?
+161:33 - Endquote missing punctuation?
+163:36 - Endquote missing punctuation?
 176:43 - Double punctuation?
 176:49 - Double punctuation?
 199:25 - Query standalone 1
@@ -59,7 +59,7 @@ Beginning check: Bookloupe
 413:26 - Double punctuation?
 425:62 - Query word au
 428:59 - Query word au
-455:41 - endquote missing punctuation?
+455:41 - Endquote missing punctuation?
 479:24 - Query standalone 1
 522:34 - Query standalone 1
 531:13 - Non-ASCII character 244
@@ -221,14 +221,14 @@ Beginning check: Bookloupe
 940:51 - Spaced doublequote?
 940:60 - Spaced quote?
 942:8 - Extra period?
-955:15 - endquote missing punctuation?
+955:15 - Endquote missing punctuation?
 956:7 - Non-ASCII character 232
 994:54 - Double punctuation?
 1004:18 - Double punctuation?
 1015:33 - Query standalone 1
 1020:27 - Query standalone 1
 1026:25 - Non-ASCII character 233
-1042:46 - endquote missing punctuation?
+1042:46 - Endquote missing punctuation?
 1072:48 - Query standalone 1
 1073:47 - Wrongspaced quotes?
 1073:45 - Spaced doublequote?
@@ -275,7 +275,7 @@ Beginning check: Bookloupe
 1089:45 - Spaced doublequote?
 1089:54 - Spaced quote?
 1090:26 - Double punctuation?
-1095:22 - endquote missing punctuation?
+1095:22 - Endquote missing punctuation?
 1116:18 - Query standalone 1
 1131:11 - Non-ASCII character 233
 1145:46 - Query standalone 1
@@ -315,7 +315,7 @@ Beginning check: Bookloupe
 1299:12 - Query standalone 1
 1327:0 - Mismatched square brackets?
 1330:0 - Mismatched square brackets?
-1401:55 - endquote missing punctuation?
+1401:55 - Endquote missing punctuation?
 1443:14 - Query standalone 1
 1448:56 - Query standalone 1
 1452:16 - Non-ASCII character 234
@@ -457,7 +457,7 @@ Beginning check: Bookloupe
 1795:37 - Non-ISO-8859 character 339
 1801:37 - Double punctuation?
 1818:33 - Non-ASCII character 226
-1946:60 - endquote missing punctuation?
+1946:60 - Endquote missing punctuation?
 2031:39 - Double punctuation?
 2032:11 - Double punctuation?
 2039:49 - Wrongspaced quotes?
@@ -708,7 +708,7 @@ Beginning check: Bookloupe
 2742:59 - Spaced quote?
 2744:8 - Extra period?
 2807:7 - Non-ASCII character 233
-2825:34 - endquote missing punctuation?
+2825:34 - Endquote missing punctuation?
 2842:54 - Query standalone 1
 2843:54 - Wrongspaced quotes?
 2843:52 - Spaced doublequote?
@@ -773,7 +773,7 @@ Beginning check: Bookloupe
 3075:39 - Double punctuation?
 3075:57 - Double punctuation?
 3076:0 - Query word Bn
-3077:50 - endquote missing punctuation?
+3077:50 - Endquote missing punctuation?
 3101:8 - Wrongspaced quotes?
 3101:6 - Spaced doublequote?
 3102:44 - Query word Bn
@@ -1016,7 +1016,7 @@ Beginning check: Bookloupe
 4512:3 - Query standalone 1
 4518:37 - Non-ASCII character 232
 4521:40 - Non-ASCII character 232
-4529:53 - endquote missing punctuation?
+4529:53 - Endquote missing punctuation?
 4545:3 - Query standalone 1
 4556:48 - Non-ASCII character 233
 4557:6 - Non-ASCII character 232
@@ -1052,11 +1052,11 @@ Beginning check: Bookloupe
 4616:13 - Query standalone 1
 4618:56 - Query standalone 1
 4627:24 - Query standalone 1
-4633:38 - endquote missing punctuation?
+4633:38 - Endquote missing punctuation?
 4641:19 - Query standalone 1
 4648:20 - Non-ASCII character 233
 4659:56 - Non-ASCII character 232
-4659:44 - endquote missing punctuation?
+4659:44 - Endquote missing punctuation?
 4672:36 - Non-ASCII character 232
 4684:54 - Query standalone 1
 4685:55 - Wrongspaced quotes?
@@ -1396,7 +1396,7 @@ Beginning check: Bookloupe
 6032:51 - Query word s
 6047:18 - Query word s
 6050:65 - Query word s
-6051:26 - endquote missing punctuation?
+6051:26 - Endquote missing punctuation?
 6093:31 - Double punctuation?
 6094:31 - Double punctuation?
 6099:21 - Double punctuation?
@@ -1406,9 +1406,9 @@ Beginning check: Bookloupe
 6252:39 - Non-ASCII character 163
 6257:5 - Non-ASCII character 233
 6268:43 - Non-ASCII character 234
-6285:32 - endquote missing punctuation?
+6285:32 - Endquote missing punctuation?
 6339:18 - Non-ASCII character 163
-6389:21 - endquote missing punctuation?
+6389:21 - Endquote missing punctuation?
 6436:47 - Query digit in S.W.7.
 6443:1 - Query standalone 1
 6445:6 - Non-ASCII character 163
@@ -1429,13 +1429,13 @@ Beginning check: Bookloupe
 6626:9 - Non-ASCII character 163
 6632:26 - Query word s
 6650:34 - Double punctuation?
-6697:44 - endquote missing punctuation?
-6703:21 - endquote missing punctuation?
-6711:35 - endquote missing punctuation?
+6697:44 - Endquote missing punctuation?
+6703:21 - Endquote missing punctuation?
+6711:35 - Endquote missing punctuation?
 6805:33 - Spaced em-dash?
 6805:35 - Spaced em-dash?
-6824:6 - endquote missing punctuation?
-6832:21 - endquote missing punctuation?
+6824:6 - Endquote missing punctuation?
+6832:21 - Endquote missing punctuation?
 6837:52 - Forward slash?
 6837:63 - Query standalone 1
 6855:64 - Forward slash?
@@ -3353,7 +3353,7 @@ Beginning check: Bookloupe
 13436:32 - Query word Cpl
 13437:1 - Query standalone 1
 13441:1 - Query standalone 1
-13445:47 - endquote missing punctuation?
+13445:47 - Endquote missing punctuation?
 13451:1 - Query standalone 1
 13452:1 - Query standalone 1
 13454:1 - Query standalone 1
@@ -3369,11 +3369,11 @@ Beginning check: Bookloupe
 13503:1 - Query standalone 1
 13507:1 - Query standalone 1
 13512:36 - Query word Dmr
-13515:36 - endquote missing punctuation?
+13515:36 - Endquote missing punctuation?
 13517:32 - Query word Cpl
-13521:37 - endquote missing punctuation?
+13521:37 - Endquote missing punctuation?
 13523:1 - Query standalone 1
-13530:46 - endquote missing punctuation?
+13530:46 - Endquote missing punctuation?
 13535:17 - Double punctuation?
 13535:48 - Double punctuation?
 13536:27 - Double punctuation?
@@ -3807,7 +3807,7 @@ Beginning check: Bookloupe
 13899:31 - Query word Cpl
 13900:1 - Query standalone 1
 13902:31 - Query word Cpl
-13914:40 - endquote missing punctuation?
+13914:40 - Endquote missing punctuation?
 13919:1 - Query standalone 1
 13920:31 - Query word Cpl
 13923:1 - Query standalone 1

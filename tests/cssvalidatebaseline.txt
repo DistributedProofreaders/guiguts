@@ -1,6 +1,6 @@
 Beginning check: W3C Validate CSS
 Sorry! We found the following errors (1)
-12:0 body
+12:0 
       (Value Error : margin-left (nullbox.html#propdef-margin-left))
       Parse Error
 Check is complete: W3C Validate CSS
