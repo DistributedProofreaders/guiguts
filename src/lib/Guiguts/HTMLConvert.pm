@@ -1831,7 +1831,16 @@ sub htmlimageok {
 
     # Use filename as basis for an id - remove file extension first
     $fname =~ s/\.[^\.]*$//;
-    my $idname      = makeanchor( ::deaccentdisplay($fname) );
+    my $idname = makeanchor( ::deaccentdisplay($fname) );
+
+    # Ensure id is unique by appending _2, _3, etc if it already exists
+    if ( $textwindow->search( '-exact', '--', "id=\"$idname\"", '1.0', 'end' ) ) {
+        my $idsuffix = 2;
+        $idsuffix++
+          while $textwindow->search( '-exact', '--', "id=\"${idname}_$idsuffix\"", '1.0', 'end' );
+        $idname .= "_$idsuffix";    # Append the suffix for the first version not found in file
+    }
+
     my $illowsuffix = 'p';
     $illowsuffix = 'e' if $::htmlimagewidthtype eq 'em';
     $illowsuffix = 'x' if $::htmlimagewidthtype eq 'px';
