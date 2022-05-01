@@ -381,8 +381,9 @@ sub selectrewrap {
                     $inblock      = 0;
                 }
             } else {
-                my $skipit = ( $selection =~ /^(\/#|#\/)/ );    # Happens when /c or /r directly follows /# or blank line before #/
-                if ( $::blockwrap == 1 ) {                      # block wrap
+                print "\$selection:$selection:\n";
+                my $skipit = ( $selection =~ /^(\/#|#\/)$/ );    # Happens when /c or /r directly follows /# or blank line before #/
+                if ( $::blockwrap == 1 ) {                       # block wrap
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
                     } elsif ($blockright) {
@@ -393,10 +394,10 @@ sub selectrewrap {
                             $selection,  $::rwhyphenspace
                         );
                     }
-                } elsif ( $::blockwrap == 2 ) {                 # index wrap
+                } elsif ( $::blockwrap == 2 ) {                  # index wrap
                     $rewrapped = indexwrapper( $leftmargin, $firstmargin, $rightmargin,
                         $selection, $::rwhyphenspace );
-                } else {                                        #rewrap the paragraph
+                } else {                                         #rewrap the paragraph
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $::lmargin, $::rmargin, $selection );
                     } elsif ($blockright) {
