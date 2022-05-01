@@ -1427,7 +1427,6 @@ sub get_title_author {
         last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
         $selection = $textwindow->get( "$step.0", "$step.end" );
         if ( ( $selection =~ /^by/i ) and ( $step < 100 ) ) {
-            last if ( $selection =~ /[\/[Ff]/ );
             if ( $selection =~ /^by$/i ) {
                 do {
                     $step++;
