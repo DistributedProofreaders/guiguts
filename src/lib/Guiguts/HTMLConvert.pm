@@ -2392,14 +2392,6 @@ sub htmlgenpopup {
             -text    => 'Autogenerate HTML',
             -width   => 16
         )->grid( -row => 1, -column => 1, -padx => 5, -pady => 1 );
-        $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
-                ::runner( ::cmdinterp( $::extops[0]{command} ) );
-            },
-            -text  => 'View in Browser',
-            -width => 16,
-        )->grid( -row => 1, -column => 2, -padx => 5, -pady => 1 );
 
         ::initialize_popup_with_deletebinding('htmlgenpop');
     }
