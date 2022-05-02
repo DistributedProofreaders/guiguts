@@ -381,7 +381,6 @@ sub selectrewrap {
                     $inblock      = 0;
                 }
             } else {
-                print "\$selection:$selection:\n";
                 my $skipit = ( $selection =~ /^(\/#|#\/)$/ );    # Happens when /c or /r directly follows /# or blank line before #/
                 if ( $::blockwrap == 1 ) {                       # block wrap
                     if ($blockcenter) {
