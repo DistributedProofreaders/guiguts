@@ -14,6 +14,10 @@
 - Respect non-breaking spaces when wrapping text file
 - New `Import TIA Abbyy OCR File` to enable PMs to use TIA scans without
   needing to purchase OCR software
+- New `/C...C/` markup centers lines during rewrapping and HTML generation
+- New `/R...R/` markup shifts block of lines to right margin (preserving
+  indentation) during rewrapping and HTML generation
+- PPVimage checks against the new recommended cover image size (1600x2560)
 
 ### Bug Fixes
 
@@ -30,6 +34,14 @@
   containing paragraphs
 - Bookloupe only ignored `/*`, `/#`, `/$`, reporting `forward slash` warnings
   for other rewrap markup
+- Conversion of fractions such as 1/2,000 failed
+- Inserting the same image twice from the HTML dialogs would cause duplicate
+  HTML ids to be used - a suffix is now added to avoid this
+- Authors' names containing `F` or `f` were not extracted in the HTML
+  generation if the name was on the same line as `By`
+- `View in Browser` button in HTML generation dialog did not display the 
+  recently-generated HTML - button removed, but identical option remains
+  in Custom menu
 
 
 ## Version 1.3.3
