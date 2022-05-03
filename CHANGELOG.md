@@ -18,6 +18,7 @@
 - New `/R...R/` markup shifts block of lines to right margin (preserving
   indentation) during rewrapping and HTML generation
 - PPVimage checks against the new recommended cover image size (1600x2560)
+- `Find Next/Previous ... Block` entries removed from Search menu
 
 ### Bug Fixes
 

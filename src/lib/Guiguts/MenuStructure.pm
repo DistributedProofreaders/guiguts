@@ -291,43 +291,6 @@ sub menu_search {
             -command => [ \&::find_proofer_comment, 'reverse' ]
         ],
         [ 'separator', '' ],
-        [
-            'command', 'Find Next /*..*/ Block', -command => [ \&::nextblock, 'default', 'forward' ]
-        ],
-        [
-            'command',
-            'Find Previous /*..*/ Block',
-            -command => [ \&::nextblock, 'default', 'reverse' ]
-        ],
-        [ 'command', 'Find Next /#..#/ Block', -command => [ \&::nextblock, 'block', 'forward' ] ],
-        [
-            'command',
-            'Find Previous /#..#/ Block',
-            -command => [ \&::nextblock, 'block', 'reverse' ]
-        ],
-        [ 'command', 'Find Next /$..$/ Block', -command => [ \&::nextblock, 'stet', 'forward' ] ],
-        [
-            'command',
-            'Find Previous /$..$/ Block',
-            -command => [ \&::nextblock, 'stet', 'reverse' ]
-        ],
-        [ 'command', 'Find Next /p..p/ Block', -command => [ \&::nextblock, 'poetry', 'forward' ] ],
-        [
-            'command',
-            'Find Previous /p..p/ Block',
-            -command => [ \&::nextblock, 'poetry', 'reverse' ]
-        ],
-        [
-            'command',
-            'Find Next Indented Block',
-            -command => [ \&::nextblock, 'indent', 'forward' ]
-        ],
-        [
-            'command',
-            'Find Previous Indented Block',
-            -command => [ \&::nextblock, 'indent', 'reverse' ]
-        ],
-        [ 'separator', '' ],
         [ 'command',   'Find ~Orphaned DP Markup...', -command => \&::orphanedmarkup ],
         [ 'command',   'Find ~Asterisks w/o Slash',   -command => \&::find_asterisks ],
         [ 'separator', '' ],
