@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT = qw(&update_sr_histories &searchtext &reg_check &getnextscanno &updatesearchlabels
       &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
-      &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
+      &find_asterisks &find_transliterations &orphanedbrackets &orphanedmarkup &searchsize
       &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount);
 }
 
@@ -1669,101 +1669,6 @@ sub find_transliterations {
     #} else {
     #	::operationadd('Found no more transliterations (\\[[^FIS\\d])');
     #}
-}
-
-sub nextblock {
-    my ( $mark, $direction ) = @_;
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    unless ($::searchstartindex) { $::searchstartindex = '1.0' }
-
-    if ( $mark eq 'default' ) {
-        if ( $direction eq 'forward' ) {
-            $::searchstartindex =
-              $textwindow->search( '-exact', '--', '/*', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            ::operationadd('Found no more /*..*/ blocks')
-              unless $::searchstartindex;
-        } elsif ( $direction eq 'reverse' ) {
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-exact', '--', '/*', $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-        }
-    } elsif ( $mark eq 'indent' ) {
-        if ( $direction eq 'forward' ) {
-            $::searchstartindex =
-              $textwindow->search( '-regexp', '--', '^\S', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            $::searchstartindex =
-              $textwindow->search( '-regexp', '--', '^\s', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            ::operationadd('Found no more indented blocks')
-              unless $::searchstartindex;
-        } elsif ( $direction eq 'reverse' ) {
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-regexp', '--', '^\S',
-                $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-regexp', '--', '^\s',
-                $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-        }
-    } elsif ( $mark eq 'stet' ) {
-        if ( $direction eq 'forward' ) {
-            $::searchstartindex =
-              $textwindow->search( '-exact', '--', '/$', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            ::operationadd('Found no more /$..$/ blocks')
-              unless $::searchstartindex;
-        } elsif ( $direction eq 'reverse' ) {
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-exact', '--', '/$', $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-        }
-    } elsif ( $mark eq 'block' ) {
-        if ( $direction eq 'forward' ) {
-            $::searchstartindex =
-              $textwindow->search( '-exact', '--', '/#', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            ::operationadd('Found no more /#..#/ blocks')
-              unless $::searchstartindex;
-        } elsif ( $direction eq 'reverse' ) {
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-exact', '--', '/#', $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-        }
-    } elsif ( $mark eq 'poetry' ) {
-        if ( $direction eq 'forward' ) {
-            $::searchstartindex =
-              $textwindow->search( '-regexp', '--', '\/[pP]', $::searchstartindex, 'end' )
-              if $::searchstartindex;
-            ::operationadd('Found no more /p..p/ blocks')
-              unless $::searchstartindex;
-        } elsif ( $direction eq 'reverse' ) {
-            $::searchstartindex =
-              $textwindow->search( '-backwards', '-regexp', '--', '\/[pP]',
-                $::searchstartindex, '1.0' )
-              if $::searchstartindex;
-        }
-    }
-    $textwindow->markSet( 'insert', $::searchstartindex )
-      if $::searchstartindex;
-    if ($::searchstartindex) {
-        $textwindow->see('end');
-        $textwindow->see($::searchstartindex);
-    }
-    $textwindow->update;
-    $textwindow->focus;
-    if ( $direction eq 'forward' ) {
-        $::searchstartindex += 1;
-    } elsif ( $direction eq 'reverse' ) {
-        $::searchstartindex -= 1;
-    }
-    if ( $::searchstartindex = int($::searchstartindex) ) {
-        $::searchstartindex .= '.0';
-    }
-    ::update_indicators();
 }
 
 sub orphanedbrackets {
