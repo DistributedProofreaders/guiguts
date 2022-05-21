@@ -21,6 +21,7 @@ $(TARGETS): common
 	# Build tools
 	mkdir guiguts/tools
 	./tools/package-tools.sh $@ $$(pwd)/guiguts/tools
+	./tools/adjust-package-contents.sh $@ $$(pwd)/guiguts
 	# Create final zip
 	$(ZIP) guiguts-$@-$(VERSION).zip guiguts
 

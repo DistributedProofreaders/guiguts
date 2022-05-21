@@ -205,10 +205,19 @@ perl install_cpan_modules.pl
 
 ### Starting Guiguts
 
-Start Guiguts with:
+Guiguts can be started directly from the Terminal with:
 ```
 perl guiguts.pl &
 ```
+
+To add it to your Dock, you can use the `guiguts.command` file. First, remove
+it from Apple's quarantine with:
+```
+xattr -d com.apple.quarantine guiguts.command
+```
+
+Now you can double click it to run Guiguts or drag the file to your Dock
+for a one-click start.
 
 ### Helper applications
 
