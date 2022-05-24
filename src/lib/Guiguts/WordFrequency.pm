@@ -1392,11 +1392,12 @@ sub slurpfile {
     my $wholefile;
     ::savefile() unless ( $textwindow->numberChanges == 0 );
     {
-        local $/;    # slurp in the file
+        local $/;                               # slurp in the file
         open my $fh, '<', $filename;
         $wholefile = <$fh>;
         close $fh;
         utf8::decode($wholefile);
+        $wholefile =~ s/\cM\cJ|\cM|\cJ/\n/g;    # Need to convert line endings to suitable one for this platform
     }
     $wholefile =~ s/-----*\s?File:\s?\S+\.(png|jpg)---.*\r?\n?//g;
     return $wholefile;
