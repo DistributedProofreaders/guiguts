@@ -305,7 +305,7 @@ sub menu_search {
             -command     => \&::hilitesinglequotes,
         ],
         [
-            'command', '~Highlight Arbitrary Characters in Selection...',
+            'command', '~Highlight Character, String or Regex...',
             -accelerator => 'Ctrl+Alt+h',
             -command     => \&::hilitepopup,
         ],
