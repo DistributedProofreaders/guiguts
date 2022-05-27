@@ -20,7 +20,7 @@ BEGIN {
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
-      &dieerror &warnerror &infoerror &poperror &BindMouseWheel);
+      &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual);
 
 }
 
@@ -760,7 +760,6 @@ sub initialize {
     $::positionhash{guesspgmarkerpop} = '+10+10'          unless $::positionhash{guesspgmarkerpop};
     $::positionhash{hilitepop}        = '+150+150'        unless $::positionhash{hilitepop};
     $::positionhash{hintpop}          = '+150+150'        unless $::positionhash{hintpop};
-    $::geometryhash{hotkeyspop}       = '+144+119'        unless $::geometryhash{hotkeyspop};
     $::geometryhash{hpopup}           = '300x400+584+211' unless $::geometryhash{hpopup};
     $::positionhash{htmlgenpop}       = '+145+37'         unless $::positionhash{htmlgenpop};
     $::geometryhash{htmlimpop}        = '+45+37'          unless $::geometryhash{htmlimpop};
@@ -777,7 +776,6 @@ sub initialize {
     $::positionhash{pagemarkerpop}    = '+302+97'         unless $::positionhash{pagemarkerpop};
     $::geometryhash{pagesephelppop}   = '+191+132'        unless $::geometryhash{pagesephelppop};
     $::positionhash{pageseppop}       = '+334+176'        unless $::positionhash{pageseppop};
-    $::geometryhash{regexrefpop}      = '+106+72'         unless $::geometryhash{regexrefpop};
     $::geometryhash{searchpop}        = '+10+10'          unless $::geometryhash{searchpop};
     $::positionhash{selectionpop}     = '+10+10'          unless $::positionhash{selectionpop};
     $::positionhash{spellpopup}       = '+152+97'         unless $::positionhash{spellpopup};
@@ -835,7 +833,7 @@ sub initialize {
       '/Navigation#Go_to_the_text_corresponding_to_a_specific_page_Image';
     $::manualhash{'grpop'}             = '/Tools_Menu#Find_and_Convert_Greek';
     $::manualhash{'guesspgmarkerpop'}  = '/File_Menu#Guess_Page_Markers';
-    $::manualhash{'hotkeyspop'}        = '/Help_Menu#Keyboard_Shortcuts';
+    $::manualhash{'hotkeys'}           = '/Help_Menu#Keyboard_Shortcuts';
     $::manualhash{'hilitepop'}         = '/Navigation#Highlighting_Characters';
     $::manualhash{'hintpop'}           = '/Tools_Menu#Scanno_Hints';
     $::manualhash{'hpopup'}            = '/Tools_Menu#Harmonic_Searches';
@@ -855,7 +853,7 @@ sub initialize {
     $::manualhash{'pagemarkerpop'}     = '/File_Menu#Display.2FAdjust_Page_Markers';
     $::manualhash{'pagesephelppop'}    = '/Tools_Menu#Fixup_Page_Separators';
     $::manualhash{'pageseppop'}        = '/Tools_Menu#Fixup_Page_Separators';
-    $::manualhash{'regexrefpop'}       = '/Searching#Regular_Expressions';
+    $::manualhash{'regexref'}          = '/Help_Menu#Regular_Expression_Quick_Reference';
     $::manualhash{'searchpop+scannos'} = '/Tools_Menu#Stealth_Scannos';
     $::manualhash{'searchpop+search'}  = '/Searching#The_Search_Dialog';
     $::manualhash{'selectionpop'}      = '/Edit_Menu#Selection_Dialog';

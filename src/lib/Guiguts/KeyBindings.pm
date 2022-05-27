@@ -243,7 +243,7 @@ sub keybindings {
     );
 
     # Help
-    keybind( '<Control-Alt-r>', sub { ::regexref(); } );
+    keybind( '<Control-Alt-r>', sub { ::display_manual("regexref"); } );
 
     # Mouse
     keybind( '<Shift-B1-Motion>', sub { $textwindow->shiftB1_Motion(@_); } );
