@@ -1120,10 +1120,10 @@ sub menu_help {
             'Guiguts ~Help on DP Forum [www]',
             -command => sub { ::launchurl('https://www.pgdp.net/phpBB3/viewtopic.php?t=11466'); }
         ],
-        [ 'command',   '~Keyboard Shortcuts',    -command => \&::hotkeyshelp ],
-        [ 'command',   '~Regex Quick Reference', -command => \&::regexref ],
-        [ 'command',   '~Compose Sequences',     -command => \&::composeref ],
-        [ 'command',   'Message ~Log',           -command => \&::poperror ],
+        [ 'command', '~Keyboard Shortcuts',    -command => sub { ::display_manual("hotkeys"); } ],
+        [ 'command', '~Regex Quick Reference', -command => sub { ::display_manual("regexref"); } ],
+        [ 'command', '~Compose Sequences',     -command => \&::composeref ],
+        [ 'command', 'Message ~Log',           -command => \&::poperror ],
         [ 'separator', '' ],
         [
             'command',
