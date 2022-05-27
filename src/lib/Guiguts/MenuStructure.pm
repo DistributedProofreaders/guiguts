@@ -310,7 +310,7 @@ sub menu_search {
             -command     => \&::hilitepopup,
         ],
         [
-            Checkbutton  => 'Highlight Quotes & Brackets',
+            Checkbutton  => 'Highlight S~urrounding Quotes & Brackets',
             -variable    => \$::nohighlights,
             -onvalue     => 1,
             -offvalue    => 0,
