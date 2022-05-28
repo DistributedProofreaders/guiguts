@@ -233,12 +233,13 @@ sub keybindings {
     keybind(
         '<Control-Alt-s>',
         sub {
+            my $rcmd = $::OS_WIN ? 'start' : $::OS_MAC ? 'open' : '';
+            return unless $rcmd;
             unless ( -e 'scratchpad.txt' ) {
                 open my $fh, '>', 'scratchpad.txt'
                   or warn "Could not create file $!";
             }
-            ::runner('start scratchpad.txt') if $::OS_WIN;
-            ::runner('open scratchpad.txt')  if $::OS_MAC;
+            ::runner( ::cmdinterp("$rcmd scratchpad.txt") );
         }
     );
 
