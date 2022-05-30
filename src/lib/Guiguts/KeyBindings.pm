@@ -229,20 +229,6 @@ sub keybindings {
     keybind( '<Alt-Left>',  sub { ::indent( $textwindow, 'out' ); } );
     keybind( '<Alt-Right>', sub { ::indent( $textwindow, 'in' ); } );
 
-    # Scratchpad
-    keybind(
-        '<Control-Alt-s>',
-        sub {
-            my $rcmd = $::OS_WIN ? 'start' : $::OS_MAC ? 'open' : '';
-            return unless $rcmd;
-            unless ( -e 'scratchpad.txt' ) {
-                open my $fh, '>', 'scratchpad.txt'
-                  or warn "Could not create file $!";
-            }
-            ::runner( ::cmdinterp("$rcmd scratchpad.txt") );
-        }
-    );
-
     # Help
     keybind( '<Control-Alt-r>', sub { ::display_manual("regexref"); } );
 
