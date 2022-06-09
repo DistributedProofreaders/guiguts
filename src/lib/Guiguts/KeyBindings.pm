@@ -71,27 +71,18 @@ sub keybindings {
     keybind(
         '<Control-BackSpace>',
         sub {
-            $textwindow->addGlobStart;
-            my $pos = $textwindow->search( '-backwards', '-regexp', '--', '\W',
-                'insert -1c', 'insert linestart' );
-            if ($pos) {
-                $pos = "$pos +1c";
-            } else {
-                $pos = 'insert linestart';
-            }
-            $textwindow->delete( $pos, 'insert' );
-            $textwindow->addGlobEnd;
+            my $end = $textwindow->index('insert');
+            $textwindow->SetCursor('insert wordstart');
+            $textwindow->delete( 'insert', $end );
         },
         '<<BackSpaceWord>>'
     );
     keybind(
         '<Control-Delete>',
         sub {
-            $textwindow->addGlobStart;
-            my $pos = $textwindow->search( '-regexp', '--', '\W', 'insert +1c', 'insert lineend' );
-            $pos = 'insert lineend' unless $pos;
-            $textwindow->delete( 'insert', $pos );
-            $textwindow->addGlobEnd;
+            my $start = $textwindow->index('insert');
+            $textwindow->SetCursor('insert wordend');
+            $textwindow->delete( $start, 'insert' );
         },
         '<<ForwardDeleteWord>>'
     );
@@ -274,16 +265,17 @@ sub keybindings {
     keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
 
     # Override wordstart/end moves because Tk fails to safely find wordstart/end with utf-8 characters.
-    # Bindings are same as in Text.pm, except there the position argument is Ev'd with the index function.
-    # That is unnecessary because SetCursor and KeySelect can accept a non-numeric position index, and
-    # we need the words 'wordstart' or 'wordend' so that the overridden versions of those routines in
-    # TextUnicode can handle wordstart/end safely.
+    # Also bindings were inconsistent in Text.pm, meaning that moving/selecting forward/backward
+    # behaved inconsistently.
+    # Retain the words 'wordstart' and 'wordend' for ease of comparison, though not totally accurate
+    # with the modern algorithm. A better description would be "wordforward" and "word backward".
+    # See TextUnicode.pm for more details
     $textwindow->MainWindow->bind( 'TextUnicode', '<Control-Left>',
-        [ 'SetCursor', 'insert-1c wordstart' ] );
+        [ 'SetCursor', 'insert wordstart' ] );
     $textwindow->MainWindow->bind( 'TextUnicode', '<Shift-Control-Left>',
-        [ 'KeySelect', 'insert-1c wordstart' ] );
+        [ 'KeySelect', 'insert wordstart' ] );
     $textwindow->MainWindow->bind( 'TextUnicode', '<Control-Right>',
-        [ 'SetCursor', 'insert+1c wordend' ] );
+        [ 'SetCursor', 'insert wordend' ] );
     $textwindow->MainWindow->bind( 'TextUnicode', '<Shift-Control-Right>',
         [ 'KeySelect', 'insert wordend' ] );
 

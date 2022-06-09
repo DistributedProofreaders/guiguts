@@ -390,10 +390,10 @@ sub SelectTo {
         }
     } elsif ( $mode eq 'word' ) {
         if ( $w->compare( $cur, '<', 'anchor' ) ) {
-            $first = $w->index( $w->safeword("$cur wordstart") );
+            $first = $w->index( $w->safeword("$cur + 1c wordstart") );
             $last  = $w->index( $w->safeword('anchor - 1c wordend') );
         } else {
-            $first = $w->index( $w->safeword('anchor wordstart') );
+            $first = $w->index( $w->safeword('anchor + 1c wordstart') );
             $last  = $w->index( $w->safeword("$cur wordend") );
         }
     } elsif ( $mode eq 'line' ) {
@@ -518,29 +518,100 @@ sub KeySelect {
 # of the start or end of the word - internal Tk processing of these
 # fails with some Unicode strings - either treating an accented character as a
 # non-word character, or giving "Malformed UTF-8 character" errors
+#
+# Note this version interprets "wordend" as the beginning of the next word,
+# not the end of the current word since this is more common in modern editors
+#
+# A sequence of word characters counts as a "word", as does a sequence of
+# non-word non-space characters. Apostrophes count as word characters
+#
+# Start & end of line always count as word breaks
 sub safeword {
     my $w   = shift;
     my $pos = shift;
+    my $new = '';
 
+    # Word characters include straight & curly apostrophes, although this means
+    # that close single quotes also count as word characters.
+    # The most widely-used word processor displays the same behavior
+    my $REGWORD = "[\\w'\x{2019}]";
+    my $REGNONW = "[^\\w'\x{2019}]";
+
+    # Backward
     if ( $pos =~ s/ wordstart// ) {
-        my $startch = $w->get($pos);
-        return $w->index("$pos") if ( $startch =~ '\W' );    # already at a non-word character
 
-        # Find first non-word character backwards on the current line, then step forward one
-        my $start = $w->search( '-backwards', '-regexp', '--', '\W', "$pos", "$pos linestart" );
-        $start = $w->index("$start + 1c") if $start;
-        $start = $w->index("$pos linestart") unless $start;    # word was at start of line
-        return $start;
-    } elsif ( $pos =~ s/ wordend// ) {
-        return 'end-1c' if $w->compare( $pos, '>=', 'end-1c' );    # don't try to go beyond the end
+        # If already at start of file, stay there
+        if ( $w->compare( $pos, '<=', '1.0' ) ) {
+            $new = '1.0';
+        }
 
-        my $endch = $w->get($pos);
-        return $w->index("$pos + 1c") if ( $endch =~ '\W' );       # already at a non-word character
+        # If at start of line return end of previous line
+        elsif ( $w->compare( $pos, '==', "$pos linestart" ) ) {
+            $new = $w->index("$pos - 1l lineend");
 
-        # Find first non-word character forwards on the current line
-        my $end = $w->search( '-regexp', '--', '\W', "$pos", "$pos lineend" );
-        $end = $w->index("$pos lineend") unless $end;              # word was at end of line
-        return $end;
+        } else {
+            my $ch = $w->get("$pos - 1c");    # get character before insert position
+
+            # If after space, skip spaces and resample non-space character
+            if ( $ch =~ ' ' ) {
+                $new = $w->search( '-regexp', '-backwards', '--', '[^ ]', "$pos - 1c",
+                    "$pos linestart" );    # Trap later if all space to start of line (i.e. $new undefined)
+                $ch = $w->get($new) if $new;
+            } else {
+                $new = $w->index("$pos - 1c");
+            }
+
+            # Find start of sequence of word or non-word characters by searching
+            # back for the opposite character (non-word or word) or a space
+            # If none found, return start of line
+            if ($new) {
+                my $reg = $w->get($new) =~ $REGWORD ? $REGNONW : $REGWORD;
+                $new =
+                  $w->search( '-regexp', '-backwards', '--', "($reg| )", $new, "$pos linestart" );
+                $new = $w->index("$new + 1c")      if $new;
+                $new = $w->index("$pos linestart") if not $new;
+            }
+
+            # All space to start of line ($new undefined) - return start of line
+            else {
+                $new = $w->index("$pos linestart");
+            }
+        }
+        return $new;
+    }
+
+    # Forward
+    elsif ( $pos =~ s/ wordend// ) {
+        my $ch = $w->get($pos);    # get character after insert position
+
+        # If already at end of file, stay there
+        if ( $w->compare( $pos, '>=', 'end-1c' ) ) {
+            $new = 'end-1c';
+        }
+
+        # If at end of line return start of next line,
+        elsif ( $w->compare( $pos, '==', "$pos lineend" ) ) {
+            $new = $w->index("$pos + 1l linestart") if not $new;
+        }
+
+        # If before space, return next non-space on this line,
+        # or return end of line
+        elsif ( $ch =~ ' ' ) {
+            $new = $w->search( '-regexp', '--', '[^ ]', "$pos", "$pos lineend" );
+            $new = $w->index("$pos lineend") if not $new;
+        }
+
+        # Must be before non-space character
+        # Find end of sequence of word or non-word characters by searching
+        # for the opposite character (non-word or word) or a space
+        # Then skip spaces
+        else {
+            my $reg = $ch =~ $REGWORD ? $REGNONW : $REGWORD;
+            $new = $w->search( '-regexp', '--', "($reg| )", "$pos", "$pos lineend" );
+            $new = $w->search( '-regexp', '--', '[^ ]',     "$new", "$pos lineend" ) if $new;
+            $new = $w->index("$pos lineend") if not $new;
+        }
+        return $new;
     }
 
     # Neither wordstart nor wordend was specified
