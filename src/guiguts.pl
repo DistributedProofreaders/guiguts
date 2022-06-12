@@ -121,6 +121,7 @@ our $charsuitewfhighlight = 0;                  # Don't do charsuite availabilit
 our $composepopbinding    = 'Alt_R';            # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
 $composepopbinding = 'Control-m' if $OS_MAC;    # Default to Ctrl+m on a Mac - Alt+RightArrow does the same indent operation
 our %composehash;                               # Keystrokes to insert character
+our %composehelp;                               # Optional help text to identify character
 our $cssvalidationlevel  = 'css3';              # CSS level checked by validator (css3 or css21)
 our $defaultindent       = 2;
 our $epubpercentoverride = 1;                   # True = override % img widths to 100% for epubs
