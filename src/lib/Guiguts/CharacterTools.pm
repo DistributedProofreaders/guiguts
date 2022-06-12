@@ -718,36 +718,41 @@ sub composekeyaction {
 #
 # Initialise hash of compose keystrokes to characters
 sub composeinitialize {
-    composeinitaccent( 'À',       'à',      'A', '`',  '\\' );
-    composeinitaccent( 'Á',       'á',      'A', '\'', '/' );
-    composeinitaccent( 'Â',       'â',      'A', '^' );
-    composeinitaccent( 'Ã',       'ã',      'A', '~' );
-    composeinitaccent( 'Ä',       'ä',      'A', '"',  ':' );
-    composeinitaccent( 'Å',       'å',      'A', 'o',  '*' );
-    composeinitaccent( 'È',       'è',      'E', '`',  '\\' );
-    composeinitaccent( 'É',       'é',      'E', '\'', '/' );
-    composeinitaccent( 'Ê',       'ê',      'E', '^' );
-    composeinitaccent( 'Ë',       'ë',      'E', '"',  ':' );
-    composeinitaccent( 'Ì',       'ì',      'I', '`',  '\\' );
-    composeinitaccent( 'Í',       'í',      'I', '\'', '/' );
-    composeinitaccent( 'Î',       'î',      'I', '^' );
-    composeinitaccent( 'Ï',       'ï',      'I', '"', ':' );
-    composeinitaccent( 'Ò',       'ò',      'O', '`', '\\' );
-    composeinitaccent( 'Ó',       'ó',      'O', '\'' );
-    composeinitaccent( 'Ô',       'ô',      'O', '^' );
-    composeinitaccent( 'Õ',       'õ',      'O', '~' );
-    composeinitaccent( 'Ö',       'ö',      'O', '"', ':' );
-    composeinitaccent( 'Ø',       'ø',      'O', '/' );
-    composeinitaccent( 'Ù',       'ù',      'U', '`',  '\\' );
-    composeinitaccent( 'Ú',       'ú',      'U', '\'', '/' );
-    composeinitaccent( 'Û',       'û',      'U', '^' );
-    composeinitaccent( 'Ü',       'ü',      'U', '"', ':' );
-    composeinitaccent( 'Ç',       'ç',      'C', ',' );
-    composeinitaccent( 'Ñ',       'ñ',      'N', '~' );
-    composeinitaccent( "\x{178}", 'ÿ',      'Y', '"',  ':' );
-    composeinitaccent( 'Ý',       'ý',      'Y', '\'', '/' );
-    composeinitaccent( "\x{A3}",  "\x{A3}", 'L', '/',  '\\' );          # pound
-    composeinitaccent( "\x{A2}",  "\x{A2}", 'C', '/',  '|' );           # cent
+    composeinitaccent( 'À',       'à',       'A', '`',  '\\' );
+    composeinitaccent( 'Á',       'á',       'A', '\'', '/' );
+    composeinitaccent( 'Â',       'â',       'A', '^' );
+    composeinitaccent( 'Ã',       'ã',       'A', '~' );
+    composeinitaccent( 'Ä',       'ä',       'A', '"',  ':' );
+    composeinitaccent( 'Å',       'å',       'A', 'o',  '*' );
+    composeinitaccent( "\x{100}", "\x{101}", 'A', '-',  '=' );
+    composeinitaccent( 'È',       'è',       'E', '`',  '\\' );
+    composeinitaccent( 'É',       'é',       'E', '\'', '/' );
+    composeinitaccent( 'Ê',       'ê',       'E', '^' );
+    composeinitaccent( 'Ë',       'ë',       'E', '"',  ':' );
+    composeinitaccent( "\x{112}", "\x{113}", 'E', '-',  '=' );
+    composeinitaccent( 'Ì',       'ì',       'I', '`',  '\\' );
+    composeinitaccent( 'Í',       'í',       'I', '\'', '/' );
+    composeinitaccent( 'Î',       'î',       'I', '^' );
+    composeinitaccent( 'Ï',       'ï',       'I', '"', ':' );
+    composeinitaccent( "\x{12a}", "\x{12b}", 'I', '-', '=' );
+    composeinitaccent( 'Ò',       'ò',       'O', '`', '\\' );
+    composeinitaccent( 'Ó',       'ó',       'O', '\'' );
+    composeinitaccent( 'Ô',       'ô',       'O', '^' );
+    composeinitaccent( 'Õ',       'õ',       'O', '~' );
+    composeinitaccent( 'Ö',       'ö',       'O', '"', ':' );
+    composeinitaccent( 'Ø',       'ø',       'O', '/' );
+    composeinitaccent( "\x{14c}", "\x{14d}", 'O', '-',  '=' );
+    composeinitaccent( 'Ù',       'ù',       'U', '`',  '\\' );
+    composeinitaccent( 'Ú',       'ú',       'U', '\'', '/' );
+    composeinitaccent( 'Û',       'û',       'U', '^' );
+    composeinitaccent( 'Ü',       'ü',       'U', '"', ':' );
+    composeinitaccent( "\x{16a}", "\x{16b}", 'U', '-', '=' );
+    composeinitaccent( 'Ç',       'ç',       'C', ',' );
+    composeinitaccent( 'Ñ',       'ñ',       'N', '~' );
+    composeinitaccent( "\x{178}", 'ÿ',       'Y', '"',  ':' );
+    composeinitaccent( 'Ý',       'ý',       'Y', '\'', '/' );
+    composeinitaccent( "\x{A3}",  "\x{A3}",  'L', '/',  '\\' );         # pound
+    composeinitaccent( "\x{A2}",  "\x{A2}",  'C', '/',  '|' );          # cent
     composeinitchars( "\x{BD}",   '1/2' );                              # 1/2
     composeinitchars( "\x{2153}", '1/3' );                              # 1/3
     composeinitchars( "\x{2154}", '2/3' );                              # 1/3
@@ -811,9 +816,9 @@ sub composeinitialize {
     composeinithelp( "\x{0302}", "Combining circumflex" );
     composeinitcombining( "\x{0303}", '~' );                            # combining tilde
     composeinithelp( "\x{0303}", "Combining tilde" );
-    composeinitcombining( "\x{0304}", '-' );                            # combining macron
+    composeinitcombining( "\x{0304}", '-', '=' );                       # combining macron
     composeinithelp( "\x{0304}", "Combining macron" );
-    composeinitcombining( "\x{0306}", 'b' );                            # combining breve
+    composeinitcombining( "\x{0306}", ')' );                            # combining breve
     composeinithelp( "\x{0306}", "Combining breve" );
     composeinitcombining( "\x{0307}", '.' );                            # combining dot above
     composeinithelp( "\x{0307}", "Combining dot above" );
@@ -821,9 +826,9 @@ sub composeinitialize {
     composeinithelp( "\x{0308}", "Combining diaresis" );
     composeinitcombining( "\x{0309}", '?' );                            # combining hook above
     composeinithelp( "\x{0309}", "Combining hook above" );
-    composeinitcombining( "\x{030a}", 'o' );                            # combining ring above
+    composeinitcombining( "\x{030a}", 'o', 'O', '*' );                  # combining ring above
     composeinithelp( "\x{030a}", "Combining ring above" );
-    composeinitcombining( "\x{030c}", 'c' );                            # combining caron
+    composeinitcombining( "\x{030c}", 'v', 'V' );                       # combining caron
     composeinithelp( "\x{030c}", "Combining caron" );
     composeinitcombining( "\x{0328}", ',' );                            # combining ogonek
     composeinithelp( "\x{0328}", "Combining ogonek" );
@@ -837,6 +842,7 @@ sub composeinitialize {
     composeinitcase( "\x{2021}", "\x{2021}", 'DDAG' );                  # double dagger
     composeinitcase( "\x{A7}",   "\x{A7}",   'SEC', 'S*', '*S' );       # section
     composeinitcase( "\x{B6}",   "\x{B6}",   'PIL', 'P*', '*P' );       # pilcrow
+    composeinitcase( "\x{17F}",  "\x{17F}",  'SF',  'sf' );             # long s
     composegreekalphabet( "\x{391}", "\x{3b1}", 'ABGDEZHQIKLMNXOPRJSTUFCYW' );
     composegreekaccent( "\x{1FBA}", "\x{1F70}", 'A' );
     composegreekaccent( "\x{1FC8}", "\x{1F72}", 'E' );
@@ -960,10 +966,10 @@ sub composegreekalphabet {
     my $term     = "\n";         # Sequences require terminating with Enter/OK if betacode ordering is used
 
     for my $ch ( split( //, $alphabet ) ) {
-        $::composehash{"=$ch"} = $::composehash{"-$ch$term"} = chr( $ustart++ );
+        $::composehash{"=$ch"} = $::composehash{"#$ch$term"} = chr( $ustart++ );
     }
     for my $ch ( split( //, lc $alphabet ) ) {
-        $::composehash{"=$ch"} = $::composehash{"-$ch$term"} = chr( $lstart++ );
+        $::composehash{"=$ch"} = $::composehash{"#$ch$term"} = chr( $lstart++ );
     }
 }
 
@@ -982,21 +988,21 @@ sub composegreekaccent {
 
     # Uppercase
     if ($iota) {                         # Either accents or iota, not both for uppercase
-        $::composehash{"=$iota$base"} = $::composehash{"=$base$iota$term"} = chr( $ustart++ );
+        $::composehash{"=$iota$base"} = $::composehash{"#$base$iota$term"} = chr( $ustart++ );
     } else {
-        $::composehash{"=`$base"} = $::composehash{"=\\$base"} = $::composehash{"-$base`$term"} =
-          $::composehash{"-$base\\$term"} = chr( $ustart++ );
-        $::composehash{"='$base"} = $::composehash{"=/$base"} = $::composehash{"-$base'$term"} =
-          $::composehash{"-$base/$term"} = chr( $ustart++ );
+        $::composehash{"=`$base"} = $::composehash{"=\\$base"} = $::composehash{"#$base`$term"} =
+          $::composehash{"#$base\\$term"} = chr( $ustart++ );
+        $::composehash{"='$base"} = $::composehash{"=/$base"} = $::composehash{"#$base'$term"} =
+          $::composehash{"#$base/$term"} = chr( $ustart++ );
     }
 
     # Lowercase
     $base = lc $base;
     $::composehash{"=`$iota$base"} = $::composehash{"=\\$iota$base"} =
-      $::composehash{"-$base`$iota$term"} = $::composehash{"-$base\\$iota$term"} = chr( $lstart++ );
-    $::composehash{"=$iota$base"}  = $::composehash{"-$base$iota$term"} = chr( $lstart++ ) if $iota;
+      $::composehash{"#$base`$iota$term"} = $::composehash{"#$base\\$iota$term"} = chr( $lstart++ );
+    $::composehash{"=$iota$base"}  = $::composehash{"#$base$iota$term"} = chr( $lstart++ ) if $iota;
     $::composehash{"='$iota$base"} = $::composehash{"=/$iota$base"} =
-      $::composehash{"-$base'$iota$term"} = $::composehash{"-$base/$iota$term"} = chr( $lstart++ );
+      $::composehash{"#$base'$iota$term"} = $::composehash{"#$base/$iota$term"} = chr( $lstart++ );
 }
 
 #
@@ -1013,25 +1019,25 @@ sub composegreekbreathing {
     my $lbase = lc $ubase;
 
     for my $base ( $lbase, $ubase ) {
-        $::composehash{"=)$iota$base"}  = $::composehash{"-$base)$iota$term"} = chr( $start++ );
-        $::composehash{"=($iota$base"}  = $::composehash{"-$base($iota$term"} = chr( $start++ );
+        $::composehash{"=)$iota$base"}  = $::composehash{"#$base)$iota$term"} = chr( $start++ );
+        $::composehash{"=($iota$base"}  = $::composehash{"#$base($iota$term"} = chr( $start++ );
         $::composehash{"=)`$iota$base"} = $::composehash{"=)\\$iota$base"} =
-          $::composehash{"-$base)`$iota$term"} = $::composehash{"-$base)\\$iota$term"} =
+          $::composehash{"#$base)`$iota$term"} = $::composehash{"#$base)\\$iota$term"} =
           chr( $start++ );
         $::composehash{"=(`$iota$base"} = $::composehash{"=(\\$iota$base"} =
-          $::composehash{"-$base(`$iota$term"} = $::composehash{"-$base(\\$iota$term"} =
+          $::composehash{"#$base(`$iota$term"} = $::composehash{"#$base(\\$iota$term"} =
           chr( $start++ );
         $::composehash{"=)'$iota$base"} = $::composehash{"=)/$iota$base"} =
-          $::composehash{"-$base)'$iota$term"} = $::composehash{"-$base)/$iota$term"} =
+          $::composehash{"#$base)'$iota$term"} = $::composehash{"#$base)/$iota$term"} =
           chr( $start++ );
         $::composehash{"=('$iota$base"} = $::composehash{"=(/$iota$base"} =
-          $::composehash{"-$base('$iota$term"} = $::composehash{"-$base(/$iota$term"} =
+          $::composehash{"#$base('$iota$term"} = $::composehash{"#$base(/$iota$term"} =
           chr( $start++ );
         $::composehash{"=)^$iota$base"} = $::composehash{"=)~$iota$base"} =
-          $::composehash{"-$base)^$iota$term"} = $::composehash{"-$base)~$iota$term"} =
+          $::composehash{"#$base)^$iota$term"} = $::composehash{"#$base)~$iota$term"} =
           chr( $start++ );
         $::composehash{"=(^$iota$base"} = $::composehash{"=(~$iota$base"} =
-          $::composehash{"-$base(^$iota$term"} = $::composehash{"-$base(~$iota$term"} =
+          $::composehash{"#$base(^$iota$term"} = $::composehash{"#$base(~$iota$term"} =
           chr( $start++ );
     }
 }
