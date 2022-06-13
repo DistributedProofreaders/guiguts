@@ -475,6 +475,7 @@ sub menu_tools_charactertools {
             -accelerator => 'AltGr / Ctrl+m',
             -command     => \&::composepopup
         ],
+        [ 'command',   '~Normalize Selected Characters', -command => \&::utfcharnormalize ],
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],
         [ 'command',   'Find and ~Convert Greek...', -command => \&::findandextractgreek ],

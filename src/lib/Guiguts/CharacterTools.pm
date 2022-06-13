@@ -3,13 +3,14 @@ use strict;
 use warnings;
 
 use Unicode::UCD 'prop_invmap';
+use Unicode::Normalize;
 
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup &cp1252toUni
-      &composepopup  &composeinitialize &composeref &fractionconvert);
+      &composepopup  &composeinitialize &composeref &fractionconvert &utfcharnormalize);
 }
 
 #
@@ -1182,6 +1183,27 @@ sub fractionconvert {
         } else {
             $start .= "+${length}c";                        # Step over skipped fraction
         }
+    }
+    $textwindow->addGlobEnd;
+}
+
+#
+# Normalize selected characters into Unicode Normalization Form C
+sub utfcharnormalize {
+    my $textwindow  = $::textwindow;
+    my @ranges      = $textwindow->tagRanges('sel');
+    my $range_total = @ranges;
+
+    return if $range_total == 0;
+
+    $textwindow->addGlobStart;
+    while (@ranges) {
+        my $end            = pop(@ranges);
+        my $start          = pop(@ranges);
+        my $thisblockstart = $start;
+        my $thisblockend   = $end;
+        my $nfc_text       = NFC( $textwindow->get( $thisblockstart, $thisblockend ) );
+        $textwindow->replacewith( $start, $end, $nfc_text );
     }
     $textwindow->addGlobEnd;
 }
