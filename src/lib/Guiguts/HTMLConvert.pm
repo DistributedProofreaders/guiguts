@@ -1088,8 +1088,8 @@ sub html_convert_footnoteblocks {
         while (1) {
 
             # Find the next </div>
-            my $endoflastfootnoteinblock =
-              $textwindow->search( '-exact', '--', '</div>', $endoflastfootnoteinblock );
+            $endoflastfootnoteinblock =
+              $textwindow->search( '-exact', '--', '</div>', "$endoflastfootnoteinblock+1c" );
             if ($endoflastfootnoteinblock) {
 
                 # Get 8 characters before </div> in case of blank lines between </p> and </div>
