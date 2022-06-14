@@ -809,29 +809,44 @@ sub composeinitialize {
     composeinitsyms( "\x{AA}", 'a', '_' );                              # feminine ordinal
     composeinithelp( "\x{AA}", "Feminine ordinal" );
     composeinitsyms( "\x{2016}", '|', '|' );                            # double vertical line
-    composeinitcombining( "\x{0300}", '\\', '`' );                      # combining grave
-    composeinithelp( "\x{0300}", "Combining grave" );
-    composeinitcombining( "\x{0301}", '/', '\'' );                      # combining acute
-    composeinithelp( "\x{0301}", "Combining acute" );
-    composeinitcombining( "\x{0302}", '^' );                            # combining circumflex
-    composeinithelp( "\x{0302}", "Combining circumflex" );
-    composeinitcombining( "\x{0303}", '~' );                            # combining tilde
-    composeinithelp( "\x{0303}", "Combining tilde" );
-    composeinitcombining( "\x{0304}", '-', '=' );                       # combining macron
-    composeinithelp( "\x{0304}", "Combining macron" );
-    composeinitcombining( "\x{0306}", ')' );                            # combining breve
-    composeinithelp( "\x{0306}", "Combining breve" );
-    composeinitcombining( "\x{0307}", '.' );                            # combining dot above
+    composeinitcombboth( "\x{0300}", "\x{0316}", '\\', '`' );           # combining grave
+    composeinithelp( "\x{0300}", "Combining grave above" );
+    composeinithelp( "\x{0316}", "Combining grave below" );
+    composeinitcombboth( "\x{0301}", "\x{0317}", '/', '\'' );           # combining acute
+    composeinithelp( "\x{0301}", "Combining acute above" );
+    composeinithelp( "\x{0317}", "Combining acute below" );
+    composeinitcombboth( "\x{0302}", "\x{032D}", '^' );                 # combining circumflex
+    composeinithelp( "\x{0302}", "Combining circumflex above" );
+    composeinithelp( "\x{032D}", "Combining circumflex below" );
+    composeinitcombboth( "\x{0303}", "\x{0330}", '~' );                 # combining tilde
+    composeinithelp( "\x{0303}", "Combining tilde above" );
+    composeinithelp( "\x{0330}", "Combining tilde below" );
+    composeinitcombboth( "\x{0304}", "\x{0331}", '-', '=' );            # combining macron
+    composeinithelp( "\x{0304}", "Combining macron above" );
+    composeinithelp( "\x{0331}", "Combining macron below" );
+    composeinitcombboth( "\x{0306}", "\x{032E}", ')' );                 # combining breve
+    composeinithelp( "\x{0306}", "Combining breve above" );
+    composeinithelp( "\x{032E}", "Combining breve below" );
+    composeinitcombboth( "\x{0311}", "\x{032F}", '(' );                 # combining inverted breve
+    composeinithelp( "\x{0311}", "Combining inverted breve above" );
+    composeinithelp( "\x{032F}", "Combining inverted breve below" );
+    composeinitcombboth( "\x{0307}", "\x{0323}", '.' );                 # combining dot
     composeinithelp( "\x{0307}", "Combining dot above" );
-    composeinitcombining( "\x{0308}", ':', '"' );                       # combining diaresis
-    composeinithelp( "\x{0308}", "Combining diaresis" );
-    composeinitcombining( "\x{0309}", '?' );                            # combining hook above
+    composeinithelp( "\x{0323}", "Combining dot below" );
+    composeinitcombboth( "\x{0308}", "\x{0324}", ':', '"' );            # combining diaeresis
+    composeinithelp( "\x{0308}", "Combining diaeresis above" );
+    composeinithelp( "\x{0324}", "Combining diaeresis below" );
+    composeinitcombabove( "\x{0309}", '?' );                            # combining hook above
     composeinithelp( "\x{0309}", "Combining hook above" );
-    composeinitcombining( "\x{030a}", 'o', 'O', '*' );                  # combining ring above
-    composeinithelp( "\x{030a}", "Combining ring above" );
-    composeinitcombining( "\x{030c}", 'v', 'V' );                       # combining caron
-    composeinithelp( "\x{030c}", "Combining caron" );
-    composeinitcombining( "\x{0328}", ',' );                            # combining ogonek
+    composeinitcombboth( "\x{030A}", "\x{0325}", 'o', 'O', '*' );       # combining ring
+    composeinithelp( "\x{030A}", "Combining ring above" );
+    composeinithelp( "\x{0325}", "Combining ring below" );
+    composeinitcombboth( "\x{030C}", "\x{032C}", 'v', 'V' );            # combining caron
+    composeinithelp( "\x{030C}", "Combining caron above" );
+    composeinithelp( "\x{032C}", "Combining caron below" );
+    composeinitcombbelow( "\x{0327}", ',' );                            # combining cedilla
+    composeinithelp( "\x{0327}", "Combining cedilla" );
+    composeinitcombbelow( "\x{0328}", ';' );                            # combining ogonek
     composeinithelp( "\x{0328}", "Combining ogonek" );
     composeinitcase( 'Æ',        'æ',        'AE' );                    # ae ligature
     composeinitcase( "\x{152}",  "\x{153}",  'OE' );                    # oe ligature
@@ -942,17 +957,48 @@ sub composeinitsyms {
 }
 
 #
-# Add compose sequences for combining characters - introduced with plus sign
+# Add compose sequences for combining characters above the base character - introduced with plus sign
 # First argument is character to create
 # Second and subsequent are compose characters to follow plus sign
-# E.g. given combining diaresis, ':' and '"', it will create
-# '+:' and '+"' to generate the combining diaresis character
-sub composeinitcombining {
+# E.g. given combining diaeresis, ':' and '"', it will create
+# '+:' and '+"' to generate the combining diaeresis character
+sub composeinitcombabove {
     my $comb = shift;
 
     while ( my $chr = shift ) {
         $::composehash{"+$chr"} = $comb;
     }
+}
+
+#
+# Add compose sequences for combining characters below the base character - introduced with underscore
+# First argument is character to create
+# Second and subsequent are compose characters to follow underscore sign
+# E.g. given combining cedilla, and ',', it will create
+# '_,' to generate the combining cedilla character
+sub composeinitcombbelow {
+    my $comb = shift;
+
+    while ( my $chr = shift ) {
+        $::composehash{"_$chr"} = $comb;
+    }
+}
+
+#
+# Add compose sequences for combining characters above and below the base character
+# Above is introduced with plus; below is introduced with underscore
+# First argument is "above" character to create
+# Second argument is "below" character to create
+# Third and subsequent are compose characters to follow plus/underscore sign
+# E.g. given combining diaeresis above, combining diaeresis below, ':' and '"', it will create
+# '+:' and '+"' to generate the combining diaeresis above character and
+# '_:' and '_"' to generate the combining diaeresis below character
+sub composeinitcombboth {
+    my $above = shift;
+    my $below = shift;
+
+    composeinitcombabove( $above, @_ );
+    composeinitcombbelow( $below, @_ );
 }
 
 #
