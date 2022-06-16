@@ -191,7 +191,7 @@ sub html_convert_footnotes {
 }
 
 sub html_convert_body {
-    my ( $textwindow, $headertext, $cssblockmarkup, $poetrynumbers ) = @_;
+    my ( $textwindow, $headertext, $poetrynumbers ) = @_;
 
     #outline of subroutine: make a single pass through all lines $selection
     # with the last four lines stored in @last5
@@ -261,19 +261,10 @@ sub html_convert_body {
     my $step             = 1;
     my ( $ler, $lec );
     $thisblockend = $textwindow->index('end');
-    my ( $blkopen, $blkclose );
     my $blkcenter = 0;
     my $blkright  = 0;
     my $blkrstart = 0;    # Value of $step when a block right starts
     my @blkrlens  = ();
-
-    if ($cssblockmarkup) {
-        $blkopen  = '<div class="blockquot"><p>';
-        $blkclose = '</p></div>';
-    } else {
-        $blkopen  = '<blockquote><p>';
-        $blkclose = '</p></blockquote>';
-    }
 
     ::hidelinenumbers();    # To speed updating of text window
 
@@ -533,9 +524,9 @@ sub html_convert_body {
             $step++;
             $selection = $textwindow->get( "$step.0", "$step.end" );
             $selection =~ s/^\s+//;
-            my $blkopencopy = $blkopen;
+            my $blkopencopy = '<blockquote><p>';    # Switched to <div> in wrapup routine if necessary
             if ( $selection =~ m|^/[\*\$rc]|i ) {
-                $selection = "\n$selection";    # catch /* /r or /c immediately following /#
+                $selection = "\n$selection";        # catch /* /r or /c immediately following /#
                 $blkopencopy =~ s/<p>//;
             }
             $textwindow->ntdelete( "$step.0", "$step.end" );
@@ -581,7 +572,7 @@ sub html_convert_body {
         # close blockquote #/
         if ( $selection =~ /^\#\// ) {
             $blkquot = 0;
-            my $blkclosecopy = $blkclose;
+            my $blkclosecopy = '</p></blockquote>';    # Switched to </div> in wrapup routine if necessary
             $blkclosecopy =~ s|</p>||
               unless is_paragraph_open( $textwindow, ( $step - 1 ) . '.end' );
             $textwindow->ntinsert( ( $step - 1 ) . '.end', $blkclosecopy );
@@ -1450,7 +1441,7 @@ sub get_title_author {
 }
 
 sub html_wrapup {
-    my ( $textwindow, $headertext, $autofraction ) = @_;
+    my ( $textwindow, $headertext, $autofraction, $cssblockmarkup ) = @_;
     my $thisblockstart;
     ::fracconv( $textwindow, '1.0', 'end' ) if $autofraction;
     $textwindow->ntinsert( '1.0', $headertext );
@@ -1472,6 +1463,10 @@ sub html_wrapup {
     ::named( '><hr',              ">\n\n<hr" );
     ::named( '</p></div>',        "</p>\n</div>" );
     ::named( '</p></blockquote>', "</p>\n</blockquote>" );
+
+    # switch blockquotes to divs with CSS if option selected by user during autogeneration
+    ::named( '<blockquote>',  '<div class="blockquot">' ) if $cssblockmarkup;
+    ::named( '</blockquote>', '</div>' )                  if $cssblockmarkup;
 
     # Output poetry indent CSS.
     # Find end of CSS, then search back for end of last class definition
@@ -2045,11 +2040,7 @@ sub htmlautoconvert {
     $::lglobal{fnsecondpass}  = 0;
     $::lglobal{fnsearchlimit} = 1;
     html_convert_footnotes( $textwindow, $::lglobal{fnarray} );
-    html_convert_body(
-        $textwindow, $headertext,
-        $::lglobal{cssblockmarkup},
-        $::lglobal{poetrynumbers}
-    );
+    html_convert_body( $textwindow, $headertext, $::lglobal{poetrynumbers} );
     html_convert_emdashes();
     html_cleanup_markers($textwindow);
     html_convert_underscoresmallcaps($textwindow);
@@ -2061,7 +2052,7 @@ sub htmlautoconvert {
     html_convert_sidenotes($textwindow);
     html_convert_pageanchors();
     html_convert_chapterdivs($textwindow);    # after page anchors, so they can be included in div
-    html_wrapup( $textwindow, $headertext, $::lglobal{autofraction} );
+    html_wrapup( $textwindow, $headertext, $::lglobal{autofraction}, $::lglobal{cssblockmarkup} );
     $textwindow->ResetUndo;
     ::setedited(1);
 }
