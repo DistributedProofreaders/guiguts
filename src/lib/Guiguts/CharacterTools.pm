@@ -1236,20 +1236,16 @@ sub fractionconvert {
 #
 # Normalize selected characters into Unicode Normalization Form C
 sub utfcharnormalize {
-    my $textwindow  = $::textwindow;
-    my @ranges      = $textwindow->tagRanges('sel');
-    my $range_total = @ranges;
-
-    return if $range_total == 0;
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
 
     $textwindow->addGlobStart;
     while (@ranges) {
-        my $end            = pop(@ranges);
-        my $start          = pop(@ranges);
-        my $thisblockstart = $start;
-        my $thisblockend   = $end;
-        my $nfc_text       = NFC( $textwindow->get( $thisblockstart, $thisblockend ) );
-        $textwindow->replacewith( $start, $end, $nfc_text );
+        my $end       = pop(@ranges);
+        my $start     = pop(@ranges);
+        my $orig_text = $textwindow->get( $start, $end );
+        my $nfc_text  = NFC($orig_text);
+        $textwindow->replacewith( $start, $end, $nfc_text ) if $orig_text ne $nfc_text;
     }
     $textwindow->addGlobEnd;
 }
