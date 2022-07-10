@@ -2442,10 +2442,13 @@ sub poetrynumbers {
     }
 }
 
+#
+# Accepts an optional index to find the page number at that index
+# Otherwise returns page number at index of the current insert position
 sub get_page_number {
     my $textwindow = $::textwindow;
     my $pnum;
-    my $markindex = $textwindow->index('insert');
+    my $markindex = shift // $textwindow->index('insert');
     my $mark      = $textwindow->markPrevious($markindex);
     while ($mark) {
         if ( $mark =~ /Pg(\S+)/ ) {

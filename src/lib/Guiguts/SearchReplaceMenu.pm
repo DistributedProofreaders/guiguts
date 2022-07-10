@@ -707,6 +707,14 @@ sub replaceeval {
     my ( $m1,         $m2,     $m3,     $m4,     $m5,     $m6,     $m7,     $m8 );
     my ( $cfound,     $lfound, $ufound, $tfound, $xfound, $bfound, $gfound, $afound, $rfound );
 
+    # convert \Ix (insert something) codes early, since they don't rely on the match string
+    if ( $replaceterm =~ /\\IP/ ) {    # Replace \IP with the page label of the start of the matched text
+        my $label = $::pagenumbers{ "Pg" . ::get_page_number($::searchstartindex) }{label};
+        $label =~ s/Pg //;
+        $label = "999999" if $label eq "";    # Alert PPer if no label
+        $replaceterm =~ s/\\IP/$label/g;
+    }
+
     #check for control codes before the $1 codes for text found are inserted
     $replaceterm =~ s/\\GA/\\GX/g;
     $replaceterm =~ s/\\GX/\\X/g;
