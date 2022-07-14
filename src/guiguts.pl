@@ -326,14 +326,14 @@ $lglobal{runtests} = ( @ARGV == 1 and $ARGV[0] eq 'runtests' );
 
 # We need to check @ARGV for --home now, before initialize() and readlabels()
 # are run, otherwise we'll write files in the wrong location
-if (@ARGV and $ARGV[0] eq '--home') {
+if ( @ARGV and $ARGV[0] eq '--home' ) {
     shift @ARGV;
     die "ERROR: malformed command (--home must specify a path)\n" unless @ARGV;
 
-    $lglobal{homedirectory} = ::rel2abs(shift @ARGV);
-    ::infoerror("Resolved --home to " . $lglobal{homedirectory});
+    $lglobal{homedirectory} = ::rel2abs( shift @ARGV );
+    ::infoerror( "Resolved --home to " . $lglobal{homedirectory} );
 
-    if (-e $lglobal{homedirectory}) {
+    if ( -e $lglobal{homedirectory} ) {
         die "ERROR: --home directory must be a directory\n" unless -d $lglobal{homedirectory};
     } else {
         die "ERROR: --home directory could not be created\n" unless mkdir $lglobal{homedirectory};
