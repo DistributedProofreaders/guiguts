@@ -1319,10 +1319,10 @@ sub html_parse_header {
         }
         $textwindow->ntdelete( '1.0', "$step.0 +1c" );
     } else {
-        unless ( -e 'header.txt' ) {
-            ::copy( 'headerdefault.txt', 'header.txt' );
+        unless ( -e ::catfile( $::lglobal{homedirectory}, 'header.txt' ) ) {
+            ::copy( 'headerdefault.txt', ::catfile( $::lglobal{homedirectory}, 'header.txt' ) );
         }
-        open my $infile, '<:encoding(utf8)', 'header.txt'
+        open my $infile, '<:encoding(utf8)', ::catfile( $::lglobal{homedirectory}, 'header.txt' )
           or warn "Could not open header file. $!\n";
         while ( my $line = <$infile> ) {
             $line =~ s/\cM\cJ|\cM|\cJ/\n/g;

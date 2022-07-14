@@ -523,7 +523,7 @@ sub deaccentdisplay {
 }
 
 sub readlabels {
-    my $labelfile        = ::catfile( 'data', "labels_$::booklang.rc" );
+    my $labelfile        = ::catfile( $::lglobal{homedirectory}, "labels_$::booklang.rc" );
     my $defaultlabelfile = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
     $defaultlabelfile = ::catfile( 'data', 'labels_en_default.rc' ) unless ( -e $defaultlabelfile );
     @::gcviewlang     = ();
