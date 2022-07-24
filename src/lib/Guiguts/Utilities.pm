@@ -353,9 +353,19 @@ sub path_defaulthtmlheader {
 
 sub path_labels {
 
+    my $homedirectory    = $::lglobal{homedirectory};
+    my $guigutsdirectory = $::lglobal{guigutsdirectory};
+
+    # Windows and macOS have case-insensitive filesystems. Lowercase
+    # the paths before comparing them
+    if ( $::OS_WIN or $::OS_MAC ) {
+        $homedirectory    = lc $homedirectory;
+        $guigutsdirectory = lc $guigutsdirectory;
+    }
+
     # If we're using --home (a separate data directory), then we store the
-    # labels file directly there
-    if ( $::lglobal{homedirectory} ne $::lglobal{guigutsdirectory} ) {
+    # labels file directly there, not in a subdirectory
+    if ( $homedirectory ne $guigutsdirectory ) {
         return ::catfile( $::lglobal{homedirectory}, "labels_$::booklang.rc" );
     }
 
