@@ -69,7 +69,7 @@ sub file_saveas {
         -initialfile => $initialfile,
     );
 
-    if ( defined($name) and length($name) and not bad_filename_chars($name)) {
+    if ( defined($name) and length($name) and not bad_filename_chars($name) ) {
         $::top->Busy( -recurse => 1 );
         $textwindow->SaveUTF($name);
         my ( $fname, $extension, $filevar );
@@ -81,7 +81,7 @@ sub file_saveas {
         _bin_save();
         ::_recentupdate($name);
         $::top->Unbusy( -recurse => 1 );
-        $textwindow->ResetUndo;               #necessary to reset edited flag
+        $textwindow->ResetUndo;    #necessary to reset edited flag
         ::setedited(0);
         ::update_indicators();
     }
