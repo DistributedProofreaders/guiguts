@@ -20,7 +20,8 @@ BEGIN {
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
-      &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual);
+      &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
+      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels);
 
 }
 
@@ -337,6 +338,49 @@ sub dos_path {
     return Win32::GetShortPathName( $_[0] );
 }
 
+# Return paths to common files used by the application.
+sub path_settings {
+    return ::catfile( $::lglobal{homedirectory}, 'setting.rc' );
+}
+
+sub path_htmlheader {
+    return ::catfile( $::lglobal{homedirectory}, 'header.txt' );
+}
+
+sub path_defaulthtmlheader {
+    return 'headerdefault.txt';
+}
+
+sub path_labels {
+
+    my $homedirectory    = $::lglobal{homedirectory};
+    my $guigutsdirectory = $::lglobal{guigutsdirectory};
+
+    # Windows and macOS have case-insensitive filesystems. Lowercase
+    # the paths before comparing them
+    if ( $::OS_WIN or $::OS_MAC ) {
+        $homedirectory    = lc $homedirectory;
+        $guigutsdirectory = lc $guigutsdirectory;
+    }
+
+    # If we're using --home (a separate data directory), then we store the
+    # labels file directly there, not in a subdirectory
+    if ( $homedirectory ne $guigutsdirectory ) {
+        return ::catfile( $::lglobal{homedirectory}, "labels_$::booklang.rc" );
+    }
+
+    # Otherwise it's stored in a subdirectory data/ from Guiguts' directory
+    return ::catfile( $::lglobal{guigutsdirectory}, 'data', "labels_$::booklang.rc" );
+}
+
+sub path_defaultlabels {
+    my $f = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
+    return $f if -e $f;
+
+    # Default to English if $::booklang has no defaults file
+    return ::catfile( 'data', 'labels_en_default.rc' );
+}
+
 # system(LIST)
 # (but slightly more robust, particularly on Windows).
 sub run {
@@ -523,10 +567,9 @@ sub deaccentdisplay {
 }
 
 sub readlabels {
-    my $labelfile        = ::catfile( 'data', "labels_$::booklang.rc" );
-    my $defaultlabelfile = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
-    $defaultlabelfile = ::catfile( 'data', 'labels_en_default.rc' ) unless ( -e $defaultlabelfile );
-    @::gcviewlang     = ();
+    my $labelfile        = path_labels();
+    my $defaultlabelfile = path_defaultlabels();
+    @::gcviewlang = ();
 
     # read the default values first, in case some are missing from the user file
     ::dofile($defaultlabelfile);
@@ -870,6 +913,11 @@ sub initialize {
     $::manualhash{'wfpop'}             = '/Tools_Menu#Word_Frequency';
     $::manualhash{'workpop'}           = '#Overview';
 
+    $::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) )
+      unless defined $::lglobal{guigutsdirectory};
+    $::lglobal{homedirectory} = $::lglobal{guigutsdirectory}
+      unless $::lglobal{homedirectory};
+
     ::composeinitialize();
 
     ::readsettings();
@@ -1085,9 +1133,6 @@ sub initialize {
         'Wrongspaced singlequotes',
     );
     $::gsopt[$_] = $::mygcview[$_] for 0 .. $#::mygcview;    # Use default gc/bl view settings
-
-    $::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) )
-      unless defined $::lglobal{guigutsdirectory};
 
     # Find tool locations. setdefaultpath handles differences in *nix/Windows
     # executable names and looks on the search path.

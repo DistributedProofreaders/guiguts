@@ -37,6 +37,7 @@ use File::Spec::Functions qw(catdir);
 use File::Copy;
 use File::Compare;
 use File::Which;
+use Getopt::Long;
 use HTML::Entities;
 use HTML::TokeParser;
 use Image::Size;
@@ -320,9 +321,35 @@ local $SIG{__WARN__} = \&::warnerror;
 #     warnerror($_) for @msgs;
 # }
 
-# Need to set $lglobal{runtests} before calling initialize(),
-# otherwise it will load setting.rc which could influence the test results.
-$lglobal{runtests} = ( @ARGV == 1 and $ARGV[0] eq 'runtests' );
+# Process command-line arguments before calling initialize().
+#
+# runtests must be set before initialize(), otherwise it will load
+# setting.rc which could influence the test results.
+#
+# homedirectory must be handled before initialize(), so that
+# homedirectory and guigutsdirectory are both set correctly.
+
+# Default values if not specified on command line
+$lglobal{runtests}      = 0;
+$lglobal{homedirectory} = '';
+
+GetOptions(
+    'home=s'   => \$lglobal{homedirectory},
+    'runtests' => \$lglobal{runtests}
+) or die("Error in command line arguments\n");
+
+if ( $lglobal{homedirectory} ) {
+    $lglobal{homedirectory} = ::rel2abs( $lglobal{homedirectory} );
+    ::infoerror( "Using home directory: " . $lglobal{homedirectory} );
+
+    if ( -e $lglobal{homedirectory} ) {
+        die "ERROR: --home directory must be a directory\n" unless -d $lglobal{homedirectory};
+    } else {
+        die "ERROR: --home directory could not be created\n" unless mkdir $lglobal{homedirectory};
+    }
+
+    die "ERROR: --home directory is not writeable\n" unless -w $lglobal{homedirectory};
+}
 
 initialize();    # Initialize a bunch of vars that need it.
 
@@ -343,6 +370,9 @@ $textwindow->focus;
 toolbar_toggle();
 $top->geometry($geometry) if $geometry;
 
+# Non-filename args were handled by Getopt::Long. If anything
+# is still in @ARGV it should be a filename or file position
+# reference (01, 02, etc.). A limit of 1 argument applies now.
 die "ERROR: too many files specified. \n" if ( @ARGV > 1 );
 
 if (@ARGV) {
@@ -364,8 +394,8 @@ $textwindow->CallNextGUICallback;
 $top->repeat( 200, sub { _updatesel($textwindow) } );
 
 # Ready to enter main loop
-unless ( -e 'header.txt' ) {
-    ::copy( 'headerdefault.txt', 'header.txt' );
+unless ( -e ::path_htmlheader() ) {
+    ::copy( ::path_defaulthtmlheader(), ::path_htmlheader() );
 }
 ::checkforupdatesmonthly();
 

@@ -809,12 +809,12 @@ sub readsettings {
     return if $::lglobal{runtests};    # don't want tests to be affected by a saved setting.rc file
 
     # Should be able to "do" the file if it exists
-    if ( -e 'setting.rc' ) {
-        my $result = ::dofile('setting.rc');
+    if ( -e ::path_settings() ) {
+        my $result = ::dofile( ::path_settings() );
 
         # If that fails, try to read the file and "eval" the contents
         unless ( $result and $result == 1 ) {
-            open my $file, "<", "setting.rc" or die "Could not open setting file\n";
+            open my $file, "<", ::path_settings() or die "Could not open setting file\n";
             my @file = <$file>;
             close $file;
             my $settings = '';
@@ -824,7 +824,7 @@ sub readsettings {
             # If that fails, copy so user can inspect it since setting.rc will be overwritten
             unless ( $result and $result == 1 ) {
                 warn "Copying corrupt setting.rc to setting.err\n";
-                open $file, ">", "setting.err";
+                open $file, ">", ::catfile( $::lglobal{homedirectory}, 'setting.err' );
                 print $file @file;
                 close $file;
             }
@@ -899,7 +899,7 @@ EOM
 
     #my $thispath = $0;
     #$thispath =~ s/[^\\]*$//;
-    my $savefile = ::catfile( $::lglobal{guigutsdirectory}, 'setting.rc' );
+    my $savefile = ::path_settings();
     $::geometry = $top->geometry unless $::geometry;
     if ( open my $save_handle, '>', $savefile ) {
         print $save_handle $message;

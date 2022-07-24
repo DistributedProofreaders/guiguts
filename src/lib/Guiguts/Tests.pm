@@ -11,7 +11,7 @@ BEGIN {
     @EXPORT = qw(&runtests);
 }
 
-# From the command line run "guiguts.pl runtests"
+# From the command line run "guiguts.pl --runtests"
 # Results will be reported to the command window
 sub runtests {
 
