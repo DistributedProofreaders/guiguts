@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA = qw(Exporter);
     @EXPORT =
-      qw(&file_open &file_saveas &file_savecopyas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
+      qw(&file_open &file_saveas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
       &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
       &file_import_markup &file_import_ocr &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
@@ -50,6 +50,10 @@ sub file_include {    # FIXME: Should include even if no file loaded.
     return;
 }
 
+#
+# Save file as a new name
+# With optional second argument, save copy of file as a new name,
+# but keep the name of the currently loaded file the same
 sub file_saveas {
 
     # Temporarily disable autosave - don't want that to happen part way through saving
@@ -58,13 +62,15 @@ sub file_saveas {
     ::reset_autosave();
 
     my $textwindow = shift;
+    my $saveacopy  = shift;    # If set, then save a copy
+
     ::hidepagenums();
     my $initialfile = '';
     $initialfile = $::lglobal{global_filename}
       unless ( $::lglobal{global_filename} =~ m/No File Loaded/ );
     $initialfile =~ s|.*/([^/]*)$|$1|;
     my $name = $textwindow->getSaveFile(
-        -title       => 'Save As',
+        -title       => ( $saveacopy ? 'Save a Copy As' : 'Save As' ),
         -initialdir  => $::globallastpath,
         -initialfile => $initialfile,
     );
@@ -72,49 +78,24 @@ sub file_saveas {
     if ( defined($name) and length($name) and not bad_filename_chars($name) ) {
         $::top->Busy( -recurse => 1 );
         $textwindow->SaveUTF($name);
-        my ( $fname, $extension, $filevar );
-        ( $fname, $::globallastpath, $extension ) = ::fileparse($name);
-        $::globallastpath = ::os_normal($::globallastpath);
-        $name             = ::os_normal($name);
-        $textwindow->FileName($name);
+        $name = ::os_normal($name);
+        ::_recentupdate($name);
+
+        # If saving a copy, globallastpath is not updated, edit flag is not reset,
+        # bin_save is done using new filename, then old name is restored
+        my $oldfilename = $::lglobal{global_filename};
+        $::globallastpath = ::os_normal( ( ::fileparse($name) )[1] ) unless $saveacopy;
         $::lglobal{global_filename} = $name;
         _bin_save();
-        ::_recentupdate($name);
-        $::top->Unbusy( -recurse => 1 );
-        $textwindow->ResetUndo;    #necessary to reset edited flag
-        ::setedited(0);
+        if ($saveacopy) {
+            $::lglobal{global_filename} = $oldfilename;
+        } else {
+            $textwindow->ResetUndo;
+            ::setedited(0);
+        }
+
+        $textwindow->FileName( $::lglobal{global_filename} );
         ::update_indicators();
-    }
-
-    # Restore autosave flag
-    $::autosave = $saveautosave;
-    ::reset_autosave();
-}
-
-sub file_savecopyas {
-
-    # Temporarily disable autosave - don't want that to happen part way through saving
-    my $saveautosave = $::autosave;
-    $::autosave = 0;
-    ::reset_autosave();
-
-    my $textwindow = shift;
-    ::hidepagenums();
-    my $name = $textwindow->getSaveFile(
-        -title       => 'Save As',
-        -initialdir  => $::globallastpath,
-        -initialfile => $::lglobal{global_filename},
-    );
-    if ( defined($name) and length($name) ) {
-        $::top->Busy( -recurse => 1 );
-        $textwindow->SaveUTF($name);
-        $name = ::os_normal($name);
-        my $oldfilename = $::lglobal{global_filename};
-        $::lglobal{global_filename} = $name;    # first do a bin_save, then restore the file name
-        _bin_save();
-        $::lglobal{global_filename} = $oldfilename;
-        $textwindow->FileName($oldfilename);
-        ::_recentupdate($name);
         $::top->Unbusy( -recurse => 1 );
     }
 
