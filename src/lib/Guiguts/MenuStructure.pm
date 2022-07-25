@@ -56,9 +56,13 @@ sub menu_file {
             -accelerator => 'Ctrl+Shift+s',
             -command     => sub { ::file_saveas($textwindow); }
         ],
-        [ 'command',   'Sa~ve a Copy As...', -command => sub { ::file_savecopyas($textwindow); } ],
-        [ 'command',   '~Include File...',   -command => sub { ::file_include($textwindow); } ],
-        [ 'command',   '~Close',             -command => sub { ::file_close($textwindow); } ],
+        [
+            'command',
+            'Sa~ve a Copy As...',
+            -command => sub { ::file_saveas( $textwindow, "copy" ); }
+        ],
+        [ 'command',   '~Include File...', -command => sub { ::file_include($textwindow); } ],
+        [ 'command',   '~Close',           -command => sub { ::file_close($textwindow); } ],
         [ 'separator', '' ],
 
         menu_cascade( '~Project', &menu_file_project ),
