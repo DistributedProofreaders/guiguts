@@ -215,6 +215,14 @@ sub tablefx {
             -text             => 'Convert Step to Grid',
             -width            => 16
         )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
+        my $f3a = $::lglobal{tblfxpop}->LabFrame( -label => 'Restructure' )
+          ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
+        $f3a->Button(
+            -activebackground => $::activecolor,
+            -command          => sub { rejoinrows() },
+            -text             => 'Rejoin Rows',
+            -width            => 16
+        )->grid( -row => 1, -column => 0, -padx => 5, -pady => 2 );
         my $f4   = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $ubtn = $f4->Button(
             -activebackground => $::activecolor,
@@ -964,6 +972,23 @@ sub tblautoc {
     tblsetpg(%pgindex);          # Restore page markers
     $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
     $textwindow->addGlobEnd;
+}
+
+#
+# Where cells have been OCRed one per line, with a blank line marking the end
+# of the row, join cells so each row is on one line
+sub rejoinrows {
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('table');
+    if (@ranges) {
+        $textwindow->addGlobStart;
+        my $tbl = $textwindow->get( 'tblstart', 'tblend' );
+        $tbl =~ s/(?<!\n)\n(?!\n)/  /g;    # Replace single newlines with double space to delimit cells
+        $textwindow->delete( 'tblstart', 'tblend' );
+        $textwindow->insert( 'tblend', $tbl . "\n" );
+        $textwindow->tagAdd( 'table', 'tblstart', 'tblend' );
+        $textwindow->addGlobEnd;
+    }
 }
 
 #
