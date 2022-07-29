@@ -1,6 +1,46 @@
 # Changelog
 
 
+## Version 1.4.1-test3
+
+- Combining Characters now available in Compose Sequences, e.g. `+~` for 
+  combining tilde above; `_~` for combining tilde below
+- Additional compose sequences added for precomposed vowels with macron and
+  long ess character.
+- Help dialog descriptions clarify easily-confused compose sequences
+- New Character Tool menu entry to convert the selected text to 
+  Unicode Normalization Form C, which is necessary for HTML to validate
+- New `\IP` extension added to regex syntax which is replaced with the
+  current page label
+- New `Rejoin Rows` button in ASCII Table Effects dialog takes a table with
+  one cell per line and a blank line to mark rows, and converts it to a
+  table with double space separators for cells, and all the cells from each
+  table row on a single text line.
+- Shortcuts and regex help now links to manual pages
+- Minor wording improvements for some highlighting buttons
+- Improvements to installation procedure and instructions for Mac users
+- Cmd-up/down key bindings added to match usual Mac behavior
+- Optional command line argument `--home` added to specify the directory
+  where persistent data files, such as `setting.rc`, will be stored,
+  instead of under the release.
+
+### Bug Fixes
+
+- Word Frequency was failing for Mac users
+- HTML generation could loop forever converting footnotes
+- HTML generation could misplace the closing `<\div>` for a group of footnotes
+  if footnote contained blockquotes
+- Navigating, selecting and deleting by whole words was inconsistent:
+    - Apostrophes now considered part of a word
+    - Use keyboard Ctrl+Left/Right arrow for move; add Shift to select
+    - Use double Mouse-1 to select words; drag or Shift+double Mouse-1 to
+      extend selection
+    - Use Ctrl+Delete/Backspace to delete word forward/backward
+- Ctrl-Alt-s scratchpad shortcut did not work - removed feature entirely
+- Using `Save` instead of `Save As` to save a new file could cause a crash
+- Filename was not displayed correctly in `Save a Copy As` dialog
+
+
 ## Version 1.4.0
 
 - HTML generation now generates HTML5 with XML serialization
