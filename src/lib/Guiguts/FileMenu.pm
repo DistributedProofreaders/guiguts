@@ -399,25 +399,17 @@ sub savefile {
             )
         ) {
             $::top->Busy( -recurse => 1 );
-            if ($::autobackup) {
-                if ( -e $filename ) {
-                    print "$filename\n";
-                    if ( -e "$filename.bk2" ) {
-                        unlink "$filename.bk2";
-                    }
-                    if ( -e "$filename.bk1" ) {
-                        rename( "$filename.bk1", "$filename.bk2" );
-                    }
-                    rename( $filename, "$filename.bk1" );
-                }
+            if ( $::autobackup and -e $filename ) {    # Handle autobackup
+                unlink "$filename.bk2" if -e "$filename.bk2";
+                rename( "$filename.bk1", "$filename.bk2" ) if -e "$filename.bk1";
+                rename( $filename, "$filename.bk1" );
             }
             $textwindow->SaveUTF;
-            $::top->Unbusy( -recurse => 1 );
-            $textwindow->ResetUndo;    #necessary to reset edited flag
             ::_bin_save();
+            $textwindow->ResetUndo;                    # Necessary to reset edited flag
             ::setedited(0);
-            ::reset_autosave();
             ::update_indicators();
+            $::top->Unbusy( -recurse => 1 );
         }
     }
 
