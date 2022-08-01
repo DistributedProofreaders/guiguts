@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&aspellstart &aspellstop &spellchecker &spellloadprojectdict &getmisspelledwords
-      &spelloptions &get_spellchecker_version);
+      &spelloptions &get_spellchecker_version &spellmyaddword &spelladdgoodwords);
 }
 
 # Initialize spellchecker
@@ -448,14 +448,18 @@ sub spelladdgoodwords {
         -default => 'yes',
         -title   => 'Warning',
         -message =>
-          'Warning: Before adding good_words.txt first check whether they do not contain misspellings, multiple spellings, etc. Continue?'
+          'Warning: Before adding good_words.txt to project dictionary, first check it does not contain misspellings, multiple spellings, etc. Continue?'
     );
     if ( $ans =~ /no/i ) {
         return;
     }
     my $pwd = ::getcwd();
     chdir $::globallastpath;
-    open( DAT, "good_words.txt" ) or die "Could not open good_words.txt!";
+
+    unless ( open( DAT, "good_words.txt" ) ) {
+        ::warnerror("Could not open good_words.txt");
+        return;
+    }
 
     # Remove all newlines and/or carriage returns whatever the current OS
     my @raw_data = map { s/[\n\r]+$//g; $_ } <DAT>;

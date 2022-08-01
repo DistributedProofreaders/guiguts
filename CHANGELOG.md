@@ -3,6 +3,10 @@
 
 ## Version 1.4.1-test3
 
+- New Spell Query tool checks spelling, reporting queries in similar way to
+  jeebies, bookloupe, etc. Similar buttons to old spell check dialog allow
+  each query to be handled. Hover over buttons to see which combination of
+  Shift/Ctrl with Left/Right click can be used as shortcut.
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and

@@ -21,7 +21,7 @@ BEGIN {
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
-      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels);
+      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_dict &path_defaultdict);
 
 }
 
@@ -351,8 +351,11 @@ sub path_defaulthtmlheader {
     return 'headerdefault.txt';
 }
 
-sub path_labels {
-
+#
+# Return path to user-editable file normally in data directory,
+# but may be in directory specified by user using --home
+sub path_data {
+    my $fname            = shift;
     my $homedirectory    = $::lglobal{homedirectory};
     my $guigutsdirectory = $::lglobal{guigutsdirectory};
 
@@ -364,21 +367,41 @@ sub path_labels {
     }
 
     # If we're using --home (a separate data directory), then we store the
-    # labels file directly there, not in a subdirectory
+    # data file directly there, not in a subdirectory
     if ( $homedirectory ne $guigutsdirectory ) {
-        return ::catfile( $::lglobal{homedirectory}, "labels_$::booklang.rc" );
+        return ::catfile( $::lglobal{homedirectory}, $fname );
     }
 
     # Otherwise it's stored in a subdirectory data/ from Guiguts' directory
-    return ::catfile( $::lglobal{guigutsdirectory}, 'data', "labels_$::booklang.rc" );
+    return ::catfile( $::lglobal{guigutsdirectory}, 'data', $fname );
 }
 
+#
+# Return path to labels data file
+sub path_labels {
+    return path_data("labels_$::booklang.rc");
+}
+
+#
+# Return path to default labels data file
 sub path_defaultlabels {
     my $f = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
     return $f if -e $f;
 
     # Default to English if $::booklang has no defaults file
     return ::catfile( 'data', 'labels_en_default.rc' );
+}
+
+#
+# Return path to spell query global dictionary for current language
+sub path_dict {
+    return path_data("dict_$::booklang.txt");
+}
+
+#
+# Return path to spell query default dictionary for current language
+sub path_defaultdict {
+    return ::catfile( 'data', "dict_$::booklang" . "_default.txt" );
 }
 
 # system(LIST)
