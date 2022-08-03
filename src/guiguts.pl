@@ -186,6 +186,7 @@ our $searchstickyoptions    = 1;
 our $multiterm              = 0;
 our $spellcheckwithenchant  = 0;
 our $spellindexbkmrk        = q{};
+our $spellquerythreshold    = 3;
 our $stayontop              = 0;
 our $suspectindex;
 our $toolside              = 'bottom';
