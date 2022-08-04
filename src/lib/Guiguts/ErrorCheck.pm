@@ -971,7 +971,7 @@ sub errorcheckprocessspell {
     my $dictionary = shift;
     my $line       = $::lglobal{errorchecklistbox}->get('active');
     return                               if not defined $errors{$line};
-    spellqueryadddict( $1, $dictionary ) if $line =~ /^\d+:\d+ +- (.+)/;
+    spellqueryadddict( $1, $dictionary ) if $line =~ /^\d+:\d+ +- ([^ ]+)/;
 }
 
 #
@@ -1229,6 +1229,7 @@ sub booklouperun {
     sub spellqueryrun {
         my $errname    = shift;
         my $textwindow = $::textwindow;
+        my $APOS       = "\x{2019}";
 
         return unless spellqueryinitialize();
 
@@ -1238,19 +1239,16 @@ sub booklouperun {
 
         my $step = 1;
         while ( $step <= $lastline ) {
-            my $line = $textwindow->get( "$step.0", "$step.end" );
-
-            # Replace curly apostrophes with straight, then save for future searching to find column
-            $line =~ s/\x{2019}/'/g;
-            my $origline = $line;
+            my $line     = $textwindow->get( "$step.0", "$step.end" );
+            my $origline = $line;                                        # Save line for future searching to find column
             my $col      = -1;
 
             # Remove unwanted characters first, e.g. block markup
             $line =~ s/^\/[$::allblocktypes]$//;
             $line =~ s/^[$::allblocktypes]\/$//;
 
-            # Replace all non-alphanumeric (but not apostrophe) with spaces
-            $line =~ s/[^[:alnum:]']+/ /g;
+            # Replace all non-alphanumeric (but not apostrophes) with spaces
+            $line =~ s/[^[:alnum:]'$APOS]+/ /g;
 
             # Trim leading/trailing spaces
             $line =~ s/^\s+|\s+$//g;
@@ -1259,18 +1257,28 @@ sub booklouperun {
             my @words = split( /\s+/, $line );
             for my $wd (@words) {
                 next if spellquerywordok($wd);
+                if ( $wd =~ /$APOS/ ) {    # If no match, try converting curly apostrophes to straight
+                    my $straight = $wd;
+                    $straight =~ s/$APOS/'/g;
+                    next if spellquerywordok($straight);
+                } elsif ( $wd =~ /'/ ) {    # And vice versa
+                    my $curly = $wd;
+                    $curly =~ s/'/$APOS/g;
+                    next if spellquerywordok($curly);
+                }
 
-                # If word has leading/trailing apostrophes (or single quotes), try trimming them and checking again
-                next if $wd =~ s/^'+|'+$//g and spellquerywordok($wd);
-                next if length($wd) == 0;                                # OK if nothing left in string after trimming quotes
+                # If word has leading straight apostrophe, it might be open single quote;
+                # if trailing straight/curly apostrophe, it might be close single quote; try trimming them and checking again
+                next if $wd =~ s/^'|['$APOS]$//g and spellquerywordok($wd);
+                next if $wd =~ /^['$APOS]*$/;                                 # OK if nothing left in string but zero or more quotes
 
-                $sqbadwordfreq{$wd}++;                                   # Count how many times bad word appears
+                $sqbadwordfreq{$wd}++;                                        # Count how many times bad word appears
 
                 # To catch multiple occurrences of bad word on a line, keep track of column number
                 $col = index( substr( $origline, $col + 1 ), $wd ) + $col + 1;
                 my $errorloc = "$step:$col";
-                $errorloc .= " " if $col < 10;                           # align to make it easier to read
-                $col += length($wd);                                     # increment stored column past the word
+                $errorloc .= " " if $col < 10;                                # align to make it easier to read
+                $col += length($wd);                                          # increment stored column past the word
 
                 my $error = "$errorloc - $wd";
                 utf8::encode($error);
@@ -1293,12 +1301,12 @@ sub booklouperun {
           if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
 
         # Now check numbers
-        return 1 if $wd =~ /^\d+$/;                 # word is all digits
-        return 1 if $wd =~ /^(\d*[02-9])?1st$/i;    # ...1st, ...21st, ...31st, etc
-        return 1 if $wd =~ /^(\d*[02-9])?2nd$/i;    # ...2nd, ...22nd, ...32nd, etc
-        return 1 if $wd =~ /^(\d*[02-9])?3rd$/i;    # ...3rd, ...23rd, ...33rd, etc
-        return 1 if $wd =~ /^\d*[04-9]th$/i;        # ...0th, ...4th, ...5th, etc
-        return 1 if $wd =~ /^\d*1[123]th$/i;        # ...11th, ...12th, ...13th
+        return 1 if $wd =~ /^\d+$/;                  # word is all digits
+        return 1 if $wd =~ /^(\d*[02-9])?1st$/i;     # ...1st, ...21st, ...31st, etc
+        return 1 if $wd =~ /^(\d*[02-9])?2n?d$/i;    # ...2nd, ...22nd, ...32nd, etc (also 2d, 22d, etc)
+        return 1 if $wd =~ /^(\d*[02-9])?3r?d$/i;    # ...3rd, ...23rd, ...33rd, etc (also 3d, 33d, etc)
+        return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
+        return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
 
         return 0;
     }
@@ -1338,6 +1346,7 @@ sub booklouperun {
         close $fh;
 
         # Now add project dictionary words
+        delete $::projectdict{$_} for keys %::projectdict;    # Old spellcheck code doesn't clear hash in spellloadprojectdict()
         ::spellloadprojectdict();
         $sqglobaldict{$_} = 1 for keys %::projectdict;
 
