@@ -131,7 +131,7 @@ sub file_import_preptext {
     $::globallastpath = $directory;
 
     for my $file ( sort @files ) {
-        if ( $file =~ /^(\w+)\.txt/ ) {
+        if ( $file =~ /(\w+)\.txt$/ ) {
             $textwindow->ntinsert( 'end', ( "\n" . '-' x 5 ) );
             $textwindow->ntinsert( 'end', "File: $1.png" );
             $textwindow->ntinsert( 'end', ( '-' x 45 ) . "\n" );
