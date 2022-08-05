@@ -21,7 +21,7 @@ BEGIN {
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
-      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_dict &path_defaultdict);
+      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict);
 
 }
 
@@ -393,13 +393,13 @@ sub path_defaultlabels {
 }
 
 #
-# Return path to spell query global dictionary for current language
-sub path_dict {
-    return path_data("dict_$::booklang.txt");
+# Return path to spell query user global dictionary for current language
+sub path_userdict {
+    return path_data( "dict_$::booklang" . "_user.txt" );
 }
 
 #
-# Return path to spell query default dictionary for current language
+# Return path to spell query default global dictionary for current language
 sub path_defaultdict {
     return ::catfile( 'data', "dict_$::booklang" . "_default.txt" );
 }

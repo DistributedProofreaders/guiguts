@@ -1312,24 +1312,43 @@ sub booklouperun {
     }
 
     #
-    # Load the Spell Query global dictionary and optional project dictionary - return true on success
+    # Load the Spell Query default global dictionary and optional user global and project dictionaries
+    # Return true on success
     sub spellqueryinitialize {
 
         # Clear any existing words in dictionary and frequency count
         delete $sqglobaldict{$_}  for keys %sqglobaldict;
         delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
 
-        my $dictname = ::path_dict();
-        unless ( -f $dictname ) {    # If language dictionary file doesn't exist, copy the default one
-            my $defname = ::path_defaultdict();
-            if ( -f $defname ) {
-                ::copy( ::path_defaultdict(), $dictname );
-            } else {
-                ::warnerror("Spell Query dictionary not found: $defname ");
-                return 0;
-            }
+        # Load default global dictionary for current language - must exist
+        my $defname = ::path_defaultdict();
+        if ( -f $defname ) {
+            return 0 unless spellqueryloadglobaldict($defname);
+        } else {
+            ::warnerror("Spell Query dictionary not found: $defname ");
+            return 0;
         }
 
+        # Add words from optional user global dictionary for current language
+        my $dictname = ::path_userdict();
+        if ( -f $dictname ) {
+            return 0 unless spellqueryloadglobaldict($dictname);
+        }
+
+        # Now add project dictionary words
+        delete $::projectdict{$_} for keys %::projectdict;    # Old spellcheck code doesn't clear hash in spellloadprojectdict()
+        ::spellloadprojectdict();
+        $sqglobaldict{$_} = 1 for keys %::projectdict;
+
+        return 1;
+    }
+
+    #
+    # Add global dictionary into spell query dict hash
+    # File format is one word per line
+    # Return true on success
+    sub spellqueryloadglobaldict {
+        my $dictname = shift;
         my $fh;
         unless ( open $fh, "<:encoding(utf8)", $dictname ) {
             ::warnerror("Error opening Spell Query dictionary: $dictname");
@@ -1338,19 +1357,10 @@ sub booklouperun {
 
         while ( my $line = <$fh> ) {
             utf8::decode($line);
-
-            # Trim leading/trailing space
-            $line =~ s/^\s+|\s+$//g;
+            $line =~ s/^\s+|\s+$//g;    # Trim leading/trailing space
             $sqglobaldict{$line} = 1;
         }
         close $fh;
-
-        # Now add project dictionary words
-        delete $::projectdict{$_} for keys %::projectdict;    # Old spellcheck code doesn't clear hash in spellloadprojectdict()
-        ::spellloadprojectdict();
-        $sqglobaldict{$_} = 1 for keys %::projectdict;
-
-        return 1;
     }
 
     #
@@ -1364,7 +1374,7 @@ sub booklouperun {
         if ( $dictionary eq 'project' ) {
             ::spellmyaddword($word);
         } else {
-            my $dictname = ::path_dict();
+            my $dictname = ::path_userdict();
             my $fh;
             unless ( open $fh, ">>:encoding(utf8)", $dictname ) {
                 ::warnerror("Error opening Spell Query dictionary to add word: $dictname");
