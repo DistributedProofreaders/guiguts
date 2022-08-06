@@ -8,6 +8,7 @@
   each query to be handled. Hover over buttons to see which combination of
   Shift/Ctrl with Left/Right click can be used as shortcut. If spelling
   occurs more often than the threshold (default 3), it is not reported.
+  Use Alt+Left click to pop the Search dialog to search for the queried word.
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
@@ -44,6 +45,7 @@
 - Ctrl-Alt-s scratchpad shortcut did not work - removed feature entirely
 - Using `Save` instead of `Save As` to save a new file could cause a crash
 - Filename was not displayed correctly in `Save a Copy As` dialog
+- `Import Prep Text Files` did not import files with a space in their names
 
 
 ## Version 1.4.0

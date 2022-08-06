@@ -11,6 +11,7 @@ BEGIN {
 
 my @errorchecklines;
 my %errors;
+my $APOS = "\x{2019}";
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
@@ -258,6 +259,29 @@ sub errorcheckpop_up {
             errorchecksetactive();
             errorcheckremovesimilar($errorchecktype);
             errorcheckview($errorchecktype);
+        }
+    );
+
+    # Alt + button 1 pops the Search dialog prepopulated with the queried word
+    $::lglobal{errorchecklistbox}->eventAdd( '<<search>>' => '<Alt-ButtonRelease-1>' );
+    $::lglobal{errorchecklistbox}->bind(
+        '<<search>>',
+        sub {
+            errorchecksetactive();
+            my $line = $::lglobal{errorchecklistbox}->get('active');
+            return
+                  unless defined $line
+              and defined $errors{$line}
+              and $line =~ s/^\d+:\d+ +- ([\w'$APOS]+) .*/$1/;
+
+            ::searchpopup();
+            ::searchoptset(qw/1 x x 0/);    # Whole-word non-regex search
+            $::lglobal{searchentry}->delete( 0, 'end' );
+            $::lglobal{searchentry}->insert( 'end', $line );
+            ::updatesearchlabels();         # Updates count in S&R dialog if word frequency has been run previously
+            $::lglobal{searchpop}->deiconify;
+            $::lglobal{searchpop}->raise;
+            $::lglobal{searchpop}->focus;
         }
     );
 
@@ -1229,7 +1253,6 @@ sub booklouperun {
     sub spellqueryrun {
         my $errname    = shift;
         my $textwindow = $::textwindow;
-        my $APOS       = "\x{2019}";
 
         return unless spellqueryinitialize();
 
