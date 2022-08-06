@@ -43,10 +43,11 @@ sub keybindings {
     keybind( '<F3>',            sub { ::colpaste($textwindow); } );
 
     # Tools
-    keybind( '<F5>', sub { ::wordfrequency(); } );
-    keybind( '<F6>', sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); } );
-    keybind( '<F7>', sub { ::spellchecker(); } );
-    keybind( '<F8>', sub { ::stealthscanno(); } );
+    keybind( '<F5>',       sub { ::wordfrequency(); } );
+    keybind( '<F6>',       sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); } );
+    keybind( '<F7>',       sub { ::spellchecker(); } );
+    keybind( '<Shift-F7>', sub { ::errorcheckpop_up( $textwindow, $top, 'Spell Query' ); } );
+    keybind( '<F8>',       sub { ::stealthscanno(); } );
 
     # Delete
     keybind(

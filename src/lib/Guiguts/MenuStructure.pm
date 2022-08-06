@@ -373,6 +373,14 @@ sub menu_tools {
             -command => sub { ::spellmultiplelanguages( $textwindow, $top ); }
         ],
         [
+            'command',
+            'Spell ~Query...',
+            -accelerator => 'Shift+F7',
+            -command     => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Spell Query' );
+            }
+        ],
+        [
             'command', 'Stealt~h Scannos...',
             -accelerator => 'F8',
             -command     => \&::stealthscanno

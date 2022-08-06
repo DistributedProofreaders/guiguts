@@ -14,7 +14,7 @@ my %errors;
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
-# pphtml, pptxt, ppvimage and Load External Checkfile,
+# pphtml, pptxt, ppvimage, Spell Query and Load External Checkfile.
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( $line, $lincol );
@@ -26,25 +26,31 @@ sub errorcheckpop_up {
     $::lglobal{errorcheckpop} = $top->Toplevel;
     $::lglobal{errorcheckpop}->title($errorchecktype);
 
+    my $ptopframeb = $::lglobal{errorcheckpop}->Frame->pack( -fill => 'x' );
+
+    my $gcol = 0;
+
+    # Label to count number of queries
+    $::lglobal{eccountlabel} =
+      $ptopframeb->Label( -justify => 'left', )->grid( -padx => 10, -row => 0, -column => $gcol++ );
+
+    # Spell Query threshold setting sits under the query count label
+    if ( $errorchecktype eq 'Spell Query' ) {
+        $gcol = 0;
+        $ptopframeb->Label( -text => 'Threshold <=' )
+          ->grid( -padx => 0, -row => 1, -column => $gcol++ );
+        $ptopframeb->Spinbox(
+            -textvariable => \$::spellquerythreshold,
+            -width        => 4,
+            -increment    => 1,
+            -from         => 1,
+            -to           => 1000,
+        )->grid( -padx => 0, -row => 1, -column => $gcol++ );
+    }
+
     # All types have a button to re-run the check
-    my $ptopframe = $::lglobal{errorcheckpop}->Frame->pack( -fill => 'x' );
-    $::lglobal{eccountlabel} = $ptopframe->Label( -justify => 'left', )->pack(
-        -side   => 'left',
-        -pady   => 10,
-        -padx   => 10,
-        -anchor => 'nw'
-    );
-    my $ptopframeb = $ptopframe->Frame->pack(
-        -side   => 'left',
-        -anchor => 'n',
-        -padx   => 20,
-        -pady   => 10,
-        -expand => 'yes',
-        -fill   => 'x'
-    );
     my $buttonlabel = 'Run Checks';
     $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
-    my $gcol      = 0;
     my $opsbutton = $ptopframeb->Button(
         -activebackground => $::activecolor,
         -command          => sub {
@@ -86,6 +92,62 @@ sub errorcheckpop_up {
                 -command  => \&::savesettings,
             )->grid( -row => 0, -column => $gcol++ );
         }
+
+        # Spell Query has Skip, Skip All, Add to Project Dict, Add to Global Dict
+    } elsif ( $errorchecktype eq 'Spell Query' ) {
+        $::lglobal{spellqueryballoon} = $top->Balloon() unless $::lglobal{spellqueryballoon};
+        $ptopframeb->Button(
+            -activebackground => $::activecolor,
+            -command          => \&::spelladdgoodwords,
+            -text             => 'Add good_words.txt',
+            -width            => 16
+        )->grid( -row => 1, -column => $gcol - 1 );
+        my $btnskip = $ptopframeb->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                errorcheckremove($errorchecktype);
+                errorcheckview($errorchecktype);
+            },
+            -text  => 'Skip',
+            -width => 16
+        )->grid( -row => 0, -column => $gcol );
+        $::lglobal{spellqueryballoon}
+          ->attach( $btnskip, -msg => "Right-click\non queried spelling to Skip" );
+        my $btnskipall = $ptopframeb->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                errorcheckremovesimilar($errorchecktype);
+                errorcheckview($errorchecktype);
+            },
+            -text  => 'Skip All',
+            -width => 16
+        )->grid( -row => 1, -column => $gcol++ );
+        $::lglobal{spellqueryballoon}->attach( $btnskipall,
+            -msg => "Ctrl+Shift+Right-click\non queried spelling to Skip All" );
+        my $btnproj = $ptopframeb->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                errorcheckprocessspell('project');
+                errorcheckremovesimilar($errorchecktype);
+                errorcheckview($errorchecktype);
+            },
+            -text  => 'Add to Project Dict',
+            -width => 16
+        )->grid( -row => 0, -column => $gcol );
+        $::lglobal{spellqueryballoon}->attach( $btnproj,
+            -msg => "Ctrl+Left-click\non queried spelling to\nAdd to Project Dictionary" );
+        my $btnglob = $ptopframeb->Button(
+            -activebackground => $::activecolor,
+            -command          => sub {
+                errorcheckprocessspell('global');
+                errorcheckremovesimilar($errorchecktype);
+                errorcheckview($errorchecktype);
+            },
+            -text  => 'Add to Global Dict',
+            -width => 16
+        )->grid( -row => 1, -column => $gcol++ );
+        $::lglobal{spellqueryballoon}->attach( $btnglob,
+            -msg => "Ctrl+Shift+Left-click\non queried spelling to\nAdd to Global Dictionary" );
     }
 
     # Scrolled listbox to display the errors
@@ -119,7 +181,7 @@ sub errorcheckpop_up {
 
     # button 1 views the error
     $::lglobal{errorchecklistbox}->eventAdd( '<<view>>' => '<ButtonRelease-1>', '<Return>' );
-    $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview(); } );
+    $::lglobal{errorchecklistbox}->bind( '<<view>>', sub { errorcheckview($errorchecktype); } );
 
     # buttons 2 & 3 remove the clicked error and view the next error
     $::lglobal{errorchecklistbox}->eventAdd(
@@ -131,22 +193,29 @@ sub errorcheckpop_up {
         sub {
             errorchecksetactive();
             errorcheckremove($errorchecktype);
-            errorcheckview();
+            errorcheckview($errorchecktype);
         }
     );
 
     # Ctrl + button 1 attempts to view and process the clicked error
+    # For Spell Query, it adds the word to the project dictionary
     $::lglobal{errorchecklistbox}->eventAdd( '<<process>>' => '<Control-ButtonRelease-1>' );
     $::lglobal{errorchecklistbox}->bind(
         '<<process>>',
         sub {
             errorchecksetactive();
-            errorcheckprocess($errorchecktype);
-            errorcheckview();
+            if ( $errorchecktype eq 'Spell Query' ) {
+                errorcheckprocessspell('project');
+                errorcheckremovesimilar($errorchecktype);
+            } else {
+                errorcheckprocess($errorchecktype);
+            }
+            errorcheckview($errorchecktype);
         }
     );
 
     # Ctrl + buttons 2 & 3 attempt to process the clicked error, then remove it and view the next error
+    # if processing is set up for the current error type. Otherwise, just removes the error.
     $::lglobal{errorchecklistbox}->eventAdd(
         '<<processremove>>' => '<Control-ButtonRelease-2>',
         '<Control-ButtonRelease-3>'
@@ -157,7 +226,23 @@ sub errorcheckpop_up {
             errorchecksetactive();
             errorcheckprocess($errorchecktype);
             errorcheckremove($errorchecktype);
-            errorcheckview();
+            errorcheckview($errorchecktype);
+        }
+    );
+
+    # Ctrl + Shift + button 1 attempts to view and alternatively process the clicked error
+    # For Spell Query, adds the word to the global dictionary
+    $::lglobal{errorchecklistbox}
+      ->eventAdd( '<<processalternative>>' => '<Control-Shift-ButtonRelease-1>' );
+    $::lglobal{errorchecklistbox}->bind(
+        '<<processalternative>>',
+        sub {
+            errorchecksetactive();
+            if ( $errorchecktype eq 'Spell Query' ) {
+                errorcheckprocessspell('global');
+                errorcheckremovesimilar($errorchecktype);
+            }
+            errorcheckview($errorchecktype);
         }
     );
 
@@ -172,7 +257,7 @@ sub errorcheckpop_up {
         sub {
             errorchecksetactive();
             errorcheckremovesimilar($errorchecktype);
-            errorcheckview();
+            errorcheckview($errorchecktype);
         }
     );
 
@@ -385,6 +470,11 @@ sub errorcheckpop_up {
                 }
                 $line =~ s/^\s*Line \d+ column \d+\s*/$row:$col /;
             }
+
+        } elsif ( $errorchecktype eq "Spell Query" ) {    # Spell query also has a frequency count to append
+            my $freq = spellqueryfrequency($line);
+            next if $freq > $::spellquerythreshold;       # If it's spelled the same way several times, it's probably not an error
+            $line .= " ($freq)";
         }
 
         # All line/column formats now converted to "line:col" - mark the locations in the main window
@@ -393,7 +483,7 @@ sub errorcheckpop_up {
             # Some tools count lines/columns differently
             my $linnum = $1 + $lineadjust;
             my $colnum = $2 + $columnadjust;
-            $colnum = 0 if $colnum < 0;    # Nu CSS errors could end up as column -1
+            $colnum = 0 if $colnum < 0;                   # Nu CSS errors could end up as column -1
             $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
 
             # Skip if already have identical error at same location already, since firstly it is not necessary,
@@ -523,7 +613,7 @@ sub errorcheckrun {    # Runs error checks
       $errorchecktype eq 'Bookloupe'
       ? "^(/[$::allblocktypes](?=[\[\n]))|([$::allblocktypes]/(?=[\n]))"
       : "";
-    savetoerrortmpfile( $tmpfname, $striptext );
+    savetoerrortmpfile( $tmpfname, $striptext ) unless $errorchecktype eq 'Spell Query';
     if ( $errorchecktype eq 'HTML Tidy' ) {
         ::run( $::tidycommand, "-f", $errname, "-e", "-utf8", $tmpfname );
     } elsif ( $errorchecktype eq 'Nu HTML Check' or $errorchecktype eq "Nu XHTML Check" ) {
@@ -550,6 +640,8 @@ sub errorcheckrun {    # Runs error checks
         booklouperun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Jeebies' ) {
         jeebiesrun( $tmpfname, $errname );
+    } elsif ( $errorchecktype eq 'Spell Query' ) {
+        spellqueryrun($errname);
     }
     $top->Unbusy;
     unlink $tmpfname;
@@ -735,7 +827,8 @@ sub linkcheckrun {
 
 # When user clicks on an error, show and highlight the correct place in the main text window
 sub errorcheckview {
-    my $textwindow = $::textwindow;
+    my $errorchecktype = shift;
+    my $textwindow     = $::textwindow;
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
     my $line = $::lglobal{errorchecklistbox}->get('active');
     return if not defined $line;
@@ -743,9 +836,11 @@ sub errorcheckview {
         $textwindow->see( $errors{$line} );
         $textwindow->markSet( 'insert', $errors{$line} );
 
-        # Highlight from error to end of line
+        # Highlight from error to end of line (or just the queried word for Spell Query)
         my $start = $errors{$line};
         my $end   = $errors{$line} . " lineend";
+        $end = $errors{$line} . "+" . length($1) . "c"
+          if $errorchecktype eq "Spell Query" and $line =~ /^\d+:\d+ +- (\S+)/;
 
         # Ensure at least 1 character is highlighted
         if ( $textwindow->index($start) == $textwindow->index($end) ) {
@@ -839,7 +934,7 @@ sub errorcheckprocess {
 sub errorcheckprocesssuggest {
     my $line = shift;
     my ( $begmatch, $endmatch, $match, $replacement );
-    if ( $line =~ /^\d+:\d+ Suggest '(.+)' for '(.+)'/ ) {
+    if ( $line =~ /^\d+:\d+ +Suggest '(.+)' for '(.+)'/ ) {
         $replacement = $1;
         $match       = $2;
 
@@ -854,7 +949,7 @@ sub errorcheckprocesssuggest {
 sub errorcheckprocessjeebies {
     my $line = shift;
     my ( $begmatch, $endmatch, $match, $replacement );
-    if ( $line =~ /^\d+:\d+ - Query phrase ".*\b([HhBb]e)\b.*"/ ) {
+    if ( $line =~ /^\d+:\d+ +- Query phrase ".*\b([HhBb]e)\b.*"/ ) {
         $match       = $1;
         $replacement = "be" if $match eq "he";
         $replacement = "he" if $match eq "be";
@@ -870,20 +965,30 @@ sub errorcheckprocessjeebies {
 }
 
 #
+# Process Spell Query output by adding queried word to either the
+# project or global dictionary based on argument
+sub errorcheckprocessspell {
+    my $dictionary = shift;
+    my $line       = $::lglobal{errorchecklistbox}->get('active');
+    return                               if not defined $errors{$line};
+    spellqueryadddict( $1, $dictionary ) if $line =~ /^\d+:\d+ +- ([^ ]+)/;
+}
+
+#
 # Remove the active item and similar items
 sub errorcheckremovesimilar {
     my $textwindow     = $::textwindow;
     my $errorchecktype = shift;
     my $line           = $::lglobal{errorchecklistbox}->get('active');
     return unless defined $line;
-    return unless defined $errors{$line} and $line =~ s/^\d+:\d+ (.+)/$1/;
+    return unless defined $errors{$line} and $line =~ s/^\d+:\d+ +(.+)/$1/;
 
     # Reverse through list deleting lines that are identical to the chosen one apart from line:column
     my $index = $::lglobal{errorchecklistbox}->size();
     while ( $index > 0 ) {
         $index--;
         my $rmvmsg = $::lglobal{errorchecklistbox}->get($index);
-        next unless $rmvmsg =~ /^\d+:\d+ \Q$line\E$/;    # Quote $line in case it contains regex special characters
+        next unless $rmvmsg =~ /^\d+:\d+ +\Q$line\E$/;    # Quote $line in case it contains regex special characters
 
         $::textwindow->markUnset( $errors{$rmvmsg} );
         undef $errors{$rmvmsg};
@@ -1081,8 +1186,6 @@ sub gcviewopts {
 
 sub jeebiesrun {
     my ( $tempfname, $errname ) = @_;
-    my $top        = $::top;
-    my $textwindow = $::textwindow;
 
     unless ($::jeebiescommand) {
         ::locateExecutable( 'Jeebies', \$::jeebiescommand );
@@ -1100,8 +1203,6 @@ sub jeebiesrun {
 ## Run bookloupe
 sub booklouperun {
     my ( $tempfname, $errname ) = @_;
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
     ::operationadd('Bookloupe');
 
     unless ($::gutcommand) {
@@ -1116,6 +1217,182 @@ sub booklouperun {
     my $runner = ::runner::tofile($errname);
     $runner->run( $::gutcommand, '-eyvd', $tempfname );
 }
+
+#
+# Block to make Spell Query dictionary hash local & persistent
+{
+    my %sqglobaldict  = ();
+    my %sqbadwordfreq = ();
+
+    #
+    # Run Spell Query on whole file
+    sub spellqueryrun {
+        my $errname    = shift;
+        my $textwindow = $::textwindow;
+        my $APOS       = "\x{2019}";
+
+        return unless spellqueryinitialize();
+
+        open my $logfile, ">", $errname or die "Error opening Spell Query output file: $errname";
+
+        my ( $lastline, $lastcol ) = split( /\./, $textwindow->index('end') );
+
+        my $step = 1;
+        while ( $step <= $lastline ) {
+            my $line     = $textwindow->get( "$step.0", "$step.end" );
+            my $origline = $line;                                        # Save line for future searching to find column
+            my $col      = -1;
+
+            # Remove unwanted characters first, e.g. block markup
+            $line =~ s/^\/[$::allblocktypes]$//;
+            $line =~ s/^[$::allblocktypes]\/$//;
+
+            # Replace all non-alphanumeric (but not apostrophes) with spaces
+            $line =~ s/[^[:alnum:]'$APOS]+/ /g;
+
+            # Trim leading/trailing spaces
+            $line =~ s/^\s+|\s+$//g;
+
+            # Check each word individually
+            my @words = split( /\s+/, $line );
+            for my $wd (@words) {
+                next if spellquerywordok($wd);
+                if ( $wd =~ /$APOS/ ) {    # If no match, try converting curly apostrophes to straight
+                    my $straight = $wd;
+                    $straight =~ s/$APOS/'/g;
+                    next if spellquerywordok($straight);
+                } elsif ( $wd =~ /'/ ) {    # And vice versa
+                    my $curly = $wd;
+                    $curly =~ s/'/$APOS/g;
+                    next if spellquerywordok($curly);
+                }
+
+                # If word has leading straight apostrophe, it might be open single quote;
+                # if trailing straight/curly apostrophe, it might be close single quote; try trimming them and checking again
+                next if $wd =~ s/^'|['$APOS]$//g and spellquerywordok($wd);
+                next if $wd =~ /^['$APOS]*$/;                                 # OK if nothing left in string but zero or more quotes
+
+                $sqbadwordfreq{$wd}++;                                        # Count how many times bad word appears
+
+                # To catch multiple occurrences of bad word on a line, keep track of column number
+                $col = index( substr( $origline, $col + 1 ), $wd ) + $col + 1;
+                my $errorloc = "$step:$col";
+                $errorloc .= " " if $col < 10;                                # align to make it easier to read
+                $col += length($wd);                                          # increment stored column past the word
+
+                my $error = "$errorloc - $wd";
+                utf8::encode($error);
+                print $logfile "$error\n";
+            }
+            $step++;
+        }
+        close $logfile;
+    }
+
+    #
+    # Return true if word is OK, e.g. in dictionary or meets some other criterion
+    sub spellquerywordok {
+        my $wd = shift;
+
+        # First check if word is in dictionary
+        return 1 if $sqglobaldict{$wd};         # same case
+        return 1 if $sqglobaldict{ lc $wd };    # lowercase
+        return 1                                # lowercase all but first letter (e.g. LONDON matches London)
+          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
+
+        # Now check numbers
+        return 1 if $wd =~ /^\d+$/;                  # word is all digits
+        return 1 if $wd =~ /^(\d*[02-9])?1st$/i;     # ...1st, ...21st, ...31st, etc
+        return 1 if $wd =~ /^(\d*[02-9])?2n?d$/i;    # ...2nd, ...22nd, ...32nd, etc (also 2d, 22d, etc)
+        return 1 if $wd =~ /^(\d*[02-9])?3r?d$/i;    # ...3rd, ...23rd, ...33rd, etc (also 3d, 33d, etc)
+        return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
+        return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
+
+        return 0;
+    }
+
+    #
+    # Load the Spell Query default global dictionary and optional user global and project dictionaries
+    # Return true on success
+    sub spellqueryinitialize {
+
+        # Clear any existing words in dictionary and frequency count
+        delete $sqglobaldict{$_}  for keys %sqglobaldict;
+        delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
+
+        # Load default global dictionary for current language - must exist
+        my $defname = ::path_defaultdict();
+        if ( -f $defname ) {
+            return 0 unless spellqueryloadglobaldict($defname);
+        } else {
+            ::warnerror("Spell Query dictionary not found: $defname ");
+            return 0;
+        }
+
+        # Add words from optional user global dictionary for current language
+        my $dictname = ::path_userdict();
+        if ( -f $dictname ) {
+            return 0 unless spellqueryloadglobaldict($dictname);
+        }
+
+        # Now add project dictionary words
+        delete $::projectdict{$_} for keys %::projectdict;    # Old spellcheck code doesn't clear hash in spellloadprojectdict()
+        ::spellloadprojectdict();
+        $sqglobaldict{$_} = 1 for keys %::projectdict;
+
+        return 1;
+    }
+
+    #
+    # Add global dictionary into spell query dict hash
+    # File format is one word per line
+    # Return true on success
+    sub spellqueryloadglobaldict {
+        my $dictname = shift;
+        my $fh;
+        unless ( open $fh, "<:encoding(utf8)", $dictname ) {
+            ::warnerror("Error opening Spell Query dictionary: $dictname");
+            return 0;
+        }
+
+        while ( my $line = <$fh> ) {
+            utf8::decode($line);
+            $line =~ s/^\s+|\s+$//g;    # Trim leading/trailing space
+            $sqglobaldict{$line} = 1;
+        }
+        close $fh;
+    }
+
+    #
+    # Add word to project/global dictionary depending on second argument
+    sub spellqueryadddict {
+        my $word       = shift;
+        my $dictionary = shift;
+
+        $sqglobaldict{$word} = 1;    # Mark as OK in dictionary hash
+
+        if ( $dictionary eq 'project' ) {
+            ::spellmyaddword($word);
+        } else {
+            my $dictname = ::path_userdict();
+            my $fh;
+            unless ( open $fh, ">>:encoding(utf8)", $dictname ) {
+                ::warnerror("Error opening Spell Query dictionary to add word: $dictname");
+                return 0;
+            }
+            print $fh "$word\n";
+            close $fh;
+        }
+    }
+
+    #
+    # Return how many times bad word referred to in error message was found during the check
+    sub spellqueryfrequency {
+        my $line = shift;
+        return $sqbadwordfreq{$1} if $line =~ /^\d+:\d+ +- (.+)/;
+        return 0;
+    }
+}    # end of variable-enclosing block
 
 #
 # Update query count in dialog

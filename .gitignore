@@ -2,6 +2,7 @@
 /src/setting.rc
 /src/header.txt
 /src/data/labels_en.rc
+/src/data/dict_*_user.txt
 
 # development artifacts
 /src/tools/
