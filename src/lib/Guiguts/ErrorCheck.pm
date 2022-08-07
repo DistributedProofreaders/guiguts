@@ -11,7 +11,7 @@ BEGIN {
 
 my @errorchecklines;
 my %errors;
-my $APOS = "\x{2019}";
+my $APOS = "\x{2019}";    # Curly apostrophe/right single quote
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
