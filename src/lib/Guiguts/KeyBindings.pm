@@ -14,11 +14,11 @@ sub keybindings {
     my $top        = $::top;
 
     # Highlight
-    keybind( '<Control-comma>',   sub { ::hilitesinglequotes(); } );
-    keybind( '<Control-period>',  sub { ::hilitedoublequotes(); } );
-    keybind( '<Control-Alt-h>',   sub { ::hilitepopup(); } );
-    keybind( '<Control-Shift-a>', sub { ::hilite_alignment_toggle(); } );
-    keybind( '<Control-0>',       sub { ::hiliteremove(); } );
+    keybind( '<Control-comma>',       sub { ::hilitesinglequotes(); } );
+    keybind( '<Control-period>',      sub { ::hilitedoublequotes(); } );
+    keybind( "<Control-$::altkey-h>", sub { ::hilitepopup(); } );
+    keybind( '<Control-Shift-a>',     sub { ::hilite_alignment_toggle(); } );
+    keybind( '<Control-0>',           sub { ::hiliteremove(); } );
     keybind(
         '<Control-semicolon>',
         sub {
@@ -33,14 +33,14 @@ sub keybindings {
     keybind( '<Control-Shift-s>', sub { ::file_saveas($textwindow); } );
 
     # Select, copy, paste
-    keybind( '<Control-a>',     sub { $textwindow->selectAll; } );
-    keybind( '<Control-c>',     sub { ::textcopy(); }, '<<Copy>>' );
-    keybind( '<Control-x>',     sub { ::cut(); },      '<<Cut>>' );
-    keybind( '<Control-v>',     sub { ::paste(); } );
-    keybind( '<Control-Alt-v>', sub { ::paste('alternative'); } );    # to avoid Perl/Tk paste bug
-    keybind( '<F1>',            sub { ::colcopy($textwindow); } );
-    keybind( '<F2>',            sub { ::colcut($textwindow); } );
-    keybind( '<F3>',            sub { ::colpaste($textwindow); } );
+    keybind( '<Control-a>',           sub { $textwindow->selectAll; } );
+    keybind( '<Control-c>',           sub { ::textcopy(); }, '<<Copy>>' );
+    keybind( '<Control-x>',           sub { ::cut(); },      '<<Cut>>' );
+    keybind( '<Control-v>',           sub { ::paste(); } );
+    keybind( "<Control-$::altkey-v>", sub { ::paste('alternative'); } );    # to avoid Perl/Tk paste bug
+    keybind( '<F1>',                  sub { ::colcopy($textwindow); } );
+    keybind( '<F2>',                  sub { ::colcut($textwindow); } );
+    keybind( '<F3>',                  sub { ::colpaste($textwindow); } );
 
     # Tools
     keybind( '<F5>',       sub { ::wordfrequency(); } );
@@ -203,7 +203,7 @@ sub keybindings {
     keybind( '<Control-m>',       sub { ::indent( $textwindow, 'in' ); } );
     keybind( '<Control-Shift-m>', sub { ::indent( $textwindow, 'out' ); } );
     keybind(
-        '<Control-Alt-m>',
+        "<Control-$::altkey-m>",
         sub {
             $textwindow->addGlobStart;
             ::indent( $textwindow, 'in' ) for ( 1 .. 4 );
@@ -211,18 +211,18 @@ sub keybindings {
         }
     );
     keybind(
-        '<Control-Alt-Shift-m>',
+        "<Control-$::altkey-Shift-m>",
         sub {
             $textwindow->addGlobStart;
             ::indent( $textwindow, 'out' ) for ( 1 .. 4 );
             $textwindow->addGlobEnd;
         }
     );
-    keybind( '<Alt-Left>',  sub { ::indent( $textwindow, 'out' ); } );
-    keybind( '<Alt-Right>', sub { ::indent( $textwindow, 'in' ); } );
+    keybind( "<$::altkey-Left>",  sub { ::indent( $textwindow, 'out' ); } );
+    keybind( "<$::altkey-Right>", sub { ::indent( $textwindow, 'in' ); } );
 
     # Help
-    keybind( '<Control-Alt-r>', sub { ::display_manual("regexref"); } );
+    keybind( "<Control-$::altkey-r>", sub { ::display_manual("regexref"); } );
 
     # Mouse
     keybind( '<Shift-B1-Motion>', sub { $textwindow->shiftB1_Motion(@_); } );
@@ -293,7 +293,7 @@ sub keybindings {
 
     # Alternative paste to give user a second option if Perl/Tk utf8 bug strikes
     $textwindow->MainWindow->bind( 'Tk::Entry',
-        '<Control-Alt-v>' => sub { ::entrypaste( shift, 'alternative' ); }, );
+        "<Control-$::altkey-v>" => sub { ::entrypaste( shift, 'alternative' ); }, );
 
     # Override bindings relating to word movement/selection in Entry fields
     $textwindow->MainWindow->bind( 'Tk::Entry',

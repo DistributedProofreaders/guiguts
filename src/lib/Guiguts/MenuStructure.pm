@@ -165,7 +165,7 @@ sub menu_edit {
         menu_edit_cutcopypaste(),
         [
             'command', 'Alternative Paste',
-            -accelerator => 'Ctrl+Alt+v',
+            -accelerator => "Ctrl+$::altkeyname+v",
             -command     => sub { ::paste('alternative'); },
         ],
         [ 'separator', '' ],
@@ -310,7 +310,7 @@ sub menu_search {
         ],
         [
             'command', '~Highlight Character, String or Regex...',
-            -accelerator => 'Ctrl+Alt+h',
+            -accelerator => "Ctrl+$::altkeyname+h",
             -command     => \&::hilitepopup,
         ],
         [
@@ -574,7 +574,7 @@ sub menu_txt {
         [
             'command',
             'Indent Selection ~1',
-            -accelerator => "Alt\x{2192},Ctrl+m",
+            -accelerator => "$::altkeyname\x{2192},Ctrl+m",
             -command     => sub {
                 ::indent( $textwindow, 'in' );
             }
@@ -582,7 +582,7 @@ sub menu_txt {
         [
             'command',
             'Indent Selection ~4',
-            -accelerator => 'Ctrl+Alt+m',
+            -accelerator => "Ctrl+$::altkeyname+m",
             -command     => sub {
                 $textwindow->addGlobStart;
                 ::indent( $textwindow, 'in' ) for ( 1 .. 4 );
@@ -592,7 +592,7 @@ sub menu_txt {
         [
             'command',
             'In~dent Selection -1',
-            -accelerator => "Alt\x{2190},Ctrl+Shift+m",
+            -accelerator => "$::altkeyname\x{2190},Ctrl+Shift+m",
             -command     => sub {
                 ::indent( $textwindow, 'out' );
             }

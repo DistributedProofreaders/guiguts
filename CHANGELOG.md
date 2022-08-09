@@ -25,6 +25,7 @@
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
 - Improvements to installation procedure and instructions for Mac users
+- Use Command key in place of Alt key in keyboard shortcuts on Macs
 - Cmd-up/down key bindings added to match usual Mac behavior
 - Optional command line argument `--home` added to specify the directory
   where persistent data files, such as `setting.rc`, will be stored,

@@ -903,7 +903,7 @@ sub composekeypopup {
     $::lglobal{composekeycombination} = $::composepopbinding;
     $::lglobal{composekeyshift}       = ( $::lglobal{composekeycombination} =~ /Shift-/ );
     $::lglobal{composekeycontrol}     = ( $::lglobal{composekeycombination} =~ /Control-/ );
-    $::lglobal{composekeyalt}         = ( $::lglobal{composekeycombination} =~ /Alt-/ );
+    $::lglobal{composekeyalt}         = ( $::lglobal{composekeycombination} =~ /$::altkeyname-/ );
     $::lglobal{composekeybase}        = $::lglobal{composekeycombination};
     $::lglobal{composekeybase} =~ s/.+-//;    # remove modifiers to find base key
 
@@ -915,7 +915,7 @@ sub composekeypopup {
         $::lglobal{composekeypop} = $top->Toplevel;
         $::lglobal{composekeypop}->title('Set Compose Key');
         $::lglobal{composekeypop}->Label( -text =>
-              "Press the key to use for starting Compose Sequences\nAlso select Shift, Control and/or Alt modifiers if required",
+              "Press the key to use for starting Compose Sequences\nAlso select Shift, Control and/or $::altkeyname modifiers if required",
         )->pack;
         my $f0 = $::lglobal{composekeypop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f0->Checkbutton(
@@ -929,7 +929,7 @@ sub composekeypopup {
             -command  => \&composekeypopupbind,
         )->grid( -row => 1, -column => 2 );
         $f0->Checkbutton(
-            -text     => 'Alt',
+            -text     => $::altkeyname,
             -variable => \$::lglobal{composekeyalt},
             -command  => \&composekeypopupbind,
         )->grid( -row => 1, -column => 3 );
@@ -964,13 +964,15 @@ sub composekeypopupbind {
 
     # Combine the modifiers with the base key
     $::composepopbinding = '';
-    $::composepopbinding .= 'Shift-'   if $::lglobal{composekeyshift};
-    $::composepopbinding .= 'Control-' if $::lglobal{composekeycontrol};
-    $::composepopbinding .= 'Alt-'     if $::lglobal{composekeyalt};
+    $::composepopbinding .= 'Shift-'         if $::lglobal{composekeyshift};
+    $::composepopbinding .= 'Control-'       if $::lglobal{composekeycontrol};
+    $::composepopbinding .= "$::altkeyname-" if $::lglobal{composekeyalt};
     $::lglobal{composekeybase} = 'Alt_R' unless $::lglobal{composekeybase};    # sensible default
     $::composepopbinding .= $::lglobal{composekeybase};
 
-    ::keybind( "<$::composepopbinding>", sub { ::composepopup(); } );          # Rebind new combination
+    my $bind = $::composepopbinding;
+    $bind =~ s/$::altkeyname/$::altkey/;                                       # Pass internal form of altkey to binding routine (Meta instead of Command on Mac)
+    ::keybind( "<$bind>", sub { ::composepopup(); } );                         # Rebind new combination
 
     $::lglobal{composekeycombination} = $::composepopbinding;                  # Update dialog entry box
 }

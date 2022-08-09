@@ -104,8 +104,10 @@ our $urlprojectpage       = 'https://www.pgdp.net/c/project.php?id=';
 our $urlprojectdiscussion = 'https://www.pgdp.net/c/tools/proofers/project_topic.php?project=';
 
 ### Application Globals
-our $activecolor      = '#24baec';    #'#f2f818';
+our $activecolor      = '#24baec';                      #'#f2f818';
 our $alpha_sort       = 'f';
+our $altkey           = $OS_MAC ? "Meta"    : "Alt";    # Alt key used in binding routine calls
+our $altkeyname       = $OS_MAC ? "Command" : "Alt";    # Name of Alt key for display to user
 our $auto_page_marks  = 1;
 our $auto_show_images = 0;
 our $autobackup       = 0;
