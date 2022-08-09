@@ -264,6 +264,8 @@ sub errorcheckpop_up {
 
     # Alt + button 1 pops the Search dialog prepopulated with the queried word
     $::lglobal{errorchecklistbox}->eventAdd( '<<search>>' => '<Alt-ButtonRelease-1>' );
+    $::lglobal{errorchecklistbox}->eventAdd( '<<search>>' => '<Meta-ButtonRelease-1>' )
+      if $::OS_MAC;
     $::lglobal{errorchecklistbox}->bind(
         '<<search>>',
         sub {
