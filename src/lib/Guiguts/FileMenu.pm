@@ -18,8 +18,10 @@ sub file_open {    # Find a text file to open
     my $textwindow = shift;
     my ($name);
     return if ( ::confirmempty() =~ /cancel/i );
-    my $types = [ [ 'Text Files', [qw/.txt .text .ggp .htm .html .bk1 .bk2 .xml/] ],
-        [ 'All Files', ['*'] ], ];
+    my $types = [
+        [ 'Text Files', [qw/.txt .text .ggp .htm .html .bk1 .bk2 .xml .xhtml/] ],
+        [ 'All Files',  ['*'] ],
+    ];
     $name = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => 'Open File',
