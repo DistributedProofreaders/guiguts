@@ -70,12 +70,7 @@ sub html_convert_simple_tag {
 sub html_convert_ampersands {
     my $textwindow = shift;
     ::working("Converting Ampersands");
-    ::named( '&(?![\w#])', '&amp;' );
-    ::named( '&$',         '&amp;' );
-    ::named( '& ',         '&amp; ' );
-    ::named( '&c\.',       '&amp;c.' );
-    ::named( '&c,',        '&amp;c.,' );
-    ::named( '&c ',        '&amp;c. ' );
+    ::named( '&', '&amp;' );
     $textwindow->FindAndReplaceAll( '-regexp', '-nocase', "(?<![a-zA-Z0-9/\\-\"])>", "&gt;" );
     $textwindow->FindAndReplaceAll( '-regexp', '-nocase',
         "(?![\\n0-9])<(?![a-zA-Z0-9/\\-\\n])", '&lt;' );
