@@ -794,21 +794,6 @@ sub filePathsPopup {
             -anchor => 'n',
             -fill   => 'x'
         );
-        $f8b->Label(
-            -text   => "Kindlegen:",
-            -width  => 22,
-            -anchor => 'w',
-        )->pack( -side => 'left' );
-        $f8b->Button(
-            -text    => 'Locate Kindlegen...',
-            -command => sub { ::locateExecutable( 'kindlegen', \$::kindlegencommand ); },
-            -width   => 24,
-        )->pack( -side => 'right' );
-        $f8b->Entry(
-            -textvariable => \$::kindlegencommand,
-            -relief       => 'sunken',
-            -background   => $::bkgcolor,
-        )->pack( -expand => 'y', -fill => 'x' );
         my $f9 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
