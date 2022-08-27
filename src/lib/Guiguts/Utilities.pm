@@ -1177,6 +1177,7 @@ sub initialize {
 
     # If XnView or Aspell are installed under "Program Files (x86)",
     # set that as the default, otherwise use "Program Files"
+    # Suitable for Windows installation locations
     my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
     if ( -e $trypath ) {
         $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
@@ -1190,6 +1191,14 @@ sub initialize {
     } else {
         $::globalspellpath = ::setdefaultpath( $::globalspellpath,
             ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+    }
+
+    # Override to more likely default locations for Mac
+    if ($::OS_MAC) {
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
+            ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
+        $::globalspellpath =
+          ::setdefaultpath( $::globalspellpath, ::catfile( '/opt', 'homebrew', 'bin', 'aspell' ) );
     }
 
     if ($::OS_MAC) {
