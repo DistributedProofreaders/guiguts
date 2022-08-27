@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use POSIX qw /strftime /;
 use File::HomeDir qw /home/;
+use Getopt::Long;
 
 BEGIN {
     use Exporter();
@@ -408,7 +409,7 @@ sub path_defaultdict {
 #
 # Return path to default GG homedir location under user's home folder
 sub path_defaulthomedir {
-    if ($::OS_WIN) {
+    if ( $::OS_WIN or $::OS_MAC ) {
         return ::catdir( File::HomeDir::home(), "Documents", "GGprefs" );
     } else {
         return ::catdir( File::HomeDir::home(), ".GGprefs" );
@@ -3314,8 +3315,6 @@ sub BindMouseWheel {
 #
 # homedirectory must be handled before initialize(), so that
 # homedirectory and guigutsdirectory are both set correctly.
-use Getopt::Long;
-
 sub processcommandline {
 
     # Default values if not specified on command line
