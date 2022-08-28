@@ -1206,8 +1206,15 @@ sub initialize {
     if ($::OS_MAC) {
         $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
             ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
-        $::globalspellpath =
-          ::setdefaultpath( $::globalspellpath, ::catfile( '/opt', 'homebrew', 'bin', 'aspell' ) );
+
+        # M1 and Intel-based Macs have Aspell installed in different locations
+        $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );
+        if ( -e $trypath ) {
+            $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
+        } else {
+            $::globalspellpath =
+              ::setdefaultpath( $::globalspellpath, ::catfile( '/usr', 'local', 'bin', 'aspell' ) );
+        }
     }
 
     if ($::OS_MAC) {
