@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use POSIX qw /strftime /;
 use File::HomeDir qw /home/;
+use Getopt::Long;
 
 BEGIN {
     use Exporter();
@@ -21,7 +22,8 @@ BEGIN {
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
-      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict);
+      &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
+      &processcommandline &copysettings);
 
 }
 
@@ -404,6 +406,16 @@ sub path_defaultdict {
     return ::catfile( 'data', "dict_$::booklang" . "_default.txt" );
 }
 
+#
+# Return path to default GG homedir location under user's home folder
+sub path_defaulthomedir {
+    if ( $::OS_WIN or $::OS_MAC ) {
+        return ::catdir( File::HomeDir::home(), "Documents", "GGprefs" );
+    } else {
+        return ::catdir( File::HomeDir::home(), ".GGprefs" );
+    }
+}
+
 # system(LIST)
 # (but slightly more robust, particularly on Windows).
 sub run {
@@ -750,6 +762,13 @@ sub working {
 }
 
 sub initialize {
+
+    # Get location of guiguts.pl & make it the current directory
+    $::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) );
+    chdir $::lglobal{guigutsdirectory};
+
+    sethomedir();
+
     $::top = ::tkinit( -title => $::window_title, );
     my $top = $::top;
     $top->minsize( 440, 90 );
@@ -790,11 +809,6 @@ sub initialize {
         -format => 'gif',
         -data   => $::icondata
     );
-    if ( $0 =~ m/\/|\\/ ) {
-        my $dir = $0;
-        $dir =~ s/(\/|\\)[^\/\\]+$/$1/;
-        chdir $dir if length $dir;
-    }
 
     # positionhash stores user's window position
     # geometryhash stores user's window position and size
@@ -935,11 +949,6 @@ sub initialize {
     $::manualhash{'versionbox'}        = '/Help_Menu#Guiguts_HELP_Menu:_Online_and_Built-in_Help';
     $::manualhash{'wfpop'}             = '/Tools_Menu#Word_Frequency';
     $::manualhash{'workpop'}           = '#Overview';
-
-    $::lglobal{guigutsdirectory} = ::dirname( ::rel2abs($0) )
-      unless defined $::lglobal{guigutsdirectory};
-    $::lglobal{homedirectory} = $::lglobal{guigutsdirectory}
-      unless $::lglobal{homedirectory};
 
     ::composeinitialize();
 
@@ -3296,6 +3305,152 @@ sub BindMouseWheel {
         $bindwidget->bind( '<4>' => sub { $listwidget->yview( 'scroll', -3, 'units' ); } );
         $bindwidget->bind( '<5>' => sub { $listwidget->yview( 'scroll', +3, 'units' ); } );
     }
+}
+
+#
+# Process command line, which has to be done before call to initialize() in guiguts.pl
+#
+# runtests must be set before initialize(), otherwise it will load
+# setting.rc which could influence the test results.
+#
+# homedirectory must be handled before initialize(), so that
+# homedirectory and guigutsdirectory are both set correctly.
+sub processcommandline {
+
+    # Default values if not specified on command line
+    $::lglobal{runtests}      = 0;
+    $::lglobal{homedirectory} = '';
+
+    GetOptions(
+        'home=s'   => \$::lglobal{homedirectory},
+        'runtests' => \$::lglobal{runtests}
+    ) or die("Error in command line arguments\n");
+}
+
+#
+# Handle setting of homedir to store prefs, language data files, personal dictionary files, etc
+# Priority as follows:
+# 1. If set via command line, use if it is suitable
+# 2. If default homedir location exists, use it
+# 3. Use historical location under release
+sub sethomedir {
+
+    # If homedir already specified via command line, ensure it is suitable
+    if ( $::lglobal{homedirectory} ) {
+        $::lglobal{homedirectory} = ::rel2abs( $::lglobal{homedirectory} );
+        ::infoerror( "Using home directory: " . $::lglobal{homedirectory} );
+        if ( -e $::lglobal{homedirectory} ) {
+            die "ERROR: --home directory must be a directory\n" unless -d $::lglobal{homedirectory};
+        } else {
+            die "ERROR: --home directory could not be created\n"
+              unless mkdir $::lglobal{homedirectory};
+        }
+        die "ERROR: --home directory is not writeable\n" unless -w $::lglobal{homedirectory};
+    } else {    # Otherwise if user's global GG prefs dir exists, use that
+        my $defaulthomedirectory = path_defaulthomedir();
+        $::lglobal{homedirectory} = $defaulthomedirectory if -d $defaulthomedirectory;
+    }
+
+    # If still not set, use historical locations under the release directory
+    $::lglobal{homedirectory} = $::lglobal{guigutsdirectory}
+      unless $::lglobal{homedirectory};
+}
+
+#
+# Copy various settings files from another release into the default home directory location
+sub copysettings {
+    my $top = $::top;
+
+    # User chooses release to copy from
+    my $source = $top->chooseDirectory(
+        -title =>
+          "Choose top-level Guiguts release folder with settings you want to copy. Cancel now if you have unsaved changes!",
+        -initialdir => "$::lglobal{guigutsdirectory}",
+    );
+    return unless $source and -d $source;
+
+    # Check user hasn't chosen global homedir by mistake
+    if ( $source eq path_defaulthomedir() ) {
+        $top->messageBox(
+            -icon    => 'error',
+            -type    => 'Ok',
+            -title   => 'Bad Folder',
+            -message => "You must choose a Guiguts release folder"
+        );
+        return;
+    }
+
+    # Check that user has selected a suitable directory, i.e. contains appropriate files/folders
+    my $settings = 'setting.rc';
+    my $header   = 'header.txt';
+    for my $file ( $settings, $header ) {
+        unless ( -f ::catfile( $source, $file ) ) {
+            $top->messageBox(
+                -icon    => 'error',
+                -type    => 'Ok',
+                -title   => 'Bad Folder',
+                -message => "$source does not contain a '$file' file"
+            );
+            return;
+        }
+    }
+    my $datadir = 'data';
+    unless ( -d ::catdir( $source, $datadir ) ) {
+        $top->messageBox(
+            -icon    => 'error',
+            -type    => 'Ok',
+            -title   => 'Bad Folder',
+            -message => "$source does not contain a '$datadir' folder"
+        );
+        return;
+    }
+
+    # Ensure we have a folder to copy into
+    my $dest = path_defaulthomedir();
+    if ( -d $dest ) {    # If homedir already exists, is it OK to overwrite files in it?
+        my $ans = $top->messageBox(
+            -icon    => 'warning',
+            -type    => 'YesNo',
+            -default => 'yes',
+            -title   => 'Overwrite Warning',
+            -message =>
+              "You already have a global settings folder: $dest - are you sure you want to overwrite the settings there with the ones stored under $source?"
+        );
+        return if $ans =~ /no/i;
+    } else {             # If it doesn't exist, create it
+        die "ERROR: settings directory could not be created\n" unless mkdir $dest;
+    }
+    die "ERROR: settings directory is not writeable\n" unless -w $dest;
+
+    # Copy any top level files first
+    for my $file ( $settings, $header ) {
+        ::copy( ::catfile( $source, $file ), ::catfile( $dest, $file ) );
+    }
+
+    # Now copy user's labels files and dictionary files
+    my $datasource = ::catdir( $source, $datadir );
+    opendir( my $dh, $datasource ) || die "Can't opendir $datasource: $!";
+    my @files = sort grep { -f "$datasource/$_" } readdir($dh);
+    closedir $dh;
+    for my $file (@files) {
+        next if $file =~ /labels.*default\.rc/;    # Don't copy default labels files
+        ::copy( ::catfile( $datasource, $file ), ::catfile( $dest, $file ) )
+          if $file =~ /labels_.*\.rc/ or $file =~ /dict_.*_user\.txt/;
+    }
+
+    # Need to exit immediately to stop newly copied setting.rc file being overwritten.
+    # This could happen if the global settings folder already existed, so this
+    # execution of the program was already using the setting.rc from there.
+    # Now the user has overwritten that setting.rc by copying from a different release,
+    # we must not re-overwrite it from within this program.
+    $top->messageBox(
+        -icon    => 'warning',
+        -type    => 'Ok',
+        -title   => 'Restart Necessary',
+        -message =>
+          "Program will now exit. Restart Guiguts to use the settings you have copied to $dest"
+    );
+    exit;
 }
 
 1;

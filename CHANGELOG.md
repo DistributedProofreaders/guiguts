@@ -1,7 +1,7 @@
 # Changelog
 
 
-## Version 1.4.1-test3
+## Version 1.4.1
 
 - New Spell Query tool checks spelling, reporting queries in similar way to
   jeebies, bookloupe, etc. Similar buttons to old spell check dialog allow
@@ -24,6 +24,7 @@
   table row on a single text line.
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
+- File Open dialog now displays files with `.xhtml` extension
 - Improvements to installation procedure and instructions for Mac users
 - Use Command key in place of Alt key in keyboard shortcuts on Macs
 - Cmd-up/down key bindings added to match usual Mac behavior
