@@ -37,7 +37,6 @@ use File::Spec::Functions qw(catdir);
 use File::Copy;
 use File::Compare;
 use File::Which;
-use Getopt::Long;
 use HTML::Entities;
 use HTML::TokeParser;
 use Image::Size;
@@ -322,34 +321,7 @@ local $SIG{__WARN__} = \&::warnerror;
 # }
 
 # Process command-line arguments before calling initialize().
-#
-# runtests must be set before initialize(), otherwise it will load
-# setting.rc which could influence the test results.
-#
-# homedirectory must be handled before initialize(), so that
-# homedirectory and guigutsdirectory are both set correctly.
-
-# Default values if not specified on command line
-$lglobal{runtests}      = 0;
-$lglobal{homedirectory} = '';
-
-GetOptions(
-    'home=s'   => \$lglobal{homedirectory},
-    'runtests' => \$lglobal{runtests}
-) or die("Error in command line arguments\n");
-
-if ( $lglobal{homedirectory} ) {
-    $lglobal{homedirectory} = ::rel2abs( $lglobal{homedirectory} );
-    ::infoerror( "Using home directory: " . $lglobal{homedirectory} );
-
-    if ( -e $lglobal{homedirectory} ) {
-        die "ERROR: --home directory must be a directory\n" unless -d $lglobal{homedirectory};
-    } else {
-        die "ERROR: --home directory could not be created\n" unless mkdir $lglobal{homedirectory};
-    }
-
-    die "ERROR: --home directory is not writeable\n" unless -w $lglobal{homedirectory};
-}
+processcommandline();
 
 initialize();    # Initialize a bunch of vars that need it.
 
