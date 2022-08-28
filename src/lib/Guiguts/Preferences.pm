@@ -51,8 +51,12 @@ sub setdefaultpath {
             if ( $oldpath && -e $oldpath ) {
                 my $oldtail = '';
                 $index = index( $oldpath, 'tools' );
-                $index = index( $oldpath, 'scannos' ) if $index < 0;
-                if ( $index >= 0 ) {                     # Old path was in tools or scannos under the release
+
+                # Extra basename condition for scannos permits user to name their custom folder anything but "scannos",
+                # Without that, names ending in "scannos", like "myscannos" would match the default name and get reset
+                $index = index( $oldpath, 'scannos' )
+                  if $index < 0 and basename($oldpath) eq "scannos";
+                if ( $index >= 0 ) {    # Old path was in tools or scannos under the release
                     my $oldtail = substr( $oldpath, $index );
                     return $oldpath unless $newtail eq $oldtail;    # Old path was different so keep it
                 } else {
