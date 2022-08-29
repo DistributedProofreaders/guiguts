@@ -2385,8 +2385,8 @@ sub ebookmaker {
     my $err  = 0;
     my $warn = 0;
     while ( my $line = <$ebmout> ) {
-        $err++ if $line =~ "^ERROR:";
-        print "$line  -  " . $warn++
+        $err++ if $line =~ "^ERROR:" or $line =~ "^CRITICAL:";
+        $warn++
           if $line  =~ "^WARNING:"
           and $line !~ "No gnu dbm support found"                                # ignore some warnings
           and $line !~ "No pg-(header|footer) found, inserted a generated one"
