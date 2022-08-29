@@ -29,7 +29,22 @@
 - Cmd-up/down key bindings added to match usual Mac behavior
 - Optional command line argument `--home` added to specify the directory
   where persistent data files, such as `setting.rc`, will be stored,
-  instead of under the release.
+  instead of under the release. If `--home` is not specified, and the
+  default home directory exists, data files from there will be used.
+  If default home directory does not exist, historical file locations
+  under the release are used. Default home directory is in
+  `HOME/Documents/GGprefs` on Windows/Mac systems and `HOME/.GGprefs`
+  on Linux.
+- New `Use Settings From Another Release` button added to the
+  `Preferences/File Paths` menu to facilitate setup of default home
+  directory. Normally used just once, this copies settings files from
+  the chosen release into the default home directory location, from
+  where they will be used by the current and all future releases.
+- Optional command line argument `--nohome` added to force usage of
+  `setting.rc` and similar files from under the release, rather than
+  the default or specified home directory (primarily for testing)
+- Mac `Command` key can be used in place of `Alt` key in keyboard
+  shortcuts
 
 ### Bug Fixes
 
@@ -37,6 +52,7 @@
 - HTML generation could loop forever converting footnotes
 - HTML generation could misplace the closing `<\div>` for a group of footnotes
   if footnote contained blockquotes
+- Some ampersands were not converted to HTML entities during HTML generation
 - Navigating, selecting and deleting by whole words was inconsistent:
     - Apostrophes now considered part of a word
     - Use keyboard Ctrl+Left/Right arrow for move; add Shift to select
@@ -47,6 +63,12 @@
 - Using `Save` instead of `Save As` to save a new file could cause a crash
 - Filename was not displayed correctly in `Save a Copy As` dialog
 - `Import Prep Text Files` did not import files with a space in their names
+- User's customized scannos folder location got reset when Guiguts was 
+  restarted if the name of the folder ended in `scannos`, e.g. `myscannos`
+  Such names are now retained, though the exact name `scannos` must still
+  not be used
+- Default locations for Aspell and XnView were unsuitable for Mac systems
+- `Set File Paths/Locate Scannos` button failed on Mac systems
 
 
 ## Version 1.4.0
