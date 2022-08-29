@@ -907,7 +907,7 @@ EOM
         for (
             qw /globallastpath globalspellpath globalspelldictopt globalviewerpath
             globalbrowserstart gutcommand jeebiescommand scannospath tidycommand
-            validatecommand validatecsscommand ebookmakercommand kindlegencommand/
+            validatecommand validatecsscommand ebookmakercommand/
         ) {
             if ( eval '$::' . $_ ) {
                 print $save_handle "\$$_", ' ' x ( 20 - length $_ ), "= '",
