@@ -1186,6 +1186,7 @@ sub initialize {
 
     # If XnView or Aspell are installed under "Program Files (x86)",
     # set that as the default, otherwise use "Program Files"
+    # Suitable for Windows installation locations
     my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
     if ( -e $trypath ) {
         $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
@@ -1199,6 +1200,21 @@ sub initialize {
     } else {
         $::globalspellpath = ::setdefaultpath( $::globalspellpath,
             ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+    }
+
+    # Override to more likely default locations for Mac
+    if ($::OS_MAC) {
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
+            ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
+
+        # M1 and Intel-based Macs have Aspell installed in different locations
+        $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );
+        if ( -e $trypath ) {
+            $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
+        } else {
+            $::globalspellpath =
+              ::setdefaultpath( $::globalspellpath, ::catfile( '/usr', 'local', 'bin', 'aspell' ) );
+        }
     }
 
     my $textwindow = $::textwindow;
@@ -3305,9 +3321,11 @@ sub processcommandline {
     # Default values if not specified on command line
     $::lglobal{runtests}      = 0;
     $::lglobal{homedirectory} = '';
+    $::lglobal{nohome}        = 0;
 
     GetOptions(
         'home=s'   => \$::lglobal{homedirectory},
+        'nohome'   => \$::lglobal{nohome},
         'runtests' => \$::lglobal{runtests}
     ) or die("Error in command line arguments\n");
 }
@@ -3315,10 +3333,17 @@ sub processcommandline {
 #
 # Handle setting of homedir to store prefs, language data files, personal dictionary files, etc
 # Priority as follows:
-# 1. If set via command line, use if it is suitable
-# 2. If default homedir location exists, use it
-# 3. Use historical location under release
+# 1. If nohome is set, ignore home option and default homedir - use historical location under release
+# 2. If homedir set via command line, use if it is suitable
+# 3. If default homedir location exists, use it
+# 4. Use historical location under release
 sub sethomedir {
+
+    # If nohome set, force the use of historical location under release dir
+    if ( $::lglobal{nohome} ) {
+        $::lglobal{homedirectory} = $::lglobal{guigutsdirectory};
+        return;
+    }
 
     # If homedir already specified via command line, ensure it is suitable
     if ( $::lglobal{homedirectory} ) {
