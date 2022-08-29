@@ -59,11 +59,14 @@ to any previous versions._
    then return to re-try this step.
 7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts
    should start up and be ready for use.
-8. See the [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
-   wiki page for information on installing the Aspell spell checker and an
-   image viewer to display scans and edit images. You can also find out how
-   to obtain and link to the kindlegen tool if you want your local version
-   of ebookmaker to create mobi files in addition to epub files.
+8. If you want to use the Spell Check tool, see the
+   [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
+   wiki page for information on installing the Aspell spell checker. If you
+   intend to use the new Spell Query tool instead, you do not need Aspell.
+   The same wiki page describes how to install an image viewer to display scans
+   and edit images. You can also find out how to obtain the Calibre e-book
+   software suite if you want your local version of ebookmaker to create Kindle
+   files in addition to epub files.
 9. Install [Java](#java) to be able to check your HTML and CSS from within
    Guiguts.
 
@@ -221,7 +224,8 @@ for a one-click start.
 
 ### Helper applications
 
-Homebrew provides some additional helper applications you might find useful:
+Homebrew provides some additional helper applications you might find useful
+(aspell is used for Spell Check, but not the new Spell Query tool):
 
 ```
 brew install aspell
@@ -234,11 +238,9 @@ See also the [Jeebies installation instructions](tools/jeebies/README.md).
 
 See also the [EBookMaker installation instructions](tools/ebookmaker/README.md).
 
-You will also need to obtain and link to the kindlegen tool if you want your
-local version of ebookmaker to create mobi files in addition to epub files.
-Kindlegen is included when you install [Kindle Previewer](https://www.amazon.com/gp/feature.html?docId=1000765261).
-You can tell Guiguts where kindlegen is installed using the Preferences ->
-Set File Paths dialog.
+You will also need to obtain the
+[Calibre e-book software suite](https://calibre-ebook.com/download) if you want your
+local version of ebookmaker to create Kindle files in addition to epub files.
 
 Install [Java](#java) to be able to check your HTML and CSS from within
 Guiguts.

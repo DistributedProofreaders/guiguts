@@ -212,7 +212,6 @@ our $tidycommand        = '';
 our $validatecommand    = '';
 our $validatecsscommand = '';
 our $ebookmakercommand  = '';
-our $kindlegencommand   = '';
 our %charsuiteenabled   = ( 'Basic Latin' => 1 );    # All projects allow Basic Latin character suite
 our %pagenumbers;
 our %projectdict;
