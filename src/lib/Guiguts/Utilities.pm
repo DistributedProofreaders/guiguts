@@ -3336,9 +3336,11 @@ sub processcommandline {
     # Default values if not specified on command line
     $::lglobal{runtests}      = 0;
     $::lglobal{homedirectory} = '';
+    $::lglobal{nohome}        = 0;
 
     GetOptions(
         'home=s'   => \$::lglobal{homedirectory},
+        'nohome'   => \$::lglobal{nohome},
         'runtests' => \$::lglobal{runtests}
     ) or die("Error in command line arguments\n");
 }
@@ -3346,10 +3348,17 @@ sub processcommandline {
 #
 # Handle setting of homedir to store prefs, language data files, personal dictionary files, etc
 # Priority as follows:
-# 1. If set via command line, use if it is suitable
-# 2. If default homedir location exists, use it
-# 3. Use historical location under release
+# 1. If nohome is set, ignore home option and default homedir - use historical location under release
+# 2. If homedir set via command line, use if it is suitable
+# 3. If default homedir location exists, use it
+# 4. Use historical location under release
 sub sethomedir {
+
+    # If nohome set, force the use of historical location under release dir
+    if ( $::lglobal{nohome} ) {
+        $::lglobal{homedirectory} = $::lglobal{guigutsdirectory};
+        return;
+    }
 
     # If homedir already specified via command line, ensure it is suitable
     if ( $::lglobal{homedirectory} ) {
