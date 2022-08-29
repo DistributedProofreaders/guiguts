@@ -1217,25 +1217,6 @@ sub initialize {
         }
     }
 
-    if ($::OS_MAC) {
-        $::kindlegencommand = ::setdefaultpath(
-            $::kindlegencommand,
-            ::catfile(
-                '/Applications', 'Kindle Previewer 3.app',
-                'Contents', 'lib', 'fc', 'bin', 'kindlegen'
-            )
-        );
-    } else {
-        $::kindlegencommand = ::setdefaultpath(
-            $::kindlegencommand,
-            ::catfile(
-                File::HomeDir::home(), 'AppData', 'Local', 'Amazon',
-                'Kindle Previewer 3',  'lib',     'fc',    'bin',
-                'kindlegen.exe'
-            )
-        );
-    }
-
     my $textwindow = $::textwindow;
     $textwindow->tagConfigure( 'footnote', -background => 'cyan' );
     $textwindow->tagConfigure( 'scannos',  -background => $::highlightcolor );
@@ -2362,24 +2343,25 @@ sub ebookmaker {
     infoerror(
         "Files will appear in the directory $::globallastpath" . ( $makehtml ? "out" : "" ) );
 
-    # EBookMaker needs to use Tidy and Kindlegen, so temporarily append to the path
-    # local variable means global value will be restored at end of sub
-    local $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::tidycommand) );
-
     # Set up options for which files ebookmaker will generate
-    my $makeoption   = "--make=html.images";
+    my $htmloption   = "";
+    my $epub2option  = "";
+    my $epub3option  = "";
     my $kindleoption = "";
-    unless ($makehtml) {
-        $makeoption = "--make=epub.images";
+    my $kf8option    = "";
 
-        # Only use kindlegen if it exists
-        if ( -e $::kindlegencommand ) {
-            $ENV{PATH} = pathcatdir( $ENV{PATH}, ::dirname($::kindlegencommand) );
+    if ($makehtml) {
+        $htmloption = "--make=html.images";
+    } else {
+        $epub2option = "--make=epub.images";
+        $epub3option = "--make=epub3.images";
+
+        # Only use Calibre to create mobi if it's on the path
+        if ( $ENV{PATH} =~ /calibre/i ) {
             $kindleoption = "--make=kindle.images";
+            $kf8option    = "--make=kf8.images";
         } else {
-            infoerror(
-                "For mobi files, use Set File Paths to locate kindlegen which you can obtain by installing Kindle Previewer 3"
-            );
+            infoerror("For Kindle files, install Calibre and ensure it is on your PATH");
         }
     }
 
@@ -2389,12 +2371,13 @@ sub ebookmaker {
     $outputdir =~ s/[\/\\]$//;                          # Remove trailing slash from output dir to avoid confusing ebookmaker
     my $configdir = ::dirname($::ebookmakercommand);    # Ebookmaker dir contains tidy.conf file
     $runner->run(
-        $::ebookmakercommand,   "--verbose",
-        "--max-depth=3",        $makeoption,
-        $kindleoption,          "--output-dir=$outputdir",
-        "--output-file=$fname", "--config-dir=$configdir",
-        "--title=$ttitle",      "--author=$tauthor",
-        "$filepath"
+        $::ebookmakercommand,      "--verbose",
+        "--max-depth=3",           $htmloption,
+        $epub2option,              $epub3option,
+        $kindleoption,             $kf8option,
+        "--output-dir=$outputdir", "--output-file=$fname",
+        "--config-dir=$configdir", "--title=$ttitle",
+        "--author=$tauthor",       "$filepath"
     );
 
     # Check for errors or warnings in ebookmaker output
@@ -2402,13 +2385,15 @@ sub ebookmaker {
     my $err  = 0;
     my $warn = 0;
     while ( my $line = <$ebmout> ) {
-        $err++ if $line =~ "^ERROR:";
+        $err++ if $line =~ "^ERROR:" or $line =~ "^CRITICAL:";
         $warn++
           if $line  =~ "^WARNING:"
-          and $line !~ "No gnu dbm support found"                         # ignore some warnings
+          and $line !~ "No gnu dbm support found"                                # ignore some warnings
+          and $line !~ "No pg-(header|footer) found, inserted a generated one"
+          and $line !~ "no boilerplate found in file"
           and $line !~ '<table> lacks "summary" attribute'
           and $line !~ "elements having class .* have been rewritten.";
-        adderror($line);                                                  # Send all ebookmaker output to message log
+        adderror($line);                                                         # Send all ebookmaker output to message log
     }
     close $ebmout;
     unlink $tmpfile;
