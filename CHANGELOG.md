@@ -21,7 +21,9 @@
 - New `Rejoin Rows` button in ASCII Table Effects dialog takes a table with
   one cell per line and a blank line to mark rows, and converts it to a
   table with double space separators for cells, and all the cells from each
-  table row on a single text line.
+  table row on a single text line
+- Latest ebookmaker version included - now creates epub3 and kf8 files in
+  addition to epub2 and mobi files
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
 - File Open dialog now displays files with `.xhtml` extension
