@@ -24,6 +24,9 @@
   table row on a single text line
 - Latest ebookmaker version included - now creates epub3 and kf8 files in
   addition to epub2 and mobi files
+- `Next Occurrence` button in Stealth Scannos dialog now searches backward
+  if clicked while holding down `Shift` key, just like `Search` button in
+  Search & Replace dialog
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
 - File Open dialog now displays files with `.xhtml` extension
