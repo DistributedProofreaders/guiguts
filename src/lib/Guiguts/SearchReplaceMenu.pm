@@ -1245,7 +1245,7 @@ sub searchpopup {
                 -padx   => 2,
                 -anchor => 'w'
             );
-            my $nextoccurrencebutton = $sf5->Button(
+            $::lglobal{nextoccurrencebutton} = $sf5->Button(
                 -activebackground => $::activecolor,
                 -command          => sub {
                     searchtext('');
@@ -1257,6 +1257,7 @@ sub searchpopup {
                 -padx   => 2,
                 -anchor => 'w'
             );
+            search_shiftreverse( $::lglobal{nextoccurrencebutton} );
             my $lastbutton = $sf5->Button(
                 -activebackground => $::activecolor,
                 -command          => sub {
