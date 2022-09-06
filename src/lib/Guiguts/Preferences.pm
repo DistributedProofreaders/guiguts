@@ -603,11 +603,21 @@ sub locateDirectory {
     $::lglobal{pathtemp} = $textwindow->chooseDirectory(
         -title      => "Where is your $dirname folder?",
         -initialdir => ::dirname( ${$dirpathref} ),
-        -mustexist  => 1,
     );
-    ${$dirpathref} = $::lglobal{pathtemp} if $::lglobal{pathtemp};
-    return unless ${$dirpathref};
-    ${$dirpathref} = ::os_normal( ${$dirpathref} );
+    return unless $::lglobal{pathtemp};    # User cancelled
+
+    # -mustexist argument to chooseDirectory doesn't work on Macs, so check manually and output the same message as Tk would have
+    unless ( -d $::lglobal{pathtemp} ) {
+        $::top->messageBox(
+            -icon    => 'error',
+            -title   => 'No such directory',
+            -message =>
+              "Directory $::lglobal{pathtemp} does not exist, please select or enter an existing directory",
+            -type => 'OK',
+        );
+        return;
+    }
+    ${$dirpathref} = ::os_normal( $::lglobal{pathtemp} );
 
     # If possible, convert to relative path by trimming release root directory and slash from start
     if ( index( ${$dirpathref}, $::lglobal{guigutsdirectory} ) == 0
