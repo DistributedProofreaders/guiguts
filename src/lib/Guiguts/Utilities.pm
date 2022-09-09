@@ -3454,11 +3454,11 @@ sub copysettings {
     # Now the user has overwritten that setting.rc by copying from a different release,
     # we must not re-overwrite it from within this program.
     $top->messageBox(
-        -icon    => 'warning',
+        -icon    => 'info',
         -type    => 'Ok',
         -title   => 'Restart Necessary',
         -message =>
-          "Program will now exit. Restart Guiguts to use the settings you have copied to $dest"
+          "Guiguts will now exit. When you restart, it will use the settings that have just been copied to $dest"
     );
     exit;
 }
