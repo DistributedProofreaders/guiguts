@@ -263,9 +263,9 @@ sub errorcheckpop_up {
     );
 
     # Alt/command + button 1 pops the Search dialog prepopulated with the queried word
-    $::lglobal{errorchecklistbox}->eventAdd( '<<search>>' => "<$::altkey-ButtonRelease-1>" );
+    $::lglobal{errorchecklistbox}->eventAdd( '<<errsearch>>' => "<$::altkey-ButtonRelease-1>" );
     $::lglobal{errorchecklistbox}->bind(
-        '<<search>>',
+        '<<errsearch>>',
         sub {
             errorchecksetactive();
             my $line = $::lglobal{errorchecklistbox}->get('active');
