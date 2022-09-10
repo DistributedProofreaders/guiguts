@@ -1291,12 +1291,13 @@ sub booklouperun {
 
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
-                    ++$col;     # Allow for having removed apostrophe from start of word
+                    ++$col;    # Allow for having removed apostrophe from start of word
                     next if spellquerywordok($wd);
                 }
+
                 # if trailing straight/curly apostrophe, it might be close single quote; trim it and check again
                 next if $wd =~ s/['$APOS]$//g and spellquerywordok($wd);
-                next if $wd =~ /^['$APOS]*$/;                                 # OK if nothing left in string but zero or more quotes
+                next if $wd =~ /^['$APOS]*$/;                              # OK if nothing left in string but zero or more quotes
 
                 # Format message - increment word frequency; final total gets appended later when populating dialog
                 $sqbadwordfreq{$wd}++;
