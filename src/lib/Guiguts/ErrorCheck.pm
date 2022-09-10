@@ -263,9 +263,9 @@ sub errorcheckpop_up {
     );
 
     # Alt/command + button 1 pops the Search dialog prepopulated with the queried word
-    $::lglobal{errorchecklistbox}->eventAdd( '<<search>>' => "<$::altkey-ButtonRelease-1>" );
+    $::lglobal{errorchecklistbox}->eventAdd( '<<errsearch>>' => "<$::altkey-ButtonRelease-1>" );
     $::lglobal{errorchecklistbox}->bind(
-        '<<search>>',
+        '<<errsearch>>',
         sub {
             errorchecksetactive();
             my $line = $::lglobal{errorchecklistbox}->get('active');
@@ -1262,48 +1262,45 @@ sub booklouperun {
 
         my $step = 1;
         while ( $step <= $lastline ) {
-            my $line     = $textwindow->get( "$step.0", "$step.end" );
-            my $origline = $line;                                        # Save line for future searching to find column
-            my $col      = -1;
+            my $line    = $textwindow->get( "$step.0", "$step.end" );
+            my $col     = 0;
+            my $nextcol = 0;
 
-            # Remove unwanted characters first, e.g. block markup
-            $line =~ s/^\/[$::allblocktypes]$//;
-            $line =~ s/^[$::allblocktypes]\/$//;
-
-            # Replace all non-alphanumeric (but not apostrophes) with spaces
-            $line =~ s/[^[:alnum:]'$APOS]+/ /g;
-
-            # Trim leading/trailing spaces
-            $line =~ s/^\s+|\s+$//g;
+            # Replace all non-alphanumeric (but not apostrophes) with space
+            $line =~ s/[^[:alnum:]'$APOS]/ /g;
 
             # Check each word individually
-            my @words = split( /\s+/, $line );
+            my @words = split( /\s/, $line );    # Split on single spaces to aid column counting
             for my $wd (@words) {
+
+                # Get column of word start (at top of loop otherwise "next" skips over it)
+                $col     = $nextcol;
+                $nextcol = $col + length($wd) + 1;    # Step forward word length plus single space
+
+                next unless $wd;                      # Empty word if two consecutive separators, e.g. period & space
                 next if spellquerywordok($wd);
-                if ( $wd =~ /$APOS/ ) {    # If no match, try converting curly apostrophes to straight
+                if ( $wd =~ /$APOS/ ) {               # If no match, try converting curly apostrophes to straight
                     my $straight = $wd;
                     $straight =~ s/$APOS/'/g;
                     next if spellquerywordok($straight);
-                } elsif ( $wd =~ /'/ ) {    # And vice versa
+                } elsif ( $wd =~ /'/ ) {              # And vice versa
                     my $curly = $wd;
                     $curly =~ s/'/$APOS/g;
                     next if spellquerywordok($curly);
                 }
 
-                # If word has leading straight apostrophe, it might be open single quote;
-                # if trailing straight/curly apostrophe, it might be close single quote; try trimming them and checking again
-                next if $wd =~ s/^'|['$APOS]$//g and spellquerywordok($wd);
+                # If word has leading straight apostrophe, it might be open single quote; trim it and check again
+                if ( $wd =~ s/^'// ) {
+                    ++$col;     # Allow for having removed apostrophe from start of word
+                    next if spellquerywordok($wd);
+                }
+                # if trailing straight/curly apostrophe, it might be close single quote; trim it and check again
+                next if $wd =~ s/['$APOS]$//g and spellquerywordok($wd);
                 next if $wd =~ /^['$APOS]*$/;                                 # OK if nothing left in string but zero or more quotes
 
-                $sqbadwordfreq{$wd}++;                                        # Count how many times bad word appears
-
-                # To catch multiple occurrences of bad word on a line, keep track of column number
-                $col = index( substr( $origline, $col + 1 ), $wd ) + $col + 1;
-                my $errorloc = "$step:$col";
-                $errorloc .= " " if $col < 10;                                # align to make it easier to read
-                $col += length($wd);                                          # increment stored column past the word
-
-                my $error = "$errorloc - $wd";
+                # Format message - increment word frequency; final total gets appended later when populating dialog
+                $sqbadwordfreq{$wd}++;
+                my $error = sprintf( "%d:%-2d - %s", $step, $col, $wd );
                 utf8::encode($error);
                 print $logfile "$error\n";
             }
