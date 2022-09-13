@@ -75,6 +75,8 @@
   not be used
 - Default locations for Aspell and XnView were unsuitable for Mac systems
 - `Set File Paths/Locate Scannos` button failed on Mac systems
+- Right-clicking to configure buttons at top of HTML markup dialog could
+  generate multiple errors
 
 
 ## Version 1.4.0
