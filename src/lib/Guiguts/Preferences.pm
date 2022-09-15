@@ -582,6 +582,8 @@ sub locateExecutable {
             $types = [ [ 'All Files', ['*'] ] ];
         }
     }
+    my $initdir = ::dirname( ${$exepathref} );
+    $initdir = $::lglobal{guigutsdirectory} unless -d $initdir;
     $::lglobal{pathtemp} = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => "Where is your $exename executable?",
