@@ -22,3 +22,15 @@ file. A `Makefile` is included to make this brainless, however:
 ```
 make build
 ```
+
+### Moving to a better location
+
+Building Jeebies will create a `jeebies` executable in the `tools/jeebies`
+directory. Installing newer versions of Guiguts will require rebuilding the
+tool unless you move it someplace outside of the Guiguts directory.
+
+To persist the tool across Guiguts upgrades you can move the `jeebies` binary
+to any location outside the Guiguts directory and point Guiguts to it.
+On macOS the following are some reasonable locations:
+* Intel-based: `/usr/local/bin`
+* M1-based: `/opt/homebrew/bin`
