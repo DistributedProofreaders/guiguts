@@ -587,7 +587,7 @@ sub locateExecutable {
     $::lglobal{pathtemp} = $textwindow->getOpenFile(
         -filetypes  => $types,
         -title      => "Where is your $exename executable?",
-        -initialdir => ::dirname( ${$exepathref} ),
+        -initialdir => $initdir,
     );
     ${$exepathref} = $::lglobal{pathtemp}
       if $::lglobal{pathtemp};
