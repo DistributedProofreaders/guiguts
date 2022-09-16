@@ -1341,19 +1341,25 @@ sub booklouperun {
         delete $sqglobaldict{$_}  for keys %sqglobaldict;
         delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
 
-        # Load default global dictionary for current language - must exist
-        my $defname = ::path_defaultdict();
+        # Load default global dictionary for current language
+        my $dictloaded = 0;
+        my $defname    = ::path_defaultdict();
         if ( -f $defname ) {
             return 0 unless spellqueryloadglobaldict($defname);
-        } else {
-            ::warnerror("Spell Query dictionary not found: $defname ");
-            return 0;
+            $dictloaded = 1;
         }
 
-        # Add words from optional user global dictionary for current language
+        # Add words from user global dictionary for current language
         my $dictname = ::path_userdict();
         if ( -f $dictname ) {
             return 0 unless spellqueryloadglobaldict($dictname);
+            $dictloaded = 1;
+        }
+
+        # Either the default or user dictionary must exist for current language
+        unless ($dictloaded) {
+            ::warnerror("No Spell Query dictionary found for language '$::booklang'");
+            return 0;
         }
 
         # Now add project dictionary words
