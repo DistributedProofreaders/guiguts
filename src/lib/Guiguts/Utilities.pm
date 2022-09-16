@@ -1207,13 +1207,27 @@ sub initialize {
         $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
             ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
 
-        # M1 and Intel-based Macs have Aspell installed in different locations
+        # M1 and Intel-based Macs have some tools installed in different locations
         $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );
         if ( -e $trypath ) {
             $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
         } else {
             $::globalspellpath =
               ::setdefaultpath( $::globalspellpath, ::catfile( '/usr', 'local', 'bin', 'aspell' ) );
+        }
+        $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'bookloupe' );
+        if ( -e $trypath ) {
+            $::gutcommand = ::setdefaultpath( $::gutcommand, $trypath );
+        } else {
+            $::gutcommand =
+              ::setdefaultpath( $::gutcommand, ::catfile( '/usr', 'local', 'bin', 'bookloupe' ) );
+        }
+        $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'tidy' );
+        if ( -e $trypath ) {
+            $::tidycommand = ::setdefaultpath( $::tidycommand, $trypath );
+        } else {
+            $::tidycommand =
+              ::setdefaultpath( $::tidycommand, ::catfile( '/usr', 'local', 'bin', 'tidy' ) );
         }
     }
 
