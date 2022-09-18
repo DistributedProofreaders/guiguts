@@ -23,7 +23,7 @@ BEGIN {
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
       &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
-      &processcommandline &copysettings);
+      &processcommandline &copysettings &main_lang &list_lang);
 
 }
 
@@ -381,29 +381,33 @@ sub path_data {
 #
 # Return path to labels data file
 sub path_labels {
-    return path_data("labels_$::booklang.rc");
+    return path_data( "labels_" . ::main_lang() . ".rc" );
 }
 
 #
 # Return path to default labels data file
 sub path_defaultlabels {
-    my $f = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
+    my $f = ::catfile( 'data', "labels_" . ::main_lang() . "_default.rc" );
     return $f if -e $f;
 
-    # Default to English if $::booklang has no defaults file
+    # Default to English if language has no defaults file
     return ::catfile( 'data', 'labels_en_default.rc' );
 }
 
 #
 # Return path to spell query user global dictionary for current language
+# Optional argument to specify language
 sub path_userdict {
-    return path_data( "dict_$::booklang" . "_user.txt" );
+    my $lang = shift // ::main_lang();
+    return path_data( "dict_$lang" . "_user.txt" );
 }
 
 #
 # Return path to spell query default global dictionary for current language
+# Optional argument to specify language
 sub path_defaultdict {
-    return ::catfile( 'data', "dict_$::booklang" . "_default.txt" );
+    my $lang = shift // ::ain_lang();
+    return ::catfile( 'data', "dict_$lang" . "_default.txt" );
 }
 
 #
@@ -414,6 +418,18 @@ sub path_defaulthomedir {
     } else {
         return ::catdir( File::HomeDir::home(), ".GGprefs" );
     }
+}
+
+#
+# Return the main (first) language in the list of languages for this book
+sub main_lang {
+    return ( ( ::list_lang() )[0] // "en" );
+}
+
+# Return the languages for this book as a list
+# Allow any non-word character as a separator
+sub list_lang {
+    return split( /\W+/, $::booklang );
 }
 
 # system(LIST)
@@ -1842,7 +1858,7 @@ sub titlecase {
     $text = lc($text);
     $text =~ s/(^\W*\w)/\U$1\E/;
     $text =~ s/([\s\n]+\W*\w)/\U$1\E/g;
-    $text =~ s/ (A|An|And|At|By|From|In|Of|On|The|To)\b/ \L$1\E/g if ( $::booklang eq 'en' );
+    $text =~ s/ (A|An|And|At|By|From|In|Of|On|The|To)\b/ \L$1\E/g if ( ::main_lang() eq 'en' );
     return $text;
 }
 
