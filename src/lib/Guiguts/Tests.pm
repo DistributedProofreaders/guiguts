@@ -38,6 +38,7 @@ sub runtests {
 
     runtesterrorcheck( "Bookloupe",        "textcheck.txt",   "bookloupebaseline.txt" );
     runtesterrorcheck( "Jeebies",          "textcheck.txt",   "jeebiesbaseline.txt" );
+    runtesterrorcheck( "Spell Query",      "textcheck.txt",   "spellquerybaseline.txt" );
     runtesterrorcheck( "pptxt",            "textcheck.txt",   "pptxtbaseline.txt" );
     runtesterrorcheck( "Nu HTML Check",    "errorcheck.html", "htmlvalidatebaseline.txt" );
     runtesterrorcheck( "Nu XHTML Check",   "errorcheck.html", "xhtmlvalidatebaseline.txt" );
