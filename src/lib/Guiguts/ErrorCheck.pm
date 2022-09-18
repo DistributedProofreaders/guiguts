@@ -95,6 +95,7 @@ sub errorcheckpop_up {
         }
 
         # Spell Query has Skip, Skip All, Add to Project Dict, Add to Global Dict
+        # and languages field
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         $::lglobal{spellqueryballoon} = $top->Balloon() unless $::lglobal{spellqueryballoon};
         $ptopframeb->Button(
@@ -149,6 +150,18 @@ sub errorcheckpop_up {
         )->grid( -row => 1, -column => $gcol++ );
         $::lglobal{spellqueryballoon}->attach( $btnglob,
             -msg => "Ctrl+Shift+Left-click\non queried spelling to\nAdd to Global Dictionary" );
+
+        # New row
+        my $ptopframec = $::lglobal{errorcheckpop}->Frame->pack( -fill => 'x' );
+        $gcol = 0;
+        $ptopframec->Label( -text => 'Language(s)', )
+          ->grid( -padx => 10, -row => 2, -column => $gcol++ );
+        $ptopframec->Entry(
+            -width        => 15,
+            -background   => $::bkgcolor,
+            -relief       => 'sunken',
+            -textvariable => \$::booklang,
+        )->grid( -padx => 10, -row => 2, -column => $gcol++ );
     }
 
     # Scrolled listbox to display the errors
@@ -1122,7 +1135,8 @@ sub gcviewopts {
             -padx   => 2,
             -anchor => 'n'
         );
-        if ( $::booklang !~ /^en/ && @::gcviewlang ) {
+        my $mainlang = ::main_lang();
+        if ( $mainlang !~ /^en/ && @::gcviewlang ) {
             $pframe2->Button(
                 -activebackground => $::activecolor,
                 -command          => sub {
@@ -1135,7 +1149,7 @@ sub gcviewopts {
                     }
                     gcwindowpopulate();
                 },
-                -text  => "Load View: '$::booklang'",
+                -text  => "Load View: '$mainlang'",
                 -width => 14
             )->pack(
                 -side   => 'left',
@@ -1341,25 +1355,23 @@ sub booklouperun {
         delete $sqglobaldict{$_}  for keys %sqglobaldict;
         delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
 
-        # Load default global dictionary for current language
-        my $dictloaded = 0;
-        my $defname    = ::path_defaultdict();
-        if ( -f $defname ) {
-            return 0 unless spellqueryloadglobaldict($defname);
-            $dictloaded = 1;
-        }
+        # Load dictionaries for current languages
+        for my $lang ( ::list_lang() ) {
 
-        # Add words from user global dictionary for current language
-        my $dictname = ::path_userdict();
-        if ( -f $dictname ) {
-            return 0 unless spellqueryloadglobaldict($dictname);
-            $dictloaded = 1;
-        }
+            # Load default and user global dictionaries for this language
+            my $dictloaded = 0;
+            for my $dictname ( ::path_defaultdict($lang), ::path_userdict($lang) ) {
+                if ( -f $dictname ) {
+                    return 0 unless spellqueryloadglobaldict($dictname);
+                    $dictloaded = 1;
+                }
+            }
 
-        # Either the default or user dictionary must exist for current language
-        unless ($dictloaded) {
-            ::warnerror("No Spell Query dictionary found for language '$::booklang'");
-            return 0;
+            # Either the default or user dictionary must exist for each language
+            unless ($dictloaded) {
+                ::warnerror("No Spell Query dictionary found for language '$lang'");
+                return 0;
+            }
         }
 
         # Now add project dictionary words
