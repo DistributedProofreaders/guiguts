@@ -5586,4 +5586,7 @@ Beginning check: Bookloupe
 16242:23 - Double punctuation?
 16244:15 - Query word i
 16244:15 - Double punctuation?
+16252:30 - Non-ISO-8859 character 8217
+16254:25 - Non-ISO-8859 character 8216
+16254:0 - Query word edinBURGH
 Check is complete: Bookloupe
