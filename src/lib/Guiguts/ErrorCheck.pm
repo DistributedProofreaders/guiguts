@@ -1293,15 +1293,9 @@ sub booklouperun {
 
                 next unless $wd;                      # Empty word if two consecutive separators, e.g. period & space
                 next if spellquerywordok($wd);
-                if ( $wd =~ /$APOS/ ) {               # If no match, try converting curly apostrophes to straight
-                    my $straight = $wd;
-                    $straight =~ s/$APOS/'/g;
-                    next if spellquerywordok($straight);
-                } elsif ( $wd =~ /'/ ) {              # And vice versa
-                    my $curly = $wd;
-                    $curly =~ s/'/$APOS/g;
-                    next if spellquerywordok($curly);
-                }
+
+                # Some common LOTE use l' and d' before word - try trimming them and checking again
+                next if $wd =~ s/^[ldLD]['$APOS]// and spellquerywordok($wd);
 
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
@@ -1330,10 +1324,16 @@ sub booklouperun {
         my $wd = shift;
 
         # First check if word is in dictionary
-        return 1 if $sqglobaldict{$wd};         # same case
-        return 1 if $sqglobaldict{ lc $wd };    # lowercase
-        return 1                                # lowercase all but first letter (e.g. LONDON matches London)
-          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
+        return 1 if spellqueryindict($wd);
+
+        # Now try swapping straight/curly apostrophes and recheck
+        if ( $wd =~ /$APOS/ ) {
+            $wd =~ s/$APOS/'/g;
+            return 1 if spellqueryindict($wd);
+        } elsif ( $wd =~ /'/ ) {
+            $wd =~ s/'/$APOS/g;
+            return 1 if spellqueryindict($wd);
+        }
 
         # Now check numbers
         return 1 if $wd =~ /^\d+$/;                  # word is all digits
@@ -1344,6 +1344,16 @@ sub booklouperun {
         return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
 
         return 0;
+    }
+
+    #
+    # Return true if word is in dictionary: same case, lower case, or title case (e.g. LONDON matches London)
+    # Can't just do case-insensitive check because we don't want "london" to be OK.
+    sub spellqueryindict {
+        my $wd = shift;
+        return 1 if $sqglobaldict{$wd};
+        return 1 if $sqglobaldict{ lc $wd };
+        return ( length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) } );
     }
 
     #
