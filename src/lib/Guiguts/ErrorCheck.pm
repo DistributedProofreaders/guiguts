@@ -1295,11 +1295,14 @@ sub booklouperun {
                 next if spellquerywordok($wd);
 
                 # Some common LOTE use l' and d' before word - try trimming them and checking again
-                next if $wd =~ s/^[ldLD]['$APOS]// and spellquerywordok($wd);
+                if ( $wd =~ s/^[ldLD]['$APOS]// ) {
+                    $col += 2;                        # Allow for having removed letters from start of word
+                    next if spellquerywordok($wd);
+                }
 
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
-                    ++$col;    # Allow for having removed apostrophe from start of word
+                    ++$col;                           # Allow for having removed apostrophe from start of word
                     next if spellquerywordok($wd);
                 }
 
