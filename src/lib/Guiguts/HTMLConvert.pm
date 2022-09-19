@@ -2668,15 +2668,16 @@ sub markupconfig {
             ::killpopup('markupconfigpop');
         }
     );
+    $::htmlentryattribhash{$typ} //= '';            # Avoid settings file being written with this variable undefined
     ::dialogboxcommonsetup(
         'markupconfigpop',
         \$::htmlentryattribhash{$typ},
         'Class name or attributes: '
     );
 
-    markupconfiglabel( $w, $typ );    # Adjust label to show presence of class/attributes
+    markupconfiglabel( $w, $typ );                  # Adjust label to show presence of class/attributes
 
-    ::savesettings();                 # Ensure new definition gets saved in setting file
+    ::savesettings();                               # Ensure new definition gets saved in setting file
 
     # stop class callback being called - possible due to binding reordering in markupbindconfig
     $w->break;
