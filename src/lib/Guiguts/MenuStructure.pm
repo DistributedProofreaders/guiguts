@@ -729,7 +729,7 @@ sub menu_html {
         ],
         [
             'command',
-            'Nu ~XHTML Checker',
+            'Nu X~HTML Checker',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Nu XHTML Check' );
             }
@@ -774,6 +774,11 @@ sub menu_html {
         [
             'command', 'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker("epub"); }
         ],
+
+        # Uncomment for option to generate HTML5 using ebookmaker - files are written to "out" subfolder
+        # [
+        # 'command', 'HTML~5 Generation', -command => sub { ::ebookmaker("html"); }
+        # ],
     ];
 }
 
