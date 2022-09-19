@@ -399,15 +399,15 @@ sub path_defaultlabels {
 # Optional argument to specify language
 sub path_userdict {
     my $lang = shift // ::main_lang();
-    return path_data( "dict_$lang" . "_user.txt" );
+    return path_data("dict_${lang}_user.txt");
 }
 
 #
 # Return path to spell query default global dictionary for current language
 # Optional argument to specify language
 sub path_defaultdict {
-    my $lang = shift // ::ain_lang();
-    return ::catfile( 'data', "dict_$lang" . "_default.txt" );
+    my $lang = shift // ::main_lang();
+    return ::catfile( 'data', "dict_${lang}_default.txt" );
 }
 
 #
