@@ -23,7 +23,7 @@ BEGIN {
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
       &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
-      &processcommandline &copysettings);
+      &path_userhtmlheader &processcommandline &copysettings);
 
 }
 
@@ -351,6 +351,10 @@ sub path_htmlheader {
 
 sub path_defaulthtmlheader {
     return 'headerdefault.txt';
+}
+
+sub path_userhtmlheader {
+    return ::catfile( $::lglobal{homedirectory}, 'header_user.txt' );
 }
 
 #
