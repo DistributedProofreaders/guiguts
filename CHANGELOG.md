@@ -9,6 +9,8 @@
   Shift/Ctrl with Left/Right click can be used as shortcut. If spelling
   occurs more often than the threshold (default 3), it is not reported.
   Use Alt+Left click to pop the Search dialog to search for the queried word.
+- Spell Query also handles multiple languages - set the language to a list
+  of language names using the status bar, or the `File/Project` menu.
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
@@ -49,6 +51,11 @@
 - Optional command line argument `--nohome` added to force usage of
   `setting.rc` and similar files from under the release, rather than
   the default or specified home directory (primarily for testing)
+- If `header_user.txt` exists, then instead of including `header.txt`
+  at the top of an HTML file, `headerdefault.txt` is included, with
+  the contents of `header_user.txt` inserted at the end of the CSS
+  section. A user's customization can therefore be retained from one
+  release to another, as well as any changes in `headerdefault.txt`
 - Mac `Command` key can be used in place of `Alt` key in keyboard
   shortcuts
 
