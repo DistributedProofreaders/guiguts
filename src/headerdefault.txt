@@ -92,7 +92,7 @@ table.autotable th { padding: 4px; }
     /*  visibility: hidden;  */
     position: absolute;
     left: 92%;
-    font-size: smaller;
+    font-size: small;
     text-align: right;
     font-style: normal;
     font-weight: normal;
@@ -124,7 +124,7 @@ table.autotable th { padding: 4px; }
     float: right;
     clear: right;
     margin-top: 1em;
-    font-size: smaller;
+    font-size: small;
     color: black;
     background: #eeeeee;
     border: 1px dashed;
@@ -239,10 +239,11 @@ img.w100 {width: 100%;}
 /* Transcriber's notes */
 .transnote {background-color: #E6E6FA;
     color: black;
-     font-size:smaller;
-     padding:0.5em;
-     margin-bottom:5em;
-     font-family:sans-serif, serif; }
+    font-size:small;
+    padding:0.5em;
+    margin-bottom:5em;
+    font-family:sans-serif, serif;
+}
 
     /* ]]> */ </style>
 </head>
