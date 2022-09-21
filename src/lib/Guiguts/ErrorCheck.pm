@@ -1334,6 +1334,8 @@ sub booklouperun {
         return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
         return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
 
+        return 1 if $wd =~ /^sc$/i;                  # <sc> DP markup
+
         return 0;
     }
 
