@@ -1282,12 +1282,6 @@ sub booklouperun {
                 next unless $wd;                      # Empty word if two consecutive separators, e.g. period & space
                 next if spellquerywordok($wd);
 
-                # Some common LOTE use l' and d' before word - try trimming them and checking again
-                if ( $wd =~ s/^[ldLD]['$APOS]// ) {
-                    $col += 2;                        # Allow for having removed letters from start of word
-                    next if spellquerywordok($wd);
-                }
-
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
                     ++$col;                           # Allow for having removed apostrophe from start of word
@@ -1315,16 +1309,14 @@ sub booklouperun {
         my $wd = shift;
 
         # First check if word is in dictionary
-        return 1 if spellqueryindict($wd);
+        return 1 if spellqueryindictapos($wd);
 
-        # Now try swapping straight/curly apostrophes and recheck
-        if ( $wd =~ /$APOS/ ) {
-            $wd =~ s/$APOS/'/g;
-            return 1 if spellqueryindict($wd);
-        } elsif ( $wd =~ /'/ ) {
-            $wd =~ s/'/$APOS/g;
-            return 1 if spellqueryindict($wd);
-        }
+        # Some languages use l', quest', etc., before word - accept if the "prefix" and the main word are both good
+        # Prefix can be with or without apostrophe ("with" is safer to avoid prefix being accepted if standalone word)
+        return 1
+          if $wd =~ /^(\w+)['$APOS](\w+)/
+          and ( spellqueryindictapos($1) or spellqueryindictapos( $1 . "'" ) )
+          and spellqueryindictapos($2);
 
         # Now check numbers
         return 1 if $wd =~ /^\d+$/;                  # word is all digits
@@ -1340,13 +1332,35 @@ sub booklouperun {
     }
 
     #
+    # Return true if a word is in the dictionary, allowing swap of straight/curly apostrophes
+    sub spellqueryindictapos {
+        my $wd = shift;
+
+        # First check if word is in dictionary
+        return 1 if spellqueryindict($wd);
+
+        # Now try swapping straight/curly apostrophes and recheck
+        if ( $wd =~ /$APOS/ ) {
+            $wd =~ s/$APOS/'/g;
+            return 1 if spellqueryindict($wd);
+        } elsif ( $wd =~ /'/ ) {
+            $wd =~ s/'/$APOS/g;
+            return 1 if spellqueryindict($wd);
+        }
+        return 0;
+    }
+
+    #
     # Return true if word is in dictionary: same case, lower case, or title case (e.g. LONDON matches London)
     # Can't just do case-insensitive check because we don't want "london" to be OK.
     sub spellqueryindict {
         my $wd = shift;
         return 1 if $sqglobaldict{$wd};
         return 1 if $sqglobaldict{ lc $wd };
-        return ( length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) } );
+        return 1
+          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
+
+        return 0;
     }
 
     #
