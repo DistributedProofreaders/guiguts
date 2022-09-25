@@ -41,7 +41,7 @@
   under the release are used. Default home directory is in
   `HOME/Documents/GGprefs` on Windows/Mac systems and `HOME/.GGprefs`
   on Linux.
-- New `Use Settings From Another Release` button added to the
+- New `Copy Settings From A Release` button added to the
   `Preferences/File Paths` menu to facilitate setup of default home
   directory. Normally used just once, this copies settings files from
   the chosen release into the default home directory location, from

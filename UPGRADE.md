@@ -22,10 +22,10 @@ steps below work for all operating systems.
 4. Review and possibly copy over changes made to Guiguts files.
    * This release has two features that will assist with this process for the
      current release and largely eliminate this step for future releases. It 
-     is therefore recommended that you complete the following steps if you have
-     never done them before:
+     is therefore recommended that you complete the following steps *if you have
+     never done them before*:
      1. Run the newly installed Guiguts program, open the `Preferences` menu,
-        then `File Paths`, then select `Use Settings From Another Release`.
+        then `File Paths`, then select `Copy Settings From A Release`.
         Use the dialog that pops up to select the top level of your old
         release (eg: `c:\guiguts-old`). This should be a folder that contains
         `guiguts.pl`, `headerdefault.txt`, etc. Using this option will copy
