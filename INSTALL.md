@@ -268,10 +268,9 @@ You can run Guiguts directly from the git repo with a few small changes.
    specified in the sections above.
 3. Create a fully-populated `src/tools/` directory by copying one from a full
    release.
-4. (optional) Run Guiguts once from `src/` to create the initial Guiguts data
-   files (`header.txt`, etc). Copy any manual edits you had made to these files
-   into the new versions of the files in `src/` if you want to retain them.
-
+4. (optional) Follow the instructions in [UPGRADE.md](UPGRADE.md) that describe
+   how to set up a `GGprefs` directory and customize `header.txt`.
+s
 You can now run Guiguts from the `src/` directory.
 
 Git will ignore the `src/tools/` directory as well as the files that Guiguts
