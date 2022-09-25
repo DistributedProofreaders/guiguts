@@ -3411,7 +3411,8 @@ sub copysettings {
     # Check that user has selected a suitable directory, i.e. contains appropriate files/folders
     my $settings = 'setting.rc';
     my $header   = 'header.txt';
-    for my $file ( $settings, $header ) {
+    my $huser    = 'header_user.txt';
+    for my $file ( $settings, $header ) {    # header_user.txt is not required to exist
         unless ( -f ::catfile( $source, $file ) ) {
             $top->messageBox(
                 -icon    => 'error',
@@ -3451,8 +3452,9 @@ sub copysettings {
     die "ERROR: settings directory is not writeable\n" unless -w $dest;
 
     # Copy any top level files first
-    for my $file ( $settings, $header ) {
-        ::copy( ::catfile( $source, $file ), ::catfile( $dest, $file ) );
+    for my $file ( $settings, $header, $huser ) {
+        ::copy( ::catfile( $source, $file ), ::catfile( $dest, $file ) )
+          if -f ::catfile( $source, $file );
     }
 
     # Now copy user's labels files and dictionary files
