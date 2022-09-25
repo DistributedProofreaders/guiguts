@@ -58,7 +58,15 @@ to any previous versions._
    files with the Perl program/app. Follow the steps in the footnote below[^1],
    then return to re-try this step.
 7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts
-   should start up and be ready for use.
+   should start up and be ready for use. Open the `Preferences` menu, then
+   `File Paths`, then select `Copy Settings From A Release`. Use the dialog
+   that pops up to select the top level of the release (eg: `c:\guiguts`).
+   This should be the folder that contains `guiguts.pl`, `headerdefault.txt`,
+   etc. Using this option will copy necessary configuration files from the
+   release into a new folder named `%HOMEPATH%\Documents\GGprefs` where
+   %HOMEPATH% is your home directory, e.g. `C:\Users\user1\Documents\GGprefs`.
+   When you have done this once, you will not normally need to do it again
+   because all your settings will be safe in the `GGprefs` folder.
 8. If you want to use the Spell Check tool, see the
    [Guiguts Windows Installation](https://www.pgdp.net/wiki/PPTools/Guiguts/Install)
    wiki page for information on installing the Aspell spell checker. If you
@@ -222,6 +230,17 @@ xattr -d com.apple.quarantine guiguts.command
 Now you can double click it to run Guiguts or drag the file to your Dock
 for a one-click start.
 
+### Preserving settings and customizations
+
+Once you are in Guiguts, open the `Preferences` menu, then `File Paths`,
+then select `Copy Settings From A Release`. Use the dialog that pops up to
+select the top level guiguts directory you created earlier. This should be
+the folder that contains `guiguts.pl`, `headerdefault.txt`, etc. Using this
+option will copy necessary configuration files from the release into a new
+folder named `HOME/Documents/GGprefs` where `HOME` is your home directory.
+When you have done this once, you will not normally need to do it again
+because all your settings will be safe in the `GGprefs` folder.
+
 ### Helper applications
 
 Homebrew provides some additional helper applications you might find useful
@@ -254,6 +273,10 @@ Then extract `guiguts-generic-n.n.n.zip` and run
 perl guiguts.pl
 ```
 
+Follow the instructions in the
+[Preserving settings and customizations](#preserving-settings-and-customizations) 
+section for MacOS above. Your GGprefs folder will be `$HOME/.GGprefs`.
+
 ## Using Guiguts from a Git checkout
 
 _This section is for advanced users who want to run the latest in-development
@@ -268,9 +291,8 @@ You can run Guiguts directly from the git repo with a few small changes.
    specified in the sections above.
 3. Create a fully-populated `src/tools/` directory by copying one from a full
    release.
-4. (optional) Run Guiguts once from `src/` to create the initial Guiguts data
-   files (`header.txt`, etc). Copy any manual edits you had made to these files
-   into the new versions of the files in `src/` if you want to retain them.
+4. (optional) Follow the instructions in [UPGRADE.md](UPGRADE.md) that describe
+   how to set up a `GGprefs` directory and customize `header.txt`.
 
 You can now run Guiguts from the `src/` directory.
 
