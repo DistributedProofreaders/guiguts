@@ -11,7 +11,7 @@ mkdir $DEST
 cp README.md $DEST
 
 if [[ $OS == "win" ]]; then
-    VERSION=0.12.7
+    VERSION=0.12.13
     URL=https://github.com/DistributedProofreaders/ebm_builder/releases/download/v$VERSION/ebookmaker-$VERSION.zip
     curl -L -o ebookmaker.zip $URL
     unzip ebookmaker.zip -d $DEST
