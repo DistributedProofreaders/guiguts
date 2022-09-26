@@ -459,38 +459,27 @@ binsch:
 
 }
     
-/* flgets - get one line from the input stream, checking for   */
-/* the existence of exactly one CR/LF line-end per line.       */
+/* flgets - get one line from the input stream                 */
 /* Returns a pointer to the line.                              */
 
 char *flgets(char *theline, int maxlen, FILE *thefile, long lcnt)
 {
     char c;
-    int len, isCR, cint;
+    int len, cint;
 
     *theline = 0;
-    len = isCR = 0;
+    len = 0;
     c = cint = fgetc(thefile);
     do {
         if (cint == EOF)
             return (NULL);
-        if (c == 10)  /* either way, it's end of line */
-            if (isCR)
-                break;
-            else {   /* Error - a LF without a preceding CR */
-                break;
-                }
-        if (c == 13) {
-            if (isCR) { /* Error - two successive CRs */
-                }
-            isCR = 1;
+        if (c == 10)  /* end of line */
+            break;
+        if (c != 13) {
+            theline[len] = c;
+            len++;
+            theline[len] = 0;
             }
-        else {
-             theline[len] = c;
-             len++;
-             theline[len] = 0;
-             isCR = 0;
-             }
         c = cint = fgetc(thefile);
     } while(len < maxlen);
     return(theline);
