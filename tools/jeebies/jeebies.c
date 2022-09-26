@@ -41,18 +41,17 @@
 #define MAX_PATH 16384
 #endif
 
-// Pointers are assumed to have the same value in binary_search.
-// May need to change at some point, which will need change there.
-#define HE_POINTERS 80000
-#define BE_POINTERS 80000
-
-#define HE_FILE "he.jee"
-#define BE_FILE "be.jee"
-
 char aline[LINEBUFSIZE];
 char prevline[LINEBUFSIZE];
-char *he_array[HE_POINTERS];
-char *be_array[BE_POINTERS];
+
+/* .inc files are created from original .jee files by adding double quotes */
+/* at start of line, and double quotes with comma at end of line           */
+char *he_array[] = {
+#include "he.inc"
+};
+char *be_array[] = {
+#include "be.inc"
+};
 
 #define PASTWORDS 30
 
@@ -109,8 +108,6 @@ int pswit[SWITNO];              /* program switches set by SWITCHES             
 #define MAX_WORDPAIR 1000
 #define MAX_ENTRY_LEN 120
 
-char running_from[MAX_PATH];
-
 void proghelp(void);
 void procfile(char *);
 
@@ -142,15 +139,6 @@ int main(int argc, char **argv)
     FILE *data_filehandle;
     char *s;
 
-    if (strlen(argv[0]) < sizeof(running_from))
-        strcpy(running_from, argv[0]);  /* save the path to the executable jeebies */
-
-    /* find out what directory we're running from */
-    for (s = running_from + strlen(running_from); *s != '/' && *s != '\\' && s >= running_from; s--)
-        *s = 0;
-
-
-
     switno = strlen(SWITCHES);
     for (i = switno ; --i >0 ; )
         pswit[i] = 0;           /* initialise switches */
@@ -179,58 +167,8 @@ int main(int argc, char **argv)
         return(1);            /* exit */
         }
         
-
-    if ((data_filehandle = fopen(HE_FILE, "rb")) == NULL) {
-        strcpy(data_filename, running_from);
-        strcat(data_filename, HE_FILE);
-        if ((data_filehandle = fopen(data_filename, "rb")) == NULL) {  /* we ain't got no user typo file! */
-            printf("   --> I couldn't find %s. Aborting.\n", HE_FILE);
-            exit(1);
-            }
-        }
-
-    he_count = 0;
-    while (flgets(aline, LINEBUFSIZE-1, data_filehandle, he_count)) {
-        if (strlen(aline) > 1) {
-            if ((int)*aline > 33) {
-                s = malloc(strlen(aline)+1);
-                if (!s) {
-                    fprintf(stderr, "jeebies: cannot get enough memory for user scanno file. Aborting. \n");
-                    exit(1);
-                    }
-                strcpy(s, aline);
-                he_array[he_count] = s;
-                he_count++;
-                }
-            }
-        }
-    fclose(data_filehandle);
-
-    if ((data_filehandle = fopen(BE_FILE, "rb")) == NULL) {
-        strcpy(data_filename, running_from);
-        strcat(data_filename, BE_FILE);
-        if ((data_filehandle = fopen(data_filename, "rb")) == NULL) {  /* we ain't got no user typo file! */
-            printf("   --> I couldn't find %s. Aborting.\n", BE_FILE);
-            exit(1);
-            }
-        }
-
-    be_count = 0;
-    while (flgets(aline, LINEBUFSIZE-1, data_filehandle, be_count)) {
-        if (strlen(aline) > 1) {
-            if ((int)*aline > 33) {
-                s = malloc(strlen(aline)+1);
-                if (!s) {
-                    fprintf(stderr, "jeebies: cannot get enough memory for user scanno file!!\n");
-                    exit(1);
-                    }
-                strcpy(s, aline);
-                be_array[be_count] = s;
-                be_count++;
-                }
-            }
-        }
-    fclose(data_filehandle);
+    he_count=sizeof(he_array)/sizeof(char *);
+    be_count=sizeof(be_array)/sizeof(char *);                   
 
     procfile(argv[0]);
 
@@ -486,7 +424,7 @@ void procfile(char *filename)
 }
 
 
-double binary_search(char *find_this, char *which_array[HE_POINTERS], long array_size)
+double binary_search(char *find_this, char *which_array[], long array_size)
 {
     long hi, lo, weareat, wewereat;
     char target[MAX_ENTRY_LEN], compare_array[MAX_ENTRY_LEN];
