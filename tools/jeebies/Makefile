@@ -1,7 +1,7 @@
 all: build
 
 %.inc : %.jee
-	sed -e 's/^.\+$$/"&",/' $< > $@
+	sed -e 's/\x0d//' -e 's/.*/"&",/' $< > $@
 
 build: jeebies.c he.inc be.inc
 	$(CC) jeebies.c -o jeebies
