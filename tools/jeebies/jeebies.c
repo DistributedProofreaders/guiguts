@@ -2,7 +2,7 @@
 /*                                                                       */
 /* jeebies  check for common scannos in a PG candidate file              */
 /*                                                                       */
-/* Version 0.15a (alpha-20091111).                                       */
+/* Version 0.30a (alpha-20220926).                                       */
 /* Copyright 2000-2005 Jim Tinsley <jtinsley@pobox.com>                  */
 /*                                                                       */
 /* Changes to binary search algorithm made by Dan Horwood, October 2009  */
@@ -35,24 +35,17 @@
 
 #define MAXWORDLEN   100    /* max length of one word             */
 #define LINEBUFSIZE 2048    /* buffer size for an input line      */
-#define USERSCANNO_FILE "jeebies.typ"
-
-#ifndef MAX_PATH
-#define MAX_PATH 16384
-#endif
-
-// Pointers are assumed to have the same value in binary_search.
-// May need to change at some point, which will need change there.
-#define HE_POINTERS 80000
-#define BE_POINTERS 80000
-
-#define HE_FILE "he.jee"
-#define BE_FILE "be.jee"
 
 char aline[LINEBUFSIZE];
-char prevline[LINEBUFSIZE];
-char *he_array[HE_POINTERS];
-char *be_array[BE_POINTERS];
+
+/* .inc files are created from original .jee files by adding double quotes */
+/* at start of line, and double quotes with comma at end of line           */
+char *he_array[] = {
+#include "he.inc"
+};
+char *be_array[] = {
+#include "be.inc"
+};
 
 #define PASTWORDS 30
 
@@ -63,22 +56,7 @@ long linecnt;         /* count of total lines in the file */
                    
 /* ---- list of special characters ---- */
 #define CHAR_SPACE        32
-#define CHAR_TAB           9
-#define CHAR_LF           10
-#define CHAR_CR           13
-#define CHAR_DQUOTE       34
-#define CHAR_SQUOTE       39
-#define CHAR_OPEN_SQUOTE  96
-#define CHAR_TILDE       126
 #define CHAR_ASTERISK     42
-
-#define CHAR_UNDERSCORE    '_'
-#define CHAR_OPEN_CBRACK   '{'
-#define CHAR_CLOSE_CBRACK  '}'
-#define CHAR_OPEN_RBRACK   '('
-#define CHAR_CLOSE_RBRACK  ')'
-#define CHAR_OPEN_SBRACK   '['
-#define CHAR_CLOSE_SBRACK  ']'
 
 
 #define SWITCHES "PTED"         /* switches:-                                     */
@@ -99,17 +77,7 @@ int pswit[SWITNO];              /* program switches set by SWITCHES             
 #define ECHO_SWITCH       2
 #define DEBUG_SWITCH      3
 
-#define START 0
-#define END 1
-#define PREV 0
-#define NEXT 1
-#define FIRST_OF_PAIR 0
-#define SECOND_OF_PAIR 1
-
-#define MAX_WORDPAIR 1000
 #define MAX_ENTRY_LEN 120
-
-char running_from[MAX_PATH];
 
 void proghelp(void);
 void procfile(char *);
@@ -117,7 +85,6 @@ void procfile(char *);
 char *getaword(char *, char *);
 char *getawordwithpunct(char *, char *);
 int matchword(char *, char *);
-char *flgets(char *, int, FILE *, long);
 void lowerit(char *);
 int gcisalpha(unsigned char);
 int gcisdigit(unsigned char);
@@ -127,29 +94,12 @@ double binary_search(char *, char **, long);
 
 long he_count, be_count, total_he, total_be;
 char wrk[LINEBUFSIZE];
-double runmatch(int which_wordpair, int which_word, int prev_next, char *thisword);
-
-char wordpair[MAX_WORDPAIR][2][20];
-long wordpair_pointer[MAX_WORDPAIR][2][2][2];
-int which_of_pair, wordpair_count;
 
 
 int main(int argc, char **argv)
 {
     char *argsw;
     int i, switno, invarg;
-    char data_filename[MAX_PATH];
-    FILE *data_filehandle;
-    char *s;
-
-    if (strlen(argv[0]) < sizeof(running_from))
-        strcpy(running_from, argv[0]);  /* save the path to the executable jeebies */
-
-    /* find out what directory we're running from */
-    for (s = running_from + strlen(running_from); *s != '/' && *s != '\\' && s >= running_from; s--)
-        *s = 0;
-
-
 
     switno = strlen(SWITCHES);
     for (i = switno ; --i >0 ; )
@@ -179,58 +129,8 @@ int main(int argc, char **argv)
         return(1);            /* exit */
         }
         
-
-    if ((data_filehandle = fopen(HE_FILE, "rb")) == NULL) {
-        strcpy(data_filename, running_from);
-        strcat(data_filename, HE_FILE);
-        if ((data_filehandle = fopen(data_filename, "rb")) == NULL) {  /* we ain't got no user typo file! */
-            printf("   --> I couldn't find %s. Aborting.\n", HE_FILE);
-            exit(1);
-            }
-        }
-
-    he_count = 0;
-    while (flgets(aline, LINEBUFSIZE-1, data_filehandle, he_count)) {
-        if (strlen(aline) > 1) {
-            if ((int)*aline > 33) {
-                s = malloc(strlen(aline)+1);
-                if (!s) {
-                    fprintf(stderr, "jeebies: cannot get enough memory for user scanno file. Aborting. \n");
-                    exit(1);
-                    }
-                strcpy(s, aline);
-                he_array[he_count] = s;
-                he_count++;
-                }
-            }
-        }
-    fclose(data_filehandle);
-
-    if ((data_filehandle = fopen(BE_FILE, "rb")) == NULL) {
-        strcpy(data_filename, running_from);
-        strcat(data_filename, BE_FILE);
-        if ((data_filehandle = fopen(data_filename, "rb")) == NULL) {  /* we ain't got no user typo file! */
-            printf("   --> I couldn't find %s. Aborting.\n", BE_FILE);
-            exit(1);
-            }
-        }
-
-    be_count = 0;
-    while (flgets(aline, LINEBUFSIZE-1, data_filehandle, be_count)) {
-        if (strlen(aline) > 1) {
-            if ((int)*aline > 33) {
-                s = malloc(strlen(aline)+1);
-                if (!s) {
-                    fprintf(stderr, "jeebies: cannot get enough memory for user scanno file!!\n");
-                    exit(1);
-                    }
-                strcpy(s, aline);
-                be_array[be_count] = s;
-                be_count++;
-                }
-            }
-        }
-    fclose(data_filehandle);
+    he_count=sizeof(he_array)/sizeof(char *);
+    be_count=sizeof(be_array)/sizeof(char *);                   
 
     procfile(argv[0]);
 
@@ -245,7 +145,7 @@ void procfile(char *filename)
 {
 
     char *s, *t, laststart;
-    char inword[MAXWORDLEN], testword[MAXWORDLEN], alt_word[MAXWORDLEN];
+    char inword[MAXWORDLEN], alt_word[MAXWORDLEN];
     char preword[MAXWORDLEN][PASTWORDS];
     FILE *infile;
     signed int i, isemptyline;
@@ -262,7 +162,7 @@ void procfile(char *filename)
     laststart = CHAR_SPACE;
 
     i = isemptyline = 0;
-    *inword = *testword = 0;
+    *inword = 0;
     alt_convince_ratio = convince_ratio = 0.0;
     he_score = be_score = be_score_adjusted = 0.0;
     alt_he_score =  alt_be_score = 0.0;
@@ -278,7 +178,7 @@ void procfile(char *filename)
         fprintf(stdout, "jeebies: cannot open %s\n", filename);
         exit(1);
         }
-    while (flgets(aline, LINEBUFSIZE-1, infile, linecnt+1)) {
+    while (fgets(aline, LINEBUFSIZE-1, infile)) {
         lowerit(aline);
         for (s = aline; *s;) {
             s = getaword(s, inword);
@@ -327,7 +227,7 @@ void procfile(char *filename)
     if (pswit[TOLERANT_SWITCH])
         threshold = 6.0;
 
-    while (flgets(aline, LINEBUFSIZE-1, infile, linecnt+1)) {
+    while (fgets(aline, LINEBUFSIZE-1, infile)) {
         linecnt++;
         s = t = aline;
         isemptyline = 1;      /* assume the line is empty until proven otherwise */
@@ -486,7 +386,7 @@ void procfile(char *filename)
 }
 
 
-double binary_search(char *find_this, char *which_array[HE_POINTERS], long array_size)
+double binary_search(char *find_this, char *which_array[], long array_size)
 {
     long hi, lo, weareat, wewereat;
     char target[MAX_ENTRY_LEN], compare_array[MAX_ENTRY_LEN];
@@ -520,46 +420,6 @@ binsch:
             
 
 }
-    
-/* flgets - get one line from the input stream, checking for   */
-/* the existence of exactly one CR/LF line-end per line.       */
-/* Returns a pointer to the line.                              */
-
-char *flgets(char *theline, int maxlen, FILE *thefile, long lcnt)
-{
-    char c;
-    int len, isCR, cint;
-
-    *theline = 0;
-    len = isCR = 0;
-    c = cint = fgetc(thefile);
-    do {
-        if (cint == EOF)
-            return (NULL);
-        if (c == 10)  /* either way, it's end of line */
-            if (isCR)
-                break;
-            else {   /* Error - a LF without a preceding CR */
-                break;
-                }
-        if (c == 13) {
-            if (isCR) { /* Error - two successive CRs */
-                }
-            isCR = 1;
-            }
-        else {
-             theline[len] = c;
-             len++;
-             theline[len] = 0;
-             isCR = 0;
-             }
-        c = cint = fgetc(thefile);
-    } while(len < maxlen);
-    return(theline);
-}
-
-
-
 
 
 /* getaword - extracts the first/next "word" from the line, and puts */
@@ -743,7 +603,7 @@ char *gcstrchr(char *s, char c)
 
 void proghelp()                  /* explain program usage here */
 {
-    fputs ("V. 0.15-alpha-20051116. Copyright 2000-2005 Jim Tinsley <jtinsley@pobox.com>.\n",stderr);
+    fputs ("V. 0.30-alpha-20220926. Copyright 2000-2005 Jim Tinsley <jtinsley@pobox.com>.\n",stderr);
     fputs ("This is *** ALPHA *** software: do NOT rely on it -- check all results!\n\n", stderr);
     fputs ("Jeebies comes wih ABSOLUTELY NO WARRANTY. For details, read the file COPYING.\n", stderr);
     fputs ("This is Free Software; you may redistribute it under certain conditions (GPL);\n", stderr);
@@ -771,7 +631,9 @@ void proghelp()                  /* explain program usage here */
 /*      having checked that the sort sequence puts "|" low.           */
 /*      If nodups not available, you can do the same thing with       */
 /*      uniq and sed.                                                 */
-/*                                                                    */
+/* 2022-09-26 (windymilla)                                            */
+/* 0.30 Incorporated data into static array rather than external      */
+/*      files to aid distribution. Miscellaneous tidy-ups to code.    */
 /*                                                                    */
 /**********************************************************************/
 
