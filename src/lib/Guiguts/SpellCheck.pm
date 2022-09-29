@@ -16,7 +16,7 @@ sub spellcheckfirst {
     my $top        = $::top;
     @{ $::lglobal{misspelledlist} } = ();
     ::hidepagenums();
-    $::globalspelldictopt = $::booklang;
+    $::globalspelldictopt = ::main_lang();
     spellloadprojectdict();
 
     # get list of misspelled words in selection (or file if nothing selected)

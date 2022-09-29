@@ -1339,7 +1339,8 @@ sub html_parse_header {
     $author     =~ s/&/&amp;/g       if $author;
     $headertext =~ s/TITLE/$title/   if $title;
     $headertext =~ s/AUTHOR/$author/ if $author;
-    $headertext =~ s/BOOKLANG/$::booklang/g;
+    my $mainlang = ::main_lang();
+    $headertext =~ s/BOOKLANG/$mainlang/g;
 
     # locate and markup title
     $step = 0;

@@ -16248,3 +16248,12 @@ embodied in the following Order:
 
 
            _Printed by_ R. & R. CLARK, LIMITED, _Edinburgh_.
+
+Don't care if apostrophes aren’t straight.
+edinburgh is wrong: 'it's all lower case.'
+edinBURGH is also wrong: ‘first letter is lower case.’
+EDInburgh is weird, but not trapped by spell query.
+EDINBURGH is absolutely fine: 3d or 4th time lucky: or even 13th.
+
+Although l'Edinburgh D'Edinburgh are permissible, e.g. in French,
+x'Edinburgh is wrong.
