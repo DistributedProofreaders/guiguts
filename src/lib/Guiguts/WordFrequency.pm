@@ -898,19 +898,11 @@ sub hyphencheck {
 }
 
 sub wordfrequencygetmisspelled {
-    $::lglobal{misspelledlist} = ();
-    $::lglobal{spellsort}      = ();
-    my ( $words, $uwords );
+    $::lglobal{spellsort} = ();
     my $wordw = 0;
-    foreach ( sort ( keys %{ $::lglobal{seenwords} } ) ) {
-        $words .= "$_\n";
-    }
-    if ($words) {
-        ::getmisspelledwords($words);
-    }
-    if ( $::lglobal{misspelledlist} ) {
-        foreach ( sort @{ $::lglobal{misspelledlist} } ) {
-            $::lglobal{spellsort}->{$_} = $::lglobal{seenwords}->{$_} || '0';
+    for my $word ( keys %{ $::lglobal{seenwords} } ) {
+        if ( not ::spellquerywfwordok($word) ) {
+            $::lglobal{spellsort}->{$word} = $::lglobal{seenwords}->{$word} || '0';
             $wordw++;
         }
     }
@@ -920,15 +912,17 @@ sub wordfrequencygetmisspelled {
 sub wordfrequencyspellcheck {
     my $top = $::top;
     ::operationadd('Check spelling wordfrequency');
-    ::spelloptions() unless $::globalspellpath;
-    return           unless $::globalspellpath;
     $top->Busy( -recurse => 1 );
     $::lglobal{wclistbox}->delete( '0', 'end' );
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building word list....' );
     $::lglobal{wclistbox}->update;
-    my $wordw = wordfrequencygetmisspelled();
-    $::lglobal{wfsaveheader} = "$wordw words not recognised by the spellchecker.";
-    sortanddisplaywords( \%{ $::lglobal{spellsort} } );
+    if ( ::spellqueryinitialize() ) {
+        my $wordw = wordfrequencygetmisspelled();
+        $::lglobal{wfsaveheader} = "$wordw words not recognised by Spell Query.";
+        sortanddisplaywords( \%{ $::lglobal{spellsort} } );
+    } else {
+        $::lglobal{wclistbox}->insert( 'end', 'Unable to check spelling.' );
+    }
     $top->Unbusy;
 }
 
