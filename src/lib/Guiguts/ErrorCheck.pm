@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&errorcheckpop_up);
+    @EXPORT = qw(&errorcheckpop_up &spellquerycleardict);
 }
 
 my @errorchecklines;
@@ -1257,6 +1257,7 @@ sub booklouperun {
         my $textwindow = $::textwindow;
 
         return unless spellqueryinitialize();
+        spellqueryclearcounts();
 
         open my $logfile, ">", $errname or die "Error opening Spell Query output file: $errname";
 
@@ -1365,12 +1366,11 @@ sub booklouperun {
 
     #
     # Load the Spell Query default global dictionary and optional user global and project dictionaries
+    # Dictionary hash will have been cleared if new project loaded or language changed
     # Return true on success
     sub spellqueryinitialize {
 
-        # Clear any existing words in dictionary and frequency count
-        delete $sqglobaldict{$_}  for keys %sqglobaldict;
-        delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
+        return 1 if %sqglobaldict;    # Don't reload dictionaries if already loaded
 
         # Load dictionaries for current languages
         for my $lang ( ::list_lang() ) {
@@ -1448,6 +1448,19 @@ sub booklouperun {
         return $sqbadwordfreq{$1} if $line =~ /^\d+:\d+ +- (.+)/;
         return 0;
     }
+
+    #
+    # Clear the spell query dictionary
+    sub spellquerycleardict {
+        delete $sqglobaldict{$_} for keys %sqglobaldict;
+    }
+
+    #
+    # Clear the spell query frequency counts
+    sub spellqueryclearcounts {
+        delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
+    }
+
 }    # end of variable-enclosing block
 
 #

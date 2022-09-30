@@ -596,6 +596,7 @@ sub setlang {
                     $::booklang = $::lglobal{booklang};
                     update_lang_button();
                     ::readlabels();
+                    ::spellquerycleardict();
                 }
                 ::killpopup('setlangpop');
             }
