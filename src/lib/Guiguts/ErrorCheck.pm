@@ -95,6 +95,7 @@ sub errorcheckpop_up {
         }
 
         # Spell Query has Skip, Skip All, Add to Project Dict, Add to Global Dict
+        # and languages field
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         $::lglobal{spellqueryballoon} = $top->Balloon() unless $::lglobal{spellqueryballoon};
         $ptopframeb->Button(
@@ -1122,7 +1123,8 @@ sub gcviewopts {
             -padx   => 2,
             -anchor => 'n'
         );
-        if ( $::booklang !~ /^en/ && @::gcviewlang ) {
+        my $mainlang = ::main_lang();
+        if ( $mainlang !~ /^en/ && @::gcviewlang ) {
             $pframe2->Button(
                 -activebackground => $::activecolor,
                 -command          => sub {
@@ -1135,7 +1137,7 @@ sub gcviewopts {
                     }
                     gcwindowpopulate();
                 },
-                -text  => "Load View: '$::booklang'",
+                -text  => "Load View: '$mainlang'",
                 -width => 14
             )->pack(
                 -side   => 'left',
@@ -1279,19 +1281,10 @@ sub booklouperun {
 
                 next unless $wd;                      # Empty word if two consecutive separators, e.g. period & space
                 next if spellquerywordok($wd);
-                if ( $wd =~ /$APOS/ ) {               # If no match, try converting curly apostrophes to straight
-                    my $straight = $wd;
-                    $straight =~ s/$APOS/'/g;
-                    next if spellquerywordok($straight);
-                } elsif ( $wd =~ /'/ ) {              # And vice versa
-                    my $curly = $wd;
-                    $curly =~ s/'/$APOS/g;
-                    next if spellquerywordok($curly);
-                }
 
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
-                    ++$col;    # Allow for having removed apostrophe from start of word
+                    ++$col;                           # Allow for having removed apostrophe from start of word
                     next if spellquerywordok($wd);
                 }
 
@@ -1316,10 +1309,14 @@ sub booklouperun {
         my $wd = shift;
 
         # First check if word is in dictionary
-        return 1 if $sqglobaldict{$wd};         # same case
-        return 1 if $sqglobaldict{ lc $wd };    # lowercase
-        return 1                                # lowercase all but first letter (e.g. LONDON matches London)
-          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
+        return 1 if spellqueryindictapos($wd);
+
+        # Some languages use l', quest', etc., before word - accept if the "prefix" and the main word are both good
+        # Prefix can be with or without apostrophe ("with" is safer to avoid prefix being accepted if standalone word)
+        return 1
+          if $wd =~ /^(\w+)['$APOS](\w+)/
+          and ( spellqueryindictapos($1) or spellqueryindictapos( $1 . "'" ) )
+          and spellqueryindictapos($2);
 
         # Now check numbers
         return 1 if $wd =~ /^\d+$/;                  # word is all digits
@@ -1328,6 +1325,40 @@ sub booklouperun {
         return 1 if $wd =~ /^(\d*[02-9])?3r?d$/i;    # ...3rd, ...23rd, ...33rd, etc (also 3d, 33d, etc)
         return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
         return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
+
+        return 1 if $wd =~ /^sc$/i;                  # <sc> DP markup
+
+        return 0;
+    }
+
+    #
+    # Return true if a word is in the dictionary, allowing swap of straight/curly apostrophes
+    sub spellqueryindictapos {
+        my $wd = shift;
+
+        # First check if word is in dictionary
+        return 1 if spellqueryindict($wd);
+
+        # Now try swapping straight/curly apostrophes and recheck
+        if ( $wd =~ /$APOS/ ) {
+            $wd =~ s/$APOS/'/g;
+            return 1 if spellqueryindict($wd);
+        } elsif ( $wd =~ /'/ ) {
+            $wd =~ s/'/$APOS/g;
+            return 1 if spellqueryindict($wd);
+        }
+        return 0;
+    }
+
+    #
+    # Return true if word is in dictionary: same case, lower case, or title case (e.g. LONDON matches London)
+    # Can't just do case-insensitive check because we don't want "london" to be OK.
+    sub spellqueryindict {
+        my $wd = shift;
+        return 1 if $sqglobaldict{$wd};
+        return 1 if $sqglobaldict{ lc $wd };
+        return 1
+          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
 
         return 0;
     }
@@ -1341,19 +1372,23 @@ sub booklouperun {
         delete $sqglobaldict{$_}  for keys %sqglobaldict;
         delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
 
-        # Load default global dictionary for current language - must exist
-        my $defname = ::path_defaultdict();
-        if ( -f $defname ) {
-            return 0 unless spellqueryloadglobaldict($defname);
-        } else {
-            ::warnerror("Spell Query dictionary not found: $defname ");
-            return 0;
-        }
+        # Load dictionaries for current languages
+        for my $lang ( ::list_lang() ) {
 
-        # Add words from optional user global dictionary for current language
-        my $dictname = ::path_userdict();
-        if ( -f $dictname ) {
-            return 0 unless spellqueryloadglobaldict($dictname);
+            # Load default and user global dictionaries for this language
+            my $dictloaded = 0;
+            for my $dictname ( ::path_defaultdict($lang), ::path_userdict($lang) ) {
+                if ( -f $dictname ) {
+                    return 0 unless spellqueryloadglobaldict($dictname);
+                    $dictloaded = 1;
+                }
+            }
+
+            # Either the default or user dictionary must exist for each language
+            unless ($dictloaded) {
+                ::warnerror("No Spell Query dictionary found for language '$lang'");
+                return 0;
+            }
         }
 
         # Now add project dictionary words

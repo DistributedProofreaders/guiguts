@@ -23,7 +23,7 @@ BEGIN {
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
       &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
-      &path_userhtmlheader &processcommandline &copysettings);
+      &path_userhtmlheader &processcommandline &copysettings &main_lang &list_lang);
 
 }
 
@@ -385,29 +385,33 @@ sub path_data {
 #
 # Return path to labels data file
 sub path_labels {
-    return path_data("labels_$::booklang.rc");
+    return path_data( "labels_" . ::main_lang() . ".rc" );
 }
 
 #
 # Return path to default labels data file
 sub path_defaultlabels {
-    my $f = ::catfile( 'data', "labels_$::booklang" . "_default.rc" );
+    my $f = ::catfile( 'data', "labels_" . ::main_lang() . "_default.rc" );
     return $f if -e $f;
 
-    # Default to English if $::booklang has no defaults file
+    # Default to English if language has no defaults file
     return ::catfile( 'data', 'labels_en_default.rc' );
 }
 
 #
 # Return path to spell query user global dictionary for current language
+# Optional argument to specify language
 sub path_userdict {
-    return path_data( "dict_$::booklang" . "_user.txt" );
+    my $lang = shift // ::main_lang();
+    return path_data("dict_${lang}_user.txt");
 }
 
 #
 # Return path to spell query default global dictionary for current language
+# Optional argument to specify language
 sub path_defaultdict {
-    return ::catfile( 'data', "dict_$::booklang" . "_default.txt" );
+    my $lang = shift // ::main_lang();
+    return ::catfile( 'data', "dict_${lang}_default.txt" );
 }
 
 #
@@ -418,6 +422,18 @@ sub path_defaulthomedir {
     } else {
         return ::catdir( File::HomeDir::home(), ".GGprefs" );
     }
+}
+
+#
+# Return the main (first) language in the list of languages for this book
+sub main_lang {
+    return ( ( ::list_lang() )[0] // "en" );
+}
+
+# Return the languages for this book as a list
+# Allow any non-word character as a separator
+sub list_lang {
+    return split( /\W+/, $::booklang );
 }
 
 # system(LIST)
@@ -631,7 +647,7 @@ sub readlabels {
 
     # Latin-1 only
     $::convertlatinsinglesearch =
-      "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ" . "ÐÑÒÓÔÕÖØÙÚÛÜÝÞß" . "àáâãäåæçèéêëìíîï" . "ðñòóôõöøùúûüýþÿ";
+      "Ã€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃŽÃ" . "ÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã˜Ã™ÃšÃ›ÃœÃÃžÃŸ" . "Ã Ã¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯" . "Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿";
     $::convertlatinsinglereplace =
       "AAAAAAACEEEEIIII" . "DNOOOOOOUUUUYTs" . "aaaaaaaceeeeiiii" . "dnoooooouuuuyty";
 
@@ -700,8 +716,8 @@ sub readlabels {
       . "OoPptTtTU"
       . "uVYyZz" . "AaI"
       . "iOoUuUuUuUuUuAa"
-      . "AaÆæGgGgKkOoOo"
-      . "jGgNnAaÆæOo"
+      . "AaÃ†Ã¦GgGgKkOoOo"
+      . "jGgNnAaÃ†Ã¦Oo"
       . "AaAaEeEeIiIiOoOo"
       . "RrRrUuUuSsTtHh"
       . "ZzAaEeOoOoOo"
@@ -1390,10 +1406,10 @@ sub initialize {
         "\x{1F11}" => 'e(',
         "\x{1F18}" => 'E)',
         "\x{1F19}" => 'E(',
-        "\x{1F20}" => 'ê)',
-        "\x{1F21}" => 'ê(',
-        "\x{1F28}" => 'Ê)',
-        "\x{1F29}" => 'Ê(',
+        "\x{1F20}" => 'Ãª)',
+        "\x{1F21}" => 'Ãª(',
+        "\x{1F28}" => 'ÃŠ)',
+        "\x{1F29}" => 'ÃŠ(',
         "\x{1F30}" => 'i)',
         "\x{1F31}" => 'i(',
         "\x{1F38}" => 'I)',
@@ -1405,24 +1421,24 @@ sub initialize {
         "\x{1F50}" => 'y)',
         "\x{1F51}" => 'y(',
         "\x{1F59}" => 'Y(',
-        "\x{1F60}" => 'ô)',
-        "\x{1F61}" => 'ô(',
-        "\x{1F68}" => 'Ô)',
-        "\x{1F69}" => 'Ô(',
+        "\x{1F60}" => 'Ã´)',
+        "\x{1F61}" => 'Ã´(',
+        "\x{1F68}" => 'Ã”)',
+        "\x{1F69}" => 'Ã”(',
         "\x{1F70}" => 'a\\\\',
         "\x{1F71}" => 'a/',
         "\x{1F72}" => 'e\\\\',
         "\x{1F73}" => 'e/',
-        "\x{1F74}" => 'ê\\\\',
-        "\x{1F75}" => 'ê/',
+        "\x{1F74}" => 'Ãª\\\\',
+        "\x{1F75}" => 'Ãª/',
         "\x{1F76}" => 'i\\\\',
         "\x{1F77}" => 'i/',
         "\x{1F78}" => 'o\\\\',
         "\x{1F79}" => 'o/',
         "\x{1F7A}" => 'y\\\\',
         "\x{1F7B}" => 'y/',
-        "\x{1F7C}" => 'ô\\\\',
-        "\x{1F7D}" => 'ô/',
+        "\x{1F7C}" => 'Ã´\\\\',
+        "\x{1F7D}" => 'Ã´/',
         "\x{1FB0}" => 'a=',
         "\x{1FB1}" => 'a_',
         "\x{1FB3}" => 'a|',
@@ -1432,13 +1448,13 @@ sub initialize {
         "\x{1FBA}" => 'A\\\\',
         "\x{1FBB}" => 'A/',
         "\x{1FBC}" => 'A|',
-        "\x{1FC3}" => 'ê|',
-        "\x{1FC6}" => 'ê~',
+        "\x{1FC3}" => 'Ãª|',
+        "\x{1FC6}" => 'Ãª~',
         "\x{1FC8}" => 'E\\\\',
         "\x{1FC9}" => 'E/',
-        "\x{1FCA}" => 'Ê\\\\',
-        "\x{1FCB}" => 'Ê/',
-        "\x{1FCC}" => 'Ê|',
+        "\x{1FCA}" => 'ÃŠ\\\\',
+        "\x{1FCB}" => 'ÃŠ/',
+        "\x{1FCC}" => 'ÃŠ|',
         "\x{1FD0}" => 'i=',
         "\x{1FD1}" => 'i_',
         "\x{1FD6}" => 'i~',
@@ -1456,13 +1472,13 @@ sub initialize {
         "\x{1FEA}" => 'Y\\\\',
         "\x{1FEB}" => 'Y/',
         "\x{1FEC}" => 'R(',
-        "\x{1FF6}" => 'ô~',
-        "\x{1FF3}" => 'ô|',
+        "\x{1FF6}" => 'Ã´~',
+        "\x{1FF3}" => 'Ã´|',
         "\x{1FF8}" => 'O\\\\',
         "\x{1FF9}" => 'O/',
-        "\x{1FFA}" => 'Ô\\\\',
-        "\x{1FFB}" => 'Ô/',
-        "\x{1FFC}" => 'Ô|',
+        "\x{1FFA}" => 'Ã”\\\\',
+        "\x{1FFB}" => 'Ã”/',
+        "\x{1FFC}" => 'Ã”|',
         "\x{03AA}" => 'I+',
         "\x{03AB}" => 'Y+',
         "\x{03CA}" => 'i+',
@@ -1489,18 +1505,18 @@ sub initialize {
         "\x{1F1B}" => 'E(\\\\',
         "\x{1F1C}" => 'E)/',
         "\x{1F1D}" => 'E(/',
-        "\x{1F22}" => 'ê)\\\\',
-        "\x{1F23}" => 'ê(\\\\',
-        "\x{1F24}" => 'ê)/',
-        "\x{1F25}" => 'ê(/',
-        "\x{1F26}" => 'ê~)',
-        "\x{1F27}" => 'ê~(',
-        "\x{1F2A}" => 'Ê)\\\\',
-        "\x{1F2B}" => 'Ê(\\\\',
-        "\x{1F2C}" => 'Ê)/',
-        "\x{1F2D}" => 'Ê(/',
-        "\x{1F2E}" => 'Ê~)',
-        "\x{1F2F}" => 'Ê~(',
+        "\x{1F22}" => 'Ãª)\\\\',
+        "\x{1F23}" => 'Ãª(\\\\',
+        "\x{1F24}" => 'Ãª)/',
+        "\x{1F25}" => 'Ãª(/',
+        "\x{1F26}" => 'Ãª~)',
+        "\x{1F27}" => 'Ãª~(',
+        "\x{1F2A}" => 'ÃŠ)\\\\',
+        "\x{1F2B}" => 'ÃŠ(\\\\',
+        "\x{1F2C}" => 'ÃŠ)/',
+        "\x{1F2D}" => 'ÃŠ(/',
+        "\x{1F2E}" => 'ÃŠ~)',
+        "\x{1F2F}" => 'ÃŠ~(',
         "\x{1F32}" => 'i)\\\\',
         "\x{1F33}" => 'i(\\\\',
         "\x{1F34}" => 'i)/',
@@ -1530,45 +1546,45 @@ sub initialize {
         "\x{1F5B}" => 'Y(\\\\',
         "\x{1F5D}" => 'Y(/',
         "\x{1F5F}" => 'Y~(',
-        "\x{1F62}" => 'ô)\\\\',
-        "\x{1F63}" => 'ô(\\\\',
-        "\x{1F64}" => 'ô)/',
-        "\x{1F65}" => 'ô(/',
-        "\x{1F66}" => 'ô~)',
-        "\x{1F67}" => 'ô~(',
-        "\x{1F6A}" => 'Ô)\\\\',
-        "\x{1F6B}" => 'Ô(\\\\',
-        "\x{1F6C}" => 'Ô)/',
-        "\x{1F6D}" => 'Ô(/',
-        "\x{1F6E}" => 'Ô~)',
-        "\x{1F6F}" => 'Ô~(',
+        "\x{1F62}" => 'Ã´)\\\\',
+        "\x{1F63}" => 'Ã´(\\\\',
+        "\x{1F64}" => 'Ã´)/',
+        "\x{1F65}" => 'Ã´(/',
+        "\x{1F66}" => 'Ã´~)',
+        "\x{1F67}" => 'Ã´~(',
+        "\x{1F6A}" => 'Ã”)\\\\',
+        "\x{1F6B}" => 'Ã”(\\\\',
+        "\x{1F6C}" => 'Ã”)/',
+        "\x{1F6D}" => 'Ã”(/',
+        "\x{1F6E}" => 'Ã”~)',
+        "\x{1F6F}" => 'Ã”~(',
         "\x{1F80}" => 'a)|',
         "\x{1F81}" => 'a(|',
         "\x{1F88}" => 'A)|',
         "\x{1F89}" => 'A(|',
-        "\x{1F90}" => 'ê)|',
-        "\x{1F91}" => 'ê(|',
-        "\x{1F98}" => 'Ê)|',
-        "\x{1F99}" => 'Ê(|',
-        "\x{1FA0}" => 'ô)|',
-        "\x{1FA1}" => 'ô(|',
-        "\x{1FA8}" => 'Ô)|',
-        "\x{1FA9}" => 'Ô(|',
+        "\x{1F90}" => 'Ãª)|',
+        "\x{1F91}" => 'Ãª(|',
+        "\x{1F98}" => 'ÃŠ)|',
+        "\x{1F99}" => 'ÃŠ(|',
+        "\x{1FA0}" => 'Ã´)|',
+        "\x{1FA1}" => 'Ã´(|',
+        "\x{1FA8}" => 'Ã”)|',
+        "\x{1FA9}" => 'Ã”(|',
         "\x{1FB2}" => 'a\\\|',
         "\x{1FB4}" => 'a/|',
         "\x{1FB7}" => 'a~|',
-        "\x{1FC2}" => 'ê\\\|',
-        "\x{1FC4}" => 'ê/|',
-        "\x{1FC7}" => 'ê~|',
+        "\x{1FC2}" => 'Ãª\\\|',
+        "\x{1FC4}" => 'Ãª/|',
+        "\x{1FC7}" => 'Ãª~|',
         "\x{1FD2}" => 'i\\\\+',
         "\x{1FD3}" => 'i/+',
         "\x{1FD7}" => 'i~+',
         "\x{1FE2}" => 'y\\\\+',
         "\x{1FE3}" => 'y/+',
         "\x{1FE7}" => 'y~+',
-        "\x{1FF2}" => 'ô\\\|',
-        "\x{1FF4}" => 'ô/|',
-        "\x{1FF7}" => 'ô~|',
+        "\x{1FF2}" => 'Ã´\\\|',
+        "\x{1FF4}" => 'Ã´/|',
+        "\x{1FF7}" => 'Ã´~|',
     );
     %{ $::lglobal{grkbeta3} } = (    #Triply marked letters
         "\x{1F82}" => 'a)\\\|',
@@ -1583,30 +1599,30 @@ sub initialize {
         "\x{1F8D}" => 'A(/|',
         "\x{1F8E}" => 'A~)|',
         "\x{1F8F}" => 'A~(|',
-        "\x{1F92}" => 'ê)\\\|',
-        "\x{1F93}" => 'ê(\\\|',
-        "\x{1F94}" => 'ê)/|',
-        "\x{1F95}" => 'ê(/|',
-        "\x{1F96}" => 'ê~)|',
-        "\x{1F97}" => 'ê~(|',
-        "\x{1F9A}" => 'Ê)\\\|',
-        "\x{1F9B}" => 'Ê(\\\|',
-        "\x{1F9C}" => 'Ê)/|',
-        "\x{1F9D}" => 'Ê(/|',
-        "\x{1F9E}" => 'Ê~)|',
-        "\x{1F9F}" => 'Ê~(|',
-        "\x{1FA2}" => 'ô)\\\|',
-        "\x{1FA3}" => 'ô(\\\|',
-        "\x{1FA4}" => 'ô)/|',
-        "\x{1FA5}" => 'ô(/|',
-        "\x{1FA6}" => 'ô~)|',
-        "\x{1FA7}" => 'ô~(|',
-        "\x{1FAA}" => 'Ô)\\\|',
-        "\x{1FAB}" => 'Ô(\\\|',
-        "\x{1FAC}" => 'Ô)/|',
-        "\x{1FAD}" => 'Ô(/|',
-        "\x{1FAE}" => 'Ô~)|',
-        "\x{1FAF}" => 'Ô~(|',
+        "\x{1F92}" => 'Ãª)\\\|',
+        "\x{1F93}" => 'Ãª(\\\|',
+        "\x{1F94}" => 'Ãª)/|',
+        "\x{1F95}" => 'Ãª(/|',
+        "\x{1F96}" => 'Ãª~)|',
+        "\x{1F97}" => 'Ãª~(|',
+        "\x{1F9A}" => 'ÃŠ)\\\|',
+        "\x{1F9B}" => 'ÃŠ(\\\|',
+        "\x{1F9C}" => 'ÃŠ)/|',
+        "\x{1F9D}" => 'ÃŠ(/|',
+        "\x{1F9E}" => 'ÃŠ~)|',
+        "\x{1F9F}" => 'ÃŠ~(|',
+        "\x{1FA2}" => 'Ã´)\\\|',
+        "\x{1FA3}" => 'Ã´(\\\|',
+        "\x{1FA4}" => 'Ã´)/|',
+        "\x{1FA5}" => 'Ã´(/|',
+        "\x{1FA6}" => 'Ã´~)|',
+        "\x{1FA7}" => 'Ã´~(|',
+        "\x{1FAA}" => 'Ã”)\\\|',
+        "\x{1FAB}" => 'Ã”(\\\|',
+        "\x{1FAC}" => 'Ã”)/|',
+        "\x{1FAD}" => 'Ã”(/|',
+        "\x{1FAE}" => 'Ã”~)|',
+        "\x{1FAF}" => 'Ã”~(|',
     );
 
     # DP character suites (easier to copy and edit with regexes from the tables on
@@ -1846,7 +1862,7 @@ sub titlecase {
     $text = lc($text);
     $text =~ s/(^\W*\w)/\U$1\E/;
     $text =~ s/([\s\n]+\W*\w)/\U$1\E/g;
-    $text =~ s/ (A|An|And|At|By|From|In|Of|On|The|To)\b/ \L$1\E/g if ( $::booklang eq 'en' );
+    $text =~ s/ (A|An|And|At|By|From|In|Of|On|The|To)\b/ \L$1\E/g if ( ::main_lang() eq 'en' );
     return $text;
 }
 
@@ -2739,7 +2755,7 @@ sub toolbar_toggle {
         );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
-            -text    => 'WF²',
+            -text    => 'WFÂ²',
             -font    => $::lglobal{toolfont},
             -command => [ \&::wordfrequency ],
             -tip     => 'Word Frequency'

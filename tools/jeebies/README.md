@@ -16,8 +16,9 @@ users to build themselves.
 
 ## Building
 
-Building Jeebies is very simple, as it only has the single `jeebies.c` source
-file. A `Makefile` is included to make this brainless, however:
+The `jeebies` executable is built from a single C source file that requires
+two include files created from the original `he.jee` and `be.jee` data files.
+Use the included `Makefile` to build the executable:
 
 ```
 make build

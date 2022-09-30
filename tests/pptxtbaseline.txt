@@ -174,6 +174,7 @@ unusual characters check
         œ | men had an opportunity of seeing Lesbœufs and Morval, which had
         œ | other features added to the difficulty of the manœuvre. The long
         œ | with outposts some 300 yards in front. This manœuvre was carried
+        ’ | Don't care if apostrophes aren’t straight.
        #/ | #/
        () |                                (Signed) BEAUVOIR DE LISLE,
        () |                               (O.R.S.)
@@ -1045,6 +1046,7 @@ unusual characters check
        èé | Portuguese front between Armentières and La Bassée, and the fighting
        éé | and moved slowly forward through Fresnoy Farm, Bévillers, Quiévy,
        œ( | and a general advance on Bourlon and Mœuvres was ordered (on the
+       ‘’ | edinBURGH is also wrong: ‘first letter is lower case.’
       ()( |       1  Corkran, C. E., C.M.G. (Bt.-Col.) (Temp.
       ()( |     Aubrey-Fletcher, H. L., Capt. (Bt.-Major), M.V.O., D.S.O. (Four
       ()( |     Maitland, M. E. M. C., Major (Temp. Lieut.-Col.), D.S.O. (Five
@@ -3887,6 +3889,8 @@ floating double quote |       "    20.   " Kriel (Cologne).
          comma check |      Wrixon, M. P. B., M.C., ii. 191, 382, iii. 3-4, 55, 56, 57, 281,
          comma check |      Wynne, E. H. J., i. 299, 339, ii. 1, 6, 87, 97-8, 107, iii. 239
          comma check |      Yorke, Hon. A. E. F., ii. 1, 6, iii. 209
+  miscapitalization? |  Although l'Edinburgh D'Edinburgh are permissible, e.g. in French,
+  miscapitalization? |  x'Edinburgh is wrong.
         spacey quote |      Lieut. C. E. Irby, M.C.                       "    "
         spacey quote |      Lieut. C. E. Irby, M.C.                       "    "
         spacey quote |      Lieut. E. H. Tuckwell, M.C.                   "    "
