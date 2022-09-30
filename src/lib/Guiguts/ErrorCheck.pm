@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&errorcheckpop_up &spellquerycleardict);
+    @EXPORT = qw(&errorcheckpop_up &spellquerycleardict &spellqueryinitialize &spellquerywfwordok);
 }
 
 my @errorchecklines;
@@ -1302,6 +1302,18 @@ sub booklouperun {
             $step++;
         }
         close $logfile;
+    }
+
+    #
+    # Return true if word from Word Frequency list is OK
+    # Word may contain non-word characters (e.g. hyphen ) - OK if all the parts are OK
+    sub spellquerywfwordok {
+        my $wfword = shift;
+
+        for my $wd ( split( /\W/, $wfword ) ) {
+            return 0 unless spellquerywordok($wd);    # part not found
+        }
+        return 1;                                     # all parts ok
     }
 
     #
