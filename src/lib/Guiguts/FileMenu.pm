@@ -344,6 +344,7 @@ sub clearvars {
         }
     }
     %::reghints = ();
+    ::spellquerycleardict();
     %{ $::lglobal{seenwordsdoublehyphen} } = ();
     $::lglobal{seenwords}     = ();
     $::lglobal{seenwordpairs} = ();
