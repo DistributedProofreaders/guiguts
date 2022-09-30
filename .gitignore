@@ -1,7 +1,8 @@
 # program artifacts
 /src/setting.rc
 /src/header.txt
-/src/data/labels_en.rc
+/src/header_user.txt
+/src/data/labels_??.rc
 /src/data/dict_*_user.txt
 
 # development artifacts

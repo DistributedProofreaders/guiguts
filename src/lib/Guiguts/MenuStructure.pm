@@ -870,8 +870,8 @@ sub menu_preferences_filepaths {
         [
             'command', 'Set ~File Paths...', -command => sub { ::filePathsPopup(); },
         ],
-        [ 'command', 'Set DP ~URLs...',                       -command => \&::setDPurls, ],
-        [ 'command', 'Use ~Settings From Another Release...', -command => \&::copysettings, ],
+        [ 'command', 'Set DP ~URLs...',                  -command => \&::setDPurls, ],
+        [ 'command', 'Copy ~Settings From A Release...', -command => \&::copysettings, ],
     ];
 }
 

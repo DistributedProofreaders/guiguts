@@ -1317,7 +1317,11 @@ sub html_parse_header {
         unless ( -e ::path_htmlheader() ) {
             ::copy( ::path_defaulthtmlheader(), ::path_htmlheader() );
         }
-        open my $infile, '<:encoding(utf8)', ::path_htmlheader()
+
+        # Either use header file, or use default header file followed by "user" header if one exists
+        my $userheader = -e ::path_userhtmlheader();
+        my $headername = $userheader ? ::path_defaulthtmlheader() : ::path_htmlheader();
+        open my $infile, '<:encoding(utf8)', $headername
           or warn "Could not open header file. $!\n";
         while ( my $line = <$infile> ) {
             $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
@@ -1331,6 +1335,17 @@ sub html_parse_header {
               if $line =~ /rel="coverpage"/;
             $line = "    <style> /* <![CDATA[ */\n" if $line =~ /<style type="text\/css">/;
             $line = "    /* ]]> */ </style>\n"      if $line =~ /<\/style>/;
+
+            # If "user" header exists, insert it just before end of CSS
+            if ( $userheader and $line =~ /<\/style>/ ) {
+                open my $inuser, '<:encoding(utf8)', ::path_userhtmlheader()
+                  or warn "Could not open header file. $!\n";
+                while ( my $uline = <$inuser> ) {
+                    $uline =~ s/\cM\cJ|\cM|\cJ/\n/g;
+                    $headertext .= $uline;
+                }
+                close $inuser;
+            }
             $headertext .= $line;
         }
         close $infile;
