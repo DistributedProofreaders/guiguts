@@ -1,7 +1,7 @@
 # Changelog
 
 
-## Version 1.4.1
+## Version 1.5.0
 
 - New Spell Query tool checks spelling, reporting queries in similar way to
   jeebies, bookloupe, etc. Similar buttons to old spell check dialog allow
@@ -11,6 +11,9 @@
   Use Alt+Left click to pop the Search dialog to search for the queried word.
 - Spell Query also handles multiple languages - set the language to a list
   of language names using the status bar, or the `File/Project` menu.
+  English, French and German dictionaries are included with the release.
+- Word Frequency's Check Spelling button now uses Spell Query instead of
+  Aspell.
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
@@ -31,6 +34,7 @@
   Search & Replace dialog
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
+- Minor improvement to `pagenum` CSS in default header
 - File Open dialog now displays files with `.xhtml` extension
 - Improvements to installation procedure and instructions for Mac users
 - Use Command key in place of Alt key in keyboard shortcuts on Macs
@@ -62,6 +66,7 @@
 ### Bug Fixes
 
 - Word Frequency was failing for Mac users
+- Several issues hindered running of jeebies on a Mac
 - HTML generation could loop forever converting footnotes
 - HTML generation could misplace the closing `<\div>` for a group of footnotes
   if footnote contained blockquotes
