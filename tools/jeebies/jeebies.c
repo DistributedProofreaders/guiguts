@@ -85,7 +85,6 @@ void procfile(char *);
 char *getaword(char *, char *);
 char *getawordwithpunct(char *, char *);
 int matchword(char *, char *);
-char *flgets(char *, int, FILE *);
 void lowerit(char *);
 int gcisalpha(unsigned char);
 int gcisdigit(unsigned char);
@@ -179,7 +178,7 @@ void procfile(char *filename)
         fprintf(stdout, "jeebies: cannot open %s\n", filename);
         exit(1);
         }
-    while (flgets(aline, LINEBUFSIZE-1, infile)) {
+    while (fgets(aline, LINEBUFSIZE-1, infile)) {
         lowerit(aline);
         for (s = aline; *s;) {
             s = getaword(s, inword);
@@ -228,7 +227,7 @@ void procfile(char *filename)
     if (pswit[TOLERANT_SWITCH])
         threshold = 6.0;
 
-    while (flgets(aline, LINEBUFSIZE-1, infile)) {
+    while (fgets(aline, LINEBUFSIZE-1, infile)) {
         linecnt++;
         s = t = aline;
         isemptyline = 1;      /* assume the line is empty until proven otherwise */
@@ -421,37 +420,6 @@ binsch:
             
 
 }
-    
-/* flgets - get one line from the input stream                 */
-/* Returns a pointer to the line.                              */
-/* Do not replace with fgets, which retains newline characters */
-/* and breaks subsequent processing when phrase spans lines    */
-
-char *flgets(char *theline, int maxlen, FILE *thefile)
-{
-    char c;
-    int len, cint;
-
-    *theline = 0;
-    len = 0;
-    c = cint = fgetc(thefile);
-    do {
-        if (cint == EOF)
-            return (NULL);
-        if (c == 10)  /* end of line */
-            break;
-        if (c != 13) {
-            theline[len] = c;
-            len++;
-            theline[len] = 0;
-            }
-        c = cint = fgetc(thefile);
-    } while(len < maxlen);
-    return(theline);
-}
-
-
-
 
 
 /* getaword - extracts the first/next "word" from the line, and puts */
