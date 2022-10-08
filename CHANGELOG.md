@@ -14,6 +14,8 @@
   English, French and German dictionaries are included with the release.
 - Word Frequency's Check Spelling button now uses Spell Query instead of
   Aspell.
+- New W3C epubcheck tool added to HTML menu. User selects the epub to be
+  checked, and results are shown in standard errorcheck dialog
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
