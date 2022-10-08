@@ -785,6 +785,29 @@ sub filePathsPopup {
             -relief       => 'sunken',
             -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
+        my $f7a = $::lglobal{filepathspop}->Frame->pack(
+            -side   => 'top',
+            -anchor => 'n',
+            -fill   => 'x'
+        );
+        $f7a->Label(
+            -text   => "W3C epubcheck:",
+            -width  => 22,
+            -anchor => 'w',
+        )->pack( -side => 'left' );
+        $f7a->Button(
+            -text    => 'Locate epubcheck...',
+            -command => sub {
+                ::locateExecutable( 'W3C epubcheck (epubcheck.jar)',
+                    \$::epubcheckcommand, $jartypes );
+            },
+            -width => 24,
+        )->pack( -side => 'right' );
+        $f7a->Entry(
+            -textvariable => \$::epubcheckcommand,
+            -relief       => 'sunken',
+            -background   => $::bkgcolor,
+        )->pack( -expand => 'y', -fill => 'x' );
         my $f8 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',

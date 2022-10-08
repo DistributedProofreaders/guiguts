@@ -11,7 +11,7 @@ BEGIN {
       &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
       &file_import_markup &file_import_ocr &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
-      &cpcharactersubs);
+      &cpcharactersubs &getsafelastpath);
 }
 
 sub file_open {    # Find a text file to open
@@ -908,7 +908,7 @@ EOM
         for (
             qw /globallastpath globalspellpath globalspelldictopt globalviewerpath
             globalbrowserstart gutcommand jeebiescommand scannospath tidycommand
-            validatecommand validatecsscommand ebookmakercommand/
+            validatecommand validatecsscommand epubcheckcommand ebookmakercommand/
         ) {
             if ( eval '$::' . $_ ) {
                 print $save_handle "\$$_", ' ' x ( 20 - length $_ ), "= '",

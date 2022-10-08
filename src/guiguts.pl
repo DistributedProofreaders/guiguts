@@ -211,6 +211,7 @@ our $jeebiescommand     = '';
 our $tidycommand        = '';
 our $validatecommand    = '';
 our $validatecsscommand = '';
+our $epubcheckcommand   = '';
 our $ebookmakercommand  = '';
 our %charsuiteenabled   = ( 'Basic Latin' => 1 );    # All projects allow Basic Latin character suite
 our %pagenumbers;

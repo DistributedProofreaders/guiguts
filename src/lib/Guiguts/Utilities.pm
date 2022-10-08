@@ -1197,6 +1197,8 @@ sub initialize {
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'vnu.jar' ) );
     $::validatecsscommand = ::setdefaultpath( $::validatecsscommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'css-validator.jar' ) );
+    $::epubcheckcommand = ::setdefaultpath( $::epubcheckcommand,
+        ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'W3C', 'epubcheck', 'epubcheck.jar' ) );
     $::gutcommand = ::setdefaultpath( $::gutcommand,
         ::catfile( $::lglobal{guigutsdirectory}, 'tools', 'bookloupe', 'bookloupe.exe' ) );
     $::jeebiescommand = ::setdefaultpath( $::jeebiescommand,
