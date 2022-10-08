@@ -228,6 +228,9 @@ void procfile(char *filename)
         threshold = 6.0;
 
     while (fgets(aline, LINEBUFSIZE-1, infile)) {
+        /* Terminate string at first end-of-line character */
+        /* or newline characters  break algorithm when phrase crosses line boundary */
+        aline[strcspn(aline, "\r\n")] = '\0';
         linecnt++;
         s = t = aline;
         isemptyline = 1;      /* assume the line is empty until proven otherwise */
