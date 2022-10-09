@@ -655,7 +655,10 @@ sub errorcheckrun {    # Runs error checks
             -filetypes  => $types,
             -initialdir => ::getsafelastpath()
         );
-        return 1 unless $tmpfname;
+        unless ($tmpfname) {
+            $top->Unbusy;
+            return 1;
+        }
     } elsif ( $errorchecktype ne 'Spell Query' ) {    # No external tool, so no temp file needed
         savetoerrortmpfile( $tmpfname, $striptext );
     }
