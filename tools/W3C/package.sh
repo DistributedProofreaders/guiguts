@@ -22,3 +22,10 @@ mv dist/vnu.jar $DEST
 mv dist/LICENSE $DEST/vnu-LICENSE
 rm -rf dist vnu.zip
 
+# epubcheck.jar is the same for all systems
+VERSION=4.2.6
+URL=https://github.com/w3c/epubcheck/releases/download/v$VERSION/epubcheck-$VERSION.zip
+curl -L -o epubcheck.zip $URL
+unzip epubcheck.zip -d .
+mv epubcheck-$VERSION $DEST/epubcheck
+rm -f epubcheck.zip 
