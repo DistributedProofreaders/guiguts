@@ -15,7 +15,7 @@ my $APOS = "\x{2019}";    # Curly apostrophe/right single quote
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
-# pphtml, pptxt, ppvimage, Spell Query, epubcheck and Load External Checkfile.
+# pphtml, pptxt, ppvimage, Spell Query, EPUBCheck and Load External Checkfile.
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( $line, $lincol );
@@ -608,7 +608,7 @@ sub errorcheckrun {    # Runs error checks
     }
     $textwindow->focus;
     ::update_indicators();
-    unless ( $errorchecktype eq 'epubcheck' ) {    # Checks an epub, not the currently loaded file
+    unless ( $errorchecktype eq 'EPUBCheck' ) {    # Checks an epub, not the currently loaded file
         return 1 if ::nofileloadedwarning();
     }
 
@@ -629,9 +629,9 @@ sub errorcheckrun {    # Runs error checks
                 \$::validatecsscommand, $jartypes );
             return 1 unless $::validatecsscommand;
         }
-    } elsif ( $errorchecktype eq 'epubcheck' ) {
+    } elsif ( $errorchecktype eq 'EPUBCheck' ) {
         unless ($::epubcheckcommand) {
-            ::locateExecutable( 'W3C epubcheck (epubcheck.jar)', \$::epubcheckcommand, $jartypes );
+            ::locateExecutable( 'W3C EPUBCheck (epubcheck.jar)', \$::epubcheckcommand, $jartypes );
             return 1 unless $::epubcheckcommand;
         }
     }
@@ -646,9 +646,9 @@ sub errorcheckrun {    # Runs error checks
       ? "^(/[$::allblocktypes](?=[\[\n]))|([$::allblocktypes]/(?=[\n]))"
       : "";
 
-    # For epubcheck, instead of saving current file as a temporary file,
+    # For EPUBCheck, instead of saving current file as a temporary file,
     # user chooses an epub file to check
-    if ( $errorchecktype eq 'epubcheck' ) {
+    if ( $errorchecktype eq 'EPUBCheck' ) {
         my $types = [ [ 'Epub Files', ['.epub'] ], [ 'All Files', ['*'] ], ];
         $tmpfname = $::lglobal{errorcheckpop}->getOpenFile(
             -title      => 'File Name?',
@@ -669,7 +669,7 @@ sub errorcheckrun {    # Runs error checks
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-jar", $::validatecsscommand, "--profile=$::cssvalidationlevel",
             "file:$tmpfname" );
-    } elsif ( $errorchecktype eq 'epubcheck' ) {
+    } elsif ( $errorchecktype eq 'EPUBCheck' ) {
         my $runner = ::runner::tofile( $errname, $errname );    # stdout & stderr
         $runner->run( "java", "-Xss2048k", "-jar", $::epubcheckcommand, $tmpfname );
     } elsif ( $errorchecktype eq 'pphtml' ) {
@@ -693,7 +693,7 @@ sub errorcheckrun {    # Runs error checks
         spellqueryrun($errname);
     }
     $top->Unbusy;
-    unlink $tmpfname unless $errorchecktype eq 'epubcheck';    # Don't delete the epub file
+    unlink $tmpfname unless $errorchecktype eq 'EPUBCheck';    # Don't delete the epub file
     return 0;
 }
 

@@ -791,14 +791,14 @@ sub filePathsPopup {
             -fill   => 'x'
         );
         $f7a->Label(
-            -text   => "W3C epubcheck:",
+            -text   => "W3C EPUBCheck:",
             -width  => 22,
             -anchor => 'w',
         )->pack( -side => 'left' );
         $f7a->Button(
-            -text    => 'Locate epubcheck...',
+            -text    => 'Locate EPUBCheck...',
             -command => sub {
-                ::locateExecutable( 'W3C epubcheck (epubcheck.jar)',
+                ::locateExecutable( 'W3C EPUBCheck (epubcheck.jar)',
                     \$::epubcheckcommand, $jartypes );
             },
             -width => 24,

@@ -776,9 +776,9 @@ sub menu_html {
         ],
         [
             'command',
-            'W3C epu~bcheck',
+            'W3C EPU~BCheck',
             -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'epubcheck' );
+                ::errorcheckpop_up( $textwindow, $top, 'EPUBCheck' );
             }
         ],
 
