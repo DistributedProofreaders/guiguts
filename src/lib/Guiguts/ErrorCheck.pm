@@ -31,9 +31,12 @@ sub errorcheckpop_up {
 
     my $gcol = 0;
 
-    # Label to count number of queries
+    # Label to count number of queries (not shown for EPUBCheck)
     $::lglobal{eccountlabel} =
-      $ptopframeb->Label( -justify => 'left', )->grid( -padx => 10, -row => 0, -column => $gcol++ );
+      $errorchecktype eq 'EPUBCheck'
+      ? 0
+      : $ptopframeb->Label( -justify => 'left', )
+      ->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
     # Spell Query threshold setting sits under the query count label
     if ( $errorchecktype eq 'Spell Query' ) {
@@ -500,6 +503,14 @@ sub errorcheckpop_up {
             my $freq = spellqueryfrequency($line);
             next if $freq > $::spellquerythreshold;       # If it's spelled the same way several times, it's probably not an error
             $line .= " ($freq)";
+
+            # EPUBCheck's error messages each contain the full path of the epub file, maybe plus the path
+            # to the relevant HTML file within it, so abbreviate that part of the message.
+            # First replace epub filename with "..."
+            # Then cut out the unnecessary part of the internal path if it is given
+        } elsif ( $errorchecktype eq "EPUBCheck" ) {
+            $line =~ s/^(.+\): ).+\.epub(.+)/$1...$2/;
+            $line =~ s/^(.+\): \.\.\.).+(-\d+\.html.+)/$1$2/;
         }
 
         # All line/column formats now converted to "line:col" - mark the locations in the main window
@@ -508,7 +519,7 @@ sub errorcheckpop_up {
             # Some tools count lines/columns differently
             my $linnum = $1 + $lineadjust;
             my $colnum = $2 + $columnadjust;
-            $colnum = 0 if $colnum < 0;                   # Nu CSS errors could end up as column -1
+            $colnum = 0 if $colnum < 0;    # Nu CSS errors could end up as column -1
             $line =~ s/^\d+:\d+/${linnum}:${colnum}/;
 
             # Skip if already have identical error at same location already, since firstly it is not necessary,
@@ -1506,6 +1517,7 @@ sub booklouperun {
 # Update query count in dialog
 # Positive value sets the count, negative value is subtracted (e.g. when error removed)
 sub eccountupdate {
+    return unless $::lglobal{eccountlabel};
     my $num = shift;
     $::lglobal{eccountvalue} = $num if $num >= 0;
     $::lglobal{eccountvalue} += $num if $num < 0;
