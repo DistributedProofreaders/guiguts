@@ -504,11 +504,12 @@ sub errorcheckpop_up {
             next if $freq > $::spellquerythreshold;       # If it's spelled the same way several times, it's probably not an error
             $line .= " ($freq)";
 
+        } elsif ( $errorchecktype eq "EPUBCheck" ) {
+
             # EPUBCheck's error messages each contain the full path of the epub file, maybe plus the path
             # to the relevant HTML file within it, so abbreviate that part of the message.
             # First replace epub filename with "..."
             # Then cut out the unnecessary part of the internal path if it is given
-        } elsif ( $errorchecktype eq "EPUBCheck" ) {
             $line =~ s/^(.+\): ).+\.epub(.+)/$1...$2/;
             $line =~ s/^(.+\): \.\.\.).+(-\d+\.html.+)/$1$2/;
         }
