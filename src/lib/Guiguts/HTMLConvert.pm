@@ -16,11 +16,18 @@ BEGIN {
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors);
 }
 
+#
+# Return the correct closure for void elements, either ">" or " />" (space included to match older versions of GG)
+sub voidclosure {
+    return $::html5serialization ? " />" : ">";
+}
+
 # Return true if asterisks or <tb> converted on this line
 sub html_convert_tb {
     my ( $textwindow, $selection, $step ) = @_;
-    if (   $selection =~ s/\s{7}(\*\s{7}){4}\*/<hr class="tb" \/>/
-        or $selection =~ s/<tb>/<hr class="tb" \/>/ ) {
+    my $closure = voidclosure();
+    if (   $selection =~ s/\s{7}(\*\s{7}){4}\*/<hr class="tb"$closure/
+        or $selection =~ s/<tb>/<hr class="tb"$closure/ ) {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
         return 1;
@@ -108,8 +115,8 @@ sub html_cleanup_markers {
         $::blockend = "$::xler.end";
         $textwindow->ntdelete( "$::blockstart-1c", $::blockend );
     }
-    while ( $::blockstart = $textwindow->search( '-regexp', '--', '<\/h\d><br />', '1.0', 'end' ) )
-    {
+    while ( $::blockstart =
+        $textwindow->search( '-regexp', '--', '<\/h\d><br' . voidclosure(), '1.0', 'end' ) ) {
         $textwindow->ntdelete( "$::blockstart+5c", "$::blockstart+9c" );
     }
     return;
@@ -213,7 +220,7 @@ sub html_convert_body {
     # if nonblank followed by blank, insert close para after the nonblank  unless
     #   it already has a closing tag (problematic one)
     # at end of block, insert close para
-    # in a block, insert <br />
+    # in a block, insert <br>
     # four blank lines--start of chapter
     # Sets a mark for the horizontal rule at the page marker rather than just before
     # the header.
@@ -258,10 +265,11 @@ sub html_convert_body {
     $thisblockend = $textwindow->index('end');
     my $blkcenter = 0;
     my $blkright  = 0;
-    my $blkrstart = 0;    # Value of $step when a block right starts
+    my $blkrstart = 0;               # Value of $step when a block right starts
     my @blkrlens  = ();
+    my $closure   = voidclosure();
 
-    ::hidelinenumbers();    # To speed updating of text window
+    ::hidelinenumbers();             # To speed updating of text window
 
     #last line and column
     ( $ler, $lec ) = split /\./, $thisblockend;
@@ -632,8 +640,8 @@ sub html_convert_body {
                     $textwindow->ntinsert( "$steptmp.0",
                         '<span style="margin-right: ' . $blkrindent . 'em;">' );
 
-                    # if line ends with a <br /> close the span before it (or it would fail on some epub readers)
-                    my $spancl = $textwindow->search( '-regexp', '--', '<br ?/>$', "$steptmp.0",
+                    # if line ends with a <br> close the span before it (or it would fail on some epub readers)
+                    my $spancl = $textwindow->search( '-regexp', '--', '<br ?/?>$', "$steptmp.0",
                         "$steptmp.end" );
                     $spancl = "$steptmp.end" unless $spancl;
                     $textwindow->ntinsert( $spancl, '</span>' );
@@ -767,7 +775,7 @@ sub html_convert_body {
               );
         }
 
-        # in block or just an indented line, add <br /> and
+        # in block or just an indented line, add <br> and
         # 1. margin-right span for right aligned  - added later since need to know max line length in block
         # 2. no extra span for center aligned
         # 3. margin-left span for other cases
@@ -837,7 +845,7 @@ sub html_convert_body {
                     '<span style="margin-left: ' . $indent . 'em;">' );
                 $textwindow->ntinsert( "$step.end", '</span>' );
             }
-            $textwindow->ntinsert( "$step.end", '<br />' );
+            $textwindow->ntinsert( "$step.end", "<br$closure" );
 
             if ( ( $last5[2] ) && ( !$last5[3] ) && ( $selection =~ /\/\*/ ) ) {
                 insert_paragraph_close( $textwindow, ( $step - 2 ) . ".end" )
@@ -900,7 +908,8 @@ sub html_convert_body {
                 $selection =~ s/<sup>.*?<\/sup>//g;
                 $selection =~ s/<[^>]+>//g;
                 $selection = "<b>$selection</b>";
-                push @contents, "<a href=\"#" . $aname . "\">" . $completeheader . "</a><br />\n";
+                push @contents,
+                  "<a href=\"#" . $aname . "\">" . $completeheader . "</a><br$closure\n";
             }
             $selection .= '<h2';
 
@@ -961,6 +970,7 @@ sub html_convert_chapterdivs {
     my ($textwindow) = @_;
     my $searchstart = '1.0';
     my $h2blockend;
+    my $closure = voidclosure();
 
     # find the end of an h2 element
     while ( $h2blockend = $textwindow->search( '-exact', '--', '</h2>', $searchstart, 'end' ) ) {
@@ -993,7 +1003,7 @@ sub html_convert_chapterdivs {
             # insert the end and start of the chapter div, with a chapter break <hr> before it
             $textwindow->ntinsert( $h2blockend . '+5c', "\n</div>" );
             $textwindow->ntinsert( $h2blockstart,
-                "\n<hr class=\"chap x-ebookmaker-drop\" />\n\n<div class=\"chapter\">\n" );
+                "\n<hr class=\"chap x-ebookmaker-drop\"$closure\n\n<div class=\"chapter\">\n" );
         }
         $searchstart = $h2blockend . '+5l';    # ensure we don't find the same </h2 again
     }
@@ -1148,6 +1158,8 @@ sub html_convert_pageanchors {
         $mark = $textwindow->markPrevious($mark);
     }
 
+    my $closure = voidclosure();
+
     # Work through all the text markers
     while ( $mark = $textwindow->markNext($mark) ) {
         next unless $mark =~ m{Pg(\S+)};              # Only look at page markers
@@ -1205,7 +1217,7 @@ sub html_convert_pageanchors {
                       $::lglobal{pageskipco} ? "" : "<a id=\"$::htmllabels{pglabel}$_\"></a>";
                     $pagereference .=
                       "$br" . "$idtxt$::htmllabels{pgnumbefore}$_$::htmllabels{pgnumafter}";
-                    $br = "<br />";    # Insert br before any subsequent markers
+                    $br = "<br$closure";    # Insert br before any subsequent markers
                 }
                 $lastref = $_;
             }
@@ -1213,7 +1225,7 @@ sub html_convert_pageanchors {
         }
 
         # if marker is not at whitespace, move it forward so pagenum span doesn't end up mid-word
-        $markindex = ::safemark( $markindex, '<' );    # don't advance past '<' (HTML tag), e.g. abc<br />
+        $markindex = ::safemark( $markindex, '<' );    # don't advance past '<' (HTML tag), e.g. abc<br>
 
         # comment only
         $textwindow->ntinsert( $markindex, "<!-- Page $lastref -->" )
@@ -1300,6 +1312,7 @@ sub html_parse_header {
     my ( $textwindow, $headertext, $title, $author ) = @_;
     my $selection;
     my $step;
+    my $closure = voidclosure();
     ::working('Parsing Header');
     $selection = $textwindow->get( '1.0', '1.end' );
     if ( $selection =~ /DOCTYPE/ ) {
@@ -1327,14 +1340,14 @@ sub html_parse_header {
             $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
 
             # Upgrade to HTML5 if old XHTML4 header
-            $line = "<!DOCTYPE html>\n" if $line =~ /<!DOCTYPE .* XHTML/;
-            next                        if $line =~ /DTD\/xhtml/;             # skip DTD line;
-            next                        if $line =~ /content="text\/css"/;    # skip content line
-            $line = "    <meta charset=\"UTF-8\" />\n" if $line =~ /charset=BOOKCHARSET/;
-            $line = "    <link rel=\"icon\" href=\"images/cover.jpg\" type=\"image/x-cover\" />\n"
+            $line = "<!DOCTYPE html>\n"                     if $line =~ /<!DOCTYPE .* XHTML/;
+            next                                            if $line =~ /DTD\/xhtml/;             # skip DTD line;
+            next                                            if $line =~ /content="text\/css"/;    # skip content line
+            $line = "    <meta charset=\"UTF-8\"$closure\n" if $line =~ /charset=BOOKCHARSET/;
+            $line =
+              "    <link rel=\"icon\" href=\"images/cover.jpg\" type=\"image/x-cover\"$closure\n"
               if $line =~ /rel="coverpage"/;
-            $line = "    <style> /* <![CDATA[ */\n" if $line =~ /<style type="text\/css">/;
-            $line = "    /* ]]> */ </style>\n"      if $line =~ /<\/style>/;
+            $line = "    <style>\n" if $line =~ /<style type="text\/css">/;
 
             # If "user" header exists, insert it just before end of CSS
             if ( $userheader and $line =~ /<\/style>/ ) {
@@ -1867,7 +1880,8 @@ sub htmlimageok {
     my $wclass = $::htmlimagewidthtype eq 'px' ? '' : ' class="w100"';
     $textwindow->insert( 'thisblockstart',
             "<div class=\"fig$::lglobal{htmlimgalignment}$divclass\" id=\"$idname\"$style>\n"
-          . "  <img$wclass src=\"$name\"$sizexy$alt$title />\n"
+          . "  <img$wclass src=\"$name\"$sizexy$alt$title"
+          . voidclosure() . "\n"
           . "$selection</div>"
           . $::lglobal{preservep} );
 
@@ -2747,6 +2761,7 @@ sub markup {
     my $thisblockstart = $start;
     my $thisblockend   = $end;
     my $selection;
+    my $closure = voidclosure();
 
     $mark = "blockquote" if $mark eq "blkq";    # shortened form for button label
 
@@ -2755,18 +2770,18 @@ sub markup {
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
         ( $ler, $lec ) = split /\./, $thisblockend;
         if ( $lsr eq $ler ) {
-            $textwindow->insert( 'insert', "<br$attr />" );
+            $textwindow->insert( 'insert', "<br$attr$closure" );
         } else {
             $step = $lsr;
             while ( $step <= $ler ) {
                 $selection = $textwindow->get( "$step.0", "$step.end" );
                 $selection =~ s/<br.*?>//g;
-                $textwindow->insert( "$step.end", "<br$attr />" );
+                $textwindow->insert( "$step.end", "<br$attr$closure" );
                 $step++;
             }
         }
     } elsif ( $mark eq 'hr' ) {
-        $textwindow->insert( 'insert', "<hr$attr />" );
+        $textwindow->insert( 'insert', "<hr$attr$closure" );
     } elsif ( $mark eq 'nbsp' ) {
         my ( $lsr, $lsc, $ler, $lec, $step );
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
@@ -3236,7 +3251,7 @@ sub autolist {
         $textwindow->insert( "$lsr.0", $selection );
 
         # Not multiline - each line is a list entry, except
-        # <p>...</p> counts as one entry, but <br /> forces a new entry
+        # <p>...</p> counts as one entry, but <br> forces a new entry
     } else {
         my $paragraph = 0;
         my $brflag    = 0;
@@ -3244,13 +3259,13 @@ sub autolist {
         while ( $step <= $ler ) {
             if ( my $selection = $textwindow->get( "$step.0", "$step.end" ) ) {
 
-                # If <br /> at end of previous line, need to restart list entry markup
+                # If <br> at end of previous line, need to restart list entry markup
                 if ( $brflag and $selection !~ /<p>/ ) {    # not if about to start paragraph anyway
                     $selection = '<li>' . $selection;
                 }
                 $brflag = 0;
 
-                # If <br />, end current list entry and restart another on next line, even if in paragraph
+                # If <br>, end current list entry and restart another on next line, even if in paragraph
                 if ( $selection =~ s/<br.*?>//g ) {
                     $selection = $selection . '</li>' unless ( $selection =~ /<\/li>/ );
                     $brflag    = 1;

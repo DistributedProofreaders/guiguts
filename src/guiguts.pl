@@ -150,6 +150,7 @@ our $globalprojectdirectory = q{};
 our @gsopt;
 our $highlightcolor         = '#a08dfc';
 our $history_size           = 20;
+our $html5serialization     = 0;                           # Don't serialize by default, i.e. don't close void elements like <br>
 our $htmlimageallowpixels   = 0;                           # Don't allow user to specify image size in pixels by default
 our $htmlimagewidthtype     = '%';                         # Default to specifying image size by percentage
 our $ignoreversions         = "none";                      # Don't ignore any updates by default
