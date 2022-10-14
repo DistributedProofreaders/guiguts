@@ -729,13 +729,6 @@ sub menu_html {
         ],
         [
             'command',
-            'Nu X~HTML Checker',
-            -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'Nu XHTML Check' );
-            }
-        ],
-        [
-            'command',
             '~CSS Validator',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'W3C Validate CSS' );

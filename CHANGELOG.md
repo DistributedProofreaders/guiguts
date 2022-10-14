@@ -16,6 +16,7 @@
   Aspell.
 - New W3C EPUBCheck tool added to HTML menu. User selects the epub to be
   checked, and results are shown in standard errorcheck dialog
+- The `Nu XHTML Checker` entry in the HTML menu has been removed
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
