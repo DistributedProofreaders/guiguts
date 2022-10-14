@@ -19,7 +19,7 @@ BEGIN {
 #
 # Return the correct closure for void elements, either ">" or " />" (space included to match older versions of GG)
 sub voidclosure {
-    return $::html5serialization ? " />" : ">";
+    return $::xmlserialization ? " />" : ">";
 }
 
 # Return true if asterisks or <tb> converted on this line

@@ -891,7 +891,7 @@ EOM
             blocklmargin blockrmargin bold_char charsuitewfhighlight composepopbinding cssvalidationlevel
             defaultindent donotcenterpagemarkers epubpercentoverride failedsearch
             font_char fontname fontsize fontweight gblfontname gblfontsize gblfontweight gblfontsystemuse
-            geometry gesperrt_char globalaspellmode highlightcolor history_size html5serialization
+            geometry gesperrt_char globalaspellmode highlightcolor history_size xmlserialization
             htmlimageallowpixels htmlimagewidthtype ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin markupthreshold
             multisearchsize multiterm nobell nohighlights pagesepauto projectfileslocation notoolbar poetrylmargin projectfileslocation
