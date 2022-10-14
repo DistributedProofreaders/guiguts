@@ -16,6 +16,8 @@
   Aspell.
 - New W3C EPUBCheck tool added to HTML menu. User selects the epub to be
   checked, and results are shown in standard errorcheck dialog
+- Generated HTML5 does not use XML serialization, i.e. void elements are not
+  closed
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and

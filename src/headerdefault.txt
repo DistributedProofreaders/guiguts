@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="BOOKLANG" lang="BOOKLANG">
+<html lang="BOOKLANG">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>
       TITLE, by AUTHOR—A Project Gutenberg eBook
     </title>
-    <link rel="icon" href="images/cover.jpg" type="image/x-cover" />
-    <style> /* <![CDATA[ */
+    <link rel="icon" href="images/cover.jpg" type="image/x-cover">
+    <style>
 
 body {
     margin-left: 10%;
@@ -245,6 +245,6 @@ img.w100 {width: 100%;}
     font-family:sans-serif, serif;
 }
 
-    /* ]]> */ </style>
+    </style>
 </head>
 <body>
