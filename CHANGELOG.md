@@ -18,6 +18,7 @@
   checked, and results are shown in standard errorcheck dialog
 - Generated HTML5 does not use XML serialization, i.e. void elements are not
   closed
+- The `Nu XHTML Checker` entry in the HTML menu has been removed
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
