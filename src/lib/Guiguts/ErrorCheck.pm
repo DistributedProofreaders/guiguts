@@ -103,9 +103,13 @@ sub errorcheckpop_up {
         $::lglobal{spellqueryballoon} = $top->Balloon() unless $::lglobal{spellqueryballoon};
         $ptopframeb->Button(
             -activebackground => $::activecolor,
-            -command          => \&::spelladdgoodwords,
-            -text             => 'Add good_words.txt',
-            -width            => 16
+            -command          => sub {
+                ::spelladdgoodwords();                                     # Add good words to project dictionary
+                spellquerycleardict();                                     # Clear cache, so project dictionary will be reloaded below
+                errorcheckpop_up( $textwindow, $top, $errorchecktype );    # Rerun Spell Query
+            },
+            -text  => 'Add good_words.txt',
+            -width => 16
         )->grid( -row => 1, -column => $gcol - 1 );
         my $btnskip = $ptopframeb->Button(
             -activebackground => $::activecolor,
