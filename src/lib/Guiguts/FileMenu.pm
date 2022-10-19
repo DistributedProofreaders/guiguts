@@ -1203,7 +1203,7 @@ sub interpretbinfile {
     my $markindex;
     foreach my $mark ( sort keys %::pagenumbers ) {
         $markindex = $::pagenumbers{$mark}{offset};
-        if ( $markindex eq '' ) {
+        unless ($markindex) {
             delete $::pagenumbers{$mark};
             next;
         }
