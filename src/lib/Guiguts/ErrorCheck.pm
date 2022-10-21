@@ -64,6 +64,15 @@ sub errorcheckpop_up {
         -width => 16
     )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
+    $ptopframeb->Button(
+        -activebackground => $::activecolor,
+        -command          => sub {
+            errorcheckcopy();
+        },
+        -text  => "Copy errors",
+        -width => 16
+    )->grid( -padx => 10, -row => 0, -column => $gcol++ );
+
     # Add verbose checkbox only for certain error check types
     if (   $errorchecktype eq 'Link Check'
         or $errorchecktype eq 'W3C Validate CSS'
@@ -571,6 +580,20 @@ sub errorcheckpop_up {
     ::working();
     if ( $errorchecktype eq 'Bookloupe' ) {
         gcwindowpopulate();    # Also handles query count display since it depends on shown/hidden error types
+
+    } elsif ( $errorchecktype eq "EPUBCheck" ) {
+
+        # EPUBCheck gives very long error lines, so wrap them using the width of the listbox
+        # and the width of a character to determine how many characters wide to wrap
+        my @splitlines;
+        my $INDENT    = 3;
+        my $charwidth = $::lglobal{errorchecklistbox}->fontMeasure( 'proofing', 'X' );    # width of a character
+        my $wrapwidth = int( $::lglobal{errorchecklistbox}->width / $charwidth );
+        for my $line (@errorchecklines) {
+            $line = ::wrapper( $INDENT, 0, $wrapwidth, $line, $::rwhyphenspace );
+            push @splitlines, split( /\n/, $line );
+        }
+        $::lglobal{errorchecklistbox}->insert( 'end', @splitlines );
     } else {
         $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
         eccountupdate($countqueries);
@@ -1068,13 +1091,24 @@ sub errorcheckremovesimilar {
     $::lglobal{errorchecklistbox}->selectionSet('active');
 }
 
+#
+# Copy list of errors to the copy/paste buffer
+sub errorcheckcopy {
+    my $textwindow = $::textwindow;
+    my @elements   = $::lglobal{errorchecklistbox}->get( 0, 'end' );
+    $textwindow->clipboardClear;
+    for my $line (@elements) {
+        $textwindow->clipboardAppend( $line . "\n" );
+    }
+}
+
 sub gcwindowpopulate {
     return unless defined $::lglobal{errorcheckpop};
     my $headr = 0;
     my $error = 0;
     $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     foreach my $line (@errorchecklines) {
-        next if $line =~ /^\s*$/;                                            # Skip blank lines
+        next if $line =~ /^\s*$/;    # Skip blank lines
         next unless defined $errors{$line};
 
         # Check if error type has been hidden
