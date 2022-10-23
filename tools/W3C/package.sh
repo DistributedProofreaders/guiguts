@@ -14,13 +14,15 @@ cp README.md $DEST
 curl -L -o $DEST/css-validator.jar https://github.com/w3c/css-validator/releases/download/cssval-20211112/css-validator.jar
 
 # vnu.jar is the same for all systems
-VERSION=20.6.30
-URL=https://github.com/validator/validator/releases/download/$VERSION/vnu.jar_$VERSION.zip
-curl -L -o vnu.zip $URL
-unzip vnu.zip -d .
-mv dist/vnu.jar $DEST
-mv dist/LICENSE $DEST/vnu-LICENSE
-rm -rf dist vnu.zip
+TAG=22.9.29
+VDEST=$DEST/validator
+git clone --branch $TAG https://github.com/validator/validator.git $VDEST
+pushd $VDEST
+python ./checker.py update-shallow build jar
+mv build/dist/vnu.jar $DEST
+mv LICENSE $DEST/vnu-LICENSE
+popd
+rm -rf $VDEST
 
 # epubcheck.jar is the same for all systems
 VERSION=4.2.6
