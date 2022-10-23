@@ -3364,6 +3364,8 @@ sub processcommandline {
         'nohome'   => \$::lglobal{nohome},
         'runtests' => \$::lglobal{runtests}
     ) or die("Error in command line arguments\n");
+
+    $::lglobal{nohome} = 1 if $::lglobal{runtests};    # Don't want GGprefs folder for test suite - it will affect the results
 }
 
 #
