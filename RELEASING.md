@@ -17,9 +17,10 @@ Github.
 4. Commit the version update changes and tag the release
    (ie: `git tag r<version>`) and push it up to github
 
-5. From a Linux or MacOS system, or a Windows system with MinGW installed,
-   confirm that you are working from a clean git checkout. Then build the
-   three releases using `make` or `make all` or
+5. From a Linux or MacOS system, or a Windows system with MSYS2 (Mingw64)
+   installed, ensure that you also have Python and the Java Development
+   Kit installed. Confirm that you are working from a clean git checkout.
+   Then build the three releases using `make` or `make all` or
    ```
    make win
    make mac
