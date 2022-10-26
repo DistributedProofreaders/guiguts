@@ -19,6 +19,8 @@
 - Generated HTML5 does not use XML serialization, i.e. void elements are not
   closed
 - The `Nu XHTML Checker` entry in the HTML menu has been removed
+- New `Copy Errors` button in tool dialogs (EPUBCheck, bookloupe, etc.)
+  copies the contents of the errors list to the copy/paste clipboard
 - Combining Characters now available in Compose Sequences, e.g. `+~` for 
   combining tilde above; `_~` for combining tilde below
 - Additional compose sequences added for precomposed vowels with macron and
@@ -32,13 +34,15 @@
   one cell per line and a blank line to mark rows, and converts it to a
   table with double space separators for cells, and all the cells from each
   table row on a single text line
-- Latest ebookmaker version (0.12.17) included - now creates epub3 and kf8
+- Latest ebookmaker version (0.12.20) included - now creates epub3 and kf8
   files in addition to epub2 and mobi files
+- Latest Nu validator version (22.9.29) included - reports closed void elements
 - `Next Occurrence` button in Stealth Scannos dialog now searches backward
   if clicked while holding down `Shift` key, just like `Search` button in
   Search & Replace dialog
 - Shortcuts and regex help now links to manual pages
 - Minor wording improvements for some highlighting buttons
+- Improvement to CSS for centered poetry using `display:flex`
 - Minor improvement to `pagenum` CSS in default header
 - File Open dialog now displays files with `.xhtml` extension
 - Improvements to installation procedure and instructions for Mac users
