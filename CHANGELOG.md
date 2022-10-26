@@ -34,7 +34,7 @@
   one cell per line and a blank line to mark rows, and converts it to a
   table with double space separators for cells, and all the cells from each
   table row on a single text line
-- Latest ebookmaker version (0.12.19) included - now creates epub3 and kf8
+- Latest ebookmaker version (0.12.20) included - now creates epub3 and kf8
   files in addition to epub2 and mobi files
 - Latest Nu validator version (22.9.29) included - reports closed void elements
 - `Next Occurrence` button in Stealth Scannos dialog now searches backward
