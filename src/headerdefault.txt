@@ -226,15 +226,12 @@ img.w100 {width: 100%;}
 }
 
 /* Poetry */
+/* uncomment the next line for centered poetry */
+/* .poetry-container {display: flex; justify-content: center;} */
 .poetry-container {text-align: center;}
 .poetry           {text-align: left; margin-left: 5%; margin-right: 5%;}
-/* uncomment the next line for centered poetry in browsers */
-/* .poetry           {display: inline-block;} */
 .poetry .stanza   {margin: 1em auto;}
 .poetry .verse    {text-indent: -3em; padding-left: 3em;}
-/* large inline blocks don't split well on paged devices */
-@media print { .poetry {display: block;} }
-.x-ebookmaker .poetry {display: block;}
 
 /* Transcriber's notes */
 .transnote {background-color: #E6E6FA;
