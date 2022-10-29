@@ -2350,7 +2350,7 @@ sub ebookmaker {
     my $tauthor = 'Unknown';
     my $tbeg    = $textwindow->search( '-exact', '--', '<title>',  '1.0', '20.0' );
     my $tend    = $textwindow->search( '-exact', '--', '</title>', '1.0', '20.0' );
-    if ( $tbeg & $tend ) {
+    if ( $tbeg and $tend ) {
         my $tstring = $textwindow->get( $tbeg . '+7c', $tend );    # Get whole title/author string
         $tstring =~ s/\s+/ /g;                                     # Join into one line, single spaced
         if (
