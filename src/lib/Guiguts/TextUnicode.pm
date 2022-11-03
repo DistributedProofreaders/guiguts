@@ -354,6 +354,23 @@ sub Button1 {
 }
 
 #
+# Modified selectWord/Line routines from Text.pm bound to double/triple click
+# Originals end with
+#   Tk::catch { $w->markSet('insert','sel.first') }
+# but that overrides SelectTo's positioning of cursor to improve subsequent selection extension
+sub selectWord {
+    my ($w) = @_;
+    my $Ev = $w->XEvent;
+    $w->SelectTo( $Ev->xy, 'word' );
+}
+
+sub selectLine {
+    my ($w) = @_;
+    my $Ev = $w->XEvent;
+    $w->SelectTo( $Ev->xy, 'line' );
+}
+
+#
 # Modified selection routine from Text.pm to deal with block selections
 # Also uses safeword() - see below
 #
@@ -441,7 +458,14 @@ sub SelectTo {
         $w->markSet( 'selend',   $last );
         $w->idletasks;
     }
-    if ( $w->compare( $cur, '<', $last ) ) {
+
+    # Change to default behavior of Text.pm:
+    # When user selects word or line via double/triple click, force the anchor to the start
+    # and the cursor to the end for more predictable selection extension behavior.
+    if ( $mode eq 'word' or $mode eq 'line' ) {
+        $w->markSet( 'anchor', $first );
+        $w->markSet( 'insert', $last );
+    } elsif ( $w->compare( $cur, '<', $last ) ) {
         $w->markSet( 'insert', $cur );
     } else {
         $w->markSet( 'insert', $last );
