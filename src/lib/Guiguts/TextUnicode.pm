@@ -390,11 +390,11 @@ sub SelectTo {
         }
     } elsif ( $mode eq 'word' ) {
         if ( $w->compare( $cur, '<', 'anchor' ) ) {
-            $first = $w->index( $w->safeword("$cur + 1c wordstart") );
-            $last  = $w->index( $w->safeword('anchor - 1c wordend') );
+            $first = $w->index( $w->safeword( "$cur + 1c wordstart", 'strictword' ) );
+            $last  = $w->index( $w->safeword( 'anchor - 1c wordend', 'strictword' ) );
         } else {
-            $first = $w->index( $w->safeword('anchor + 1c wordstart') );
-            $last  = $w->index( $w->safeword("$cur wordend") );
+            $first = $w->index( $w->safeword( 'anchor + 1c wordstart', 'strictword' ) );
+            $last  = $w->index( $w->safeword( "$cur wordend",          'strictword' ) );
         }
     } elsif ( $mode eq 'line' ) {
         if ( $w->compare( $cur, '<', 'anchor' ) ) {
@@ -521,15 +521,17 @@ sub KeySelect {
 #
 # Note this version interprets "wordend" as the beginning of the next word,
 # not the end of the current word since this is more common in modern editors
+# This can be overridden by passing a true value for the optional "strictword" argument
 #
 # A sequence of word characters counts as a "word", as does a sequence of
 # non-word non-space characters. Apostrophes count as word characters
 #
 # Start & end of line always count as word breaks
 sub safeword {
-    my $w   = shift;
-    my $pos = shift;
-    my $new = '';
+    my $w          = shift;
+    my $pos        = shift;
+    my $strictword = shift;
+    my $new        = '';
 
     # Word characters include straight & curly apostrophes, although this means
     # that close single quotes also count as word characters.
@@ -604,11 +606,12 @@ sub safeword {
         # Must be before non-space character
         # Find end of sequence of word or non-word characters by searching
         # for the opposite character (non-word or word) or a space
-        # Then skip spaces
+        # Then skip spaces (unless "strictword" mode)
         else {
             my $reg = $ch =~ $REGWORD ? $REGNONW : $REGWORD;
             $new = $w->search( '-regexp', '--', "($reg| )", "$pos", "$pos lineend" );
-            $new = $w->search( '-regexp', '--', '[^ ]',     "$new", "$pos lineend" ) if $new;
+            $new = $w->search( '-regexp', '--', '[^ ]',     "$new", "$pos lineend" )
+              if $new and not $strictword;
             $new = $w->index("$pos lineend") if not $new;
         }
         return $new;
