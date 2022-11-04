@@ -343,6 +343,25 @@ sub errorcheckpop_up {
         }
     }
 
+    # Zero-size error file means most tools failed badly (e.g. blocked by anti-virus software)
+    if (    -z $errname
+        and $errorchecktype ne "Spell Query"
+        and $errorchecktype ne "Load Checkfile"
+        and $errorchecktype ne "Nu HTML Check"
+        and $errorchecktype ne "Nu XHTML Check" ) {
+        unlink $errname;
+        my $dialog = $top->Dialog(
+            -text    => 'Error file was empty - maybe blocked by anti-virus software?',
+            -bitmap  => 'question',
+            -title   => "Empty $errorchecktype error file",
+            -buttons => [qw/OK/],
+        );
+        $dialog->Show;
+        ::killpopup('errorcheckpop');
+        ::working();
+        return;
+    }
+
     # Open error file
     my $fh = FileHandle->new("< $errname");
     if ( not defined($fh) ) {
