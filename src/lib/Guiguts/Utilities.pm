@@ -2328,7 +2328,6 @@ sub seeindex {
 sub ebookmaker {
     my $makehtml   = shift =~ m/html/i;
     my $textwindow = $::textwindow;
-    ::busy();    # Change cursor to show user something is happening
     unless ($::ebookmakercommand) {
         ::locateExecutable( 'EBookMaker', \$::ebookmakercommand );
         return unless $::ebookmakercommand;
@@ -2344,6 +2343,8 @@ sub ebookmaker {
         )->Show;
         return;
     }
+
+    ::busy();    # Change cursor to show user something is happening
 
     # Get title and author information
     my $ttitle  = $fname;      # Title defaults to base filename
