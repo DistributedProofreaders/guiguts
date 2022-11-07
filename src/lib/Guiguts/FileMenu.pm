@@ -1100,7 +1100,8 @@ sub file_import_markup {
         return if ( ::confirmempty() =~ /cancel/i );
 
         my $directory = '';
-        my $name      = $textwindow->getOpenFile( -title => 'Open OCR File' );
+        my $types     = [ [ 'Gzip Files', ['.gz'] ], [ 'All Files', ['*'] ], ];
+        my $name      = $textwindow->getOpenFile( -title => 'Open OCR File', -filetypes => $types );
         return unless defined($name) and length($name);
         clearvars($textwindow);
         clearpopups();
