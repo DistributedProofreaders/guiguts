@@ -240,6 +240,7 @@ sub html_convert_body {
     my $front;
 
     #my $headertext;
+    my $chapdiv    = 0;
     my $inblock    = 0;
     my $incontents = '1.0';
     my $indent     = 0;
@@ -419,6 +420,12 @@ sub html_convert_body {
             if ( $selection =~ /^[pP]\/<?/ ) {
                 $poetry    = 0;
                 $selection = "  </div>\n</div>\n</div>";
+                my $extra_nl = 2;
+                if ($chapdiv) {    # Close chapter div if opened previously
+                    $selection .= "\n</div>";
+                    $extra_nl++;
+                    $chapdiv = 0;
+                }
 
                 # delete "p/" characters and
                 # newline so a page number doesn't fall inside the closing tag
@@ -427,9 +434,9 @@ sub html_convert_body {
                 # add back the deleted newline, and 3 </div>s with 2 more newlines
                 $textwindow->ntinsert( "$step.0 -1c", "\n$selection" );
 
-                # allow for the two additional newlines
-                $step += 2;
-                $ler  += 2;
+                # allow for the two/three additional newlines
+                $step += $extra_nl;
+                $ler  += $extra_nl;
                 push @last5, $selection;
                 shift @last5 while ( scalar(@last5) > 4 );
                 $ital = $bold = $smcap = 0;
@@ -496,6 +503,12 @@ sub html_convert_body {
             $poetry    = 1;
             $poetryend = $textwindow->search( '-regexp', '--', '^[pP]/$', $step . '.end', 'end' );
             $ital      = $bold = $smcap = 0;
+
+            # If 4 blank lines precede start of block, insert hr and chapter div
+            if ( !$last5[0] && !$last5[1] && !$last5[2] && !$last5[3] ) {
+                insert_chapdiv($step);
+                $chapdiv = 1;    # Remember to close div later
+            }
 
             $unindentedpoetry = ispoetryunindented( $textwindow, $step . '.end', $poetryend );
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
@@ -650,7 +663,10 @@ sub html_convert_body {
                 $blkrstart = 0;
                 @blkrlens  = ();
             }
-            $textwindow->replacewith( "$step.0", "$step.end", '</p>' );
+
+            # Remember to close chapter div if it was opened earlier
+            $textwindow->replacewith( "$step.0", "$step.end", $chapdiv ? '</p></div>' : '</p>' );
+            $chapdiv = 0;
             $step++;
             next;
         }
@@ -695,6 +711,12 @@ sub html_convert_body {
                     $idx += 2;
                     $inspos = "$stepm.$idx";
                 }
+            }
+
+            # If 4 blank lines precede start of block, insert hr and chapter div
+            if ( !$last5[0] && !$last5[1] && !$last5[2] && !$last5[3] ) {
+                insert_chapdiv($step);
+                $chapdiv = 1;    # Remember to close div later
             }
             $textwindow->ntinsert( "$inspos", ' class="center"' ) if $blkcenter;
             $textwindow->ntinsert( "$inspos", ' class="right"' )  if $blkright;
@@ -962,6 +984,17 @@ sub html_convert_body {
       unless is_paragraph_open( $textwindow, $incontents );
     $textwindow->insert( $incontents, $contentstext ) if @contents;
     ::restorelinenumbers();
+}
+
+#
+# Insert an hr and a chapter div before the current line
+# Must only be called if 4 blank lines precede the "step" line handed in as argument
+sub insert_chapdiv {
+    my $step   = shift;
+    my $stepm4 = $step - 4;
+    $::textwindow->ntinsert( "$stepm4.0", '<hr class="chap x-ebookmaker-drop"' . voidclosure() );
+    my $stepm1 = $step - 1;
+    $::textwindow->ntinsert( "$stepm1.0", '<div class="chapter">' );
 }
 
 # Put <div class="chapter"> before, and </div> after h2 elements, including pagenum
