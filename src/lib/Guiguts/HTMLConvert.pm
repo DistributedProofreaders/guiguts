@@ -1873,7 +1873,7 @@ sub htmlimageok {
     my $alt = $::lglobal{alttext}->get;
     $alt =~ s/"/&quot;/g;
     $alt       = " alt=\"$alt\"";
-    $selection = "  <div class=\"caption\">$selection</div>\n"
+    $selection = "  <figcaption class=\"caption\">$selection</figcaption>\n"
       if $selection;
     $::lglobal{preservep} = '' unless $selection;
     my $title = $::lglobal{titltext}->get || '';
@@ -1896,9 +1896,9 @@ sub htmlimageok {
     $illowsuffix = 'e' if $::htmlimagewidthtype eq 'em';
     $illowsuffix = 'x' if $::htmlimagewidthtype eq 'px';
     my $classname = "illow$illowsuffix$widthcn";
-    my $divclass  = ( $::htmlimagewidthtype eq 'px' ? "" : " $classname" );
+    my $figclass  = ( $::htmlimagewidthtype eq 'px' ? "" : " $classname" );
 
-    # Replace [Illustration] with div, img and caption
+    # Replace [Illustration] with figure, img and figcaption
     $textwindow->addGlobStart;
     $textwindow->delete( 'thisblockstart', 'thisblockend' );
 
@@ -1912,10 +1912,10 @@ sub htmlimageok {
     $style = " style=\"width: ${width}px;\""        if $::htmlimagewidthtype eq 'px';
     my $wclass = $::htmlimagewidthtype eq 'px' ? '' : ' class="w100"';
     $textwindow->insert( 'thisblockstart',
-            "<div class=\"fig$::lglobal{htmlimgalignment}$divclass\" id=\"$idname\"$style>\n"
+            "<figure class=\"fig$::lglobal{htmlimgalignment}$figclass\" id=\"$idname\"$style>\n"
           . "  <img$wclass src=\"$name\"$sizexy$alt$title"
           . voidclosure() . "\n"
-          . "$selection</div>"
+          . "$selection</figure>"
           . $::lglobal{preservep} );
 
     # Write class into CSS block (sorted) - first find end of CSS
