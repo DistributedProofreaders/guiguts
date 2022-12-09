@@ -20,7 +20,7 @@ use lib '.';
 #use criticism 'gentle';
 
 # DON'T FORGET to update the version number in makefile too
-our $VERSION = '1.5.0';
+our $VERSION = '1.5.1';
 
 use FindBin;
 use lib $FindBin::Bin . "/lib";
