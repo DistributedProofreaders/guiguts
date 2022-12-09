@@ -8,6 +8,7 @@
 - Further improvement to word selection, e.g. by double clicking
 - Ebookmaker version 0.12.23 included - handles `&NoBreak;` character; warns
   about empty img alt tags; improved cover handling; miscellaneous bug fixes
+- Attempt to warn user if anti-virus software blocks a tool from running
 - Default extension when importing TIA OCR is now `.gz`
 
 ### Bug Fixes
