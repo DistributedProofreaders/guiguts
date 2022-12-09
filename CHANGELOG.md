@@ -1,6 +1,21 @@
 # Changelog
 
 
+## Version 1.5.1
+
+- HTML5 `figure` and `figcaption` elements now used for illos
+- Page break code inserted in HTML whenever 4 blank lines are seen
+- Further improvement to word selection, e.g. by double clicking
+- Ebookmaker version 0.12.23 included - handles `&NoBreak;` character; warns
+  about empty img alt tags; improved cover handling; miscellaneous bug fixes
+- Default extension when importing TIA OCR is now `.gz`
+
+### Bug Fixes
+
+- Uninitialized variable error could occur running ebookmaker
+- Aborting epub creation prematurely left busy cursor showing
+
+
 ## Version 1.5.0
 
 - New Spell Query tool checks spelling, reporting queries in similar way to
