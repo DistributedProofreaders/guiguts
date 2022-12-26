@@ -431,9 +431,9 @@ sub main_lang {
 }
 
 # Return the languages for this book as a list
-# Allow any non-word character as a separator
+# Allow space, comma or plus sign as a separator
 sub list_lang {
-    return split( /\W+/, $::booklang );
+    return split( /[+, ]+/, $::booklang );
 }
 
 # system(LIST)

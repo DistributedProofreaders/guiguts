@@ -1,6 +1,15 @@
 # Changelog
 
 
+## Version 1.5.2
+
+### Bug Fixes
+
+- Aspell dictionary names containing non-word characters, e.g. `de-1901`
+  could not be used. Note the fix means multiple languages can now only
+  be separated by spaces, commas, or plus signs, e.g. `en, fr`
+
+
 ## Version 1.5.1
 
 - HTML5 `figure` and `figcaption` elements now used for illos
