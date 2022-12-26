@@ -1435,6 +1435,14 @@ sub booklouperun {
         return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
         return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
 
+        # Allow decades/years
+        return 1 if $wd =~ /^['$APOS]?\d\ds$/;       # e.g. '20s or 20s (abbreviation for 1820s)
+        return 1 if $wd =~ /^['$APOS]\d\d$/;         # e.g. '62 (abbreviation for 1862)
+        return 1 if $wd =~ /^1\d{3}s$/;              # e.g. 1820s
+
+        # Allow abbreviations for shillings and pence (not pounds because 20l is common scanno for the number 201)
+        return 1 if $wd =~ /^\d{1,2}[sd]$/;          # e.g. 15s or 6d (up to 2 digits of old English shillings and pence)
+
         return 1 if $wd =~ /^sc$/i;                  # <sc> DP markup
 
         return 0;
