@@ -3526,6 +3526,10 @@ sub orphans {
     return 0;
 }
 
+#
+# Apply poetry markup to selected region
+# Copes with unindented poetry or where the whole poem is indented by 4 spaces
+# One or more blank lines delimit stanzas
 sub poetryhtml {
     my $textwindow = $::textwindow;
     ::hidepagenums();
@@ -3533,6 +3537,7 @@ sub poetryhtml {
     my $range_total = @ranges;
     return if ( $range_total == 0 );
 
+    $textwindow->addGlobStart;
     my $end   = pop(@ranges);
     my $start = pop(@ranges);
     my ( $lsr, $lsc, $ler, $lec, $step, $ital, $bold, $smcap );
@@ -3549,29 +3554,26 @@ sub poetryhtml {
     my ( $cssendr, $cssendc ) = split /\./, $cssend;
     $cssendr++;
 
+    my $linesinstanza = 0;
     $step = $lsr;
     while ( $step <= $ler ) {
         my $selection = $textwindow->get( "$step.0", "$step.end" );
 
-        # end of stanza
+        # blank line - end of stanza if one has been started
         if ( $selection =~ /^$/ ) {
-            $textwindow->insert( "$step.0", "  </div>\n  <div class=\"stanza\">" );
-
-            # allow for the additional newline
-            $step++;
-            $ler++;
-            while (1) {
-                $step++;
-                $selection = $textwindow->get( "$step.0", "$step.end" );
-                last if ( $step ge $ler );
-                next if ( $selection =~ /^$/ );
-                last;
+            if ( $linesinstanza > 0 and $step != $ler ) {
+                $textwindow->insert( "$step.0", "  </div>\n  <div class=\"stanza\">" );
+                $step++;    # allow for the additional newline
+                $ler++;
+                $linesinstanza = 0;    # starting fresh stanza
             }
+            $textwindow->delete( "$step.0", "$step.0 + 1l" );    # Blank text line not needed in HTML code
+            $ler--;                                              # So there's one less line to process
+            next;
         }
         $selection =~ s/&#160;/ /g;
-        $selection =~ s/^(\s+)//;
         my $indent = 0;
-        $indent = length($1) if $1;
+        $indent = length($1) if $selection =~ s/^(\s+)//;
         $textwindow->delete( "$step.0", "$step.$indent" ) if $indent;
         unless ($unindentedpoetry) {
             $indent -= 4;
@@ -3584,6 +3586,7 @@ sub poetryhtml {
 
         $textwindow->insert( "$step.0",   "    <div class=\"verse indent$indent\">" );
         $textwindow->insert( "$step.end", '</div>' );
+        $linesinstanza++;
 
         # unless this class already defined, add it to end of CSS block
         my $classdef = ".poetry .indent$indent {text-indent: " . ( $indent / 2 - 3 ) . "em;}";
@@ -3603,6 +3606,7 @@ sub poetryhtml {
     $textwindow->insert( "$ler.end", "\n  </div>\n</div>\n</div>" );
     $textwindow->insert( "$lsr.0",
         "<div class=\"poetry-container\">\n<div class=\"poetry\">\n  <div class=\"stanza\">\n" );
+    $textwindow->addGlobEnd;
 }
 
 # determine if poetry is not already indented by four spaces
