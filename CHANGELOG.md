@@ -3,6 +3,9 @@
 
 ## Version 1.5.2
 
+- Spell query no longer queries year/decade/shillings/pence abbreviations,
+  e.g. '62, '60s, 1860s, 12s, 6d
+
 ### Bug Fixes
 
 - Aspell dictionary names containing non-word characters, e.g. `de-1901`
