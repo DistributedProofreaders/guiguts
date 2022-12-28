@@ -341,7 +341,7 @@ sub runProgram {
                     $found++;
                 }
             }
-            if ( not $found ) {
+            if ( ( not $found ) and ( $cssdef !~ /^x-ebookmaker/ ) ) {    # Don't report ebookmaker control classes
                 printf LOGFILE ( "%d:0 CSS possibly not used: %s\n", $cssline[$idx], $cssdef );
             }
         }
@@ -359,7 +359,9 @@ sub runProgram {
                     $found++;
                 }
             }
-            if ( ( not $found ) and ( not $cssused eq "blockquote" ) ) {
+            if (    ( not $found )
+                and ( $cssused ne "blockquote" )
+                and ( $cssused !~ /^x-ebookmaker/ ) ) {    # Don't report ebookmaker control classes
                 printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
                     $cssused );
             }

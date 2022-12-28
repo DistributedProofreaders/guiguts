@@ -5,6 +5,8 @@
 
 - Spell query no longer queries year/decade/shillings/pence abbreviations,
   e.g. '62, '60s, 1860s, 12s, 6d
+- The pphtml tool no longer reports ebookmaker control classes, e.g.
+  `x-ebookmaker-drop` as undefined or unused
 
 ### Bug Fixes
 
