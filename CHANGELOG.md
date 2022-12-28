@@ -11,6 +11,8 @@
 - Aspell dictionary names containing non-word characters, e.g. `de-1901`
   could not be used. Note the fix means multiple languages can now only
   be separated by spaces, commas, or plus signs, e.g. `en, fr`
+- `Apply Poetry Markup to Selection` could delete some characters when the 
+  poem text had not been indented
 
 
 ## Version 1.5.1
