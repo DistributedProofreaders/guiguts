@@ -33,7 +33,7 @@ sub wordfrequencybuildwordlist {
 
         # build a list of "word--word""
         for my $word (@words) {
-            next unless ( $word =~ /--/ );
+            next unless ( $word =~ /[^-]--[^-]/ );
             next if ( $word =~ /---/ );
             $word =~ s/[\.,']$//;
             $word =~ s/^[\.'-]+//;
