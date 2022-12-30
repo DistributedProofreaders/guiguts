@@ -15,6 +15,8 @@
   be separated by spaces, commas, or plus signs, e.g. `en, fr`
 - `Apply Poetry Markup to Selection` could delete some characters when the 
   poem text had not been indented
+- Word Frequency could report false Emdash suspects if there was an emdash
+  before a hyphenated word.
 
 
 ## Version 1.5.1
