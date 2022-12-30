@@ -19,7 +19,7 @@ BEGIN {
       &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
       &xtops &toolbar_toggle &killpopup &expandselection
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
-      &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers
+      &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers &displaycolnumbers
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
       &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
@@ -1053,7 +1053,6 @@ sub initialize {
 
     # The actual text widget
     $::textwindow = $::text_frame->LineNumberText(
-        -widget          => 'TextUnicode',
         -exportselection => 'true',           # 'sel' tag is associated with selections
         -background      => $::bkgcolor,
         -relief          => 'sunken',
@@ -1282,6 +1281,7 @@ sub initialize {
     );
     $textwindow->tagBind( 'pagenum', '<ButtonRelease-1>', \&::pnumadjust );
     ::displaylinenumbers($::vislnnm);
+    ::displaycolnumbers($::viscolnm);
 
     %{ $::lglobal{utfblocks} } = (
         'Alphabetic Presentation Forms' => [ 'FB00', 'FB4F' ],
@@ -2959,15 +2959,24 @@ sub displaylinenumbers {
     ::savesettings();
 }
 
-# Temporarily hide line numbers to speed up some operations
-# Note that the global flag is not changed
-sub hidelinenumbers {
-    $::textwindow->hidelinenum if $::vislnnm;
+# Show/hide column numbers based on input argument
+sub displaycolnumbers {
+    $::viscolnm = shift;
+    $::viscolnm ? $::textwindow->showcolnum : $::textwindow->hidecolnum;
+    ::savesettings();
 }
 
-# Restore the line numbers after they have been temporarily hidden
+# Temporarily hide line & column numbers to speed up some operations
+# Note that the global flags are not changed
+sub hidelinenumbers {
+    $::textwindow->hidelinenum if $::vislnnm;
+    $::textwindow->hidecolnum  if $::viscolnm;
+}
+
+# Restore the line & column numbers after they have been temporarily hidden
 sub restorelinenumbers {
     $::textwindow->showlinenum if $::vislnnm;
+    $::textwindow->showcolnum  if $::viscolnm;
 }
 
 # Allow for long operations to be interrupted by the user

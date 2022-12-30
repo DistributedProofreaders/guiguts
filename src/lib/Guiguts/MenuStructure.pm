@@ -907,6 +907,13 @@ sub menu_preferences_appearance {
             -command    => sub { ::displaylinenumbers($::vislnnm) },
         ],
         [
+            Checkbutton => 'Display Column Numbers',
+            -variable   => \$::viscolnm,
+            -onvalue    => 1,
+            -offvalue   => 0,
+            -command    => sub { ::displaycolnumbers($::viscolnm) },
+        ],
+        [
             Checkbutton => 'Auto Show Page Images',
             -variable   => \$::auto_show_images,
             -onvalue    => 1,

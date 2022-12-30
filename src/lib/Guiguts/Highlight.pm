@@ -412,12 +412,12 @@ sub hilite_alignment {
     $textwindow->tagRemove( 'alignment', '1.0', 'end' );    # Remove any existing tags
     my $top = $textwindow->index('@0,0');                   # Find top line visible on screen (line at pixel 0,0)
     my ( $line, $col ) = split( /\./, $top );
-    $col = $::lglobal{highlightalignmentcolumn};            # Set column from saved global
+    $col = $::lglobal{highlightalignmentcolumn} - 1;        # Highlight column immediately preceding cursor for consistency with ruler
 
     # Add tags to each subsequent line that is visible on-screen, unless line is too short
     while ( $textwindow->compare( "$line.0", "<", "end" ) and $textwindow->dlineinfo("$line.0") ) {
-        $textwindow->tagAdd( 'alignment', "$line.$col" )
-          unless $textwindow->get("$line.$col") eq "\n";
+        my ( $ldummy, $maxcol ) = split( /\./, $textwindow->index("$line.0 lineend") );
+        $textwindow->tagAdd( 'alignment', "$line.$col" ) unless $col < 0 or $col >= $maxcol;
         $line++;
     }
 }
