@@ -7,6 +7,12 @@
   e.g. '62, '60s, 1860s, 12s, 6d
 - The pphtml tool no longer reports ebookmaker control classes, e.g.
   `x-ebookmaker-drop` as undefined or unused
+- A ruler showing column numbers can be displayed at top of text window to
+  aid with text alignment; it indicates the current column. Ruler can be
+  shown/hidden using the Preferences menu, or using Shift+Right-click on
+  the Row/Col display in the Status Bar. Highlight Alignment Column now
+  highlights the column before the cursor rather than after the cursor to
+  match the new ruler.
 
 ### Bug Fixes
 

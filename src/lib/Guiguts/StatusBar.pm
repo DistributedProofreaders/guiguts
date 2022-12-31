@@ -140,7 +140,6 @@ sub _updatesel {
     $::lglobal{selmaxlength} = $msgln if ( $msgln > $::lglobal{selmaxlength} );
     $::lglobal{selectionlabel}->configure( -text => $msg, -width => $::lglobal{selmaxlength} );
     ::update_indicators();
-    $textwindow->_lineupdate;
 }
 
 ## Status Bar
@@ -183,6 +182,14 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         '<3>',
         sub {
             ::displaylinenumbers( !$::vislnnm );
+        }
+    );
+
+    # Shift-Mouse-3 to toggle column number display
+    $::lglobal{current_line_label}->bind(
+        '<Shift-3>',
+        sub {
+            ::displaycolnumbers( !$::viscolnm );
         }
     );
 

@@ -203,6 +203,7 @@ our $utffontname           = 'Courier New';
 our $utffontsize           = 14;
 our $utffontweight         = 'normal';
 our $verboseerrorchecks    = 0;
+our $viscolnm              = 0;
 our $vislnnm               = 0;
 our $wfstayontop           = 0;
 
