@@ -22,7 +22,10 @@
 - `Apply Poetry Markup to Selection` could delete some characters when the 
   poem text had not been indented
 - Word Frequency could report false Emdash suspects if there was an emdash
-  before a hyphenated word.
+  before a hyphenated word
+- The `autotable` class defaulted to padding of `4px`. Values ending in `px`
+  are stripped by ebookmaker resulting in loss of padding. CSS header now
+  defaults to `0.25em`
 
 
 ## Version 1.5.1

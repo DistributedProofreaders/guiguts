@@ -82,7 +82,7 @@ table {
 }
 table.autotable    { border-collapse: collapse; }
 table.autotable td,
-table.autotable th { padding: 4px; }
+table.autotable th { padding: 0.25em; }
 
 .tdl      {text-align: left;}
 .tdr      {text-align: right;}
