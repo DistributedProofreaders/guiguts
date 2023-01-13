@@ -360,6 +360,7 @@ sub clearvars {
     @{ $::lglobal{fnarray} } = ();
     $::lglobal{fntotal} = 0;
     undef $::lglobal{prepfile};
+    $::bookauthor = '';
     return;
 }
 
