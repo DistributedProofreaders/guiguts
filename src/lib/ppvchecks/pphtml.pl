@@ -66,26 +66,30 @@ sub runProgram {
       localtime(time);
 
     sub header_check {
-
-        #print LOGFILE "Please confirm title is: 'The Project Gutenberg eBook of TITLE, by AUTHOR.\n";
         my $printing = 0;
         my $count    = 0;
 
+        my $guttitle  = 0;                        # No <title> at all
+        my $gutstring = " | Project Gutenberg";
         foreach my $line (@book) {
             $count++;
             if ( $line =~ /<title>/ ) {
                 $printing = 1;
                 printf LOGFILE ( "%d:0 Confirm title:\n", $count );
-
-                #next;
+                $guttitle = 1;    # <title>, but gutstring not found yet
             }
             if ($printing) {
                 printf LOGFILE ( "%d:0 %s\n", $count, trim($line) );
+                $guttitle = 2 if $line =~ /\Q$gutstring\E/;    # gutstring found
             }
             if ( $line =~ /<\/title>/ ) {
                 $printing = 0;
+                last;
             }
         }
+        printf LOGFILE ( "%d:0 No <title> field found\n", $count ) if $guttitle == 0;
+        printf LOGFILE ( "%d:0 <title> field must end with '%s'\n", $count, $gutstring )
+          if $guttitle == 1;
     }
 
     sub specials {

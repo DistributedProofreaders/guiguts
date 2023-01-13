@@ -119,6 +119,7 @@ our $blockrmargin     = 72;
 our $poetrylmargin    = 4;
 our $blockwrap;
 our $booklang             = 'en';
+our $bookauthor           = '';
 our $charsuitewfhighlight = 0;                  # Don't do charsuite availability highlighting in WF dialog
 our $composepopbinding    = 'Alt_R';            # Default key to pop the Compose dialog (Right hand Alt key, also labelled AltGr)
 $composepopbinding = 'Control-m' if $OS_MAC;    # Default to Ctrl+m on a Mac - Alt+RightArrow does the same indent operation

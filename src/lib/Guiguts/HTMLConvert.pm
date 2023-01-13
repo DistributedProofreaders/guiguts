@@ -1342,7 +1342,7 @@ sub html_convert_pageanchors {
 }
 
 sub html_parse_header {
-    my ( $textwindow, $headertext, $title, $author ) = @_;
+    my ( $textwindow, $headertext, $title ) = @_;
     my $selection;
     my $step;
     my $closure = voidclosure();
@@ -1397,9 +1397,7 @@ sub html_parse_header {
         close $infile;
     }
 
-    $author     =~ s/&/&amp;/g       if $author;
-    $headertext =~ s/TITLE/$title/   if $title;
-    $headertext =~ s/AUTHOR/$author/ if $author;
+    $headertext =~ s/TITLE/$title/ if $title;
     my $mainlang = ::main_lang();
     $headertext =~ s/BOOKLANG/$mainlang/g;
 
@@ -2070,7 +2068,7 @@ sub htmlimages {
 }
 
 sub htmlautoconvert {
-    my ( $textwindow, $top, $title, $author ) = @_;
+    my ( $textwindow, $top, $title ) = @_;
     ::hidepagenums();
     my $headertext;
     if ( $::lglobal{global_filename} =~ /No File Loaded/ ) {
@@ -2094,7 +2092,7 @@ sub htmlautoconvert {
     $::lglobal{global_filename} = $savefn;
     $textwindow->FileName($savefn);
     html_convert_ampersands($textwindow);
-    $headertext               = html_parse_header( $textwindow, $headertext, $title, $author );
+    $headertext               = html_parse_header( $textwindow, $headertext, $title );
     $::lglobal{fnsecondpass}  = 0;
     $::lglobal{fnsearchlimit} = 1;
     html_convert_footnotes( $textwindow, $::lglobal{fnarray} );
@@ -2201,8 +2199,9 @@ sub htmlgenpopup {
         )->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
 
         my $ishtml = $textwindow->search( '-nocase', '--', '<html', '1.0' );
-        my ( $htmltitle, $htmlauthor ) = ( '', '' );
-        ( $htmltitle, $htmlauthor ) = get_title_author() unless $ishtml;
+        my ( $htmltitle, $author ) = ( '', '' );
+        ( $htmltitle, $author ) = get_title_author() unless $ishtml;
+        $::bookauthor = $author unless $::bookauthor;
         my $f0a = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f0a->Label( -text => 'Title:', )
           ->grid( -row => 0, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
@@ -2215,7 +2214,7 @@ sub htmlgenpopup {
         $f0a->Label( -text => 'Author:', )
           ->grid( -row => 1, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
         $f0a->Entry(
-            -textvariable => \$htmlauthor,
+            -textvariable => \$::bookauthor,
             -width        => 45,
             -background   => $::bkgcolor,
             -relief       => 'sunken',
@@ -2437,9 +2436,9 @@ sub htmlgenpopup {
         my $f2 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f2->Button(
             -activebackground => $::activecolor,
-            -command => sub { htmlautoconvert( $textwindow, $top, $htmltitle, $htmlauthor ) },
-            -text    => 'Autogenerate HTML',
-            -width   => 16
+            -command          => sub { htmlautoconvert( $textwindow, $top, $htmltitle ) },
+            -text             => 'Autogenerate HTML',
+            -width            => 16
         )->grid( -row => 1, -column => 1, -padx => 5, -pady => 1 );
 
         ::initialize_popup_with_deletebinding('htmlgenpop');
