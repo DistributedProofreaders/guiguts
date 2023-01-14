@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-      TITLE, by AUTHOR—A Project Gutenberg eBook
+      TITLE | Project Gutenberg
     </title>
     <link rel="icon" href="images/cover.jpg" type="image/x-cover">
     <style>

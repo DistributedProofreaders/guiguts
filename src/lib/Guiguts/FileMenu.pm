@@ -318,6 +318,7 @@ sub _bin_save {
         print $fh "\$::spellindexbkmrk = '$::spellindexbkmrk';\n\n";
         print $fh "\$::projectid = '$::projectid';\n\n";
         print $fh "\$::booklang = '$::booklang';\n\n";
+        print $fh "\$::bookauthor = '$::bookauthor';\n\n";
         print $fh
           "\$scannoslistpath = '@{[::escape_problems(::os_normal($::scannoslistpath))]}';\n\n";
         foreach ( sort keys %::charsuiteenabled ) {
@@ -359,6 +360,7 @@ sub clearvars {
     @{ $::lglobal{fnarray} } = ();
     $::lglobal{fntotal} = 0;
     undef $::lglobal{prepfile};
+    $::bookauthor = '';
     return;
 }
 

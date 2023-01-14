@@ -2346,31 +2346,20 @@ sub ebookmaker {
 
     ::busy();    # Change cursor to show user something is happening
 
-    # Get title and author information
-    my $ttitle  = $fname;      # Title defaults to base filename
-    my $tauthor = 'Unknown';
-    my $tbeg    = $textwindow->search( '-exact', '--', '<title>',  '1.0', '20.0' );
-    my $tend    = $textwindow->search( '-exact', '--', '</title>', '1.0', '20.0' );
+    # Get title information
+    my $ttitle = $fname;    # Title defaults to base filename
+    my $tbeg   = $textwindow->search( '-exact', '--', '<title>',  '1.0', '20.0' );
+    my $tend   = $textwindow->search( '-exact', '--', '</title>', '1.0', '20.0' );
     if ( $tbeg and $tend ) {
-        my $tstring = $textwindow->get( $tbeg . '+7c', $tend );    # Get whole title/author string
-        $tstring =~ s/\s+/ /g;                                     # Join into one line, single spaced
-        if (
-            $tstring =~ s/The Project Gutenberg EBook of//i              # Strip PG part - 2 formats
-            or $tstring =~ s/(--|\x{2014})A Project Gutenberg eBook//i
-        ) {
-            HTML::Entities::decode_entities($tstring);                   # HTML entities need converting to characters
-            $tstring = deaccentdisplay($tstring);                        # Remove accents since passing as argument in shell
-            $tstring =~ s/[^[:ascii:]]/_/g;                              # Substitute "_" for any remaining non-ASCII characters
-
-            # Split into title/author - use last "by" in case "by" is in the book title
-            my $byidx = rindex( $tstring, ", by " );
-            if ( $byidx > -1 ) {
-                $ttitle = substr( $tstring, 0, $byidx );
-                $ttitle =~ s/^\s+|\s+$//g;
-                $tauthor = substr( $tstring, $byidx + 5 );
-                $tauthor =~ s/^\s+|\s+$//g;
-            }
-        }
+        $ttitle = $textwindow->get( $tbeg . '+7c', $tend );       # Get whole title string
+        $ttitle =~ s/\s+/ /g;                                     # Join into one line, single spaced
+        $ttitle =~ s/The Project Gutenberg EBook of//i;           # Strip PG part - 3 formats
+        $ttitle =~ s/(--|\x{2014})A Project Gutenberg eBook//i;
+        $ttitle =~ s/\| Project Gutenberg//i;
+        HTML::Entities::decode_entities($ttitle);                 # HTML entities need converting to characters
+        $ttitle = deaccentdisplay($ttitle);                       # Remove accents since passing as argument in shell
+        $ttitle =~ s/[^[:ascii:]]/_/g;                            # Substitute "_" for any remaining non-ASCII characters
+        $ttitle =~ s/^\s+|\s+$//g;
     }
 
     my $filepath  = $::lglobal{global_filename};
@@ -2414,7 +2403,7 @@ sub ebookmaker {
         $kindleoption,             $kf8option,
         "--output-dir=$outputdir", "--output-file=$fname",
         "--config-dir=$configdir", "--title=$ttitle",
-        "--author=$tauthor",       "$filepath"
+        "--author=$::bookauthor",  "$filepath"
     );
 
     # Check for errors or warnings in ebookmaker output

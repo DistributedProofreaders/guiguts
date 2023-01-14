@@ -13,6 +13,7 @@
   the Row/Col display in the Status Bar. Highlight Alignment Column now
   highlights the column before the cursor rather than after the cursor to
   match the new ruler.
+- New HTML title format: book title followed by ` | Project Gutenberg`
 
 ### Bug Fixes
 
