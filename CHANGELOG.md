@@ -14,6 +14,7 @@
   highlights the column before the cursor rather than after the cursor to
   match the new ruler.
 - New HTML title format: book title followed by ` | Project Gutenberg`
+- Ebookmaker version 0.12.24 included - minimum chunk size = 256KB
 
 ### Bug Fixes
 
