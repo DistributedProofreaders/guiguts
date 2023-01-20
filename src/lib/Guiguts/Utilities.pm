@@ -2418,6 +2418,7 @@ sub ebookmaker {
           and $line !~ "No pg-(header|footer) found, inserted a generated one"
           and $line !~ "no boilerplate found in file"
           and $line !~ '<table> lacks "summary" attribute'
+          and $line !~ 'Empty alt text for'
           and $line !~ "elements having class .* have been rewritten.";
         adderror($line);                                                         # Send all ebookmaker output to message log
     }
