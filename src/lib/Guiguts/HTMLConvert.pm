@@ -1435,7 +1435,8 @@ sub html_parse_header {
 sub get_title_author {
     my $textwindow = $::textwindow;
     my $step       = 0;
-    my ( $selection, $title, $author );
+    my ( $selection, $title );
+    my $author        = '';
     my $completetitle = '';
     my $intitle       = 0;
     while (1) {    # find title
