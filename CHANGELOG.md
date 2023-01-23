@@ -28,6 +28,8 @@
 - The `autotable` class defaulted to padding of `4px`. Values ending in `px`
   are stripped by ebookmaker resulting in loss of padding. CSS header now
   defaults to `0.25em`
+- Corrupt page markers in the bin file could cause errors when exporting
+  prep text files
 
 
 ## Version 1.5.1
