@@ -1,7 +1,7 @@
 Beginning check: pphtml
 5:0 Confirm title:
 5:0 <title>
-6:0 The Project Gutenberg eBook of The Streets Of Ascalon, by Robert W. Chambers.
+6:0 The Streets Of Ascalon | Project Gutenberg
 7:0 </title>
 14:0 CSS possibly not used: unusedcss
 24:0 CSS possibly not defined: h1

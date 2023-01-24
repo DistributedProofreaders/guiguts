@@ -137,7 +137,6 @@ sub html_convert_footnotes {
     $textwindow->update;
     while (1) {
         $step++;
-        last if ( $textwindow->compare( "$step.0", '>', 'end' ) );
         last unless $fnarray->[$step][0];
 
         # User's responsibility to ensure footnote markup is OK prior to HTML conversion
@@ -167,16 +166,21 @@ sub html_convert_footnotes {
         );
         $textwindow->ntdelete( 'fns' . "$step", 'fns' . "$step" . '+10c' );
 
+        # Can't rely on fnb marker (end index of "[NN]") because it may have been
+        # moved by earlier processing, e.g. if footnote ends with anchor for another footnote
+        # Find index of anchor end using fna (start index)
+        my $fnbindex = $textwindow->search( '-exact', '--', ']', "fna$step", 'end' );
+
         # jump through some hoops to steer clear of page markers
         if ( $fnarray->[$step][3] ) {
-            $textwindow->ntinsert( "fnb$step -1c", ']</a>' );
-            $textwindow->ntdelete( "fnb$step -1c", "fnb$step" );
+            $textwindow->ntinsert( $fnbindex, ']</a>' );
+            $textwindow->ntdelete( $fnbindex . ' +5c', $fnbindex . ' +6c' );
         }
         unless ( $::htmllabels{fnanchbefore} eq '[' && $::htmllabels{fnanchafter} eq ']' ) {
             $textwindow->ntinsert( "fna$step +1c", $::htmllabels{fnanchbefore} );    # insert before delete, otherwise it gets excluded from the tag
-            $textwindow->ntdelete( "fna$step",     "fna$step +1c" );
-            $textwindow->ntdelete( "fnb$step -5c", "fnb$step -4c" );
-            $textwindow->ntinsert( "fnb$step -4c", $::htmllabels{fnanchafter} );
+            $textwindow->ntdelete( "fna$step", "fna$step +1c" );
+            $textwindow->ntinsert( "$fnbindex", $::htmllabels{fnanchafter} );
+            $textwindow->ntdelete( "$fnbindex +1c", "$fnbindex +2c" );
         }
         $textwindow->ntinsert(
             'fna' . "$step",
@@ -262,7 +266,6 @@ sub html_convert_body {
     my $unindentedpoetry = 0;
     my @last5            = [ '1', '1', '1', '1', '1', '1' ];
     my $step             = 1;
-    my ( $ler, $lec );
     $thisblockend = $textwindow->index('end');
     my $blkcenter = 0;
     my $blkright  = 0;
@@ -272,11 +275,14 @@ sub html_convert_body {
 
     ::hidelinenumbers();             # To speed updating of text window
 
-    #last line and column
-    ( $ler, $lec ) = split /\./, $thisblockend;
-
     #step through all the lines
-    while ( $step <= $ler ) {
+    while (1) {
+
+        # Check if done - end index may have changed during previous loop iteration
+        # if lines were inserted or deleted
+        my ( $ler, $lec ) = split /\./, $textwindow->index('end');
+        last if $step >= $ler;
+
         unless ( ::updatedrecently() ) {    # slow if updated too frequently
             $textwindow->see("$step.0");
             $textwindow->update;
@@ -450,11 +456,10 @@ sub html_convert_body {
 
                 # allow for the additional newline
                 $step++;
-                $ler++;
                 while (1) {
                     $step++;
                     $selection = $textwindow->get( "$step.0", "$step.end" );
-                    last if ( $step ge $ler );
+                    last if ( $step >= $ler + 1 );
                     next if ( $selection =~ /^$/ );
                     last;
                 }
@@ -525,7 +530,6 @@ sub html_convert_body {
 
             # allow for the two additional newlines inserted
             $step += 2;
-            $ler  += 2;
             push @last5, $selection;
             shift @last5 while ( scalar(@last5) > 4 );
             $step++;
@@ -534,7 +538,7 @@ sub html_convert_body {
 
         # in blockquote /#
         if ( $selection =~ /^\/\#/ ) {
-            $blkquot = 1;
+            $blkquot++;                             # increment blockquote level
             push @last5, $selection;
             shift @last5 while ( scalar(@last5) > 4 );
             $step++;
@@ -587,11 +591,15 @@ sub html_convert_body {
 
         # close blockquote #/
         if ( $selection =~ /^\#\// ) {
-            $blkquot = 0;
-            my $blkclosecopy = '</p></blockquote>';    # Switched to </div> in wrapup routine if necessary
-            $blkclosecopy =~ s|</p>||
-              unless is_paragraph_open( $textwindow, ( $step - 1 ) . '.end' );
-            $textwindow->ntinsert( ( $step - 1 ) . '.end', $blkclosecopy );
+            if ( $blkquot > 0 ) {
+                $blkquot--;    # decrement blockquote level
+            } else {
+                ::warnerror("Close blockquote (#/) found with no matching open markup");
+            }
+            my $endprev = ( $step - 1 ) . '.end';
+            $textwindow->ntinsert( $endprev, '</p>' ) if is_paragraph_open( $textwindow, $endprev );
+            $textwindow->ntinsert( "$step.0", "</blockquote>\n" );    # Switched to </div> in wrapup routine if necessary
+            $step++;                                                  # Allow for newline inserted
             push @last5, $selection;
             shift @last5 while ( scalar(@last5) > 4 );
             $step++;
@@ -629,7 +637,7 @@ sub html_convert_body {
         }
 
         # delete spaces
-        if ( $blkquot and not $blkright ) {
+        if ( $blkquot > 0 and not $blkright ) {
             if ( $selection =~ s/^(\s+)// ) {
                 my $space = length $1;
                 $textwindow->ntdelete( "$step.0", "$step.0 +${space}c" );

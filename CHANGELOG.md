@@ -30,6 +30,11 @@
   defaults to `0.25em`
 - Corrupt page markers in the bin file could cause errors when exporting
   prep text files
+- The last few lines in a text file were sometimes not converted to HTML
+  during Autogenerate
+- Consecutive closing block markup or a footnote anchor at the end of a
+  footnote could cause syntax errors in the generated HTML
+- Nested blockquote markup was not wrapped correctly
 
 
 ## Version 1.5.1

@@ -163,6 +163,10 @@ sub rightblockwrapper {
     return $rewrapped;
 }
 
+#
+# Rewrap selected text
+# Global variable $::blockwrap is zero for normal text, -1 within Index markup,
+# or a positive number indicating the depth of nested blockquotes
 sub selectrewrap {
     my $silentmode = shift;
     my $textwindow = $::textwindow;
@@ -273,16 +277,14 @@ sub selectrewrap {
         # Check for block types that support blockwrap
         $::blockwrap = 0 unless $::blockwrap;
         if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
-            $::blockwrap = 1;
-            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {                      # block
-                $leftmargin  = $::blocklmargin;
-                $firstmargin = $::blocklmargin;
-                $rightmargin = $::blockrmargin;
-            } elsif ( $selection =~ /^$TEMPPAGEMARK*\/[iI]/ ) {               #index
-                $leftmargin  = 8;                                             # All continuation lines aligned here
-                $firstmargin = 2;                                             # All first lines indented by existing indent, plus this figure
-                $rightmargin = 72;                                            # Right hand limit
-                $::blockwrap = 2;
+            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {                      # blockquote
+                $::blockwrap++;                                               # increment blockquote level
+                ( $leftmargin, $firstmargin, $rightmargin ) = setblockmargins($::blockwrap);
+            } elsif ( $selection =~ /^$TEMPPAGEMARK*\/[iI]/ ) {    # index
+                $leftmargin  = 8;                                  # All continuation lines aligned here
+                $firstmargin = 2;                                  # All first lines indented by existing indent, plus this figure
+                $rightmargin = 72;                                 # Right hand limit
+                $::blockwrap = -1;
             }
 
             # Check if there are any parameters following blockwrap markup [n...
@@ -327,6 +329,11 @@ sub selectrewrap {
         unless ( $selection =~ /^[$TEMPPAGEMARK\s]*?(\*[$TEMPPAGEMARK\s]*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
             if ( $inblock and not( $blockcenter or $blockright ) ) {
                 if ($enableindent) {
+
+                    # In order to support poetry, etc., within blockquotes,
+                    # special handling for [pP\*Ll] types here means that if immediately followed
+                    # by closing of blockquote markup, the close blockquote will be handled next time round
+                    # the loop. See comment "Special handling for [pP\*Ll] types" below.
                     $indentblockend = $textwindow->search( '-regex', '--',
                         "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
                     $indentblockend = $indentblockend || $end;
@@ -382,7 +389,7 @@ sub selectrewrap {
                 }
             } else {
                 my $skipit = ( $selection =~ /^(\/#|#\/)$/ );    # Happens when /c or /r directly follows /# or blank line before #/
-                if ( $::blockwrap == 1 ) {                       # block wrap
+                if ( $::blockwrap > 0 ) {                        # block wrap
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
                     } elsif ($blockright) {
@@ -393,7 +400,7 @@ sub selectrewrap {
                             $selection,  $::rwhyphenspace
                         );
                     }
-                } elsif ( $::blockwrap == 2 ) {                  # index wrap
+                } elsif ( $::blockwrap == -1 ) {                 # index wrap
                     $rewrapped = indexwrapper( $leftmargin, $firstmargin, $rightmargin,
                         $selection, $::rwhyphenspace );
                 } else {                                         #rewrap the paragraph
@@ -424,7 +431,28 @@ sub selectrewrap {
             $blockcenter  = 0;
             $blockright   = 0;
         }
-        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) { $::blockwrap = 0 }
+        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) {
+
+            # blockquote
+            if ( $selection =~ /$TEMPPAGEMARK*\#\// ) {
+
+                # In order to support poetry, etc., within blockquotes,
+                # if [pP\*Ll] markup is closed immediately preceding close of blockquote,
+                # special treatment earlier means the close blockquote will be selected next time round loop
+                # so don't decrement the level now, or it will be done twice.
+                # See comment "Special handling for [pP\*Ll] types" above.
+                unless ( $selection =~ /[pP\*Ll]\/\n$TEMPPAGEMARK*\#\// ) {
+                    if ( $::blockwrap > 0 ) {
+                        $::blockwrap--;    # decrement blockquote level
+                        ( $leftmargin, $firstmargin, $rightmargin ) = setblockmargins($::blockwrap);
+                    } else {
+                        ::warnerror("Close blockquote (#/) found with no matching open markup");
+                    }
+                }
+            } else {
+                $::blockwrap = 0;
+            }
+        }
         last unless $end;
         $thisblockstart = $textwindow->index('rewrapend');             #advance to the next paragraph
         $lastend        = $textwindow->index("$thisblockstart+1c");    #track where the end of the last paragraph was
@@ -478,6 +506,18 @@ sub selectrewrap {
         ::update_indicators();
         ::restorelinenumbers();
     }
+}
+
+#
+# Set the margins for block wrapping based on depth of nested blocks
+# For each level, indent left margin by difference between standard and block margin
+# Don't indent right margin extra or text width becomes too narrow
+sub setblockmargins {
+    my $blockdepth  = shift;
+    my $leftmargin  = $::lmargin + $blockdepth * ( $::blocklmargin - $::lmargin );
+    my $firstmargin = $leftmargin;
+    my $rightmargin = $::rmargin - $blockdepth * ( $::rmargin - $::blockrmargin );
+    return ( $leftmargin, $firstmargin, $rightmargin );
 }
 
 sub aligntext {
