@@ -203,6 +203,12 @@ sub file_export_preptext {
             $next = 'end';
         }
         my $file = $textwindow->get( $page, $next );
+        if ( not defined $file ) {
+            ::warnerror(
+                "Corrupt page markers detected: quit; delete bin file; delete any prep text files written; restart"
+            );
+            last;
+        }
         if ( $midwordpagebreak and ( $exporttype eq 'onefile' ) ) {
 
             # put the rest of the word after the separator with a *
