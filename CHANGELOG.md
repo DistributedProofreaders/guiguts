@@ -38,6 +38,8 @@
 - Consecutive closing block markup or a footnote anchor at the end of a
   footnote could cause syntax errors in the generated HTML
 - Nested blockquote markup was not wrapped correctly
+- Trying to center a line that was longer than the available space between
+  the left and right margin during rewrap caused an error message.
 
 
 ## Version 1.5.1
