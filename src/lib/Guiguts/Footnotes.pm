@@ -523,7 +523,7 @@ sub fnview {
     my $textwindow = $::textwindow;
     my $fnindex    = shift;
     $fnindex = 0 unless $fnindex;
-    my ( %fnotes, %anchors, $ftext );
+    my ( %fnotes, %anchors );
     my $allcheckspassed = 1;    # flag if all checks passed
     ::hidepagenums();
     if ( defined( $::lglobal{footcheckpop} ) ) {
@@ -536,41 +536,17 @@ sub fnview {
         $::lglobal{footcheckpop}->title('Footnote Check');
         my $frame1 = $::lglobal{footcheckpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame1->Label(
-            -text => "Warning: You shouldn't attempt to reindex or auto-move footnotes\n"
-              . "until you've addressed all warnings displayed here." )
+                -text => "Warning: You shouldn't attempt to reindex or auto-move footnotes\n"
+              . "until you've addressed all warnings displayed here.\n"
+              . "Click a colored warning type below to make it top priority" )
           ->grid( -row => 0, -column => 1, -columnspan => 4 );
-        $frame1->Label(
-            -text       => "Duplicate footnotes.\nmore than one fn\npointing to same anchor",
-            -background => 'yellow',
-        )->grid( -row => 1, -column => 1 );
-        $frame1->Label(
-            -text =>
-              "No anchor found.\nmissing anchor/colon, incorrect #?\n(may need Unlimited Anchor Search)",
-            -background => 'pink',
-        )->grid( -row => 1, -column => 2 );
-        $frame1->Label(
-            -text       => "Out of sequence.\nfn's not in same\norder as anchors",
-            -background => 'cyan',
-        )->grid( -row => 1, -column => 3 );
-        $frame1->Label(
-            -text       => "Very long.\nfn missing its end bracket?\n(may just be a long fn.)",
-            -background => 'tan',
-        )->grid( -row => 1, -column => 4 );
-        my $duplbl = $frame1->Label( -background => 'yellow' )
-          ->grid( -row => 2, -column => 1, -sticky => 'ew' );
-        my $noanchlbl =
-          $frame1->Label( -background => 'pink' )->grid( -row => 2, -column => 2, -sticky => 'ew' );
-        my $seqlbl =
-          $frame1->Label( -background => 'cyan' )->grid( -row => 2, -column => 3, -sticky => 'ew' );
-        my $longlbl =
-          $frame1->Label( -background => 'tan' )->grid( -row => 2, -column => 4, -sticky => 'ew' );
         my $frame2 = $::lglobal{footcheckpop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
             -fill   => 'both',
             -expand => 'both'
         );
-        $ftext = $frame2->Scrolled(
+        $::lglobal{footchecktext} = $frame2->Scrolled(
             'ROText',
             -scrollbars => 'se',
             -background => $::bkgcolor,
@@ -582,24 +558,36 @@ sub fnview {
             -padx   => 2,
             -pady   => 2
         );
-        ::drag($ftext);
-        $ftext->tagConfigure( 'seq',    background => 'cyan' );
-        $ftext->tagConfigure( 'dup',    background => 'yellow' );
-        $ftext->tagConfigure( 'noanch', background => 'pink' );
-        $ftext->tagConfigure( 'long',   background => 'tan' );
+        ::drag( $::lglobal{footchecktext} );
 
-        $::lglobal{footcheckpop}->eventAdd( '<<find>>' => '<Double-Button-1>', '<Return>' );
-        $::lglobal{footcheckpop}->bind(
+        # Create the labels and bind mouse button
+        my $duplbl =
+          fnwarninglbl( $frame1, 1, "yellow",
+            "dup", "Duplicate footnotes.\nmore than one fn\npointing to same anchor" );
+        my $noanchlbl = fnwarninglbl( $frame1, 2, "pink", "noanch",
+            "No anchor found.\nmissing anchor/colon, incorrect #?\n(may need Unlimited Anchor Search)"
+        );
+        my $seqlbl =
+          fnwarninglbl( $frame1, 3, "cyan", "seq",
+            "Out of sequence.\nfn's not in same\norder as anchors" );
+        my $longlbl = fnwarninglbl( $frame1, 4, "tan", "long",
+            "Very long.\nfn missing its end bracket?\n(may just be a long fn.)" );
+
+        # Double click footnote in list to show it in text
+        $::lglobal{footchecktext}->eventAdd( '<<find>>' => '<Double-Button-1>', '<Return>' );
+        $::lglobal{footchecktext}->bind(
             '<<find>>',
             sub {
-                my ( $row, $col ) = split( /\./, $ftext->index('insert') );
+                my ( $row, $col ) = split( /\./, $::lglobal{footchecktext}->index('insert') );
                 $::lglobal{fnindex} = $row;
                 footnoteshow();
             }
         );
+
+        # Populate list of warnings, counting and tag the different types
         my ( $noanchcount, $seqcount, $dupcount, $longcount ) = ( 0, 0, 0, 0 );
         for my $findex ( 1 .. $::lglobal{fntotal} ) {
-            $ftext->insert( 'end',
+            $::lglobal{footchecktext}->insert( 'end',
                     'footnote #'
                   . $findex
                   . '  line.column - '
@@ -607,12 +595,15 @@ sub fnview {
                   . ",\tanchor line.column - "
                   . $::lglobal{fnarray}->[$findex][2]
                   . "\n" );
+
+            # Footnote has no anchor
             if ( $::lglobal{fnarray}->[$findex][0] eq $::lglobal{fnarray}->[$findex][2] ) {
-                $ftext->tagAdd( 'noanch', 'end -2l', 'end -1l' );
-                $ftext->update;
+                $::lglobal{footchecktext}->tagAdd( 'noanch', 'end -2l', 'end -1l' );
                 $noanchcount++;
                 $allcheckspassed = 0;
             }
+
+            # Footnote is out of sequence
             if (
                 ( $findex > 1 )
                 && (
@@ -626,14 +617,14 @@ sub fnview {
                     )
                 )
             ) {
-                $ftext->tagAdd( 'seq', 'end -2l', 'end -1l' );
-                $ftext->update;
+                $::lglobal{footchecktext}->tagAdd( 'seq', 'end -2l', 'end -1l' );
                 $seqcount++;
                 $allcheckspassed = 0;
             }
+
+            # Footnote number already exists - duplicate
             if ( exists $fnotes{ $::lglobal{fnarray}->[$findex][2] } ) {
-                $ftext->tagAdd( 'dup', 'end -2l', 'end -1l' );
-                $ftext->update;
+                $::lglobal{footchecktext}->tagAdd( 'dup', 'end -2l', 'end -1l' );
                 $dupcount++;
                 $allcheckspassed = 0;
             }
@@ -648,14 +639,14 @@ sub fnview {
                     $::lglobal{fnarray}->[$findex][1]
                 )
             ) {
-                $ftext->tagAdd( 'long', 'end -2l', 'end -1l' );
-                $ftext->update;
+                $::lglobal{footchecktext}->tagAdd( 'long', 'end -2l', 'end -1l' );
                 $longcount++;
 
                 # do not change $allcheckspassed=0;
             }
             $fnotes{ $::lglobal{fnarray}->[$findex][2] } = $findex;
         }
+        $::lglobal{footchecktext}->update;
         $noanchlbl->configure( -text => "Found $noanchcount" );
         $seqlbl->configure( -text => "Found $seqcount" );
         $duplbl->configure( -text => "Found $dupcount" );
@@ -663,8 +654,38 @@ sub fnview {
         if ($allcheckspassed) {
             ::operationadd('Footnote check passed');
         }
-        $ftext->see("1.0 + $fnindex l") if $fnindex;
+        $::lglobal{footchecktext}->see("1.0 + $fnindex l") if $fnindex;
     }
+}
+
+# Create a pair of colored labels at top of dialog with balloon help,
+# and allow user to click to make that warning type be top priority
+# Thus if a footnote has more than one warning, user can choose which to see
+# Also links the tag name and the highlight color
+sub fnwarninglbl {
+    my $frame  = shift;
+    my $column = shift;
+    my $color  = shift;
+    my $tag    = shift;
+    my $lbltxt = shift;
+
+    # Description label and label showing number of occurrences
+    my $textlbl = $frame->Label(
+        -text       => $lbltxt,
+        -background => $color,
+    )->grid( -row => 1, -column => $column );
+    my $countlbl = $frame->Label( -background => $color )
+      ->grid( -row => 2, -column => $column, -sticky => 'ew' );
+
+    # Balloon help - attach to both widgets, and bind Mouse-1 to raise the linked tag's priority
+    $::lglobal{footlabelballoon} = $::top->Balloon() unless $::lglobal{footlabelballoon};
+    for my $wgt ( $textlbl, $countlbl ) {
+        $::lglobal{footlabelballoon}
+          ->attach( $wgt, -msg => "Click here to make these warnings top priority" );
+        $wgt->bind( '<Button-1>', sub { $::lglobal{footchecktext}->tagRaise($tag); } );
+    }
+    $::lglobal{footchecktext}->tagConfigure( $tag, background => $color );
+    return $countlbl;
 }
 
 # @{$::lglobal{fnarray}} is an array of arrays

@@ -15,6 +15,9 @@
   match the new ruler.
 - New HTML title format: book title followed by ` | Project Gutenberg`
 - Ebookmaker version 0.12.24 included - minimum chunk size = 256KB
+- Colored labels at top of Footnote Check dialog can be clicked to make
+  that error type high priority in the list displayed below, to help with
+  the situation where footnote has more than one error
 
 ### Bug Fixes
 
