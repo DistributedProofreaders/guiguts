@@ -126,6 +126,7 @@ sub centerblockwrapper {
             $line =~ s/^\s*//;                                                        # Remove any existing indentation
             my $len = length($line);
             $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;           # Indentation required for centering
+            $len = 0 if $len < 0;
             $rewrapped .= ' ' x $len . $line . "\n";
         }
     }
