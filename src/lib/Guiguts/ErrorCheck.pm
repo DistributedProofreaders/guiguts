@@ -166,6 +166,21 @@ sub errorcheckpop_up {
         )->grid( -row => 1, -column => $gcol++ );
         $::lglobal{spellqueryballoon}->attach( $btnglob,
             -msg => "Ctrl+Shift+Left-click\non queried spelling to\nAdd to Global Dictionary" );
+
+        # Sorting options
+        my $rcol = 1;
+        $ptopframeb->Label( -text => 'Sort:', )->grid( -row => 2, -column => $rcol++ );
+        my @rbutton =
+          ( [ 'Line Number', 'l' ], [ 'Alphabetical', 'a' ], [ 'Case Insensitive', 'i' ], );
+        $::lglobal{errsortmode} = 'l' unless $::lglobal{errsortmode};
+        for (@rbutton) {
+            $ptopframeb->Radiobutton(
+                -text     => $_->[0],
+                -variable => \$::lglobal{errsortmode},
+                -value    => $_->[1],
+                -command  => sub { errsortrefresh($errorchecktype); }
+            )->grid( -row => 2, -column => $rcol++ );
+        }
     }
 
     # Scrolled listbox to display the errors
@@ -614,13 +629,69 @@ sub errorcheckpop_up {
         }
         $::lglobal{errorchecklistbox}->insert( 'end', @splitlines );
     } else {
-        $::lglobal{errorchecklistbox}->insert( 'end', @errorchecklines );
+        errsortrefresh($errorchecktype);
         eccountupdate($countqueries);
     }
 
     $::lglobal{errorchecklistbox}->update;
     $::lglobal{errorchecklistbox}->focus;
     $::lglobal{errorcheckpop}->raise;
+}
+
+#
+# Error sort comparison function
+sub errsortfunc {
+
+    # Keep first line first, and last line last
+    return -1 if $a =~ /^Beginning check/ or $b =~ /^Check is complete/;
+    return 1  if $b =~ /^Beginning check/ or $a =~ /^Check is complete/;
+
+    # Extract row:col numbers from message
+    my $ta = $a;
+    $ta =~ s/^(\d+):(\d+) +- //;
+    my $alin = $1 // 0;
+    my $acol = $2 // 0;
+    my $tb   = $b;
+    $tb =~ s/^(\d+):(\d+) +- //;
+    my $blin = $1 // 0;
+    my $bcol = $2 // 0;
+
+    # Compare text of message
+    my $cmpstr = 0;                                                     # text ignored if sorting by row:col
+    $cmpstr = $ta cmp $tb         if $::lglobal{errsortmode} eq 'a';    # alphabetical
+    $cmpstr = lc($ta) cmp lc($tb) if $::lglobal{errsortmode} eq 'i';    # case-insensitive
+
+    return $cmpstr || $alin <=> $blin || $acol <=> $bcol;
+}
+
+#
+# Refresh the display of errors, sorting it first if appropriate
+sub errsortrefresh {
+    my $errorchecktype = shift;
+
+    @errorchecklines = sort errsortfunc @errorchecklines if $errorchecktype eq 'Spell Query';
+
+    # Get currently active error, so we can reselect it after refreshing the list
+    my $actidx = -1;
+    my $active = $::lglobal{errorchecklistbox}->get('active');    # Get text of active error
+    if ($active) {
+        for my $idx ( 0 .. $#errorchecklines ) {
+            if ( $errorchecklines[$idx] eq $active ) {            # Found the error in the resorted list
+                $actidx = $idx;
+                last;
+            }
+        }
+    }
+
+    $::lglobal{errorchecklistbox}->delete( '0', 'end' );
+    for my $line (@errorchecklines) {
+        $::lglobal{errorchecklistbox}->insert( 'end', $line );
+    }
+
+    # Reactivate/select the previously active error and make it visible in the view
+    $::lglobal{errorchecklistbox}->activate($actidx) if $actidx >= 0;
+    $::lglobal{errorchecklistbox}->selectionSet($actidx);
+    $::lglobal{errorchecklistbox}->see($actidx);
 }
 
 #

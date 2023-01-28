@@ -18,6 +18,7 @@
 - Colored labels at top of Footnote Check dialog can be clicked to make
   that error type high priority in the list displayed below, to help with
   the situation where footnote has more than one error
+- Spell Query results can now be sorted alphabetically or by line number
 
 ### Bug Fixes
 
