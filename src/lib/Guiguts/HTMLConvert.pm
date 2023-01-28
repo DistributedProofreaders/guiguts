@@ -4268,10 +4268,10 @@ sub fracconv {
 sub addpagelinks {
     my $selection = shift;
     my $ndash     = "\x{2013}";
-    my $rdblq     = "\x{201d}";
+    my $rquot     = q(["'\x{201d}\x{2019}]);
     $selection =~
-      s/(,["$rdblq]?) +(\d{1,3})([-$ndash])\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2$3$4<\/a>/g;
-    $selection =~ s/(,["$rdblq]?) +\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2<\/a>/g;
+      s/(,$rquot?) +(\d{1,3})([-$ndash])\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2$3$4<\/a>/g;
+    $selection =~ s/(,$rquot?) +\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2<\/a>/g;
     return $selection;
 }
 1;
