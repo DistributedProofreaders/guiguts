@@ -116,18 +116,21 @@ sub centerblockwrapper {
 
     # Center each line independently and append to a single string to return.
     my $rewrapped = '';
+    my $done      = 0;                        # Used to stop indenting when closing c/ is spotted
     for my $line (@lines) {
+        $done = 1 if $line =~ /^$TEMPPAGEMARK*[Cc]\/$TEMPPAGEMARK*$/;
 
-        # if start and end of markup - just preserve - don't indent
-        if ( $line =~ /^$TEMPPAGEMARK*(\/[#Cc]|[#Cc]\/)$TEMPPAGEMARK*$/ ) {
+        # if done, or start and end of markup - just preserve - don't indent
+        if ( $done or $line =~ /^$TEMPPAGEMARK*(\/[#Cc]|[#Cc]\/)$TEMPPAGEMARK*$/ ) {
             $rewrapped .= $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/    # No extra newline for closing blockquote markup
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/;    # No extra newline for closing blockquote markup
         } else {
-            $line =~ s/^\s*//;                                                        # Remove any existing indentation
+            $line =~ s/^\s*//;                                                         # Remove any existing indentation
             my $len = length($line);
-            $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;           # Indentation required for centering
+            $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;            # Indentation required for centering
             $len = 0 if $len < 0;
-            $rewrapped .= ' ' x $len . $line . "\n";
+            $rewrapped .= ' ' x $len . $line;
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*$/;
         }
     }
     return $rewrapped;
@@ -151,14 +154,17 @@ sub rightblockwrapper {
 
     # Indent all lines by this amount, and append to a single string to return.
     my $rewrapped = '';
+    my $done      = 0;                        # Used to stop indenting when closing r/ is spotted
     for my $line (@lines) {
+        $done = 1 if $line =~ /^$TEMPPAGEMARK*[Rr]\/$TEMPPAGEMARK*$/;
 
-        # if start and end of markup - just preserve - don't indent
-        if ( $line =~ /^$TEMPPAGEMARK*(\/[#Rr]|[#Rr]\/)$TEMPPAGEMARK*$/ ) {
+        # if done, or start and end of markup - just preserve - don't indent
+        if ( $done or $line =~ /^$TEMPPAGEMARK*(\/[#Rr]|[#Rr]\/)$TEMPPAGEMARK*$/ ) {
             $rewrapped .= $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/    # No extra newline for closing blockquote markup
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/;    # No extra newline for closing blockquote markup
         } else {
-            $rewrapped .= ' ' x $minspc . $line . "\n";
+            $rewrapped .= ' ' x $minspc . $line;
+            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*$/;
         }
     }
     return $rewrapped;
@@ -242,7 +248,8 @@ sub selectrewrap {
         $toplineblank = 1;
     }
     ::enable_interrupt() unless $silentmode;
-    $spaces = 0;
+    $spaces      = 0;
+    $::blockwrap = 0 unless $::blockwrap;
 
     # main while loop
     while (1) {
@@ -276,7 +283,6 @@ sub selectrewrap {
             || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
 
         # Check for block types that support blockwrap
-        $::blockwrap = 0 unless $::blockwrap;
         if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
             if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {                      # blockquote
                 $::blockwrap++;                                               # increment blockquote level
@@ -432,10 +438,10 @@ sub selectrewrap {
             $blockcenter  = 0;
             $blockright   = 0;
         }
-        if ( $selection =~ /$TEMPPAGEMARK*[$blockwraptypes]\// ) {
+        if ( $selection =~ /\n$TEMPPAGEMARK*[$blockwraptypes]\/$TEMPPAGEMARK*(\n|$)/ ) {
 
             # blockquote
-            if ( $selection =~ /$TEMPPAGEMARK*\#\// ) {
+            if ( $selection =~ /\n$TEMPPAGEMARK*\#\/$TEMPPAGEMARK*(\n|$)/ ) {
 
                 # In order to support poetry, etc., within blockquotes,
                 # if [pP\*Ll] markup is closed immediately preceding close of blockquote,
@@ -507,6 +513,7 @@ sub selectrewrap {
         ::update_indicators();
         ::restorelinenumbers();
     }
+    $::blockwrap = 0;    # In case of markup error, don't want to leave blockwrap variable set
 }
 
 #
