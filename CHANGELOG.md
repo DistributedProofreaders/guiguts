@@ -41,6 +41,8 @@
 - Nested blockquote markup was not wrapped correctly
 - Trying to center a line that was longer than the available space between
   the left and right margin during rewrap caused an error message.
+- When the quote following an index entry was a single quote, the first
+  page number was not hyperlinked as it would be for a double quote
 
 
 ## Version 1.5.1
