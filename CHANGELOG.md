@@ -43,6 +43,10 @@
   the left and right margin during rewrap caused an error message.
 - When the quote following an index entry was a single quote, the first
   page number was not hyperlinked as it would be for a double quote
+- Page markers immediately following closing block markup could cause an
+  extra blank line to be inserted
+- Closing illo caption markup that immediately followed `C/` or `R/` was
+  centered or right-aligned instead of remaining at left margin
 
 
 ## Version 1.5.1
