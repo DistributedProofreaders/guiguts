@@ -1831,9 +1831,11 @@ sub initialize_popup_without_deletebinding {
     }
     $::lglobal{$popupname}->Icon( -image => $::icon );
 
-    # wfpop has its own "stay on top" flag
-    $::lglobal{$popupname}->transient($top)
-      if ( $popupname eq "wfpop" ? $::wfstayontop : $::stayontop );
+    # sfpop and searchpop dialogs have their own "stay on top" flag
+    my $ontop = $::stayontop;
+    $ontop = $::wfstayontop if $popupname eq "wfpop";
+    $ontop = $::srstayontop if $popupname eq "searchpop";
+    $::lglobal{$popupname}->transient($top) if $ontop;
 
     $::lglobal{$popupname}->Tk::bind( '<F1>' => sub { display_manual( $popupname, $context ); } );
 
