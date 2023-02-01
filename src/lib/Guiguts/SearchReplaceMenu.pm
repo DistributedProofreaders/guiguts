@@ -1683,6 +1683,7 @@ sub find_transliterations {
 #
 # Find next block of given type
 # First argument can be 'indent' to search for next indented block
+# or 'all' to search for any block type that uses '/'
 # or can be open markup for block, e.g. '/#', '/P', etc.
 # Optional second argument means search backwards
 sub nextblock {
@@ -1708,6 +1709,9 @@ sub nextblock {
               $textwindow->search( '-regexp', $dirstr, '--', '^\s', $begstr, $endstr );
 
         }
+    } elsif ( $mark eq 'all' ) {
+        $::searchstartindex =
+          $textwindow->search( '-regexp', $dirstr, '--', '^/', $begstr, $endstr );
     } else {
         $::searchstartindex =
           $textwindow->search( $dirstr, '-nocase', '--', $mark, $begstr, $endstr );

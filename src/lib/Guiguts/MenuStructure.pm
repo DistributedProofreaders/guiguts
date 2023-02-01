@@ -347,6 +347,12 @@ sub menu_search {
 sub menu_search_block {
     [
         [
+            'command', 'Find Next Block', -command => [ \&::nextblock, 'all' ]
+        ],
+        [
+            'command', 'Find Previous Block', -command => [ \&::nextblock, 'all', 'reverse' ]
+        ],
+        [
             'command', 'Find Next Indented Block', -command => [ \&::nextblock, 'indent' ]
         ],
         [
