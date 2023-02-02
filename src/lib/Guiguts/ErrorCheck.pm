@@ -669,7 +669,13 @@ sub errsortfunc {
 sub errsortrefresh {
     my $errorchecktype = shift;
 
-    @errorchecklines = sort errsortfunc @errorchecklines if $errorchecktype eq 'Spell Query';
+    if ( $errorchecktype eq 'Spell Query' ) {
+        my @errorchecktemp;
+        for my $line (@errorchecklines) {
+            push @errorchecktemp, $line if defined $errors{$line};
+        }
+        @errorchecklines = sort errsortfunc @errorchecktemp;
+    }
 
     # Get currently active error, so we can reselect it after refreshing the list
     my $actidx = -1;
