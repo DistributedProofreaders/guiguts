@@ -438,10 +438,10 @@ sub selectrewrap {
             $blockcenter  = 0;
             $blockright   = 0;
         }
-        if ( $selection =~ /(^|\n)$TEMPPAGEMARK*[$blockwraptypes]\/$TEMPPAGEMARK*(\n|$)/ ) {
+        if ( $selection =~ /^$TEMPPAGEMARK*[$blockwraptypes]\/$TEMPPAGEMARK*$/m ) {
 
             # blockquote
-            if ( $selection =~ /(^|\n)$TEMPPAGEMARK*\#\/$TEMPPAGEMARK*(\n|$)/ ) {
+            if ( $selection =~ /^$TEMPPAGEMARK*\#\/$TEMPPAGEMARK*$/m ) {
 
                 # In order to support poetry, etc., within blockquotes,
                 # if [pP\*Ll] markup is closed immediately preceding close of blockquote,
