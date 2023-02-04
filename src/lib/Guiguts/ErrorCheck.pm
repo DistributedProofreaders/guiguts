@@ -11,7 +11,9 @@ BEGIN {
 
 my @errorchecklines;
 my %errors;
-my $APOS = "\x{2019}";    # Curly apostrophe/right single quote
+my $APOS   = "\x{2019}";             # Curly apostrophe/right single quote
+my $BEGMSG = "Beginning check:";
+my $ENDMSG = "Check is complete:";
 
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
@@ -340,7 +342,7 @@ sub errorcheckpop_up {
             return;
         }
     } else {
-        push @errorchecklines, "Beginning check: " . $errorchecktype;
+        push @errorchecklines, "$BEGMSG $errorchecktype";
 
         # Temporary file in same folder as current file - needs .html extension for some tools
         # Error output in same folder, named errors.err
@@ -600,8 +602,7 @@ sub errorcheckpop_up {
         ::working();
         return;
     }
-    push @errorchecklines, "Check is complete: " . $errorchecktype
-      unless $errorchecktype eq 'Load Checkfile';
+    push @errorchecklines, "$ENDMSG $errorchecktype" unless $errorchecktype eq 'Load Checkfile';
     if ( $errorchecktype eq "Nu HTML Check" or $errorchecktype eq "Nu XHTML Check" ) {
         push @errorchecklines,
           "Don't forget to do the final validation at https://validator.w3.org";
@@ -643,8 +644,8 @@ sub errorcheckpop_up {
 sub errsortfunc {
 
     # Keep first line first, and last line last
-    return -1 if $a =~ /^Beginning check/ or $b =~ /^Check is complete/;
-    return 1  if $b =~ /^Beginning check/ or $a =~ /^Check is complete/;
+    return -1 if $a =~ /^$BEGMSG/ or $b =~ /^ENDMSG/;
+    return 1  if $b =~ /^$BEGMSG/ or $a =~ /^$ENDMSG/;
 
     # Extract row:col numbers from message
     my $ta = $a;
@@ -665,14 +666,21 @@ sub errsortfunc {
 }
 
 #
-# Refresh the display of errors, sorting it first if appropriate
+# Refresh the display of errors, sorting it first for Spell Query only
 sub errsortrefresh {
     my $errorchecktype = shift;
 
+    # Note: This code assumes that, apart from the beginning and end messages,
+    # all messages originally had an entry in the $errors array linking them to the text.
+    # If a spelling is "skipped" this is currently flagged by undefining that link,
+    # so that spelling is not inserted into the sorted list, which is correct behavior.
+    # However, if sorting is implemented for another check type, this assumption may not hold,
+    # e.g. if it contains messages that do not begin with "row:col".
+    # The code below would omit such messages from the sorted list
     if ( $errorchecktype eq 'Spell Query' ) {
         my @errorchecktemp;
         for my $line (@errorchecklines) {
-            push @errorchecktemp, $line if defined $errors{$line};
+            push @errorchecktemp, $line if defined $errors{$line} or $line =~ /^($BEGMSG|$ENDMSG)/;
         }
         @errorchecklines = sort errsortfunc @errorchecktemp;
     }
@@ -695,9 +703,11 @@ sub errsortrefresh {
     }
 
     # Reactivate/select the previously active error and make it visible in the view
-    $::lglobal{errorchecklistbox}->activate($actidx) if $actidx >= 0;
-    $::lglobal{errorchecklistbox}->selectionSet($actidx);
-    $::lglobal{errorchecklistbox}->see($actidx);
+    if ( $actidx >= 0 ) {
+        $::lglobal{errorchecklistbox}->activate($actidx);
+        $::lglobal{errorchecklistbox}->selectionSet($actidx);
+        $::lglobal{errorchecklistbox}->see($actidx);
+    }
 }
 
 #
@@ -1232,8 +1242,8 @@ sub gcwindowpopulate {
     }
 
     # Add start/end messages
-    $::lglobal{errorchecklistbox}->insert( 0,     "Beginning check: Bookloupe" );
-    $::lglobal{errorchecklistbox}->insert( "end", "Check is complete: Bookloupe" );
+    $::lglobal{errorchecklistbox}->insert( 0,     "$BEGMSG Bookloupe" );
+    $::lglobal{errorchecklistbox}->insert( "end", "$ENDMSG Bookloupe" );
     $::lglobal{errorchecklistbox}->update;
 }
 
