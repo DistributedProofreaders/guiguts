@@ -644,7 +644,7 @@ sub errorcheckpop_up {
 sub errsortfunc {
 
     # Keep first line first, and last line last
-    return -1 if $a =~ /^$BEGMSG/ or $b =~ /^ENDMSG/;
+    return -1 if $a =~ /^$BEGMSG/ or $b =~ /^$ENDMSG/;
     return 1  if $b =~ /^$BEGMSG/ or $a =~ /^$ENDMSG/;
 
     # Extract row:col numbers from message
