@@ -207,6 +207,7 @@ our $verboseerrorchecks    = 0;
 our $viscolnm              = 0;
 our $vislnnm               = 0;
 our $wfstayontop           = 0;
+our $srstayontop           = 0;
 
 # These are set to the default values in initialize()
 our $gutcommand         = '';

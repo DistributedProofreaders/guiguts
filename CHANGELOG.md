@@ -19,6 +19,9 @@
   that error type high priority in the list displayed below, to help with
   the situation where footnote has more than one error
 - Spell Query results can now be sorted alphabetically or by line number
+- Find Block Markup submenu added to Search menu
+- Search/Replace dialog can be kept on top, like Word Frequency, in
+  Preferences->Appearance menu
 
 ### Bug Fixes
 

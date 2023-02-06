@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT = qw(&update_sr_histories &searchtext &reg_check &getnextscanno &updatesearchlabels
       &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
-      &find_asterisks &find_transliterations &orphanedbrackets &orphanedmarkup &searchsize
+      &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
       &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount);
 }
 
@@ -1678,6 +1678,53 @@ sub find_transliterations {
     #} else {
     #	::operationadd('Found no more transliterations (\\[[^FIS\\d])');
     #}
+}
+
+#
+# Find next block of given type
+# First argument can be 'indent' to search for next indented block
+# or 'all' to search for any block type that uses '/'
+# or can be open markup for block, e.g. '/#', '/P', etc.
+# Optional second argument means search backwards
+sub nextblock {
+    my ( $mark, $reverse ) = @_;
+    my $textwindow = $::textwindow;
+
+    $::searchstartindex = $reverse ? 'end' : '1.0' unless $::searchstartindex;
+
+    my $dirstr = '-forwards';
+    my $begstr = $::searchstartindex . '+1l';
+    my $endstr = 'end';
+    my $incr   = 1;
+    if ($reverse) {
+        $dirstr = '-backwards';
+        $begstr = $::searchstartindex . '-1l';
+        $endstr = '1.0';
+        $incr   = -1;
+    }
+
+    if ( $mark eq 'indent' ) {    # Find non-indented line first in case currently in a block, then next indented line
+        if ( $begstr = $textwindow->search( '-regexp', $dirstr, '--', '^\S', $begstr, $endstr ) ) {
+            $::searchstartindex =
+              $textwindow->search( '-regexp', $dirstr, '--', '^\s', $begstr, $endstr );
+
+        }
+    } elsif ( $mark eq 'all' ) {
+        $::searchstartindex =
+          $textwindow->search( '-regexp', $dirstr, '--', '^/', $begstr, $endstr );
+    } else {
+        $::searchstartindex =
+          $textwindow->search( $dirstr, '-nocase', '--', $mark, $begstr, $endstr );
+    }
+    if ($::searchstartindex) {
+        $textwindow->markSet( 'insert', $::searchstartindex );
+        $textwindow->see('end');
+        $textwindow->see($::searchstartindex);
+    } else {
+        ::soundbell();
+    }
+    $textwindow->update;
+    $textwindow->focus;
 }
 
 sub orphanedbrackets {

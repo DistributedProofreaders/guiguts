@@ -297,6 +297,7 @@ sub menu_search {
         [ 'separator', '' ],
         [ 'command',   'Find ~Orphaned DP Markup...', -command => \&::orphanedmarkup ],
         [ 'command',   'Find ~Asterisks w/o Slash',   -command => \&::find_asterisks ],
+        menu_cascade( '~Find Block Markup', &menu_search_block ),
         [ 'separator', '' ],
         [
             'command', 'Highlight ~Double Quotes in Selection',
@@ -339,6 +340,67 @@ sub menu_search {
             'command', 'Re~move Highlights',
             -accelerator => 'Ctrl+0',
             -command     => \&::hiliteremove,
+        ],
+    ];
+}
+
+sub menu_search_block {
+    [
+        [
+            'command', 'Find Next Block', -command => [ \&::nextblock, 'all' ]
+        ],
+        [
+            'command', 'Find Previous Block', -command => [ \&::nextblock, 'all', 'reverse' ]
+        ],
+        [
+            'command', 'Find Next Indented Block', -command => [ \&::nextblock, 'indent' ]
+        ],
+        [
+            'command',
+            'Find Previous Indented Block',
+            -command => [ \&::nextblock, 'indent', 'reverse' ]
+        ],
+        [
+            'command', 'Find Next /* Block', -command => [ \&::nextblock, '/*' ]
+        ],
+        [
+            'command', 'Find Previous /* Block', -command => [ \&::nextblock, '/*', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /# Block', -command => [ \&::nextblock, '/#' ] ],
+        [
+            'command', 'Find Previous /# Block', -command => [ \&::nextblock, '/#', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /$ Block', -command => [ \&::nextblock, '/$' ] ],
+        [
+            'command', 'Find Previous /$ Block', -command => [ \&::nextblock, '/$', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /P Block', -command => [ \&::nextblock, '/P' ] ],
+        [
+            'command', 'Find Previous /P Block', -command => [ \&::nextblock, '/P', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /C Block', -command => [ \&::nextblock, '/C' ] ],
+        [
+            'command', 'Find Previous /C Block', -command => [ \&::nextblock, '/C', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /R Block', -command => [ \&::nextblock, '/R' ] ],
+        [
+            'command', 'Find Previous /R Block', -command => [ \&::nextblock, '/R', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /F Block', -command => [ \&::nextblock, '/F' ] ],
+        [
+            'command', 'Find Previous /F Block', -command => [ \&::nextblock, '/F', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /L Block', -command => [ \&::nextblock, '/L' ] ],
+        [
+            'command', 'Find Previous /L Block', -command => [ \&::nextblock, '/L', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /X Block', -command => [ \&::nextblock, '/X' ] ],
+        [
+            'command', 'Find Previous /X Block', -command => [ \&::nextblock, '/X', 'reverse' ]
+        ],
+        [ 'command', 'Find Next /I Block', -command => [ \&::nextblock, '/I' ] ],
+        [
+            'command', 'Find Previous /I Block', -command => [ \&::nextblock, '/I', 'reverse' ]
         ],
     ];
 }
@@ -889,6 +951,12 @@ sub menu_preferences_appearance {
         [
             Checkbutton => 'Keep Word Frequency Pop-up On Top',
             -variable   => \$::wfstayontop,
+            -onvalue    => 1,
+            -offvalue   => 0
+        ],
+        [
+            Checkbutton => 'Keep Search/Replace Pop-up On Top',
+            -variable   => \$::srstayontop,
             -onvalue    => 1,
             -offvalue   => 0
         ],
