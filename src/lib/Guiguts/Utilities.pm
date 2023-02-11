@@ -876,6 +876,7 @@ sub initialize {
     $::positionhash{pagemarkerpop}    = '+302+97'         unless $::positionhash{pagemarkerpop};
     $::geometryhash{pagesephelppop}   = '+191+132'        unless $::geometryhash{pagesephelppop};
     $::positionhash{pageseppop}       = '+334+176'        unless $::positionhash{pageseppop};
+    $::positionhash{quicksearchpop}   = '+334+176'        unless $::positionhash{quicksearchpop};
     $::geometryhash{searchpop}        = '+10+10'          unless $::geometryhash{searchpop};
     $::positionhash{selectionpop}     = '+10+10'          unless $::positionhash{selectionpop};
     $::positionhash{spellpopup}       = '+152+97'         unless $::positionhash{spellpopup};
@@ -953,6 +954,7 @@ sub initialize {
     $::manualhash{'pagemarkerpop'}     = '/File_Menu#Display.2FAdjust_Page_Markers';
     $::manualhash{'pagesephelppop'}    = '/Tools_Menu#Fixup_Page_Separators';
     $::manualhash{'pageseppop'}        = '/Tools_Menu#Fixup_Page_Separators';
+    $::manualhash{'quicksearchpop'}    = '/Searching#Quick_Search';
     $::manualhash{'regexref'}          = '/Help_Menu#Regular_Expression_Quick_Reference';
     $::manualhash{'searchpop+scannos'} = '/Tools_Menu#Stealth_Scannos';
     $::manualhash{'searchpop+search'}  = '/Searching#The_Search_Dialog';

@@ -114,7 +114,8 @@ sub keybindings {
     keybind( '<Control-Shift-z>', undef, '<<Redo>>' );    # Add another key-combination
 
     # Search
-    keybind( '<Control-f>', sub { ::searchpopup(); } );
+    keybind( '<Control-f>',       sub { ::searchpopup(); } );
+    keybind( '<Control-Shift-f>', sub { ::quicksearchpopup(); } );
     keybind(
         '<Control-g>',
         sub {

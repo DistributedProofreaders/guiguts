@@ -10,7 +10,8 @@ BEGIN {
       &isvalid &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
-      &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount);
+      &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount
+      &quicksearch &quicksearchpopup);
 }
 
 # Update both the search and replace histories from their dialog fields
@@ -261,8 +262,14 @@ sub searchtext {
         # Warn user string was not found, unless auto-advancing scannos, or silent count mode
         unless ( ( $::scannosearch and $::lglobal{regaa} ) or $silentcountmode ) {
             ::soundbell('noflash');
-            $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
-            $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
+            if ( $::lglobal{quicksearch} ) {
+                $::lglobal{quicksearchbutton}->flash if defined $::lglobal{quicksearchpop};
+                $::lglobal{quicksearchbutton}->flash if defined $::lglobal{quicksearchpop};
+
+            } else {
+                $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
+                $::lglobal{searchbutton}->flash if defined $::lglobal{searchpop};
+            }
 
             # If nothing found, return cursor to starting point
             if ($::failedsearch) {
@@ -1337,6 +1344,7 @@ sub searchpopup {
 
         # Return: find in current direction
         searchbind(
+            $::lglobal{searchpop},
             '<Return>',
             sub {
                 update_sr_histories();
@@ -1347,6 +1355,7 @@ sub searchpopup {
 
         # Control-Return: find & replace
         searchbind(
+            $::lglobal{searchpop},
             '<Control-Return>',
             sub {
                 update_sr_histories();
@@ -1358,6 +1367,7 @@ sub searchpopup {
 
         # Shift-Return: replace
         searchbind(
+            $::lglobal{searchpop},
             '<Shift-Return>',
             sub {
                 update_sr_histories();
@@ -1368,6 +1378,7 @@ sub searchpopup {
 
         # Control-Shift-Return: replace all
         searchbind(
+            $::lglobal{searchpop},
             '<Control-Shift-Return>',
             sub {
                 update_sr_histories();
@@ -1378,6 +1389,7 @@ sub searchpopup {
 
         # Control-f: find in current direction
         searchbind(
+            $::lglobal{searchpop},
             '<Control-f>',
             sub {
                 update_sr_histories();
@@ -1388,6 +1400,7 @@ sub searchpopup {
 
         # Control-g: repeat find in current direction
         searchbind(
+            $::lglobal{searchpop},
             '<Control-g>',
             sub {
                 update_sr_histories();
@@ -1398,6 +1411,7 @@ sub searchpopup {
 
         # Control-Shift-g: repeat find in opposite direction
         searchbind(
+            $::lglobal{searchpop},
             '<Control-Shift-g>',
             sub {
                 update_sr_histories();
@@ -1410,6 +1424,7 @@ sub searchpopup {
 
         # Control-b: count occurrences
         searchbind(
+            $::lglobal{searchpop},
             '<Control-b>',
             sub {
                 update_sr_histories();
@@ -1418,7 +1433,10 @@ sub searchpopup {
         );
 
         # Compose
-        searchbind( "<$::composepopbinding>", sub { ::composepopup(); } );
+        searchbind( $::lglobal{searchpop}, "<$::composepopbinding>", sub { ::composepopup(); } );
+
+        # Allow user to pop Quicksearch while focused on S/R dialog
+        searchbind( $::lglobal{searchpop}, '<Control-Shift-f>', sub { ::quicksearchpopup(); } );
 
         $::lglobal{searchentry}->{_MENU_}  = ();
         $::lglobal{replaceentry}->{_MENU_} = ();
@@ -1476,23 +1494,24 @@ sub search_shiftreverse {
     );
 }
 
-# Bind a key-combination to a sub for the S&R dialog
+# Bind a key-combination to a sub for a search dialog
 # Also disable default class behaviour for key on Entry widgets
 # (e.g. Ctrl-b does "move left" by default)
 # See KeyBindings.pm for main text window equivalent
 sub searchbind {
+    my $dlg  = shift;    # Which dialog to add binding to
     my $lkey = shift;    # Key-combination (lower-case letter)
     my $subr = shift;    # Subroutine to bind to key
 
     my $ukey = $lkey;
     $ukey =~ s/-([a-z])>/-\u$1>/;    # Create uppercase version
 
-    $::lglobal{searchpop}->bind( $lkey => $subr );
-    $::lglobal{searchpop}->bind( $ukey => $subr ) if $ukey ne $lkey;
+    $dlg->bind( $lkey => $subr );
+    $dlg->bind( $ukey => $subr ) if $ukey ne $lkey;
 
     # Disable default class bindings for Entry widgets
-    $::lglobal{searchpop}->MainWindow->bind( "Tk::Entry", $lkey, 'NoOp' );
-    $::lglobal{searchpop}->MainWindow->bind( "Tk::Entry", $ukey, 'NoOp' ) if $ukey ne $lkey;
+    $dlg->MainWindow->bind( "Tk::Entry", $lkey, 'NoOp' );
+    $dlg->MainWindow->bind( "Tk::Entry", $ukey, 'NoOp' ) if $ukey ne $lkey;
 }
 
 # Add frames containing field and buttons for replacement terms
@@ -2200,4 +2219,120 @@ sub quickcount {
     $dlg->Tk::bind( '<Escape>' => sub { $dlg->Subwidget('B_Ok')->invoke; } );
     $dlg->Show;
 }
+
+#
+# Do a quick search forwards or backwards, saving and restoring search settings
+# in the main S/R dialog
+sub quicksearch {
+    my $reverse = shift;
+
+    return if not defined $::lglobal{statussearchtext} or $::lglobal{statussearchtext} eq '';
+
+    # Save main search settings and set up using quicksearch values
+    my @saveopt;
+    $saveopt[$_]                 = $::sopt[$_] for ( 0 .. 4 );
+    $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Whole word and regex are mutually exclusive
+    $::sopt[0]                   = $::lglobal{statussearchword};
+    $::sopt[1]                   = $::lglobal{statussearchnocase};
+    $::sopt[2]                   = $reverse ? 1 : 0;
+    $::sopt[3]                   = $::lglobal{statussearchregex};
+    $::sopt[4]                   = 0;
+
+    $::lglobal{quicksearch} = 1;
+    ::searchtext( $::lglobal{statussearchtext} );
+    $::lglobal{quicksearch} = 0;
+    ::add_entry_history( $::lglobal{statussearchtext}, \@::quicksearch_history );    # Add to history menu
+
+    # Restore main search settings
+    $::sopt[$_] = $saveopt[$_] for ( 0 .. 4 );
+    $::textwindow->focus;
+}
+
+#
+# Create a small Quicksearch dialog
+sub quicksearchpopup {
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+
+    ::killpopup('quicksearchpop') if $::lglobal{quicksearchpop};
+
+    $::lglobal{quicksearchpop} = $top->Toplevel;
+    $::lglobal{quicksearchpop}->title('Quick Search');
+
+    $::lglobal{quicksearchpop}->Button(
+        -activebackground => $::activecolor,
+        -command          => sub {
+            ::entry_history( $::lglobal{quicksearchentry}, \@::quicksearch_history );
+        },
+        -image  => $::lglobal{hist_img},
+        -width  => 9,
+        -height => 15,
+    )->pack( -side => 'left', -anchor => 'nw' );
+    $::lglobal{statussearchtext} = '' unless defined $::lglobal{statussearchtext};
+    $::lglobal{quicksearchentry} = $::lglobal{'quicksearchpop'}->Entry(
+        -background   => $::bkgcolor,
+        -width        => 12,
+        -textvariable => \$::lglobal{statussearchtext},
+    )->pack( -expand => 1, -fill => 'x', -side => 'top' );
+    $::lglobal{quicksearchentry}->bind( '<Return>',       sub { ::quicksearch(); } );
+    $::lglobal{quicksearchentry}->bind( '<Shift-Return>', sub { ::quicksearch('reverse'); } );
+
+    # Allow user to pop main S/R dialog while focused on Quicksearch dialog
+    searchbind( $::lglobal{quicksearchpop}, '<Control-f>', sub { ::searchpopup(); } );
+    my $frame1 =
+      $::lglobal{'quicksearchpop'}
+      ->Frame->pack( -expand => 1, -fill => 'x', -padx => 0, -pady => 0, -side => 'top' );
+    $::lglobal{quicksearchbutton} = $frame1->Button(
+        -activebackground => $::activecolor,
+        -command          => sub {
+            ::quicksearch( $::lglobal{searchreversetemp} );    # reverse variable set by Shift-Button-1 binding below
+        },
+        -text => 'Search',
+    )->grid( -row => 1, -column => 0, -padx => 1 );
+
+    # Set and restore a temporary reverse flag to handle Shift-clicking on button
+    # Regular button command (via class ButtonRelease-1) will be executed between these two events
+    $::lglobal{quicksearchbutton}
+      ->bind( '<Shift-Button-1>', sub { $::lglobal{searchreversetemp} = 'reverse'; } );
+    $::lglobal{quicksearchbutton}
+      ->bind( '<ButtonRelease-1>', sub { $::lglobal{searchreversetemp} = ''; } );
+
+    $frame1->Checkbutton(
+        -variable    => \\$::lglobal{statussearchnocase},
+        -selectcolor => $::lglobal{checkcolor},
+        -text        => 'Nocase',
+    )->grid( -row => 1, -column => 1, -padx => 1 );
+    $frame1->Checkbutton(
+        -variable    => \\$::lglobal{statussearchword},
+        -selectcolor => $::lglobal{checkcolor},
+        -text        => 'Word',
+        -command     => sub {
+            $::lglobal{statussearchregex} = 0 if $::lglobal{statussearchword};    # Can't have word and regex
+        },
+    )->grid( -row => 1, -column => 2, -padx => 1 );
+    $frame1->Checkbutton(
+        -variable    => \\$::lglobal{statussearchregex},
+        -selectcolor => $::lglobal{checkcolor},
+        -text        => 'Regex',
+        -command     => sub {
+            $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Can't have word and regex
+        },
+    )->grid( -row => 1, -column => 3, -padx => 1 );
+
+    $::lglobal{quicksearchpop}->resizable( 'yes', 'no' );
+    ::initialize_popup_without_deletebinding('quicksearchpop');
+    $::lglobal{quicksearchpop}->protocol(
+        'WM_DELETE_WINDOW' => sub {
+            ::killpopup('quicksearchpop');
+            $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+        }
+    );
+    $::lglobal{quicksearchpop}->Tk::bind( '<Escape>', sub { ::killpopup('quicksearchpop'); } );
+    $::lglobal{quicksearchpop}->transient($::top);    # Always on top
+
+    $::lglobal{quicksearchentry}->focus;
+    $::lglobal{quicksearchentry}->selectionRange( 0, 'end' );
+    $::lglobal{quicksearchentry}->icursor('end');
+}
+
 1;

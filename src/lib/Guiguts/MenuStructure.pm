@@ -254,6 +254,11 @@ sub menu_search {
             -command     => \&::searchpopup
         ],
         [
+            'command', 'Quic~k Search...',
+            -accelerator => 'Shift+Ctrl+f',
+            -command     => \&::quicksearchpopup
+        ],
+        [
             'command', '~Quick Count',
             -accelerator => 'Shift+Ctrl+b',
             -command     => \&::quickcount
