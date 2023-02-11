@@ -7,6 +7,11 @@
   button, or typing Return/Shift-Return, searches forwards or backwards.
 
 
+- `Find Match` in the Search menu (or `Ctrl-[`) finds the matching bracket,
+  quote or HTML tag to the one currently selected or indicated by the cursor.
+- `Unclosed Tag Check` in the HTML menu reports unclosed HTML tags.
+
+
 ## Version 1.5.2
 
 - Spell query no longer queries year/decade/shillings/pence abbreviations,

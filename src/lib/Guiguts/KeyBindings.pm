@@ -26,6 +26,8 @@ sub keybindings {
             ::highlight_quotbrac();
         }
     );
+    keybind( '<Control-bracketleft>',  sub { ::hilitematch(); } );
+    keybind( '<Control-bracketright>', sub { ::hilitematch(); } );
 
     # File
     keybind( '<Control-o>',       sub { ::file_open($textwindow); } );
