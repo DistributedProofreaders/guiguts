@@ -8,7 +8,7 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
-      &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle);
+      &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle &hilitematch);
 }
 
 # Routine to find highlight word list
@@ -422,4 +422,164 @@ sub hilite_alignment {
     }
 }
 
+#
+# Highlight character/tag that matches the selected one,
+# or if nothing selected, match the one adjacent to cursor
+sub hilitematch {
+    my $textwindow = $::textwindow;
+
+    $textwindow->tagRemove( 'highlight', '1.0', 'end' );
+
+    my ( $selection, $start, $end, $adjafter, $adjbefore, $htmltag );
+    my @ranges = $textwindow->tagRanges('sel');
+    if (@ranges) {    # Character/string is selected
+        $end   = pop(@ranges);
+        $start = pop(@ranges);
+    } else {          # Nothing selected - work from cursor position
+        $start = $end = 'insert';
+
+        # If character after or before insert position has a match, then use that,
+        # otherwise leave empty selection for HTML tag searching below
+        # Note, checking "after" first to correspond with fact that cursor is
+        # placed before match (see end of routine)
+        my $achr = $textwindow->get( $start, "$start +1c" );
+        my ( $amatch, $dummy ) = hilitematchpair($achr);
+        if ($amatch) {
+            $end .= " +1c";
+        } else {
+            my $bchr = $textwindow->get( "$start -1c", $start );
+            my ( $bmatch, $dummy ) = hilitematchpair($bchr);
+            $start .= " -1c" if $bmatch;
+        }
+    }
+
+    $selection = $textwindow->get( $start,             $end );
+    $adjafter  = $textwindow->get( $end,               "$end lineend" );
+    $adjbefore = $textwindow->get( "$start linestart", $start );
+
+    # Check simple pairs, e.g. brackets, quotes
+    my ( $matchstr, $reverse ) = hilitematchpair($selection);
+
+    # No single character match, so look around for HTML tag
+    unless ($matchstr) {
+        if ( $selection !~ />$/ and $adjafter =~ /^(<?\/?$TAGCH*)/ ) {      # look forward for more unless already have end of tag in selection
+            $selection .= $1;
+            $end       .= '+' . length($1) . 'c';
+        }
+        if ( $selection !~ /^</ && $adjbefore =~ /(<?\/?$TAGCH*>?)$/ ) {    # look back for more unless already have start of tag in selection
+            $selection = $1 . $selection;
+            $start .= '-' . length($1) . 'c';
+        }
+        $end .= '-1c' if $selection =~ s/^(<\/?$TAGCH+)>$/$1/;              # Remove closing > - permits match if cursor just after "</div>"
+
+        ( $matchstr, $reverse ) = hilitematchtag($selection);
+    }
+
+    my $index;
+    if ($matchstr) {
+        $index = hilitematchfind( $start, $end, $selection, $matchstr, $reverse );
+        if ($index) {
+            $textwindow->tagAdd( 'highlight', $start, $end );
+            $textwindow->tagAdd( 'highlight', $index, $index . ' +' . length($matchstr) . 'c' );
+            $textwindow->tagRemove( 'sel', '1.0', 'end' );
+
+            # For HTML tags, position cursor inside tag; for simple pairs, just before character
+            # to correspond with checking "after" first (see top of routine)
+            # Repeated use of Find Match should then re-find matching one, rather than adjacent
+            my $inside = 0;
+            if ( $matchstr =~ /^</ ) {
+                $inside = $matchstr =~ /^<\// ? 2 : 1;
+            }
+            $textwindow->markSet( 'insert', "$index +$inside c" );
+            $textwindow->see('insert');
+        }
+    }
+    ::soundbell() unless $index;    # Match not found (or attempt to match unsupported string)
+}
+
+#
+# Given the location of the selected string and its matching string,
+# find the matching occurrence in the file, returning index to its location.
+# Keep track of depth to cope with nested quotes, brackets, tags, etc.
+sub hilitematchfind {
+    my $start      = shift;
+    my $end        = shift;
+    my $selection  = shift;
+    my $match      = shift;
+    my $reverse    = shift;
+    my $textwindow = $::textwindow;
+
+    my $index;
+    my $length;
+    my $depth = 1;
+    while ( $depth > 0 ) {    # Keep going until we get back to match at same level
+        $index = $textwindow->search(
+            ( $reverse ? '-backwards' : '-forwards' ), '-regexp',
+            '-count' => \$length,
+            '--',
+            "(\Q$match\E|\Q$selection\E)",
+            ( $reverse ? $start : $end ),
+            ( $reverse ? '1.0'  : 'end' )
+        );
+        last unless ($index);
+
+        # Found match or another occurrence of the selected tag, so adjust depth
+        my $found = $textwindow->get( $index, "$index + $length c" );
+        $depth += $found eq $selection ? 1 : -1;
+
+        # Adjust start position of next search
+        if ($reverse) {
+            $start = $index;
+        } else {
+            $end = "$index + $length c";
+        }
+    }
+    return $index;
+}
+
+#
+# Return matching pair to given character and whether given character
+# was closing/right member of pair
+sub hilitematchpair {
+    my $selection = shift;
+    my $right     = 0;
+    my $match     = '';
+
+    # Don't add angle brackets to this list, because they will clash with HTML tag markup
+    my @pairs = (
+        [ '(',        ')' ],
+        [ '[',        ']' ],
+        [ '{',        '}' ],
+        [ "\x{201c}", "\x{201d}" ],
+        [ "\x{2018}", "\x{2019}" ],
+    );
+    for my $pairr (@pairs) {
+        if ( $selection eq $pairr->[0] ) {
+            $match = $pairr->[1];
+            last;
+        }
+        if ( $selection eq $pairr->[1] ) {
+            $match = $pairr->[0];
+            $right = 1;
+            last;
+        }
+    }
+    return ( $match, $right );
+}
+
+#
+# Return matching tag for given tag and whether given string was closing tag
+# Expects something like "<div" or "</div"
+sub hilitematchtag {
+    my $selection = shift;
+    my $right     = 0;
+    my $match     = '';
+    if ( $selection =~ /^<\// ) {
+        $right = 1;
+        $match = '<' . substr( $selection, 2 );
+    } elsif ( $selection =~ /^</ ) {
+        $match = '</' . substr( $selection, 1 );
+    }
+    return ( $match, $right );
+}
 1;
