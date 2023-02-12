@@ -243,6 +243,8 @@ sub keybindings {
         keybind( '<Meta-v>',          sub { ::paste(); } );
         keybind( '<Meta-f>',          sub { ::searchpopup(); } );
         keybind( '<Meta-Shift-f>',    sub { ::quicksearchpopup(); } );
+        keybind( '<Meta-g>',          undef, '<<FindNext>>' );
+        keybind( '<Meta-Shift-g>',    undef, '<<FindNextReverse>>' );
         keybind( '<Meta-z>',          undef, '<<Undo>>' );
         keybind( '<Meta-y>',          undef, '<<Redo>>' );
         keybind( '<Meta-Up>',         [ 'SetCursor', '1.0' ] );
