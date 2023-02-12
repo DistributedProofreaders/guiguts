@@ -2281,6 +2281,7 @@ sub quicksearchpopup {
 
     # Allow user to pop main S/R dialog while focused on Quicksearch dialog
     searchbind( $::lglobal{quicksearchpop}, '<Control-f>', sub { ::searchpopup(); } );
+    searchbind( $::lglobal{quicksearchpop}, '<Meta-f>',    sub { ::searchpopup(); } ) if $::OS_MAC;
     my $frame1 =
       $::lglobal{'quicksearchpop'}
       ->Frame->pack( -expand => 1, -fill => 'x', -padx => 0, -pady => 0, -side => 'top' );
