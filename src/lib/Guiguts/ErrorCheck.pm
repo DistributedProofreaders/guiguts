@@ -16,7 +16,7 @@ my $BEGMSG = "Beginning check:";
 my $ENDMSG = "Check is complete:";
 
 # General error check window
-# Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check
+# Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Unclosed Tag Check, Link Check
 # pphtml, pptxt, ppvimage, Spell Query, EPUBCheck and Load External Checkfile.
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
@@ -365,7 +365,8 @@ sub errorcheckpop_up {
         and $errorchecktype ne "Spell Query"
         and $errorchecktype ne "Load Checkfile"
         and $errorchecktype ne "Nu HTML Check"
-        and $errorchecktype ne "Nu XHTML Check" ) {
+        and $errorchecktype ne "Nu XHTML Check"
+        and $errorchecktype ne "HTML Tags" ) {
         unlink $errname;
         my $dialog = $top->Dialog(
             -text    => 'Error file was empty - maybe blocked by anti-virus software?',
@@ -839,6 +840,8 @@ sub errorcheckrun {    # Runs error checks
         jeebiesrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         spellqueryrun($errname);
+    } elsif ( $errorchecktype eq 'HTML Tags' ) {
+        htmltagsrun($errname);
     }
     $top->Unbusy;
     unlink $tmpfname unless $errorchecktype eq 'EPUBCheck';    # Don't delete the epub file
@@ -1665,6 +1668,46 @@ sub booklouperun {
     }
 
 }    # end of variable-enclosing block
+
+#
+# Check that all relevant opening HTML tags have a matching close tag
+# and vice versa
+sub htmltagsrun {
+    my $errname    = shift;
+    my $textwindow = $::textwindow;
+    my $TAGCH      = "[a-z0-9]";      # Permissible characters in HTML tag name
+
+    open my $logfile, ">", $errname or die "Error opening HTML Tags output file: $errname";
+
+    # Find each start/end tag in order from beginning to end
+    my $start = '1.0';
+    my $len;
+    while (
+        my $index = $textwindow->search(
+            '-regexp', '-count', \$len, '--', "(<$TAGCH+|</$TAGCH+)", $start, 'end'
+        )
+    ) {
+        my $endidx = "$index + $len c";
+        my $tag    = $textwindow->get( $index, $endidx );
+        my $len    = length($tag);
+
+        # Skip void elements - they don't need separate closing tags
+        unless ( ::hilitematchvoid($tag) ) {
+            my ( $matchstr, $reverse ) = ::hilitematchtag($tag);
+            if ($matchstr) {    # Should always be true, since we're only passing HTML tags to hilitematchtag
+                my $matchidx = ::hilitematchfind( $index, $endidx, $tag, $matchstr, $reverse );
+                unless ($matchidx) {    # Failed to find a match
+                    my ( $row, $col ) = split( /\./, $index );
+                    my $error = sprintf( "%d:%d - %s> not matched", $row, $col, $tag );
+                    utf8::encode($error);
+                    print $logfile "$error\n";
+                }
+            }
+        }
+        $start = $endidx;
+    }
+    close $logfile;
+}
 
 #
 # Update query count in dialog

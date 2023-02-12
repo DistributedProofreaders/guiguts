@@ -819,6 +819,13 @@ sub menu_html {
         ],
         [
             'command',
+            'Unclo~sed Tag Check',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'HTML Tags' );
+            }
+        ],
+        [
+            'command',
             '~PPhtml',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'pphtml' );
