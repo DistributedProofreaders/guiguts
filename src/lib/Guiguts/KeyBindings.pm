@@ -242,6 +242,7 @@ sub keybindings {
         keybind( '<Meta-x>',          sub { ::cut(); } );
         keybind( '<Meta-v>',          sub { ::paste(); } );
         keybind( '<Meta-f>',          sub { ::searchpopup(); } );
+        keybind( '<Meta-Shift-f>',    sub { ::quicksearchpopup(); } );
         keybind( '<Meta-z>',          undef, '<<Undo>>' );
         keybind( '<Meta-y>',          undef, '<<Redo>>' );
         keybind( '<Meta-Up>',         [ 'SetCursor', '1.0' ] );
@@ -291,6 +292,8 @@ sub keybindings {
     # because default class bindings don't get set up until first Entry is created. So without
     # the dummy widget, the binding below would be overwritten by the default at a later point.
     $textwindow->MainWindow->bind( 'Tk::Entry', '<<Paste>>' => sub { ::entrypaste(shift); }, );
+    $textwindow->MainWindow->bind( 'Tk::Entry', '<Meta-v>'  => sub { ::entrypaste(shift); }, )
+      if $::OS_MAC;
 
     # Alternative paste to give user a second option if Perl/Tk utf8 bug strikes
     $textwindow->MainWindow->bind( 'Tk::Entry',
