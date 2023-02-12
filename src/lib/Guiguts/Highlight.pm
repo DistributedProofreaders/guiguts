@@ -8,8 +8,11 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
-      &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle &hilitematch);
+      &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle
+      &hilitematch &hilitematchfind &hilitematchtag &hilitematchvoid);
 }
+
+my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
 
 # Routine to find highlight word list
 sub scannosfile {
@@ -462,7 +465,7 @@ sub hilitematch {
 
     # No single character match, so look around for HTML tag
     unless ($matchstr) {
-        if ( $selection !~ />$/ and $adjafter =~ /^(<?\/?$TAGCH*)/ ) {      # look forward for more unless already have end of tag in selection
+        if ( $selection !~ />$/ and $adjafter =~ /^(<?\/?$TAGCH*)/ ) {    # look forward for more unless already have end of tag in selection
             $selection .= $1;
             $end       .= '+' . length($1) . 'c';
         }
@@ -509,15 +512,25 @@ sub hilitematchfind {
     my $reverse    = shift;
     my $textwindow = $::textwindow;
 
+    # Regex searches for either the tag or its match, since if nested you may find the tag
+    # several times before finding the matches.
+    my $regexp = "(\Q$match\E|\Q$selection\E)";
+
+    # If an HTML tag, don't want "<b" to match "</blockquote...", for example,
+    # so use negative lookahead to ensure there's not an alphanumeric character
+    # after "</b".
+    $regexp .= "(?!$TAGCH)" if substr( $selection, 0, 1 ) eq '<';
+
     my $index;
     my $length;
     my $depth = 1;
     while ( $depth > 0 ) {    # Keep going until we get back to match at same level
         $index = $textwindow->search(
-            ( $reverse ? '-backwards' : '-forwards' ), '-regexp',
+            ( $reverse ? '-backwards' : '-forwards' ),
+            '-regexp',
             '-count' => \$length,
             '--',
-            "(\Q$match\E|\Q$selection\E)",
+            $regexp,
             ( $reverse ? $start : $end ),
             ( $reverse ? '1.0'  : 'end' )
         );
@@ -581,5 +594,18 @@ sub hilitematchtag {
         $match = '</' . substr( $selection, 1 );
     }
     return ( $match, $right );
+}
+
+#
+# Return true if given tag is for a void element,
+# i.e. does not need separate open/close tags
+sub hilitematchvoid {
+    my $tag   = shift;
+    my @voids = (
+        'area', 'base', 'br',    'col',    'embed', 'hr', 'img', 'input',
+        'link', 'meta', 'param', 'source', 'track', 'wbr',
+    );
+    $tag =~ s/<?\/?($TAGCH+)>?/$1/;
+    return grep { /^$tag$/ } @voids;
 }
 1;
