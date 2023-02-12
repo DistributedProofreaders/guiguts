@@ -1437,6 +1437,7 @@ sub searchpopup {
 
         # Allow user to pop Quicksearch while focused on S/R dialog
         searchbind( $::lglobal{searchpop}, '<Control-Shift-f>', sub { ::quicksearchpopup(); } );
+        searchbind( $::lglobal{searchpop}, '<Meta-Shift-f>', sub { ::quicksearchpopup(); } ) if $OS_MAC;
 
         $::lglobal{searchentry}->{_MENU_}  = ();
         $::lglobal{replaceentry}->{_MENU_} = ();
