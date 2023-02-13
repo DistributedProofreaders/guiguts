@@ -1343,25 +1343,15 @@ sub searchpopup {
         );
 
         # Return: find in current direction
-        searchbind(
-            $::lglobal{searchpop},
-            '<Return>',
-            sub {
-                update_sr_histories();
-                searchtext();
-                $top->raise;
-            }
-        );
+        searchbind( $::lglobal{searchpop}, '<Return>', \&searchraise );
 
-        # Control-Return: find & replace
+        # Control-Return: replace and find next
         searchbind(
             $::lglobal{searchpop},
             '<Control-Return>',
             sub {
-                update_sr_histories();
                 replace( $::lglobal{replaceentry}->get );
-                searchtext();
-                $top->raise;
+                searchraise();
             }
         );
 
@@ -1387,40 +1377,21 @@ sub searchpopup {
             }
         );
 
-        # Control-f: find in current direction
-        searchbind(
-            $::lglobal{searchpop},
-            '<Control-f>',
-            sub {
-                update_sr_histories();
-                searchtext();
-                $top->raise;
-            }
-        );
+        # Cmd/Control-f: find in current direction - focus remains in S/R dialog
+        # Cmd/Control-g: find in current direction - focus in mainwindow
+        # Cmd/Control-Shift-g: find in opposite direction - focus in mainwindow
+        searchbind( $::lglobal{searchpop}, '<Control-f>',       \&searchraise );
+        searchbind( $::lglobal{searchpop}, '<Control-g>',       \&searchfocus );
+        searchbind( $::lglobal{searchpop}, '<Control-Shift-g>', \&searchfocusreverse );
+        if ($::OS_MAC) {
+            searchbind( $::lglobal{searchpop}, '<Meta-f>',       \&searchraise );
+            searchbind( $::lglobal{searchpop}, '<Meta-g>',       \&searchfocus );
+            searchbind( $::lglobal{searchpop}, '<Meta-Shift-g>', \&searchfocusreverse );
+        }
 
-        # Control-g: repeat find in current direction
-        searchbind(
-            $::lglobal{searchpop},
-            '<Control-g>',
-            sub {
-                update_sr_histories();
-                searchtext( $::lglobal{searchentry}->get );
-                $textwindow->focus;
-            }
-        );
-
-        # Control-Shift-g: repeat find in opposite direction
-        searchbind(
-            $::lglobal{searchpop},
-            '<Control-Shift-g>',
-            sub {
-                update_sr_histories();
-                $::lglobal{searchop2}->toggle;
-                searchtext( $::lglobal{searchentry}->get );
-                $::lglobal{searchop2}->toggle;
-                $textwindow->focus;
-            }
-        );
+        # Cmd/Control-Shift-f: pop Quicksearch dialog
+        searchbind( $::lglobal{searchpop}, '<Control-Shift-f>', \&quicksearchpopup );
+        searchbind( $::lglobal{searchpop}, '<Meta-Shift-f>',    \&quicksearchpopup ) if $::OS_MAC;
 
         # Control-b: count occurrences
         searchbind(
@@ -1434,11 +1405,6 @@ sub searchpopup {
 
         # Compose
         searchbind( $::lglobal{searchpop}, "<$::composepopbinding>", sub { ::composepopup(); } );
-
-        # Allow user to pop Quicksearch while focused on S/R dialog
-        searchbind( $::lglobal{searchpop}, '<Control-Shift-f>', sub { ::quicksearchpopup(); } );
-        searchbind( $::lglobal{searchpop}, '<Meta-Shift-f>',    sub { ::quicksearchpopup(); } )
-          if $::OS_MAC;
 
         $::lglobal{searchentry}->{_MENU_}  = ();
         $::lglobal{replaceentry}->{_MENU_} = ();
@@ -1467,6 +1433,30 @@ sub searchpopup {
         update_sr_histories();
         searchtext('');
     }
+}
+
+#
+# Equivalent to Search button but raises the main window
+# Note: focus remains in S/R dialog, unlike Ctrl-g
+sub searchraise {
+    $::lglobal{searchbutton}->invoke;
+    $::top->raise;
+}
+
+#
+# Equivalent to Search button but switches focus to main window
+sub searchfocus {
+    $::lglobal{searchbutton}->invoke;
+    $::textwindow->focus;
+}
+
+#
+# Equivalent to temporary reverse and Search button, but switches focus to main window
+sub searchfocusreverse {
+    $::lglobal{searchop2}->toggle;
+    $::lglobal{searchbutton}->invoke;
+    $::lglobal{searchop2}->toggle;
+    $::textwindow->focus;
 }
 
 # Create bindings so Shift key causes a one-off reversal of Search or Replace & Search direction.
@@ -2247,7 +2237,6 @@ sub quicksearch {
 
     # Restore main search settings
     $::sopt[$_] = $saveopt[$_] for ( 0 .. 4 );
-    $::textwindow->focus;
 }
 
 #
@@ -2278,6 +2267,10 @@ sub quicksearchpopup {
     )->pack( -expand => 1, -fill => 'x', -side => 'top' );
     $::lglobal{quicksearchentry}->bind( '<Return>',       sub { ::quicksearch(); } );
     $::lglobal{quicksearchentry}->bind( '<Shift-Return>', sub { ::quicksearch('reverse'); } );
+    $::lglobal{quicksearchentry}
+      ->bind( '<Control-Return>', sub { ::quicksearch(); $::textwindow->focus; } );
+    $::lglobal{quicksearchentry}
+      ->bind( '<Control-Shift-Return>', sub { ::quicksearch('reverse'); $::textwindow->focus; } );
 
     # Allow user to pop main S/R dialog while focused on Quicksearch dialog
     searchbind( $::lglobal{quicksearchpop}, '<Control-f>', sub { ::searchpopup(); } );
