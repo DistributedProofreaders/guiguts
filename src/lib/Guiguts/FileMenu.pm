@@ -952,8 +952,16 @@ EOM
         for (@::mygcview) { print $save_handle "$_," }
         print $save_handle (");\n\n");
 
+        print $save_handle ("\@quicksearch_history = (\n");
+        my @array = @::quicksearch_history;
+        for my $index (@array) {
+            $index =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
+            print $save_handle qq/\t"$index",\n/;
+        }
+        print $save_handle ");\n\n";
+
         print $save_handle ("\@search_history = (\n");
-        my @array = @::search_history;
+        @array = @::search_history;
         for my $index (@array) {
             $index =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
             print $save_handle qq/\t"$index",\n/;

@@ -1,5 +1,11 @@
 # Changelog
 
+## Next version
+
+- `Quick Search` in Search menu (or Shift-Ctrl-f) pops a mini-dialog with
+  basic search options and a history button. Clicking or Shift-clicking Search
+  button, or typing Return/Shift-Return, searches forwards or backwards.
+
 
 ## Version 1.5.2
 
