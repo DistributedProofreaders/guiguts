@@ -6,6 +6,8 @@
   basic search options and a history button. Clicking or Shift-clicking Search
   button, or typing Return/Shift-Return, searches forwards or backwards.
 
+### Bug Fixes
+- The column display (ruler) numbers could sometimes display wrongly
 
 ## Version 1.5.2
 
