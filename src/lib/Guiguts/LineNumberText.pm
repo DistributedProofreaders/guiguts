@@ -254,13 +254,10 @@ sub _lincolupdate {
     my $leftcol   = 0;                                                  # Max value of leftmost column number
 
     # Find row,column index of leftmost visible column character for each row
-    # If no character there (line too short) column 0 is returned, so need to
-    # check every row to find if there's a non-zero left-column number
     # Use y coordinate to get line number of visible rows
     while (1) {
         my $idx = $w->{'rtext'}->index( '@0,' . "$ypix" );
         my ( $realline, $realcol ) = split( /\./, $idx );
-        $leftcol = $realcol if $realcol > 0;
         my ( $x, $y, $wi, $he ) = $w->{'rtext'}->dlineinfo($idx);
         last unless defined $he;
         last if ( $oldy == $y );    #line is the same as the last one
@@ -268,6 +265,9 @@ sub _lincolupdate {
         $ypix += $he;
         last
           if $ypix >= ( $theight - 1 );    #we have reached the end of the display
+
+        # if last line of file is onscreen, we tried above to get index of first character of
+        # line beyond end, which index returns as row/col of last character of last line of file
         last if ( $y == $ypix );
         $ltextline++;
 
@@ -277,6 +277,11 @@ sub _lincolupdate {
             push( @LineNum, "$realline\n" );
         }
         $lastline = $realline;
+
+        # If line too short and scrolled off left side of screen, index returns column number
+        # of last character of line, so need to get maximum column number, not just the first.
+        # That will give us the column number of the first visible column of the screen
+        $leftcol = $realcol if $realcol > $leftcol;
     }
 
     if ( $w->{'ltext'}->ismapped ) {
