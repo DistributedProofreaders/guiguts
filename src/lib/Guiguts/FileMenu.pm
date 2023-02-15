@@ -48,7 +48,6 @@ sub file_include {    # FIXME: Should include even if no file loaded.
     $textwindow->IncludeFile($name)
       if defined($name)
       and length($name);
-    ::update_indicators();
     return;
 }
 
@@ -97,7 +96,6 @@ sub file_saveas {
         }
 
         $textwindow->FileName( $::lglobal{global_filename} );
-        ::update_indicators();
         $::top->Unbusy( -recurse => 1 );
     }
 
@@ -110,7 +108,6 @@ sub file_close {
     my $textwindow = shift;
     return if ( ::confirmempty() =~ m{cancel}i );
     clearvars($textwindow);
-    ::update_indicators();
     return;
 }
 
@@ -419,7 +416,6 @@ sub savefile {
             ::_bin_save();
             $textwindow->ResetUndo;                    # Necessary to reset edited flag
             ::setedited(0);
-            ::update_indicators();
             $::top->Unbusy( -recurse => 1 );
         }
     }
@@ -766,7 +762,6 @@ sub openfile {    # and open it
     }
     ::highlight_scannos();
     ::highlight_quotbrac();
-    ::update_indicators();
     file_mark_pages() if $::auto_page_marks;
     ::readlabels();
 

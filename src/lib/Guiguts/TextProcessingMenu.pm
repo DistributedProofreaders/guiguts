@@ -457,7 +457,6 @@ sub fixup {
             $textwindow->see($index);
             $textwindow->markSet( 'insert', $index );
             $textwindow->update;
-            ::update_indicators();
         }
         $lastindex = $index;
         $index++;
@@ -471,7 +470,6 @@ sub fixup {
     ::disable_interrupt();
     $textwindow->markSet( 'insert', 'end' );
     $textwindow->see('end');
-    ::update_indicators();
     ::restorelinenumbers();
 }
 
@@ -533,7 +531,6 @@ sub endofline {
         $end   = $ranges[-1];
     }
     $textwindow->FindAndReplaceAll( '-regex', '-nocase', '\s+$', '' );
-    ::update_indicators();
 }
 
 ## Clean Up Rewrap

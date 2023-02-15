@@ -305,7 +305,6 @@ sub highlight_scannos {    # Enable / disable word highlighting in the text
         undef $::lglobal{scannos_highlightedid};
         $textwindow->tagRemove( 'scannos', '1.0', 'end' );
     }
-    ::update_indicators();
     ::savesettings();
 }
 
@@ -322,7 +321,6 @@ sub highlight_quotbrac {
         undef $::lglobal{quotbrac_highlightedid};
         highlight_quotbrac_remove();
     }
-    ::update_indicators();
     ::savesettings();
 }
 

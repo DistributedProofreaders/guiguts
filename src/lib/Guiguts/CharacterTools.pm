@@ -667,7 +667,6 @@ sub cp1252toUni {
             $textwindow->replacewith( $thisblockstart, "$thisblockstart+1c", $cp{$term} );
         }
     }
-    ::update_indicators();
 }
 
 # Pop up compose window to allow entering characters via keystroke shortcuts

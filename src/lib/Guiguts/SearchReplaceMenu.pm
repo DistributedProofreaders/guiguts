@@ -281,7 +281,6 @@ sub searchtext {
     }
     unless ($silentmode) {
         ::updatesearchlabels();
-        ::update_indicators();
     }
     return $foundone;    # return index of where found text started
 }

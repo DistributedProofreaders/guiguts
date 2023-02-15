@@ -510,7 +510,6 @@ sub selectrewrap {
         $textwindow->update;
         $textwindow->see($start);
         $textwindow->Unbusy;
-        ::update_indicators();
         ::restorelinenumbers();
     }
     $::blockwrap = 0;    # In case of markup error, don't want to leave blockwrap variable set

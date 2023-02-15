@@ -2070,7 +2070,6 @@ sub htmlimages {
     return unless $end;
     $textwindow->tagAdd( 'highlight', $start, $end );
     $textwindow->markSet( 'insert', $start );
-    ::update_indicators();
     $::lglobal{imarkupstart} = $start;
     $::lglobal{imarkupend}   = $end;
     htmlimage();
@@ -3527,7 +3526,6 @@ sub orphans {
                 $textwindow->see( $op[0] )               if $op[0];
                 $textwindow->tagAdd( 'highlight', $op[0], $op[0] . '+' . $lengthc . 'c' );
             }
-            ::update_indicators();
             return 0;
         }
     }

@@ -397,7 +397,6 @@ sub footnoteshow {
       if ( ( $anchor ne $start ) && $anchorend );
     $::lglobal{footnotetotal}->configure( -text => "# $::lglobal{fnindex}/$::lglobal{fntotal}" )
       if $::lglobal{footpop};
-    ::update_indicators();
 }
 
 sub fninsertmarkers {
@@ -853,7 +852,6 @@ sub footnotefixup {
             $::lglobal{fnarray}->[ $::lglobal{fnindex} ][2] );
         $textwindow->markSet( "fnb$::lglobal{fnindex}",
             $::lglobal{fnarray}->[ $::lglobal{fnindex} ][3] );
-        ::update_indicators();
         $textwindow->focus;
         $::lglobal{footpop}->raise if $::lglobal{footpop};
 

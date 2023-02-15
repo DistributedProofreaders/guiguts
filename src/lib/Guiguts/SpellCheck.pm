@@ -113,7 +113,6 @@ sub spellchecknext {
       if $::lglobal{matchindex};                                                #get the index of the end of the match
     spellguesses( $::lglobal{misspelledlist}[ $::lglobal{nextmiss} ] );         # get a list of guesses for the misspelling
     spellshow_guesses();                                                        # and put them in the guess list
-    ::update_indicators();                                                      # update the status bar
     $::lglobal{spellpopup}->configure( -title => 'Current Dictionary - '
           . ( $::globalspelldictopt || 'No dictionary!' )
           . " | $#{$::lglobal{misspelledlist}} words to check." );
