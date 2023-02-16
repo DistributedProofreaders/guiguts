@@ -426,7 +426,6 @@ sub wordfrequency {
     $wc = wordfrequencybuildwordlist($textwindow);
     allwords($wc);
     $top->Unbusy( -recurse => 1 );
-    ::update_indicators();
 }
 
 sub allwords {

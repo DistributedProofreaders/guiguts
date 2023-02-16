@@ -1071,7 +1071,7 @@ sub initialize {
     $top->configure( -menu => $::menubar = $top->Menu );
 
     # routines to call every time the text is edited
-    $::textwindow->SetGUICallbacks( [ \&::update_indicators, ] );
+    $::textwindow->SetGUICallbacks( [] );
 
     # Ignore any watchdog timer alarms. Subroutines that take a long time to
     # complete can trip it
@@ -2311,7 +2311,6 @@ sub gotobookmark {
     } else {
         ::soundbell();
     }
-    ::update_indicators();
 }
 
 sub seeindex {
@@ -2537,7 +2536,6 @@ sub poetrynumbers {
         last unless $::searchstartindex;
         $textwindow->see($::searchstartindex);
         $textwindow->update;
-        ::update_indicators();
         ( $row, $col ) = split /\./, $::searchstartindex;
         $line = $textwindow->get( "$row.0", "$row.end" );
         $line =~ s/(?<=\S)\s\s+(\d+)$//;
@@ -2729,7 +2727,6 @@ sub toolbar_toggle {
             -command => sub {
                 return if ( ::confirmempty() =~ /cancel/i );
                 ::clearvars($textwindow);
-                ::update_indicators();
             },
             -tip => 'Discard Edits'
         );

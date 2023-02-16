@@ -395,7 +395,6 @@ sub pgfocus {
     }
     $textwindow->markSet( 'insert', $mark );
     ::seeindex( $mark, $::donotcenterpagemarkers );
-    ::update_indicators();
 }
 
 #

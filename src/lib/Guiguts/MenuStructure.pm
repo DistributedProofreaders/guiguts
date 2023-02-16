@@ -270,7 +270,6 @@ sub menu_search {
             -accelerator => 'Ctrl+p',
             -command     => sub {
                 ::gotopage();
-                ::update_indicators();
             }
         ],
         [
@@ -279,7 +278,6 @@ sub menu_search {
             -accelerator => 'Ctrl+Shift+p',
             -command     => sub {
                 ::gotolabel();
-                ::update_indicators();
             }
         ],
         [
@@ -288,7 +286,6 @@ sub menu_search {
             -accelerator => 'Ctrl+j',
             -command     => sub {
                 ::gotoline();
-                ::update_indicators();
             }
         ],
         [ 'command',   '~Which Line?', -command => sub { $textwindow->WhatLineNumberPopUp } ],

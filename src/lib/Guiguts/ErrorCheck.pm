@@ -753,7 +753,6 @@ sub errorcheckrun {    # Runs error checks
         $::lglobal{errorchecklistbox}->delete( '0', 'end' );
     }
     $textwindow->focus;
-    ::update_indicators();
     unless ( $errorchecktype eq 'EPUBCheck' ) {    # Checks an epub, not the currently loaded file
         return 1 if ::nofileloadedwarning();
     }
@@ -1053,7 +1052,6 @@ sub errorcheckview {
             }
         }
         $textwindow->tagAdd( 'highlight', $start, $end );
-        ::update_indicators();
     } else {    # some tools output error without line number
         if ( $line =~ /^\+(.*):/ ) {    # search on text between + and :
             my @savesets = @::sopt;

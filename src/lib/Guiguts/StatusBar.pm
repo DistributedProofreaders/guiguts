@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&update_indicators &_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
+    @EXPORT = qw(&_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
       &setlang &selection &gotoline &gotopage &gotolabel &set_auto_img);
 }
 
@@ -139,7 +139,7 @@ sub _updatesel {
 
     $::lglobal{selmaxlength} = $msgln if ( $msgln > $::lglobal{selmaxlength} );
     $::lglobal{selectionlabel}->configure( -text => $msg, -width => $::lglobal{selmaxlength} );
-    ::update_indicators();
+    update_indicators();
 }
 
 ## Status Bar
@@ -173,7 +173,6 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         sub {
             $::lglobal{current_line_label}->configure( -relief => 'sunken' );
             gotoline();
-            ::update_indicators();
         }
     );
 
@@ -358,7 +357,6 @@ sub update_img_button {
             sub {
                 $::lglobal{img_num_label}->configure( -relief => 'sunken' );
                 gotopage();
-                ::update_indicators();
             }
         );
         $::lglobal{img_num_label}->bind(
@@ -366,7 +364,6 @@ sub update_img_button {
             sub {
                 $::lglobal{img_num_label}->configure( -relief => 'sunken' );
                 ::togglepagenums();
-                ::update_indicators();
             }
         );
         _butbind( $::lglobal{img_num_label} );
@@ -431,7 +428,6 @@ sub update_ordinal_button {
 
 sub togglelongordlabel {
     $::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
-    ::update_indicators();
 }
 
 sub update_prev_img_button {
@@ -737,7 +733,6 @@ sub gotolineok {
     }
     $textwindow->markSet( 'insert', "$::lglobal{line_number}.0" );
     $textwindow->see('insert');
-    update_indicators();
 }
 
 #
@@ -776,7 +771,6 @@ sub gotopageok {
     $textwindow->markSet( 'insert', "$index +1l linestart" );
     ::seeindex( 'insert -2l', 1 );
     $textwindow->focus;
-    update_indicators();
 }
 
 #
@@ -814,7 +808,6 @@ sub gotolabelok {
     $textwindow->markSet( 'insert', "$index +1l linestart" );
     ::seeindex( 'insert -2l', 1 );
     $textwindow->focus;
-    ::update_indicators();
 }
 
 1;
