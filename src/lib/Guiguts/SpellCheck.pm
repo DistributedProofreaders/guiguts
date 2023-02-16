@@ -525,8 +525,7 @@ sub spellchecker {    # Set up spell check window
           $::lglobal{spellpopup}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
 
         my $changebutton = $spf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 spellreplace();
                 ::unbusy();
@@ -540,8 +539,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $ignorebutton = $spf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 shift @{ $::lglobal{misspelledlist} };
                 spellchecknext();
@@ -556,8 +554,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $dictmyaddbutton = $spf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 spellmyaddword( $::lglobal{misspelledentry}->get );
                 spellignoreall();
@@ -573,8 +570,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $replaceallbutton = $spf3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 spellreplaceall();
                 spellchecknext();
@@ -589,8 +585,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $ignoreallbutton = $spf3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 spellignoreall();
                 spellchecknext();
@@ -605,8 +600,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $dictaddbutton = $spf3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::busy();
                 spelladdword();
                 spellignoreall();
@@ -622,8 +616,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         $spf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $::spellindexbkmrk = $textwindow->index( $::lglobal{lastmatchindex} . '-1c' )
                   || '1.0';
                 $textwindow->markSet( 'spellbkmk', $::spellindexbkmrk );
@@ -638,8 +631,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         $spf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return unless $::spellindexbkmrk;
                 $textwindow->tagRemove( 'sel',       '1.0', 'end' );
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
@@ -655,8 +647,7 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $dictmybutton = $spf5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 spelladdgoodwords();
             },
             -text  => 'Add Goodwords To Proj. Dic.',
@@ -668,10 +659,9 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $spelloptionsbutton = $spf5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { spelloptions() },
-            -text             => 'Options',
-            -width            => 12,
+            -command => sub { spelloptions() },
+            -text    => 'Options',
+            -width   => 12,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -679,10 +669,9 @@ sub spellchecker {    # Set up spell check window
             -anchor => 'nw'
         );
         my $closebutton = $spf5->Button(
-            -activebackground => $::activecolor,
-            -command          => \&endaspell,
-            -text             => 'Close',
-            -width            => 12,
+            -command => \&endaspell,
+            -text    => 'Close',
+            -width   => 12,
         )->pack(
             -side   => 'left',
             -pady   => 2,

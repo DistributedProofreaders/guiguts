@@ -58,8 +58,7 @@ sub errorcheckpop_up {
     my $buttonlabel = 'Run Checks';
     $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
     my $opsbutton = $ptopframeb->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             errorcheckpop_up( $textwindow, $top, $errorchecktype );
         },
         -text  => $buttonlabel,
@@ -67,8 +66,7 @@ sub errorcheckpop_up {
     )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
     $ptopframeb->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             errorcheckcopy();
         },
         -text  => "Copy errors",
@@ -89,10 +87,9 @@ sub errorcheckpop_up {
         # Bookloupe has button to change View Options
     } elsif ( $errorchecktype eq 'Bookloupe' ) {
         $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { gcviewopts(); },
-            -text             => 'View Options',
-            -width            => 16
+            -command => sub { gcviewopts(); },
+            -text    => 'View Options',
+            -width   => 16
         )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
         # Jeebies has paranoia level radio buttons
@@ -113,8 +110,7 @@ sub errorcheckpop_up {
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         $::lglobal{spellqueryballoon} = $top->Balloon() unless $::lglobal{spellqueryballoon};
         $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::spelladdgoodwords();                                     # Add good words to project dictionary
                 spellquerycleardict();                                     # Clear cache, so project dictionary will be reloaded below
                 errorcheckpop_up( $textwindow, $top, $errorchecktype );    # Rerun Spell Query
@@ -123,8 +119,7 @@ sub errorcheckpop_up {
             -width => 16
         )->grid( -row => 1, -column => $gcol - 1 );
         my $btnskip = $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 errorcheckremove($errorchecktype);
                 errorcheckview($errorchecktype);
             },
@@ -134,8 +129,7 @@ sub errorcheckpop_up {
         $::lglobal{spellqueryballoon}
           ->attach( $btnskip, -msg => "Right-click\non queried spelling to Skip" );
         my $btnskipall = $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 errorcheckremovesimilar($errorchecktype);
                 errorcheckview($errorchecktype);
             },
@@ -145,8 +139,7 @@ sub errorcheckpop_up {
         $::lglobal{spellqueryballoon}->attach( $btnskipall,
             -msg => "Ctrl+Shift+Right-click\non queried spelling to Skip All" );
         my $btnproj = $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 errorcheckprocessspell('project');
                 errorcheckremovesimilar($errorchecktype);
                 errorcheckview($errorchecktype);
@@ -157,8 +150,7 @@ sub errorcheckpop_up {
         $::lglobal{spellqueryballoon}->attach( $btnproj,
             -msg => "Ctrl+Left-click\non queried spelling to\nAdd to Project Dictionary" );
         my $btnglob = $ptopframeb->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 errorcheckprocessspell('global');
                 errorcheckremovesimilar($errorchecktype);
                 errorcheckview($errorchecktype);
@@ -1276,8 +1268,7 @@ sub gcviewopts {
         }
         my $pframe2 = $::lglobal{gcviewoptspop}->Frame->pack;
         $pframe2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->select;
                 }
@@ -1292,8 +1283,7 @@ sub gcviewopts {
             -anchor => 'n'
         );
         $pframe2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 for ( 0 .. $#gsoptions ) {
                     $gsoptions[$_]->deselect;
                 }
@@ -1310,8 +1300,7 @@ sub gcviewopts {
         my $mainlang = ::main_lang();
         if ( $mainlang !~ /^en/ && @::gcviewlang ) {
             $pframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     for ( 0 .. $#::gcviewlang ) {
                         if ( $::gcviewlang[$_] ) {
                             $gsoptions[$_]->select;
@@ -1331,8 +1320,7 @@ sub gcviewopts {
             );
         } else {
             $pframe2->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     for ( 0 .. $#gsoptions ) {
                         $gsoptions[$_]->toggle;
                     }
@@ -1348,8 +1336,7 @@ sub gcviewopts {
             );
         }
         $pframe2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 for ( 0 .. $#::mygcview ) {
                     if ( $::mygcview[$_] ) {
                         $gsoptions[$_]->select;
@@ -1368,8 +1355,7 @@ sub gcviewopts {
             -anchor => 'n'
         );
         $pframe2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 for ( 0 .. $#::gsopt ) {
                     $::mygcview[$_] = $::gsopt[$_];
                 }

@@ -80,10 +80,9 @@ sub tablefx {
             $row = int( $inc / 4 );
             $col = $inc % 4;
             $f0->Button(
-                -activebackground => $::activecolor,
-                -command          => $tb_buttons[$inc][1],
-                -text             => $tb_buttons[$inc][0],
-                -width            => 16
+                -command => $tb_buttons[$inc][1],
+                -text    => $tb_buttons[$inc][0],
+                -width   => 16
             )->grid(
                 -row    => $row,
                 -column => $col,
@@ -152,16 +151,14 @@ sub tablefx {
             },
         )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
         $f1b->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { coladjust(-1) },
-            -text             => 'Move Left',
-            -width            => 10
+            -command => sub { coladjust(-1) },
+            -text    => 'Move Left',
+            -width   => 10
         )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
         $f1b->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { coladjust(1) },
-            -text             => 'Move Right',
-            -width            => 10
+            -command => sub { coladjust(1) },
+            -text    => 'Move Right',
+            -width   => 10
         )->pack( -side => 'left', -anchor => 'n', -padx => 1 );
         $::lglobal{colwidthlbl} = $f1b->Label(
             -text  => "Width $::lglobal{columnspaces}",
@@ -181,16 +178,14 @@ sub tablefx {
             -vcmd         => sub { return length( $_[0] ) <= 1; }
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f2f->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { leadtrailspaces('fill'); },
-            -text             => 'Fill',
-            -width            => 10
+            -command => sub { leadtrailspaces('fill'); },
+            -text    => 'Fill',
+            -width   => 10
         )->grid( -row => 1, -column => 3, -padx => 5, -pady => 2 );
         $f2f->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { leadtrailspaces('restore'); },
-            -text             => 'Restore',
-            -width            => 10
+            -command => sub { leadtrailspaces('restore'); },
+            -text    => 'Restore',
+            -width   => 10
         )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
         my $f3 = $::lglobal{tblfxpop}->LabFrame( -label => 'Grid <=> Step' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
@@ -204,37 +199,32 @@ sub tablefx {
             -vcmd         => sub { return $_[0] =~ /^\d*$/; }
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { grid2step() },
-            -text             => 'Convert Grid to Step',
-            -width            => 16
+            -command => sub { grid2step() },
+            -text    => 'Convert Grid to Step',
+            -width   => 16
         )->grid( -row => 1, -column => 3, -padx => 5, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { step2grid() },
-            -text             => 'Convert Step to Grid',
-            -width            => 16
+            -command => sub { step2grid() },
+            -text    => 'Convert Step to Grid',
+            -width   => 16
         )->grid( -row => 1, -column => 4, -padx => 5, -pady => 2 );
         my $f3a = $::lglobal{tblfxpop}->LabFrame( -label => 'Restructure' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $f3a->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { rejoinrows() },
-            -text             => 'Rejoin Rows',
-            -width            => 16
+            -command => sub { rejoinrows() },
+            -text    => 'Rejoin Rows',
+            -width   => 16
         )->grid( -row => 1, -column => 0, -padx => 5, -pady => 2 );
         my $f4   = $::lglobal{tblfxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $ubtn = $f4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { undoredo('undo'); },
-            -text             => 'Undo',
-            -width            => 10
+            -command => sub { undoredo('undo'); },
+            -text    => 'Undo',
+            -width   => 10
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         my $rbtn = $f4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { undoredo('redo'); },
-            -text             => 'Redo',
-            -width            => 10
+            -command => sub { undoredo('redo'); },
+            -text    => 'Redo',
+            -width   => 10
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
         ::initialize_popup_without_deletebinding('tblfxpop');
 

@@ -45,9 +45,8 @@ EOM
             -text    => $help_text
         )->pack;
         my $button_ok = $::lglobal{pagesephelppop}->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Close',
-            -command          => sub { ::killpopup('pagesephelppop'); }
+            -text    => 'Close',
+            -command => sub { ::killpopup('pagesephelppop'); }
         )->pack;
         $::lglobal{pagesephelppop}->resizable( 'yes', 'yes' );
     }
@@ -524,45 +523,39 @@ sub separatorpopup {
         $::lglobal{pageseppop}->title('Fixup Page Separators');
         my $sf1        = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $joinbutton = $sf1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('j') },
-            -text             => 'Join Lines',
-            -underline        => 0,
-            -width            => 19
+            -command   => sub { processpageseparatorrefresh('j') },
+            -text      => 'Join Lines',
+            -underline => 0,
+            -width     => 19
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $joinhybutton = $sf1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('k') },
-            -text             => 'Join, Keep Hyphen',
-            -underline        => 6,
-            -width            => 19
+            -command   => sub { processpageseparatorrefresh('k') },
+            -text      => 'Join, Keep Hyphen',
+            -underline => 6,
+            -width     => 19
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $phelpbutton = $sf1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pageseparatorhelppopup() },
-            -text             => 'Help',
+            -command => sub { pageseparatorhelppopup() },
+            -text    => 'Help',
         )->pack( -side => 'left', -pady => 2, -padx => 10, -anchor => 'w' );
         my $sf2 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $blankbutton = $sf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('l') },
-            -text             => 'Blank Line',
-            -underline        => 6,
-            -width            => 12
+            -command   => sub { processpageseparatorrefresh('l') },
+            -text      => 'Blank Line',
+            -underline => 6,
+            -width     => 12
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sectjoinbutton = $sf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('t') },
-            -text             => 'New Section',
-            -underline        => 7,
-            -width            => 12
+            -command   => sub { processpageseparatorrefresh('t') },
+            -text      => 'New Section',
+            -underline => 7,
+            -width     => 12
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $chjoinbutton = $sf2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('h') },
-            -text             => 'New Chapter',
-            -underline        => 5,
-            -width            => 12
+            -command   => sub { processpageseparatorrefresh('h') },
+            -text      => 'New Chapter',
+            -underline => 5,
+            -width     => 12
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf3 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         $sf3->Radiobutton(
@@ -591,8 +584,7 @@ sub separatorpopup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf4 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $viewbutton = $sf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::openpng( $textwindow, ::get_page_number() );
                 $::lglobal{pageseppop}->raise;
             },
@@ -601,33 +593,29 @@ sub separatorpopup {
             -width     => 8
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $refreshbutton = $sf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { refreshpageseparatorwrapper() },
-            -text             => 'Refresh',
-            -underline        => 0,
-            -width            => 8
+            -command   => sub { refreshpageseparatorwrapper() },
+            -text      => 'Refresh',
+            -underline => 0,
+            -width     => 8
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $delbutton = $sf4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { processpageseparatorrefresh('d') },
-            -text             => 'Delete',
-            -underline        => 0,
-            -width            => 8
+            -command   => sub { processpageseparatorrefresh('d') },
+            -text      => 'Delete',
+            -underline => 0,
+            -width     => 8
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf5 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $undobutton = $sf5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { undojoin() },
-            -text             => 'Undo',
-            -underline        => 0,
-            -width            => 8
+            -command   => sub { undojoin() },
+            -text      => 'Undo',
+            -underline => 0,
+            -width     => 8
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $redobutton = $sf5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { redojoin() },
-            -text             => 'Redo',
-            -underline        => 1,
-            -width            => 8
+            -command   => sub { redojoin() },
+            -text      => 'Redo',
+            -underline => 1,
+            -width     => 8
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         ::initialize_popup_without_deletebinding('pageseppop');
         $::lglobal{pageseppop}->protocol(

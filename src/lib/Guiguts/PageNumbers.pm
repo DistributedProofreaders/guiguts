@@ -88,16 +88,14 @@ sub pnumadjust {
         $::lglobal{pagemarkerpop}->title('Adjust Page Markers');
         my $frame2   = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         my $upbutton = $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pmove('up'); },
-            -text             => 'Move Up',
-            -width            => 10
+            -command => sub { pmove('up'); },
+            -text    => 'Move Up',
+            -width   => 10
         )->grid( -row => 1, -column => 2 );
         my $leftbutton = $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pmove('left'); },
-            -text             => 'Move Left',
-            -width            => 10
+            -command => sub { pmove('left'); },
+            -text    => 'Move Left',
+            -width   => 10
         )->grid( -row => 2, -column => 1 );
         $::lglobal{pagenumentry} = $frame2->Entry(
             -background => 'yellow',
@@ -107,29 +105,25 @@ sub pnumadjust {
             -justify    => 'center',
         )->grid( -row => 2, -column => 2 );
         my $rightbutton = $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pmove('right'); },
-            -text             => 'Move Right',
-            -width            => 10
+            -command => sub { pmove('right'); },
+            -text    => 'Move Right',
+            -width   => 10
         )->grid( -row => 2, -column => 3 );
         my $downbutton = $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pmove('down'); },
-            -text             => 'Move Down',
-            -width            => 10
+            -command => sub { pmove('down'); },
+            -text    => 'Move Down',
+            -width   => 10
         )->grid( -row => 3, -column => 2 );
         my $frame3     = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 4 );
         my $prevbutton = $frame3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pgfocus(-1); },
-            -text             => 'Previous Marker',
-            -width            => 14
+            -command => sub { pgfocus(-1); },
+            -text    => 'Previous Marker',
+            -width   => 14
         )->grid( -row => 1, -column => 1 );
         my $nextbutton = $frame3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pgfocus(+1); },
-            -text             => 'Next Marker',
-            -width            => 14
+            -command => sub { pgfocus(+1); },
+            -text    => 'Next Marker',
+            -width   => 14
         )->grid( -row => 1, -column => 2 );
         my $frame4 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         $frame4->Label( -text => 'Adjust Page Offset', )->grid( -row => 1, -column => 1 );
@@ -141,21 +135,18 @@ sub pnumadjust {
             -width        => 6,
         )->grid( -row => 2, -column => 1 );
         $frame4->Button(
-            -activebackground => $::activecolor,
-            -command          => \&::pgrenum,
-            -text             => 'Renumber',
-            -width            => 12
+            -command => \&::pgrenum,
+            -text    => 'Renumber',
+            -width   => 12
         )->grid( -row => 3, -column => 1, -pady => 3 );
         my $frame5 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         $frame5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { ::soundbell() unless ::pageadd() },
-            -text             => 'Add',
-            -width            => 8
+            -command => sub { ::soundbell() unless ::pageadd() },
+            -text    => 'Add',
+            -width   => 8
         )->grid( -row => 1, -column => 1 );
         $frame5->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 my $insert = $textwindow->index('insert');
                 unless ( ::pageadd() ) {
                     $::lglobal{pagerenumoffset}->configure( -textvariable => '1' );
@@ -170,23 +161,20 @@ sub pnumadjust {
             -width => 8
         )->grid( -row => 1, -column => 2 );
         my $removebutton = $frame5->Button(
-            -activebackground => $::activecolor,
-            -command          => \&::pageremove,
-            -text             => 'Remove',
-            -width            => 8
+            -command => \&::pageremove,
+            -text    => 'Remove',
+            -width   => 8
         )->grid( -row => 1, -column => 3 );
         my $frame6 = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 5 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pagetextinsert('markers'); },
-            -text             => 'Insert Page Markers',
-            -width            => 16,
+            -command => sub { pagetextinsert('markers'); },
+            -text    => 'Insert Page Markers',
+            -width   => 16,
         )->grid( -row => 1, -column => 1 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { pagetextinsert('labels'); },
-            -text             => 'Insert Page Labels',
-            -width            => 16,
+            -command => sub { pagetextinsert('labels'); },
+            -text    => 'Insert Page Labels',
+            -width   => 16,
         )->grid( -row => 1, -column => 2 );
         $::lglobal{pagemarkerpop}->bind( '<Up>'     => sub { $upbutton->invoke; } );
         $::lglobal{pagemarkerpop}->bind( '<Left>'   => sub { $leftbutton->invoke; } );

@@ -713,8 +713,7 @@ sub surround {
         );
         my $f2    = $::lglobal{surpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $gobut = $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::surroundit( $::lglobal{surstrt}, $::lglobal{surend}, $textwindow );
             },
             -text  => 'Surround',
@@ -791,10 +790,9 @@ sub flood {
         );
         my $f2    = $::lglobal{floodpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $gobut = $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { floodfill( $textwindow, $::lglobal{ffchar} ) },
-            -text             => 'Flood Fill',
-            -width            => 16
+            -command => sub { floodfill( $textwindow, $::lglobal{ffchar} ) },
+            -text    => 'Flood Fill',
+            -width   => 16
         )->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
         ::initialize_popup_with_deletebinding('floodpop');
     }
@@ -913,8 +911,7 @@ sub alignpopup {
             -textvariable => \$::lglobal{alignstring},
         )->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
         my $gobut = $f1->Button(
-            -activebackground => $::activecolor,
-            -command          => [
+            -command => [
                 sub {
                     aligntext( $textwindow, $::lglobal{alignstring} );
                 }
@@ -1002,8 +999,7 @@ sub asciibox_popup {
             -text        => 'Don\'t Rewrap'
         )->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
         my $gobut = $f1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 asciibox( $textwindow, $::lglobal{asciinowrap}, $::lglobal{asciiwidth},
                     $::lglobal{ascii}, $::lglobal{asciijustify} );
             },
