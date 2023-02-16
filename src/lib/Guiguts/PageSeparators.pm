@@ -559,28 +559,24 @@ sub separatorpopup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf3 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         $sf3->Radiobutton(
-            -variable    => \$::pagesepauto,
-            -value       => 0,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'No Auto',
+            -variable => \$::pagesepauto,
+            -value    => 0,
+            -text     => 'No Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::pagesepauto,
-            -value       => 1,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Auto Advance',
+            -variable => \$::pagesepauto,
+            -value    => 1,
+            -text     => 'Auto Advance',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::pagesepauto,
-            -value       => 2,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => '80% Auto',
+            -variable => \$::pagesepauto,
+            -value    => 2,
+            -text     => '80% Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         $sf3->Radiobutton(
-            -variable    => \$::pagesepauto,
-            -value       => 3,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => '99% Auto',
+            -variable => \$::pagesepauto,
+            -value    => 3,
+            -text     => '99% Auto',
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'w' );
         my $sf4 = $::lglobal{pageseppop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 5 );
         my $viewbutton = $sf4->Button(

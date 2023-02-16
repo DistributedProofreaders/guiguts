@@ -152,22 +152,19 @@ sub multilangpopup {
         );
         my $f3 = $::lglobal{multispellpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Radiobutton(
-            -variable    => \$sortorder,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'a',
-            -text        => 'Alph',
+            -variable => \$sortorder,
+            -value    => 'a',
+            -text     => 'Alph',
         )->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
         $f3->Radiobutton(
-            -variable    => \$sortorder,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'f',
-            -text        => 'Frq',
+            -variable => \$sortorder,
+            -value    => 'f',
+            -text     => 'Frq',
         )->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
         $f3->Radiobutton(
-            -variable    => \$sortorder,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'l',
-            -text        => 'Len',
+            -variable => \$sortorder,
+            -value    => 'l',
+            -text     => 'Len',
         )->pack( -side => 'left', -anchor => 'nw', -pady => 1 );
         $multiwclistbox->bind(
             '<Control-f>' => sub {

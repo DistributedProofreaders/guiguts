@@ -1269,11 +1269,10 @@ sub charsuitespopup {
         for my $suite ( sort keys %{ $::lglobal{dpcharsuite} } ) {
             $::charsuiteenabled{$suite} = 0 unless defined $::charsuiteenabled{$suite};
             $f0->Checkbutton(
-                -variable    => \$::charsuiteenabled{$suite},
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => $suite,
-                -state       => ( $suite eq 'Basic Latin' ? 'disabled' : 'normal' ),    # User can't turn off Basic Latin
-                -command     => sub { ::sortanddisplayhighlight(); },
+                -variable => \$::charsuiteenabled{$suite},
+                -text     => $suite,
+                -state    => ( $suite eq 'Basic Latin' ? 'disabled' : 'normal' ),    # User can't turn off Basic Latin
+                -command  => sub { ::sortanddisplayhighlight(); },
             )->grid(
                 -row    => $row++,
                 -column => 1,

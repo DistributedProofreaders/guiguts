@@ -79,9 +79,8 @@ sub errorcheckpop_up {
         or $errorchecktype eq 'ppvimage'
         or $errorchecktype eq 'pphtml' ) {
         $ptopframeb->Checkbutton(
-            -variable    => \$::verboseerrorchecks,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Verbose'
+            -variable => \$::verboseerrorchecks,
+            -text     => 'Verbose'
         )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
         # Bookloupe has button to change View Options
@@ -1260,10 +1259,9 @@ sub gcviewopts {
             $gcrow         = $_ % $gcrows;
             $::gsopt[$_]   = 0 unless defined $::gsopt[$_];
             $gsoptions[$_] = $pframe1->Checkbutton(
-                -variable    => \$::gsopt[$_],
-                -command     => sub { gcwindowpopulate(); },
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => $::lglobal{gcarray}->[$_],
+                -variable => \$::gsopt[$_],
+                -command  => sub { gcwindowpopulate(); },
+                -text     => $::lglobal{gcarray}->[$_],
             )->grid( -row => $gcrow, -column => $gccol, -sticky => 'nw' );
         }
         my $pframe2 = $::lglobal{gcviewoptspop}->Frame->pack;

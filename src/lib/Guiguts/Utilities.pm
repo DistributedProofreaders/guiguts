@@ -23,7 +23,7 @@ BEGIN {
       &enable_interrupt &disable_interrupt &set_interrupt &query_interrupt &soundbell &busy &unbusy
       &dieerror &warnerror &infoerror &poperror &BindMouseWheel &display_manual
       &path_settings &path_htmlheader &path_defaulthtmlheader &path_labels &path_defaultlabels &path_userdict &path_defaultdict
-      &path_userhtmlheader &processcommandline &copysettings &main_lang &list_lang);
+      &path_userhtmlheader &processcommandline &copysettings &main_lang &list_lang &setwidgetdefaultoptions);
 
 }
 
@@ -1027,12 +1027,7 @@ sub initialize {
     );
     ::globalfontconfigure();       # may need to set to system default
 
-    # Use option database to set widget defaults - 'widgetDefault' priority means
-    # user can override, e.g. using .Xdefaults file
-    # Set font for all widgets, then override for Entry fields
-    $top->optionAdd( '*font'                    => 'global',       'widgetDefault' );
-    $top->optionAdd( '*Entry*font'              => 'textentry',    'widgetDefault' );
-    $top->optionAdd( '*Button*activeBackground' => $::activecolor, 'widgetDefault' );
+    setwidgetdefaultoptions();
 
     # Set up Main window size
     unless ($::geometry) {
@@ -1750,13 +1745,31 @@ sub initialize {
           . "\x{2669}\x{266a}\x{266d}\x{266e}\x{266f}",
     );
 
-    $::lglobal{checkcolor} = ($::OS_WIN) ? 'white' : $::activecolor;
     my $scroll_gif =
       'R0lGODlhCAAQAIAAAAAAAP///yH5BAEAAAEALAAAAAAIABAAAAIUjAGmiMutopz0pPgwk7B6/3SZphQAOw==';
     $::lglobal{scrollgif} = $top->Photo(
         -data   => $scroll_gif,
         -format => 'gif',
     );
+}
+
+#
+# Use option database to set widget defaults
+sub setwidgetdefaultoptions {
+    my $top = $::top;
+
+    # 'widgetDefault' priority means user can override, e.g. using .Xdefaults file
+    my $priority = 'widgetDefault';
+
+    # Set font for all widgets, then override for Entry fields
+    $top->optionAdd( '*font'       => 'global',    $priority );
+    $top->optionAdd( '*Entry*font' => 'textentry', $priority );
+
+    # Active and select colors
+    $top->optionAdd( '*Button*activeBackground' => $::activecolor, $priority );
+    my $selectcolor = $::OS_WIN ? 'white' : $::activecolor;
+    $top->optionAdd( '*Checkbutton*selectColor' => $selectcolor, $priority );
+    $top->optionAdd( '*Radiobutton*selectColor' => $selectcolor, $priority );
 }
 
 sub scrolldismiss {

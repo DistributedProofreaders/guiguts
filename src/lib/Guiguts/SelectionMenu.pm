@@ -976,27 +976,23 @@ sub asciibox_popup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
         my $f1       = $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $leftjust = $f1->Radiobutton(
-            -text        => 'left justified',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{asciijustify},
-            -value       => 'left',
+            -text     => 'left justified',
+            -variable => \$::lglobal{asciijustify},
+            -value    => 'left',
         )->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
         my $centerjust = $f1->Radiobutton(
-            -text        => 'centered',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{asciijustify},
-            -value       => 'center',
+            -text     => 'centered',
+            -variable => \$::lglobal{asciijustify},
+            -value    => 'center',
         )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
         my $rightjust = $f1->Radiobutton(
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'right justified',
-            -variable    => \$::lglobal{asciijustify},
-            -value       => 'right',
+            -text     => 'right justified',
+            -variable => \$::lglobal{asciijustify},
+            -value    => 'right',
         )->grid( -row => 2, -column => 3, -padx => 1, -pady => 2 );
         my $asciiw = $f1->Checkbutton(
-            -variable    => \$::lglobal{asciinowrap},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Don\'t Rewrap'
+            -variable => \$::lglobal{asciinowrap},
+            -text     => 'Don\'t Rewrap'
         )->grid( -row => 3, -column => 2, -padx => 1, -pady => 2 );
         my $gobut = $f1->Button(
             -command => sub {

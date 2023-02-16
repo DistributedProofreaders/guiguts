@@ -1039,31 +1039,26 @@ sub searchpopup {
             -pady   => 1
         );
         $::lglobal{searchop1} = $sf2->Checkbutton(
-            -variable    => \$::sopt[1],
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Case Insensitive'
+            -variable => \$::sopt[1],
+            -text     => 'Case Insensitive'
         )->grid( -row => 1, -column => 1, -padx => 1 );
         $::lglobal{searchop0} = $sf2->Checkbutton(
-            -variable    => \$::sopt[0],
-            -command     => [ \&searchoptset, 'x', 'x', 'x', 0 ],
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Whole Word'
+            -variable => \$::sopt[0],
+            -command  => [ \&searchoptset, 'x', 'x', 'x', 0 ],
+            -text     => 'Whole Word'
         )->grid( -row => 1, -column => 2, -padx => 1 );
         $::lglobal{searchop3} = $sf2->Checkbutton(
-            -variable    => \$::sopt[3],
-            -command     => [ \&searchoptset, 0, 'x', 'x', 'x' ],
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Regex'
+            -variable => \$::sopt[3],
+            -command  => [ \&searchoptset, 0, 'x', 'x', 'x' ],
+            -text     => 'Regex'
         )->grid( -row => 1, -column => 3, -padx => 1 );
         $::lglobal{searchop2} = $sf2->Checkbutton(
-            -variable    => \$::sopt[2],
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Reverse'
+            -variable => \$::sopt[2],
+            -text     => 'Reverse'
         )->grid( -row => 1, -column => 4, -padx => 1 );
         $::lglobal{searchop4} = $sf2->Checkbutton(
-            -variable    => \$::sopt[4],
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Start at Beginning'
+            -variable => \$::sopt[4],
+            -text     => 'Start at Beginning'
         )->grid( -row => 1, -column => 5, -padx => 1 );
 
         my $sf5;
@@ -1728,124 +1723,99 @@ sub orphanedbrackets {
 
         # The list of radio buttons below must be the same as the matches in sub brsel
         my $psel = $frame->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '[\(\)]',
-            -text        => '(  )',
+            -variable => \$::lglobal{brsel},
+            -value    => '[\(\)]',
+            -text     => '(  )',
         )->grid( -row => 1, -column => 1 );
         $psel->select;
         $frame->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '[\[\]]',
-            -text        => '[  ]',
+            -variable => \$::lglobal{brsel},
+            -value    => '[\[\]]',
+            -text     => '[  ]',
         )->grid( -row => 1, -column => 2 );
         $frame->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '[\{\}]',
-            -text        => '{  }',
+            -variable => \$::lglobal{brsel},
+            -value    => '[\{\}]',
+            -text     => '{  }',
         )->grid( -row => 1, -column => 3, -pady => 5 );
         $frame->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '[<>]',
-            -text        => '<  >',
+            -variable => \$::lglobal{brsel},
+            -value    => '[<>]',
+            -text     => '<  >',
         )->grid( -row => 1, -column => 4, -pady => 5 );
         my $frame1 = $::lglobal{brkpop}->Frame->pack;
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '\/\*|\*\/',
-            -text        => '/* */',
+            -variable => \$::lglobal{brsel},
+            -value    => '\/\*|\*\/',
+            -text     => '/* */',
         )->grid( -row => 1, -column => 1 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '\/#|#\/',
-            -text        => '/# #/',
+            -variable => \$::lglobal{brsel},
+            -value    => '\/#|#\/',
+            -text     => '/# #/',
         )->grid( -row => 1, -column => 2 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '\/\$|\$\/',
-            -text        => '/$ $/',
+            -variable => \$::lglobal{brsel},
+            -value    => '\/\$|\$\/',
+            -text     => '/$ $/',
         )->grid( -row => 1, -column => 3 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Pp]|[Pp]\/',
-            -text        => '/P P/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Pp]|[Pp]\/',
+            -text     => '/P P/',
         )->grid( -row => 1, -column => 4 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Xx]|[Xx]\/',
-            -text        => '/X X/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Xx]|[Xx]\/',
+            -text     => '/X X/',
         )->grid( -row => 1, -column => 5 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Ff]|[Ff]\/',
-            -text        => '/F F/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Ff]|[Ff]\/',
+            -text     => '/F F/',
         )->grid( -row => 2, -column => 1 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Ll]|[Ll]\/',
-            -text        => '/L L/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Ll]|[Ll]\/',
+            -text     => '/L L/',
         )->grid( -row => 2, -column => 2 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Ii]|[Ii]\/',
-            -text        => '/I I/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Ii]|[Ii]\/',
+            -text     => '/I I/',
         )->grid( -row => 2, -column => 3 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Cc]|[Cc]\/',
-            -text        => '/C C/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Cc]|[Cc]\/',
+            -text     => '/C C/',
         )->grid( -row => 2, -column => 4 );
         $frame1->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '^\/[Rr]|[Rr]\/',
-            -text        => '/R R/',
+            -variable => \$::lglobal{brsel},
+            -value    => '^\/[Rr]|[Rr]\/',
+            -text     => '/R R/',
         )->grid( -row => 2, -column => 5 );
         my $frame3 = $::lglobal{brkpop}->Frame->pack;
         $frame3->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => "«|»",
-            -text        => 'French angle quotes « »',
+            -variable => \$::lglobal{brsel},
+            -value    => "«|»",
+            -text     => 'French angle quotes « »',
         )->grid( -row => 2, -column => 2, -pady => 1, -sticky => 'w' );
         $frame3->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '»|«',
-            -text        => 'German angle quotes » «',
+            -variable => \$::lglobal{brsel},
+            -value    => '»|«',
+            -text     => 'German angle quotes » «',
         )->grid( -row => 3, -column => 2, -pady => 1, -sticky => 'w' );
         $frame3->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => "\x{201c}|\x{201d}",
-            -text        => "English curly quotes \x{201c} \x{201d}",
+            -variable => \$::lglobal{brsel},
+            -value    => "\x{201c}|\x{201d}",
+            -text     => "English curly quotes \x{201c} \x{201d}",
         )->grid( -row => 4, -column => 2, -pady => 1, -sticky => 'w' );
         $frame3->Radiobutton(
-            -variable    => \$::lglobal{brsel},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => "\x{201e}|\x{201c}",
-            -text        => "German curly quotes \x{201e} \x{201c}",
+            -variable => \$::lglobal{brsel},
+            -value    => "\x{201e}|\x{201c}",
+            -text     => "German curly quotes \x{201e} \x{201c}",
         )->grid( -row => 5, -column => 2, -pady => 1, -sticky => 'w' );
 
-        #		my $allqsel =
-        #		  $frame3->Radiobutton(
-        #								-variable    => \$::lglobal{brsel},
-        #								-selectcolor => $::lglobal{checkcolor},
-        #								-value       => 'all',
-        #								-text        => 'All brackets ( )',
-        #		  )->grid( -row => 3, -column => 2 );
         my $frame2 = $::lglobal{brkpop}->Frame->pack;
         my ( $brkresult, $brnextbt );
         $brkresult =
@@ -2265,23 +2235,20 @@ sub quicksearchpopup {
       ->bind( '<ButtonRelease-1>', sub { $::lglobal{searchreversetemp} = ''; } );
 
     $frame1->Checkbutton(
-        -variable    => \\$::lglobal{statussearchnocase},
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Nocase',
+        -variable => \\$::lglobal{statussearchnocase},
+        -text     => 'Nocase',
     )->grid( -row => 1, -column => 1, -padx => 1 );
     $frame1->Checkbutton(
-        -variable    => \\$::lglobal{statussearchword},
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Word',
-        -command     => sub {
+        -variable => \\$::lglobal{statussearchword},
+        -text     => 'Word',
+        -command  => sub {
             $::lglobal{statussearchregex} = 0 if $::lglobal{statussearchword};    # Can't have word and regex
         },
     )->grid( -row => 1, -column => 2, -padx => 1 );
     $frame1->Checkbutton(
-        -variable    => \\$::lglobal{statussearchregex},
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Regex',
-        -command     => sub {
+        -variable => \\$::lglobal{statussearchregex},
+        -text     => 'Regex',
+        -command  => sub {
             $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Can't have word and regex
         },
     )->grid( -row => 1, -column => 3, -padx => 1 );

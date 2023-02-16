@@ -248,16 +248,14 @@ sub hilitepopup {
         );
         my $f2 = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f2->Radiobutton(
-            -variable    => \$hilitemode,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'exact',
-            -text        => 'Exact',
+            -variable => \$hilitemode,
+            -value    => 'exact',
+            -text     => 'Exact',
         )->grid( -row => 0, -column => 1 );
         $f2->Radiobutton(
-            -variable    => \$hilitemode,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'regex',
-            -text        => 'Regex',
+            -variable => \$hilitemode,
+            -value    => 'regex',
+            -text     => 'Regex',
         )->grid( -row => 0, -column => 2 );
         my $f3 = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Button(

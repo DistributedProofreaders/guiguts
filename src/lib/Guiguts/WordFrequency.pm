@@ -88,32 +88,27 @@ sub wordfrequency {
         $::lglobal{wfpop}->title('Word Frequency');
         my $wordfreqseframe = $::lglobal{wfpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $wcopt3          = $wordfreqseframe->Checkbutton(
-            -variable    => \$::lglobal{suspects_only},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Suspects only'
+            -variable => \$::lglobal{suspects_only},
+            -text     => 'Suspects only'
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         my $wcopt1 = $wordfreqseframe->Checkbutton(
-            -variable    => \$::lglobal{wf_ignore_case},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Ignore case',
+            -variable => \$::lglobal{wf_ignore_case},
+            -text     => 'Ignore case',
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         $wordfreqseframe->Radiobutton(
-            -variable    => \$::alpha_sort,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'a',
-            -text        => 'Alph',
+            -variable => \$::alpha_sort,
+            -value    => 'a',
+            -text     => 'Alph',
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         $wordfreqseframe->Radiobutton(
-            -variable    => \$::alpha_sort,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'f',
-            -text        => 'Frq',
+            -variable => \$::alpha_sort,
+            -value    => 'f',
+            -text     => 'Frq',
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         $wordfreqseframe->Radiobutton(
-            -variable    => \$::alpha_sort,
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'l',
-            -text        => 'Len',
+            -variable => \$::alpha_sort,
+            -value    => 'l',
+            -text     => 'Len',
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         $wordfreqseframe->Button(
             -command => sub {

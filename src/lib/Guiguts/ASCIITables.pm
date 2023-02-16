@@ -97,22 +97,19 @@ sub tablefx {
         my $f1aj = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20 );
         $f1aj->Label( -text => 'Justify', )->pack( -side => 'left', -anchor => 'w' );
         my $rb1 = $f1aj->Radiobutton(
-            -text        => 'L',
-            -variable    => \$::lglobal{tblcoljustify},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'l',
+            -text     => 'L',
+            -variable => \$::lglobal{tblcoljustify},
+            -value    => 'l',
         )->pack( -side => 'left', -anchor => 'w' );
         my $rb2 = $f1aj->Radiobutton(
-            -text        => 'C',
-            -variable    => \$::lglobal{tblcoljustify},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'c',
+            -text     => 'C',
+            -variable => \$::lglobal{tblcoljustify},
+            -value    => 'c',
         )->pack( -side => 'left', -anchor => 'w' );
         my $rb3 = $f1aj->Radiobutton(
-            -text        => 'R',
-            -variable    => \$::lglobal{tblcoljustify},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'r',
+            -text     => 'R',
+            -variable => \$::lglobal{tblcoljustify},
+            -value    => 'r',
         )->pack( -side => 'left', -anchor => 'w' );
         my $f1ah = $f1a->Frame->pack( -side => 'left', -anchor => 'w', -padx => 20 );
         $f1ah->Label( -text => 'Indent', )->pack( -side => 'left', -anchor => 'w' );
@@ -125,16 +122,14 @@ sub tablefx {
             -vcmd         => sub { return $_[0] =~ /^\d*$/; }
         )->pack( -side => 'left', -anchor => 'w', -pady => 2 );
         my $hitog = $f1ah->Checkbutton(
-            -variable    => \$::lglobal{tblhanging},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Hanging',
+            -variable => \$::lglobal{tblhanging},
+            -text     => 'Hanging',
         )->pack( -side => 'left', -anchor => 'w', -pady => 5 );
         my $f1b = $f1->Frame->pack( -side => 'top', -anchor => 'n' );
         $f1b->Checkbutton(
-            -variable    => \$::lglobal{tblrwcol},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Rewrap Cols',
-            -command     => sub {
+            -variable => \$::lglobal{tblrwcol},
+            -text     => 'Rewrap Cols',
+            -command  => sub {
                 if ( $::lglobal{tblrwcol} ) {
                     $rb1->configure( -state => 'active' );
                     $rb2->configure( -state => 'active' );

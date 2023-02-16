@@ -189,11 +189,10 @@ sub footnotepop {
         )->grid( -row => 4, -column => 3, -padx => 2, -pady => 4 );
         my $frame4 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $fnrb1  = $frame4->Radiobutton(
-            -text        => 'Inline',
-            -variable    => \$::lglobal{footstyle},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'inline',
-            -command     => sub {
+            -text     => 'Inline',
+            -variable => \$::lglobal{footstyle},
+            -value    => 'inline',
+            -command  => sub {
                 $::lglobal{fnindex} = 1;
                 footnoteshow();
                 $::lglobal{fnmvbutton}->configure( -state => 'disabled' );
@@ -206,11 +205,10 @@ sub footnotepop {
             -width   => 14
         )->grid( -row => 8, -column => 3, -padx => 2, -pady => 4 );
         my $fnrb2 = $frame4->Radiobutton(
-            -text        => 'Out-of-Line',
-            -variable    => \$::lglobal{footstyle},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'end',
-            -command     => sub {
+            -text     => 'Out-of-Line',
+            -variable => \$::lglobal{footstyle},
+            -value    => 'end',
+            -command  => sub {
                 $::lglobal{fnindex} = 1;
                 footnoteshow();
                 $::lglobal{fnmvbutton}->configure( -state => 'normal' )
