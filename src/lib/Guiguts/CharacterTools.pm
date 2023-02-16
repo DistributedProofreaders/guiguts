@@ -96,13 +96,12 @@ sub commoncharspopup {
 
                 # Define simple flat button to save space
                 my $w = $frame->Button(
-                    -activebackground => $::activecolor,
-                    -text             => $text,
-                    -font             => 'unicode',
-                    -relief           => 'flat',
-                    -borderwidth      => 0,
-                    -background       => $::bkgcolor,
-                    -command          =>
+                    -text        => $text,
+                    -font        => 'unicode',
+                    -relief      => 'flat',
+                    -borderwidth => 0,
+                    -background  => $::bkgcolor,
+                    -command     =>
                       sub { insertit( $::lglobal{comcharoutp} eq 'h' ? ::entity($ord) : $text ); },
                     -highlightthickness => 0,
                     -width              => 1,
@@ -254,13 +253,12 @@ sub doutfbuttons {
             my $text = chr($ord);
 
             my $w = $::lglobal{utfframe}->Button(
-                -activebackground => $::activecolor,
-                -text             => $text,
-                -font             => 'unicode',
-                -relief           => 'flat',
-                -borderwidth      => 0,
-                -background       => $::bkgcolor,
-                -command => sub { insertit( $::lglobal{uoutp} eq 'h' ? "&#$ord;" : $text ); },
+                -text        => $text,
+                -font        => 'unicode',
+                -relief      => 'flat',
+                -borderwidth => 0,
+                -background  => $::bkgcolor,
+                -command     => sub { insertit( $::lglobal{uoutp} eq 'h' ? "&#$ord;" : $text ); },
                 -highlightthickness => 0,
                 -width              => 1,
             )->grid( -row => $y, -column => $x );
@@ -1114,9 +1112,8 @@ sub composeref {
             -font       => 'proofing',
         )->pack( -anchor => 'n', -expand => 'y', -fill => 'both' );
         my $button_ok = $::lglobal{composerefpop}->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Close',
-            -command          => sub { ::killpopup('composerefpop'); }
+            -text    => 'Close',
+            -command => sub { ::killpopup('composerefpop'); }
         )->pack;
         ::initialize_popup_with_deletebinding('composerefpop');
         ::drag($comtext);

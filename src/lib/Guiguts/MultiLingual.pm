@@ -69,8 +69,7 @@ sub multilangpopup {
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
         my $f0 = $::lglobal{multispellpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 setmultiplelanguages( $textwindow, $top );
                 updateMultiDictEntry();
             },
@@ -78,8 +77,7 @@ sub multilangpopup {
             -width => 20
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::spelloptions();
                 clearmultilanguages();
                 updateMultiDictEntry();
@@ -88,65 +86,55 @@ sub multilangpopup {
             -width => 20
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { createseenwordslang( $textwindow, $top ) },
-            -text             => '(Re)create Wordlist',
-            -width            => 20
+            -command => sub { createseenwordslang( $textwindow, $top ) },
+            -text    => '(Re)create Wordlist',
+            -width   => 20
         )->grid( -row => 2, -column => 1, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { multilingualgetmisspelled( $textwindow, $top ) },
-            -text             => 'Check spelling',
-            -width            => 20
+            -command => sub { multilingualgetmisspelled( $textwindow, $top ) },
+            -text    => 'Check spelling',
+            -width   => 20
         )->grid( -row => 2, -column => 2, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { includeprojectdict( $textwindow, $top ) },
-            -text             => 'Include project words',
-            -width            => 20
+            -command => sub { includeprojectdict( $textwindow, $top ) },
+            -text    => 'Include project words',
+            -width   => 20
         )->grid( -row => 2, -column => 3, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { showAllWords() },
-            -text             => 'Show all words',
-            -width            => 20
+            -command => sub { showAllWords() },
+            -text    => 'Show all words',
+            -width   => 20
         )->grid( -row => 3, -column => 1, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { showUnspeltWords() },
-            -text             => 'Show unspelt words',
-            -width            => 20
+            -command => sub { showUnspeltWords() },
+            -text    => 'Show unspelt words',
+            -width   => 20
         )->grid( -row => 3, -column => 2, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { showspeltforeignwords() },
-            -text             => 'Show spelt foreign words',
-            -width            => 20
+            -command => sub { showspeltforeignwords() },
+            -text    => 'Show spelt foreign words',
+            -width   => 20
         )->grid( -row => 3, -column => 3, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { showprojectdict() },
-            -text             => 'Show project dictionary',
-            -width            => 20
+            -command => sub { showprojectdict() },
+            -text    => 'Show project dictionary',
+            -width   => 20
         )->grid( -row => 4, -column => 1, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { addspeltforeignproject() },
-            -text             => 'Add foreign to project',
-            -width            => 20
+            -command => sub { addspeltforeignproject() },
+            -text    => 'Add foreign to project',
+            -width   => 20
         )->grid( -row => 4, -column => 2, -padx => 1, -pady => 1 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { addminfreqproject() },
-            -text             => 'Add frequent to project',
-            -width            => 20
+            -command => sub { addminfreqproject() },
+            -text    => 'Add frequent to project',
+            -width   => 20
         )->grid( -row => 4, -column => 3, -padx => 1, -pady => 1 );
 
         $f0->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { multi_help_popup($top) },
-            -text             => 'Help',
-            -width            => 20
+            -command => sub { multi_help_popup($top) },
+            -text    => 'Help',
+            -width   => 20
         )->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
         my $f1 = $::lglobal{multispellpop}->Frame->pack( -fill => 'both', -expand => 'both', );
         $multiwclistbox = $f1->Scrolled(
@@ -897,9 +885,8 @@ EOM
             -text    => $text
         )->pack;
         $::lglobal{multihelppop}->Button(
-            -activebackground => $::activecolor,
-            -text             => 'OK',
-            -command          => sub {
+            -text    => 'OK',
+            -command => sub {
                 $::lglobal{multihelppop}->destroy;
                 undef $::lglobal{multihelppop};
             }

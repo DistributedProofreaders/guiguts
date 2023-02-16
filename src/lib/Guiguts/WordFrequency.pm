@@ -116,8 +116,7 @@ sub wordfrequency {
             -text        => 'Len',
         )->pack( -side => 'left', -anchor => 'w', -pady => 1 );
         $wordfreqseframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return unless ( $::lglobal{wclistbox}->curselection );
                 $::lglobal{harmonics} = 1;
                 harmonicspop();
@@ -130,8 +129,7 @@ sub wordfrequency {
             -anchor => 'w'
         );
         $wordfreqseframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return unless ( $::lglobal{wclistbox}->curselection );
                 $::lglobal{harmonics} = 2;
                 harmonicspop();
@@ -144,8 +142,7 @@ sub wordfrequency {
             -anchor => 'w'
         );
         $wordfreqseframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
 
                 #return if $::lglobal{global_filename} =~ /No File Loaded/;
                 #savefile() unless ( $textwindow->numberChanges == 0 );
@@ -202,10 +199,9 @@ sub wordfrequency {
             ++$inc;
             if ( not( $_->[0] eq 'RegExpEntry' ) ) {
                 my $button = $wordfreqseframe1->Button(
-                    -activebackground => $::activecolor,
-                    -command          => $_->[1],
-                    -text             => $_->[0],
-                    -width            => 13
+                    -command => $_->[1],
+                    -text    => $_->[0],
+                    -width   => 13
                 )->grid(
                     -row    => $row,
                     -column => $col,
@@ -787,8 +783,7 @@ sub ital_adjust {
         },
     )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
     $::lglobal{markuppopok} = $f1->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             $::markupthreshold = 0 unless $::markupthreshold;    # User has cleared entry field
             ::savesettings();
             ::killpopup('markuppop');

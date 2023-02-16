@@ -2200,10 +2200,9 @@ sub htmlgenpopup {
             -command => sub { ::pageadjust() },
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
         $f1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { htmlimages( $textwindow, $top ); },
-            -text             => 'Auto Illus Search',
-            -width            => 16,
+            -command => sub { htmlimages( $textwindow, $top ); },
+            -text    => 'Auto Illus Search',
+            -width   => 16,
         )->grid( -row => 1, -column => 3, -padx => 1, -pady => 1 );
 
         my $ishtml = $textwindow->search( '-nocase', '--', '<html', '1.0' );
@@ -2443,10 +2442,9 @@ sub htmlgenpopup {
 
         my $f2 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { htmlautoconvert( $textwindow, $top, $htmltitle ) },
-            -text             => 'Autogenerate HTML',
-            -width            => 16
+            -command => sub { htmlautoconvert( $textwindow, $top, $htmltitle ) },
+            -text    => 'Autogenerate HTML',
+            -width   => 16
         )->grid( -row => 1, -column => 1, -padx => 5, -pady => 1 );
 
         ::initialize_popup_with_deletebinding('htmlgenpop');
@@ -2486,8 +2484,7 @@ sub htmlmarkpopup {
             $col = $inc % 6;
             $row = int $inc / 6;
             my $mbtn = $f1->Button(
-                -activebackground => $::activecolor,
-                -command          => [
+                -command => [
                     sub {
                         markup( $textwindow, $top, $_[0], $::htmlentryattribhash{ $_[0] } );
                     },
@@ -2515,8 +2512,7 @@ sub htmlmarkpopup {
                 -relief     => 'sunken',
             )->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
             $f5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     ::entry_history( $entry, \@::htmlentryhistory );
                 },
                 -image  => $::lglobal{hist_img},
@@ -2527,8 +2523,7 @@ sub htmlmarkpopup {
             $entry->insert( 'end', $::htmlentry[$ent] );
             for (qw / div span i /) {
                 $f5->Button(
-                    -activebackground => $::activecolor,
-                    -command          => [
+                    -command => [
                         sub {
                             $::htmlentry[$ent] = $entry->get;
                             ::add_entry_history( $::htmlentry[$ent], \@::htmlentryhistory );
@@ -2557,8 +2552,7 @@ sub htmlmarkpopup {
         for (@hbuttons) {
             my $marktype = $hbuttons[$col][1];
             my $mbtn     = $f2->Button(
-                -activebackground => $::activecolor,
-                -command          => [
+                -command => [
                     sub {
                         markup( $textwindow, $top, $marktype, $::htmlentryattribhash{$marktype} );
                     }
@@ -2597,10 +2591,9 @@ sub htmlmarkpopup {
             -offvalue => 0
         )->pack( -side => 'right', -anchor => 'e', -padx => 4, -pady => 2 );
         my $autolbutton = $lf3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { autolist($textwindow); $textwindow->focus },
-            -text             => 'Auto List',
-            -width            => 12
+            -command => sub { autolist($textwindow); $textwindow->focus },
+            -text    => 'Auto List',
+            -width   => 12
         )->pack( -side => 'right', -anchor => 'e', -padx => 4, -pady => 2 );
 
         my $lf4 = $::lglobal{markpop}->LabFrame( -label => 'Tables' )
@@ -2648,8 +2641,7 @@ sub htmlmarkpopup {
             -offvalue => 0
         )->pack( -side => 'right', -anchor => 'n', -padx => 4, -pady => 2 );
         $f4b->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 autotable( $textwindow, $tableformat->get );
                 $textwindow->focus;
             },
@@ -2659,28 +2651,24 @@ sub htmlmarkpopup {
 
         my $f7 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f7->Button(
-            -activebackground => $::activecolor,
-            -command          => \&poetryhtml,
-            -text             => 'Apply Poetry Markup to Sel.',
-            -width            => 24
+            -command => \&poetryhtml,
+            -text    => 'Apply Poetry Markup to Sel.',
+            -width   => 24
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f7->Button(
-            -activebackground => $::activecolor,
-            -command          => \&hyperlinkpagenums,
-            -text             => 'Hyperlink Page Nums',
-            -width            => 24
+            -command => \&hyperlinkpagenums,
+            -text    => 'Hyperlink Page Nums',
+            -width   => 24
         )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 
         my $f3 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { clearmarkupinselection() },
-            -text             => 'Remove Markup from Selection',
-            -width            => 24
+            -command => sub { clearmarkupinselection() },
+            -text    => 'Remove Markup from Selection',
+            -width   => 24
         )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 for my $orphan (
                     'i',          'b',    'u',      'center', 'sub',   'sup',
                     'h1',         'h2',   'h3',     'h4',     'h5',    'h6',
@@ -2869,10 +2857,9 @@ sub markup {
               $linkf1->Entry( -background => $::bkgcolor )->pack( -expand => 'yes', -fill => 'x' );
             my $linkf2    = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
             my $extbrowse = $linkf2->Button(
-                -activebackground => $::activecolor,
-                -text             => 'Browse',
-                -width            => 16,
-                -command          => sub {
+                -text    => 'Browse',
+                -width   => 16,
+                -command => sub {
                     $name = $::lglobal{elinkpop}->getOpenFile( -title => 'File Name?' );
                     if ($name) {
                         $::lglobal{linkentry}->delete( 0, 'end' );
@@ -2882,10 +2869,9 @@ sub markup {
             )->pack( -side => 'left', -pady => 4 );
             my $linkf3 = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
             my $okbut  = $linkf3->Button(
-                -activebackground => $::activecolor,
-                -text             => 'OK',
-                -width            => 16,
-                -command          => sub {
+                -text    => 'OK',
+                -width   => 16,
+                -command => sub {
                     $name = $::lglobal{linkentry}->get;
                     if ($name) {
                         $name =~ s/[\/\\]/;/g;

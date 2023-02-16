@@ -526,8 +526,7 @@ sub file_guess_page_marks {
         )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
         my $f2         = $::lglobal{guesspgmarkerpop}->Frame->pack;
         my $calcbutton = $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 my ( $pnum, $lnum, $pagex, $linex, $number );
                 $totpages = $tpages->get;
                 $line25   = $page25->get;

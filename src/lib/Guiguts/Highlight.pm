@@ -261,8 +261,7 @@ sub hilitepopup {
         )->grid( -row => 0, -column => 2 );
         my $f3 = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
 
                 if ( $textwindow->markExists('selstart') ) {
                     $textwindow->tagAdd( 'sel', 'selstart', 'selend' );
@@ -272,22 +271,19 @@ sub hilitepopup {
             -width => 16,
         )->grid( -row => 1, -column => 1, -padx => 2, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { $textwindow->tagAdd( 'sel', '1.0', 'end' ) },
-            -text             => 'Select Whole File',
-            -width            => 16,
+            -command => sub { $textwindow->tagAdd( 'sel', '1.0', 'end' ) },
+            -text    => 'Select Whole File',
+            -width   => 16,
         )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { hilite( $entry->get, $hilitemode ) },
-            -text             => 'Apply Highlights',
-            -width            => 16,
+            -command => sub { hilite( $entry->get, $hilitemode ) },
+            -text    => 'Apply Highlights',
+            -width   => 16,
         )->grid( -row => 2, -column => 1, -padx => 2, -pady => 2 );
         $f3->Button(
-            -activebackground => $::activecolor,
-            -command          => \&::hiliteremove,
-            -text             => 'Remove Highlight',
-            -width            => 16,
+            -command => \&::hiliteremove,
+            -text    => 'Remove Highlight',
+            -width   => 16,
         )->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
     }
 }

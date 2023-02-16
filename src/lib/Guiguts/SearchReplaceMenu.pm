@@ -381,31 +381,27 @@ sub regedit {
     )->pack;
     my $buttonframe = $editor->add('Frame')->pack;
     $buttonframe->Button(
-        -activebackground => $::activecolor,
-        -text             => '<--',
-        -command          => sub {
+        -text    => '<--',
+        -command => sub {
             $::lglobal{scannosindex}-- if $::lglobal{scannosindex};
             regload();
         },
     )->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'w' );
     $buttonframe->Button(
-        -activebackground => $::activecolor,
-        -text             => '-->',
-        -command          => sub {
+        -text    => '-->',
+        -command => sub {
             $::lglobal{scannosindex}++
               if $::lglobal{scannosarray}[ $::lglobal{scannosindex} ];
             regload();
         },
     )->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'w' );
     $buttonframe->Button(
-        -activebackground => $::activecolor,
-        -text             => 'Add',
-        -command          => \&regadd,
+        -text    => 'Add',
+        -command => \&regadd,
     )->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'w' );
     $buttonframe->Button(
-        -activebackground => $::activecolor,
-        -text             => 'Del',
-        -command          => \&regdel,
+        -text    => 'Del',
+        -command => \&regdel,
     )->pack( -side => 'left', -pady => 5, -padx => 2, -anchor => 'w' );
     $::lglobal{regsearch}->insert( 'end', ( $::lglobal{searchentry}->get ) )
       if $::lglobal{searchentry}->get;
@@ -975,8 +971,7 @@ sub searchpopup {
           $sf1->Label( -text => 'Search Text', )
           ->pack( -side => 'left', -anchor => 'w', -padx => 80 );
         $::lglobal{searchpopcountbutton} = $sf1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 countmatches( $::lglobal{searchentry}->get );
             },
@@ -998,8 +993,7 @@ sub searchpopup {
             -fill   => 'x'
         );
         $sf11->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $textwindow->undo;
                 $textwindow->tagRemove( 'highlight', '1.0', 'end' );
                 $textwindow->see('insert');
@@ -1008,8 +1002,7 @@ sub searchpopup {
             -width => 6
         )->pack( -side => 'right', -anchor => 'w' );
         $::lglobal{searchbutton} = $sf11->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 searchtext('');
             },
@@ -1022,8 +1015,7 @@ sub searchpopup {
         );
         search_shiftreverse( $::lglobal{searchbutton} );
         $sf11->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::entry_history( $::lglobal{searchentry}, \@::search_history );
             },
             -image  => $::lglobal{hist_img},
@@ -1110,8 +1102,7 @@ sub searchpopup {
         # Button to increment number of multiterms (also switches to multi)
         # Add frame/field/buttons if necessary
         $::lglobal{searchmultiadd} = $sf10->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 if ( $::multisearchsize < 10 ) {    # don't go above 10 in multi-term mode
                     ++$::multisearchsize;
                     searchaddterms( \@multisearch, $::multisearchsize - 2 );
@@ -1136,8 +1127,7 @@ sub searchpopup {
         # Button to decrement number of multiterms (also switches to multi)
         # Don't destroy field/buttons, just hide their frame
         $sf10->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 if ( $::multisearchsize > 2 ) {    # don't go below 2 in multi-term mode
                     --$::multisearchsize;
 
@@ -1165,8 +1155,7 @@ sub searchpopup {
             -pady   => 1
         );
         $sf12->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replaceall( $::lglobal{replaceentry}->get );
             },
@@ -1178,8 +1167,7 @@ sub searchpopup {
             -anchor => 'w'
         );
         my $sf12rs = $sf12->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replace( $::lglobal{replaceentry}->get );
                 searchtext('');
@@ -1193,8 +1181,7 @@ sub searchpopup {
         );
         search_shiftreverse($sf12rs);
         $sf12->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replace( $::lglobal{replaceentry}->get );
             },
@@ -1206,8 +1193,7 @@ sub searchpopup {
             -anchor => 'w'
         );
         $sf12->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::entry_history( $::lglobal{replaceentry}, \@::replace_history );
             },
             -image  => $::lglobal{hist_img},
@@ -1238,8 +1224,7 @@ sub searchpopup {
         $sf5 = $::lglobal{searchpop}->Frame->pack( -side => 'top', -anchor => 'n', -pady => 1 );
         if ( $::lglobal{doscannos} ) {
             my $nextbutton = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     $::lglobal{scannosindex}++
                       unless $::lglobal{scannosindex} >= $#{ $::lglobal{scannosarray} };
                     getnextscanno();
@@ -1252,8 +1237,7 @@ sub searchpopup {
                 -anchor => 'w'
             );
             $::lglobal{nextoccurrencebutton} = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     searchtext('');
                 },
                 -text  => 'Next Occurrence',
@@ -1265,8 +1249,7 @@ sub searchpopup {
             );
             search_shiftreverse( $::lglobal{nextoccurrencebutton} );
             my $lastbutton = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub {
+                -command => sub {
                     $aacheck->deselect;
                     $::lglobal{scannosindex}--
                       unless ( $::lglobal{scannosindex} == 0 );
@@ -1280,30 +1263,27 @@ sub searchpopup {
                 -anchor => 'w'
             );
             my $switchbutton = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub { swapterms() },
-                -text             => 'Swap Terms',
-                -width            => 15
+                -command => sub { swapterms() },
+                -text    => 'Swap Terms',
+                -width   => 15
             )->pack(
                 -side   => 'left',
                 -padx   => 2,
                 -anchor => 'w'
             );
             my $hintbutton = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub { reghint() },
-                -text             => 'Hint',
-                -width            => 5
+                -command => sub { reghint() },
+                -text    => 'Hint',
+                -width   => 5
             )->pack(
                 -side   => 'left',
                 -padx   => 2,
                 -anchor => 'w'
             );
             my $editbutton = $sf5->Button(
-                -activebackground => $::activecolor,
-                -command          => sub { regedit() },
-                -text             => 'Edit',
-                -width            => 5
+                -command => sub { regedit() },
+                -text    => 'Edit',
+                -width   => 5
             )->pack(
                 -side   => 'left',
                 -padx   => 2,
@@ -1514,8 +1494,7 @@ sub searchaddterms {
         push @$msref, $::lglobal{searchpop}->Frame;
         my $replaceentry = "replaceentry" . ( $_ + 1 );
         $msref->[$_]->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replaceall( $::lglobal{$replaceentry}->get );
             },
@@ -1527,8 +1506,7 @@ sub searchaddterms {
             -anchor => 'w'
         );
         my $rsbtn = $msref->[$_]->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replace( $::lglobal{$replaceentry}->get );
                 searchtext('');
@@ -1542,8 +1520,7 @@ sub searchaddterms {
         );
         search_shiftreverse($rsbtn);
         $msref->[$_]->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 update_sr_histories();
                 replace( $::lglobal{$replaceentry}->get );
             },
@@ -1555,8 +1532,7 @@ sub searchaddterms {
             -anchor => 'w'
         );
         $msref->[$_]->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 ::entry_history( $::lglobal{$replaceentry}, \@::replace_history );
             },
             -image  => $::lglobal{hist_img},
@@ -1875,15 +1851,13 @@ sub orphanedbrackets {
         $brkresult =
           $frame2->Label( -text => '', )->grid( -row => 0, -column => 1, -columnspan => 2 );
         my $brsearchbt = $frame2->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Search',
-            -command          => sub { brsearch( $brkresult, $brnextbt ); },
-            -width            => 16,
+            -text    => 'Search',
+            -command => sub { brsearch( $brkresult, $brnextbt ); },
+            -width   => 16,
         )->grid( -row => 1, -column => 1, -padx => 4, -pady => 5 );
         $brnextbt = $frame2->Button(
-            -activebackground => $::activecolor,
-            -text             => 'Next',
-            -command          => sub {
+            -text    => 'Next',
+            -command => sub {
                 shift @{ $::lglobal{brbrackets} }
                   if @{ $::lglobal{brbrackets} };
                 shift @{ $::lglobal{brindices} }
@@ -2250,8 +2224,7 @@ sub quicksearchpopup {
     $::lglobal{quicksearchpop}->title('Quick Search');
 
     $::lglobal{quicksearchpop}->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             ::entry_history( $::lglobal{quicksearchentry}, \@::quicksearch_history );
         },
         -image  => $::lglobal{hist_img},
@@ -2278,8 +2251,7 @@ sub quicksearchpopup {
       $::lglobal{'quicksearchpop'}
       ->Frame->pack( -expand => 1, -fill => 'x', -padx => 0, -pady => 0, -side => 'top' );
     $::lglobal{quicksearchbutton} = $frame1->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             ::quicksearch( $::lglobal{searchreversetemp} );    # reverse variable set by Shift-Button-1 binding below
         },
         -text => 'Search',

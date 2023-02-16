@@ -193,9 +193,8 @@ sub setmargins {
         my $button_frame =
           $::lglobal{marginspop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
         my $button_ok = $button_frame->Button(
-            -activebackground => $::activecolor,
-            -text             => 'OK',
-            -command          => sub {
+            -text    => 'OK',
+            -command => sub {
                 ::killpopup('marginspop');
                 if ( ( $::blockrmargin < $::blocklmargin ) || ( $::rmargin < $::lmargin ) ) {
                     $top->messageBox(
@@ -267,9 +266,8 @@ sub setfonts {
         )->grid( -row => 6, -column => 1, -columnspan => 3, -padx => 5, -pady => 5 );
 
         my $button_ok = $::lglobal{fontpop}->Button(
-            -activebackground => $::activecolor,
-            -text             => 'OK',
-            -command          => sub {
+            -text    => 'OK',
+            -command => sub {
                 $::top->fontConfigure(
                     'proofing',
                     -family => $::fontname,
@@ -869,9 +867,8 @@ sub filePathsPopup {
             -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         $::lglobal{filepathspop}->Button(
-            -activebackground => $::activecolor,
-            -text             => 'OK',
-            -command          => sub {
+            -text    => 'OK',
+            -command => sub {
                 ::killpopup('filepathspop');
                 ::savesettings();
             }
@@ -908,9 +905,8 @@ sub setDPurls {
             -background   => $::bkgcolor,
         )->grid( -row => 4, -column => 1, -pady => 2 );
         $f0->Button(
-            -activebackground => $::activecolor,
-            -text             => 'OK',
-            -command          => sub {
+            -text    => 'OK',
+            -command => sub {
                 ::killpopup('defurlspop');
                 ::savesettings();
             }

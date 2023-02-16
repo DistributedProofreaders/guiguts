@@ -1027,9 +1027,12 @@ sub initialize {
     );
     ::globalfontconfigure();       # may need to set to system default
 
-    # Use option database to set font for all widgets, then override for Entry fields
-    $top->optionAdd( '*font'       => 'global' );
-    $top->optionAdd( '*Entry*font' => 'textentry' );
+    # Use option database to set widget defaults - 'widgetDefault' priority means
+    # user can override, e.g. using .Xdefaults file
+    # Set font for all widgets, then override for Entry fields
+    $top->optionAdd( '*font'                    => 'global',       'widgetDefault' );
+    $top->optionAdd( '*Entry*font'              => 'textentry',    'widgetDefault' );
+    $top->optionAdd( '*Button*activeBackground' => $::activecolor, 'widgetDefault' );
 
     # Set up Main window size
     unless ($::geometry) {
@@ -2640,8 +2643,7 @@ sub externalpopup {    # Set up the external commands menu
         }
         my $f2    = $::lglobal{extoptpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         my $gobut = $f2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
 
                 # save the settings and rebuild the menu
                 externalpopuptidy();
@@ -2994,10 +2996,9 @@ sub restorelinenumbers {
         ::initialize_popup_with_deletebinding('stoppop');
         my $frame      = $::lglobal{stoppop}->Frame->pack;
         my $stopbutton = $frame->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { set_interrupt(); },
-            -text             => 'Interrupt Operation',
-            -width            => 16
+            -command => sub { set_interrupt(); },
+            -text    => 'Interrupt Operation',
+            -width   => 16
         )->grid( -row => 1, -column => 1, -padx => 10, -pady => 10 );
     }
 
@@ -3269,9 +3270,8 @@ sub printerror {
             $::lglobal{messagespop} = $top->Toplevel;
             $::lglobal{messagespop}->title('Message Log');
             my $button_ok = $::lglobal{messagespop}->Button(
-                -activebackground => $::activecolor,
-                -text             => 'Close',
-                -command          => sub { ::killpopup('messagespop'); }
+                -text    => 'Close',
+                -command => sub { ::killpopup('messagespop'); }
             )->pack( -side => 'bottom', -pady => 5 );
             my $frame = $::lglobal{messagespop}->Frame->pack(
                 -side   => 'top',

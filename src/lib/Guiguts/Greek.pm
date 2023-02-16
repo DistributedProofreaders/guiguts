@@ -378,16 +378,14 @@ sub greekpopup {
     );
     for (qw!( ) / \ | ~ + = _!) {
         $bframe2->Button(
-            -activebackground => $::activecolor,
-            -text             => $_,
-            -font             => 'unicode',
-            -borderwidth      => 0,
-            -command          => \&placechar,
+            -text        => $_,
+            -font        => 'unicode',
+            -borderwidth => 0,
+            -command     => \&placechar,
         )->pack( -side => 'left' );
     }
     $bframe2->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             my $spot = $::lglobal{grtext}->index('insert');
             $::lglobal{grtext}->insert( 'insert', ' ' );
             $::lglobal{grtext}->markSet( 'insert', "$spot+1c" );
@@ -432,43 +430,36 @@ sub greekpopup {
         -pady   => 3
     );
     $tframe2->Button(
-        -activebackground => $::activecolor,
-        -command          => sub { greekpopuptranslate( \&togreektr ); },
-        -text             => 'ASCII->Greek',
+        -command => sub { greekpopuptranslate( \&togreektr ); },
+        -text    => 'ASCII->Greek',
     )->pack( -side => 'left', -padx => 5 );
     $tframe2->Button(
-        -activebackground => $::activecolor,
-        -command          => sub { greekpopuptranslate( \&fromgreektr ); },
-        -text             => 'Greek->ASCII',
+        -command => sub { greekpopuptranslate( \&fromgreektr ); },
+        -text    => 'Greek->ASCII',
     )->pack( -side => 'left', -padx => 5 );
     $tframe2->Button(
-        -activebackground => $::activecolor,
-        -command          => sub { greekpopuptranslate( \&bettergreek ); },
-        -text             => 'Beta code->Unicode',
+        -command => sub { greekpopuptranslate( \&bettergreek ); },
+        -text    => 'Beta code->Unicode',
     )->pack( -side => 'left', -padx => 5 );
     $tframe2->Button(
-        -activebackground => $::activecolor,
-        -command          => sub { greekpopuptranslate( \&greekbetter ); },
-        -text             => 'Unicode->Beta code',
+        -command => sub { greekpopuptranslate( \&greekbetter ); },
+        -text    => 'Unicode->Beta code',
     )->pack( -side => 'left', -padx => 5 );
 
     my $oframe = $::lglobal{grpop}
       ->Frame->pack( -expand => 'no', -fill => 'none', -anchor => 's', -pady => 3 );
 
     $oframe->Button(
-        -activebackground => $::activecolor,
-        -command          => \&movegreek,
-        -text             => 'Transfer',
+        -command => \&movegreek,
+        -text    => 'Transfer',
     )->pack( -side => 'left', -padx => 5 );
     $oframe->Button(
-        -activebackground => $::activecolor,
-        -command          => sub { movegreek(); findandextractgreek(); },
-        -text             => 'Transfer & Get Next',
+        -command => sub { movegreek(); findandextractgreek(); },
+        -text    => 'Transfer & Get Next',
     )->pack( -side => 'left', -padx => 5 );
 
     $oframe->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             movegreek();
             %attributes = ();
@@ -477,8 +468,7 @@ sub greekpopup {
         -text => 'OK',
     )->pack( -side => 'left', -padx => 10 );
     my $cancel = $oframe->Button(
-        -activebackground => $::activecolor,
-        -command          => sub {
+        -command => sub {
             $textwindow->tagRemove( 'highlight', '1.0', 'end' );
             %attributes = ();
             ::killpopup('grpop');
@@ -509,7 +499,6 @@ sub greekpopupbutton {
     my $attrib = shift;
     return unless $attrib;
     my $w = $frame->Label(
-        -activebackground   => $::activecolor,
         -text               => $attrib->[3],
         -font               => 'unicode',
         -relief             => 'flat',

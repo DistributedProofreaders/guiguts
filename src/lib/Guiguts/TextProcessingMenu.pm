@@ -317,8 +317,7 @@ sub fixpopup {
         )->grid( -row => $row, -column => 1 );
         my $tframe = $::lglobal{fixpop}->Frame->pack;
         $tframe->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $::lglobal{fixpop}->UnmapWindow;
                 fixup();
                 ::killpopup('fixpop');

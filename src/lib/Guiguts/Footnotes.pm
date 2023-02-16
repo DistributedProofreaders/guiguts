@@ -30,35 +30,30 @@ sub footnotepop {
         $::lglobal{footpop}->title('Footnote Fixup');
         my $frame1 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { fnfirstpass() },
-            -text             => 'First Pass',
-            -underline        => 0,
-            -width            => 14
+            -command   => sub { fnfirstpass() },
+            -text      => 'First Pass',
+            -underline => 0,
+            -width     => 14
         )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
         $frame1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { footnoteadjust() },
-            -text             => 'Rescan this FN',
-            -width            => 14
+            -command => sub { footnoteadjust() },
+            -text    => 'Rescan this FN',
+            -width   => 14
         )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
         $frame1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { fnview() },
-            -text             => 'Check Footnotes',
-            -width            => 14
+            -command => sub { fnview() },
+            -text    => 'Check Footnotes',
+            -width   => 14
         )->grid( -row => 1, -column => 3, -padx => 6, -pady => 2 );
         $frame1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { fnjoin() },
-            -text             => 'Join With Previous',
-            -width            => 14
+            -command => sub { fnjoin() },
+            -text    => 'Join With Previous',
+            -width   => 14
         )->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
         $frame1->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { setanchor() },
-            -text             => 'Set Anchor',
-            -width            => 14
+            -command => sub { setanchor() },
+            -text    => 'Set Anchor',
+            -width   => 14
         )->grid( -row => 2, -column => 3, -padx => 2, -pady => 2 );
         my $frame1b = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $::lglobal{unlimitedsearchbutton} = $frame1b->Checkbutton(
@@ -71,8 +66,7 @@ sub footnotepop {
         )->grid( -row => 1, -column => 2, -padx => 3, -pady => 4 );
         my $frame2 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $textwindow->yview('end');
                 $textwindow->see( $::lglobal{fnarray}->[ $::lglobal{fnindex} ][2] )
                   if $::lglobal{fnarray}->[ $::lglobal{fnindex} ][2];
@@ -82,16 +76,14 @@ sub footnotepop {
         )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
         $::lglobal{footnotetotal} = $frame2->Label->grid( -row => 1, -column => 2 );
         $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 footnoteshow();
             },
             -text  => 'See Footnote',
             -width => 14
         )->grid( -row => 1, -column => 3, -padx => 2, -pady => 4 );
         $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $::lglobal{fnindex}--;
                 footnoteshow();
             },
@@ -109,8 +101,7 @@ sub footnotepop {
             }
         )->grid( -row => 2, -column => 2 );
         $frame2->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 $::lglobal{fnindex}++;
                 footnoteshow();
             },
@@ -170,8 +161,7 @@ sub footnotepop {
             -width => 14
         )->grid( -row => 5, -column => 3, -padx => 2, -pady => 4 );
         $frame3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return if ( $::lglobal{footstyle} eq 'inline' );
                 fninsertmarkers('n');
                 footnoteshow();
@@ -180,8 +170,7 @@ sub footnotepop {
             -width => 14
         )->grid( -row => 4, -column => 1, -padx => 2, -pady => 4 );
         $frame3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return if ( $::lglobal{footstyle} eq 'inline' );
                 fninsertmarkers('a');
                 footnoteshow();
@@ -190,8 +179,7 @@ sub footnotepop {
             -width => 14
         )->grid( -row => 4, -column => 2, -padx => 2, -pady => 4 );
         $frame3->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 return if ( $::lglobal{footstyle} eq 'inline' );
                 fninsertmarkers('r');
                 footnoteshow();
@@ -212,11 +200,10 @@ sub footnotepop {
             },
         )->grid( -row => 8, -column => 1 );
         $::lglobal{fnfpbutton} = $frame4->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { &footnotefixup() },
-            -text             => 'Reindex',
-            -state            => 'disabled',
-            -width            => 14
+            -command => sub { &footnotefixup() },
+            -text    => 'Reindex',
+            -state   => 'disabled',
+            -width   => 14
         )->grid( -row => 8, -column => 3, -padx => 2, -pady => 4 );
         my $fnrb2 = $frame4->Radiobutton(
             -text        => 'Out-of-Line',
@@ -233,26 +220,22 @@ sub footnotepop {
         )->grid( -row => 8, -column => 2 );
         my $frame6 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { setlz('insert') },
-            -text             => 'Set LZ @ cursor',
-            -width            => 14
+            -command => sub { setlz('insert') },
+            -text    => 'Set LZ @ cursor',
+            -width   => 14
         )->grid( -row => 1, -column => 1, -padx => 2, -pady => 4 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { autochaptlz() },
-            -text             => 'Autoset Chap. LZ',
-            -width            => 14
+            -command => sub { autochaptlz() },
+            -text    => 'Autoset Chap. LZ',
+            -width   => 14
         )->grid( -row => 1, -column => 2, -padx => 2, -pady => 4 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { autoendlz() },
-            -text             => 'Autoset End LZ',
-            -width            => 14
+            -command => sub { autoendlz() },
+            -text    => 'Autoset End LZ',
+            -width   => 14
         )->grid( -row => 1, -column => 3, -padx => 2, -pady => 4 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 getlz();
                 return                  unless $::lglobal{fnlzs} and @{ $::lglobal{fnlzs} };
                 $::lglobal{zoneindex}-- unless $::lglobal{zoneindex} < 1;
@@ -270,8 +253,7 @@ sub footnotepop {
             -width => 12
         )->grid( -row => 2, -column => 1, -padx => 2, -pady => 4 );
         $frame6->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 getlz();
                 return unless $::lglobal{fnlzs} and @{ $::lglobal{fnlzs} };
                 $::lglobal{zoneindex}++
@@ -291,23 +273,20 @@ sub footnotepop {
         )->grid( -row => 2, -column => 3, -padx => 6, -pady => 4 );
         my $frame7 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $::lglobal{fnmvbutton} = $frame7->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { footnotemove() },
-            -text             => 'Move FNs to Landing Zone(s)',
-            -state            => 'disabled',
-            -width            => 30
+            -command => sub { footnotemove() },
+            -text    => 'Move FNs to Landing Zone(s)',
+            -state   => 'disabled',
+            -width   => 30
         )->grid( -row => 1, -column => 2, -padx => 3, -pady => 4 );
         $::lglobal{fnmvinlinebutton} = $frame7->Button(
-            -activebackground => $::activecolor,
-            -command          => sub { footnotemoveinline() },
-            -text             => 'Move FNs to Para',
-            -state            => 'disabled',
-            -width            => 30
+            -command => sub { footnotemoveinline() },
+            -text    => 'Move FNs to Para',
+            -state   => 'disabled',
+            -width   => 30
         )->grid( -row => 2, -column => 2, -padx => 3, -pady => 4 );
         my $frame8 = $::lglobal{footpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $frame8->Button(
-            -activebackground => $::activecolor,
-            -command          => sub {
+            -command => sub {
                 if ( $::lglobal{footstyle} eq 'inline' ) {
                     $::top->Dialog(
                         -text    => 'Inline footnotes cannot be tidied.',
