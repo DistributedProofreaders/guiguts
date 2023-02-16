@@ -382,10 +382,7 @@ sub utfcharsearchpopup {
             $cframe, 1 );
 
         $frame0->Label( -text => 'Search Characteristics ', )->grid( -row => 1, -column => 1 );
-        my $characteristics = $frame0->Entry(
-            -width      => 40,
-            -background => $::bkgcolor
-        )->grid( -row => 1, -column => 2 );
+        my $characteristics = $frame0->Entry( -width => 40, )->grid( -row => 1, -column => 2 );
         $characteristics->focus;
         my $doit = $frame0->Button(
             -text    => 'Search',
@@ -561,7 +558,6 @@ sub utfcharentrypopup {
 
         # Input entry field
         $inentry = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 6,
             -textvariable => \$::lglobal{utfcharentryord},
             -validate     => 'key',

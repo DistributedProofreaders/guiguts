@@ -1011,6 +1011,7 @@ sub menu_preferences_appearance {
             -command => sub {
                 my $thiscolor = ::setcolor($::bkgcolor);
                 $::bkgcolor = $thiscolor if $thiscolor;
+                ::setwidgetdefaultoptions();    # Update database with new defaults
                 ::savesettings();
             }
         ],

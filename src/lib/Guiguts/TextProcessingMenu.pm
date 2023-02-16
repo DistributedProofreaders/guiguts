@@ -65,7 +65,6 @@ sub text_convert_options {
     )->pack( -side => 'left' );
     my $italic_entry = $italic_frame->Entry(
         -width        => 6,
-        -background   => $::bkgcolor,
         -relief       => 'sunken',
         -textvariable => \$::italic_char,
     )->pack( -side => 'left' );
@@ -76,7 +75,6 @@ sub text_convert_options {
     )->pack( -side => 'left' );
     my $bold_entry = $bold_frame->Entry(
         -width        => 6,
-        -background   => $::bkgcolor,
         -relief       => 'sunken',
         -textvariable => \$::bold_char,
     )->pack( -side => 'left' );
@@ -107,7 +105,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $italic_entry = $italic_frame->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::italic_char,
         )->pack( -side => 'left' );
@@ -129,7 +126,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $bold_entry = $bold_frame->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::bold_char,
         )->pack( -side => 'left' );
@@ -150,7 +146,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $g_entry = $g_frame->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::gesperrt_char,
         )->pack( -side => 'left' );
@@ -171,7 +166,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $f_entry = $f_frame->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::font_char,
         )->pack( -side => 'left' );
@@ -206,7 +200,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $sc_entry = $sc_frame->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::sc_char,
         )->pack( -side => 'left' );

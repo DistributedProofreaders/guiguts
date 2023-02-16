@@ -116,7 +116,6 @@ sub tablefx {
         $::lglobal{tblindent} = 0 unless $::lglobal{tblindent};
         my $ientry = $f1ah->Entry(
             -width        => 4,
-            -background   => $::bkgcolor,
             -textvariable => \$::lglobal{tblindent},
             -validate     => 'all',
             -vcmd         => sub { return $_[0] =~ /^\d*$/; }
@@ -167,7 +166,6 @@ sub tablefx {
           unless defined $::lglobal{tablefillchar} and length( $::lglobal{tablefillchar} ) == 1;
         $f2f->Entry(
             -width        => 2,
-            -background   => $::bkgcolor,
             -textvariable => \$::lglobal{tablefillchar},
             -validate     => 'all',
             -vcmd         => sub { return length( $_[0] ) <= 1; }
@@ -188,7 +186,6 @@ sub tablefx {
           ->grid( -row => 1, -column => 0, -padx => 1, -pady => 2 );
         $f3->Entry(
             -width        => 4,
-            -background   => $::bkgcolor,
             -textvariable => \$::lglobal{stepmaxwidth},
             -validate     => 'all',
             -vcmd         => sub { return $_[0] =~ /^\d*$/; }

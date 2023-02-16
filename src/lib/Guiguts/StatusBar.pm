@@ -609,7 +609,6 @@ sub setlang {
         $frame->Label( -text => 'Language: ' )->pack( -side => 'left' );
         $::lglobal{booklang} = $::booklang;
         my $entry = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 20,
             -textvariable => \$::lglobal{booklang},
         )->pack( -side => 'left', -fill => 'x' );
@@ -636,7 +635,6 @@ sub selection {
         my $frame = $::lglobal{selectionpop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         $frame->Label( -text => 'Start Line.Col' )->grid( -row => 1, -column => 1 );
         $::lglobal{selsentry} = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 15,
             -textvariable => \$start,
             -validate     => 'focusout',
@@ -647,7 +645,6 @@ sub selection {
         )->grid( -row => 1, -column => 2 );
         $frame->Label( -text => 'End Line.Col' )->grid( -row => 2, -column => 1 );
         $::lglobal{seleentry} = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 15,
             -textvariable => \$end,
             -validate     => 'focusout',

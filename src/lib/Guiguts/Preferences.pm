@@ -453,7 +453,6 @@ sub saveinterval {
         my $frame = $::lglobal{intervalpop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         $frame->Label( -text => 'Minutes between auto save' )->pack( -side => 'left' );
         my $entry = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 5,
             -textvariable => \$::autosaveinterval,
             -validate     => 'key',
@@ -655,7 +654,6 @@ sub filePathsPopup {
             -textvariable => \$::globalviewerpath,
             -width        => 60,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f2 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -675,7 +673,6 @@ sub filePathsPopup {
         $f2->Entry(
             -textvariable => \$::globalspellpath,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f3 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -695,7 +692,6 @@ sub filePathsPopup {
         $f3->Entry(
             -textvariable => \$::gutcommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f4 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -715,7 +711,6 @@ sub filePathsPopup {
         $f4->Entry(
             -textvariable => \$::jeebiescommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f5 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -735,7 +730,6 @@ sub filePathsPopup {
         $f5->Entry(
             -textvariable => \$::tidycommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f6 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -758,7 +752,6 @@ sub filePathsPopup {
         $f6->Entry(
             -textvariable => \$::validatecommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f7 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -781,7 +774,6 @@ sub filePathsPopup {
         $f7->Entry(
             -textvariable => \$::validatecsscommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f7a = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -804,7 +796,6 @@ sub filePathsPopup {
         $f7a->Entry(
             -textvariable => \$::epubcheckcommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f8 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -824,7 +815,6 @@ sub filePathsPopup {
         $f8->Entry(
             -textvariable => \$::ebookmakercommand,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f8b = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -849,7 +839,6 @@ sub filePathsPopup {
         $f9->Entry(
             -textvariable => \$::scannospath,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         my $f0 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -864,7 +853,6 @@ sub filePathsPopup {
         $f0->Entry(
             -textvariable => \$::extops[0]{command},
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->pack( -expand => 'y', -fill => 'x' );
         $::lglobal{filepathspop}->Button(
             -text    => 'OK',
@@ -894,7 +882,6 @@ sub setDPurls {
             -width        => 70,
             -textvariable => \$::urlprojectpage,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->grid( -row => 3, -column => 1, -pady => 2 );
         $f0->Label( -text => "View project discussion of projectid:" )
           ->grid( -row => 4, -column => 0, -sticky => 'w' );
@@ -902,7 +889,6 @@ sub setDPurls {
             -width        => 70,
             -textvariable => \$::urlprojectdiscussion,
             -relief       => 'sunken',
-            -background   => $::bkgcolor,
         )->grid( -row => 4, -column => 1, -pady => 2 );
         $f0->Button(
             -text    => 'OK',

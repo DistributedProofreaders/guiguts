@@ -493,17 +493,15 @@ sub spellchecker {    # Set up spell check window
           $spf1->Label( -text => 'Not in Dictionary:', )
           ->pack( -side => 'top', -anchor => 'n', -pady => 5 );
         $::lglobal{misspelledentry} = $spf1->Entry(
-            -background => $::bkgcolor,
-            -width      => 42,
-            -font       => 'proofing',
+            -width => 42,
+            -font  => 'proofing',
         )->pack( -side => 'top', -anchor => 'n', -pady => 1 );
         my $replacelabel =
           $spf1->Label( -text => 'Replacement Text:', )
           ->pack( -side => 'top', -anchor => 'n', -padx => 6 );
         $::lglobal{spreplaceentry} = $spf1->Entry(
-            -background => $::bkgcolor,
-            -width      => 42,
-            -font       => 'proofing',
+            -width => 42,
+            -font  => 'proofing',
         )->pack( -side => 'top', -anchor => 'n', -padx => 1 );
         $::lglobal{suggestionlabel} =
           $spf1->Label( -text => 'Suggestions:', )
