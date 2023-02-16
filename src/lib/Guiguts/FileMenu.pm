@@ -500,30 +500,22 @@ sub file_guess_page_marks {
         my $f1 = $::lglobal{guesspgmarkerpop}->Frame->pack;
         $f1->Label( -text => 'How many pages are there total?', )
           ->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
-        my $tpages = $f1->Entry(
-            -background => $::bkgcolor,
-            -width      => 8,
-        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
+        my $tpages =
+          $f1->Entry( -width => 8, )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
         $f1->Label( -text => 'What line # does page 25 start with?', )
           ->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
-        my $page25 = $f1->Entry(
-            -background => $::bkgcolor,
-            -width      => 8,
-        )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
+        my $page25 =
+          $f1->Entry( -width => 8, )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
         my $f3 = $::lglobal{guesspgmarkerpop}->Frame->pack;
         $f3->Label( -text => 'Select a page near the back, before the index starts.', )
           ->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
         my $f4 = $::lglobal{guesspgmarkerpop}->Frame->pack;
         $f4->Label( -text => 'Page #?.', )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
         $f4->Label( -text => 'Line #?.', )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
-        my $pagexe = $f4->Entry(
-            -background => $::bkgcolor,
-            -width      => 8,
-        )->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
-        my $linexe = $f4->Entry(
-            -background => $::bkgcolor,
-            -width      => 8,
-        )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
+        my $pagexe =
+          $f4->Entry( -width => 8, )->grid( -row => 2, -column => 1, -padx => 1, -pady => 2 );
+        my $linexe =
+          $f4->Entry( -width => 8, )->grid( -row => 2, -column => 2, -padx => 1, -pady => 2 );
         my $f2         = $::lglobal{guesspgmarkerpop}->Frame->pack;
         my $calcbutton = $f2->Button(
             -command => sub {

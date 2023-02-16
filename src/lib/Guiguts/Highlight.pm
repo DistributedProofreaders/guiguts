@@ -236,9 +236,8 @@ sub hilitepopup {
         $f->Label( -text => 'Highlight Character(s) or Regex', )
           ->pack( -side => 'top', -pady => 2, -padx => 2, -anchor => 'n' );
         my $entry = $f->Entry(
-            -width      => 40,
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
+            -width  => 40,
+            -relief => 'sunken',
         )->pack(
             -expand => 1,
             -fill   => 'x',

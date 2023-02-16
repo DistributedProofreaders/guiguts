@@ -2208,7 +2208,6 @@ sub htmlgenpopup {
         $f0a->Entry(
             -textvariable => \$htmltitle,
             -width        => 45,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->grid( -row => 0, -column => 1, -pady => 2, -sticky => 'w' );
         $f0a->Label( -text => 'Author:', )
@@ -2216,7 +2215,6 @@ sub htmlgenpopup {
         $f0a->Entry(
             -textvariable => \$::bookauthor,
             -width        => 45,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->grid( -row => 1, -column => 1, -pady => 2, -sticky => 'w' );
         $f0a->Label( -text => 'Language:', )
@@ -2224,7 +2222,6 @@ sub htmlgenpopup {
         $f0a->Entry(
             -textvariable => \$::booklang,
             -width        => 5,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->grid( -row => 2, -column => 1, -pady => 2, -sticky => 'w' );
 
@@ -2477,9 +2474,8 @@ sub htmlmarkpopup {
         for my $row ( 1 .. @::htmlentry ) {
             my $col   = 1;
             my $entry = $f5->Entry(
-                -width      => 23,
-                -background => $::bkgcolor,
-                -relief     => 'sunken',
+                -width  => 23,
+                -relief => 'sunken',
             )->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
             $f5->Button(
                 -command => sub {
@@ -2570,10 +2566,7 @@ sub htmlmarkpopup {
           $lf4->Frame->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $f4a->Label( -text => 'Column Format:', )
           ->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
-        $tableformat = $f4a->Entry(
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
-        )->pack(
+        $tableformat = $f4a->Entry( -relief => 'sunken', )->pack(
             -side   => 'left',
             -anchor => 'n',
             -padx   => 4,
@@ -2819,7 +2812,7 @@ sub markup {
             );
             my $linklabel = $linkf1->Label( -text => 'Link name' )->pack;
             $::lglobal{linkentry} =
-              $linkf1->Entry( -background => $::bkgcolor )->pack( -expand => 'yes', -fill => 'x' );
+              $linkf1->Entry()->pack( -expand => 'yes', -fill => 'x' );
             my $linkf2    = $::lglobal{elinkpop}->Frame->pack( -side => 'top', -anchor => 'n' );
             my $extbrowse = $linkf2->Button(
                 -text    => 'Browse',

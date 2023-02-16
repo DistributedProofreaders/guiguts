@@ -1765,8 +1765,9 @@ sub setwidgetdefaultoptions {
     $top->optionAdd( '*font'       => 'global',    $priority );
     $top->optionAdd( '*Entry*font' => 'textentry', $priority );
 
-    # Active and select colors
+    # Various colors
     $top->optionAdd( '*Button*activeBackground' => $::activecolor, $priority );
+    $top->optionAdd( '*Entry*background'        => $::bkgcolor,    $priority );
     my $selectcolor = $::OS_WIN ? 'white' : $::activecolor;
     $top->optionAdd( '*Checkbutton*selectColor' => $selectcolor, $priority );
     $top->optionAdd( '*Radiobutton*selectColor' => $selectcolor, $priority );
@@ -2632,7 +2633,6 @@ sub externalpopup {    # Set up the external commands menu
         for my $menutempvar ( 0 .. ( $#::extops < 10 ? 10 : $#::extops ) + 1 ) {
             $f1->Entry(
                 -width        => 50,
-                -background   => $::bkgcolor,
                 -relief       => 'sunken',
                 -textvariable => \$::extops[$menutempvar]{label},
                 -state        => ( $menutempvar ? 'normal' : 'readonly' ),
@@ -2644,7 +2644,6 @@ sub externalpopup {    # Set up the external commands menu
             );
             $f1->Entry(
                 -width        => 80,
-                -background   => $::bkgcolor,
                 -relief       => 'sunken',
                 -textvariable => \$::extops[$menutempvar]{command},
             )->grid(
@@ -2898,7 +2897,6 @@ sub setprojectid {
     my $frame = $projectidpop->Frame->pack( -fill => 'x' );
     $frame->Label( -text => 'Project ID: ' )->pack( -side => 'left' );
     my $entry = $frame->Entry(
-        -background   => $::bkgcolor,
         -width        => 30,
         -textvariable => \$::projectid,
     )->pack( -side => 'left', -fill => 'x' );
@@ -3128,7 +3126,6 @@ sub textentrydialogpopup {
       $::lglobal{$key}->Frame->pack( -expand => 1, -fill => 'x', -padx => 5, -pady => 5 );
     $$varref = $defaulttext unless $$varref;
     my $entryw = $frame1->Entry(
-        -background   => $::bkgcolor,
         -width        => 12,
         -textvariable => $varref,
     )->pack( -expand => 1, -fill => 'x', -side => 'right' );
@@ -3173,7 +3170,6 @@ sub dialogboxcommonsetup {
     my $frame = $::lglobal{$dlg}->Frame->pack( -fill => 'x' );
     $frame->Label( -text => $prompt )->pack( -side => 'left' );
     my $entry = $frame->Entry(
-        -background   => $::bkgcolor,
         -width        => 25,
         -textvariable => $var,
     )->pack( -side => 'left', -fill => 'x' );

@@ -63,10 +63,8 @@ sub multilangpopup {
         my $labelone =
           $f2->Label( -text => 'Dictionaries selected:' )
           ->grid( -row => 1, -column => 1, -padx => 1, -pady => 1 );
-        $multidictentry = $f2->Entry(
-            -background => $::bkgcolor,
-            -width      => 40,
-        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
+        $multidictentry =
+          $f2->Entry( -width => 40, )->grid( -row => 1, -column => 2, -padx => 1, -pady => 1 );
         my $f0 = $::lglobal{multispellpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f0->Button(
             -command => sub {
@@ -467,7 +465,6 @@ sub setmultiplelanguages {
     )->pack( -side => 'left' );
     my $minfreqcell = $freqframe->Entry(
         -width        => 6,
-        -background   => $::bkgcolor,
         -relief       => 'sunken',
         -textvariable => \$minfreq,
     )->pack( -side => 'left' );

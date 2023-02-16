@@ -205,15 +205,13 @@ sub wordfrequency {
                 );
                 $button->bind( '<3>' => $_->[2] ) if $_->[2];
             } else {
-                $::lglobal{regexpentry} = $wordfreqseframe1->Entry(
-                    -background   => $::bkgcolor,
-                    -textvariable => \$::regexpentry,
-                )->grid(
+                $::lglobal{regexpentry} =
+                  $wordfreqseframe1->Entry( -textvariable => \$::regexpentry, )->grid(
                     -row        => $row,
                     -column     => $col,
                     -columnspan => 3,
                     -sticky     => "nsew"
-                );
+                  );
             }
         }
         my $wcframe = $::lglobal{wfpop}->Frame->pack( -fill => 'both', -expand => 'both', );
@@ -767,7 +765,6 @@ sub ital_adjust {
     my $f1 = $::lglobal{markuppop}->Frame->pack( -side => 'top', -anchor => 'n' );
     $f1->Entry(
         -width        => 10,
-        -background   => $::bkgcolor,
         -relief       => 'sunken',
         -textvariable => \$::markupthreshold,
         -validate     => 'key',

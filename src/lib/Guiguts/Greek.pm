@@ -308,12 +308,11 @@ sub greekpopup {
         -relief     => 'ridge'
     )->pack( -side => 'left', -padx => 2 );
     $::lglobal{buildentry} = $bframe2->Entry(
-        -width      => 5,
-        -font       => 'unicode',
-        -background => $::bkgcolor,
-        -relief     => 'ridge',
-        -validate   => 'all',
-        -vcmd       => \&buildvalidator,
+        -width    => 5,
+        -font     => 'unicode',
+        -relief   => 'ridge',
+        -validate => 'all',
+        -vcmd     => \&buildvalidator,
     )->pack( -side => 'left', -padx => 2 );
     $::lglobal{buildentry}->bind(
         '<FocusIn>',

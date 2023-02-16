@@ -680,7 +680,6 @@ sub surround {
         my $surstrt = $f1->Entry(
             -textvariable => \$::lglobal{surstrt},
             -width        => 12,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->pack(
             -side   => 'left',
@@ -697,7 +696,6 @@ sub surround {
         my $surend = $f1->Entry(
             -textvariable => \$::lglobal{surend},
             -width        => 12,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
         )->pack(
             -side   => 'left',
@@ -770,7 +768,6 @@ sub flood {
             -fill   => 'x'
         );
         my $floodch = $f1->Entry(
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::lglobal{ffchar},
             -width        => 24,
@@ -906,7 +903,6 @@ sub alignpopup {
         my $f1 = $::lglobal{alignpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f1->Entry(
             -width        => 8,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::lglobal{alignstring},
         )->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
@@ -952,7 +948,6 @@ sub asciibox_popup {
             $col = $_ % 3;
             $f5->Entry(
                 -width        => 1,
-                -background   => $::bkgcolor,
                 -font         => 'proofing',
                 -relief       => 'sunken',
                 -textvariable => \${ $::lglobal{ascii} }[$_],
@@ -970,7 +965,6 @@ sub asciibox_popup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
         my $wmentry = $f0->Entry(
             -width        => 6,
-            -background   => $::bkgcolor,
             -relief       => 'sunken',
             -textvariable => \$::lglobal{asciiwidth},
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );

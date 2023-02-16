@@ -1023,7 +1023,6 @@ sub searchpopup {
             -height => 15,
         )->pack( -side => 'left', -anchor => 'w' );
         $::lglobal{searchentry} = $sf11->Entry(
-            -background => $::bkgcolor,
             -foreground => 'black',
             -validate   => 'all',
             -vcmd       => sub { reg_check(shift); }
@@ -1195,7 +1194,7 @@ sub searchpopup {
             -width  => 9,
             -height => 15,
         )->pack( -side => 'left', -anchor => 'w' );
-        $::lglobal{replaceentry} = $sf12->Entry( -background => $::bkgcolor, )->pack(
+        $::lglobal{replaceentry} = $sf12->Entry()->pack(
             -side   => 'left',
             -anchor => 'w',
             -padx   => 1,
@@ -1534,7 +1533,7 @@ sub searchaddterms {
             -width  => 9,
             -height => 15,
         )->pack( -side => 'left', -anchor => 'w' );
-        $::lglobal{$replaceentry} = $msref->[$_]->Entry( -background => $::bkgcolor, )->pack(
+        $::lglobal{$replaceentry} = $msref->[$_]->Entry()->pack(
             -side   => 'left',
             -anchor => 'w',
             -padx   => 1,
@@ -2020,7 +2019,6 @@ sub searchsize {    # Pop up a window where you can adjust the search history si
           $::lglobal{srchhistsizepop}->Frame->pack( -fill => 'x', -padx => 5, -pady => 5 );
         $frame->Label( -text => 'History Size: # of terms to save - ' )->pack( -side => 'left' );
         my $entry = $frame->Entry(
-            -background   => $::bkgcolor,
             -width        => 5,
             -textvariable => \$::history_size,
             -validate     => 'key',
@@ -2203,7 +2201,6 @@ sub quicksearchpopup {
     )->pack( -side => 'left', -anchor => 'nw' );
     $::lglobal{statussearchtext} = '' unless defined $::lglobal{statussearchtext};
     $::lglobal{quicksearchentry} = $::lglobal{'quicksearchpop'}->Entry(
-        -background   => $::bkgcolor,
         -width        => 12,
         -textvariable => \$::lglobal{statussearchtext},
     )->pack( -expand => 1, -fill => 'x', -side => 'top' );
