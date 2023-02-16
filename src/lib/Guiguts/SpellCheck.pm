@@ -830,28 +830,24 @@ sub spelloptions {
     );
     my $spopframe = $spellop->Frame->pack;
     $spopframe->Radiobutton(
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Ultra Fast',
-        -variable    => \$::globalaspellmode,
-        -value       => 'ultra'
+        -text     => 'Ultra Fast',
+        -variable => \$::globalaspellmode,
+        -value    => 'ultra'
     )->grid( -row => 0, -sticky => 'w' );
     $spopframe->Radiobutton(
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Fast',
-        -variable    => \$::globalaspellmode,
-        -value       => 'fast'
+        -text     => 'Fast',
+        -variable => \$::globalaspellmode,
+        -value    => 'fast'
     )->grid( -row => 1, -sticky => 'w' );
     $spopframe->Radiobutton(
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Normal',
-        -variable    => \$::globalaspellmode,
-        -value       => 'normal'
+        -text     => 'Normal',
+        -variable => \$::globalaspellmode,
+        -value    => 'normal'
     )->grid( -row => 2, -sticky => 'w' );
     $spopframe->Radiobutton(
-        -selectcolor => $::lglobal{checkcolor},
-        -text        => 'Bad Spellers',
-        -variable    => \$::globalaspellmode,
-        -value       => 'bad-spellers'
+        -text     => 'Bad Spellers',
+        -variable => \$::globalaspellmode,
+        -value    => 'bad-spellers'
     )->grid( -row => 3, -sticky => 'w' );
     $spellop->Show;
     $spellop->focus;

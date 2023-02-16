@@ -259,28 +259,24 @@ sub greekpopup {
     # Radio buttons determine type of input obtained by pressing letter buttons
     my $tframe = $::lglobal{grpop}->Frame->pack( -expand => 'no', -fill => 'none', -anchor => 'n' );
     $tframe->Radiobutton(
-        -variable    => \$::lglobal{groutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'l',
-        -text        => 'Latin-1',
+        -variable => \$::lglobal{groutp},
+        -value    => 'l',
+        -text     => 'Latin-1',
     )->grid( -row => 1, -column => 1 );
     $tframe->Radiobutton(
-        -variable    => \$::lglobal{groutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'n',
-        -text        => 'Greek Name',
+        -variable => \$::lglobal{groutp},
+        -value    => 'n',
+        -text     => 'Greek Name',
     )->grid( -row => 1, -column => 2 );
     $tframe->Radiobutton(
-        -variable    => \$::lglobal{groutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'h',
-        -text        => 'HTML code',
+        -variable => \$::lglobal{groutp},
+        -value    => 'h',
+        -text     => 'HTML code',
     )->grid( -row => 1, -column => 3 );
     $tframe->Radiobutton(
-        -variable    => \$::lglobal{groutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'u',
-        -text        => 'UTF-8',
+        -variable => \$::lglobal{groutp},
+        -value    => 'u',
+        -text     => 'UTF-8',
     )->grid( -row => 1, -column => 4 );
 
     # Fill frame with Greek letter buttons - first row consists of labels

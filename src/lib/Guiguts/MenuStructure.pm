@@ -1020,7 +1020,7 @@ sub menu_preferences_appearance {
             -command => sub {
                 my $thiscolor = ::setcolor($::activecolor);
                 $::activecolor = $thiscolor if $thiscolor;
-                $::lglobal{checkcolor} = $::OS_WIN ? 'white' : $::activecolor;
+                ::setwidgetdefaultoptions();    # Update database with new defaults
                 ::savesettings();
             }
         ],

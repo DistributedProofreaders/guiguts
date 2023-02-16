@@ -1668,25 +1668,22 @@ sub htmlimage {
         $::htmlimagewidthtype = '%'
           if $::htmlimagewidthtype eq 'px' and not $::htmlimageallowpixels;
         my $percentsel = $f51->Radiobutton(
-            -variable    => \$::htmlimagewidthtype,
-            -text        => '%',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => '%',
-            -command     => sub { htmlimagewidthsetdefault(); }
+            -variable => \$::htmlimagewidthtype,
+            -text     => '%',
+            -value    => '%',
+            -command  => sub { htmlimagewidthsetdefault(); }
         )->pack( -side => 'left' );
         my $emsel = $f51->Radiobutton(
-            -variable    => \$::htmlimagewidthtype,
-            -text        => 'em',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'em',
-            -command     => sub { htmlimagewidthsetdefault(); }
+            -variable => \$::htmlimagewidthtype,
+            -text     => 'em',
+            -value    => 'em',
+            -command  => sub { htmlimagewidthsetdefault(); }
         )->pack( -side => 'left' );
         my $pxsel = $f51->Radiobutton(
-            -variable    => \$::htmlimagewidthtype,
-            -text        => 'px',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'px',
-            -command     => sub { htmlimagewidthsetdefault(); }
+            -variable => \$::htmlimagewidthtype,
+            -text     => 'px',
+            -value    => 'px',
+            -command  => sub { htmlimagewidthsetdefault(); }
         )->pack( -side => 'left' )
           if $::htmlimageallowpixels;
         my $f52 = $f5->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -1695,31 +1692,27 @@ sub htmlimage {
         $::lglobal{htmlimgmaxwidth} =
           $f52->Label( -text => '' )->pack();
         $f52->Checkbutton(
-            -variable    => \$::epubpercentoverride,
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Override % with 100% in epub',
-            -anchor      => 'w',
+            -variable => \$::epubpercentoverride,
+            -text     => 'Override % with 100% in epub',
+            -anchor   => 'w',
         )->pack();
         my $f2 =
           $::lglobal{htmlimpop}->LabFrame( -label => 'Alignment' )
           ->pack( -side => 'top', -anchor => 'n' );
         $f2->Radiobutton(
-            -variable    => \$::lglobal{htmlimgalignment},
-            -text        => 'Left',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'left',
+            -variable => \$::lglobal{htmlimgalignment},
+            -text     => 'Left',
+            -value    => 'left',
         )->grid( -row => 1, -column => 1 );
         my $censel = $f2->Radiobutton(
-            -variable    => \$::lglobal{htmlimgalignment},
-            -text        => 'Center',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'center',
+            -variable => \$::lglobal{htmlimgalignment},
+            -text     => 'Center',
+            -value    => 'center',
         )->grid( -row => 1, -column => 2 );
         $f2->Radiobutton(
-            -variable    => \$::lglobal{htmlimgalignment},
-            -text        => 'Right',
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'right',
+            -variable => \$::lglobal{htmlimgalignment},
+            -text     => 'Right',
+            -value    => 'right',
         )->grid( -row => 1, -column => 3 );
         $censel->select;
         my $f8 = $::lglobal{htmlimpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2239,10 +2232,9 @@ sub htmlgenpopup {
 
         # Page numbers retained as comments rather than spans in HTML
         $f0->Checkbutton(
-            -variable    => \$::lglobal{pagecmt},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Pg #s as Comments',
-            -anchor      => 'w',
+            -variable => \$::lglobal{pagecmt},
+            -text     => 'Pg #s as Comments',
+            -anchor   => 'w',
         )->grid(
             -row    => 1,
             -column => 1,
@@ -2253,10 +2245,9 @@ sub htmlgenpopup {
 
         # Add anchor at each page boundary
         $f0->Checkbutton(
-            -variable    => \$::lglobal{pageanch},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Insert Anchors at Pg #s',
-            -anchor      => 'w',
+            -variable => \$::lglobal{pageanch},
+            -text     => 'Insert Anchors at Pg #s',
+            -anchor   => 'w',
         )->grid(
             -row    => 1,
             -column => 2,
@@ -2267,10 +2258,9 @@ sub htmlgenpopup {
 
         # Only output last of coincident page numbers (due to blank pages)
         $f0->Checkbutton(
-            -variable    => \$::lglobal{pageskipco},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Skip coincident Pg #s',
-            -anchor      => 'w',
+            -variable => \$::lglobal{pageskipco},
+            -text     => 'Skip coincident Pg #s',
+            -anchor   => 'w',
         )->grid(
             -row    => 1,
             -column => 3,
@@ -2281,10 +2271,9 @@ sub htmlgenpopup {
 
         # Use <div> with CSS class rather than HTML <blockquote> element
         $f0->Checkbutton(
-            -variable    => \$::lglobal{cssblockmarkup},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'CSS blockquote',
-            -anchor      => 'w',
+            -variable => \$::lglobal{cssblockmarkup},
+            -text     => 'CSS blockquote',
+            -anchor   => 'w',
         )->grid(
             -row    => 2,
             -column => 1,
@@ -2295,10 +2284,9 @@ sub htmlgenpopup {
 
         # Anchor will be of the form Footnote_3 rather than Footnote_3_3
         $f0->Checkbutton(
-            -variable    => \$::lglobal{shorthtmlfootnotes},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Short FN Anchors',
-            -anchor      => 'w',
+            -variable => \$::lglobal{shorthtmlfootnotes},
+            -text     => 'Short FN Anchors',
+            -anchor   => 'w',
         )->grid(
             -row    => 2,
             -column => 2,
@@ -2309,10 +2297,9 @@ sub htmlgenpopup {
 
         # Automatically convert 1/2, 1/4, 3/4 to entities
         $f0->Checkbutton(
-            -variable    => \$::lglobal{autofraction},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Convert Fractions',
-            -anchor      => 'w',
+            -variable => \$::lglobal{autofraction},
+            -text     => 'Convert Fractions',
+            -anchor   => 'w',
         )->grid(
             -row    => 2,
             -column => 3,
@@ -2325,9 +2312,8 @@ sub htmlgenpopup {
 
         # Find & format poetry line numbers consisting of digits spaced beyond end of line
         $f7->Checkbutton(
-            -variable    => \$::lglobal{poetrynumbers},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Find and Format Poetry Line Numbers'
+            -variable => \$::lglobal{poetrynumbers},
+            -text     => 'Find and Format Poetry Line Numbers'
         )->grid( -row => 1, -column => 1, -pady => 2 );
 
         my $f4 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2335,109 +2321,93 @@ sub htmlgenpopup {
         # HTML to use when converting <i> markup
         $f4->Label( -text => '<i>:', )->grid( -row => 1, -column => 0, -padx => 2, -pady => 2 );
         $f4->Radiobutton(
-            -text        => '<i>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_i},
-            -value       => '<i>',
+            -text     => '<i>',
+            -variable => \$::lglobal{html_i},
+            -value    => '<i>',
         )->grid( -row => 1, -column => 1 );
         $f4->Radiobutton(
-            -text        => '<em>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_i},
-            -value       => '<em>',
+            -text     => '<em>',
+            -variable => \$::lglobal{html_i},
+            -value    => '<em>',
         )->grid( -row => 1, -column => 2 );
         $f4->Radiobutton(
-            -text        => '<em class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_i},
-            -value       => '<em class="italic">',
+            -text     => '<em class>',
+            -variable => \$::lglobal{html_i},
+            -value    => '<em class="italic">',
         )->grid( -row => 1, -column => 3 );
         $f4->Radiobutton(
-            -text        => '<span class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_i},
-            -value       => '<span class="italic">',
+            -text     => '<span class>',
+            -variable => \$::lglobal{html_i},
+            -value    => '<span class="italic">',
         )->grid( -row => 1, -column => 4 );
 
         # HTML to use when converting <b> markup
         $f4->Label( -text => '<b>:', )->grid( -row => 2, -column => 0, -padx => 2, -pady => 2 );
         $f4->Radiobutton(
-            -text        => '<b>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_b},
-            -value       => '<b>',
+            -text     => '<b>',
+            -variable => \$::lglobal{html_b},
+            -value    => '<b>',
         )->grid( -row => 2, -column => 1 );
         $f4->Radiobutton(
-            -text        => '<em>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_b},
-            -value       => '<em>',
+            -text     => '<em>',
+            -variable => \$::lglobal{html_b},
+            -value    => '<em>',
         )->grid( -row => 2, -column => 2 );
         $f4->Radiobutton(
-            -text        => '<em class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_b},
-            -value       => '<em class="bold">',
+            -text     => '<em class>',
+            -variable => \$::lglobal{html_b},
+            -value    => '<em class="bold">',
         )->grid( -row => 2, -column => 3 );
         $f4->Radiobutton(
-            -text        => '<span class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_b},
-            -value       => '<span class="bold">',
+            -text     => '<span class>',
+            -variable => \$::lglobal{html_b},
+            -value    => '<span class="bold">',
         )->grid( -row => 2, -column => 4 );
 
         # HTML to use when converting <g> markup
         $f4->Label( -text => '<g>:', )->grid( -row => 3, -column => 0, -padx => 2, -pady => 2 );
         $f4->Radiobutton(
-            -text        => 'ign.',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_g},
-            -value       => '<g>',
+            -text     => 'ign.',
+            -variable => \$::lglobal{html_g},
+            -value    => '<g>',
         )->grid( -row => 3, -column => 1 );
         $f4->Radiobutton(
-            -text        => '<em>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_g},
-            -value       => '<em>',
+            -text     => '<em>',
+            -variable => \$::lglobal{html_g},
+            -value    => '<em>',
         )->grid( -row => 3, -column => 2 );
         $f4->Radiobutton(
-            -text        => '<em class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_g},
-            -value       => '<em class="gesperrt">',
+            -text     => '<em class>',
+            -variable => \$::lglobal{html_g},
+            -value    => '<em class="gesperrt">',
         )->grid( -row => 3, -column => 3 );
         $f4->Radiobutton(
-            -text        => '<span class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_g},
-            -value       => '<span class="gesperrt">',
+            -text     => '<span class>',
+            -variable => \$::lglobal{html_g},
+            -value    => '<span class="gesperrt">',
         )->grid( -row => 3, -column => 4 );
 
         # HTML to use when converting <f> markup
         $f4->Label( -text => '<f>:', )->grid( -row => 4, -column => 0, -padx => 2, -pady => 2 );
         $f4->Radiobutton(
-            -text        => 'ign.',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_f},
-            -value       => '<f>',
+            -text     => 'ign.',
+            -variable => \$::lglobal{html_f},
+            -value    => '<f>',
         )->grid( -row => 4, -column => 1 );
         $f4->Radiobutton(
-            -text        => '<em>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_f},
-            -value       => '<em>',
+            -text     => '<em>',
+            -variable => \$::lglobal{html_f},
+            -value    => '<em>',
         )->grid( -row => 4, -column => 2 );
         $f4->Radiobutton(
-            -text        => '<em class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_f},
-            -value       => '<em class="antiqua">',
+            -text     => '<em class>',
+            -variable => \$::lglobal{html_f},
+            -value    => '<em class="antiqua">',
         )->grid( -row => 4, -column => 3 );
         $f4->Radiobutton(
-            -text        => '<span class>',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{html_f},
-            -value       => '<span class="antiqua">',
+            -text     => '<span class>',
+            -variable => \$::lglobal{html_f},
+            -value    => '<span class="antiqua">',
         )->grid( -row => 4, -column => 4 );
 
         my $f2 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2572,16 +2542,14 @@ sub htmlmarkpopup {
         my $lf3 = $::lglobal{markpop}->LabFrame( -label => 'Lists' )
           ->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         my $unorderselect = $lf3->Radiobutton(
-            -text        => 'unordered',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{liststyle},
-            -value       => 'ul',
+            -text     => 'unordered',
+            -variable => \$::lglobal{liststyle},
+            -value    => 'ul',
         )->pack( -side => 'left', -anchor => 'w', -padx => 4, -pady => 2 );
         my $orderselect = $lf3->Radiobutton(
-            -text        => 'ordered',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{liststyle},
-            -value       => 'ol',
+            -text     => 'ordered',
+            -variable => \$::lglobal{liststyle},
+            -value    => 'ol',
         )->pack( -side => 'left', -anchor => 'w', -padx => 4, -pady => 2 );
         $unorderselect->select;
         $lf3->Checkbutton(
@@ -2616,22 +2584,19 @@ sub htmlmarkpopup {
         my $f4b =
           $lf4->Frame->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         my $leftselect = $f4b->Radiobutton(
-            -text        => 'left',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{tablecellalign},
-            -value       => ' class="tdl"',
+            -text     => 'left',
+            -variable => \$::lglobal{tablecellalign},
+            -value    => ' class="tdl"',
         )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
         my $censelect = $f4b->Radiobutton(
-            -text        => 'center',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{tablecellalign},
-            -value       => ' class="tdc"',
+            -text     => 'center',
+            -variable => \$::lglobal{tablecellalign},
+            -value    => ' class="tdc"',
         )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
         my $rghtselect = $f4b->Radiobutton(
-            -text        => 'right',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{tablecellalign},
-            -value       => ' class="tdr"',
+            -text     => 'right',
+            -variable => \$::lglobal{tablecellalign},
+            -value    => ' class="tdr"',
         )->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
         $leftselect->select;
         $f4b->Checkbutton(
@@ -2940,10 +2905,9 @@ sub markup {
             $::lglobal{fnlinks} = 1;
             my $tframe = $::lglobal{linkpop}->Frame->pack;
             $tframe->Checkbutton(
-                -variable    => \$::lglobal{ilinksrt},
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => 'Sort Alphabetically',
-                -command     => sub {
+                -variable => \$::lglobal{ilinksrt},
+                -text     => 'Sort Alphabetically',
+                -command  => sub {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
@@ -2954,10 +2918,9 @@ sub markup {
                 -anchor => 'n'
             );
             $tframe->Checkbutton(
-                -variable    => \$::lglobal{fnlinks},
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => 'Hide Footnote Links',
-                -command     => sub {
+                -variable => \$::lglobal{fnlinks},
+                -text     => 'Hide Footnote Links',
+                -command  => sub {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
@@ -2968,10 +2931,9 @@ sub markup {
                 -anchor => 'n'
             );
             $tframe->Checkbutton(
-                -variable    => \$::lglobal{pglinks},
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => 'Hide Page Links',
-                -command     => sub {
+                -variable => \$::lglobal{pglinks},
+                -text     => 'Hide Page Links',
+                -command  => sub {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
@@ -3846,11 +3808,10 @@ sub fracconv {
         $::lglobal{pagelabelballoon}
           ->attach( $fimg, -msg => 'Double-click on page list to show image' );
         $::lglobal{pagelabelautoimgbtn} = $fimg->Checkbutton(
-            -variable    => \$::lglobal{pagelabelautoimg},
-            -selectcolor => $::lglobal{checkcolor},
-            -text        => 'Auto Img',
-            -anchor      => 'w',
-            -command     => sub {
+            -variable => \$::lglobal{pagelabelautoimg},
+            -text     => 'Auto Img',
+            -anchor   => 'w',
+            -command  => sub {
                 $::lglobal{pagelabelimgbtn}->invoke if $::lglobal{pagelabelautoimg};
             },
         )->pack( -side => 'top', -anchor => 'nw' );
@@ -3871,25 +3832,22 @@ sub fracconv {
         $::lglobal{pagelabelballoon}
           ->attach( $fstyle, -msg => 'Shift-click on page list to cycle style' );
         my $fstylea = $fstyle->Radiobutton(
-            -text        => 'Arabic',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelstyle},
-            -value       => 'Arabic',
-            -command     => sub { pagelabelsetstyle(); },
+            -text     => 'Arabic',
+            -variable => \$::lglobal{pagelabelstyle},
+            -value    => 'Arabic',
+            -command  => sub { pagelabelsetstyle(); },
         )->grid( -row => 1, -column => 1, -sticky => 'w' );
         my $fstyler = $fstyle->Radiobutton(
-            -text        => 'Roman',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelstyle},
-            -value       => 'Roman',
-            -command     => sub { pagelabelsetstyle(); },
+            -text     => 'Roman',
+            -variable => \$::lglobal{pagelabelstyle},
+            -value    => 'Roman',
+            -command  => sub { pagelabelsetstyle(); },
         )->grid( -row => 2, -column => 1, -sticky => 'w' );
         my $fstyled = $fstyle->Radiobutton(
-            -text        => '"',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelstyle},
-            -value       => '"',
-            -command     => sub { pagelabelsetstyle(); },
+            -text     => '"',
+            -variable => \$::lglobal{pagelabelstyle},
+            -value    => '"',
+            -command  => sub { pagelabelsetstyle(); },
         )->grid( -row => 3, -column => 1, -sticky => 'w' );
 
         # Label action - Start @/+1/No Count
@@ -3898,25 +3856,22 @@ sub fracconv {
         $::lglobal{pagelabelballoon}
           ->attach( $faction, -msg => 'Control-click on page list to cycle action' );
         my $factions = $faction->Radiobutton(
-            -text        => 'Start @',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelaction},
-            -value       => 'Start @',
-            -command     => sub { pagelabelsetaction(); },
+            -text     => 'Start @',
+            -variable => \$::lglobal{pagelabelaction},
+            -value    => 'Start @',
+            -command  => sub { pagelabelsetaction(); },
         )->grid( -row => 1, -column => 1, -sticky => 'w' );
         my $factionp = $faction->Radiobutton(
-            -text        => '+1',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelaction},
-            -value       => '+1',
-            -command     => sub { pagelabelsetaction(); },
+            -text     => '+1',
+            -variable => \$::lglobal{pagelabelaction},
+            -value    => '+1',
+            -command  => sub { pagelabelsetaction(); },
         )->grid( -row => 2, -column => 1, -sticky => 'w' );
         my $factionn = $faction->Radiobutton(
-            -text        => 'No Count',
-            -selectcolor => $::lglobal{checkcolor},
-            -variable    => \$::lglobal{pagelabelaction},
-            -value       => 'No Count',
-            -command     => sub { pagelabelsetaction(); },
+            -text     => 'No Count',
+            -variable => \$::lglobal{pagelabelaction},
+            -value    => 'No Count',
+            -command  => sub { pagelabelsetaction(); },
         )->grid( -row => 3, -column => 1, -sticky => 'w' );
 
         # Label base - only used with 'Start @' action

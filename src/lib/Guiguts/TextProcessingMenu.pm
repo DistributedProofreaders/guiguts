@@ -296,24 +296,21 @@ sub fixpopup {
 
         for (@rbuttons) {
             $pframe1->Checkbutton(
-                -variable    => \${ $::lglobal{fixopt} }[$row],
-                -selectcolor => $::lglobal{checkcolor},
-                -text        => $_,
+                -variable => \${ $::lglobal{fixopt} }[$row],
+                -text     => $_,
             )->grid( -row => $row, -column => 1, -sticky => 'nw' );
             ++$row;
         }
         $pframe1->Radiobutton(
-            -variable    => \${ $::lglobal{fixopt} }[15],
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 1,
-            -text        => 'French style angle quotes «guillemets»',
+            -variable => \${ $::lglobal{fixopt} }[15],
+            -value    => 1,
+            -text     => 'French style angle quotes «guillemets»',
         )->grid( -row => $row, -column => 1 );
         ++$row;
         $pframe1->Radiobutton(
-            -variable    => \${ $::lglobal{fixopt} }[15],
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 0,
-            -text        => 'German style angle quotes »guillemets«',
+            -variable => \${ $::lglobal{fixopt} }[15],
+            -value    => 0,
+            -text     => 'German style angle quotes »guillemets«',
         )->grid( -row => $row, -column => 1 );
         my $tframe = $::lglobal{fixpop}->Frame->pack;
         $tframe->Button(

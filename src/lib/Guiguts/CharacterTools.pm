@@ -32,16 +32,14 @@ sub commoncharspopup {
         my $blln      = $::lglobal{comcharspop}->Balloon( -initwait => 750 );
         my $tframe    = $::lglobal{comcharspop}->Frame->pack;
         my $charradio = $tframe->Radiobutton(
-            -variable    => \$::lglobal{comcharoutp},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'c',
-            -text        => 'Character',
+            -variable => \$::lglobal{comcharoutp},
+            -value    => 'c',
+            -text     => 'Character',
         )->grid( -row => 1, -column => 1 );
         $tframe->Radiobutton(
-            -variable    => \$::lglobal{comcharoutp},
-            -selectcolor => $::lglobal{checkcolor},
-            -value       => 'h',
-            -text        => 'HTML Entity',
+            -variable => \$::lglobal{comcharoutp},
+            -value    => 'h',
+            -text     => 'HTML Entity',
         )->grid( -row => 1, -column => 2 );
         $charradio->select;
         my $frame = $::lglobal{comcharspop}->Frame( -background => $::bkgcolor )
@@ -288,16 +286,14 @@ sub utfpopup {
     # Choose Unicode/HTML code and select block
     my $cframe = $::lglobal{utfpop}->Frame->pack;
     my $usel   = $cframe->Radiobutton(
-        -variable    => \$::lglobal{uoutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'u',
-        -text        => 'Unicode',
+        -variable => \$::lglobal{uoutp},
+        -value    => 'u',
+        -text     => 'Unicode',
     )->grid( -row => 1, -column => 5, -padx => 5 );
     $cframe->Radiobutton(
-        -variable    => \$::lglobal{uoutp},
-        -selectcolor => $::lglobal{checkcolor},
-        -value       => 'h',
-        -text        => 'HTML code',
+        -variable => \$::lglobal{uoutp},
+        -value    => 'h',
+        -text     => 'HTML code',
     )->grid( -row => 1, -column => 6 );
     my $unicodelist = $cframe->BrowseEntry(
         -label     => 'Block',
