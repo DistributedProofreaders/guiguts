@@ -2208,21 +2208,18 @@ sub htmlgenpopup {
         $f0a->Entry(
             -textvariable => \$htmltitle,
             -width        => 45,
-            -relief       => 'sunken',
         )->grid( -row => 0, -column => 1, -pady => 2, -sticky => 'w' );
         $f0a->Label( -text => 'Author:', )
           ->grid( -row => 1, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
         $f0a->Entry(
             -textvariable => \$::bookauthor,
             -width        => 45,
-            -relief       => 'sunken',
         )->grid( -row => 1, -column => 1, -pady => 2, -sticky => 'w' );
         $f0a->Label( -text => 'Language:', )
           ->grid( -row => 2, -column => 0, -padx => 2, -pady => 2, -sticky => 'w' );
         $f0a->Entry(
             -textvariable => \$::booklang,
             -width        => 5,
-            -relief       => 'sunken',
         )->grid( -row => 2, -column => 1, -pady => 2, -sticky => 'w' );
 
         my $f0 = $::lglobal{htmlgenpop}->Frame->pack( -side => 'top', -anchor => 'n' );
@@ -2473,10 +2470,8 @@ sub htmlmarkpopup {
         # Create rows with entry field and buttons for configurable div, span & i
         for my $row ( 1 .. @::htmlentry ) {
             my $col   = 1;
-            my $entry = $f5->Entry(
-                -width  => 23,
-                -relief => 'sunken',
-            )->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
+            my $entry = $f5->Entry( -width => 23, )
+              ->grid( -row => $row, -column => $col++, -padx => 1, -pady => 2 );
             $f5->Button(
                 -command => sub {
                     ::entry_history( $entry, \@::htmlentryhistory );
@@ -2566,7 +2561,7 @@ sub htmlmarkpopup {
           $lf4->Frame->pack( -side => 'top', -anchor => 'n', -expand => 'yes', -fill => 'x' );
         $f4a->Label( -text => 'Column Format:', )
           ->pack( -side => 'left', -anchor => 'n', -padx => 4, -pady => 2 );
-        $tableformat = $f4a->Entry( -relief => 'sunken', )->pack(
+        $tableformat = $f4a->Entry()->pack(
             -side   => 'left',
             -anchor => 'n',
             -padx   => 4,

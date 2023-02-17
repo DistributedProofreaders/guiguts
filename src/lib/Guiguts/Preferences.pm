@@ -93,8 +93,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $lmentry = $lmframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::lmargin,
             -increment    => 1,
             -from         => 0,
@@ -107,8 +105,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $rmentry = $rmframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::rmargin,
             -increment    => 1,
             -from         => 0,
@@ -122,8 +118,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $blmentry = $blmframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::blocklmargin,
             -increment    => 1,
             -from         => 0,
@@ -137,8 +131,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $brmentry = $brmframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::blockrmargin,
             -increment    => 1,
             -from         => 0,
@@ -152,8 +144,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $plmentry = $plmframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::poetrylmargin,
             -increment    => 1,
             -from         => 0,
@@ -167,8 +157,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $didntmentry = $didntframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::defaultindent,
             -increment    => 1,
             -from         => 0,
@@ -183,8 +171,6 @@ sub setmargins {
         )->pack( -side => 'left' );
         my $rmdiffentry = $rmdiffframe->Spinbox(
             -width        => 6,
-            -background   => $::bkgcolor,
-            -relief       => 'sunken',
             -textvariable => \$::rmargindiff,
             -increment    => 1,
             -from         => 0,
@@ -653,7 +639,6 @@ sub filePathsPopup {
         $f1->Entry(
             -textvariable => \$::globalviewerpath,
             -width        => 60,
-            -relief       => 'sunken',
         )->pack( -expand => 'y', -fill => 'x' );
         my $f2 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
@@ -689,10 +674,7 @@ sub filePathsPopup {
             -command => sub { ::locateExecutable( 'Bookloupe', \$::gutcommand ); },
             -width   => 24,
         )->pack( -side => 'right' );
-        $f3->Entry(
-            -textvariable => \$::gutcommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f3->Entry( -textvariable => \$::gutcommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f4 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -708,10 +690,7 @@ sub filePathsPopup {
             -command => sub { ::locateExecutable( 'Jeebies', \$::jeebiescommand ); },
             -width   => 24,
         )->pack( -side => 'right' );
-        $f4->Entry(
-            -textvariable => \$::jeebiescommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f4->Entry( -textvariable => \$::jeebiescommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f5 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -727,10 +706,7 @@ sub filePathsPopup {
             -command => sub { ::locateExecutable( 'HTML Tidy', \$::tidycommand ); },
             -width   => 24,
         )->pack( -side => 'right' );
-        $f5->Entry(
-            -textvariable => \$::tidycommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f5->Entry( -textvariable => \$::tidycommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f6 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -749,10 +725,7 @@ sub filePathsPopup {
             },
             -width => 24,
         )->pack( -side => 'right' );
-        $f6->Entry(
-            -textvariable => \$::validatecommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f6->Entry( -textvariable => \$::validatecommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f7 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -771,10 +744,8 @@ sub filePathsPopup {
             },
             -width => 24,
         )->pack( -side => 'right' );
-        $f7->Entry(
-            -textvariable => \$::validatecsscommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f7->Entry( -textvariable => \$::validatecsscommand, )
+          ->pack( -expand => 'y', -fill => 'x' );
         my $f7a = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -793,10 +764,7 @@ sub filePathsPopup {
             },
             -width => 24,
         )->pack( -side => 'right' );
-        $f7a->Entry(
-            -textvariable => \$::epubcheckcommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f7a->Entry( -textvariable => \$::epubcheckcommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f8 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -812,10 +780,7 @@ sub filePathsPopup {
             -command => sub { ::locateExecutable( 'ebookmaker.exe', \$::ebookmakercommand ); },
             -width   => 24,
         )->pack( -side => 'right' );
-        $f8->Entry(
-            -textvariable => \$::ebookmakercommand,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f8->Entry( -textvariable => \$::ebookmakercommand, )->pack( -expand => 'y', -fill => 'x' );
         my $f8b = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -836,10 +801,7 @@ sub filePathsPopup {
             -command => sub { locateDirectory( 'scannos', \$::scannospath ); },
             -width   => 24,
         )->pack( -side => 'right' );
-        $f9->Entry(
-            -textvariable => \$::scannospath,
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f9->Entry( -textvariable => \$::scannospath, )->pack( -expand => 'y', -fill => 'x' );
         my $f0 = $::lglobal{filepathspop}->Frame->pack(
             -side   => 'top',
             -anchor => 'n',
@@ -850,10 +812,8 @@ sub filePathsPopup {
             -width  => 22,
             -anchor => 'w',
         )->pack( -side => 'left' );
-        $f0->Entry(
-            -textvariable => \$::extops[0]{command},
-            -relief       => 'sunken',
-        )->pack( -expand => 'y', -fill => 'x' );
+        $f0->Entry( -textvariable => \$::extops[0]{command}, )
+          ->pack( -expand => 'y', -fill => 'x' );
         $::lglobal{filepathspop}->Button(
             -text    => 'OK',
             -command => sub {
@@ -881,14 +841,12 @@ sub setDPurls {
         $f0->Entry(
             -width        => 70,
             -textvariable => \$::urlprojectpage,
-            -relief       => 'sunken',
         )->grid( -row => 3, -column => 1, -pady => 2 );
         $f0->Label( -text => "View project discussion of projectid:" )
           ->grid( -row => 4, -column => 0, -sticky => 'w' );
         $f0->Entry(
             -width        => 70,
             -textvariable => \$::urlprojectdiscussion,
-            -relief       => 'sunken',
         )->grid( -row => 4, -column => 1, -pady => 2 );
         $f0->Button(
             -text    => 'OK',

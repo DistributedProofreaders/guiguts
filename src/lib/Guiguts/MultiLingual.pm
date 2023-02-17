@@ -465,7 +465,6 @@ sub setmultiplelanguages {
     )->pack( -side => 'left' );
     my $minfreqcell = $freqframe->Entry(
         -width        => 6,
-        -relief       => 'sunken',
         -textvariable => \$minfreq,
     )->pack( -side => 'left' );
     $spellop->Show;

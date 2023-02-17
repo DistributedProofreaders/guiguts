@@ -310,7 +310,6 @@ sub greekpopup {
     $::lglobal{buildentry} = $bframe2->Entry(
         -width    => 5,
         -font     => 'unicode',
-        -relief   => 'ridge',
         -validate => 'all',
         -vcmd     => \&buildvalidator,
     )->pack( -side => 'left', -padx => 2 );

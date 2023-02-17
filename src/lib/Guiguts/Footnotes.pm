@@ -113,21 +113,18 @@ sub footnotepop {
             -background => $::bkgcolor,
             -relief     => 'sunken',
             -justify    => 'center',
-            -font       => '{Times} 10',
             -width      => 10,
         )->grid( -row => 3, -column => 1, -padx => 2, -pady => 4 );
         $::lglobal{footnoteletter} = $frame3->Label(
             -background => $::bkgcolor,
             -relief     => 'sunken',
             -justify    => 'center',
-            -font       => '{Times} 10',
             -width      => 10,
         )->grid( -row => 3, -column => 2, -padx => 2, -pady => 4 );
         $::lglobal{footnoteroman} = $frame3->Label(
             -background => $::bkgcolor,
             -relief     => 'sunken',
             -justify    => 'center',
-            -font       => '{Times} 10',
             -width      => 10,
         )->grid( -row => 3, -column => 3, -padx => 2, -pady => 4 );
         $checkn = $frame3->Checkbutton(
