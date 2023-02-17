@@ -675,11 +675,13 @@ sub hilitematchblock {
 #
 # Return true if given tag is for a void element,
 # i.e. does not need separate open/close tags
+# Includes <tb> which is DP markup rather than HTML
 sub hilitematchvoid {
     my $tag   = shift;
     my @voids = (
         'area', 'base', 'br',    'col',    'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'param', 'source', 'track', 'wbr',
+        'link', 'meta', 'param', 'source', 'track', 'wbr',    #end of HTML tags
+        'tb'                                                  # DP tag
     );
     $tag =~ s/<?\/?($TAGCH+)>?/$1/;
     return grep { /^$tag$/ } @voids;
