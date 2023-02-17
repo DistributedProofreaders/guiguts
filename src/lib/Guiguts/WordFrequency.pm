@@ -765,7 +765,6 @@ sub ital_adjust {
     my $f1 = $::lglobal{markuppop}->Frame->pack( -side => 'top', -anchor => 'n' );
     $f1->Entry(
         -width        => 10,
-        -relief       => 'sunken',
         -textvariable => \$::markupthreshold,
         -validate     => 'key',
         -vcmd         => sub {

@@ -1055,7 +1055,6 @@ sub initialize {
     $::textwindow = $::text_frame->LineNumberText(
         -exportselection => 'true',           # 'sel' tag is associated with selections
         -background      => $::bkgcolor,
-        -relief          => 'sunken',
         -font            => 'proofing',
         -wrap            => 'none',
         -curlinebg       => $::activecolor,
@@ -1767,7 +1766,11 @@ sub setwidgetdefaultoptions {
 
     # Various colors
     $top->optionAdd( '*Button*activeBackground' => $::activecolor, $priority );
-    $top->optionAdd( '*Entry*background'        => $::bkgcolor,    $priority );
+
+    $top->optionAdd( '*Entry*background'   => $::bkgcolor, $priority );
+    $top->optionAdd( '*Spinbox*background' => $::bkgcolor, $priority );
+    $top->optionAdd( '*ROText*background'  => $::bkgcolor, $priority );
+
     my $selectcolor = $::OS_WIN ? 'white' : $::activecolor;
     $top->optionAdd( '*Checkbutton*selectColor' => $selectcolor, $priority );
     $top->optionAdd( '*Radiobutton*selectColor' => $selectcolor, $priority );
@@ -2633,7 +2636,6 @@ sub externalpopup {    # Set up the external commands menu
         for my $menutempvar ( 0 .. ( $#::extops < 10 ? 10 : $#::extops ) + 1 ) {
             $f1->Entry(
                 -width        => 50,
-                -relief       => 'sunken',
                 -textvariable => \$::extops[$menutempvar]{label},
                 -state        => ( $menutempvar ? 'normal' : 'readonly' ),
             )->grid(
@@ -2644,7 +2646,6 @@ sub externalpopup {    # Set up the external commands menu
             );
             $f1->Entry(
                 -width        => 80,
-                -relief       => 'sunken',
                 -textvariable => \$::extops[$menutempvar]{command},
             )->grid(
                 -row    => "$menutempvar" + 1,

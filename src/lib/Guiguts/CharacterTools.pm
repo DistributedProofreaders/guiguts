@@ -549,11 +549,9 @@ sub utfcharentrypopup {
 
         # Define output entry field first so it can be populated by input entry validation routine
         $outentry = $frame->ROText(
-            -background => $::bkgcolor,
-            -relief     => 'sunken',
-            -font       => 'unicode',
-            -width      => 6,
-            -height     => 1,
+            -font   => 'unicode',
+            -width  => 6,
+            -height => 1,
         )->grid( -row => 2, -column => 2 );
 
         # Input entry field

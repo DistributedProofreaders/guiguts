@@ -65,7 +65,6 @@ sub text_convert_options {
     )->pack( -side => 'left' );
     my $italic_entry = $italic_frame->Entry(
         -width        => 6,
-        -relief       => 'sunken',
         -textvariable => \$::italic_char,
     )->pack( -side => 'left' );
     my $bold_frame = $options->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
@@ -75,7 +74,6 @@ sub text_convert_options {
     )->pack( -side => 'left' );
     my $bold_entry = $bold_frame->Entry(
         -width        => 6,
-        -relief       => 'sunken',
         -textvariable => \$::bold_char,
     )->pack( -side => 'left' );
     $options->Show;
@@ -105,7 +103,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $italic_entry = $italic_frame->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::italic_char,
         )->pack( -side => 'left' );
         my $italic_button = $italic_frame->Button(
@@ -126,7 +123,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $bold_entry = $bold_frame->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::bold_char,
         )->pack( -side => 'left' );
         my $bold_button = $bold_frame->Button(
@@ -146,7 +142,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $g_entry = $g_frame->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::gesperrt_char,
         )->pack( -side => 'left' );
         my $g_button = $g_frame->Button(
@@ -166,7 +161,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $f_entry = $f_frame->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::font_char,
         )->pack( -side => 'left' );
         my $f_button = $f_frame->Button(
@@ -200,7 +194,6 @@ sub txt_convert_palette {
         )->pack( -side => 'left' );
         my $sc_entry = $sc_frame->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::sc_char,
         )->pack( -side => 'left' );
         my $tb_frame =

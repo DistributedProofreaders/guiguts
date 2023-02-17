@@ -235,10 +235,7 @@ sub hilitepopup {
         my $f          = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f->Label( -text => 'Highlight Character(s) or Regex', )
           ->pack( -side => 'top', -pady => 2, -padx => 2, -anchor => 'n' );
-        my $entry = $f->Entry(
-            -width  => 40,
-            -relief => 'sunken',
-        )->pack(
+        my $entry = $f->Entry( -width => 40, )->pack(
             -expand => 1,
             -fill   => 'x',
             -padx   => 3,

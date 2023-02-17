@@ -99,7 +99,6 @@ sub pnumadjust {
         )->grid( -row => 2, -column => 1 );
         $::lglobal{pagenumentry} = $frame2->Entry(
             -background => 'yellow',
-            -relief     => 'sunken',
             -text       => $mark,
             -width      => 10,
             -justify    => 'center',

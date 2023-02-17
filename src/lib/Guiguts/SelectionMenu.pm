@@ -680,7 +680,6 @@ sub surround {
         my $surstrt = $f1->Entry(
             -textvariable => \$::lglobal{surstrt},
             -width        => 12,
-            -relief       => 'sunken',
         )->pack(
             -side   => 'left',
             -pady   => 5,
@@ -696,7 +695,6 @@ sub surround {
         my $surend = $f1->Entry(
             -textvariable => \$::lglobal{surend},
             -width        => 12,
-            -relief       => 'sunken',
         )->pack(
             -side   => 'left',
             -pady   => 5,
@@ -768,7 +766,6 @@ sub flood {
             -fill   => 'x'
         );
         my $floodch = $f1->Entry(
-            -relief       => 'sunken',
             -textvariable => \$::lglobal{ffchar},
             -width        => 24,
         )->pack(
@@ -903,7 +900,6 @@ sub alignpopup {
         my $f1 = $::lglobal{alignpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f1->Entry(
             -width        => 8,
-            -relief       => 'sunken',
             -textvariable => \$::lglobal{alignstring},
         )->pack( -side => 'top', -pady => 5, -padx => 2, -anchor => 'n' );
         my $gobut = $f1->Button(
@@ -949,7 +945,6 @@ sub asciibox_popup {
             $f5->Entry(
                 -width        => 1,
                 -font         => 'proofing',
-                -relief       => 'sunken',
                 -textvariable => \${ $::lglobal{ascii} }[$_],
             )->grid(
                 -row    => $row,
@@ -965,7 +960,6 @@ sub asciibox_popup {
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
         my $wmentry = $f0->Entry(
             -width        => 6,
-            -relief       => 'sunken',
             -textvariable => \$::lglobal{asciiwidth},
         )->pack( -side => 'left', -pady => 2, -padx => 2, -anchor => 'n' );
         my $f1       = $::lglobal{asciiboxpop}->Frame->pack( -side => 'top', -anchor => 'n' );
