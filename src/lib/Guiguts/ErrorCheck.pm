@@ -16,7 +16,8 @@ my $BEGMSG = "Beginning check:";
 my $ENDMSG = "Check is complete:";
 
 # General error check window
-# Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Unclosed Tag Check, Link Check
+# Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check,
+# Unmatched Tag/Brackets/Double Quotes/Block Checks
 # pphtml, pptxt, ppvimage, Spell Query, EPUBCheck and Load External Checkfile.
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
@@ -357,7 +358,10 @@ sub errorcheckpop_up {
         and $errorchecktype ne "Load Checkfile"
         and $errorchecktype ne "Nu HTML Check"
         and $errorchecktype ne "Nu XHTML Check"
-        and $errorchecktype ne "HTML Tags" ) {
+        and $errorchecktype ne "Unmatched Tags"
+        and $errorchecktype ne "Unmatched Brackets"
+        and $errorchecktype ne "Unmatched Double Quotes"
+        and $errorchecktype ne "Unmatched Block Markup" ) {
         unlink $errname;
         my $dialog = $top->Dialog(
             -text    => 'Error file was empty - maybe blocked by anti-virus software?',
@@ -830,8 +834,14 @@ sub errorcheckrun {    # Runs error checks
         jeebiesrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         spellqueryrun($errname);
-    } elsif ( $errorchecktype eq 'HTML Tags' ) {
-        htmltagsrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched Tags' ) {
+        unmatchedtagsrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched Brackets' ) {
+        unmatchedbracketsrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched Double Quotes' ) {
+        unmatcheddoublequotesrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched Block Markup' ) {
+        unmatchedblockrun($errname);
     }
     $top->Unbusy;
     unlink $tmpfname unless $errorchecktype eq 'EPUBCheck';    # Don't delete the epub file
@@ -1652,35 +1662,34 @@ sub booklouperun {
 }    # end of variable-enclosing block
 
 #
-# Check that all relevant opening HTML tags have a matching close tag
+# Check that all relevant opening items have a matching close item
 # and vice versa
-sub htmltagsrun {
-    my $errname    = shift;
+# Input arguments are error output filename, regex to match open/close items,
+# and subroutine references to get match string, and whether to skip item.
+sub unmatcheditemsrun {
+    my $errname    = shift;           # output filename
+    my $regexp     = shift;           # regex that matches open or close item, enclosed in grouping parentheses
+    my $rsubmatch  = shift;           # subroutine that will convert open to close & vice versa
+    my $rsubskip   = shift;           # subroutine that will return whether skip item
     my $textwindow = $::textwindow;
-    my $TAGCH      = "[a-z0-9]";      # Permissible characters in HTML tag name
 
-    open my $logfile, ">", $errname or die "Error opening HTML Tags output file: $errname";
+    open my $logfile, ">", $errname or die "Error opening Unmatched Items output file: $errname";
 
     # Find each start/end tag in order from beginning to end
     my $start = '1.0';
     my $len;
-    while (
-        my $index = $textwindow->search(
-            '-regexp', '-count', \$len, '--', "(<$TAGCH+|</$TAGCH+)", $start, 'end'
-        )
-    ) {
+    while ( my $index =
+        $textwindow->search( '-regexp', '-count', \$len, '--', $regexp, $start, 'end' ) ) {
         my $endidx = "$index + $len c";
-        my $tag    = $textwindow->get( $index, $endidx );
-        my $len    = length($tag);
+        my $item   = $textwindow->get( $index, $endidx );
 
-        # Skip void elements - they don't need separate closing tags
-        unless ( ::hilitematchvoid($tag) ) {
-            my ( $matchstr, $reverse ) = ::hilitematchtag($tag);
-            if ($matchstr) {    # Should always be true, since we're only passing HTML tags to hilitematchtag
-                my $matchidx = ::hilitematchfind( $index, $endidx, $tag, $matchstr, $reverse );
-                unless ($matchidx) {    # Failed to find a match
+        unless ( $rsubskip and &$rsubskip($item) ) {    # May skip certain elements
+            my ( $matchstr, $reverse ) = &$rsubmatch($item);
+            if ($matchstr) {                            # Should always be true, since we're only passing valid items to matching subroutine
+                my $matchidx = ::hilitematchfind( $index, $endidx, $item, $matchstr, $reverse );
+                unless ($matchidx) {                    # Failed to find a match
                     my ( $row, $col ) = split( /\./, $index );
-                    my $error = sprintf( "%d:%d - %s> not matched", $row, $col, $tag );
+                    my $error = sprintf( "%d:%d - %s not matched", $row, $col, $item );
                     utf8::encode($error);
                     print $logfile "$error\n";
                 }
@@ -1689,6 +1698,36 @@ sub htmltagsrun {
         $start = $endidx;
     }
     close $logfile;
+}
+
+#
+# Check that all relevant HTML/DP tags have a matching pair
+# Skips void elements
+sub unmatchedtagsrun {
+    my $errname = shift;
+    my $TAGCH   = "[a-z0-9]";    # Permissible characters in tag name
+    unmatcheditemsrun( $errname, "<$TAGCH+|</$TAGCH+", \&::hilitematchtag, \&::hilitematchvoid );
+}
+
+#
+# Check that all brackets have matching pair
+sub unmatchedbracketsrun {
+    my $errname = shift;
+    unmatcheditemsrun( $errname, "[][)(}{]", \&::hilitematchpair );
+}
+
+#
+# Check that all curly double quotes have matching pair
+sub unmatcheddoublequotesrun {
+    my $errname = shift;
+    unmatcheditemsrun( $errname, "[\x{201c}\x{201d}]", \&::hilitematchpair );
+}
+
+#
+# Check that all block markups have matching pair
+sub unmatchedblockrun {
+    my $errname = shift;
+    unmatcheditemsrun( $errname, "/[$::allblocktypes]|[$::allblocktypes]/", \&::hilitematchblock );
 }
 
 #
