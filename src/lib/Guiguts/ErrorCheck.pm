@@ -1727,7 +1727,8 @@ sub unmatcheddoublequotesrun {
 # Check that all block markups have matching pair
 sub unmatchedblockrun {
     my $errname = shift;
-    unmatcheditemsrun( $errname, "/[$::allblocktypes]|[$::allblocktypes]/", \&::hilitematchblock );
+    unmatcheditemsrun( $errname, "^/[$::allblocktypes]\$|^[$::allblocktypes]\$/",
+        \&::hilitematchblock );
 }
 
 #
