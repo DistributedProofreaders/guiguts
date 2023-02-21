@@ -12,7 +12,8 @@ BEGIN {
       &hilitematch &hilitematchfind &hilitematchtag &hilitematchvoid);
 }
 
-my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
+my $TAGCH   = "[a-z0-9]";       # Permissible characters in HTML tag name
+my $BLOCKCH = '[*#$A-Za-z]';    # Types of block markup (including future expansion :)
 
 # Routine to find highlight word list
 sub scannosfile {
@@ -414,7 +415,7 @@ sub hilite_alignment {
 }
 
 #
-# Highlight character/tag that matches the selected one,
+# Highlight character/tag/markup that matches the selected one,
 # or if nothing selected, match the one adjacent to cursor
 sub hilitematch {
     my $textwindow = $::textwindow;
@@ -453,17 +454,73 @@ sub hilitematch {
 
     # No single character match, so look around for HTML tag
     unless ($matchstr) {
-        if ( $selection !~ />$/ and $adjafter =~ /^(<?\/?$TAGCH*)/ ) {    # look forward for more unless already have end of tag in selection
-            $selection .= $1;
-            $end       .= '+' . length($1) . 'c';
+        my $tagselection = $selection;
+        my $tagstart     = $start;
+        my $tagend       = $end;
+        if ( $tagselection !~ />$/ and $adjafter =~ /^(<?\/?$TAGCH*)/ ) {    # look forward for more unless already have end of tag in selection
+            $tagselection .= $1;
+            $tagend       .= '+' . length($1) . 'c';
         }
-        if ( $selection !~ /^</ && $adjbefore =~ /(<?\/?$TAGCH*>?)$/ ) {    # look back for more unless already have start of tag in selection
-            $selection = $1 . $selection;
-            $start .= '-' . length($1) . 'c';
+        if ( $tagselection !~ /^</ && $adjbefore =~ /(<?\/?$TAGCH*>?)$/ ) {    # look back for more unless already have start of tag in selection
+            $tagselection = $1 . $tagselection;
+            $tagstart .= '-' . length($1) . 'c';
         }
-        $end .= '-1c' if $selection =~ s/^(<\/?$TAGCH+)>$/$1/;              # Remove closing > - permits match if cursor just after "</div>"
+        $tagend .= '-1c' if $tagselection =~ s/^(<\/?$TAGCH+)>$/$1/;           # Remove closing > - permits match if cursor just after "</div>"
 
-        ( $matchstr, $reverse ) = hilitematchtag($selection);
+        ( $matchstr, $reverse ) = hilitematchtag($tagselection);
+        if ($matchstr) {                                                       # Only update selection, start and end if we found a valid HTML tag
+            $selection = $tagselection;
+            $end       = $tagend;
+            $start     = $tagstart;
+        }
+    }
+
+    # Still no match, so look around for block markup, e.g. /*, #/, etc
+    unless ($matchstr) {
+        if ( $selection eq '' ) {
+
+            # Nothing selected - look forwards/backwards two characters
+            if ( length($adjafter) >= 2
+                and substr( $adjafter, 0, 2 ) =~ /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {    # Both chars after cursor
+                $selection = $1;
+                $end .= '+2c';
+            } elsif ( length($adjbefore) >= 2
+                and substr( $adjbefore, -2 ) =~ /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {     # Both chars before cursor
+                $selection = $1;
+                $start .= '-2c';
+            } elsif ( length($adjbefore) >= 1
+                and length($adjafter) >= 1
+                and substr( $adjbefore, -1 ) . substr( $adjafter, 0, 1 ) =~
+                /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {                                     # One character either side of cursor
+                $selection = substr( $adjbefore, -1 ) . substr( $adjafter, 0, 1 );
+                $start .= '-1c';
+                $end   .= '+1c';
+            }
+        } elsif ( $selection eq '/' ) {
+
+            # Just slash selected - look forwards/backwards one character for block character
+            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) =~ /^$BLOCKCH$/ ) {    # Open markup
+                $selection = $selection . substr( $adjafter, 0, 1 );
+                $end .= '+1c';
+            } elsif ( length($adjbefore) >= 1 and substr( $adjbefore, -1 ) =~ /^$BLOCKCH$/ ) {    # Close markup
+                $selection = substr( $adjbefore, -1 ) . $selection;
+                $start .= '-1c';
+            }
+        } elsif ( $selection =~ /^$BLOCKCH$/ ) {
+
+            # Just block character selected - look forwards/backwards one character for a slash
+            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) eq '/' ) {                  # Close markup
+                $selection = $selection . substr( $adjafter, 0, 1 );
+                $end .= '+1c';
+            } elsif ( length($adjbefore) >= 1 and substr( $adjbefore, -1 ) eq '/' ) {             # Open markup
+                $selection = substr( $adjbefore, -1 ) . $selection;
+                $start .= '-1c';
+            }
+        }
+
+        # By now, either $selection has been extended to include both characters
+        # or maybe they had already both been selected by the user
+        ( $matchstr, $reverse ) = hilitematchblock($selection);
     }
 
     my $index;
@@ -474,12 +531,15 @@ sub hilitematch {
             $textwindow->tagAdd( 'highlight', $index, $index . ' +' . length($matchstr) . 'c' );
             $textwindow->tagRemove( 'sel', '1.0', 'end' );
 
-            # For HTML tags, position cursor inside tag; for simple pairs, just before character
+            # For HTML tags, or block markup, position cursor inside tag;
+            # for simple pairs, just before character
             # to correspond with checking "after" first (see top of routine)
             # Repeated use of Find Match should then re-find matching one, rather than adjacent
             my $inside = 0;
-            if ( $matchstr =~ /^</ ) {
+            if ( $matchstr =~ /^</ ) {    # HTML
                 $inside = $matchstr =~ /^<\// ? 2 : 1;
+            } elsif ( $matchstr =~ /^\// or $matchstr =~ /\/$/ ) {    # Block
+                $inside = 1;
             }
             $textwindow->markSet( 'insert', "$index +$inside c" );
             $textwindow->see('insert');
@@ -585,13 +645,31 @@ sub hilitematchtag {
 }
 
 #
+# Return matching block markup for given markup and whether it was closing markup
+# Expects something like "/*" or "#/"
+sub hilitematchblock {
+    my $selection = shift;
+    my $right     = 0;
+    my $match     = '';
+    if ( $selection =~ /^$BLOCKCH\/$/ ) {
+        $right = 1;
+        $match = '/' . substr( $selection, 0, 1 );
+    } elsif ( $selection =~ /^\/$BLOCKCH$/ ) {
+        $match = substr( $selection, 1 ) . '/';
+    }
+    return ( $match, $right );
+}
+
+#
 # Return true if given tag is for a void element,
 # i.e. does not need separate open/close tags
+# Includes <tb> which is DP markup rather than HTML
 sub hilitematchvoid {
     my $tag   = shift;
     my @voids = (
         'area', 'base', 'br',    'col',    'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'param', 'source', 'track', 'wbr',
+        'link', 'meta', 'param', 'source', 'track', 'wbr',    #end of HTML tags
+        'tb'                                                  # DP tag
     );
     $tag =~ s/<?\/?($TAGCH+)>?/$1/;
     return grep { /^$tag$/ } @voids;
