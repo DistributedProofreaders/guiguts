@@ -300,7 +300,11 @@ sub menu_search {
         [ 'command',   'Find ~Orphaned DP Markup...', -command => \&::orphanedmarkup ],
         [ 'command',   'Find ~Asterisks w/o Slash',   -command => \&::find_asterisks ],
         menu_cascade( '~Find Block Markup', &menu_search_block ),
-        [ 'command',   'Find ~Match', -command => \&::hilitematch ],
+        [
+            'command', 'Find ~Match',
+            -accelerator => 'Ctrl+[',
+            -command     => \&::hilitematch,
+        ],
         [ 'separator', '' ],
         [
             'command', 'Highlight ~Double Quotes in Selection',
