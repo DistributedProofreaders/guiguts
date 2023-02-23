@@ -18,8 +18,10 @@ my $TEMPPAGEMARK = "\x7f";
 sub wrapper {
     my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
     return $paragraph
-      if ( $paragraph =~ m|^$TEMPPAGEMARK*[$::allblocktypes]/$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
-        || $paragraph =~ m|^$TEMPPAGEMARK*/[$::allblocktypes]$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
+      if ( $paragraph =~
+        m|^$TEMPPAGEMARK*[$::allblocktypes]$TEMPPAGEMARK*/$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
+        || $paragraph =~
+        m|^$TEMPPAGEMARK*/$TEMPPAGEMARK*[$::allblocktypes]$TEMPPAGEMARK*\n$TEMPPAGEMARK*$|
         || $paragraph =~ m|^$TEMPPAGEMARK*$| );
     return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 }
@@ -31,12 +33,18 @@ sub knuth_wrapper {
     my $TEMPNBSP = "\x{E123}";    # Private Use Area character won't appear in our books
 
     # if open rewrap markup, remove, then prepend once rewrapped
-    if    ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes]\[[0-9.,]+\])|| ) { $pre = "$1\n"; }
-    elsif ( $paragraph =~ s|^($TEMPPAGEMARK*/[$blockwraptypes])|| )             { $pre = "$1\n"; }
+    if ( $paragraph =~
+        s|^($TEMPPAGEMARK*/$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*\[$TEMPPAGEMARK*[0-9.,$TEMPPAGEMARK*]+$TEMPPAGEMARK*\]$TEMPPAGEMARK*)||
+    ) {
+        $pre = "$1\n";
+    } elsif ( $paragraph =~ s|^($TEMPPAGEMARK*/$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*)|| ) {
+        $pre = "$1\n";
+    }
 
     # if close rewrap markup, remove (including any newline), then append once rewrapped
     # (note that look-behind group is not captured, so $1 refers to large capturing group)
-    if ( $paragraph =~ s|(?<=\n)($TEMPPAGEMARK*[$blockwraptypes]/$TEMPPAGEMARK*)(\n?)$|| ) {
+    if ( $paragraph =~
+        s|(?<=\n)($TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*/$TEMPPAGEMARK*)(\n?)$|| ) {
         $post = "$1$2";
     }
     my $maxwidth = $rightmargin;
@@ -88,9 +96,10 @@ sub indexwrapper {
     # Rewrap each line (entry) independently and append to a single string to return.
     my $rewrapped = '';
     for my $line (@lines) {
+        my $notpmline = removetpms($line);
 
         # if start and end of markup - just preserve - don't indent
-        if ( $line =~ /^$TEMPPAGEMARK*([Ii]\/|\/[Ii])$TEMPPAGEMARK*$/ ) {
+        if ( $notpmline =~ /^([Ii]\/|\/[Ii])$/ ) {
             $rewrapped .= $line . "\n";
             next;
         }
@@ -118,19 +127,21 @@ sub centerblockwrapper {
     my $rewrapped = '';
     my $done      = 0;                        # Used to stop indenting when closing c/ is spotted
     for my $line (@lines) {
-        $done = 1 if $line =~ /^$TEMPPAGEMARK*[Cc]\/$TEMPPAGEMARK*$/;
+        my $notpmline = removetpms($line);
+        $done = 1 if $notpmline =~ /^[Cc]\/$/;
 
         # if done, or start and end of markup - just preserve - don't indent
-        if ( $done or $line =~ /^$TEMPPAGEMARK*(\/[#Cc]|[#Cc]\/)$TEMPPAGEMARK*$/ ) {
+        if ( $done or $notpmline =~ /^(\/[#Cc]|[#Cc]\/)$/ ) {
             $rewrapped .= $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/;    # No extra newline for closing blockquote markup
+            $rewrapped .= "\n" unless $notpmline =~ /^#\/$/;    # No extra newline for closing blockquote markup
         } else {
-            $line =~ s/^\s*//;                                                         # Remove any existing indentation
-            my $len = length($line);
-            $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;            # Indentation required for centering
+            $line      =~ s/^\s*//;                                            # Remove any existing indentation
+            $notpmline =~ s/^\s*//;
+            my $len = length($notpmline);                                      # Don't count temp page markers in line length
+            $len = ( $rightmargin - $leftmargin - $len ) / 2 + $leftmargin;    # Indentation required for centering
             $len = 0 if $len < 0;
             $rewrapped .= ' ' x $len . $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*$/;
+            $rewrapped .= "\n" unless $notpmline =~ /^$/;
         }
     }
     return $rewrapped;
@@ -147,24 +158,26 @@ sub rightblockwrapper {
     # Find number of spaces needed to move longest line to right margin
     my $minspc = 1000;
     for my $line (@lines) {
-        my $spc = $rightmargin - length($line);
+        my $notpmline = removetpms($line);
+        my $spc       = $rightmargin - length($notpmline);    # Don't count temp page markers in line length
         $spc    = 0    if $spc < 0;
         $minspc = $spc if $spc < $minspc;
     }
 
     # Indent all lines by this amount, and append to a single string to return.
     my $rewrapped = '';
-    my $done      = 0;                        # Used to stop indenting when closing r/ is spotted
+    my $done      = 0;    # Used to stop indenting when closing r/ is spotted
     for my $line (@lines) {
-        $done = 1 if $line =~ /^$TEMPPAGEMARK*[Rr]\/$TEMPPAGEMARK*$/;
+        my $notpmline = removetpms($line);
+        $done = 1 if $notpmline =~ /^[Rr]\/$/;
 
         # if done, or start and end of markup - just preserve - don't indent
-        if ( $done or $line =~ /^$TEMPPAGEMARK*(\/[#Rr]|[#Rr]\/)$TEMPPAGEMARK*$/ ) {
+        if ( $done or $notpmline =~ /^(\/[#Rr]|[#Rr]\/)$/ ) {
             $rewrapped .= $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*#\/$TEMPPAGEMARK*$/;    # No extra newline for closing blockquote markup
+            $rewrapped .= "\n" unless $notpmline =~ /^#\/$/;    # No extra newline for closing blockquote markup
         } else {
             $rewrapped .= ' ' x $minspc . $line;
-            $rewrapped .= "\n" unless $line =~ /^$TEMPPAGEMARK*$/;
+            $rewrapped .= "\n" unless $notpmline =~ /^$/;
         }
     }
     return $rewrapped;
@@ -256,7 +269,7 @@ sub selectrewrap {
         $indent = $::defaultindent;
         $thisblockend =
           $textwindow->search( '-regex', '--',
-            "(^$TEMPPAGEMARK*\$|^$TEMPPAGEMARK*[$blockwraptypes]/$TEMPPAGEMARK*\$)",
+            "(^$TEMPPAGEMARK*\$|^$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*/$TEMPPAGEMARK*\$)",
             $thisblockstart, $end );    # find end of paragraph or end of markup
                                         # if two start rewrap block markers aren't separated by a blank line, just let it become added
         $thisblockend = $thisblockstart
@@ -282,45 +295,50 @@ sub selectrewrap {
           if ( ( $thisblockend eq $lastend )
             || ( $textwindow->compare( $thisblockend, '<', $lastend ) ) );    # finish if the search isn't advancing
 
+        # To simplify all the comparisons for various blocktypes below, make a copy of the selection
+        # but with the temporary page markers removed.
+        # Only use this for the comparions; use the original for the actual rewrapping process.
+        my $notpmselection = removetpms($selection);
+
         # Check for block types that support blockwrap
-        if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]/ ) {
-            if ( $selection =~ /^$TEMPPAGEMARK*\/\#/ ) {                      # blockquote
-                $::blockwrap++;                                               # increment blockquote level
+        if ( $notpmselection =~ /^\/[$blockwraptypes]/ ) {
+            if ( $notpmselection =~ /^\/\#/ ) {    # blockquote
+                $::blockwrap++;                    # increment blockquote level
                 ( $leftmargin, $firstmargin, $rightmargin ) = setblockmargins($::blockwrap);
-            } elsif ( $selection =~ /^$TEMPPAGEMARK*\/[iI]/ ) {    # index
-                $leftmargin  = 8;                                  # All continuation lines aligned here
-                $firstmargin = 2;                                  # All first lines indented by existing indent, plus this figure
-                $rightmargin = 72;                                 # Right hand limit
+            } elsif ( $notpmselection =~ /^\/[iI]/ ) {    # index
+                $leftmargin  = 8;                         # All continuation lines aligned here
+                $firstmargin = 2;                         # All first lines indented by existing indent, plus this figure
+                $rightmargin = 72;                        # Right hand limit
                 $::blockwrap = -1;
             }
 
             # Check if there are any parameters following blockwrap markup [n...
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
                 $leftmargin  = $1;
                 $firstmargin = $leftmargin;
             }
 
             # [n.n...
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
                 $firstmargin = $3;
             }
 
             # [n.n,n...
-            if ( $selection =~ /^$TEMPPAGEMARK*\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
                 $rightmargin = $4;
             }
         }
 
         # if selection is /*, /L, or /l
-        if ( $selection =~ /^$TEMPPAGEMARK*\/[\*Ll]/ ) {
+        if ( $notpmselection =~ /^\/[\*Ll]/ ) {
             $inblock      = 1;
             $enableindent = 1;
         }    #check for no rewrap markup
              # if there are any parameters /*[n
-        if ( $selection =~ /^$TEMPPAGEMARK*\/\*\[(\d+)/ ) { $indent = $1 }
+        if ( $notpmselection =~ /^\/\*\[(\d+)/ ) { $indent = $1 }
 
         # if selection begins /p or /P
-        if ( $selection =~ /^$TEMPPAGEMARK*\/[pP]/ ) {
+        if ( $notpmselection =~ /^\/[pP]/ ) {
             $inblock      = 1;
             $enableindent = 1;
             $poem         = 1;
@@ -328,12 +346,12 @@ sub selectrewrap {
         }
 
         # starting a block if selection begins /x /f /$ /c or /r
-        $inblock     = 1 if $selection =~ /^$TEMPPAGEMARK*\/[XxFf\$CcRr]/;
-        $blockcenter = 1 if $selection =~ /^$TEMPPAGEMARK*\/[cC]/;
-        $blockright  = 1 if $selection =~ /^$TEMPPAGEMARK*\/[rR]/;
+        $inblock     = 1 if $notpmselection =~ /^\/[XxFf\$CcRr]/;
+        $blockcenter = 1 if $notpmselection =~ /^\/[cC]/;
+        $blockright  = 1 if $notpmselection =~ /^\/[rR]/;
 
-        $textwindow->markSet( 'rewrapend', $thisblockend );                             # Set a mark at the end of the text so it can be found after rewrap
-        unless ( $selection =~ /^[$TEMPPAGEMARK\s]*?(\*[$TEMPPAGEMARK\s]*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
+        $textwindow->markSet( 'rewrapend', $thisblockend );    # Set a mark at the end of the text so it can be found after rewrap
+        unless ( $notpmselection =~ /^\s*?(\*\s*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
             if ( $inblock and not( $blockcenter or $blockright ) ) {
                 if ($enableindent) {
 
@@ -341,8 +359,10 @@ sub selectrewrap {
                     # special handling for [pP\*Ll] types here means that if immediately followed
                     # by closing of blockquote markup, the close blockquote will be handled next time round
                     # the loop. See comment "Special handling for [pP\*Ll] types" below.
-                    $indentblockend = $textwindow->search( '-regex', '--',
-                        "^$TEMPPAGEMARK*[pP\*Ll]\/", $thisblockstart, $end );
+                    $indentblockend =
+                      $textwindow->search( '-regex', '--',
+                        "^$TEMPPAGEMARK*[pP\*Ll]$TEMPPAGEMARK*\/",
+                        $thisblockstart, $end );
                     $indentblockend = $indentblockend || $end;
                     $textwindow->markSet( 'rewrapend', $indentblockend );
                     unless ($offset) { $offset = 0 }
@@ -369,9 +389,10 @@ sub selectrewrap {
                     }
                     for my $line ( $sr .. $er - 1 ) {
                         $textline = $textwindow->get( "$line.0", "$line.end" );
+                        my $notpmtextline = removetpms($textline);
                         next
-                          if ( ( $textline =~ /^$TEMPPAGEMARK*\/[pP\*Ll]/ )
-                            || ( $textline =~ /^$TEMPPAGEMARK*[pP\*LlFf]\// ) );
+                          if ( ( $textline =~ /^\/[pP\*Ll]/ )
+                            || ( $textline =~ /^[pP\*LlFf]\// ) );
                         if ( $enableindent and $fblock == 0 ) {
                             $textwindow->insert( "$line.0", ( ' ' x $indent ) )
                               if ( $indent > 0 );
@@ -385,7 +406,6 @@ sub selectrewrap {
                                     $textwindow->delete( "$line.0", "$line.@{[abs $indent]}" );
                                 }
                             }
-                        } else {
                         }
                     }
                     $indent       = 0;
@@ -429,7 +449,7 @@ sub selectrewrap {
                 $end = shift @endtemp;
             }
         }
-        if ( $selection =~ /^$TEMPPAGEMARK*[XxFf\$CcRr]\//m ) {
+        if ( $notpmselection =~ /^[XxFf\$CcRr]\//m ) {
             $inblock      = 0;
             $indent       = 0;
             $offset       = 0;
@@ -438,17 +458,17 @@ sub selectrewrap {
             $blockcenter  = 0;
             $blockright   = 0;
         }
-        if ( $selection =~ /^$TEMPPAGEMARK*[$blockwraptypes]\/$TEMPPAGEMARK*$/m ) {
+        if ( $notpmselection =~ /^[$blockwraptypes]\/$/m ) {
 
             # blockquote
-            if ( $selection =~ /^$TEMPPAGEMARK*\#\/$TEMPPAGEMARK*$/m ) {
+            if ( $notpmselection =~ /^\#\/$/m ) {
 
                 # In order to support poetry, etc., within blockquotes,
                 # if [pP\*Ll] markup is closed immediately preceding close of blockquote,
                 # special treatment earlier means the close blockquote will be selected next time round loop
                 # so don't decrement the level now, or it will be done twice.
                 # See comment "Special handling for [pP\*Ll] types" above.
-                unless ( $selection =~ /[pP\*Ll]\/\n$TEMPPAGEMARK*\#\// ) {
+                unless ( $notpmselection =~ /[pP\*Ll]\/\n\#\// ) {
                     if ( $::blockwrap > 0 ) {
                         $::blockwrap--;    # decrement blockquote level
                         ( $leftmargin, $firstmargin, $rightmargin ) = setblockmargins($::blockwrap);
@@ -513,6 +533,17 @@ sub selectrewrap {
         ::restorelinenumbers();
     }
     $::blockwrap = 0;    # In case of markup error, don't want to leave blockwrap variable set
+}
+
+#
+# Create a copy of a paragraph without temporary pagemarker characters for ease of
+# regex comparisons. Page markers can otherwise optionally appear anywhere in
+# "/#[4.8,24]" which means the regex to match gets very long and unreadable.
+# Note: do not use this copy for wrapping, just comparing
+sub removetpms {
+    my $notpm = shift;
+    $notpm =~ s/$TEMPPAGEMARK//g;
+    return $notpm;
 }
 
 #

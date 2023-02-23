@@ -12,6 +12,9 @@
 
 ### Bug Fixes
 - The column display (ruler) numbers could sometimes display wrongly
+- When an internal page marker ended up in the middle of block markup,
+  rewrapping could fail. Page markers could also break the column
+  counting needed for `/R` and `/C` wrapping leading to misalignment
 
 
 ## Version 1.5.2
