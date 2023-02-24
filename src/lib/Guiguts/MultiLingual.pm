@@ -36,8 +36,8 @@ sub spellmultiplelanguages {
     ::hidepagenums();
 
     # find Aspell and base language if necessary
-    ::spelloptions() unless $::globalspellpath;
-    return           unless $::globalspellpath;
+    ::spelloptions() unless $::globalspellpath and -e $::globalspellpath;
+    return           unless $::globalspellpath and -e $::globalspellpath;
     ::spelloptions() unless $::globalspelldictopt;
     return           unless $::globalspelldictopt;
     multilangpopup( $textwindow, $top );

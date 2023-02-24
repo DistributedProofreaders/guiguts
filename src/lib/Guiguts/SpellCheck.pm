@@ -278,6 +278,7 @@ sub aspellstart {
 
 sub get_spellchecker_version {
     return $::lglobal{spellversion} if $::lglobal{spellversion};
+    return "Not available" unless $::globalspellpath and -e $::globalspellpath;
     my $aspell_version;
     my $runner = runner::tofile('aspell.tmp');
     $runner->run( $::globalspellpath, 'help' );
@@ -476,13 +477,14 @@ sub spellchecker {    # Set up spell check window
     ::operationadd('Spellcheck');
     ::hidepagenums();
     if ( defined( $::lglobal{spellpopup} ) ) {    # If window already exists
-        $::lglobal{spellpopup}->deiconify;                       # pop it up off the task bar
-        $::lglobal{spellpopup}->raise;                           # put it on top
-        $::lglobal{spellpopup}->focus;                           # and give it focus
+        $::lglobal{spellpopup}->deiconify;                        # pop it up off the task bar
+        $::lglobal{spellpopup}->raise;                            # put it on top
+        $::lglobal{spellpopup}->focus;                            # and give it focus
         spelloptions()
-          unless $::globalspellpath && -e $::globalspellpath;    # Whoops, don't know where to find Aspell
+          unless $::globalspellpath and -e $::globalspellpath;    # Whoops, don't know where to find Aspell
+        return unless $::globalspellpath and -e $::globalspellpath;    # Still no Aspell, so quit spell check
         spellclearvars();
-        spellcheckfirst();                                       # Start checking the spelling
+        spellcheckfirst();                                             # Start checking the spelling
     } else {    # window doesn't exist so set it up
         $::lglobal{spellpopup} = $top->Toplevel;
         $::lglobal{spellpopup}
@@ -688,8 +690,8 @@ sub spellchecker {    # Set up spell check window
         $::lglobal{replacementlist}->bind( '<Triple-Button-1>',
             sub { ::busy(); spellmisspelled_replace(); spellreplace(); ::unbusy(); } );
         spelloptions()
-          unless $::globalspellpath && -e $::globalspellpath;    # Check to see if we know where Aspell is
-        spellcheckfirst();                                       # Start the spellcheck
+          unless $::globalspellpath and -e $::globalspellpath;    # Check to see if we know where Aspell is
+        spellcheckfirst() if $::globalspellpath and -e $::globalspellpath;    # Start spellcheck if we now know where Aspell is
     }
 }
 
@@ -728,7 +730,7 @@ sub getprojectdic {
 sub spelloptions {
     my $textwindow = $::textwindow;
     my $top        = $::top;
-    if ($::globalspellpath) {
+    if ( $::globalspellpath and -e $::globalspellpath ) {
         aspellstart() unless $::lglobal{spellpid};
     }
     my $dicts;
@@ -745,7 +747,7 @@ sub spelloptions {
         -width   => 24,
         -command => sub {
             ::locateExecutable( 'Aspell', \$::globalspellpath );
-            if ($::globalspellpath) {
+            if ( $::globalspellpath and -e $::globalspellpath ) {
                 $spellpathentry->delete( 0, 'end' );
                 $spellpathentry->insert( 'end', $::globalspellpath );
                 ::savesettings();
@@ -792,8 +794,7 @@ sub spelloptions {
     $spelldictxt->delete( '1.0', 'end' );
     $spelldictxt->insert( '1.0', $::globalspelldictopt );
 
-    #$dictlist->insert( 'end', "No dictionary!" );
-    if ($::globalspellpath) {
+    if ( $::globalspellpath and -e $::globalspellpath ) {
         my $runner = runner::tofile('aspell.tmp');
         $runner->run( $::globalspellpath, 'dump', 'dicts' );
         warn "Unable to access dictionaries.\n" if $?;
