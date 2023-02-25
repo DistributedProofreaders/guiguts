@@ -919,14 +919,21 @@ sub initialize {
     $::manualhash{'errorcheckpop+pphtml'}    = '/HTML_Menu#PPhtml';
     $::manualhash{'errorcheckpop+ppvimage'} =
       '/HTML_Menu#Check_for_image-related_errors_.28PPVimage.29';
-    $::manualhash{'extoptpop'}     = '/Custom_Menu';
-    $::manualhash{'filepathspop'}  = '/Preferences_Menu#File_Paths';
-    $::manualhash{'fixpop'}        = '/Tools_Menu#Basic_Fixup';
-    $::manualhash{'floodpop'}      = '/Edit_Menu#Flood_Fill';
-    $::manualhash{'fontpop'}       = '/Preferences_Menu#Appearance';
-    $::manualhash{'footcheckpop'}  = '/Tools_Menu#Footnote_Fixup';
-    $::manualhash{'footpop'}       = '/Tools_Menu#Footnote_Fixup';
-    $::manualhash{'gcviewoptspop'} = '/Tools_Menu#Bookloupe';
+    $::manualhash{'errorcheckpop+Spell Query'} = '/Tools_Menu#Spell_Query';
+    $::manualhash{'errorcheckpop+EPUBCheck'} =
+      '/HTML_Menu#Check_.EPUB_Files_for_Possible_Errors_.28EPUBCheck.29';
+    $::manualhash{'errorcheckpop+Unmatched Tags'}          = '/Tools_Menu#Unmatched_Tags';
+    $::manualhash{'errorcheckpop+Unmatched Brackets'}      = '/Tools_Menu#Unmatched_Brackets';
+    $::manualhash{'errorcheckpop+Unmatched Block Markup'}  = '/Tools_Menu#Unmatched_Block_Markup';
+    $::manualhash{'errorcheckpop+Unmatched Double Quotes'} = '/Text_Menu#Unmatched_Double_Quotes';
+    $::manualhash{'extoptpop'}                             = '/Custom_Menu';
+    $::manualhash{'filepathspop'}                          = '/Preferences_Menu#File_Paths';
+    $::manualhash{'fixpop'}                                = '/Tools_Menu#Basic_Fixup';
+    $::manualhash{'floodpop'}                              = '/Edit_Menu#Flood_Fill';
+    $::manualhash{'fontpop'}                               = '/Preferences_Menu#Appearance';
+    $::manualhash{'footcheckpop'}                          = '/Tools_Menu#Footnote_Fixup';
+    $::manualhash{'footpop'}                               = '/Tools_Menu#Footnote_Fixup';
+    $::manualhash{'gcviewoptspop'}                         = '/Tools_Menu#Bookloupe';
     $::manualhash{'gotolabpop'} =
       '/Navigation#Go_to_the_text_on_a_specific_page_number_of_the_original_Book';
     $::manualhash{'gotolinepop'} = '/Navigation#Go_to_a_specific_Line';

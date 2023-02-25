@@ -9,11 +9,10 @@ BEGIN {
     @EXPORT =
       qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
       &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle
-      &hilitematch &hilitematchfind &hilitematchtag &hilitematchvoid);
+      &hilitematch &hilitematchfind &hilitematchpair &hilitematchtag &hilitematchblock &hilitematchvoid);
 }
 
-my $TAGCH   = "[a-z0-9]";       # Permissible characters in HTML tag name
-my $BLOCKCH = '[*#$A-Za-z]';    # Types of block markup (including future expansion :)
+my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
 
 # Routine to find highlight word list
 sub scannosfile {
@@ -481,17 +480,19 @@ sub hilitematch {
 
             # Nothing selected - look forwards/backwards two characters
             if ( length($adjafter) >= 2
-                and substr( $adjafter, 0, 2 ) =~ /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {    # Both chars after cursor
+                and substr( $adjafter, 0, 2 ) =~ /^(\/[$::allblocktypes]|[$::allblocktypes]\/)$/ )
+            {    # Both chars after cursor
                 $selection = $1;
                 $end .= '+2c';
             } elsif ( length($adjbefore) >= 2
-                and substr( $adjbefore, -2 ) =~ /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {     # Both chars before cursor
+                and substr( $adjbefore, -2 ) =~ /^(\/[$::allblocktypes]|[$::allblocktypes]\/)$/ )
+            {    # Both chars before cursor
                 $selection = $1;
                 $start .= '-2c';
             } elsif ( length($adjbefore) >= 1
                 and length($adjafter) >= 1
                 and substr( $adjbefore, -1 ) . substr( $adjafter, 0, 1 ) =~
-                /^(\/$BLOCKCH|$BLOCKCH\/)$/ ) {                                     # One character either side of cursor
+                /^(\/[$::allblocktypes]|[$::allblocktypes]\/)$/ ) {    # One character either side of cursor
                 $selection = substr( $adjbefore, -1 ) . substr( $adjafter, 0, 1 );
                 $start .= '-1c';
                 $end   .= '+1c';
@@ -499,20 +500,22 @@ sub hilitematch {
         } elsif ( $selection eq '/' ) {
 
             # Just slash selected - look forwards/backwards one character for block character
-            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) =~ /^$BLOCKCH$/ ) {    # Open markup
+            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) =~ /^[$::allblocktypes]$/ )
+            {    # Open markup
                 $selection = $selection . substr( $adjafter, 0, 1 );
                 $end .= '+1c';
-            } elsif ( length($adjbefore) >= 1 and substr( $adjbefore, -1 ) =~ /^$BLOCKCH$/ ) {    # Close markup
+            } elsif ( length($adjbefore) >= 1
+                and substr( $adjbefore, -1 ) =~ /^[$::allblocktypes]$/ ) {    # Close markup
                 $selection = substr( $adjbefore, -1 ) . $selection;
                 $start .= '-1c';
             }
-        } elsif ( $selection =~ /^$BLOCKCH$/ ) {
+        } elsif ( $selection =~ /^[$::allblocktypes]$/ ) {
 
             # Just block character selected - look forwards/backwards one character for a slash
-            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) eq '/' ) {                  # Close markup
+            if ( length($adjafter) >= 1 and substr( $adjafter, 0, 1 ) eq '/' ) {    # Close markup
                 $selection = $selection . substr( $adjafter, 0, 1 );
                 $end .= '+1c';
-            } elsif ( length($adjbefore) >= 1 and substr( $adjbefore, -1 ) eq '/' ) {             # Open markup
+            } elsif ( length($adjbefore) >= 1 and substr( $adjbefore, -1 ) eq '/' ) {    # Open markup
                 $selection = substr( $adjbefore, -1 ) . $selection;
                 $start .= '-1c';
             }
@@ -651,10 +654,10 @@ sub hilitematchblock {
     my $selection = shift;
     my $right     = 0;
     my $match     = '';
-    if ( $selection =~ /^$BLOCKCH\/$/ ) {
+    if ( $selection =~ /^[$::allblocktypes]\/$/ ) {
         $right = 1;
         $match = '/' . substr( $selection, 0, 1 );
-    } elsif ( $selection =~ /^\/$BLOCKCH$/ ) {
+    } elsif ( $selection =~ /^\/[$::allblocktypes]$/ ) {
         $match = substr( $selection, 1 ) . '/';
     }
     return ( $match, $right );

@@ -300,7 +300,11 @@ sub menu_search {
         [ 'command',   'Find ~Orphaned DP Markup...', -command => \&::orphanedmarkup ],
         [ 'command',   'Find ~Asterisks w/o Slash',   -command => \&::find_asterisks ],
         menu_cascade( '~Find Block Markup', &menu_search_block ),
-        [ 'command',   'Find ~Match', -command => \&::hilitematch ],
+        [
+            'command', 'Find ~Match',
+            -accelerator => 'Ctrl+[',
+            -command     => \&::hilitematch,
+        ],
         [ 'separator', '' ],
         [
             'command', 'Highlight ~Double Quotes in Selection',
@@ -412,7 +416,7 @@ sub menu_tools {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
         [
-            'command', '~Word Frequency...',
+            'command', 'Word Frequenc~y...',
             -accelerator => 'F5',
             -command     => \&::wordfrequency,
         ],
@@ -459,6 +463,27 @@ sub menu_tools {
         ],
         [
             'command',
+            'Unmatched Ta~g Check',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Tags' );
+            }
+        ],
+        [
+            'command',
+            'Unmatche~d Brackets Check',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Brackets' );
+            }
+        ],
+        [
+            'command',
+            'Unmatched ~Block Markup Check',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Block Markup' );
+            }
+        ],
+        [
+            'command',
             'Load Checkf~ile...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Load Checkfile' );
@@ -469,7 +494,7 @@ sub menu_tools {
         [ 'command',   '~Sidenote Fixup...', -command => \&::sidenotes ],
         [
             'command',
-            'Replace [::] with I~ncremental Counter',
+            'Replace [::] ~with Incremental Counter',
             -command => \&::replace_incr_counter
         ],
         menu_cascade( 'Con~vert Fractions', &menu_tools_convertfractions ),
@@ -517,7 +542,7 @@ sub menu_tools {
         ],
         [
             'command',
-            '~Block Rewrap Selection',
+            'Block Rewrap Selectio~n',
             -accelerator => 'Ctrl+Shift+w',
             -command     => sub {
                 $textwindow->addGlobStart;
@@ -618,7 +643,14 @@ sub menu_txt {
         [
             'command', "Convert to Curly ~Quotes", -command => sub { ::text_quotes_convert(); }
         ],
-        menu_cascade( 'Curly Quote Corrections', &menu_txt_curlycorrections ),
+        menu_cascade( 'Curl~y Quote Corrections', &menu_txt_curlycorrections ),
+        [
+            'command',
+            '~Unmatched Curly Double Quote Check',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Double Quotes' );
+            }
+        ],
         [ 'separator', '' ],
         [
             'command',
@@ -664,7 +696,7 @@ sub menu_txt {
         ],
         [ 'separator', '' ],
         [ 'command',   "~Center Selection",      -command => sub { ::rcaligntext( 'c', 0 ); } ],
-        [ 'command',   "~Right-Align Selection", -command => sub { ::rcaligntext( 'r', 0 ); } ],
+        [ 'command',   "Ri~ght-Align Selection", -command => sub { ::rcaligntext( 'r', 0 ); } ],
         [
             'command',
             "Right-Align ~Numbers in Selection",
@@ -816,9 +848,9 @@ sub menu_html {
         ],
         [
             'command',
-            'Unclo~sed Tag Check',
+            'Unm~atched Tag Check',
             -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'HTML Tags' );
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Tags' );
             }
         ],
         [
