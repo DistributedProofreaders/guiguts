@@ -596,6 +596,7 @@ sub escape_regexmetacharacters {
 
 sub deaccentsort {
     my $phrase = shift;
+    $phrase =~ s/\p{Mark}//g;                              # First remove any combining marks from phrase
     if ( $phrase =~ /[$::convertcharssinglesearch]/ ) {    # do we need the slow tr?
         eval
           "\$phrase =~ tr/$::convertlatinsinglesearch$::convertcharssinglesearch/$::convertlatinsinglereplace$::convertcharssinglereplace/";
