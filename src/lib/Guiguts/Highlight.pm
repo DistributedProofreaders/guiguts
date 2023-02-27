@@ -9,7 +9,7 @@ BEGIN {
     @EXPORT =
       qw(&scannosfile &hilite &hiliteremove &hilitesinglequotes &hilitedoublequotes &hilitepopup &highlight_scannos
       &highlight_quotbrac &hilite_alignment_start &hilite_alignment_stop &hilite_alignment_toggle
-      &hilitematch &hilitematchfind &hilitematchpair &hilitematchtag &hilitematchblock &hilitematchvoid);
+      &hilitematch &hilitematchfind &hilitematchpair &hilitematchtag &hilitematchblock &hilitematchvoid &hilitematchtb);
 }
 
 my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
@@ -528,7 +528,7 @@ sub hilitematch {
 
     my $index;
     if ($matchstr) {
-        $index = hilitematchfind( $start, $end, $selection, $matchstr, $reverse );
+        $index = hilitematchfind( $start, $end, $selection, $matchstr, $reverse, 1 );    # Allow nesting
         if ($index) {
             $textwindow->tagAdd( 'highlight', $start, $end );
             $textwindow->tagAdd( 'highlight', $index, $index . ' +' . length($matchstr) . 'c' );
@@ -554,13 +554,14 @@ sub hilitematch {
 #
 # Given the location of the selected string and its matching string,
 # find the matching occurrence in the file, returning index to its location.
-# Keep track of depth to cope with nested quotes, brackets, tags, etc.
+# Keep track of depth to cope with nested quotes, brackets, tags, etc. if nest argument is true
 sub hilitematchfind {
     my $start      = shift;
     my $end        = shift;
     my $selection  = shift;
     my $match      = shift;
     my $reverse    = shift;
+    my $nest       = shift;
     my $textwindow = $::textwindow;
 
     # Regex searches for either the tag or its match, since if nested you may find the tag
@@ -590,6 +591,11 @@ sub hilitematchfind {
         # Found match or another occurrence of the selected tag, so adjust depth
         my $found = $textwindow->get( $index, "$index + $length c" );
         $depth += $found eq $selection ? 1 : -1;
+
+        if ( $depth > 1 and not $nest ) {    # If depth > 1 it's nested, so fail if no nesting
+            $index = undef;
+            last;
+        }
 
         # Adjust start position of next search
         if ($reverse) {
@@ -666,15 +672,21 @@ sub hilitematchblock {
 #
 # Return true if given tag is for a void element,
 # i.e. does not need separate open/close tags
-# Includes <tb> which is DP markup rather than HTML
 sub hilitematchvoid {
     my $tag   = shift;
     my @voids = (
         'area', 'base', 'br',    'col',    'embed', 'hr', 'img', 'input',
-        'link', 'meta', 'param', 'source', 'track', 'wbr',    #end of HTML tags
-        'tb'                                                  # DP tag
+        'link', 'meta', 'param', 'source', 'track', 'wbr',
     );
     $tag =~ s/<?\/?($TAGCH+)>?/$1/;
     return grep { /^$tag$/ } @voids;
+}
+
+#
+# Return true if given tag is a thought break,
+# so does not need separate open/close tags
+sub hilitematchtb {
+    my $tag = shift;
+    $tag =~ /^<tb>?$/;
 }
 1;

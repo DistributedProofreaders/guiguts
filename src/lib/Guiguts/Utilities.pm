@@ -922,7 +922,8 @@ sub initialize {
     $::manualhash{'errorcheckpop+Spell Query'} = '/Tools_Menu#Spell_Query';
     $::manualhash{'errorcheckpop+EPUBCheck'} =
       '/HTML_Menu#Check_.EPUB_Files_for_Possible_Errors_.28EPUBCheck.29';
-    $::manualhash{'errorcheckpop+Unmatched Tags'}          = '/Tools_Menu#Unmatched_Tags';
+    $::manualhash{'errorcheckpop+Unmatched HTML Tags'}     = '/HTML_Menu#Unmatched_Tags';
+    $::manualhash{'errorcheckpop+Unmatched DP Tags'}       = '/Tools_Menu#Unmatched_Tags';
     $::manualhash{'errorcheckpop+Unmatched Brackets'}      = '/Tools_Menu#Unmatched_Brackets';
     $::manualhash{'errorcheckpop+Unmatched Block Markup'}  = '/Tools_Menu#Unmatched_Block_Markup';
     $::manualhash{'errorcheckpop+Unmatched Double Quotes'} = '/Text_Menu#Unmatched_Double_Quotes';
