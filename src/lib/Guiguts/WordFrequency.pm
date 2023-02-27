@@ -41,11 +41,11 @@ sub wordfrequencybuildwordlist {
             $match = ( $::lglobal{wf_ignore_case} ) ? lc($word) : $word;
             $::lglobal{seenwordsdoublehyphen}->{$match}++;
         }
-        $line =~ s/[^'\.,\p{Alnum}\*-]/ /g;    # get rid of nonalphanumeric
-        $line =~ s/--/ /g;                     # get rid of --
-        $line =~ s/—/ /g;                      # trying to catch words with real em-dashes, from dp2rst
-        $line =~ s/(\D),/$1 /g;                # throw away comma after non-digit
-        $line =~ s/,(\D)/ $1/g;                # and before
+        $line =~ s/[^'\.,\p{Alnum}\p{Mark}\*-]/ /g;    # get rid of nonalphanumeric (retaining combining characters)
+        $line =~ s/--/ /g;                             # get rid of --
+        $line =~ s/—/ /g;                              # trying to catch words with real em-dashes, from dp2rst
+        $line =~ s/(\D),/$1 /g;                        # throw away comma after non-digit
+        $line =~ s/,(\D)/ $1/g;                        # and before
         @words = split( /\s+/, $line );
         for my $word (@words) {
             $word =~ s/ //g;
