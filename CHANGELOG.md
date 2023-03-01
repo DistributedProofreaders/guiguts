@@ -1,6 +1,6 @@
 # Changelog
 
-## Next version
+## Version 1.5.3
 
 - `Quick Search` in Search menu (or Shift-Ctrl-f) pops a mini-dialog with
   basic search options and a history button. Clicking or Shift-clicking Search
@@ -8,9 +8,9 @@
 - `Find Match` in the Search menu (or `Ctrl-[`) finds the matching bracket,
   curly quote, block markup, or HTML tag to the one currently selected or
   indicated by the cursor
-- `Unmatched Tag Check` in the HTML menu reports unmatched HTML tags
+- `Unmatched HTML Tag Check` in the HTML menu reports unmatched HTML tags
 - `Unmatched Curly Double Quote Check` added to the Txt menu
-- Separate `Unmatched Tag/Brackets/Block Markup Checks` added to Tools menu
+- Separate `Unmatched DP Tag/Brackets/Block Markup Checks` added to Tools menu
 
 ### Bug Fixes
 - The column display (ruler) numbers could sometimes display wrongly
