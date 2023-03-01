@@ -762,23 +762,27 @@ sub readlabels {
 sub working {
     my $msg = shift;
     my $top = $::top;
-    if ( defined( $::lglobal{workpop} ) && ( defined $msg ) ) {
-        $::lglobal{worklabel}->configure( -text => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n" );
+
+    # Display "working" message
+    if ( defined $msg ) {
+        if ( defined $::lglobal{workpop} ) {    # dialog already showing, so just change message
+            $::lglobal{worklabel}
+              ->configure( -text => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n" );
+        } else {                                # create dialog from scratch
+            $::lglobal{workpop} = $top->Toplevel;
+            $::lglobal{workpop}->transient($top);
+            $::lglobal{workpop}->title('Working.....');
+            $::lglobal{worklabel} = $::lglobal{workpop}->Label(
+                -text       => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n",
+                -font       => '{helvetica} 20 bold',
+                -background => $::activecolor,
+            )->pack;
+            $::lglobal{workpop}->resizable( 'no', 'no' );
+            initialize_popup_with_deletebinding('workpop');
+        }
         $::lglobal{workpop}->update;
-    } elsif ( defined $::lglobal{workpop} ) {
+    } else {    # No message given means "no longer working" so kill dialog
         ::killpopup('workpop');
-    } else {
-        $::lglobal{workpop} = $top->Toplevel;
-        $::lglobal{workpop}->transient($top);
-        $::lglobal{workpop}->title('Working.....');
-        $::lglobal{worklabel} = $::lglobal{workpop}->Label(
-            -text       => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n",
-            -font       => '{helvetica} 20 bold',
-            -background => $::activecolor,
-        )->pack;
-        $::lglobal{workpop}->resizable( 'no', 'no' );
-        initialize_popup_with_deletebinding('workpop');
-        $::lglobal{workpop}->update;
     }
 }
 
