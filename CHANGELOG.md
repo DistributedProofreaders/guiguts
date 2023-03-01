@@ -11,6 +11,7 @@
 - `Unmatched Tag Check` in the HTML menu reports unmatched HTML tags
 - `Unmatched Curly Double Quote Check` added to the Txt menu
 - Separate `Unmatched Tag/Brackets/Block Markup Checks` added to Tools menu
+- Ebookmaker version 0.12.29 included
 
 ### Bug Fixes
 - The column display (ruler) numbers could sometimes display wrongly
