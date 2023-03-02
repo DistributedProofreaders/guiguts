@@ -564,10 +564,6 @@ sub menu_tools {
 
 sub menu_tools_charactertools {
     [
-        [
-            'command', 'Convert ~Windows CP 1252 characters to Unicode',
-            -command => \&::cp1252toUni
-        ],
         [ 'command', 'Search for ~Transliterations...', -command => \&::find_transliterations ],
         [ 'command', 'Common~ly-Used Characters Chart', -command => \&::commoncharspopup ],
         [ 'command', 'Unicode Character ~Entry',        -command => \&::utfcharentrypopup ],
