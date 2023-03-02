@@ -1,6 +1,6 @@
 # Changelog
 
-## Next version
+## Version 1.5.3
 
 - `Quick Search` in Search menu (or Shift-Ctrl-f) pops a mini-dialog with
   basic search options and a history button. Clicking or Shift-clicking Search
