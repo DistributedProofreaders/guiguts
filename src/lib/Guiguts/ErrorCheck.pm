@@ -358,7 +358,8 @@ sub errorcheckpop_up {
         and $errorchecktype ne "Load Checkfile"
         and $errorchecktype ne "Nu HTML Check"
         and $errorchecktype ne "Nu XHTML Check"
-        and $errorchecktype ne "Unmatched Tags"
+        and $errorchecktype ne "Unmatched DP Tags"
+        and $errorchecktype ne "Unmatched HTML Tags"
         and $errorchecktype ne "Unmatched Brackets"
         and $errorchecktype ne "Unmatched Double Quotes"
         and $errorchecktype ne "Unmatched Block Markup" ) {
@@ -834,8 +835,10 @@ sub errorcheckrun {    # Runs error checks
         jeebiesrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         spellqueryrun($errname);
-    } elsif ( $errorchecktype eq 'Unmatched Tags' ) {
-        unmatchedtagsrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched DP Tags' ) {
+        unmatcheddptagsrun($errname);
+    } elsif ( $errorchecktype eq 'Unmatched HTML Tags' ) {
+        unmatchedhtmltagsrun($errname);
     } elsif ( $errorchecktype eq 'Unmatched Brackets' ) {
         unmatchedbracketsrun($errname);
     } elsif ( $errorchecktype eq 'Unmatched Double Quotes' ) {
@@ -1670,7 +1673,8 @@ sub unmatcheditemsrun {
     my $errname    = shift;           # output filename
     my $regexp     = shift;           # regex that matches open or close item, enclosed in grouping parentheses
     my $rsubmatch  = shift;           # subroutine that will convert open to close & vice versa
-    my $rsubskip   = shift;           # subroutine that will return whether skip item
+    my $nestreg    = shift;           # regex to match tags that can nest - undef matches nothing
+    my $rsubskip   = shift;           # optional subroutine that will return whether to skip item
     my $textwindow = $::textwindow;
 
     open my $logfile, ">", $errname or die "Error opening Unmatched Items output file: $errname";
@@ -1686,7 +1690,9 @@ sub unmatcheditemsrun {
         unless ( $rsubskip and &$rsubskip($item) ) {    # May skip certain elements
             my ( $matchstr, $reverse ) = &$rsubmatch($item);
             if ($matchstr) {                            # Should always be true, since we're only passing valid items to matching subroutine
-                my $matchidx = ::hilitematchfind( $index, $endidx, $item, $matchstr, $reverse );
+                my $nest = ( defined $nestreg and $item =~ $nestreg );
+                my $matchidx =
+                  ::hilitematchfind( $index, $endidx, $item, $matchstr, $reverse, $nest );
                 unless ($matchidx) {                    # Failed to find a match
                     my ( $row, $col ) = split( /\./, $index );
                     my $error = sprintf( "%d:%d - %s not matched", $row, $col, $item );
@@ -1701,34 +1707,46 @@ sub unmatcheditemsrun {
 }
 
 #
-# Check that all relevant HTML/DP tags have a matching pair
-# Skips void elements
-sub unmatchedtagsrun {
+# Check that all relevant DP tags have a matching pair
+# Skips thought breaks and does not allow nesting
+sub unmatcheddptagsrun {
     my $errname = shift;
-    my $TAGCH   = "[a-z0-9]";    # Permissible characters in tag name
-    unmatcheditemsrun( $errname, "<$TAGCH+|</$TAGCH+", \&::hilitematchtag, \&::hilitematchvoid );
+    my $TAGCH   = "[a-z]";    # Permissible characters in tag name
+    unmatcheditemsrun( $errname, "<$TAGCH+|</$TAGCH+", \&::hilitematchtag, undef,
+        \&::hilitematchtb );
 }
 
 #
-# Check that all brackets have matching pair
+# Check that all relevant HTML tags have a matching pair
+# Skips void elements
+# Allows all tags to be nested - don't use empty regex to match all, since special meaning in Perl
+sub unmatchedhtmltagsrun {
+    my $errname = shift;
+    my $TAGCH   = "[a-z0-9]";    # Permissible characters in tag name
+    unmatcheditemsrun( $errname, "<$TAGCH+|</$TAGCH+", \&::hilitematchtag, ".",
+        \&::hilitematchvoid );
+}
+
+#
+# Check that all brackets have matching pair (no nesting)
 sub unmatchedbracketsrun {
     my $errname = shift;
     unmatcheditemsrun( $errname, "[][)(}{]", \&::hilitematchpair );
 }
 
 #
-# Check that all curly double quotes have matching pair
+# Check that all curly double quotes have matching pair (no nesting)
 sub unmatcheddoublequotesrun {
     my $errname = shift;
     unmatcheditemsrun( $errname, "[\x{201c}\x{201d}]", \&::hilitematchpair );
 }
 
 #
-# Check that all block markups have matching pair
+# Check that all block markups have matching pair (/# may be nested)
 sub unmatchedblockrun {
     my $errname = shift;
-    unmatcheditemsrun( $errname, "^/[$::allblocktypes]\$|^[$::allblocktypes]\$/",
-        \&::hilitematchblock );
+    unmatcheditemsrun( $errname, "^(/[$::allblocktypes]|[$::allblocktypes]/)\$",
+        \&::hilitematchblock, "^(/#|#/)\$" );
 }
 
 #

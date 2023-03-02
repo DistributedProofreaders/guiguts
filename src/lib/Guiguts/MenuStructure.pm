@@ -463,9 +463,9 @@ sub menu_tools {
         ],
         [
             'command',
-            'Unmatched Ta~g Check',
+            'Unmatched DP Ta~g Check',
             -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Tags' );
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched DP Tags' );
             }
         ],
         [
@@ -848,9 +848,9 @@ sub menu_html {
         ],
         [
             'command',
-            'Unm~atched Tag Check',
+            'Unm~atched HTML Tag Check',
             -command => sub {
-                ::errorcheckpop_up( $textwindow, $top, 'Unmatched Tags' );
+                ::errorcheckpop_up( $textwindow, $top, 'Unmatched HTML Tags' );
             }
         ],
         [
