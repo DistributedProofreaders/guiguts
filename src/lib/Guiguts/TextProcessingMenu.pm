@@ -20,6 +20,8 @@ my $LSQ  = "\x{2018}";
 my $RSQ  = "\x{2019}";
 my $FLAG = "@";
 
+#
+# Replace all <i> markup with text markup character (underscore by default)
 sub text_convert_italic {
     my ( $textwindow, $italic_char ) = @_;
     my $italic  = qr/<\/?i>/;
@@ -27,6 +29,8 @@ sub text_convert_italic {
     $textwindow->FindAndReplaceAll( '-regexp', '-nocase', $italic, $replace );
 }
 
+#
+# Replace all <b> markup with text markup character (equals sign by default)
 sub text_convert_bold {
     my ( $textwindow, $bold_char ) = @_;
     my $bold    = qr{</?b>};
@@ -34,24 +38,30 @@ sub text_convert_bold {
     $textwindow->FindAndReplaceAll( '-regexp', '-nocase', $bold, $replace );
 }
 
+#
+# Replace all given DP markup with given text equivalent
 sub txt_convert_simple_markup {
     my ( $textwindow, $markup, $replace ) = @_;
     my $search = eval( 'qr{' . $markup . '}' );
     $textwindow->FindAndReplaceAll( '-regexp', '-nocase', $search, $replace );
 }
 
-## Insert a "Thought break" (duh)
+#
+# Insert a "Thought break"
 sub text_thought_break {
     my ($textwindow) = @_;
     $textwindow->insert( ( $textwindow->index('insert') ) . ' lineend', '       *' x 5 );
 }
 
+#
+# Replace all DP <tb> markup with text equivalent
 sub text_convert_tb {
     my ($textwindow) = @_;
-    my $tb = '       *       *       *       *       *';
-    $textwindow->FindAndReplaceAll( '-exact', '-nocase', '<tb>', $tb );
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', '<tb>', '       *' x 5 );
 }
 
+#
+# Pop the markup->text autoconvert options dialog
 sub text_convert_options {
     my $top     = shift;
     my $options = $top->DialogBox(
@@ -80,6 +90,8 @@ sub text_convert_options {
     ::savesettings();
 }
 
+#
+# Pop the Markup->Text conversion dialog
 sub txt_convert_palette {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     if ( defined( $::lglobal{txtconvpop} ) ) {
@@ -247,6 +259,8 @@ sub txt_convert_palette {
     ::savesettings();
 }
 
+#
+# Pop the Basic Fixup dialog
 sub fixpopup {
     my $top = $::top;
     ::hidepagenums();
@@ -275,7 +289,7 @@ sub fixpopup {
             'Remove spaces after opening and before closing brackets, () [], {}.',
             'Mark up a line with 4 or more * and nothing else as <tb>.',
             'Fix obvious l<->1 problems, lst, llth, etc.',
-            'Format ellipses correctly',
+            'Format ellipses correctly.',
             'Remove spaces after beginning and before ending angle quotes « ».',
         );
         my $row = 0;
@@ -312,7 +326,8 @@ sub fixpopup {
     }
 }
 
-## Fixup Popup
+#
+# Do Basic Fixup
 sub fixup {
     my $textwindow = $::textwindow;
     ::hidelinenumbers();    # To speed updating of text window
@@ -455,6 +470,8 @@ sub fixup {
     ::restorelinenumbers();
 }
 
+#
+# Pop Search/Replace dialog with regex to convert smallcaps to allcaps
 sub text_uppercase_smallcaps {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
@@ -464,6 +481,8 @@ sub text_uppercase_smallcaps {
     $::lglobal{replaceentry}->insert( 'end', "\\U\$1\\E" );
 }
 
+#
+# Convert smallcaps to allcaps in whole file
 sub txt_auto_uppercase_smallcaps {
     my $textwindow = $::textwindow;
     $textwindow->addGlobStart;
@@ -476,6 +495,8 @@ sub txt_auto_uppercase_smallcaps {
     $textwindow->addGlobEnd;
 }
 
+#
+# Pop Search/Replace dialog with regex to remove smallcaps markup
 sub text_remove_smallcaps_markup {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
@@ -485,6 +506,9 @@ sub text_remove_smallcaps_markup {
     $::lglobal{replaceentry}->insert( 'end', "\$1" );
 }
 
+#
+# Pop Search/Replace dialog with regex to find smallcaps markup and
+# replace with existing text, uppercase version, or +Marked up version+
 sub txt_manual_sc_conversion {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
@@ -500,22 +524,17 @@ sub txt_manual_sc_conversion {
     $::lglobal{searchmulti}->invoke;
 }
 
-## End of Line Cleanup
+#
+# Remove end of line whitespace from whole file
 sub endofline {
     my $textwindow = $::textwindow;
     ::operationadd('Remove end-of-line spaces');
     ::hidepagenums();
-    my $start  = '1.0';
-    my $end    = $textwindow->index('end');
-    my @ranges = $textwindow->tagRanges('sel');
-    if (@ranges) {
-        $start = $ranges[0];
-        $end   = $ranges[-1];
-    }
     $textwindow->FindAndReplaceAll( '-regex', '-nocase', '\s+$', '' );
 }
 
-## Clean Up Rewrap
+#
+# Clean up Rewrap Block markers
 sub cleanup {
     my $textwindow = $::textwindow;
     my $top        = $::top;

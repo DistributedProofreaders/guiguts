@@ -10,15 +10,19 @@ BEGIN {
       &pnumadjust &pgfocus &pgrenum &pageadd &pageremove &pagetextinsert );
 }
 
+#
+# Hide visible page markers
 sub hidepagenums {
     ::togglepagenums() if $::lglobal{seepagenums};
 }
 
+#
+# Show visible poage markers
 sub displaypagenums {
     ::togglepagenums() unless $::lglobal{seepagenums};
 }
 
-## Toggle visible page markers. This is not line numbers but marks for pages.
+## Toggle visible page markers
 sub togglepagenums {
     my $showallmarkers = shift;
     my $textwindow     = $::textwindow;
@@ -54,7 +58,8 @@ sub togglepagenums {
     }
 }
 
-## Page Number Adjust
+#
+# Create Page Number Adjust dialog
 sub pnumadjust {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -227,7 +232,9 @@ sub pagetextinsert {
     $textwindow->addGlobEnd;
 }
 
-sub pageremove {    # Delete a page marker
+#
+# Delete a page marker
+sub pageremove {
     my $textwindow = $::textwindow;
     my $num        = $::lglobal{pagenumentry}->get;
     $num = $textwindow->index('insert') unless $num;
@@ -242,7 +249,9 @@ sub pageremove {    # Delete a page marker
     ::displaypagenums();
 }
 
-sub pageadd {    # Add a page marker
+#
+# Add a page marker
+sub pageadd {
     my $textwindow = $::textwindow;
     my ( $prev, $next, $mark, $length );
     my $insert = $textwindow->index('insert');
@@ -284,7 +293,9 @@ sub pageadd {    # Add a page marker
     return 1;
 }
 
-sub pgrenum {    # Re sequence page markers
+#
+# Re-sequence page markers
+sub pgrenum {
     my $textwindow = $::textwindow;
     my ( $mark, $length, $num, $start, $end );
     my $offset = $::lglobal{pagerenumoffset}->get;

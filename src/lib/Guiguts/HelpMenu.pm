@@ -9,6 +9,8 @@ BEGIN {
     @EXPORT = qw( &about_pop_up );
 }
 
+#
+# Show the Help->About Guiguts dialog
 sub about_pop_up {
     my $top        = $::top;
     my $about_text = <<EOM;

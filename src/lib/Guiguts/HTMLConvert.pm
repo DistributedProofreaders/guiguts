@@ -22,7 +22,8 @@ sub voidclosure {
     return $::xmlserialization ? " />" : ">";
 }
 
-# Return true if asterisks or <tb> converted on this line
+#
+# Convert asterisks or <tb> on this line - return true if conversion done
 sub html_convert_tb {
     my ( $textwindow, $selection, $step ) = @_;
     my $closure = voidclosure();
@@ -35,6 +36,7 @@ sub html_convert_tb {
     return 0;
 }
 
+#
 # Convert subscripts in the textwindow at this line
 # Also return modified line so remainder of HTML conversion acts on the edited version
 sub html_convert_subscripts {
@@ -46,9 +48,10 @@ sub html_convert_subscripts {
     return $selection;
 }
 
+#
 # Convert superscripts in the textwindow at this line
 # Also return modified line so remainder of HTML conversion acts on the edited version
-# Doesn't convert Gen^rl; workaround Gen^{rl} - correct behaviour, not a bug, cf. the guidelines
+# Accepts either Gen^{rl} or M^r (for single character superscript) as per DP guidelines
 sub html_convert_superscripts {
     my ( $textwindow, $selection, $step ) = @_;
     if ( $selection =~ s/\^\{([^}]+?)\}/<sup>$1<\/sup>/g ) {
@@ -56,7 +59,6 @@ sub html_convert_superscripts {
         $textwindow->ntinsert( "$step.0", $selection );
     }
 
-    # Fixed a bug--did not handle the case without curly brackets, i.e., Philad^a.
     if ( $selection =~ s/\^(.)/<sup>$1<\/sup>/g ) {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
@@ -64,6 +66,8 @@ sub html_convert_superscripts {
     return $selection;
 }
 
+#
+# Convert simple tags, such as <i>...</i> to HTML defined in generate dialog
 sub html_convert_simple_tag {
     my ( $markup, $replace ) = @_;
     if ( "<$markup>" ne $replace ) {
@@ -74,6 +78,10 @@ sub html_convert_simple_tag {
     return;
 }
 
+#
+# Convert ampersands, greater than and less than symbols to HTML code
+# Regexps needed for gt and lt to avoid converting those that are part of HTML tags
+# Note that some gt/lt will not be converted, e.g. 2>1 or a<b (likely causing validation error)
 sub html_convert_ampersands {
     my $textwindow = shift;
     ::working("Converting Ampersands");
@@ -84,7 +92,9 @@ sub html_convert_ampersands {
     return;
 }
 
-# double hyphens go to emdash.
+#
+# Convert double hyphens to emdashes
+# Also converts non-breaking spaces to numeric entity
 sub html_convert_emdashes {
     ::working("Converting Emdashes");
 
@@ -98,6 +108,8 @@ sub html_convert_emdashes {
     return;
 }
 
+#
+# Remove /*, /$ and /# markers now that processing is finished
 sub html_cleanup_markers {
     my ($textwindow) = @_;
     my $thisblockend;
@@ -115,6 +127,8 @@ sub html_cleanup_markers {
         $::blockend = "$::xler.end";
         $textwindow->ntdelete( "$::blockstart-1c", $::blockend );
     }
+
+    # Don't think this ever happens, and if it did, not enough characters would be deleted
     while ( $::blockstart =
         $textwindow->search( '-regexp', '--', '<\/h\d><br' . voidclosure(), '1.0', 'end' ) ) {
         $textwindow->ntdelete( "$::blockstart+5c", "$::blockstart+9c" );
@@ -122,6 +136,8 @@ sub html_cleanup_markers {
     return;
 }
 
+#
+# Convert all footnotes to HTML, adding hyperlinks
 sub html_convert_footnotes {
     my ( $textwindow, $fnarray ) = @_;
     my $step = 0;
@@ -196,6 +212,8 @@ sub html_convert_footnotes {
     return;
 }
 
+#
+# Convert main body of file, handling things like being inside block markup, etc.
 sub html_convert_body {
     my ( $textwindow, $headertext, $poetrynumbers ) = @_;
 
@@ -1005,6 +1023,7 @@ sub insert_chapdiv {
     $::textwindow->ntinsert( "$stepm1.0", '<div class="chapter">' );
 }
 
+#
 # Put <div class="chapter"> before, and </div> after h2 elements, including pagenum
 # within the div if it comes up to 5 lines before the h2 and there's no intervening text.
 sub html_convert_chapterdivs {
@@ -1050,6 +1069,9 @@ sub html_convert_chapterdivs {
     }
 }
 
+#
+# Convert <u> markup to HTML span for underscore and <sc> markup to small caps.
+# If the smallcap text doesn't have any lowercase letters, then allsmcap is used instead
 sub html_convert_underscoresmallcaps {
     my ($textwindow) = @_;
     my $thisblockstart = '1.0';
@@ -1085,6 +1107,7 @@ sub html_convert_underscoresmallcaps {
     }
 }
 
+#
 # Set opening and closing markup for footnotes
 sub html_convert_footnoteblocks {
     my ($textwindow) = @_;
@@ -1151,6 +1174,8 @@ sub html_convert_footnoteblocks {
     return;
 }
 
+#
+# Convert sidenote markup to HTML divs
 sub html_convert_sidenotes {
     my ($textwindow) = @_;
     ::working("Converting\nSidenotes");
@@ -1188,6 +1213,10 @@ sub html_convert_sidenotes {
     return;
 }
 
+#
+# Add HTML markup for each page marker
+# Attempts to handle blank pages by batching up page numbers and outputting in one span
+# (depending on setting of 'Skip coincident Pg #s')
 sub html_convert_pageanchors {
     my $textwindow = $::textwindow;
     ::working("Inserting Page Number Markup");
@@ -1349,6 +1378,9 @@ sub html_convert_pageanchors {
     return;
 }
 
+#
+# Unless file already has a header, insert the header file
+# (or default header followed by user header if one exists)
 sub html_parse_header {
     my ( $textwindow, $headertext, $title ) = @_;
     my $selection;
@@ -1440,6 +1472,8 @@ sub html_parse_header {
     return $headertext;
 }
 
+#
+# Attempt to find the title and author by examining the text
 sub get_title_author {
     my $textwindow = $::textwindow;
     my $step       = 0;
@@ -1504,6 +1538,11 @@ sub get_title_author {
     return ( $completetitle, $author );
 }
 
+#
+# Perform various tidy ups to HTML code:
+#  - improve readability with extra newlines
+#  - change <blockquote> markup to blockquot divs if required
+#  - output the stored poetry CSS indent lines
 sub html_wrapup {
     my ( $textwindow, $headertext, $autofraction, $cssblockmarkup ) = @_;
     my $thisblockstart;
@@ -1552,7 +1591,8 @@ sub html_wrapup {
     return;
 }
 
-# insert </p> only if there is an open <p> tag
+#
+# Close paragraphs by inserting </p> only if there is an open <p> tag
 sub insert_paragraph_close {
     my ( $textwindow, $index ) = @_;
     if ( is_paragraph_open( $textwindow, $index ) ) {
@@ -1562,6 +1602,8 @@ sub insert_paragraph_close {
     return 0;
 }
 
+#
+# Check if currently inside paragraph markup
 sub is_paragraph_open {
     my ( $textwindow, $index ) = @_;
     my $pstart = $textwindow->search( '-backwards', '-regexp', '--', '<p(>| )', $index, '1.0' )
@@ -1574,6 +1616,7 @@ sub is_paragraph_open {
     return 0;
 }
 
+#
 # insert <p> only if there is not an open <p> tag
 sub insert_paragraph_open {
     my ( $textwindow, $index ) = @_;
@@ -1584,6 +1627,8 @@ sub insert_paragraph_open {
     return 0;
 }
 
+#
+# Pop the HTML image dialog to configure and insert image markup in HTML file
 sub htmlimage {
     my $filename   = shift;
     my $textwindow = $::textwindow;
@@ -1851,6 +1896,8 @@ sub htmlimagefilenext {
     return ::catfile( $dirname, $nextfile );
 }
 
+#
+# Insert image markup for selected file
 sub htmlimageok {
     my $textwindow = shift;
     my $name       = $::lglobal{imgname}->get;
@@ -1984,6 +2031,8 @@ sub htmlimageok {
     $textwindow->see('insert');
 }
 
+#
+# Close the image dialog, also deleting image thumbnail data
 sub htmlimagedestroy {
     $::lglobal{htmlthumb}->delete if $::lglobal{htmlthumb};
     ::killpopup('htmlthumb');
@@ -1993,6 +2042,7 @@ sub htmlimagedestroy {
     ::killpopup('htmlimpop');
 }
 
+#
 # Reset the width field to the default for the current type
 sub htmlimagewidthsetdefault {
     my $sizex;
@@ -2015,6 +2065,7 @@ sub htmlimagewidthsetdefault {
     );
 }
 
+#
 # Return the maximum percentage width for the current image
 # such that both its width and height will fit a landscape screen
 sub htmlimagewidthmaxpercent {
@@ -2023,6 +2074,7 @@ sub htmlimagewidthmaxpercent {
         int( 100.0 * $LANDY / $LANDX * $::lglobal{htmlimagesizex} / $::lglobal{htmlimagesizey} ) );
 }
 
+#
 # Update the image height field based on the width field, width type (%/em)
 # and aspect ratio of loaded image
 # If using percentage width, then height is not known/displayed
@@ -2048,6 +2100,9 @@ sub htmlimageupdateheight {
     $::lglobal{htmlimgheight} = $heightlabel;
 }
 
+#
+# Perform the Auto-Illus Search action, finding next illo markup
+# and popping the image dialog to configure insertion of HTML markup
 sub htmlimages {
     my ( $textwindow, $top ) = @_;
     my $length;
@@ -2068,6 +2123,8 @@ sub htmlimages {
     htmlimage();
 }
 
+#
+# Top level of HTML Autogenerate procedure
 sub htmlautoconvert {
     my ( $textwindow, $top, $title ) = @_;
     ::hidepagenums();
@@ -2115,6 +2172,7 @@ sub htmlautoconvert {
 }
 
 #
+# Browse for an image file to be used for this illo
 # Optionally takes a filename instead of letting user browse for one
 sub thumbnailbrowse {
     my $name = shift;
@@ -2172,6 +2230,7 @@ sub thumbnailbrowse {
     );
 }
 
+#
 # Create the HTML Generator dialog for user to adjust settings then autogenerate HTML
 # Note that the default settings for the Checkbuttons and Radiobuttons are defined by
 # the initial value of the relevant ::lglobal hash element set in sub initialize.
@@ -3028,6 +3087,8 @@ sub markup {
     $textwindow->focus unless $mark eq 'elink' or $mark eq 'ilink';
 }
 
+#
+# Remove HTML markup from selected region
 sub clearmarkupinselection {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     ::hidepagenums();
@@ -3039,8 +3100,6 @@ sub clearmarkupinselection {
     my $range_total = @ranges;
     return unless $range_total;
 
-    #my $open           = 0;
-    #my $close          = 0;
     $textwindow->addGlobStart;
     while (@ranges) {
         my $end            = pop(@ranges);
@@ -3080,18 +3139,11 @@ sub clearmarkupinselection {
         $textwindow->tagAdd( 'sel', $start, $selectionend ) if $range_total == 2;
     }
     $textwindow->addGlobEnd;
-
-    #if ( $open != $close ) { # never implemented?
-    #	$top->messageBox(
-    #		-icon => 'error',
-    #		-message =>
-    #	"Mismatching open and close markup removed.\nYou may have orphaned markup.",
-    #		-title => 'Mismatching markup.',
-    #		-type  => 'Ok',
-    #	);
-    #}
 }
 
+#
+# Pop the Search/Replace dialog with preset regexp
+# to surround page numbers with hyperlink markup
 sub hyperlinkpagenums {
     ::searchpopup();
     ::searchoptset(qw/0 x x 1/);
@@ -3099,6 +3151,8 @@ sub hyperlinkpagenums {
     $::lglobal{replaceentry}->insert( 'end', "<a href=\"#$::htmllabels{pglabel}\$1\">\$1</a>" );
 }
 
+#
+# Convert given string to a legal id string
 sub makeanchor {
     my $linkname = shift;
     return unless $linkname;
@@ -3135,6 +3189,7 @@ sub makeanchor {
     return $linkname;
 }
 
+#
 # Return the start and end rows of the selected text
 # If end selection is at start of line, return previous row
 sub getselrows {
@@ -3156,6 +3211,7 @@ sub getselrows {
     return ( $lsr, $ler );
 }
 
+#
 # Create an index from selected region using <ul> and <li> markup and classes
 sub autoindex {
     my $textwindow = shift;
@@ -3199,6 +3255,7 @@ sub autoindex {
     $textwindow->addGlobEnd;
 }
 
+#
 # Create a list from selected region using basic <ul>/<ol> and <li> markup
 sub autolist {
     my $textwindow = shift;
@@ -3268,6 +3325,7 @@ sub autolist {
     $textwindow->addGlobEnd;
 }
 
+#
 # Create a table from selected region using <table> markup
 sub autotable {
     my ( $textwindow, $format ) = @_;
@@ -3353,6 +3411,8 @@ sub autotable {
     $textwindow->addGlobEnd;
 }
 
+#
+# Find "some" orphaned markup
 sub orphans {
     my $textwindow = $::textwindow;
     ::hidepagenums();
@@ -3551,6 +3611,7 @@ sub poetryhtml {
     $textwindow->addGlobEnd;
 }
 
+#
 # determine if poetry is not already indented by four spaces
 sub ispoetryunindented {
     my ( $textwindow, $poetrystart, $poetryend ) = @_;
@@ -3561,10 +3622,10 @@ sub ispoetryunindented {
           and $textwindow->search( '-regexp', '--', '^(?!\\s{4}).{4}', $poetrystart, $poetryend ) );
 }
 
+#
 # If italic/bold/smcap markup spans across end of line, we have to close
 # at end of line and re-open at start of next.
 # First argument is temporary sub that calls textwindow->insert/ntinsert
-
 sub domarkupperline {
     my ( $insertfunc, $textwindow, $step, $selection, $ital, $bold, $smcap ) = @_;
 
@@ -3595,6 +3656,8 @@ sub domarkupperline {
     return @flags;    # So calling routine can remember for next line
 }
 
+#
+# Populate link dialog with list of internal links for user to select from
 sub linkpopulate {
     my $linklistbox = shift;
     my $anchorsref  = shift;
@@ -3627,12 +3690,13 @@ sub entity {
     return '&#' . $ord . ';';
 }
 
+#
+# Replace all occurrences of first argument with second argument
 sub named {
     my ( $from, $to, $start, $end ) = @_;
     my $length;
     my $textwindow = $::textwindow;
 
-    #print "from:$from:to:$to\n";
     my $searchstartindex = $start;
     $searchstartindex = '1.0' unless $searchstartindex;
     $end              = 'end' unless $end;
@@ -3644,15 +3708,17 @@ sub named {
             '--', $from, $searchstartindex, 'srchend'
         )
     ) {
+        # insert before delete to stay on the right side of page markers
         $textwindow->ntinsert( $searchstartindex, $to );
         $textwindow->ntdelete( $searchstartindex . '+' . length($to) . 'c',
             $searchstartindex . '+' . ( $length + length($to) ) . 'c' );
 
-        # insert before delete to stay on the right side of page markers
         $searchstartindex = $textwindow->index("$searchstartindex+1c");
     }
 }
 
+#
+# Convert some HTML entities by the actual character
 sub fromnamed {
     my ($textwindow) = @_;
     my @ranges       = $textwindow->tagRanges('sel');
@@ -3690,6 +3756,8 @@ sub fromnamed {
     }
 }
 
+#
+# Replace non-ASCII characters with HTML entities
 # Note that double hyphen is converted to numeric (not named) emdash
 sub tonamed {
     my ($textwindow) = @_;
@@ -3728,6 +3796,8 @@ sub tonamed {
     }
 }
 
+#
+# Convert 1/2, 1/4 and 3/4 to HTML fraction entities
 sub fracconv {
     my ( $textwindow, $start, $end ) = @_;
     my %frachash = (

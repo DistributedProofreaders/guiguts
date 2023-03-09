@@ -75,6 +75,8 @@ sub setdefaultpath {
     }
 }
 
+#
+# Pop the Set Rewrap Margins dialog
 sub setmargins {
     my $top = $::top;
     if ( defined( $::lglobal{marginspop} ) ) {
@@ -409,6 +411,8 @@ sub fontgeometryupdate {
     ::setsearchpopgeometry();
 }
 
+#
+# Choose the directory where png files are saved
 sub setpngspath {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -425,7 +429,8 @@ sub setpngspath {
     ::setedited(1);
 }
 
-# Pop up a window where you can adjust the auto save interval
+#
+# Pop up a dialog where you can adjust the auto save interval
 sub saveinterval {
     my $top = $::top;
     if ( $::lglobal{intervalpop} ) {
@@ -463,6 +468,7 @@ sub saveinterval {
     }
 }
 
+#
 # If autosave is on, then reset the timers
 # If autosave is off, then ensure timers are cancelled
 sub reset_autosave {
@@ -511,6 +517,7 @@ sub reset_autosave {
     ::savesettings();
 }
 
+#
 # Set a timer to flash the save icon green/yellow to warn autosave is imminent
 sub flash_autosave {
     $::lglobal{saveflashingid} = $::top->repeat(
@@ -534,6 +541,7 @@ sub flash_autosave {
     );
 }
 
+#
 # Store save icon's default background color so it can be restored when turning off autosave
 sub storedefaultcolor_autosave {
     return if $::lglobal{savetoolcolor};    # once stored, don't overwrite the color later
@@ -541,6 +549,8 @@ sub storedefaultcolor_autosave {
     $::lglobal{savetoolcolor} = $::lglobal{savetool}->cget('-background');
 }
 
+#
+# Allow user to choose a color used for e.g. background, highlight, etc
 sub setcolor {    # Color picking routine
     my $top     = $::top;
     my $initial = shift;
@@ -552,6 +562,8 @@ sub setcolor {    # Color picking routine
     );
 }
 
+#
+# Allow user to choose location of an executable - normally a tool
 sub locateExecutable {
     my ( $exename, $exepathref, $filetypes ) = @_;
     my $textwindow = $::textwindow;
@@ -612,6 +624,8 @@ sub locateDirectory {
     ::savesettings();
 }
 
+#
+# Pop the Set File Paths dialog to set where various tools are located
 sub filePathsPopup {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     if ( defined( $::lglobal{filepathspop} ) ) {
@@ -826,6 +840,8 @@ sub filePathsPopup {
     }
 }
 
+#
+# Pop dialog to set URL of project page & project discussion
 sub setDPurls {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     if ( defined( $::lglobal{defurlspop} ) ) {

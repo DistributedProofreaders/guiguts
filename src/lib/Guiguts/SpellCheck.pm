@@ -10,6 +10,7 @@ BEGIN {
       &spelloptions &get_spellchecker_version &spellmyaddword &spelladdgoodwords);
 }
 
+#
 # Initialize spellchecker
 sub spellcheckfirst {
     my $textwindow = $::textwindow;
@@ -41,6 +42,8 @@ sub spellcheckfirst {
     spellchecknext();
 }
 
+#
+# Load the project dictionary
 sub spellloadprojectdict {
     getprojectdic();
     if (    ( defined $::lglobal{projectdictname} )
@@ -58,6 +61,8 @@ sub spellloadprojectdict {
     }
 }
 
+#
+# Find the next misspelled word
 sub spellchecknext {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -164,21 +169,20 @@ sub spellchecknext {
     return 1;
 }
 
+#
+# get the misspelled word as it appears in the text (may be checking case insensitive)
 sub spellgettextselection {
     my $textwindow = $::textwindow;
     return $textwindow->get( $::lglobal{matchindex},
-        "$::lglobal{matchindex}+$::lglobal{matchlength}c" );    # get the
-                                                                # misspelled word
-                                                                # as it appears in
-                                                                # the text (may be
-                                                                # checking case
-                                                                # insensitive)
+        "$::lglobal{matchindex}+$::lglobal{matchlength}c" );
 }
 
+#
+# Replace the bad spelling with the correction
 sub spellreplace {
     my $textwindow = $::textwindow;
     ::hidepagenums();
-    my $replacement = $::lglobal{spreplaceentry}->get;          # get the word for the replacement box
+    my $replacement = $::lglobal{spreplaceentry}->get;    # get the word for the replacement box
     ::soundbell() unless $replacement;
     my $misspelled = $::lglobal{misspelledentry}->get;
     return unless $replacement;
@@ -191,7 +195,8 @@ sub spellreplace {
     spellchecknext();                                                                         # and check the next word
 }
 
-# replace all instances of a word with another, pretty straightforward
+#
+# Replace all instances of bad spelling with correction
 sub spellreplaceall {
     my $textwindow = $::textwindow;
     ::hidepagenums();
@@ -203,7 +208,8 @@ sub spellreplaceall {
     spellignoreall();
 }
 
-# replace the replacement word with one from the guess list
+#
+# Replace the replacement word with one from the guess list
 sub spellmisspelled_replace {
     ::hidepagenums();
     $::lglobal{spreplaceentry}->delete( 0, 'end' );
@@ -211,7 +217,8 @@ sub spellmisspelled_replace {
     $::lglobal{spreplaceentry}->insert( 'end', $term );
 }
 
-# tell aspell to add a word to the personal dictionary
+#
+# Tell aspell to add a word to the personal dictionary
 sub spelladdword {
     my $textwindow = $::textwindow;
     my $term       = $::lglobal{misspelledentry}->get;
@@ -223,7 +230,8 @@ sub spelladdword {
     print OUT "#\n";
 }
 
-# add a word to the project dictionary
+#
+# Add a word to the project dictionary
 sub spellmyaddword {
     my $textwindow = $::textwindow;
     my $term       = shift;
@@ -256,6 +264,8 @@ sub spellmyaddword {
     close $dic;
 }
 
+#
+# Clear the fields in the spellcheck dialog
 sub spellclearvars {
     my $textwindow = $::textwindow;
     $::lglobal{misspelledentry}->delete( '0', 'end' );
@@ -264,7 +274,8 @@ sub spellclearvars {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
 }
 
-# start aspell in interactive mode, repipe stdin and stdout to file handles
+#
+# Start aspell in interactive mode, repipe stdin and stdout to file handles
 sub aspellstart {
     aspellstop();
     my @cmd =
@@ -276,6 +287,8 @@ sub aspellstart {
     my $line = <IN>;
 }
 
+#
+# Get the version of Aspell being used (if any)
 sub get_spellchecker_version {
     return $::lglobal{spellversion} if $::lglobal{spellversion};
     return "Not available" unless $::globalspellpath and -e $::globalspellpath;
@@ -293,19 +306,21 @@ sub get_spellchecker_version {
     return $aspell_version;
 }
 
+#
+# Stop the Aspell process
 sub aspellstop {
     if ( $::lglobal{spellpid} ) {
         close IN;
         close OUT;
-        kill 9, $::lglobal{spellpid}
-          if $::OS_WIN;    # Brute force kill the aspell process... seems to be necessary
-                           # under windows
+        kill 9, $::lglobal{spellpid} if $::OS_WIN;    # Brute force kill the aspell process... seems to be necessary under windows
         waitpid( $::lglobal{spellpid}, 0 );
         $::lglobal{spellpid} = 0;
     }
 }
 
-sub spellguesses {    #feed aspell a word to get a list of guess
+#
+# Feed Aspell a word to get a list of guesses
+sub spellguesses {
     my $word = shift;                   # word to get guesses for
     @{ $::lglobal{guesslist} } = ();    # clear the guesslist
     utf8::encode($word);
@@ -323,7 +338,8 @@ sub spellguesses {    #feed aspell a word to get a list of guess
     do { $list = <IN> } while ( $list ne "\n" && $list ne "\r\n" );    # throw away extra lines until newline (especially for non-ascii)
 }
 
-# load the guesses into the guess list box
+#
+# Load the guesses into the guess list box
 sub spellshow_guesses {
     $::lglobal{replacementlist}->delete( 0, 'end' );
     $::lglobal{replacementlist}->insert( 0, @{ $::lglobal{guesslist} } );
@@ -334,7 +350,9 @@ sub spellshow_guesses {
     $::lglobal{suggestionlabel}->configure( -text => @{ $::lglobal{guesslist} } . ' Suggestions:' );
 }
 
-# only spell check selected text or whole file if nothing selected
+#
+# Set the start and end points for spell checking:
+# either selected text or whole file if nothing selected
 sub spellcheckrange {
     ::hidepagenums();
     my $textwindow = $::textwindow;
@@ -348,7 +366,9 @@ sub spellcheckrange {
     }
 }
 
-sub spellget_misspellings {    # get list of misspelled words
+#
+# Get list of misspelled words
+sub spellget_misspellings {
     my $textwindow = $::textwindow;
     spellcheckrange();                                                                           # get chunk of text to process
     return if ( $::lglobal{spellindexstart} eq $::lglobal{spellindexend} );
@@ -357,7 +377,6 @@ sub spellget_misspellings {    # get list of misspelled words
     getmisspelledwords($section);
     ::wordfrequencybuildwordlist($textwindow);
 
-    #wordfrequencygetmisspelled();
     if ( $#{ $::lglobal{misspelledlist} } > 0 ) {
         $::lglobal{spellpopup}->configure( -title => 'Current Dictionary - '
               . ( $::globalspelldictopt || '<default>' )
@@ -370,6 +389,8 @@ sub spellget_misspellings {    # get list of misspelled words
     unlink 'checkfil.txt';
 }
 
+#
+# Use Aspell to get list of misspelled words
 sub getmisspelledwords {
     $::lglobal{misspelledlist} = ();
     my $section = shift;
@@ -401,7 +422,8 @@ sub getmisspelledwords {
     }
 }
 
-# remove ignored words from checklist
+#
+# Remove ignored words from checklist
 sub spellignoreall {
     my $textwindow = $::textwindow;
     my $next;
@@ -420,16 +442,20 @@ sub spellignoreall {
     spellmyaddword($word);
 }
 
-sub spelladjust_index {    # get the index of the match start (row column)
+#
+# Given an index of the match start return next index to use
+# Maybe previously advanced by length of word, but now just advances by 1 character
+sub spelladjust_index {
     my $textwindow = $::textwindow;
     my ( $idx, $match ) = @_;
     my ( $mr, $mc ) = split /\./, $idx;
     $mc += 1;
     $textwindow->markSet( 'spellindex', "$mr.$mc" );
-    return "$mr.$mc";      # and return the index of the end of the match
+    return "$mr.$mc";    # and return the index of 1 character later
 }
 
-# add highlighting to selected word
+#
+# Add highlighting to selected word
 sub spelladdtexttags {
     my $textwindow = $::textwindow;
     $textwindow->markSet( 'insert', $::lglobal{matchindex} );
@@ -439,6 +465,8 @@ sub spelladdtexttags {
     $textwindow->see( $::lglobal{matchindex} );
 }
 
+#
+# Add spellings from good_words.txt to the project dictionary
 sub spelladdgoodwords {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -471,7 +499,9 @@ sub spelladdgoodwords {
     }
 }
 
-sub spellchecker {    # Set up spell check window
+#
+# Pop the spell check window
+sub spellchecker {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     ::operationadd('Spellcheck');
@@ -695,6 +725,8 @@ sub spellchecker {    # Set up spell check window
     }
 }
 
+#
+# End the Aspell process
 sub endaspell {
     my $textwindow = $::textwindow;
     @{ $::lglobal{misspelledlist} } = ();
@@ -704,8 +736,8 @@ sub endaspell {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
 }
 
-## Spell Check
-#needed elsewhere - load projectdict
+#
+# Load project dictionary
 sub getprojectdic {
     return unless $::lglobal{global_filename};
     my $fname = $::lglobal{global_filename};
@@ -727,6 +759,8 @@ sub getprojectdic {
     }
 }
 
+#
+# Pop the Spell Check options dialog
 sub spelloptions {
     my $textwindow = $::textwindow;
     my $top        = $::top;

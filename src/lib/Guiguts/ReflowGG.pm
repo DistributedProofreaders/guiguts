@@ -349,6 +349,8 @@ $pin = " " x $poetryindent;
     next    => 2
 );
 
+#
+# Rewraps the given string
 sub reflow_string($@) {
     my ( $input, @opts ) = @_;
 
@@ -365,9 +367,9 @@ sub reflow_string($@) {
     return ( join( "", @to ) );
 }
 
+#
 # Process the keyword options, set module global variables as required,
 # save the old values on the @save_opts stack:
-
 sub process_opts(@) {
     my @opts = @_;
     my ( $key, $value );
@@ -412,6 +414,8 @@ sub process_opts(@) {
     }
 }
 
+#
+# Restore saved option values
 sub restore_opts() {
     my ( $key, $value );
     no strict 'refs';
@@ -422,6 +426,9 @@ sub restore_opts() {
     }
 }
 
+#
+# Get next line from string to be rewrapped
+# Whole routine may not be needed for Guiguts usage
 sub get_line() {
     my $line = shift(@from);
     return ($line) unless defined($line);
@@ -436,13 +443,16 @@ sub get_line() {
     return ($line);
 }
 
-# Trim EOL spaces and print the lines:
+#
+# Trim EOL spaces and store the lines in the output buffer:
 sub print_lines(@) {
     my @lines = @_;
     map { s/[ \t]+\n/\n/gs } @lines;
     push( @to, @lines );
 }
 
+#
+# Actually do the rewrapping
 sub reflow() {
     my ( $line, $last );
     if ( $skipto ne "" ) {
@@ -526,7 +536,6 @@ sub reflow() {
 
 # Process a non-poetry line by pushing the words onto @words
 # If the line is blank, then reflow the paragraph of @words:
-
 sub process($) {
     my ($line) = @_;
 
@@ -585,6 +594,8 @@ sub process($) {
     }
 }
 
+#
+# Rewrap paragraph
 sub reflow_para {
     return () unless (@words);
     reflow_penalties();
@@ -600,7 +611,9 @@ sub reflow_para {
     @words = ();
 }
 
+#
 # Add spaces to ends of sentences and calculate @extra array of penalties
+# In fact in GG, $frenchspacing is "y", so extra space not added after period
 sub reflow_penalties {
     my $j;
     $wordcount = $#words + 1;
@@ -679,18 +692,16 @@ sub reflow_penalties {
     $word_len[0] -= length($indent2) if ($wordcount);
 }
 
+#
 # compute @output from $wordcount, @words, $lastbreak and @linkbreak
-
 sub compute_output {
     my ( $j, $terminus );
     @output   = ();
     $terminus = $wordcount - 1;
     for ( $j = 0 ; $terminus >= 0 ; $j++ ) {
         $output[$j] = join( ' ', @words[ $lastbreak + 1 .. $terminus ] ) . "\n";
-
-        #print "j = $j, lastbreak = $lastbreak:\noutput = $output[$j]\n";
-        $terminus  = $lastbreak;
-        $lastbreak = $linkbreak[$lastbreak];
+        $terminus   = $lastbreak;
+        $lastbreak  = $linkbreak[$lastbreak];
     }
     @output = reverse(@output);
 

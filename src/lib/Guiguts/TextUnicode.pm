@@ -8,6 +8,7 @@ use File::Basename;
 use constant OS_Win => $^O =~ /Win/;
 Construct Tk::Widget 'TextUnicode';
 
+#
 # Custom File load routine; will automatically handle Unicode and line endings
 sub Load {
     my ( $w, $filename ) = @_;
@@ -54,6 +55,7 @@ sub Load {
     }
 }
 
+#
 # Custom file save routine to handle unicode files
 sub SaveUTF {
     my ( $w, $filename ) = @_;
@@ -116,7 +118,8 @@ sub SaveUTF {
     }
 }
 
-#Custom File Include routine to handle Unicode and line ends
+#
+# Custom File Include routine to handle Unicode and line ends
 sub IncludeFile {
     my ( $w, $filename ) = @_;
     unless ( defined($filename) ) {
@@ -156,17 +159,22 @@ sub IncludeFile {
     }
 }
 
-sub ntinsert {    # no undo tracking insert
+#
+# Insert, without Undo tracking
+sub ntinsert {
     my ( $w, $index, $string ) = @_;
     $w->Tk::Text::insert( $index, $string );
 }
 
-sub ntdelete {    # no undo tracking delete
+#
+# Delete, without Undo tracking
+sub ntdelete {
     my ( $w, $start, $end ) = @_;
     $end = "$start +1c" unless $end;
     $w->Tk::Text::delete( $start, $end );
 }
 
+#
 # Override TextUndo::insert_UNDO to avoid bug when undoing multi-line insert in the case
 # when the string ends in a newline character. See code for details.
 sub insert_UNDO {
@@ -207,13 +215,16 @@ sub insert_UNDO {
     return [ 'delete', $index, $line . '.' . $col ];
 }
 
-sub replacewith {    #One step cut and insert without undo tracking
+#
+# One step cut and insert
+sub replacewith {
     my ( $w, $start, $end, $string ) = @_;
     $w->tagRemove( 'sel', '1.0', 'end' );
     $w->tagAdd( 'sel', $start, $end );
     $w->ReplaceSelectionsWith($string);
 }
 
+#
 # Override TextUndo::ReplaceSelectionsWith
 # Default behaviour on text replacement was for all
 # page markers to move to start of replacement string.
@@ -333,7 +344,9 @@ sub ReplaceSelectionsWith {
     $w->addGlobEnd;
 }
 
-sub shiftB1_Motion {    # Alternate selection mode, for block selection
+#
+# Alternate selection mode, for block/column selection
+sub shiftB1_Motion {
     my ($w) = @_;
     return unless defined $Tk::mouseMoved;
     my $Ev = $w->XEvent;
@@ -343,6 +356,8 @@ sub shiftB1_Motion {    # Alternate selection mode, for block selection
     Tk::break;
 }
 
+#
+# Override default button1 click to also cancel button 2 scrolling
 sub Button1 {
     my ( $w, $x, $y ) = @_;
     $w->eventGenerate('<<ScrollDismiss>>');
@@ -472,6 +487,7 @@ sub SelectTo {
     }
 }
 
+#
 # Taken from Text.pm with addition of safeword() to safely find the start and end
 # of a word - see safeword() for details
 #
@@ -492,6 +508,7 @@ sub SetCursor {
     $w->see('insert');
 }
 
+#
 # Taken from Text.pm with addition of safeword() to safely find the start and end
 # of a word - see safeword() for details
 #
@@ -645,7 +662,8 @@ sub safeword {
     return $pos;
 }
 
-#modified Column Cut & Copy routine to handle block selection
+#
+# Modified Column Cut & Copy routine to handle block selection
 sub Column_Copy_or_Cut {
     my ( $w, $cut ) = @_;
     my @ranges = $w->tagRanges('sel');
@@ -665,7 +683,8 @@ sub Column_Copy_or_Cut {
     $w->markSet( 'insert', $start );
 }
 
-#modified Column Paste routine to handle block selection
+#
+# Modified Column Paste routine to handle block selection
 sub clipboardColumnPaste {
     my ($w)           = @_;
     my $current_index = $w->index('insert');
@@ -730,6 +749,8 @@ sub bbox_safe {
     return ( $bx, $by, $bw, $bh );
 }
 
+#
+#
 sub UpDownLine {
     my ( $w, $n ) = @_;
     $w->see('insert');
@@ -791,25 +812,31 @@ sub UpDownLine {
     if ( $testX > $nx + $nw / 2 ) {
         $testX = $nx + $nw + 1;
     }
+
     my $newindex = $w->index("\@$testX,$testY");
+
+    # If we are trying to move to the 'end' of the text from
+    # the same display line - don't do that
     return $i
       if ( $w->compare( $newindex, '==', 'end - 1 char' )
         and ( $ny == $ly ) );
 
-    # Then we are trying to the 'end' of the text from
-    # the same display line - don't do that
     $w->{'lastindex'} = $newindex;
     $w->see($newindex);
     return $newindex;
 }
 
-sub InsertKeypress {    # Supress inserting control characters into the text
+#
+# Override keypresses to suppress inserting control characters into the text
+sub InsertKeypress {
     my ( $w, $char ) = @_;
     $w->SUPER::InsertKeypress($char) if ( ord($char) > 26 );
     $w->eventGenerate('<<ScrollDismiss>>');
 }
 
-# Modified to generate autoscroll events and accellerated scrolling.
+#
+# Invoked when the mouse leaves window with button 1 down
+# Modified to generate autoscroll events and accelerated scrolling.
 sub AutoScan {
     my ($w) = @_;
     $w->eventGenerate('<<autoscroll>>');
