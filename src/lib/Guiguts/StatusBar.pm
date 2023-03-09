@@ -10,8 +10,8 @@ BEGIN {
       &setlang &selection &gotoline &gotopage &gotolabel &set_auto_img);
 }
 
-# Routine to update the status bar when something has changed.
 #
+# Routine to update the status bar when something has changed.
 {    # Start of block to localise persistent variables
     my $prev_line   = -1;
     my $prev_column = -1;
@@ -93,7 +93,8 @@ BEGIN {
     }
 }    # End of block to localise persistent variables
 
-## Bindings to make label in status bar act like buttons
+#
+# Bindings to make label in status bar act like buttons
 sub _butbind {
     my $widget = shift;
     $widget->bind(
@@ -113,7 +114,8 @@ sub _butbind {
     $widget->bind( '<ButtonRelease-1>', sub { $widget->configure( -relief => 'raised' ) } );
 }
 
-## Update Last Selection readout in status bar
+#
+# Update Last Selection readout in status bar
 sub _updatesel {
     my $textwindow = shift;
     my @ranges     = $textwindow->tagRanges('sel');
@@ -142,7 +144,8 @@ sub _updatesel {
     update_indicators();
 }
 
-## Status Bar
+#
+# Create the Status Bar
 sub buildstatusbar {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -342,6 +345,8 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
           "Start and end points of selection -- Or, total lines.columns of selection" );
 }
 
+#
+# Create "Img:" button unless it already exists
 sub update_img_button {
     my $pnum       = shift;
     my $textwindow = $::textwindow;
@@ -373,6 +378,8 @@ sub update_img_button {
     return ();
 }
 
+#
+# Create "Lbl:" button unless it already exists
 sub update_label_button {
     my $textwindow = $::textwindow;
     unless ( $::lglobal{page_label} ) {
@@ -402,8 +409,9 @@ sub update_label_button {
     return ();
 }
 
-# New subroutine "update_ordinal_button" extracted - Mon Mar 21 22:53:33 2011.
 #
+# Update the ordinal button with the decimal and hex ordinals of the character
+# at the cursor position (and optionally the character name too)
 sub update_ordinal_button {
     my $textwindow = $::textwindow;
     my $ordinal    = ord( $textwindow->get('insert') );
@@ -426,10 +434,14 @@ sub update_ordinal_button {
     }
 }
 
+#
+# Toggle whether character name is shown in ordinal label
 sub togglelongordlabel {
     $::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
 }
 
+#
+# Create the Previous Image button if it doesn't exist
 sub update_prev_img_button {
     my $textwindow = $::textwindow;
     unless ( defined( $::lglobal{previmagebutton} ) ) {
@@ -455,8 +467,8 @@ sub update_prev_img_button {
     }
 }
 
-# New subroutine "update_see_img_button" extracted - Mon Mar 21 23:23:36 2011.
 #
+# Create the See Img button if it doesn't exist
 sub update_see_img_button {
     my $textwindow = $::textwindow;
     unless ( defined( $::lglobal{pagebutton} ) ) {
@@ -474,6 +486,8 @@ sub update_see_img_button {
     }
 }
 
+#
+# Open the scan image for the current page
 sub seecurrentimage {
     my $textwindow = $::textwindow;
     $::lglobal{pagebutton}->configure( -relief => 'sunken' );
@@ -485,6 +499,8 @@ sub seecurrentimage {
     ::openpng( $textwindow, $pagenum );
 }
 
+#
+# Create the Next Image button if it doesn't exist
 sub update_next_img_button {
     my $textwindow = $::textwindow;
     unless ( defined( $::lglobal{nextimagebutton} ) ) {
@@ -546,8 +562,8 @@ sub set_auto_img {
       ->configure( -background => ( $::auto_show_images ? $::highlightcolor : 'gray' ) );
 }
 
-# New subroutine "update_img_lbl_values" extracted - Tue Mar 22 00:08:26 2011.
 #
+# Update the image number and page label labels
 sub update_img_lbl_values {
     my $pnum       = shift;
     my $textwindow = $::textwindow;
@@ -563,6 +579,8 @@ sub update_img_lbl_values {
     }
 }
 
+#
+# Create (if necessary) and update the language button
 sub update_lang_button {
     my $textwindow = $::textwindow;
     unless ( $::lglobal{langbutton} ) {
@@ -585,6 +603,8 @@ sub update_lang_button {
     $::lglobal{langbutton}->configure( -text => "Lang:$::booklang" );
 }
 
+#
+# Pop the set language(s) dialog
 sub setlang {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -621,7 +641,8 @@ sub setlang {
     }
 }
 
-# Pop up window allowing tracking and auto reselection of last selection
+#
+# Pop a dialog allowing tracking and auto reselection of last selection
 sub selection {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -703,7 +724,8 @@ sub selection {
     return;
 }
 
-# Pop up a window which will allow jumping directly to a specified line
+#
+# Pop a dialog which will allow jumping directly to a specified line
 sub gotoline {
     ::textentrydialogpopup(
         -key          => 'gotolinepop',
@@ -733,7 +755,7 @@ sub gotolineok {
 }
 
 #
-# Pop up a window which will allow jumping directly to a specified page
+# Pop a dialog which will allow jumping directly to a specified page
 sub gotopage {
     return unless %::pagenumbers;
     ::textentrydialogpopup(
@@ -771,7 +793,7 @@ sub gotopageok {
 }
 
 #
-# Pop up a window which will allow jumping directly to a specified page label
+# Pop a dialog which will allow jumping directly to a specified page label
 sub gotolabel {
     return unless %::pagenumbers;
     ::textentrydialogpopup(

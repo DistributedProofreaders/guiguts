@@ -30,6 +30,8 @@ sub menurebuild {
     menu_toplevel( '~Help',        &menu_help );
 }
 
+#
+# Create the File menu
 sub menu_file {
     my $textwindow = $::textwindow;
     [
@@ -74,6 +76,8 @@ sub menu_file {
     ];
 }
 
+#
+# Create the File, Project submenu
 sub menu_file_project {
     [
         [ 'command', 'See ~Image', -command => \&::seecurrentimage ],
@@ -98,6 +102,8 @@ sub menu_file_project {
     ];
 }
 
+#
+# Create the File, Content Providing submenu
 sub menu_file_content_providing {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
@@ -148,6 +154,8 @@ sub menu_file_content_providing {
     ];
 }
 
+#
+# Create the Edit menu
 sub menu_edit {
     my $textwindow = $::textwindow;
     [
@@ -227,6 +235,8 @@ sub menu_edit {
     ];
 }
 
+#
+# Provide Cut, Copy and Paste for the Edit menu and the Context menu
 sub menu_edit_cutcopypaste {
     [
         'command', 'Cut',
@@ -245,6 +255,8 @@ sub menu_edit_cutcopypaste {
       ];
 }
 
+#
+# Create the Search menu
 sub menu_search {
     my $textwindow = $::textwindow;
     [
@@ -351,6 +363,8 @@ sub menu_search {
     ];
 }
 
+#
+# Create the Search, Find Block Markup submenu
 sub menu_search_block {
     [
         [
@@ -412,6 +426,8 @@ sub menu_search_block {
     ];
 }
 
+#
+# Create the Tools menu
 sub menu_tools {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
@@ -562,6 +578,8 @@ sub menu_tools {
     ];
 }
 
+#
+# Create the Tools, Character Tools submenu
 sub menu_tools_charactertools {
     [
         [ 'command', 'Search for ~Transliterations...', -command => \&::find_transliterations ],
@@ -580,6 +598,8 @@ sub menu_tools_charactertools {
     ];
 }
 
+#
+# Create the Tools, Convert Fractions submenu
 sub menu_tools_convertfractions {
     [
         [ 'command', 'Unicode fractions only', -command => sub { ::fractionconvert('unicode'); } ],
@@ -596,6 +616,8 @@ sub menu_tools_convertfractions {
     ];
 }
 
+#
+# Create the Text menu
 sub menu_txt {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
@@ -713,6 +735,8 @@ sub menu_txt {
     ];
 }
 
+#
+# Create the Text, Curly Quote Corrections submenu
 sub menu_txt_curlycorrections {
     [
         [ 'command', '~Select Next @ Line', -command => sub { ::text_quotes_select(); } ],
@@ -769,6 +793,8 @@ sub menu_txt_curlycorrections {
     ];
 }
 
+#
+# Create the HTML menu
 sub menu_html {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
@@ -882,6 +908,8 @@ sub menu_html {
     ];
 }
 
+#
+# Create the Unicode menu - can be sorted by name of block or range of block
 sub menu_unicode {
     [
         [
@@ -902,7 +930,9 @@ sub menu_unicode {
     ];
 }
 
-# Returns 1 if Unicode menu column break should be inserted at the given block name
+#
+# Returns whether Unicode menu column break should be inserted at the given block name
+# Splits the menu into 3 columns to fit on screen
 sub menu_unicode_break {
     my $block = shift;
     if ( $::lglobal{utfrangesort} ) {
@@ -912,6 +942,7 @@ sub menu_unicode_break {
     }
 }
 
+#
 # Sort function for Unicode menu - either by start of hex range or by block name
 sub menu_unicode_sort {
     if ( $::lglobal{utfrangesort} ) {
@@ -921,6 +952,8 @@ sub menu_unicode_sort {
     }
 }
 
+#
+# Create the Bookmarks menu
 sub menu_bookmarks {
     [
         map ( [
@@ -939,6 +972,8 @@ sub menu_bookmarks {
     ];
 }
 
+#
+# Create the Custom menu
 sub menu_custom {
     [
         map ( [
@@ -954,6 +989,8 @@ sub menu_custom {
     ];
 }
 
+#
+# Create the Preferences menu
 sub menu_preferences {
     my $textwindow = $::textwindow;
     [
@@ -965,6 +1002,8 @@ sub menu_preferences {
     ];
 }
 
+#
+# Create the Preferences, File Paths submenu
 sub menu_preferences_filepaths {
     [
         [
@@ -975,6 +1014,8 @@ sub menu_preferences_filepaths {
     ];
 }
 
+#
+# Create the Preferences, Appearance submenu
 sub menu_preferences_appearance {
     my $textwindow = $::textwindow;
     [
@@ -1081,6 +1122,8 @@ sub menu_preferences_appearance {
     ];
 }
 
+#
+# Create the Preferences, Toolbar submenu
 sub menu_preferences_toolbar {
     [
         [
@@ -1128,6 +1171,8 @@ sub menu_preferences_toolbar {
     ];
 }
 
+#
+# Create the Preferences, Backup submenu
 sub menu_preferences_backup {
     [
         [
@@ -1156,6 +1201,8 @@ sub menu_preferences_backup {
     ];
 }
 
+#
+# Create the Preferences, Processing submenu
 sub menu_preferences_processing {
     [
         [
@@ -1238,6 +1285,8 @@ sub menu_preferences_processing {
     ];
 }
 
+#
+# Create the Help menu
 sub menu_help {
     my $top = $::top;
     [
@@ -1278,6 +1327,7 @@ sub menu_help {
     ];
 }
 
+#
 # Add a top level menu with given label and menu items
 sub menu_toplevel {
     $::menubar->cascade(
@@ -1287,6 +1337,7 @@ sub menu_toplevel {
     );
 }
 
+#
 # Add a cascade menu with given label and menu items
 sub menu_cascade {
     [

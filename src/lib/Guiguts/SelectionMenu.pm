@@ -15,6 +15,8 @@ my $blockwraptypes = quotemeta '#iI';    # Blockquotes & index allow user to spe
 # "Delete" character is inserted to flag mark positions during wrapping
 my $TEMPPAGEMARK = "\x7f";
 
+#
+# Rewrap given paragraph
 sub wrapper {
     my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
     return $paragraph
@@ -26,6 +28,8 @@ sub wrapper {
     return knuth_wrapper( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace );
 }
 
+#
+# Rewrap given paragraph
 sub knuth_wrapper {
     my ( $leftmargin, $firstmargin, $rightmargin, $paragraph, $rwhyphenspace ) = @_;
     my ( $pre, $post ) = ( '', '' );
@@ -115,6 +119,7 @@ sub indexwrapper {
     return $rewrapped;
 }
 
+#
 # Wrap a center block marked with /c...c/
 # Center align each line between the left and right margins
 # Copes with /c nested inside /#
@@ -147,6 +152,7 @@ sub centerblockwrapper {
     return $rewrapped;
 }
 
+#
 # Wrap a right block marked with /r...r/
 # Right align the block, retaining relative indentation, i.e. longest line will touch right margin
 # Copes with /r nested inside /#
@@ -558,6 +564,8 @@ sub setblockmargins {
     return ( $leftmargin, $firstmargin, $rightmargin );
 }
 
+#
+# Align selected text with chosen align string
 sub aligntext {
     my ( $textwindow, $alignstring ) = @_;
     my @ranges      = $textwindow->tagRanges('sel');
@@ -593,6 +601,7 @@ sub aligntext {
     }
 }
 
+#
 # Draws an ascii box around selected lines of text, with at least one space between
 # box and text (unless lines are too long, when no space is added)
 # Text is wrapped before boxing unless $asciinowrap is true
@@ -657,6 +666,8 @@ sub asciibox {
     $textwindow->addGlobEnd;
 }
 
+#
+# Convert selected text to given case (upper, lower, sentence, title)
 sub case {
     ::savesettings();
     my ( $textwindow, $marker ) = @_;
@@ -690,6 +701,8 @@ sub case {
     }
 }
 
+#
+# Pop the Surround With dialog to surround the selected text with given characters
 sub surround {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     if ( defined( $::lglobal{surpop} ) ) {
@@ -757,6 +770,8 @@ sub surround {
     }
 }
 
+#
+# Place given strings before and after the selected text (supports column selection)
 sub surroundit {
     my ( $pre, $post, $textwindow ) = @_;
     $pre  =~ s/\\n/\n/;
@@ -775,9 +790,9 @@ sub surroundit {
     $textwindow->addGlobEnd;
 }
 
+#
+# Pop the Flood Fill dialog
 sub flood {
-
-    #my ( $textwindow, $top, $floodpop, $font, $activecolor, $icon ) = @_;
     my $top        = $::top;
     my $textwindow = $::textwindow;
     if ( defined( $::lglobal{floodpop} ) ) {
@@ -823,6 +838,8 @@ sub flood {
     }
 }
 
+#
+# Flood the selected text with the given characters (supports column selection)
 sub floodfill {
     my ( $textwindow, $ffchar ) = @_;
     my @ranges = $textwindow->tagRanges('sel');
@@ -848,6 +865,8 @@ sub floodfill {
     $textwindow->addGlobEnd;
 }
 
+#
+# Indent the selected lines by the given amount
 sub indent {
     my ( $textwindow, $indent ) = @_;
     my @ranges      = $textwindow->tagRanges('sel');
@@ -915,6 +934,8 @@ sub indent {
     }
 }
 
+#
+# Pop Align Text dialog
 sub alignpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -946,6 +967,8 @@ sub alignpopup {
     }
 }
 
+#
+# Rewrap using block quote margins
 sub blockrewrap {
     my $textwindow = $::textwindow;
     $::blockwrap = 1;
@@ -953,6 +976,8 @@ sub blockrewrap {
     $::blockwrap = 0;
 }
 
+#
+# Pop the ASCII Boxes dialog
 sub asciibox_popup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -1028,6 +1053,8 @@ sub asciibox_popup {
     }
 }
 
+#
+# Right-align or center-align the selected text
 sub rcaligntext {
     my ( $align, $indentval ) = @_;
     my $textwindow  = $::textwindow;
@@ -1058,6 +1085,8 @@ sub rcaligntext {
     $textwindow->focus;
 }
 
+#
+# Right align numbers in the selected text
 sub tocalignselection {
     my ($indentval) = @_;
     $indentval = 0 unless $indentval;

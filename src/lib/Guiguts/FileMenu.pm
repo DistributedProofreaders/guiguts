@@ -8,13 +8,15 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&file_open &file_saveas &file_include &file_export_preptext &file_import_preptext &_bin_save &file_close
-      &clearvars &savefile &_exit &file_mark_pages &_recentupdate &file_guess_page_marks
+      &clearvars &savefile &_exit &file_mark_pages &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
       &file_import_markup &file_import_ocr &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
       &cpcharactersubs &getsafelastpath);
 }
 
-sub file_open {    # Find a text file to open
+#
+# Wrapper routine to find a text/HTML file and open it
+sub file_open {
     my $textwindow = shift;
     my ($name);
     return if ( ::confirmempty() =~ /cancel/i );
@@ -32,7 +34,9 @@ sub file_open {    # Find a text file to open
     }
 }
 
-sub file_include {    # FIXME: Should include even if no file loaded.
+#
+# Find a text file to insert into the current file - must have a file currently loaded
+sub file_include {
     my $textwindow = shift;
     my ($name);
     my $types = [
@@ -80,7 +84,7 @@ sub file_saveas {
         $::top->Busy( -recurse => 1 );
         $textwindow->SaveUTF($name);
         $name = ::os_normal($name);
-        ::_recentupdate($name);
+        recentupdate($name);
 
         # If saving a copy, globallastpath is not updated, edit flag is not reset,
         # bin_save is done using new filename, then old name is restored
@@ -104,6 +108,8 @@ sub file_saveas {
     ::reset_autosave();
 }
 
+#
+# Close the currently loaded file, checking first if user needs to save
 sub file_close {
     my $textwindow = shift;
     return if ( ::confirmempty() =~ m{cancel}i );
@@ -111,6 +117,8 @@ sub file_close {
     return;
 }
 
+#
+# Import prep text files and allow user to save concatenated result
 sub file_import_preptext {
     my ( $textwindow, $top ) = @_;
     return if ( ::confirmempty() =~ /cancel/i );
@@ -165,6 +173,8 @@ sub file_import_preptext {
     return;
 }
 
+#
+# Split current file into individual pages and export as prep text files
 sub file_export_preptext {
     my $exporttype       = shift;
     my $top              = $::top;
@@ -240,7 +250,9 @@ sub file_export_preptext {
     return;
 }
 
-## save the .bin file associated with the text file
+#
+# Save the .bin file associated with the text file
+# Contains locations of page breaks and bookmarks, and other project info
 sub _bin_save {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     my $mark = '1.0';
@@ -338,7 +350,8 @@ sub _bin_save {
     return;
 }
 
-## Clear persistent variables before loading another file
+#
+# Clear persistent variables before loading another file
 sub clearvars {
     my $textwindow = shift;
     my @marks      = $textwindow->markNames;
@@ -367,7 +380,8 @@ sub clearvars {
     return;
 }
 
-## Destroy some popups and labels when closing a file
+#
+# Destroy some popups and labels when closing a file
 sub clearpopups {
     ::killpopup('img_num_label');
     ::killpopup('pagebutton');
@@ -378,6 +392,7 @@ sub clearpopups {
     ::killpopup('pagelabelpop');
 }
 
+#
 # Save the currently loaded file
 sub savefile {
 
@@ -425,6 +440,8 @@ sub savefile {
     ::reset_autosave();
 }
 
+#
+# Return true if file is write-protected for the owner
 sub fileisreadonly {
     my $name = shift;
     my $mode = ( stat($name) )[2];
@@ -432,6 +449,8 @@ sub fileisreadonly {
     return 1;
 }
 
+#
+# Use page separator lines in file to locate page boundaries and set marks
 sub file_mark_pages {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -460,8 +479,9 @@ sub file_mark_pages {
     return;
 }
 
-## Track recently open files for the menu
-sub _recentupdate {    # FIXME: Seems to be choking.
+#
+# Track recently open files for the menu
+sub recentupdate {
     my $name = shift;
 
     # remove $name or any *empty* values from the list
@@ -476,14 +496,18 @@ sub _recentupdate {    # FIXME: Seems to be choking.
     return;
 }
 
-## Global Exit
+#
+# Exit the program, giving the user a chance to save first if needed
 sub _exit {
-    if ( confirmdiscard() =~ m{no}i ) {
+    if ( confirmdiscard() =~ m{no}i ) {    # "no" means ok to continue
         ::aspellstop() if $::lglobal{spellpid};
         exit;
     }
 }
 
+#
+# If page markers have been corrupted/lost/not set, and file has no page separator lines,
+# attempt to guess where the page markers were, given a few key locations in the file.
 sub file_guess_page_marks {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -598,6 +622,8 @@ sub file_guess_page_marks {
     return;
 }
 
+#
+# Update the list of operations in the operation history dialog
 sub oppopupdate {
     my $href = shift;
     $::lglobal{oplistbox}->delete( '0', 'end' );
@@ -612,6 +638,8 @@ sub oppopupdate {
     $::lglobal{oplistbox}->update;
 }
 
+#
+# Add an operation to the list of operations
 sub operationadd {
     return unless $::trackoperations;
     my $operation = shift;
@@ -624,6 +652,7 @@ sub operationadd {
     ::setedited(1);
 }
 
+#
 # Pop up an "Operation" history. Track which functions have already been
 # run.
 sub opspop_up {
@@ -665,6 +694,14 @@ sub opspop_up {
     ::oppopupdate();
 }
 
+#
+# If file has been edited, ask user if they want to save the edits
+#
+# If user cancels, sub returns "C/cancel", i.e. continue without saving or discarding
+# If user answers "Yes", sub returns "no"(!) after saving the file
+# If user answers "No", sub returns "N/no", and any changes are lost
+# Note need to compare return value case-insensitively
+# Typically called prior to quit/close/load operation - return matching /no/i means ok to continue that operation
 sub confirmdiscard {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -685,6 +722,9 @@ sub confirmdiscard {
     return 'no';
 }
 
+#
+# Clear the current file if user is ok to discard any unsaved edits
+# See sub confirmdiscard for description of return value
 sub confirmempty {
     my $textwindow = $::textwindow;
     my $answer     = confirmdiscard();
@@ -696,7 +736,9 @@ sub confirmempty {
     return $answer;
 }
 
-sub openfile {    # and open it
+#
+# Open a file - a main project file, normally text or HTML
+sub openfile {
     my $name       = shift;
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -740,7 +782,7 @@ sub openfile {    # and open it
     # If no bin file, or bin file didn't have a project id,
     # try to get one from the local project comments filename.
     ::getprojectid() unless $::projectid;
-    _recentupdate($name);
+    recentupdate($name);
     unless ( -e $::pngspath ) {
         $::pngspath = $::globallastpath . $::defaultpngspath;
         unless ( -e $::pngspath ) {
@@ -856,7 +898,8 @@ sub readsettings {
     $::ignoreversions = "revisions" if $::ignoreversions eq "revision";
 }
 
-## Save setting.rc file
+#
+# Save setting.rc file
 sub savesettings {
     return if $::lglobal{runtests};    # don't want setting.rc file to be overwritten during tests
 
@@ -998,6 +1041,8 @@ EOM
     }
 }
 
+#
+# Return the name of the bin file associated with the currently loaded file
 sub getbinname {
     my $binname = "$::lglobal{global_filename}.bin";
     unless ( -e $binname ) {    #for backward compatibility
@@ -1008,6 +1053,8 @@ sub getbinname {
     return $binname;
 }
 
+#
+# Export a single file with page break location information appended
 sub file_export_pagemarkup {
     my $textwindow = $::textwindow;
     my ($name);
@@ -1046,11 +1093,10 @@ sub file_export_pagemarkup {
         close $fh2;
     }
     openfile( $::lglobal{global_filename} );
-
-    #$textwindow->undo;
-    # OR reload the original file
 }
 
+#
+# Import an exported file containing page break location information
 sub file_import_markup {
     my $textwindow = $::textwindow;
     return if ( ::confirmempty() =~ /cancel/i );
@@ -1201,6 +1247,8 @@ sub file_import_markup {
     }
 }
 
+#
+# Set up page marks, bookmarks, etc. after loading a bin file
 sub interpretbinfile {
     my $textwindow = $::textwindow;
     my $markindex;
@@ -1230,11 +1278,19 @@ sub interpretbinfile {
     return ();
 }
 
+#
+# Returns true if file has been edited since last save
 sub isedited {
     my $textwindow = $::textwindow;
     return $textwindow->numberChanges || $::lglobal{isedited};
 }
 
+#
+# Set the "edited" flag
+# Pass a non-zero value to mark file as needing to be saved
+# Pass zero to clear flag after file has been saved
+# Note that clearing the flag also clears the Undo list, i.e.
+# once a file has been saved, it is not possible to undo before that point
 sub setedited {
     my $val        = shift;
     my $textwindow = $::textwindow;

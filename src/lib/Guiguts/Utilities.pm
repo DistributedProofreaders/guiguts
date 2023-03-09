@@ -27,6 +27,8 @@ BEGIN {
 
 }
 
+#
+# Get name of scan file for given page number
 sub get_image_file {
     my $pagenum = shift;
     my $imagefile;
@@ -50,6 +52,7 @@ sub get_image_file {
     return $imagefile;
 }
 
+#
 # Routine to handle image viewer file requests
 sub openpng {
     my ( $textwindow, $pagenum ) = @_;
@@ -78,6 +81,7 @@ sub openpng {
     return;
 }
 
+#
 # Roman numeral conversion taken directly from the Roman.pm module Copyright
 # (c) 1995 OZAWA Sakuro. Done to avoid users having to install downloadable
 # modules.
@@ -111,6 +115,8 @@ sub roman {
     return "$roman";    # getting rid of trailing dot
 }
 
+#
+# Roman to Arabic conversion
 sub arabic {
     my $arg = shift;
     return $arg
@@ -129,6 +135,8 @@ sub arabic {
     return $arabic;
 }
 
+#
+# Begin (or end) button 2 scrolling of main window
 sub popscroll {
     if ( $::lglobal{scroller} ) {
         scrolldismiss();
@@ -163,6 +171,7 @@ sub popscroll {
     $::lglobal{scroll_id} = $::top->repeat( $::scrollupdatespd, \&b2scroll );
 }
 
+#
 # Command parsing for External command routine
 sub cmdinterp {
 
@@ -222,6 +231,9 @@ sub cmdinterp {
     return @args;
 }
 
+#
+# Return true (& issue warning) if contents of main window are not associated with a named file,
+# e.g. if it has never been saved, or no file has ever been loaded
 sub nofileloadedwarning {
     my $top = $::top;
     if ( $::lglobal{global_filename} =~ m/No File Loaded/ ) {
@@ -234,8 +246,11 @@ sub nofileloadedwarning {
         my $answer = $dialog->Show;
         return 1;
     }
+    return 0;
 }
 
+#
+# Handle quoting of command line arguments for Windows systems
 sub win32_cmdline {
     my @args = @_;
 
@@ -252,6 +267,8 @@ sub win32_cmdline {
     return join " ", @args;
 }
 
+#
+# Use Windows "start" command to use default program to open a file
 sub win32_start {
     my @args = @_;
 
@@ -289,11 +306,15 @@ sub win32_start {
     Win32::Unicode::Process::systemW $cmdline;    # systemW is like system, but copes with utf8 encoding correctly.
 }
 
+#
+# Check file is a Windows executable
 sub win32_is_exe {
     my ($exe) = @_;
     return -x $exe && !-d $exe;
 }
 
+#
+# Find Windows executable (searching path if necessary)
 sub win32_find_exe {
     my ($exe) = @_;
     return $exe if win32_is_exe($exe);
@@ -316,6 +337,8 @@ sub win32_find_exe {
     return $exe;
 }
 
+#
+# Create subprocess to run Windows executable
 sub win32_create_process {
     require Win32;
     require Win32::Process;
@@ -332,6 +355,7 @@ sub win32_create_process {
     return;
 }
 
+#
 # This turns long Windows path to DOS path, e.g., C:\Program Files\
 # becomes C:\Progra~1\.
 # Removed from code in 1.0.6 (why?), reintroduced 1.0.22
@@ -340,19 +364,26 @@ sub dos_path {
     return Win32::GetShortPathName( $_[0] );
 }
 
-# Return paths to common files used by the application.
+#
+# Return path to setting.rc
 sub path_settings {
     return ::catfile( $::lglobal{homedirectory}, 'setting.rc' );
 }
 
+#
+# Return path to header.txt
 sub path_htmlheader {
     return ::catfile( $::lglobal{homedirectory}, 'header.txt' );
 }
 
+#
+# Return path to headerdefault.txt
 sub path_defaulthtmlheader {
     return 'headerdefault.txt';
 }
 
+#
+# Return path to header_user.txt
 sub path_userhtmlheader {
     return ::catfile( $::lglobal{homedirectory}, 'header_user.txt' );
 }
@@ -436,6 +467,7 @@ sub list_lang {
     return split( /[+, ]+/, $::booklang );
 }
 
+#
 # system(LIST)
 # (but slightly more robust, particularly on Windows).
 sub run {
@@ -458,6 +490,7 @@ sub run {
     return;
 }
 
+#
 # Launch url in browser
 sub launchurl {
     my $url     = shift;
@@ -466,6 +499,7 @@ sub launchurl {
     ::runner( ::cmdinterp($command) );
 }
 
+#
 # Start an external program
 sub runner {
     my @args = @_;
@@ -488,6 +522,7 @@ sub runner {
     return;
 }
 
+#
 # Run external program, with stdin, stdout and/or stderr redirected to temporary files
 # stdout and stderr can be redirected to the same file
 {
@@ -587,6 +622,8 @@ sub runner {
     }
 }
 
+#
+# Escape metacharacters used in regexps
 sub escape_regexmetacharacters {
     my $inputstring = shift;
     $inputstring =~ s/([\{\}\[\]\(\)\^\$\.\|\*\+\?\\])/\\$1/g;
@@ -594,6 +631,9 @@ sub escape_regexmetacharacters {
     return $inputstring;
 }
 
+#
+# Deaccent string in a suitable manner for alphabetic sorting
+# Needs to be as fast as possible, since called a lot when sorting large array
 sub deaccentsort {
     my $phrase = shift;
     $phrase =~ s/\p{Mark}//g;                              # First remove any combining marks from phrase
@@ -609,6 +649,8 @@ sub deaccentsort {
     return $phrase;
 }
 
+#
+# Deaccent string in a suitable manner for things like HTML anchor
 sub deaccentdisplay {
     my $phrase = shift;
     return $phrase unless ( $phrase =~ /[$::convertlatinsinglesearch$::convertcharssinglesearch]/ );
@@ -622,6 +664,10 @@ sub deaccentdisplay {
     return $phrase;
 }
 
+#
+# Read language-specific labels files
+# They also contain language specific strings to control sort ordering
+# Defaults are set in this routine, then removed if the user has overridden them using labels file
 sub readlabels {
     my $labelfile        = path_labels();
     my $defaultlabelfile = path_defaultlabels();
@@ -759,11 +805,11 @@ sub readlabels {
     }
 }
 
+#
+# Display a "working" message, or remove dialog if no message given
 sub working {
     my $msg = shift;
     my $top = $::top;
-
-    # Display "working" message
     if ( defined $msg ) {
         if ( defined $::lglobal{workpop} ) {    # dialog already showing, so just change message
             $::lglobal{worklabel}
@@ -786,6 +832,8 @@ sub working {
     }
 }
 
+#
+# Initialize variables at start of program - called only once
 sub initialize {
 
     # Get location of guiguts.pl & make it the current directory
@@ -1789,6 +1837,8 @@ sub setwidgetdefaultoptions {
     $top->optionAdd( '*Radiobutton*selectColor' => $selectcolor, $priority );
 }
 
+#
+# Cancel button 2 window scrolling
 sub scrolldismiss {
     my $textwindow = $::textwindow;
     return unless $::lglobal{scroller};
@@ -1798,6 +1848,8 @@ sub scrolldismiss {
     $::lglobal{scroll_id} = '';
 }
 
+#
+# Display correct cursor and adjust view in main window during button 2 scrolling
 sub b2scroll {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -1821,6 +1873,8 @@ sub b2scroll {
     }
 }
 
+#
+# Create a dialog with common behavior defined and default behavior when window is dismissed
 sub initialize_popup_with_deletebinding {
     my $popupname = shift;
     my $context   = shift;    # Additional context for multi-use dialogs
@@ -1832,6 +1886,8 @@ sub initialize_popup_with_deletebinding {
     );
 }
 
+#
+# Destroy a dialog and undefine the global variable so program knows it's been destroyed
 sub killpopup {
     my $popupname = shift;
     return unless $::lglobal{$popupname};
@@ -1839,6 +1895,8 @@ sub killpopup {
     undef $::lglobal{$popupname};
 }
 
+#
+# Create a dialog with common behavior defined but without handling when dialog is dismissed
 sub initialize_popup_without_deletebinding {
     my $top       = $::top;
     my $popupname = shift;
@@ -1876,6 +1934,7 @@ sub initialize_popup_without_deletebinding {
 
 }
 
+#
 # Display the manual page corresponding to the given dialog name and optional context string
 sub display_manual {
     my $helplookup = shift;
@@ -1896,6 +1955,8 @@ sub display_manual {
     }
 }
 
+#
+# Convert given text to title case
 sub titlecase {
     my $text = shift;
     $text = lc($text);
@@ -1905,12 +1966,18 @@ sub titlecase {
     return $text;
 }
 
+#
+# Convert forward slash to backslash for Windows paths
 sub os_normal {
     my $tmp = $_[0];
     $tmp =~ s|/|\\|g if $::OS_WIN && $tmp;
     return $tmp;
 }
 
+#
+# Handle backslashes and single quotes so string is suitable for writing
+# to setting.rc or similar format file
+# Note - assumes string variables will be written out enclosed in single quotes
 sub escape_problems {
     my $var = shift;
     if ($var) {
@@ -1920,6 +1987,9 @@ sub escape_problems {
     return $var;
 }
 
+#
+# Set up resizing of widget with scrollbars by creating a
+# "corner" widget that can be clicked and dragged
 sub drag {
     my $scrolledwidget = shift;
     my $corner         = $scrolledwidget->Subwidget('corner');
@@ -1996,7 +2066,8 @@ sub natural_sort_freq {
     } keys %{ $_[0] };
 }
 
-## No Asterisks
+#
+# Remove the 4 asterisk WF "suspects" suffix
 sub noast {
     local $/ = ' ****';
     my $phrase = shift;
@@ -2004,7 +2075,8 @@ sub noast {
     return $phrase;
 }
 
-### Edit Menu
+#
+# Cut text operation
 sub cut {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('sel');
@@ -2019,6 +2091,8 @@ sub cut {
     }
 }
 
+#
+# Copy text operation
 sub textcopy {
     my $textwindow  = $::textwindow;
     my @ranges      = $textwindow->tagRanges('sel');
@@ -2032,6 +2106,7 @@ sub textcopy {
     }
 }
 
+#
 # Special paste routine that will respond differently
 # for overstrike/insert modes
 sub paste {
@@ -2077,7 +2152,7 @@ sub paste {
 # Similarly to paste routine above, alternative paste uses slightly different method
 sub entrypaste {
     my $w = shift;
-    $w->deleteSelected;    #
+    $w->deleteSelected;
 
     my $alternative_paste = shift;
     if ($alternative_paste) {
@@ -2088,6 +2163,8 @@ sub entrypaste {
     }
 }
 
+#
+# Column cut operation
 sub colcut {
     my $textwindow = shift;
     columnizeselection($textwindow);
@@ -2096,6 +2173,8 @@ sub colcut {
     $textwindow->addGlobEnd;
 }
 
+#
+# Column copy operation
 sub colcopy {
     my $textwindow = shift;
     columnizeselection($textwindow);
@@ -2104,6 +2183,8 @@ sub colcopy {
     $textwindow->addGlobEnd;
 }
 
+#
+# Column paste operation
 sub colpaste {
     my $textwindow = shift;
     $textwindow->addGlobStart;
@@ -2111,6 +2192,8 @@ sub colpaste {
     $textwindow->addGlobEnd;
 }
 
+#
+# Pop dialog showing version numbers of OS and tools
 sub showversion {
     my $top = $::top;
     my $os  = $^O;
@@ -2139,10 +2222,10 @@ END
     $dialog->Show;
 }
 
-# Check what is the most recent version online
+#
+# Check what is the most recent version of GG online
 sub checkonlineversion {
 
-    #working("Checking for update online (timeout 20 seconds)");
     my $ua = LWP::UserAgent->new(
         env_proxy  => 1,
         keep_alive => 1,
@@ -2153,7 +2236,6 @@ sub checkonlineversion {
     );
     my $response = $ua->get('https://github.com/DistributedProofreaders/guiguts/releases');
 
-    #working();
     unless ( $response->content ) {
         return;
     }
@@ -2162,7 +2244,8 @@ sub checkonlineversion {
     }
 }
 
-# Check to see if this is the most recent version
+#
+# Check to see if this is the most recent version of GG
 sub checkforupdates {
     my $top          = $::top;
     my $monthlycheck = shift;
@@ -2289,7 +2372,8 @@ sub checkforupdates {
     )->pack( -side => 'top', -pady => 2 );
 }
 
-# On a monthly basis, check to see if this is the most recent version
+#
+# On a monthly basis, check to see if this is the most recent version of Guiguts
 sub checkforupdatesmonthly {
     my $top = $::top;
 
@@ -2313,7 +2397,8 @@ sub checkforupdatesmonthly {
     ::savesettings();
 }
 
-### Bookmarks
+#
+# Set bookmark at cursor location
 sub setbookmark {
     my $bookmark   = shift;
     my $textwindow = $::textwindow;
@@ -2334,6 +2419,8 @@ sub setbookmark {
     ::setedited(1);
 }
 
+#
+# Go to numbered bookmark
 sub gotobookmark {
     my $bookmark   = shift;
     my $textwindow = $::textwindow;
@@ -2346,6 +2433,8 @@ sub gotobookmark {
     }
 }
 
+#
+# Scroll main window to make the given index position visible
 sub seeindex {
     my ( $mark, $displayattop ) = @_;
     my $textwindow = $::textwindow;
@@ -2358,6 +2447,7 @@ sub seeindex {
     }
 }
 
+#
 # Run ebookmaker tool on current HTML file to create epub and mobi or HTML version.
 # Note ebookmaker creates a subfolder "out" when output folder is the same as input
 # folder only when producing HTML version.
@@ -2477,12 +2567,14 @@ sub ebookmaker {
     }
 }
 
+#
 # Concatenate given directories using OS-specific path separator
 sub pathcatdir {
     return $_[0] . $Config::Config{path_sep} . $_[1];
 }
 
-## Sidenote Fixup
+#
+# Run Sidenote Fixup
 sub sidenotes {
     my $textwindow = $::textwindow;
     ::operationadd('Sidenote Fixup');
@@ -2554,9 +2646,9 @@ sub sidenotes {
     }
 }
 
+#
 # Find and format poetry line numbers. They need to be to the right, at
-# least 2 space from the text.
-## Reformat Poetry ~LINE Numbers
+# least 2 spaces from the text.
 sub poetrynumbers {
     my $textwindow = $::textwindow;
     $::searchstartindex = '1.0';
@@ -2618,7 +2710,9 @@ sub get_page_number {
     return $pnum;
 }
 
-sub externalpopup {    # Set up the external commands menu
+#
+# Pop the Set External Programs dialog
+sub externalpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     my $menutempvar;
@@ -2636,7 +2730,7 @@ sub externalpopup {    # Set up the external commands menu
               . "(for Windows). You can call a file directly: (\"C:\\Program Files\\Accessories\\wordpad.exe\") or indirectly for\n"
               . "registered apps (start or rundll). If you call a program that has a space in the path, you must enclose the program\n"
               . "name in double quotes.\n\n"
-              . "There are a few exposed internal variables you can use to build commands with.\nUse one of these variable to "
+              . "There are a few exposed internal variables you can use to build commands with.\nUse one of these variables to "
               . "substitute in the corresponding value.\n\n"
               . "\$d = the directory path of the currently open file.\n"
               . "\$f = the current open file name, without a path or extension.\n"
@@ -2685,12 +2779,14 @@ sub externalpopup {    # Set up the external commands menu
     }
 }
 
+#
 # Tidy and destroy the custom external commands dialog
 sub externalpopupdestroy {
     externalpopuptidy();
     ::killpopup('extoptpop');
 }
 
+#
 # Remove any empty items in the custom external commands list by building a fresh one
 sub externalpopuptidy {
     my @new_extops = qw();
@@ -2702,7 +2798,9 @@ sub externalpopuptidy {
     @::extops = @new_extops;
 }
 
-sub xtops {    # run an external program through the external commands menu
+#
+# Run an external program through the external commands menu
+sub xtops {
     my $index = shift;
     return unless $::extops[$index]{command};
     ::runner( ::cmdinterp( $::extops[$index]{command} ) );
@@ -2848,8 +2946,9 @@ sub toolbar_toggle {
     ::savesettings();
 }
 
-# expand current selection to span entire lines
-# if multiple selections, span from first to last
+#
+# Expand current selection to span entire lines
+# If multiple selections, span from first to last
 sub expandselection {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     my @ranges = $textwindow->tagRanges('sel');
@@ -2868,7 +2967,8 @@ sub expandselection {
     return ( $lsr, $ler );
 }
 
-# adjust current selection to column mode, spanning a block defined by the two given corners
+#
+# Adjust current selection to column mode, spanning a block defined by the two given corners
 sub columnizeselection {
     my $textwindow  = shift;
     my @ranges      = $textwindow->tagRanges('sel');
@@ -2886,7 +2986,9 @@ sub columnizeselection {
     }
 }
 
-#FIXME: doesnt work quite right if multiple volumes held in same directory
+#
+# Get the id of the current project by searching for the project comments file
+# in the current folder
 sub getprojectid {
     my $fname = $::lglobal{global_filename};
     my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
@@ -2901,6 +3003,8 @@ sub getprojectid {
     return;
 }
 
+#
+# Manually set the current project id
 sub setprojectid {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     my $projectidpop = $top->DialogBox(
@@ -2918,6 +3022,8 @@ sub setprojectid {
     $projectidpop->Show;
 }
 
+#
+# Open a project comments file that has been saved locally
 sub viewprojectcomments {
     ::operationadd('View project comments locally');
     return if ::nofileloadedwarning();
@@ -2928,6 +3034,8 @@ sub viewprojectcomments {
     ::runner( ::cmdinterp($defaulthandler) ) if $::projectid;
 }
 
+#
+# View the project discussion online
 sub viewprojectdiscussion {
     ::operationadd('View project discussion online');
     return if ::nofileloadedwarning();
@@ -2935,6 +3043,8 @@ sub viewprojectdiscussion {
     ::launchurl( $::urlprojectdiscussion . $::projectid ) if $::projectid;
 }
 
+#
+# View the project page online
 sub viewprojectpage {
     ::operationadd('View project page online');
     return if ::nofileloadedwarning();
@@ -2970,6 +3080,7 @@ sub viewprojectpage {
     }
 }    # end of variable-enclosing block
 
+#
 # Show/hide line numbers based on input argument
 sub displaylinenumbers {
     $::vislnnm = shift;
@@ -2977,6 +3088,7 @@ sub displaylinenumbers {
     ::savesettings();
 }
 
+#
 # Show/hide column numbers based on input argument
 sub displaycolnumbers {
     $::viscolnm = shift;
@@ -2984,6 +3096,7 @@ sub displaycolnumbers {
     ::savesettings();
 }
 
+#
 # Temporarily hide line & column numbers to speed up some operations
 # Note that the global flags are not changed
 sub hidelinenumbers {
@@ -2991,6 +3104,7 @@ sub hidelinenumbers {
     $::textwindow->hidecolnum  if $::viscolnm;
 }
 
+#
 # Restore the line & column numbers after they have been temporarily hidden
 sub restorelinenumbers {
     $::textwindow->showlinenum if $::vislnnm;
@@ -3013,6 +3127,7 @@ sub restorelinenumbers {
 {    # Block to make variable local & persistent
     my $operationinterrupt = 0;
 
+    #
     # Popup the interrupt dialog so user can interrupt operation
     sub enable_interrupt {
         disable_interrupt();    # Reset mechanism
@@ -3027,17 +3142,20 @@ sub restorelinenumbers {
         )->grid( -row => 1, -column => 1, -padx => 10, -pady => 10 );
     }
 
+    #
     # Destroy the dialog and ensure flag is cleared
     sub disable_interrupt {
         killpopup('stoppop');
         $operationinterrupt = 0;
     }
 
+    #
     # Set the interrupt flag, so next time query_interrupt is called, it will return true
     sub set_interrupt {
         $operationinterrupt = 1;
     }
 
+    #
     # Return whether user has interrupted the operation.
     sub query_interrupt {
         return 0 unless $operationinterrupt;
@@ -3047,6 +3165,7 @@ sub restorelinenumbers {
 
 }    # end of variable-enclosing block
 
+#
 # Sound bell unless global nobell flag is set
 # Also flash first label on status bar unless noflash argument is given
 sub soundbell {

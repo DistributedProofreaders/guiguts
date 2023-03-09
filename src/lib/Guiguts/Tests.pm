@@ -13,6 +13,9 @@ BEGIN {
 
 # From the command line run "guiguts.pl --runtests"
 # Results will be reported to the command window
+
+#
+# Run the test suite
 sub runtests {
 
     my $textwindow = $::textwindow;
@@ -94,6 +97,7 @@ sub runtests {
     exit;
 }
 
+#
 # Run an HTML conversion test with filenames determined by input argument
 sub runtesthtml {
     my $number       = shift;
@@ -130,6 +134,7 @@ sub runtesthtml {
     unlink "$HTMLBAKFILE.bin";
 }
 
+#
 # Run an error check conversion test given the test type,
 # input filename and baseline output filename
 sub runtesterrorcheck {

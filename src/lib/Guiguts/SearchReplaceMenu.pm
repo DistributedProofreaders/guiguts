@@ -14,6 +14,13 @@ BEGIN {
       &quicksearch &quicksearchpopup);
 }
 
+# $::sopt[0] --> 0 = pattern search               1 = whole word search
+# $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
+# $::sopt[2] --> 0 = search forwards              1 = search backwards
+# $::sopt[3] --> 0 = normal search term           1 = regex search term - 3 and 0 are mutually exclusive
+# $::sopt[4] --> 0 = search from last index       1 = Start from beginning
+
+#
 # Update both the search and replace histories from their dialog fields
 sub update_sr_histories {
     return if $::scannosearch;
@@ -21,6 +28,9 @@ sub update_sr_histories {
     ::add_entry_history( $::lglobal{replaceentry}->get, \@::replace_history );
 }
 
+#
+# Search for given text/regex
+# Can also run in silent modes (less updating)
 sub searchtext {
     my $searchterm      = shift;
     my $silentmode      = shift;                                  # 1 = don't update main window; 2 = total silence for counting only
@@ -29,11 +39,6 @@ sub searchtext {
     my $top             = $::top;
     ::hidepagenums();
 
-    # $::sopt[0] --> 0 = pattern search               1 = whole word search
-    # $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
-    # $::sopt[2] --> 0 = search forwards              1 = search backwards
-    # $::sopt[3] --> 0 = normal search term           1 = regex search term - 3 and 0 are mutually exclusive
-    # $::sopt[4] --> 0 = search from last index       1 = Start from beginning
     #	$::searchstartindex--where the last search for this $searchterm ended
     #   replaced with the insertion point if the user has clicked someplace else
     $searchterm = '' unless defined $searchterm;
@@ -285,6 +290,7 @@ sub searchtext {
     return $foundone;    # return index of where found text started
 }
 
+#
 # Use searchtext routine to find how many matches in file for search string
 sub countmatches {
     my ($searchterm) = @_;
@@ -331,7 +337,8 @@ BEGIN {    # restrict scope of $countlastterm
            # remember last term counted / searched
     my $countlastterm = '';
 
-    # only need to clear counted label if current term is different
+    #
+    # Clear counted label if current search term is different to old
     sub countlabelclear {
         my $newterm = shift;
         if ( $newterm ne $countlastterm ) {
@@ -341,6 +348,7 @@ BEGIN {    # restrict scope of $countlastterm
     }
 }
 
+#
 # Set search entry box to red/black text if invalid/valid search term
 # Also used as a validation routine, but always returns OK because we still want
 # the text to be shown, even if it's a bad regex - user may not have finished typing
@@ -351,6 +359,8 @@ sub reg_check {
     return 1;
 }
 
+#
+# Pop dialog for editing regexps/hints in scannos files
 sub regedit {
     my $top    = $::top;
     my $editor = $top->DialogBox(
@@ -443,6 +453,8 @@ EOF
     }
 }
 
+#
+# Clear and refresh the regex editing dialog fields
 sub regload {
     my $word = '';
     $word = $::lglobal{scannosarray}[ $::lglobal{scannosindex} ];
@@ -455,6 +467,8 @@ sub regload {
     $::lglobal{reghinted}->insert( 'end', $::reghints{$word} ) if defined $word;
 }
 
+#
+# Add a new scanno
 sub regadd {
     my $st = $::lglobal{regsearch}->get( '1.0', '1.end' );
     unless ( isvalid($st) ) {
@@ -487,6 +501,8 @@ sub regadd {
     regload();
 }
 
+#
+# Delete a scanno
 sub regdel {
     my $word = '';
     my $st   = $::lglobal{regsearch}->get( '1.0', '1.end' );
@@ -500,6 +516,8 @@ sub regdel {
     regload();
 }
 
+#
+# Display the hint for this scanno
 sub reghint {
     my $message = 'No hints for this entry.';
     my $reg     = $::lglobal{searchentry}->get;
@@ -535,6 +553,8 @@ sub reghint {
     }
 }
 
+#
+# Advance to the next scanno
 sub getnextscanno {
     $::scannosearch = 1;
     ::findascanno();
@@ -552,6 +572,8 @@ sub getnextscanno {
     }
 }
 
+#
+# Swap the Search and Replace strings
 sub swapterms {
     my $tempholder = $::lglobal{replaceentry}->get;
     $::lglobal{replaceentry}->delete( 0, 'end' );
@@ -561,6 +583,7 @@ sub swapterms {
     searchtext();
 }
 
+#
 # Check if a regex is valid by attempting to eval it
 #
 # Two possible errors:
@@ -595,13 +618,13 @@ sub swapterms {
         $valid = 0 if $@;    # if compile failed
         return $valid;
     }
-}
+}    # End of enclosing block
 
-# End of enclosing block
-
+#
+# Warn user if regex search term is invalid
 sub badreg {
     my $warning = $::top->Dialog(
-        -text    => "Invalid Regex search term.\nDo you have mismatched\nbrackets or parenthesis?",
+        -text    => "Invalid Regex search term.\nDo you have mismatched\nbrackets or parentheses?",
         -title   => 'Invalid Regex',
         -bitmap  => 'warning',
         -buttons => ['Ok'],
@@ -610,6 +633,9 @@ sub badreg {
     $warning->Show;
 }
 
+#
+# Clear the mark that showed where match from previous search was
+# (used when `\n` included in regex, for multi-line matching?)
 sub clearmarks {
     @{ $::lglobal{nlmatches} } = ();
     my ( $mark, $mindex );
@@ -624,6 +650,8 @@ sub clearmarks {
     }
 }
 
+#
+# Get next/previous mark from given index
 sub getmark {
     my $start = shift;
     if ( $::sopt[2] ) {    # search reverse
@@ -633,6 +661,9 @@ sub getmark {
     }
 }
 
+#
+# Update the label showing how many times word appears
+# Uses "seenwords" from Word Frequency - somewhat superceded by "Count" feature
 sub updatesearchlabels {
     if ( $::lglobal{searchpop} ) {
         my $searchterm1 = $::lglobal{searchentry}->get;
@@ -646,6 +677,7 @@ sub updatesearchlabels {
     }
 }
 
+#
 # Return text for searchnumlabel depending on number of times found.
 sub searchnumtext {
     my $count = shift;
@@ -654,6 +686,7 @@ sub searchnumtext {
 
 }
 
+#
 # calls the replacewith command after calling replaceeval
 # to allow arbitrary perl code to be included in the replace entry
 sub replace {
@@ -673,6 +706,8 @@ sub replace {
     return 1;
 }
 
+#
+# Find next scanno
 sub findascanno {
     my $textwindow = $::textwindow;
     $::searchendindex = '1.0';
@@ -698,8 +733,9 @@ sub findascanno {
     return 1;
 }
 
-# allow the replacment term to contain arbitrary perl code
-# called only from replace()
+#
+# Allow the replacement term to contain arbitrary perl code
+# Called only from replace()
 sub replaceeval {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -829,6 +865,7 @@ END
     return $replaceterm;
 }
 
+#
 # Execute extended regex actions of one type, e.g. all the \L...\E for lowercase
 sub replaceevalaction {
     my $replaceterm = shift;
@@ -848,6 +885,9 @@ sub replaceevalaction {
     return $replbuild;
 }
 
+#
+# Replace all occurrences for search term with replacement term
+# Uses a fast Perl/Tk TextEdit routine unless regex or to avoid a bug
 sub replaceall {
     my $replacement = shift;
     $replacement = '' unless $replacement;
@@ -903,6 +943,7 @@ sub replaceall {
     ::restorelinenumbers();
 }
 
+#
 # Reset search from start of doc if new search term
 sub searchfromstartifnew {
     my $new_term = shift;
@@ -911,15 +952,18 @@ sub searchfromstartifnew {
     }
 }
 
+#
+# Set search options - pass 0 or 1, or pass "x" to leave option as it is
+#
+# $::sopt[0] --> 0 = pattern search               1 = whole word search
+# $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
+# $::sopt[2] --> 0 = search forwards              1 = search backwards
+# $::sopt[3] --> 0 = normal search term   1 = regex search term - 3 and 0 are mutually exclusive
+# $::sopt[4] --> 1 = start search at beginning
 sub searchoptset {
     my @opt       = @_;
     my $opt_count = @opt;
 
-    # $::sopt[0] --> 0 = pattern search               1 = whole word search
-    # $::sopt[1] --> 0 = case sensitive               1 = case insensitive search
-    # $::sopt[2] --> 0 = search forwards              1 = search backwards
-    # $::sopt[3] --> 0 = normal search term   1 = regex search term - 3 and 0 are mutually exclusive
-    # $::sopt[4] --> 1 = start search at beginning
     for ( 0 .. $opt_count - 1 ) {
         if ( defined( $::lglobal{searchpop} ) ) {
             if ( $opt[$_] !~ /[a-zA-Z]/ ) {
@@ -935,7 +979,9 @@ sub searchoptset {
     # Changing options may affect if search string is valid, so re-check it
     reg_check( $::lglobal{searchentry}->get ) if $::lglobal{searchpop};
 }
-### Search
+
+#
+# Pop the Search/Replace dialog
 sub searchpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -1432,6 +1478,7 @@ sub searchfocusreverse {
     $::textwindow->focus;
 }
 
+#
 # Create bindings so Shift key causes a one-off reversal of Search or Replace & Search direction.
 # Shift-Button toggles the reverse flag before the class's ButtonRelease event
 # executes the search command.
@@ -1459,6 +1506,7 @@ sub search_shiftreverse {
     );
 }
 
+#
 # Bind a key-combination to a sub for a search dialog
 # Also disable default class behaviour for key on Entry widgets
 # (e.g. Ctrl-b does "move left" by default)
@@ -1479,12 +1527,13 @@ sub searchbind {
     $dlg->MainWindow->bind( "Tk::Entry", $ukey, 'NoOp' ) if $ukey ne $lkey;
 }
 
+#
 # Add frames containing field and buttons for replacement terms
 sub searchaddterms {
-    my $msref  = shift;              # Array of frames
-    my $termno = shift;              # Highest number frame required
+    my $msref  = shift;            # Array of frames
+    my $termno = shift;            # Highest number frame required
     my $mslen  = @$msref;
-    for ( $mslen .. $termno ) {      # Create as many as needed
+    for ( $mslen .. $termno ) {    # Create as many as needed
         push @$msref, $::lglobal{searchpop}->Frame;
         my $replaceentry = "replaceentry" . ( $_ + 1 );
         $msref->[$_]->Button(
@@ -1546,6 +1595,8 @@ sub searchaddterms {
     }
 }
 
+#
+# Show the appropriate number of Replace fields and buttons
 sub searchshowterms {
     my ( $msref, $start, $end, $before ) = @_;
     for ( $start .. $end ) {
@@ -1593,6 +1644,8 @@ sub setsearchpopgeometry {
     $::lglobal{searchpop}->geometry( $::geometryhash{searchpop} );
 }
 
+#
+# Pop the Search/Replace dialog in scannos mode
 sub stealthscanno {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -1610,6 +1663,8 @@ sub stealthscanno {
     $::lglobal{doscannos} = 0;
 }
 
+#
+# Find next proofer comment
 sub find_proofer_comment {
     my $direction = shift;
     $direction = 'forward' unless $direction;
@@ -1629,6 +1684,8 @@ sub find_proofer_comment {
     }
 }
 
+#
+# Find next asterisks that are not part of /*...*/ markup
 sub find_asterisks {
     my $textwindow = $::textwindow;
     my $pattern    = "(?<!/)\\*(?!/)";
@@ -1641,6 +1698,8 @@ sub find_asterisks {
     }
 }
 
+#
+# Find transliterations, e.g. "[Greek...]" - open square bracket not start of footnote/illo/sidenote
 sub find_transliterations {
     my $textwindow = $::textwindow;
     my $pattern    = "\\[[^FIS\\d]";
@@ -1650,14 +1709,6 @@ sub find_transliterations {
     $::lglobal{searchentry}->delete( 0, 'end' );
     $::lglobal{searchentry}->insert( 'end', $pattern );
     $::lglobal{searchbutton}->invoke;
-
-    #my $comment    = $textwindow->search( '-regexp', '--', $pattern, "insert" );
-    #if ($comment) {
-    #	my $index = $textwindow->index("$comment +1c");
-    #	$textwindow->SetCursor($index);
-    #} else {
-    #	::operationadd('Found no more transliterations (\\[[^FIS\\d])');
-    #}
 }
 
 #
@@ -1707,6 +1758,8 @@ sub nextblock {
     $textwindow->focus;
 }
 
+#
+# Pop the Find Orphaned Brackets dialog
 sub orphanedbrackets {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -1854,6 +1907,8 @@ sub orphanedbrackets {
         );
     }
 
+    #
+    # Search for orphaned brackets
     sub brsearch {
         my ( $brkresult, $brnextbt ) = @_;
         my $textwindow = $::textwindow;
@@ -1891,6 +1946,9 @@ sub orphanedbrackets {
         }
     }
 
+    #
+    # Return simple printable form of each bracket type
+    # based on the regex used to search for it
     sub printable_brackets {
         my $brackets = shift;
         if ( $brackets =~ /^\[(.*)\]$/ ) {
@@ -1908,6 +1966,8 @@ sub orphanedbrackets {
         return $brackets;
     }
 
+    #
+    # Find next occurrence
     sub brnext {
         my ( $brkresult, $brnextbt ) = @_;
         my $textwindow = $::textwindow;
@@ -1998,6 +2058,8 @@ sub orphanedbrackets {
     }
 }
 
+#
+# Pop the Search/Replace dialog with a regex to find some orphaned markup
 sub orphanedmarkup {
     searchpopup();
     searchoptset(qw/0 x x 1/);
@@ -2007,7 +2069,9 @@ sub orphanedmarkup {
     $::lglobal{searchbutton}->invoke;
 }
 
-sub searchsize {    # Pop up a window where you can adjust the search history size
+#
+# Pop up a dialog where you can adjust the search history size
+sub searchsize {
     my $top = $::top;
     if ( $::lglobal{srchhistsizepop} ) {
         $::lglobal{srchhistsizepop}->deiconify;
@@ -2047,7 +2111,8 @@ sub searchsize {    # Pop up a window where you can adjust the search history si
     }
 }
 
-# Do not move from guiguts.pl; do command must be run in main
+#
+# Load scannos file (consists of Perl source to be executed with dofile)
 sub loadscannos {
     my $top = $::top;
     $::lglobal{scannosfilename} = '';
@@ -2095,6 +2160,8 @@ sub loadscannos {
     }
 }
 
+#
+# Replace each occurrence of "[::]" with an incrementing counter
 sub replace_incr_counter {
     my $counter    = 1;
     my $textwindow = $::textwindow;

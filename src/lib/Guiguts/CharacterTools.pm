@@ -207,6 +207,10 @@ sub charbuttonballoon {
     $blln->attach( $w, -balloonmsg => $msg, );
 }
 
+#
+# Insert character(s) in the text/entry widget that last had focus
+# This might be the main text window, a field in the S/R dialog, etc.
+# Allows insertion of characters chosen from compose dialog, common chars dialog, etc.
 sub insertit {
     my $letter  = shift;
     my $isatext = 0;
@@ -229,6 +233,9 @@ sub insertit {
       if $isatext;
 }
 
+#
+# Draw array of buttons, each containing one character from a Unicode block
+# User can click to insert the character in text, or right-click to copy to clipboard
 sub doutfbuttons {
     my ( $start, $end ) = @_;
     my $rows = ( ( hex $end ) - ( hex $start ) + 1 ) / 16 - 1;
@@ -268,7 +275,8 @@ sub doutfbuttons {
     $::lglobal{utfpop}->update;
 }
 
-### Unicode
+#
+# Create the Unicode block dialog
 sub utfpopup {
     my ( $block, $start, $end ) = @_;
     my $top        = $::top;
@@ -332,6 +340,10 @@ sub utfpopup {
     $top->Unbusy( -recurse => 1 );
 }
 
+#
+# Create the Unicode Character Search dialog
+# User can enter characteristics (parts of Unicode character name)
+# such as "latin capital acute" to get list of characters that match
 sub utfcharsearchpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -463,6 +475,9 @@ sub utfcharsearchpopup {
     }
 }
 
+#
+# Add bindings to make a label that contains character information
+# in the results from the Unicode Character Search dialog behave like button
 sub utflabel_bind {
     my ( $widget, $block, $start, $end ) = @_;
     $widget->bind(
@@ -475,11 +490,15 @@ sub utflabel_bind {
     $widget->bind(
         '<ButtonPress-1>',
         sub {
-            utfpopup( $block, $start, $end );
+            utfpopup( $block, $start, $end );    # Display the block containing this character
         }
     );
 }
 
+#
+# Add bindings to make a label that contains the actual character
+# in the results from the Unicode Character Search dialog behave like button
+# Left-click to insert character, right-click to copy to clipboard
 sub utfchar_bind {
     my $textwindow = $::textwindow;
     my $widget     = shift;
@@ -519,6 +538,7 @@ sub utfchar_bind {
     );
 }
 
+#
 # Pop up window to allow entering Unicode characters by ordinal number
 sub utfcharentrypopup {
     my $textwindow = $::textwindow;
@@ -615,6 +635,7 @@ sub utfcharentrypopup {
     }
 }
 
+#
 # Pop up compose window to allow entering characters via keystroke shortcuts
 sub composepopup {
     $::lglobal{composepopstr} = '';
@@ -629,6 +650,7 @@ sub composepopup {
     $::lglobal{composepop}->Tk::bind( '<Key>', \&composekeyaction );
 }
 
+#
 # Action when a key is pressed or OK button forces interpretation of string so far
 # If string matches a defined compose sequence, insert the relevant character
 # If string is a 4 digit hex number (with optional prefix), interpret as unicode ordinal
@@ -1076,6 +1098,7 @@ sub composeref {
     }
 }
 
+#
 # Sort the compose sequences first by character, then by sequence
 sub composesort {
     $::composehash{$a} cmp $::composehash{$b} or $a cmp $b;

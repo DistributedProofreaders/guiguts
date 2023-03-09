@@ -15,6 +15,9 @@ use base qw(Tk::Frame);
 use Carp;
 Construct Tk::Widget 'LineNumberText';
 
+#
+# Create the various widgets needed to make a LineNumberText:
+# main text window, line number widget at side, column number widget at top/bottom
 sub Populate {
     my ( $self, $args ) = @_;
     $self->SUPER::Populate($args);
@@ -141,7 +144,8 @@ sub Populate {
 # Configure methods
 # ------------------------------------------
 
-# For line numbers
+#
+# Set which side line number widget is positioned
 sub linenumside {
     my ( $w, $side ) = @_;
     return unless defined $side;
@@ -153,23 +157,34 @@ sub linenumside {
     return;
 }
 
+#
+# Set the background color of the line number widget
 sub linenumbg {
     return shift->{'ltext'}->configure( -bg => @_ );
 }
 
+#
+# Set the foreground color of the line number widget
 sub linenumfg {
     return shift->{'ltext'}->configure( -fg => @_ );
 }
 
+#
+# Set the highlight background color of the line number widget
+# to show which is the current line
 sub curlinebg {
     return shift->{'ltext'}->tagConfigure( 'CURLINE', -background => @_ );
 }
 
+#
+# Set the highlight foreground color of the line number widget
+# to show which is the current line
 sub curlinefg {
     return shift->{'ltext'}->tagConfigure( 'CURLINE', -foreground => @_ );
 }
 
-# For column numbers
+#
+# Set which side column number widget is positioned
 sub colnumpos {
     my ( $w, $pos ) = @_;
     return unless defined $pos;
@@ -181,27 +196,41 @@ sub colnumpos {
     return;
 }
 
+#
+# Set the background color of the column number widget
 sub colnumbg {
     return shift->{'ctext'}->configure( -bg => @_ );
 }
 
+#
+# Set the foreground color of the column number widget
 sub colnumfg {
     return shift->{'ctext'}->configure( -fg => @_ );
 }
 
-# Raise current column number - the dark border to right (and below) looks a bit like an insert cursor at the current column
+#
+# Set the highlight background color of the column number widget
+# to show which is the current column
+# Also raise current column number - the dark border to right (and below)
+# looks a bit like an insert cursor at the current column
 sub curcolbg {
     return
       shift->{'ctext'}
       ->tagConfigure( 'CURCOL', -background => @_, -relief => 'raised', -borderwidth => 2 );
 }
 
+#
+# Set the highlight foreground color of the column number widget
+# to show which is the current column
 sub curcolfg {
     return shift->{'ctext'}->tagConfigure( 'CURCOL', -foreground => @_ );
 }
 
 # Public Methods
 # ------------------------------------------
+
+#
+# Display the line number widget
 sub showlinenum {
     my ($w) = @_;
     return if ( $w->{'linenumshowing'} );
@@ -211,6 +240,8 @@ sub showlinenum {
     return;
 }
 
+#
+# Hide the line number widget
 sub hidelinenum {
     my ($w) = @_;
     return unless ( $w->{'linenumshowing'} );
@@ -219,6 +250,8 @@ sub hidelinenum {
     return;
 }
 
+#
+# Display the column number widget
 sub showcolnum {
     my ($w) = @_;
     return if ( $w->{'colnumshowing'} );
@@ -228,6 +261,8 @@ sub showcolnum {
     return;
 }
 
+#
+# Hide the column number widget
 sub hidecolnum {
     my ($w) = @_;
     return unless ( $w->{'colnumshowing'} );
@@ -238,6 +273,11 @@ sub hidecolnum {
 
 #Private Methods
 # ------------------------------------------
+
+#
+# Update the line and column numbers if their widgets are visible
+# They need to display the correct range of line/column numbers
+# as well as highlight the current one
 sub _lincolupdate {
     my ($w) = @_;
     return

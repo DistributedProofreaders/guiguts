@@ -9,6 +9,8 @@ BEGIN {
     @EXPORT = qw(&greekpopup &findandextractgreek &betagreek &greekbeta);
 }
 
+#
+# Convert simple Greek characters in string to betacode ("ASCII")
 sub fromgreektr {
     my $phrase = shift;
     $phrase =~ s/\x{03DA}/St/g;
@@ -108,7 +110,9 @@ sub fromgreektr {
     $phrase =~ s/(\p{Upper}\p{Lower}\p{Upper})/\U$1\E/g;
     return $phrase;
 }
-## Find Greek
+
+#
+# Find next Greek phrase in text & load into Greek dialog
 sub findandextractgreek {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -131,6 +135,8 @@ sub findandextractgreek {
     }
 }
 
+#
+# Pop the Greek transcription/creation dialog
 sub greekpopup {
     if ( defined( $::lglobal{grpop} ) ) {
         $::lglobal{grpop}->deiconify;
@@ -662,6 +668,8 @@ sub buildvalidator {
     }
 }
 
+#
+# Find closing bracket that matches the open bracket starting Greek phrase
 sub findmatchingclosebracket {
     my $textwindow   = $::textwindow;
     my ($startIndex) = @_;
@@ -691,6 +699,8 @@ sub findmatchingclosebracket {
     return $closeIndex;
 }
 
+#
+# Find the extent of the next Greek phrase
 sub findgreek {
     my $startIndex = shift;
     my $textwindow = $::textwindow;
@@ -705,7 +715,8 @@ sub findgreek {
     }
 }
 
-# Puts Greek character into the Greek popup
+#
+# Inserts given Greek character into the Greek popup
 sub putgreek {
     my $attrib     = shift;
     my $textwindow = $::textwindow;
@@ -727,6 +738,8 @@ sub putgreek {
     $::lglobal{grtext}->see('insert');
 }
 
+#
+# Transfer the phrase from the Greek dialog into the main text window
 sub movegreek {
     my $textwindow = $::textwindow;
     my $phrase     = $::lglobal{grtext}->get( '1.0', 'end' );
@@ -736,6 +749,8 @@ sub movegreek {
     undef $::lglobal{grtextoriginal};
 }
 
+#
+# Put the given char into the character builder field
 sub placechar {
     my ( $widget, @xy, $letter );
     @xy     = $::lglobal{grpop}->pointerxy;
@@ -753,6 +768,8 @@ sub placechar {
     }
 }
 
+#
+# Convert given phrase from Betacode to Greek
 sub togreektr {
     my $phrase = shift;
     $phrase =~ s/nch/\x{03B3}\x{03C7}/g;
@@ -979,6 +996,8 @@ sub greekbeta {
     return fromgreektr($phrase);    #Un-marked & specials
 }
 
+#
+# Convert betacode to "ASCII" (no longer used IRL, but still accessible via \G...\E regex directive)
 sub betaascii {    #Actually it's beta->ANSI
 
     # Discards the accents

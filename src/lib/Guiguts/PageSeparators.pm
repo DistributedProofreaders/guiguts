@@ -9,6 +9,8 @@ BEGIN {
     @EXPORT = qw(&separatorpopup &delblanklines &safemark);
 }
 
+#
+# Popup help on the keystroke shortcuts for handling page separators
 sub pageseparatorhelppopup {
     my $top       = $::top;
     my $help_text = <<'EOM';
@@ -52,6 +54,7 @@ EOM
     }
 }
 
+#
 # Called by "Refresh" and when dialog first popped
 # Wraps single undo around all changes made from this click
 # If 'noauto' argument specified, then don't start processing yet
@@ -206,6 +209,8 @@ sub handleautomaticonrefresh {
     }
 }
 
+#
+# Find the next page separator line
 sub findpageseparator {
     my $textwindow = $::textwindow;
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
@@ -223,6 +228,8 @@ sub findpageseparator {
     $textwindow->see($::searchstartindex) if $::searchstartindex;
 }
 
+#
+# Handle case where markup closes before page break and re-opens immediately after
 sub closeupmarkup {
     my $textwindow = $::textwindow;
     my $changemade = 0;
@@ -270,6 +277,7 @@ sub closeupmarkup {
     return $changemade;
 }
 
+#
 # Process page separator and refresh ready for next one if needed
 # Only called via user action, not auto-joining
 sub processpageseparatorrefresh {
@@ -282,6 +290,7 @@ sub processpageseparatorrefresh {
     $textwindow->addGlobEnd;
 }
 
+#
 # Process page separator based on option chosen: j, k, l, t, h, d
 # Called either via user action or via auto-joining.
 sub processpageseparator {
@@ -468,6 +477,7 @@ sub processpageseparator {
     $textwindow->markSet( $pagemark, $markindex );
 }
 
+#
 # Given the index of a page marker return the index of a safe place for it,
 # specifically move it forward if it is mid-word
 sub safemark {
@@ -493,6 +503,8 @@ sub safemark {
     return $markindex;
 }
 
+#
+# Undo the last join action (would actually undo whatever the last edit was)
 sub undojoin {
     my $textwindow = $::textwindow;
     $textwindow->undo;
@@ -503,6 +515,8 @@ sub undojoin {
     refreshpageseparator('noauto');
 }
 
+#
+# Redo the last join action (would actually redo whatever the last edit was)
 sub redojoin {
     my $textwindow = $::textwindow;
     $textwindow->redo;
@@ -510,6 +524,8 @@ sub redojoin {
     $textwindow->see('insert');
 }
 
+#
+# Pop the main dialog for fixing page separators
 sub separatorpopup {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -641,6 +657,7 @@ sub separatorpopup {
     refreshpageseparatorwrapper('noauto');    # Don't start automatically when dialog has only just been popped
 }
 
+#
 # Delete blank lines before page separators
 sub delblanklines {
     my $textwindow = $::textwindow;

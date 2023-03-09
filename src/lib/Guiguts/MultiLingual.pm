@@ -29,7 +29,8 @@ my $sortorder = 'f';
 my @templist  = ();
 my $minfreq   = 5;
 
-#startup routine
+#
+# Startup routine for multi-language spell-checking
 sub spellmultiplelanguages {
     my ( $textwindow, $top ) = @_;
     ::operationadd('multilingual spelling');
@@ -43,7 +44,8 @@ sub spellmultiplelanguages {
     multilangpopup( $textwindow, $top );
 }
 
-#the popup window and menu
+#
+# Create the multi-language spell check dialog
 sub multilangpopup {
     my ( $textwindow, $top ) = @_;
     ::operationadd('Multilingual Spelling');
@@ -189,6 +191,8 @@ sub multilangpopup {
     getwordcounts();
 }
 
+#
+# Display a list of all the words with their language
 sub showAllWords {
     my $lang;
     $savedHeader = "Total words: $totalwordcount, Distinct words: $distinctwordcount\n";
@@ -222,6 +226,8 @@ sub showAllWords {
     $multiwclistbox->update;
 }
 
+#
+# Show words not found in dictionaries
 sub showUnspeltWords {
     if ($unspeltwordcount) {
         $savedHeader = "Spelt words: $speltwordcount, Unspelt words: $unspeltwordcount\n";
@@ -258,6 +264,8 @@ sub showUnspeltWords {
     $multiwclistbox->update;
 }
 
+#
+# Show words in languages other than the base language
 sub showspeltforeignwords {
     $multiwclistbox->delete( '0', 'end' );
     $multiwclistbox->insert( 'end', 'Please wait, sorting list....' );
@@ -302,7 +310,8 @@ sub showspeltforeignwords {
     $multiwclistbox->update;
 }
 
-# update global lists
+#
+# Update global list variables from the list of distinct words found
 sub updategloballists {
     $::lglobal{seenwords}      = ();
     $::lglobal{misspelledlist} = ();
@@ -316,7 +325,8 @@ sub updategloballists {
     }
 }
 
-#show project dictionary
+#
+# Display words in the project dictionary
 sub showprojectdict {
     $savedHeader = "Project Dictionary:";
     $multiwclistbox->delete( '0', 'end' );
@@ -335,7 +345,8 @@ sub showprojectdict {
     $multiwclistbox->update;
 }
 
-#update all counts
+#
+# Update the counts of seen/spelt/unspelt words
 sub getwordcounts {
     my $i = 0;
     my $j = 0;
@@ -364,7 +375,8 @@ sub getwordcounts {
     }
 }
 
-#updates the dictionary display
+#
+# Updates the list of selected dictionaries
 sub updateMultiDictEntry {
     $multidictentry->delete( '0', 'end' );
     for my $element (@::multidicts) {
@@ -373,7 +385,8 @@ sub updateMultiDictEntry {
     }
 }
 
-# set multiple languages in array @multidicts
+#
+# Pop dialog to select which languages to use
 sub setmultiplelanguages {
     my ( $textwindow, $top ) = @_;
     if ($::globalspellpath) {
@@ -470,13 +483,15 @@ sub setmultiplelanguages {
     $spellop->Show;
 }
 
-# clear array of languages
+#
+# Clear array of languages
 sub clearmultilanguages {
     @::multidicts = ();
     $::multidicts[0] = $::globalspelldictopt;
 }
 
-# create hash %seenwordslang
+#
+# Recreate the words list
 sub createseenwordslang {
     my ( $textwindow, $top ) = @_;
     @orderedwords      = ();
@@ -509,7 +524,8 @@ sub createseenwordslang {
     $top->Unbusy;
 }
 
-# build lists of wordsn
+#
+# Build basic list of distinct words
 sub buildwordlist {
     my $textwindow = shift;
     my ( @words, $match, @savesets );
@@ -570,7 +586,8 @@ sub buildwordlist {
     return $wc;
 }
 
-#spelling control routine
+#
+# Spell check words that have not been found in any language dictionaries so far
 sub multilingualgetmisspelled {
     my ( $textwindow, $top ) = @_;
     $::lglobal{misspelledlist} = ();
@@ -606,8 +623,8 @@ sub multilingualgetmisspelled {
     return $wordw;
 }
 
-#Aspell check routine
-#input $dict, $section
+#
+# Use Aspell to check spellings of given words
 sub getmisspelledwordstwo {
     $::lglobal{misspelledlist} = ();
     my $dict    = shift;
@@ -636,9 +653,8 @@ sub getmisspelledwordstwo {
     unlink 'temp.txt'         # output file of unspelt words from Aspell
 }
 
-#post Aspell routine
-#update %seenwordslang depending on spelling
-#input $dict, @templist
+#
+# Process Aspell output and update language for word if found in dictionary
 sub processmisspelledwords {
     my $dict         = shift;
     my @startunspelt = ();
@@ -677,7 +693,8 @@ sub processmisspelledwords {
     $multiwclistbox->update;
 }
 
-# includes all projectdict words as spelt
+#
+# Mark all words from project dictionary as spelt OK
 sub includeprojectdict {
     my ( $textwindow, $top ) = @_;
     my $i = 0;
@@ -698,7 +715,8 @@ sub includeprojectdict {
     $top->Unbusy;
 }
 
-#add all spelt foreign words to project dictionary
+#
+# Add all spelt foreign words to project dictionary
 sub addspeltforeignproject {
     ::spellloadprojectdict();
     my $i = 0;
@@ -729,7 +747,8 @@ sub addspeltforeignproject {
     getwordcounts();
 }
 
-#add words above minfreq to project dictionary
+#
+# Add words occuring >= minfreq times to project dictionary
 sub addminfreqproject {
     ::spellloadprojectdict();
     my $i = 0;
@@ -761,64 +780,8 @@ sub addminfreqproject {
     getwordcounts();
 }
 
-sub lowergetmisspelled {
-    my ( $textwindow, $top ) = @_;
-
-    #	$::lglobal{misspelledlist}= ();
-    $top->Busy( -recurse => 1 );
-    for my $dict (@::multidicts) {
-        my $words     = '';
-        my %unspelt   = ();
-        my %lcunspelt = ();
-        my $i         = 0;
-        foreach ( keys %distinctwords ) {
-            unless ( $seenwordslang{$_} ) {
-                $unspelt{$_}   = undef;
-                $lcunspelt{$_} = lc($_);
-                $words .= "$lcunspelt{$_}\n";
-                $i++;
-            }
-        }
-        print "to spell $i, dict $dict\n";
-        if ($words) { getmisspelledwordstwo( $dict, $words ); }
-        my $j = 0;
-        my $k = 0;
-        $i = 0;
-        for my $keya (@templist) {
-            $i++;
-            for my $keyb ( keys %lcunspelt ) {
-                $j++;
-                if ( $keya eq $lcunspelt{$keyb} ) {
-                    $unspelt{$keyb} = 'unspelt';
-                    $k++;
-                }
-            }
-        }
-        print "returned words $i\n";
-        print "iterations $j\n";
-        print "unspelt $k\n";
-        $i = 0;
-        $j = 0;
-        $k = 0;
-        for my $key (%distinctwords) {
-            $i++;
-            unless ( $seenwordslang{$key} ) {
-                $j++;
-                unless ( $unspelt{$key} ) {
-                    $seenwordslang{$key} = 'case';
-                    $k++;
-                }
-            }
-        }
-        print "distinct words $i\n";
-        print "unspelt $j\n";
-        print "new spelt words $k\n";
-    }
-    updategloballists();
-    getwordcounts();
-    $top->Unbusy;
-}
-
+#
+# Give user instructions on how to use multi-language spell-checking
 sub multi_help_popup {
     my $top  = shift;
     my $text = <<EOM;

@@ -14,6 +14,7 @@ BEGIN {
 
 my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
 
+#
 # Routine to find highlight word list
 sub scannosfile {
     my $top = $::top;
@@ -35,7 +36,10 @@ sub scannosfile {
     }
     return;
 }
-##routine to automatically highlight words in the text
+
+#
+# Action routine to automatically highlight words in the text
+# Repeated calls are set up in highlight_scannos
 sub highlightscannos {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -128,6 +132,8 @@ sub highlightscannos {
     return;
 }
 
+#
+# Read the file containing list of words to highlight
 sub read_word_list {
     my $top = $::top;
     ::scannosfile() unless ( defined $::scannoslist && -e $::scannoslist );
@@ -163,6 +169,8 @@ sub read_word_list {
     }
 }
 
+#
+# Highlight text in the selected area that matches the given chars/regex
 sub hilite {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -198,6 +206,7 @@ sub hilite {
     }
 }
 
+#
 # Remove all highlights from file
 sub hiliteremove {
     my $textwindow = $::textwindow;
@@ -208,16 +217,19 @@ sub hiliteremove {
     ::highlight_quotbrac();
 }
 
+#
 # Highlight straight and curly single quotes in selection
 sub hilitesinglequotes {
     hilite( '[\'\x{2018}\x{2019}]', 'regex' );
 }
 
+#
 # Highlight straight and curly double quotes in selection
 sub hilitedoublequotes {
     hilite( '["\x{201c}\x{201d}]', 'regex' );
 }
 
+#
 # Popup for highlighting arbitrary characters in selection
 sub hilitepopup {
     my $textwindow = $::textwindow;
@@ -282,7 +294,10 @@ sub hilitepopup {
     }
 }
 
-sub highlight_scannos {    # Enable / disable word highlighting in the text
+#
+# Enable / disable word highlighting in the text
+# Set up repeating call to highlighting routine every 400ms
+sub highlight_scannos {
     my $textwindow = $::textwindow;
     my $top        = $::top;
     if ($::scannos_highlighted) {
@@ -300,6 +315,7 @@ sub highlight_scannos {    # Enable / disable word highlighting in the text
 
 #
 # Enable/disable quote/bracket highlighting in the text
+# Set up repeating call to highlighting routine every 400ms
 sub highlight_quotbrac {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -315,7 +331,7 @@ sub highlight_quotbrac {
 }
 
 #
-# Action routine to highlight quotes/brackets
+# Action routine to highlight quotes/brackets that surround the cursor
 # Calls to HighlightSinglePairBracketingCursor adapted from TextEdit.pm
 sub highlightquotbrac {
     my $textwindow = $::textwindow;
@@ -364,6 +380,7 @@ sub highlight_quotbrac_remove {
 
 #
 # Start alignment highlighter at column of current insert position
+# Action routine is called every 200ms
 sub hilite_alignment_start {
     hilite_alignment_stop();    # Cancel any previous highlight repeat
 

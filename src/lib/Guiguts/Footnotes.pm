@@ -9,7 +9,8 @@ BEGIN {
     @EXPORT = qw(&footnotepop &footnotefixup &getlz);
 }
 
-## Pop up a window where footnotes can be found, fixed and formatted. (heh)
+#
+# Pop up a window where footnotes can be found, fixed and formatted
 sub footnotepop {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -325,12 +326,17 @@ sub footnotepop {
     }
 }
 
+#
+# Run the first pass of footnote fixup, looking for various footnote errors
+# and displaying them in a dialog for user to process
 sub fnfirstpass {
     $::lglobal{fnsecondpass} = 0;
     footnotefixup();
     fnview();
 }
 
+#
+# Highlight where the current footnote occurs in the main text window
 sub footnoteshow {
     my $textwindow = $::textwindow;
     if ( $::lglobal{fnindex} < 1 ) {
@@ -373,6 +379,8 @@ sub footnoteshow {
       if $::lglobal{footpop};
 }
 
+#
+# Insert the correct footnote marker depending on the numeric/alphabetic/roman style
 sub fninsertmarkers {
     my $style      = shift;
     my $textwindow = $::textwindow;
@@ -431,6 +439,7 @@ sub fninsertmarkers {
     }
 }
 
+#
 # Join the footnote fnindex '*[Footnote:' with the previous.
 sub fnjoin {
     my $textwindow = $::textwindow;
@@ -489,6 +498,7 @@ sub fnjoin {
     $textwindow->addGlobEnd;
 }
 
+#
 # Pop up a window showing all the footnote addresses with potential
 # problems highlighted
 sub fnview {
@@ -631,6 +641,7 @@ sub fnview {
     }
 }
 
+#
 # Create a pair of colored labels at top of dialog with balloon help,
 # and allow user to click to make that warning type be top priority
 # Thus if a footnote has more than one warning, user can choose which to see
@@ -661,6 +672,7 @@ sub fnwarninglbl {
     return $countlbl;
 }
 
+#
 # @{$::lglobal{fnarray}} is an array of arrays
 #
 # $::lglobal{fnarray}->[$::lglobal{fnindex}][0] = starting index of footnote.
@@ -670,6 +682,9 @@ sub fnwarninglbl {
 # $::lglobal{fnarray}->[$::lglobal{fnindex}][4] = anchor label.
 # $::lglobal{fnarray}->[$::lglobal{fnindex}][5] = anchor type n a r (numeric, alphabet, roman)
 # $::lglobal{fnarray}->[$::lglobal{fnindex}][6] = type index
+
+#
+# Either checks footnotes for errors (first pass) or fixes them (second pass)
 sub footnotefixup {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -701,45 +716,19 @@ sub footnotefixup {
     $textwindow->tagRemove( 'highlight', '1.0', 'end' );
 
     $textwindow->addGlobStart;
-    while (1) {
+    while (1) {    # Correct space between bracket and "Footnote"
         $::lglobal{ftnoteindexstart} =
           $textwindow->search( '-exact', '--', '[ Footnote', '1.0', 'end' );
         last unless $::lglobal{ftnoteindexstart};
         $textwindow->delete( "$::lglobal{ftnoteindexstart}+1c", "$::lglobal{ftnoteindexstart}+2c" );
     }
-    while (1) {
+    while (1) {    # Correct various minor spelling/formation errors
         $::lglobal{ftnoteindexstart} =
-          $textwindow->search( '-exact', '--', '{Footnote', '1.0', 'end' );
+          $textwindow->search( '-regexp', '--', '(\{Footnote|\[Fotonote|\[Footnoto|\[footnote)',
+            '1.0', 'end' );
         last unless $::lglobal{ftnoteindexstart};
-        $textwindow->delete( $::lglobal{ftnoteindexstart}, "$::lglobal{ftnoteindexstart}+1c" );
-        $textwindow->insert( $::lglobal{ftnoteindexstart}, '[' );
-    }
-
-    # Misspelled Fotonote
-    while (1) {
-        $::lglobal{ftnoteindexstart} =
-          $textwindow->search( '-exact', '--', '[Fotonote', '1.0', 'end' );
-        last unless $::lglobal{ftnoteindexstart};
-        $textwindow->delete( "$::lglobal{ftnoteindexstart}+1c", "$::lglobal{ftnoteindexstart}+9c" );
-        $textwindow->insert( "$::lglobal{ftnoteindexstart}+1c", 'Footnote' );
-    }
-
-    # Misspelled Fotonoto
-    while (1) {
-        $::lglobal{ftnoteindexstart} =
-          $textwindow->search( '-exact', '--', '[Footnoto', '1.0', 'end' );
-        last unless $::lglobal{ftnoteindexstart};
-        $textwindow->delete( "$::lglobal{ftnoteindexstart}+1c", "$::lglobal{ftnoteindexstart}+9c" );
-        $textwindow->insert( "$::lglobal{ftnoteindexstart}+1c", 'Footnote' );
-    }
-
-    # Misspelled footnote
-    while (1) {
-        $::lglobal{ftnoteindexstart} =
-          $textwindow->search( '-exact', '--', '[footnote', '1.0', 'end' );
-        last unless $::lglobal{ftnoteindexstart};
-        $textwindow->delete( "$::lglobal{ftnoteindexstart}+1c", "$::lglobal{ftnoteindexstart}+2c" );
-        $textwindow->insert( "$::lglobal{ftnoteindexstart}+1c", 'F' );
+        $textwindow->delete( $::lglobal{ftnoteindexstart}, "$::lglobal{ftnoteindexstart}+9c" );
+        $textwindow->insert( $::lglobal{ftnoteindexstart}, '[Footnote' );
     }
     $::lglobal{ftnoteindexstart} = '1.0';
     while (1) {
@@ -863,6 +852,9 @@ sub footnotefixup {
     ::restorelinenumbers();
 }
 
+#
+# Get list of footnote landing zones into global variable and
+# ensure LZ marks are set to correct locations
 sub getlz {
     my $textwindow = $::textwindow;
     my $index      = '1.0';
@@ -971,6 +963,8 @@ sub setlz {
     $textwindow->see($lzindex);
 }
 
+#
+# Move all footnotes to the correct landing zone
 sub footnotemove {
     my $textwindow = $::textwindow;
     my ( $lz, %footnotes, $zone, $index, $r, $c, $marker );
@@ -1001,9 +995,6 @@ sub footnotemove {
         $textwindow->delete("fns$::lglobal{fnindex} -1c")
           if ( $textwindow->get("fns$::lglobal{fnindex} -1c") eq "\n" );
 
-        # Try to remove extra line before moved footnote
-        #$textwindow->delete("fns$::lglobal{fnindex} -1c")
-        # if ( $textwindow->get("fns$::lglobal{fnindex} -1c") eq "\n" );
         $textwindow->delete( "fns$::lglobal{fnindex}", "fne$::lglobal{fnindex}" );
         $::lglobal{fnindex}--;
     }
@@ -1062,6 +1053,8 @@ sub footnotemove {
     $textwindow->see('1.0');
 }
 
+#
+# Move footnotes to "inline" position, i.e. at end of current paragraph
 sub footnotemoveinline {
     my $textwindow = $::textwindow;
     ::operationadd('Moved footnotes to end-of-paragraph');
@@ -1101,6 +1094,10 @@ sub footnotemoveinline {
     $::lglobal{fnmvinlinebutton}->configure( '-state' => 'disabled' );
 }
 
+#
+# Ensure lglobal array, other footnote variables, and marks in text
+# are all self-consistent, I think. Called from many locations where
+# footnotes are being edited. I hope I never have to edit it.
 sub footnoteadjust {
     my $textwindow = $::textwindow;
     my $end        = $::lglobal{fnarray}->[ $::lglobal{fnindex} ][1];
@@ -1197,6 +1194,7 @@ sub footnoteadjust {
     return ( $start, $end );
 }
 
+#
 # Clean up footnotes in txt version. Note: destructive. Use only
 # at end of editing.
 sub footnotetidy {
@@ -1229,6 +1227,8 @@ sub footnotetidy {
     ::restorelinenumbers();
 }
 
+#
+# Set the anchor position for the current footnote
 sub setanchor {
     my $textwindow = $::textwindow;
     my ( $index, $insert );
@@ -1306,6 +1306,9 @@ sub setanchor {
     }
 }
 
+#
+# Finds the first footnote in the text after the location given
+# by $::lglobal{ftnoteindexstart}
 sub footnotefind {
     my $textwindow = $::textwindow;
     my ( $bracketndx, $nextbracketndx, $bracketstartndx, $bracketendndx );
@@ -1337,6 +1340,12 @@ sub footnotefind {
     return ( $bracketstartndx, $bracketendndx );
 }
 
+#
+# Converts given footnote number to alphabetic form:
+# A,B,...Z,AA,AB,...AZ,BA,BB...YZ
+# Code intended to continue to ZA,ZB,...ZZ,AAA,AAB,...,ZZZ
+# thus handling up to 26^3+26^2+26=18278 footnotes
+# But, currently has (bracketing?) bug if number is greater than 676
 sub alpha {
     my $label = shift;
     $label--;

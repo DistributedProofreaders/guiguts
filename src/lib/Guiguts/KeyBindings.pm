@@ -9,6 +9,8 @@ BEGIN {
     @EXPORT = qw( &keybindings &keybind );
 }
 
+#
+# Set up key bindings for main text window
 sub keybindings {
     my $textwindow = $::textwindow;
     my $top        = $::top;

@@ -15,6 +15,7 @@ my $APOS   = "\x{2019}";             # Curly apostrophe/right single quote
 my $BEGMSG = "Beginning check:";
 my $ENDMSG = "Check is complete:";
 
+#
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check,
 # Unmatched Tag/Brackets/Double Quotes/Block Checks
@@ -739,7 +740,12 @@ sub ignorequery {
     return 0;    # All other tools' line:column queries need counting
 }
 
-sub errorcheckrun {    # Runs error checks
+#
+# Run error checks for given errorcheck type.
+# For most checks, the currently loaded file has been saved into a
+# temporary file, and any errors will be written to an error file
+# to be processed later
+sub errorcheckrun {
     my ( $errorchecktype, $tmpfname, $errname ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -851,6 +857,7 @@ sub errorcheckrun {    # Runs error checks
     return 0;
 }
 
+#
 # Save current file to a temporary file in order to run a check on it
 # Second optional argument is regex to match text to be stripped before saving, e.g. rewrap markup
 sub savetoerrortmpfile {
@@ -874,6 +881,8 @@ sub savetoerrortmpfile {
     close $td;
 }
 
+#
+# Run the link check on an HTML file - parses the HTML file rather than running an external tool
 sub linkcheckrun {
     my ( $tempfname, $errname ) = @_;
     my $textwindow = $::textwindow;
@@ -1028,6 +1037,7 @@ sub linkcheckrun {
     close $logfile;
 }
 
+#
 # When user clicks on an error, show and highlight the correct place in the main text window
 sub errorcheckview {
     my $errorchecktype = shift;
@@ -1133,6 +1143,10 @@ sub errorcheckprocess {
 
 #
 # Process "Suggest 'X' for 'Y'" by replacing string 'Y' with string 'X'
+# Originally added for OCRfixr tool which was trialled but not continued.
+# Would work for any future tool that outputs a file with the correct
+# format for suggested edits, e.g. "123:27 Suggest 'dog' for 'cat'"
+# File would then be loaded using Load Checkfile
 sub errorcheckprocesssuggest {
     my $line = shift;
     my ( $begmatch, $endmatch, $match, $replacement );
@@ -1213,6 +1227,9 @@ sub errorcheckcopy {
     }
 }
 
+#
+# Special population of errorcheck window is needed for bookloupe
+# because it has its own options for which types of error to show/hide
 sub gcwindowpopulate {
     return unless defined $::lglobal{errorcheckpop};
     my $headr = 0;
@@ -1252,6 +1269,8 @@ sub gcwindowpopulate {
     $::lglobal{errorchecklistbox}->update;
 }
 
+#
+# Pop the bookloupe view options window, allowing user to show/hide error types
 sub gcviewopts {
     my $top = $::top;
     my @gsoptions;
@@ -1391,6 +1410,8 @@ sub gcviewopts {
     }
 }
 
+#
+# Run the jeebies tool
 sub jeebiesrun {
     my ( $tempfname, $errname ) = @_;
 

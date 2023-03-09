@@ -9,7 +9,8 @@ BEGIN {
     @EXPORT = qw(&wordfrequencybuildwordlist &wordfrequency &ital_adjust &sortanddisplayhighlight);
 }
 
-# build lists of words, word pairs, and double hyphenated words
+#
+# Build lists of words, word pairs, and double hyphenated words
 sub wordfrequencybuildwordlist {
     my $textwindow = shift;
     my ( @words, $match );
@@ -67,7 +68,8 @@ sub wordfrequencybuildwordlist {
     return $wc;
 }
 
-## Word Frequency
+#
+# Pop the Word Frequency dialog
 sub wordfrequency {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -417,6 +419,8 @@ sub wordfrequency {
     $top->Unbusy( -recurse => 1 );
 }
 
+#
+# Show all words found
 sub allwords {
     my $wc = shift;
     $::lglobal{wfsaveheader} =
@@ -425,6 +429,8 @@ sub allwords {
     @::wfsearchopt = qw/1 x x 0/;
 }
 
+#
+# Show words with lowercase letter following period
 sub bangmark {
     my $top = $::top;
     ::operationadd('Check . lower');
@@ -443,22 +449,6 @@ sub bangmark {
     while ( $wholefile =~ m/(\p{Alnum}+\.['"]?\n*\s*['"]?\p{Lower}\p{Alnum}*)/g ) {
         my $word = $1;
         $wordw++;
-        if ( $wordw == 0 ) {
-
-            # FIXME: think this code DOESN'T WORK. skipping
-            $word =~ s/<\/?[bidhscalup].*?>//g;
-            $word =~ s/(\p{Alnum})'(\p{Alnum})/$1PQzJ$2/g;
-            $word =~ s/"/pQzJ/g;
-            $word =~ s/(\p{Alnum})\.(\s*\S)/$1PqzJ$2/g;
-            $word =~ s/(\p{Alnum})-(\p{Alnum})/$1PLXj$2/g;
-            $word =~ s/[^\s\p{Alnum}]//g;
-            $word =~ s/PQzJ/'/g;
-            $word =~ s/PqzJ/./g;
-            $word =~ s/PLXj/-/g;
-            $word =~ s/pQzJ/"/g;
-            $word =~ s/\P{Alnum}+$//g;
-            $word =~ s/\x{d}//g;
-        }
         $word =~ s/\n/\\n/g;
         $display{$word}++;
     }
@@ -468,6 +458,8 @@ sub bangmark {
     $top->Unbusy;
 }
 
+#
+# Show words with emdashes
 sub dashcheck {
     my $top = $::top;
     ::operationadd('Check emdashes');
@@ -505,6 +497,8 @@ sub dashcheck {
     $top->Unbusy;
 }
 
+#
+# Show words containing a mix of alphabetic and numeric characters
 sub alphanumcheck {
     my $top = $::top;
     ::operationadd('Check alpha/num');
@@ -529,6 +523,8 @@ sub alphanumcheck {
     $top->Unbusy;
 }
 
+#
+# Show words that are all caps
 sub capscheck {
     my $top = $::top;
     ::operationadd('Check ALL CAPS');
@@ -553,6 +549,8 @@ sub capscheck {
     $top->Unbusy;
 }
 
+#
+# Show words that are MiXed CasE
 sub mixedcasecheck {
     my $top = $::top;
     ::operationadd('Check MiXeD CasE');
@@ -577,7 +575,8 @@ sub mixedcasecheck {
     $top->Unbusy;
 }
 
-# Refactor various word frequency checks into one
+#
+# Handle various word frequency checks - shows words that match the given regex
 sub anythingwfcheck {
     my ( $checktype, $checkregexp ) = @_;
     my $top = $::top;
@@ -604,6 +603,8 @@ sub anythingwfcheck {
     $top->Unbusy;
 }
 
+#
+# Check if words appear accented and not-accented but otherwise identical
 sub accentcheck {
     my $top = $::top;
     ::operationadd('Check Accents');
@@ -647,6 +648,8 @@ sub accentcheck {
     $top->Unbusy;
 }
 
+#
+# Check for Uppercase character following comma
 sub commark {
     my $top = $::top;
     ::operationadd('Check , Upper');
@@ -678,22 +681,6 @@ sub commark {
           && $2
           && $2 ne '';    # ignore if word followed by period, !, or ?
         $wordw++;
-        if ( $wordw == 0 ) {
-
-            # FIXME: think this code DOESN'T WORK. skipping
-            $word =~ s/<\/?[bidhscalup].*?>//g;
-            $word =~ s/(\p{Alnum})'(\p{Alnum})/$1PQzJ$2/g;
-            $word =~ s/"/pQzJ/g;
-            $word =~ s/(\p{Alnum})\.(\p{Alnum})/$1PqzJ$2/g;
-            $word =~ s/(\p{Alnum})-(\p{Alnum})/$1PLXJ$2/g;
-            $word =~ s/[^\s\p{Alnum}]//g;
-            $word =~ s/PQzJ/'/g;
-            $word =~ s/PqzJ/./g;
-            $word =~ s/PLXJ/-/g;
-            $word =~ s/pQzJ/"/g;
-            $word =~ s/\P{Alnum}+$//g;
-            $word =~ s/\x{d}//g;
-        }
         $word =~ s/\n/\\n/g;
         $display{ ',' . $word }++;
     }
@@ -704,6 +691,8 @@ sub commark {
     $top->Unbusy;
 }
 
+#
+# Show words with italic, bold or smallcap markup
 sub itwords {
     my $top = $::top;
     ::operationadd('WF Check Ital/Bold/SC');
@@ -753,6 +742,10 @@ sub itwords {
     $top->Unbusy;
 }
 
+#
+# Pop dialog to allow user to set a threshold word count for italic/bold/smallcap markup
+# This is to allow single word/short phrases to be displayed, without displaying
+# full sentences in italic, for example.
 sub ital_adjust {
     my $top = $::top;
     return if $::lglobal{markuppop};
@@ -788,6 +781,9 @@ sub ital_adjust {
     $::lglobal{markuppop}->resizable( 'no', 'no' );
 }
 
+#
+# Display words with hyphens, and allow check for same word without hyphen, with a space,
+# or with a double hyphen
 sub hyphencheck {
     my $top = $::top;
     ::operationadd('Check hyphens');
@@ -882,6 +878,8 @@ sub hyphencheck {
     $top->Unbusy;
 }
 
+#
+# Find word frequency words that Spell Query does not recognise
 sub wordfrequencygetmisspelled {
     $::lglobal{spellsort} = ();
     my $wordw = 0;
@@ -894,6 +892,8 @@ sub wordfrequencygetmisspelled {
     return $wordw;
 }
 
+#
+# Display words not recognised by Spell Query
 sub wordfrequencyspellcheck {
     my $top = $::top;
     ::operationadd('Check spelling wordfrequency');
@@ -911,6 +911,8 @@ sub wordfrequencyspellcheck {
     $top->Unbusy;
 }
 
+#
+# Check character counts
 sub charsortcheck {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -997,6 +999,8 @@ sub charsortsuitecontrol {
     }
 }
 
+#
+# Run stealth scanno check from within Word Frequency
 sub stealthcheck {
     my $top        = $::top;
     my $textwindow = $::textwindow;
@@ -1072,6 +1076,8 @@ sub ligaturecheck {
     $top->Unbusy;
 }
 
+#
+# Pop the Harmonics dialog - to check for similar (mis)spellings of words
 sub harmonicspop {
     my $top = $::top;
     my ( $line, $word, $sword, $snum, @savesets, $wc );
@@ -1214,6 +1220,8 @@ sub harmonicspop {
     $::lglobal{hlistbox}->focus;
 }
 
+#
+# Find words (mis)spelled similarly to given word
 sub harmonics {
     my $word = shift;
     $word =~ s/\d+\s+([\w'-]*)/$1/;
@@ -1226,6 +1234,8 @@ sub harmonics {
     }
 }
 
+#
+# Find words (mis)spelled similarly to given word allowing distance of 2
 sub harmonics2 {
     my $word = shift;
     $word =~ s/\d+\s+([\w'-]*)/$1/;
@@ -1244,16 +1254,8 @@ sub distance {
     return Text::LevenshteinXS::distance(@_);
 }
 
-sub _min {
-    return
-        $_[0] < $_[1]
-      ? $_[0] < $_[2]
-          ? $_[0]
-          : $_[2]
-      : $_[1] < $_[2] ? $_[1]
-      :                 $_[2];
-}
-
+#
+# Sort and display list of words in the WF dialog
 sub sortanddisplaywords {
     my $href = shift;
     $::lglobal{wclistbox}->delete( '0', 'end' );
@@ -1322,6 +1324,9 @@ sub sortanddisplayhighlight {
     }
 }
 
+#
+# Check file has been loaded (or saved), i.e. has a filename
+# before doing WF operations
 sub nofileloaded {
     my $top = shift;
     if ( $::lglobal{global_filename} =~ m/No File Loaded/ ) {
@@ -1332,6 +1337,8 @@ sub nofileloaded {
     }
 }
 
+#
+# Add shortcuts to WF word list
 sub add_navigation_events {
     my ($dialog_box) = @_;
     $dialog_box->eventAdd(
@@ -1365,6 +1372,8 @@ sub add_navigation_events {
     );
 }
 
+#
+# Save current file, then read it all back in and return the text
 sub slurpfile {
     my $textwindow = $::textwindow;
     my $filename   = $textwindow->FileName;
