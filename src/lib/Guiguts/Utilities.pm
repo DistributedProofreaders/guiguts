@@ -2414,11 +2414,8 @@ sub seeindex {
 }
 
 #
-# Run ebookmaker tool on current HTML file to create epub and mobi or HTML version.
-# Note ebookmaker creates a subfolder "out" when output folder is the same as input
-# folder only when producing HTML version.
+# Run ebookmaker tool on current HTML file to create epub and mobi versions.
 sub ebookmaker {
-    my $makehtml   = shift =~ m/html/i;
     my $textwindow = $::textwindow;
     unless ($::ebookmakercommand) {
         ::locateExecutable( 'EBookMaker', \$::ebookmakercommand );
@@ -2458,44 +2455,33 @@ sub ebookmaker {
     my $outputdir = $::globallastpath;
 
     infoerror("Beginning ebookmaker");
-    infoerror(
-        "Files will appear in the directory $::globallastpath" . ( $makehtml ? "out" : "" ) );
+    infoerror("Files will appear in the directory $::globallastpath");
 
     # Set up options for which files ebookmaker will generate
-    my $htmloption   = "";
-    my $epub2option  = "";
-    my $epub3option  = "";
+    my $epub2option  = "--make=epub.images";
+    my $epub3option  = "--make=epub3.images";
     my $kindleoption = "";
     my $kf8option    = "";
 
-    if ($makehtml) {
-        $htmloption = "--make=html.images";
+    # Only use Calibre to create mobi if it's on the path
+    if ( $ENV{PATH} =~ /calibre/i ) {
+        $kindleoption = "--make=kindle.images";
+        $kf8option    = "--make=kf8.images";
     } else {
-        $epub2option = "--make=epub.images";
-        $epub3option = "--make=epub3.images";
-
-        # Only use Calibre to create mobi if it's on the path
-        if ( $ENV{PATH} =~ /calibre/i ) {
-            $kindleoption = "--make=kindle.images";
-            $kf8option    = "--make=kf8.images";
-        } else {
-            infoerror("For Kindle files, install Calibre and ensure it is on your PATH");
-        }
+        infoerror("For Kindle files, install Calibre and ensure it is on your PATH");
     }
 
     # Run ebookmaker, redirecting stdout and stderr to a file to analyse afterwards
     my $tmpfile = 'ebookmaker.tmp';
     my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
-    $outputdir =~ s/[\/\\]$//;                          # Remove trailing slash from output dir to avoid confusing ebookmaker
-    my $configdir = ::dirname($::ebookmakercommand);    # Ebookmaker dir contains tidy.conf file
+    $outputdir =~ s/[\/\\]$//;    # Remove trailing slash from output dir to avoid confusing ebookmaker
     $runner->run(
-        $::ebookmakercommand,      "--verbose",
-        "--max-depth=3",           $htmloption,
-        $epub2option,              $epub3option,
-        $kindleoption,             $kf8option,
-        "--output-dir=$outputdir", "--output-file=$fname",
-        "--config-dir=$configdir", "--title=$ttitle",
-        "--author=$::bookauthor",  "$filepath"
+        $::ebookmakercommand,     "--verbose",
+        "--max-depth=3",          $epub2option,
+        $epub3option,             $kindleoption,
+        $kf8option,               "--output-dir=$outputdir",
+        "--output-file=$fname",   "--title=$ttitle",
+        "--author=$::bookauthor", "$filepath"
     );
 
     # Check for errors or warnings in ebookmaker output

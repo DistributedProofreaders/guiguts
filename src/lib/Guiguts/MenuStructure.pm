@@ -891,7 +891,7 @@ sub menu_html {
         ],
         [ 'separator', '' ],
         [
-            'command', 'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker("epub"); }
+            'command', 'EB~ookMaker epub/mobi Generation', -command => sub { ::ebookmaker(); }
         ],
         [
             'command',
@@ -900,11 +900,6 @@ sub menu_html {
                 ::errorcheckpop_up( $textwindow, $top, 'EPUBCheck' );
             }
         ],
-
-        # Uncomment for option to generate HTML5 using ebookmaker - files are written to "out" subfolder
-        # [
-        # 'command', 'HTML~5 Generation', -command => sub { ::ebookmaker("html"); }
-        # ],
     ];
 }
 
