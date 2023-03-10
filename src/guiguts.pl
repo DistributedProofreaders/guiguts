@@ -171,7 +171,6 @@ our $intelligentWF          = 0;
 our $defaultpngspath        = ::os_normal('pngs/');
 our $pngspath               = q{};
 our $projectid              = q{};
-our $projectfileslocation   = '';
 our $recentfile_size        = 9;
 our $regexpentry            = q();
 our $rmargin                = 72;
