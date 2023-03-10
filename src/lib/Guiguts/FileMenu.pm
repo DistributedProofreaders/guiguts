@@ -931,7 +931,7 @@ EOM
             geometry gesperrt_char globalaspellmode highlightcolor history_size xmlserialization
             htmlimageallowpixels htmlimagewidthtype ignoreversionnumber
             intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin markupthreshold
-            multisearchsize multiterm nobell nohighlights pagesepauto projectfileslocation notoolbar poetrylmargin projectfileslocation
+            multisearchsize multiterm nobell nohighlights pagesepauto notoolbar poetrylmargin
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted
             searchstickyoptions spellcheckwithenchant spellquerythreshold srstayontop stayontop toolside
             trackoperations txt_conv_bold txt_conv_font txt_conv_gesperrt txt_conv_italic txt_conv_sc txt_conv_tb

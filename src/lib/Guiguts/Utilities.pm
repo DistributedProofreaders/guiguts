@@ -2958,7 +2958,7 @@ sub columnizeselection {
 sub getprojectid {
     my $fname = $::lglobal{global_filename};
     my ( $f, $d, $e ) = ::fileparse( $fname, qr{\.[^\.]*$} );
-    opendir( DIR, "$d$::projectfileslocation" );
+    opendir( DIR, "$d" );
     for ( readdir(DIR) ) {
         if ( $_ =~ m/(projectID[0-9a-f]*)_comments\.html/ ) {
             $::projectid = $1;
@@ -2995,7 +2995,7 @@ sub viewprojectcomments {
     return if ::nofileloadedwarning();
     ::setprojectid() unless $::projectid;
     my $defaulthandler = $::extops[0]{command};
-    my $commentsfile   = $::projectfileslocation . $::projectid . '_comments.html';
+    my $commentsfile   = $::projectid . '_comments.html';
     $defaulthandler =~ s/\$f\$e/$commentsfile/;
     ::runner( ::cmdinterp($defaulthandler) ) if $::projectid;
 }
