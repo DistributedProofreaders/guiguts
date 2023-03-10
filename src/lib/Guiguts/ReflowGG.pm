@@ -19,6 +19,7 @@ BEGIN {
 # rather than converting to hex with pack & unpack (the original
 # had to be able to pass arguments to a C XSUB).
 # Also reflow_file and reflow_array removed since unused.
+# Several parameters and associated code also removed since unused in GG.
 
 # Original Reflow script written by Michael Larsen, larsen@edu.upenn.math
 # Modified by Martin Ward, martin@gkc.org.uk
@@ -39,7 +40,7 @@ BEGIN {
 
 # This is the perl version of the C function reflow_trial
 
-sub reflow_trial($$$$$$$) {
+sub reflow_trial {
     my ( $optimum, $maximum, $wordcount, $penaltylimit, $word_len, $space_len, $best_linkbreak ) =
       @_;
     my ( $lastbreak,      @linkbreak );
@@ -105,11 +106,10 @@ use vars qw(
   @space_len     @tmp           @from	    @to
   $indent1       $optimum	    @linewords	@word_len
   $indent2       $penaltylimit  @linkbreak	@words
-  $pin	         $wordcount     @optimum
+  $wordcount     @optimum
 );
 
 # The following parameters can be twiddled to taste:
-
 %keys = (
     optimum => '.*',
     maximum => '\d+',
@@ -123,15 +123,10 @@ $indent1      = "";          # Indentation for first line
 $indent2      = "";          # Indentation for each line after the first
                              # before the group of lines will be skipped
 $penaltylimit = 0x2000000;
-$pin          = " ";         # minimum indent indicating poetry
-
-# NB By default there must be two consecutive indented lines for it to count
-# as poetry, so the program will not mistake a paragraph indentation
-# for a line of poetry.
 
 #
 # Rewraps the given string
-sub reflow_string($@) {
+sub reflow_string {
     my ( $input, @opts ) = @_;
 
     # Create the array from the string, keep trailing empty lines.
@@ -148,7 +143,7 @@ sub reflow_string($@) {
 
 #
 # Process the keyword options, set module global variables as required
-sub process_opts(@) {
+sub process_opts {
     my @opts = @_;
     my ( $key, $value );
     no strict 'refs';
@@ -180,13 +175,13 @@ sub process_opts(@) {
 
 #
 # Get next line from string to be rewrapped
-sub get_line() {
+sub get_line {
     return shift(@from);
 }
 
 #
 # Trim EOL spaces and store the lines in the output buffer:
-sub print_lines(@) {
+sub print_lines {
     my @lines = @_;
     map { s/[ \t]+\n/\n/gs } @lines;
     push( @to, @lines );
@@ -194,41 +189,10 @@ sub print_lines(@) {
 
 #
 # Actually do the rewrapping
-sub reflow() {
+sub reflow {
     my ( $line, $last );
 
     while ( defined( $line = get_line() ) ) {
-        if ( $line =~ /^($pin|\t).*\S/ ) {
-
-            # current line may be poetry, check next line:
-            $last = $line;
-            $line = get_line();
-            if ( !defined($line) ) {
-                process($last);
-                last;
-            }
-            if ( $line =~ /^($pin|\t).*\S/ ) {
-
-                # found some poetry, skip indented lines until end of input
-                # or a non-indented line found:
-                reflow_para();
-                print_lines( $indent1 . $last );
-                print_lines( $indent1 . $line );
-                while ( defined( $line = get_line() ) ) {
-                    last
-                      unless ( $line =~ /^($pin|\t).*\S/ );
-                    print_lines( $indent1 . $line );
-                }
-                last unless ( defined($line) );    # poetry at end of document
-                                                   # $line is a non-poetic line
-            } else {
-
-                # $last had a poetry indent, but current line doesn't.
-                # Process last line:
-                process($last);
-            }
-        }    # end of first poetry test
-             # current line is non-poetic, so process it:
         process($line);
     }
 
@@ -236,9 +200,9 @@ sub reflow() {
     reflow_para();
 }
 
-# Process a non-poetry line by pushing the words onto @words
+# Process a line by pushing the words onto @words
 # If the line is blank, then reflow the paragraph of @words:
-sub process($) {
+sub process {
     my ($line) = @_;
 
     # protect ". . ." ellipses by replacing space with unused byte \x9f
