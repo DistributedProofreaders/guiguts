@@ -58,21 +58,13 @@ sub knuth_wrapper {
     $paragraph =~ s/$NBSP/$TEMPNBSP/g;               # use temp character for non-breaking space so reflow doesn't break there
     my $reflowed = ::reflow_string(
         $paragraph,
-        maximum       => $maxwidth,
-        optimum       => $optwidth,
-        indent1       => ' ' x $firstmargin,
-        indent2       => ' ' x $leftmargin,
-        frenchspacing => 'y',
-        semantic      => 0,
-        namebreak     => 0,
-        sentence      => 0,
-        independent   => 0,
-        dependent     => 0,
-        shortlast     => 0,
-        connpenalty   => 0,
+        maximum => $maxwidth,
+        optimum => $optwidth,
+        indent1 => ' ' x $firstmargin,
+        indent2 => ' ' x $leftmargin,
     );
     $reflowed =~ s/ *$//;
-    $reflowed =~ s/$TEMPNBSP/$NBSP/g;    # restore non-breaking spaces
+    $reflowed =~ s/$TEMPNBSP/$NBSP/g;                # restore non-breaking spaces
     return $pre . $reflowed . $post;
 }
 

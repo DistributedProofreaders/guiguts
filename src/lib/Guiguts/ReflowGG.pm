@@ -39,11 +39,9 @@ BEGIN {
 
 # This is the perl version of the C function reflow_trial
 
-sub reflow_trial($$$$$$$$$$) {
-    my (
-        $optimum,   $maximum,  $wordcount, $penaltylimit, $semantic,
-        $shortlast, $word_len, $space_len, $extra,        $best_linkbreak
-    ) = @_;
+sub reflow_trial($$$$$$$) {
+    my ( $optimum, $maximum, $wordcount, $penaltylimit, $word_len, $space_len, $best_linkbreak ) =
+      @_;
     my ( $lastbreak,      @linkbreak );
     my ( $j,              $k, $interval, $penalty, @totalpenalty, $bestsofar );
     my ( $best_lastbreak, $opt );
@@ -64,7 +62,6 @@ sub reflow_trial($$$$$$$$$$) {
                 $penalty = ( $interval - $opt ) * ( $interval - $opt );
                 $interval += $space_len->[$k];
                 $penalty  += $totalpenalty[ $k - 1 ] if ( $k > 0 );
-                $penalty  -= ( $extra->[$j] * $semantic ) / 2;
                 if ( $penalty < $totalpenalty[$j] ) {
                     $totalpenalty[$j] = $penalty;
                     $linkbreak[$j]    = $k - 1;
@@ -86,8 +83,7 @@ sub reflow_trial($$$$$$$$$$) {
                 $penalty = 0;
             }
             $interval += $space_len->[ $k + 1 ];
-            $penalty  += $totalpenalty[$k]      if ( $k >= 0 );
-            $penalty  += $shortlast * $semantic if ( $wordcount - $k - 1 <= 2 );
+            $penalty  += $totalpenalty[$k] if ( $k >= 0 );
             if ( $penalty <= $bestsofar ) {
                 $bestsofar = $penalty;
                 $lastbreak = $k;
@@ -105,249 +101,33 @@ sub reflow_trial($$$$$$$$$$) {
 }
 
 use vars qw(
-  $lastbreak     $poetryindent  %abbrev	       @output
-  $connpenalty   $maximum	    $quote	       %connectives @save_opts
-  $dependent     $namebreak     $semantic	   %keys	    @space_len
-  $frenchspacing $noreflow      $sentence	   @extra	    @tmp
-  $indent	     $oneparagraph  $shortlast     @from	    @to
-  $indent1       $optimum	    $skipindented  @linewords	@word_len
-  $indent2       $penaltylimit  $skipto	       @linkbreak	@words
-  $independent   $pin	        $wordcount     @optimum
+  $lastbreak     @output        $maximum    %keys
+  @space_len     @tmp           @from	    @to
+  $indent1       $optimum	    @linewords	@word_len
+  $indent2       $penaltylimit  @linkbreak	@words
+  $pin	         $wordcount     @optimum
 );
 
 # The following parameters can be twiddled to taste:
 
 %keys = (
-    optimum       => '.*',
-    maximum       => '\d+',
-    indent        => '.*',
-    indent1       => '.*',
-    indent2       => '.*',
-    quote         => '.*',
-    skipto        => '.*',
-    skipindented  => '[012]',
-    oneparagraph  => '[yYnN]',
-    frenchspacing => '[yYnN]',
-    noreflow      => '.*',
-    semantic      => '\d+',
-    namebreak     => '\d+',
-    sentence      => '\d+',
-    independent   => '\d+',
-    dependent     => '\d+',
-    shortlast     => '\d+',
-    connpenalty   => '\d+',
-    poetryindent  => '\d+'
+    optimum => '.*',
+    maximum => '\d+',
+    indent1 => '.*',
+    indent2 => '.*',
 );
 
-my $gg = 1;
-$optimum       = [65];    # Best line length 65.  Also try [60..70]
-$maximum       = 75;      # Maximum possible line length 80
-$indent1       = "";      # Indentation for first line
-$indent2       = "";      # Indentation for each line after the first
-$quote         = "";      # Quote characters to remove from the front of each line
-$skipto        = "";      # Pattern to skip to before starting to reflow
-$skipindented  = 2;       # Number of sequential indented lines required
-                          # before the group of lines will be skipped
-$noreflow      = "";      # A regexp to indicate lines which should not be reflowed
-                          # eg table of contents: '\.\s*\.\s*\.\s*\.\s*\.'
-$frenchspacing = "n";     # If "y" then don't put two spaces at end of sentence/clause
-$oneparagraph  = "n";     # If "Y" then put all the input into a single paragraph
-
-$semantic     = 30;       # Extent to which semantic factors matter 20
-$namebreak    = 20;       # Penalty for splitting up name 10
-$sentence     = 20;       # Penalty for sentence widows and orphans 6
-$independent  = 10;       # Penalty for independent clause w's & o's
-$dependent    = 6;        # Penalty for dependent clause w's & o's
-$shortlast    = 5;        # Penalty for a short last line (1 or 2 words) in a paragraph
-$connpenalty  = 1;        # Multiplier to avoid penalties at end of line
-$poetryindent = 1;        # Treat $skipindented consecutive lines indented by
-                          # at least this much
-
+$optimum      = [65];        # Best line length 65.  Also try [60..70]
+$maximum      = 75;          # Maximum possible line length 80
+$indent1      = "";          # Indentation for first line
+$indent2      = "";          # Indentation for each line after the first
+                             # before the group of lines will be skipped
 $penaltylimit = 0x2000000;
-@save_opts    = ();          # Saved original values of options
-
-$pin = " " x $poetryindent;
+$pin          = " ";         # minimum indent indicating poetry
 
 # NB By default there must be two consecutive indented lines for it to count
 # as poetry, so the program will not mistake a paragraph indentation
 # for a line of poetry.
-
-# Abbreviations from a half dozen novels,
-# Titles and other abbreviations which should discourage
-# a break have the value 1:
-
-%abbrev = (
-    Jan   => 1,
-    Feb   => 1,
-    Mar   => 1,
-    Apr   => 1,
-    Jun   => 1,
-    Jul   => 1,
-    Aug   => 1,
-    Sep   => 1,
-    Sept  => 1,
-    Oct   => 1,
-    Nov   => 1,
-    Dec   => 1,
-    Pvt   => 1,
-    Cpl   => 1,
-    Sgt   => 1,
-    Ens   => 1,
-    Lieut => 1,
-    Capt  => 1,
-    Cmdr  => 1,
-    Maj   => 1,
-    Col   => 1,
-    Gen   => 1,
-    Adm   => 1,
-    Dr    => 1,
-    Hon   => 1,
-    Mlle  => 1,
-    Mme   => 1,
-    Mr    => 1,
-    Mrs   => 1,
-    Miss  => 1,
-    Prof  => 1,
-    Rev   => 1,
-    Bart  => 2,
-    Esq   => 2,
-    No    => 1,
-    St    => 1,
-    Ave   => 2,
-    Rd    => 2,
-    Blvd  => 2,
-    Ct    => 2,
-    Cir   => 2,
-    A     => 1,
-    B     => 1,
-    C     => 1,
-    D     => 1,
-    E     => 1,
-    F     => 1,
-    G     => 1,
-    H     => 1,
-    I     => 1,
-    J     => 1,
-    K     => 1,
-    L     => 1,
-    M     => 1,
-    N     => 1,
-    O     => 1,
-    P     => 1,
-    Q     => 1,
-    R     => 1,
-    S     => 1,
-    T     => 1,
-    U     => 1,
-    V     => 1,
-    W     => 1,
-    X     => 1,
-    Y     => 1,
-    Z     => 1
-);
-
-# The value is the relative effort to avoid breaking
-# a line after this connective
-
-%connectives = (    # Extracted from /usr/dict/connectives
-    the     => 4,
-    he      => 4,
-    of      => 2,
-    and     => 2,
-    to      => 2,
-    a       => 2,
-    in      => 2,
-    that    => 2,
-    is      => 1,
-    was     => 1,
-    for     => 2,
-    with    => 2,
-    as      => 2,
-    his     => 1,
-    on      => 1,
-    be      => 1,
-    at      => 1,
-    by      => 2,
-    had     => 1,
-    not     => 1,
-    are     => 1,
-    but     => 2,
-    from    => 1,
-    or      => 2,
-    have    => 1,
-    an      => 2,
-    which   => 2,
-    one     => 1,
-    were    => 1,
-    her     => 1,
-    all     => 1,
-    their   => 1,
-    when    => 2,
-    who     => 2,
-    will    => 1,
-    more    => 1,
-    no      => 1,
-    if      => 2,
-    out     => 1,
-    so      => 2,
-    what    => 2,
-    its     => 1,
-    about   => 1,
-    into    => 1,
-    than    => 1,
-    only    => 1,
-    other   => 1,
-    new     => 1,
-    some    => 1,
-    these   => 2,
-    two     => 1,
-    may     => 1,
-    do      => 1,
-    first   => 1,
-    any     => 1,
-    my      => 1,
-    now     => 1,
-    such    => 1,
-    like    => 2,
-    our     => 1,
-    over    => 1,
-    even    => 1,
-    most    => 1,
-    after   => 1,
-    also    => 2,
-    many    => 1,
-    before  => 1,
-    through => 1,
-    where   => 2,
-    your    => 1,
-    well    => 1,
-    down    => 1,
-    should  => 1,
-    because => 2,
-    each    => 1,
-    just    => 1,
-    those   => 2,
-    how     => 2,
-    too     => 1,
-    good    => 1,
-    very    => 2,
-    here    => 1,
-    between => 1,
-    both    => 1,
-    under   => 1,
-    never   => 1,
-    same    => 1,
-    another => 1,
-    while   => 2,
-    last    => 1,
-    might   => 1,
-    great   => 1,
-    since   => 2,
-    against => 1,
-    right   => 1,
-    three   => 2,
-    next    => 2
-);
 
 #
 # Rewraps the given string
@@ -363,20 +143,16 @@ sub reflow_string($@) {
     local @to = ();
     process_opts(@opts);
     reflow();
-    restore_opts();
     return ( join( "", @to ) );
 }
 
 #
-# Process the keyword options, set module global variables as required,
-# save the old values on the @save_opts stack:
+# Process the keyword options, set module global variables as required
 sub process_opts(@) {
     my @opts = @_;
     my ( $key, $value );
     no strict 'refs';
 
-    # Fix an externally-set $optimum value:
-    $optimum = [$optimum] if ( $optimum =~ /^\d+$/ );
     while (@opts) {
         $key = shift(@opts);
         croak "No value for option key `$key'" unless (@opts);
@@ -385,62 +161,27 @@ sub process_opts(@) {
         croak "`$value' is not a suitable value for `$key'"
           unless ( $value =~ /^$keys{$key}$/ );
 
-        # keyword "indent" is short for setting both indent1 and indent2:
-        if ( $key eq "indent" ) {
-            $key = "indent1";
-            unshift( @opts, "indent2", $value );
-        } elsif ( $key eq "optimum" ) {
+        if ( $key eq "optimum" ) {
             if ( $value =~ /^\d+$/ ) {
                 $value = [$value];
             } elsif ( ref($value) ne 'ARRAY' ) {
                 croak "`$value' is not a suitable value for `$key'";
             }
         }
-
-        # Save old value. Save a copy of the array if the value is a reference:
-        if ( ref( ${$key} ) eq "ARRAY" ) {
-            push( @save_opts, $key, [ @${$key} ] );
-        } else {
-            push( @save_opts, $key, ${$key} );
-        }
         ${$key} = $value;
     }
 
     # Adjust $optimum and $maximum by $indent2 length:
     if ( $indent2 ne "" ) {
-        push( @save_opts, "optimum", $optimum, "maximum", $maximum );
         $maximum -= length($indent2);
         $optimum = [ map { $_ - length($indent2) } @$optimum ];
     }
 }
 
 #
-# Restore saved option values
-sub restore_opts() {
-    my ( $key, $value );
-    no strict 'refs';
-    while (@save_opts) {
-        $value = pop(@save_opts);
-        $key   = pop(@save_opts);
-        ${$key} = $value;
-    }
-}
-
-#
 # Get next line from string to be rewrapped
-# Whole routine may not be needed for Guiguts usage
 sub get_line() {
-    my $line = shift(@from);
-    return ($line) unless defined($line);
-    $line =~ tr/\015\032//d;
-    $line =~ s/^$quote//;
-
-    # Check for eg $quote = "> " and $line = ">":
-    my $quote_ns = $quote;
-    if ( $quote_ns =~ s/\s+$// ) {
-        $line = "" if ( $line =~ /^$quote_ns$/ );
-    }
-    return ($line);
+    return shift(@from);
 }
 
 #
@@ -455,79 +196,40 @@ sub print_lines(@) {
 # Actually do the rewrapping
 sub reflow() {
     my ( $line, $last );
-    if ( $skipto ne "" ) {
-        while ( defined( $line = get_line() ) ) {
-            print_lines($line);
-            last if ( $line =~ /^$skipto/ );
-        }
-        croak "Skipto pattern `$skipto' not found!" unless ( defined($line) );
-    }
 
-    if ( $oneparagraph =~ /[Yy]/ ) {
+    while ( defined( $line = get_line() ) ) {
+        if ( $line =~ /^($pin|\t).*\S/ ) {
 
-        # put all the lines into one paragraph
-        while ( defined( $line = get_line() ) ) {
-            process($line);
-        }
+            # current line may be poetry, check next line:
+            $last = $line;
+            $line = get_line();
+            if ( !defined($line) ) {
+                process($last);
+                last;
+            }
+            if ( $line =~ /^($pin|\t).*\S/ ) {
 
-    } elsif ( $skipindented < 2 ) {
-        while ( defined( $line = get_line() ) ) {
-            if (   ( $skipindented && ( $line =~ /^($pin|\t).*\S/ ) )
-                || ( ( $noreflow ne "" ) && ( $line =~ /$noreflow/ ) ) ) {
-
-                # current line is indented, or a paragraph break:
+                # found some poetry, skip indented lines until end of input
+                # or a non-indented line found:
                 reflow_para();
+                print_lines( $indent1 . $last );
                 print_lines( $indent1 . $line );
+                while ( defined( $line = get_line() ) ) {
+                    last
+                      unless ( $line =~ /^($pin|\t).*\S/ );
+                    print_lines( $indent1 . $line );
+                }
+                last unless ( defined($line) );    # poetry at end of document
+                                                   # $line is a non-poetic line
             } else {
 
-                # Add line to current paragraph in @words:
-                process($line);
+                # $last had a poetry indent, but current line doesn't.
+                # Process last line:
+                process($last);
             }
-        }
-
-    } else {
-
-        while ( defined( $line = get_line() ) ) {
-            if ( ( $noreflow ne "" ) && ( $line =~ /$noreflow/ ) ) {
-
-                # current line is a paragraph break:
-                reflow_para();
-                print_lines( $indent1 . $line );
-                next;
-            } elsif ( $line =~ /^($pin|\t).*\S/ ) {
-
-                # current line may be poetry, check next line:
-                $last = $line;
-                $line = get_line();
-                if ( !defined($line) ) {
-                    process($last);
-                    last;
-                }
-                if ( $line =~ /^($pin|\t).*\S/ ) {
-
-                    # found some poetry, skip indented lines until end of input
-                    # or a non-indented line found:
-                    reflow_para();
-                    print_lines( $indent1 . $last );
-                    print_lines( $indent1 . $line );
-                    while ( defined( $line = get_line() ) ) {
-                        last
-                          unless ( ( $line =~ /^($pin|\t).*\S/ )
-                            || ( $noreflow ne "" && $line =~ /$noreflow/ ) );
-                        print_lines( $indent1 . $line );
-                    }
-                    last unless ( defined($line) );    # poetry at end of document
-                                                       # $line is a non-poetic line
-                } else {
-
-                    # $last had a poetry indent, but current line doesn't.
-                    # Process last line:
-                    process($last);
-                }
-            }    # end of first poetry test
-                 # current line is non-poetic, so process it:
-            process($line);
-        }
+        }    # end of first poetry test
+             # current line is non-poetic, so process it:
+        process($line);
     }
 
     # reflow any remaining @words:
@@ -539,57 +241,21 @@ sub reflow() {
 sub process($) {
     my ($line) = @_;
 
-    # current line is non-poetry
-    # remove spaces around dashes:
-    $line =~ s/([^-])[ \t]*--[ \t]*([^-])/$1--$2/g unless $gg;
-
     # protect ". . ." ellipses by replacing space with unused byte \x9f
     $line =~ s/ \. \. \./\x9f\.\x9f\.\x9f\./g;
     $line =~ s/\. \. \./\.\x9f\.\x9f\./g;
     @linewords = split( /\s+/, $line );
     shift(@linewords) if ( @linewords && ( $linewords[0] eq "" ) );
 
-    # If last word of previous line ends in a single hyphen,
-    # then append first word of this line:
-    if ( !$gg && @linewords && @words && ( $words[$#words] =~ /[a-zA-Z0-9]-$/ ) ) {
-        $words[$#words] .= shift(@linewords);
-    }
-    if ( $#linewords == -1 ) {
-
-        # No words on this line
-        if ( $oneparagraph !~ /[Yy]/ ) {
-
-            # end of paragraph
-            reflow_para();
-            print_lines("$indent1\n");
-        }
+    if ( $#linewords == -1 ) {    # No words on this line - end of paragraph
+        reflow_para();
+        print_lines("$indent1\n");
     } else {
 
         # add @linewords to @words,
-        # split on em dashes, ie word--word
-        # Move "--" from beginning of current word to end of last word:
-        if ( !$gg && ( $#words >= 0 ) && ( $linewords[0] =~ s/^--[^a-zA-Z0-9]*// ) ) {
-            $words[$#words] .= $&;
-            shift(@linewords) if ( $linewords[0] eq "" );
-        }
         my $word;
         foreach $word (@linewords) {
-            if ( !$gg && $word =~ /[^-]--[a-zA-Z0-9]/ ) {
-                @tmp = split( /--/, $word );
-
-                # restore the hyphens:
-                grep( s/$/--/, @tmp );
-
-                # remove an extra one at the end:
-                $tmp[$#tmp] =~ s/--$//;
-
-                # append @tmp to @words:
-                push( @words, @tmp );
-            } else {
-
-                # append $word to @words:
-                push( @words, $word );
-            }
+            push( @words, $word );
         }
     }
 }
@@ -599,87 +265,30 @@ sub process($) {
 sub reflow_para {
     return () unless (@words);
     reflow_penalties();
-    $lastbreak             = 0;
+    $lastbreak = 0;
     $linkbreak[$wordcount] = 0;
-    $lastbreak             = reflow_trial(
-        $optimum,   $maximum,   $wordcount,  $penaltylimit, $semantic,
-        $shortlast, \@word_len, \@space_len, \@extra,       \@linkbreak
-    );
+    $lastbreak =
+      reflow_trial( $optimum, $maximum, $wordcount, $penaltylimit, \@word_len, \@space_len,
+        \@linkbreak );
     compute_output();
-    grep ( s/\x9f/ /g, @output );
+    grep ( s/\x9f/ /g, @output );    # Restore spaces in ellipses
     print_lines(@output);
     @words = ();
 }
 
 #
-# Add spaces to ends of sentences and calculate @extra array of penalties
-# In fact in GG, $frenchspacing is "y", so extra space not added after period
+# Initialize word- and space-length arrays
 sub reflow_penalties {
     my $j;
     $wordcount = $#words + 1;
 
     # Add paragraph indentation to first word:
     $words[0] = $indent1 . $words[0] if ($wordcount);
-    for ( $j = 0 ; $j < $wordcount + 1 ; $j++ ) {
-        $extra[$j] = 0;
-    }
-    for ( $j = 0 ; $j < $wordcount ; $j++ ) {
-        if ( $words[$j] =~ /^(\w+)["')]*([\.\:])["')]*$/ ) {    # Period or colon
-            if ( !defined( $abbrev{$1} ) || ( $2 eq ":" ) ) {    # End of sentence
-                $extra[$j]       += $sentence / 2;
-                $extra[ $j - 1 ] -= $sentence if ( $j > 0 );
-                $extra[ $j + 1 ] -= $sentence;
-                $words[$j] = $words[$j] . " " unless ( $frenchspacing =~ /[Yy]/ );
-            } else {
-
-                # Don't break "Mr. X"
-                $extra[$j] -= $namebreak if ( $abbrev{$1} == 1 );
-            }
-        }
-        if (
-            ( $words[$j] =~ /[\?\!]["')]*$/ )                    # !? after word
-            && ( ( $j >= $#words ) || ( $words[ $j + 1 ] =~ /^[^a-zA-Z]*[A-Z]/ ) )
-        ) {
-            $extra[$j]       += $sentence / 2;
-            $extra[ $j - 1 ] -= $sentence if ( $j > 0 );
-            $extra[ $j + 1 ] -= $sentence;
-            $words[$j] = $words[$j] . " " unless ( $frenchspacing =~ /[Yy]/ );
-        }
-        if ( $words[$j] =~ /\,$/ ) {    # Comma after word
-            $extra[$j]       += $dependent / 2;
-            $extra[ $j - 1 ] -= $dependent if ( $j > 0 );
-            $extra[ $j + 1 ] -= $dependent;
-        }
-        if ( $words[$j] =~ /[\;\"\'\)]$|--$/ ) {    # Punctuation after word
-            $extra[$j]       += $independent / 2;
-            $extra[ $j - 1 ] -= $independent if ( $j > 0 );
-            $extra[ $j + 1 ] -= $independent;
-        }
-        if (   ( $j < $#words )
-            && ( $words[ $j + 1 ] =~ /^\(/ ) ) {    # Next word has opening parenthesis
-            $extra[$j]       += $independent / 2;
-            $extra[ $j - 1 ] -= $independent if ( $j > 0 );
-            $extra[ $j + 1 ] -= $independent;
-        }
-        if (
-            ( $j < $#words )
-            && (   $words[$j] =~ /[A-Z]/
-                && $words[$j] !~ /\./
-                && $words[ $j + 1 ] =~ /[A-Z]/ )
-        ) {
-            $extra[$j] -= $namebreak;               # Don't break "United States"
-        }
-        $extra[$j] -= $connectives{ $words[$j] } * $connpenalty
-          if ( defined( $connectives{ $words[$j] } ) );
-    }
 
     @word_len  = ();    # Length of each word (excluding spaces)
     @space_len = ();    # Length the space after this word
     for ( $j = 0 ; $j < $wordcount ; $j++ ) {
-        if ( !$gg && $words[$j] =~ /--$/ ) {
-            $word_len[$j]  = length( $words[$j] );
-            $space_len[$j] = 0;
-        } elsif ( $words[$j] =~ / $/ ) {
+        if ( $words[$j] =~ / $/ ) {
             $word_len[$j]  = length( $words[$j] ) - 1;
             $space_len[$j] = 2;
         } else {
@@ -704,9 +313,6 @@ sub compute_output {
         $lastbreak  = $linkbreak[$lastbreak];
     }
     @output = reverse(@output);
-
-    # trim spaces after hyphens:
-    map { s/([^-])[ \t]*--[ \t*]([^-])/$1--$2/g } @output unless $gg;
 
     # Add the indent to all but the first line:
     map { $_ = $indent2 . $_ } @output[ 1 .. $#output ];
