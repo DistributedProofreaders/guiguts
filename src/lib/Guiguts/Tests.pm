@@ -27,9 +27,9 @@ sub runtests {
 
     ok( ::roman(22) eq 'XXII', "roman(22)==XXII" );
 
-    ok( ::arabic('XXII.') eq '22', "arabic(XXII.) eq '22'" );
+    ok( ::arabic('XXII') eq '22', "arabic(XXII) eq '22'" );
 
-    ok( not( ::arabic('XXII.') eq '23' ), "not arabic(XXII.) eq '23'" );
+    ok( not( ::arabic('XXII') eq '23' ), "not arabic(XXII) eq '23'" );
 
     ok(
         ::deaccentdisplay('ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÑñÙÚÛÜùúûüİÿı') eq

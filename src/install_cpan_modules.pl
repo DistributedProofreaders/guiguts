@@ -20,6 +20,9 @@ my @modules = (
 
     # Needed for update checking
     "LWP::UserAgent",
+
+    # Needed for Roman-Arabic numeral conversion
+    "Roman",
 );
 
 # Windows-specific modules

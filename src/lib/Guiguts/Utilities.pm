@@ -4,6 +4,7 @@ use warnings;
 use POSIX qw /strftime /;
 use File::HomeDir qw /home/;
 use Getopt::Long;
+use Roman ();
 
 BEGIN {
     use Exporter();
@@ -82,57 +83,22 @@ sub openpng {
 }
 
 #
-# Roman numeral conversion taken directly from the Roman.pm module Copyright
-# (c) 1995 OZAWA Sakuro. Done to avoid users having to install downloadable
-# modules.
+# Convert Arabic numerals to Roman numerals (range 1-3999)
+# Note: Roman module has a sub "roman" which returns lowercase numerals
+# This sub is named "roman" rather than "Roman" for backward compatibility
+# within Guiguts, since it's exposed to user via \C...\E regex directive
 sub roman {
-    my %roman_digit = qw(1 IV 10 XL 100 CD 1000 MMMMMM);
-    my @figure      = reverse sort keys %roman_digit;
-    grep( $roman_digit{$_} = [ split( //, $roman_digit{$_}, 2 ) ], @figure );
-    my $arg = shift;
-    return unless defined $arg;
-    0 < $arg and $arg < 4000 or return;
-    my ( $x, $roman );
-    foreach (@figure) {
-        my ( $digit, $i, $v ) = ( int( $arg / $_ ), @{ $roman_digit{$_} } );
-        if ( 1 <= $digit and $digit <= 3 ) {
-            $roman .= $i x $digit;
-        } elsif ( $digit == 4 ) {
-            $roman .= "$i$v";
-        } elsif ( $digit == 5 ) {
-            $roman .= $v;
-        } elsif ( 6 <= $digit
-            and $digit <= 8 ) {
-            $roman .= $v . $i x ( $digit - 5 );
-        } elsif ( $digit == 9 ) {
-            $roman .= "$i$x";
-        }
-        $arg -= $digit * $_;
-        $x = $i;
-    }
-
-    #return "$roman.";
-    return "$roman";    # getting rid of trailing dot
+    return Roman::Roman(shift);
 }
 
 #
-# Roman to Arabic conversion
+# Convert Roman numerals to Arabic numerals (range 1-3999)
+# Note: Roman::arabic returns undef if argument is not valid
+# but we return original argument
 sub arabic {
-    my $arg = shift;
-    return $arg
-      unless $arg =~ /^(?: M{0,3})
-                (?: D?C{0,3} | C[DM])
-                (?: L?X{0,3} | X[LC])
-                (?: V?I{0,3} | I[VX])\.?$/ix;
-    $arg =~ s/\.$//;
-    my %roman2arabic = qw(I 1 V 5 X 10 L 50 C 100 D 500 M 1000);
-    my $last_digit   = 1000;
-    my $arabic;
-    foreach ( split( //, uc $arg ) ) {
-        $arabic -= 2 * $last_digit if $last_digit < $roman2arabic{$_};
-        $arabic += ( $last_digit = $roman2arabic{$_} );
-    }
-    return $arabic;
+    my $arg    = shift;
+    my $result = Roman::arabic($arg);
+    return $result // $arg;
 }
 
 #
