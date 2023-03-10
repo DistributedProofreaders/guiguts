@@ -624,41 +624,6 @@ sub menu_txt {
         [ 'command',   "Txt Conversion ~Palette...", -command => sub { ::txt_convert_palette(); } ],
         [ 'separator', '' ],
         [
-            'command',
-            "Convert ~Italics",
-            -command => sub {
-                ::text_convert_italic( $textwindow, $::italic_char );
-            }
-        ],
-        [
-            'command',
-            "Convert ~Bold",
-            -command => sub { ::text_convert_bold( $textwindow, $::bold_char ); }
-        ],
-        [
-            'command',
-            'Convert <~tb> to Asterisk Breaks',
-            -command => sub {
-                $textwindow->addGlobStart;
-                ::text_convert_tb($textwindow);
-                $textwindow->addGlobEnd;
-            }
-        ],
-        [
-            'command',
-            '~Auto-Convert Italics, Bold and tb',
-            -command => sub {
-                $textwindow->addGlobStart;
-                ::text_convert_italic( $textwindow, $::italic_char );
-                ::text_convert_bold( $textwindow, $::bold_char );
-                ::text_convert_tb($textwindow);
-                $textwindow->addGlobEnd;
-            }
-        ],
-        [
-            'command', "Auto-Convert ~Options...", -command => sub { ::text_convert_options($top); }
-        ],
-        [
             'command', "Convert to Curly ~Quotes", -command => sub { ::text_quotes_convert(); }
         ],
         menu_cascade( 'Curl~y Quote Corrections', &menu_txt_curlycorrections ),
@@ -676,14 +641,6 @@ sub menu_txt {
             -command => sub {
                 ::text_thought_break($textwindow);
             }
-        ],
-        [ 'separator', '' ],
-        [ 'command',   '~Small Caps to ALL CAPS',   -command => \&::text_uppercase_smallcaps ],
-        [ 'command',   '~Remove Small Caps Markup', -command => \&::text_remove_smallcaps_markup ],
-        [
-            'command',
-            '~Manually Convert Small Caps Markup...',
-            -command => \&::txt_manual_sc_conversion
         ],
         [ 'separator', '' ],
         [
