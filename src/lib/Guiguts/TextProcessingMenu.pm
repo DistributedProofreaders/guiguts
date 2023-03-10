@@ -5,11 +5,9 @@ use warnings;
 BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
-    @ISA = qw(Exporter);
-    @EXPORT =
-      qw(&text_convert_italic &text_convert_bold &txt_convert_simple_markup &text_thought_break &text_convert_tb
-      &text_convert_options &txt_convert_palette &fixpopup &text_uppercase_smallcaps &text_remove_smallcaps_markup
-      &txt_manual_sc_conversion &endofline &cleanup &text_quotes_convert &text_quotes_select &text_quotes_flipdouble
+    @ISA    = qw(Exporter);
+    @EXPORT = qw(&text_thought_break &txt_convert_palette &fixpopup
+      &endofline &cleanup &text_quotes_convert &text_quotes_select &text_quotes_flipdouble
       &text_quotes_usespaces &text_quotes_removeat &text_straight_quote_select &text_straight_quote_convert
       &text_quotes_insert);
 }
@@ -19,24 +17,7 @@ my $RDQ  = "\x{201d}";
 my $LSQ  = "\x{2018}";
 my $RSQ  = "\x{2019}";
 my $FLAG = "@";
-
-#
-# Replace all <i> markup with text markup character (underscore by default)
-sub text_convert_italic {
-    my ( $textwindow, $italic_char ) = @_;
-    my $italic  = qr/<\/?i>/;
-    my $replace = $italic_char;
-    $textwindow->FindAndReplaceAll( '-regexp', '-nocase', $italic, $replace );
-}
-
-#
-# Replace all <b> markup with text markup character (equals sign by default)
-sub text_convert_bold {
-    my ( $textwindow, $bold_char ) = @_;
-    my $bold    = qr{</?b>};
-    my $replace = "$bold_char";
-    $textwindow->FindAndReplaceAll( '-regexp', '-nocase', $bold, $replace );
-}
+my $TB   = "       *" x 5;
 
 #
 # Replace all given DP markup with given text equivalent
@@ -50,44 +31,29 @@ sub txt_convert_simple_markup {
 # Insert a "Thought break"
 sub text_thought_break {
     my ($textwindow) = @_;
-    $textwindow->insert( ( $textwindow->index('insert') ) . ' lineend', '       *' x 5 );
+    $textwindow->insert( ( $textwindow->index('insert') ) . ' lineend', $TB );
 }
 
 #
 # Replace all DP <tb> markup with text equivalent
 sub text_convert_tb {
     my ($textwindow) = @_;
-    $textwindow->FindAndReplaceAll( '-exact', '-nocase', '<tb>', '       *' x 5 );
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', '<tb>', $TB );
 }
 
 #
-# Pop the markup->text autoconvert options dialog
-sub text_convert_options {
-    my $top     = shift;
-    my $options = $top->DialogBox(
-        -title   => "Auto-Convert Options",
-        -buttons => ["OK"],
-    );
-    my $italic_frame = $options->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
-    my $italic_label = $italic_frame->Label(
-        -width => 25,
-        -text  => "Italic Replace Character"
-    )->pack( -side => 'left' );
-    my $italic_entry = $italic_frame->Entry(
-        -width        => 6,
-        -textvariable => \$::italic_char,
-    )->pack( -side => 'left' );
-    my $bold_frame = $options->add('Frame')->pack( -side => 'top', -padx => 5, -pady => 3 );
-    my $bold_label = $bold_frame->Label(
-        -width => 25,
-        -text  => "Bold Replace Character"
-    )->pack( -side => 'left' );
-    my $bold_entry = $bold_frame->Entry(
-        -width        => 6,
-        -textvariable => \$::bold_char,
-    )->pack( -side => 'left' );
-    $options->Show;
-    ::savesettings();
+# Perform all selected conversions from Txt Markup dialog
+sub text_convert_allsel {
+    my ($textwindow) = @_;
+    $textwindow->addGlobStart;
+    txt_convert_simple_markup( $textwindow, "</?i>", $::italic_char )   if ($::txt_conv_italic);
+    txt_convert_simple_markup( $textwindow, "</?b>", $::bold_char )     if ($::txt_conv_bold);
+    txt_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char ) if ($::txt_conv_gesperrt);
+    txt_convert_simple_markup( $textwindow, "</?f>", $::font_char )     if ($::txt_conv_font);
+    text_convert_tb($textwindow)                                        if ($::txt_conv_tb);
+    txt_convert_simple_markup( $textwindow, "</?sc>", $::sc_char )      if ( $::txt_conv_sc == 1 );
+    txt_auto_uppercase_smallcaps()                                      if ( $::txt_conv_sc == 2 );
+    $textwindow->addGlobEnd;
 }
 
 #
@@ -222,37 +188,19 @@ sub txt_convert_palette {
         my $tb_button = $tb_frame->Button(
             -width   => 16,
             -text    => 'Convert <tb> now',
-            -command => sub { ::text_convert_tb($textwindow); }
+            -command => sub { text_convert_tb($textwindow); }
         )->pack( -side => 'left' );
         my $all_frame =
           $::lglobal{txtconvpop}->Frame->pack( -side => 'top', -padx => 5, -pady => 3 );
         my $sc_manual = $all_frame->Button(
             -width   => 20,
             -text    => 'Do <sc> manually...',
-            -command => sub { ::txt_manual_sc_conversion() },
+            -command => sub { txt_manual_sc_conversion() },
         )->pack( -side => 'left', -padx => 10 );
         my $all_button = $all_frame->Button(
             -width   => 20,
             -text    => 'Do All Selected',
-            -command => sub {
-                $textwindow->addGlobStart;
-                txt_convert_simple_markup( $textwindow, "</?i>", $::italic_char )
-                  if ($::txt_conv_italic);
-                txt_convert_simple_markup( $textwindow, "</?b>", $::bold_char )
-                  if ($::txt_conv_bold);
-                txt_convert_simple_markup( $textwindow, "</?g>", $::gesperrt_char )
-                  if ($::txt_conv_gesperrt);
-                txt_convert_simple_markup( $textwindow, "</?f>", $::font_char )
-                  if ($::txt_conv_font);
-                text_convert_tb($textwindow)
-                  if ($::txt_conv_tb);
-                if ($::txt_conv_sc) {
-                    txt_auto_uppercase_smallcaps() if ( $::txt_conv_sc == 2 );
-                    txt_convert_simple_markup( $textwindow, "</?sc>", $::sc_char )
-                      if ( $::txt_conv_sc == 1 );
-                }
-                $textwindow->addGlobEnd;
-            }
+            -command => sub { text_convert_allsel($textwindow); }
         )->pack( -side => 'left' );
         ::initialize_popup_with_deletebinding('txtconvpop');
     }
@@ -471,17 +419,6 @@ sub fixup {
 }
 
 #
-# Pop Search/Replace dialog with regex to convert smallcaps to allcaps
-sub text_uppercase_smallcaps {
-    ::searchpopup();
-    ::searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( 0, 'end' );
-    $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
-    $::lglobal{replaceentry}->delete( 0, 'end' );
-    $::lglobal{replaceentry}->insert( 'end', "\\U\$1\\E" );
-}
-
-#
 # Convert smallcaps to allcaps in whole file
 sub txt_auto_uppercase_smallcaps {
     my $textwindow = $::textwindow;
@@ -493,17 +430,6 @@ sub txt_auto_uppercase_smallcaps {
         $textwindow->replacewith( $thisblockstart, "$thisblockend +5c", uc($selection) );
     }
     $textwindow->addGlobEnd;
-}
-
-#
-# Pop Search/Replace dialog with regex to remove smallcaps markup
-sub text_remove_smallcaps_markup {
-    ::searchpopup();
-    ::searchoptset(qw/0 x x 1/);
-    $::lglobal{searchentry}->delete( 0, 'end' );
-    $::lglobal{searchentry}->insert( 'end', "<sc>(\\n?[^<]+)</sc>" );
-    $::lglobal{replaceentry}->delete( 0, 'end' );
-    $::lglobal{replaceentry}->insert( 'end', "\$1" );
 }
 
 #
