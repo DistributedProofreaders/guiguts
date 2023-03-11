@@ -187,7 +187,7 @@ sub searchtext {
         } else {    # not a search across line boundaries
             my $exactsearch = $searchterm;
             $exactsearch = ::escape_regexmetacharacters($exactsearch);
-            $searchterm  = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})'
+            $searchterm  = '(?<![\p{Alnum}\p{Mark}])' . $exactsearch . '(?![\p{Alnum}\p{Mark}])'
               if $::sopt[0];
             my ( $direction, $searchstart, $mode );
             if   ( $::sopt[2] ) { $searchstart = $::searchstartindex }
@@ -915,7 +915,7 @@ sub replaceall {
             # escape metacharacters and check before/after for non-alpha if whole word matching
             if ( $::sopt[0] ) {
                 my $exactsearch = ::escape_regexmetacharacters($searchterm);
-                $searchterm = '(?<!\p{Alnum})' . $exactsearch . '(?!\p{Alnum})';
+                $searchterm = '(?<![\p{Alnum}\p{Mark}])' . $exactsearch . '(?![\p{Alnum}\p{Mark}])';
             }
 
             # regex search is needed for whole word matching
@@ -2192,7 +2192,10 @@ sub quickcount {
     my $string = $textwindow->get( $start, $end );
 
     # Escape any regex metacharacters, and force whole-word searching
-    $string = '(?<!\p{Alnum})' . ::escape_regexmetacharacters($string) . '(?!\p{Alnum})';
+    $string =
+        '(?<![\p{Alnum}\p{Mark}])'
+      . ::escape_regexmetacharacters($string)
+      . '(?![\p{Alnum}\p{Mark}])';
 
     # Loop through whole file, counting number of occurrences
     my $length      = 0;

@@ -281,9 +281,9 @@ sub wordfrequency {
                     $sword =~ s/([^\w\s\\])/\\$1/g;
 
                     # Force whole word search via regex - can't use \b because underscore is a "word" character in Perl
-                    $sword .= '(?![[:alnum:]])'
+                    $sword .= '(?![\p{Alnum}\p{Mark}])'
                       if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
-                    $sword = '(?<![[:alnum:]])' . $sword
+                    $sword = '(?<![\p{Alnum}\p{Mark}])' . $sword
                       if ( ( length $sword gt 1 ) && ( $sword =~ /^\w/ ) );
                     ::searchoptset(qw/0 x x 1/);
                 }
@@ -321,9 +321,9 @@ sub wordfrequency {
                     $sword =~ s/([^\w\s\\])/\\$1/g;
 
                     # Force whole word search via regex - can't use \b because underscore is a "word" character in Perl
-                    $sword .= '(?![[:alnum:]])'
+                    $sword .= '(?![\p{Alnum}\p{Mark}])'
                       if ( ( length $sword gt 1 ) && ( $sword =~ /\w$/ ) );
-                    $sword = '(?<![[:alnum:]])' . $sword
+                    $sword = '(?<![\p{Alnum}\p{Mark}])' . $sword
                       if ( ( length $sword gt 1 ) && ( $sword =~ /^\w/ ) );
                     ::searchoptset(qw/0 0 x 1/);    # Case sensitive
                 }
@@ -446,7 +446,8 @@ sub bangmark {
     $::lglobal{wclistbox}->update;
     my $wholefile = slurpfile();
 
-    while ( $wholefile =~ m/(\p{Alnum}+\.['"]?\n*\s*['"]?\p{Lower}\p{Alnum}*)/g ) {
+    while (
+        $wholefile =~ m/([\p{Alnum}\p{Mark}]+\.['"]?\n*\s*['"]?\p{Lower}[\p{Alnum}\p{Mark}]*)/g ) {
         my $word = $1;
         $wordw++;
         $word =~ s/\n/\\n/g;
@@ -669,12 +670,12 @@ sub commark {
 
         # Skip if pattern is: . Hello, John
         $wholefile =~
-          s/([\.\?\!]['"]*[\n\s]['"]*\p{Upper}\p{Alnum}*),([\n\s]['"]*\p{Upper})/$1 $2/g;
+          s/([\.\?\!]['"]*[\n\s]['"]*\p{Upper}[\p{Alnum}\p{Mark}]*),([\n\s]['"]*\p{Upper})/$1 $2/g;
 
         # Skip if pattern is: \n\nHello, John
-        $wholefile =~ s/(\n\n *['"]*\p{Upper}\p{Alnum}*),( ['"]*\p{Upper})/$1 $2/g;
+        $wholefile =~ s/(\n\n *['"]*\p{Upper}[\p{Alnum}\p{Mark}]*),( ['"]*\p{Upper})/$1 $2/g;
     }
-    while ( $wholefile =~ m/,(['"]*\n*\s*['"]*\p{Upper}\p{Alnum}*)([\.\?\!]?)/g ) {
+    while ( $wholefile =~ m/,(['"]*\n*\s*['"]*\p{Upper}[\p{Alnum}\p{Mark}]*)([\.\?\!]?)/g ) {
         my $word = $1;
         next
           if $::intelligentWF

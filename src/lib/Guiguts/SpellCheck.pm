@@ -91,9 +91,9 @@ sub spellchecknext {
             $textwindow->search(
                 -forwards, -regexp,
                 -count => \$::lglobal{matchlength},
-                '(?<!\p{Alpha})'
+                '(?<![\p{Alnum}\p{Mark}])'
                   . $::lglobal{misspelledlist}[ $::lglobal{nextmiss} ]
-                  . '(?!\p{Alnum})', $::lglobal{lastmatchindex}, 'end'
+                  . '(?![\p{Alnum}\p{Mark}])', $::lglobal{lastmatchindex}, 'end'
             )
         );
     }

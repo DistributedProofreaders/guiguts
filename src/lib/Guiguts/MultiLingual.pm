@@ -528,62 +528,24 @@ sub createseenwordslang {
 # Build basic list of distinct words
 sub buildwordlist {
     my $textwindow = shift;
-    my ( @words, $match, @savesets );
-    my $index = '1.0';
-    my $wc    = 0;
-    my $end   = $textwindow->index('end');
+    my @words;
+    my $index          = '1.0';
+    my $totalwordcount = 0;
     %distinctwords = ();
-    my $filename = $textwindow->FileName;
-    unless ($filename) {
-        $filename = 'tempfile.tmp';
-        open( my $file, ">", "$filename" );
-        my ($lines) = $textwindow->index('end - 1 chars') =~ /^(\d+)\./;
-        while ( $textwindow->compare( $index, '<', 'end' ) ) {
-            my $end  = $textwindow->index("$index  lineend +1c");
-            my $line = $textwindow->get( $index, $end );
-            print $file $line;
-            $index = $end;
-        }
-    }
-    ::savefile()
-      if ( ( $textwindow->FileName )
-        && ( $textwindow->numberChanges != 0 ) );
-    open my $fh, '<', $filename;
-    my $lastwordseen = '';
-
-    # starts here
-    while ( my $line = <$fh> ) {
-        utf8::decode($line);
+    while ( $textwindow->compare( $index, '<', 'end' ) ) {
+        my $end  = $textwindow->index("$index  lineend +1c");
+        my $line = $textwindow->get( $index, $end );
         next if $line =~ m/^-----*\s?File:\s?\S+\.(png|jpg)---/;
-        $line         =~ s/_/ /g;                                  # underscores to spaces
-        $line         =~ s/<!--//g;                                # remove comment starts
-        $line         =~ s/-->//g;                                 # remove comment ends
-
-        $line =~ s/['^\.,\*-]/ /g;                                 # get rid of nonalphanumeric
-        $line =~ s/\P{Alnum}/ /g;
-        $line =~ s/--/ /g;                                         # get rid of --
-        $line =~ s/—/ /g;                                          # trying to catch words with real em-dashes, from dp2rst
-        $line =~ s/(\D),/$1 /g;                                    # throw away comma after non-digit
-        $line =~ s/,(\D)/ $1/g;                                    # and before
+        $line =~ s/[^\p{Alnum}\p{Mark}]+/ /g;                      # get rid of nonalphanumeric
         @words = split( /\s+/, $line );
-
         for my $word (@words) {
-            $word =~ s/ //g;
-            if ( length($word) == 0 ) { next; }
-            $word =~ s/[\.',-]+$//;    # throw away punctuation at end
-            $word =~ s/^[\.,'-]+//;    #and at the beginning
-            next if ( $word eq '' );
-            $wc++;
+            next if length($word) == 0;
+            $totalwordcount++;
             $distinctwords{$word}++;
         }
-        $index++;
-        $index .= '.0';
-        $textwindow->update;
+        $index = $end;
     }
-    close $fh;
-    unlink 'tempfile.tmp' if ( -e 'tempfile.tmp' );
-    $totalwordcount = $wc;
-    return $wc;
+    return $totalwordcount;
 }
 
 #
