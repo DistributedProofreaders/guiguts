@@ -786,7 +786,7 @@ sub working {
             $::lglobal{workpop}->title('Working.....');
             $::lglobal{worklabel} = $::lglobal{workpop}->Label(
                 -text       => "\n\n\nWorking....\n$msg\nPlease wait.\n\n\n",
-                -font       => '{helvetica} 20 bold',
+                -font       => 'largebold',
                 -background => $::activecolor,
             )->pack;
             $::lglobal{workpop}->resizable( 'no', 'no' );
@@ -1053,6 +1053,14 @@ sub initialize {
         -weight => $::gblfontweight,
     );
     ::globalfontconfigure();       # may need to set to system default
+
+    # Large font, e.g. for "Working" popup - doesn't need to be configurable
+    $top->fontCreate(
+        'largebold',
+        -family => 'Helvetica',
+        -size   => 20,
+        -weight => 'bold',
+    );
 
     setwidgetdefaultoptions();
 
@@ -2770,12 +2778,7 @@ sub toolbar_toggle {
 
     # Create toolbar unless not wanted
     unless ($::notoolbar) {
-        $::lglobal{toptool}  = $top->ToolBar( -side => $::toolside, -close => '30' );
-        $::lglobal{toolfont} = $top->Font(
-            -family => 'Times',
-            -weight => 'bold',
-            -size   => 10
-        );
+        $::lglobal{toptool} = $top->ToolBar( -side => $::toolside, -close => '30' );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -image   => 'fileopen16',
@@ -2828,13 +2831,11 @@ sub toolbar_toggle {
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -text    => 'WF²',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::wordfrequency ],
             -tip     => 'Word Frequency'
         );
         $::lglobal{toptool}->ToolButton(
             -text    => 'BL',
-            -font    => $::lglobal{toolfont},
             -command => [ sub { ::errorcheckpop_up( $textwindow, $top, 'Bookloupe' ); } ],
             -tip     => 'Bookloupe'
         );
@@ -2851,46 +2852,39 @@ sub toolbar_toggle {
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -text    => 'Common',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::commoncharspopup ],
             -tip     => 'Commonly-Used Characters Chart'
         );
         $::lglobal{toptool}->ToolButton(
             -text    => 'Grk',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::greekpopup ],
             -tip     => 'Greek Transliteration Popup'
         );
         $::lglobal{toptool}->ToolButton(
             -text    => 'UCS',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::utfcharsearchpopup ],
             -tip     => 'Unicode Character Search'
         );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -text    => 'HTML',
-            -font    => $::lglobal{toolfont},
             -command => sub { ::htmlmarkpopup( $textwindow, $top ) },
             -tip     => 'HTML Markup'
         );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -text    => 'Tfx',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::tablefx ],
             -tip     => 'ASCII Table Formatting'
         );
         $::lglobal{toptool}->separator;
         $::lglobal{toptool}->ToolButton(
             -text    => 'Eol',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::endofline ],
             -tip     => 'Remove trailing spaces in selection'
         );
         $::lglobal{toptool}->ToolButton(
             -text    => 'FN',
-            -font    => $::lglobal{toolfont},
             -command => [ \&::footnotepop ],
             -tip     => 'Footnote Fixup'
         );
