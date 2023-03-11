@@ -2197,25 +2197,49 @@ END
 }
 
 #
-# Check what is the most recent version of GG online
+# Check and return most recent version of GG available at Github
+# Assumes most recent production release is the first on the
+# "releases" page, with format "M.m.r</h2>", being Major number,
+# minor number, revision number in an h2 heading.
+# If release has a further suffix, like "-beta", we don't want to
+# offer it to user via this mechanism. They would access it
+# independently of GG via specific forum post or PM which would
+# warn of its non-production status.
 sub checkonlineversion {
+    my $latest = "";                                                              # Return empty string on failure
+    my $giturl = 'https://github.com/DistributedProofreaders/guiguts/releases';
 
-    my $ua = LWP::UserAgent->new(
-        env_proxy  => 1,
-        keep_alive => 1,
-        timeout    => 20,
-        ssl_opts   => {
-            verify_hostname => 0,
-        },
-    );
-    my $response = $ua->get('https://github.com/DistributedProofreaders/guiguts/releases');
+    # LWP::UserAgent doesn't install cleanly on Macs, so use system(curl)
+    if ($::OS_MAC) {
+        my $tmpfile = 'curl.tmp';
+        my $runner  = ::runner::withfiles( undef, $tmpfile, $tmpfile );
 
-    unless ( $response->content ) {
-        return;
+        $runner->run( 'curl', '-s', $giturl );
+
+        open my $curlout, '<', $tmpfile;
+        while ( my $line = <$curlout> ) {
+            if ( $line =~ /(\d+)\.(\d+)\.(\d+)<\/h2>/ ) {
+                $latest = "$1.$2.$3";
+                last;
+            }
+        }
+        close $curlout;
+        unlink $tmpfile;
+    } else {    # On Windows/Linux, use LWP::UserAgent
+        my $ua = LWP::UserAgent->new(
+            env_proxy  => 1,
+            keep_alive => 1,
+            timeout    => 20,
+            ssl_opts   => { verify_hostname => 0, },
+        );
+        my $response = $ua->get($giturl);
+        if (    $response->is_success
+            and $response->content
+            and $response->content =~ /(\d+)\.(\d+)\.(\d+)<\/h2>/ ) {
+            $latest = "$1.$2.$3";
+        }
     }
-    if ( $response->content =~ /(\d+)\.(\d+)\.(\d+)\.zip/i ) {
-        return "$1.$2.$3";
-    }
+    return $latest;
 }
 
 #
