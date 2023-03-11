@@ -1472,7 +1472,7 @@ sub booklouperun {
             my $nextcol = 0;
 
             # Replace all non-alphanumeric (but not apostrophes) with space
-            $line =~ s/[^[:alnum:]'$APOS]/ /g;
+            $line =~ s/[^\p{Alnum}\p{Mark}'$APOS]/ /g;
 
             # Check each word individually
             my @words = split( /\s/, $line );    # Split on single spaces to aid column counting
