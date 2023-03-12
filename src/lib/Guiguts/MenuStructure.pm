@@ -353,6 +353,7 @@ sub menu_search {
                 } else {
                     ::hilite_alignment_stop();
                 }
+                $textwindow->focus;
             }
         ],
         [

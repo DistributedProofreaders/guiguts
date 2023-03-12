@@ -204,6 +204,7 @@ sub hilite {
             else          { $lastindex = '' }
         }
     }
+    $textwindow->focus;
 }
 
 #
@@ -215,6 +216,7 @@ sub hiliteremove {
     hilite_alignment_stop();
     $::nohighlights = 0;
     ::highlight_quotbrac();
+    $textwindow->focus;
 }
 
 #
@@ -328,6 +330,7 @@ sub highlight_quotbrac {
         highlight_quotbrac_remove();
     }
     ::savesettings();
+    $textwindow->focus;
 }
 
 #
@@ -410,6 +413,7 @@ sub hilite_alignment_toggle {
     } else {
         ::hilite_alignment_start();
     }
+    $::textwindow->focus;
 }
 
 #
@@ -566,6 +570,7 @@ sub hilitematch {
         }
     }
     ::soundbell() unless $index;    # Match not found (or attempt to match unsupported string)
+    $textwindow->focus;
 }
 
 #
