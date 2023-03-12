@@ -1682,6 +1682,7 @@ sub find_proofer_comment {
         ::operationadd('Found no more proofer comments')
           if $direction ne 'reverse';
     }
+    $textwindow->focus;
 }
 
 #
@@ -1696,6 +1697,7 @@ sub find_asterisks {
     } else {
         ::operationadd('Found no more asterisks without slash');
     }
+    $textwindow->focus;
 }
 
 #
