@@ -1342,22 +1342,19 @@ sub footnotefind {
 
 #
 # Converts given footnote number to alphabetic form:
-# A,B,...Z,AA,AB,...AZ,BA,BB...YZ
-# Code intended to continue to ZA,ZB,...ZZ,AAA,AAB,...,ZZZ
-# thus handling up to 26^3+26^2+26=18278 footnotes
-# But, currently has (bracketing?) bug if number is greater than 676
+# A,B,...Z,AA,AB,...AZ,BA,BB,...ZZ,AAA,AAB,...ZZZ
+# Wraps back to AAA,AAB,etc., if >= 18728 (26^3+26^2+26) footnotes
 sub alpha {
     my $label = shift;
     $label--;
     my ( $single, $double, $triple );
     $single = $label % 26;
-    $double = ( int( $label / 26 ) % 26 );
-    $triple = ( $label - $single - ( $double * 26 ) % 26 );
+    $double = int( ( $label - 26 ) / 26 ) % 26;
+    $triple = int( ( $label - 26 - 676 ) / 676 ) % 26;
+
     $single = chr( 65 + $single );
-    $double = chr( 65 + $double - 1 );
-    $triple = chr( 65 + $triple - 1 );
-    $double = '' if ( $label < 26 );
-    $triple = '' if ( $label < 676 );
+    $double = $label >= 26           ? chr( 65 + $double ) : '';
+    $triple = $label >= ( 676 + 26 ) ? chr( 65 + $triple ) : '';
     return ( $triple . $double . $single );
 }
 1;
