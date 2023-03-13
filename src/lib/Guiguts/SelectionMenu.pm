@@ -38,7 +38,7 @@ sub knuth_wrapper {
 
     # if open rewrap markup, remove, then prepend once rewrapped
     if ( $paragraph =~
-        s|^($TEMPPAGEMARK*/$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*\[$TEMPPAGEMARK*[0-9.,$TEMPPAGEMARK*]+$TEMPPAGEMARK*\]$TEMPPAGEMARK*)||
+        s|^($TEMPPAGEMARK*/$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*\[$TEMPPAGEMARK*[0-9.,$TEMPPAGEMARK* ]+$TEMPPAGEMARK*\]$TEMPPAGEMARK*)||
     ) {
         $pre = "$1\n";
     } elsif ( $paragraph =~ s|^($TEMPPAGEMARK*/$TEMPPAGEMARK*[$blockwraptypes]$TEMPPAGEMARK*)|| ) {
@@ -311,18 +311,19 @@ sub selectrewrap {
             }
 
             # Check if there are any parameters following blockwrap markup [n...
-            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)/ ) {    #check for block rewrapping with parameter markup
+            # Permit spaces within parameter list
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[ *(\d+)/ ) {    #check for block rewrapping with parameter markup
                 $leftmargin  = $1;
                 $firstmargin = $leftmargin;
             }
 
             # [n.n...
-            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)?(\.)(\d+)/ ) {
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[ *(\d+)? *(\.) *(\d+)/ ) {
                 $firstmargin = $3;
             }
 
             # [n.n,n...
-            if ( $notpmselection =~ /^\/[$blockwraptypes]\[(\d+)?(\.)?(\d+)?,(\d+)/ ) {
+            if ( $notpmselection =~ /^\/[$blockwraptypes]\[ *(\d+)? *(\.)? *(\d+)? *, *(\d+)/ ) {
                 $rightmargin = $4;
             }
         }
