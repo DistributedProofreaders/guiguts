@@ -13,7 +13,7 @@ BEGIN {
     @EXPORT = qw(&openpng &get_image_file &arabic &roman &popscroll
       &cmdinterp &nofileloadedwarning &win32_cmdline &win32_start &dialogboxcommonsetup &textentrydialogpopup
       &win32_is_exe &win32_create_process &dos_path &runner &run &launchurl &escape_regexmetacharacters
-      &deaccentsort &deaccentdisplay &readlabels &working &initialize &initialize_popup_with_deletebinding
+      &deaccentsort &deaccentdisplay &escapeforperlstring &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
       &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
@@ -628,6 +628,19 @@ sub deaccentdisplay {
     eval
       "\$phrase =~ tr/$::convertlatinsinglesearch$::convertcharssinglesearch/$::convertlatinsinglereplace$::convertcharssinglereplace/";
     return $phrase;
+}
+
+#
+# Escape characters that are not alphanumeric or a space (for readability),
+# so returned string is suitable as a Perl string to be output enclosed in
+# double quotes to setting.rc, .bin file, etc.
+# Primarily to avoid outputing non-ASCII characters, backslashes or double
+# quotes that could cause errors when trying to read back in. It's fine
+# to be conservative though and escape all non-alphanumeric.
+sub escapeforperlstring {
+    my $string = shift;
+    $string =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
+    return $string;
 }
 
 #
