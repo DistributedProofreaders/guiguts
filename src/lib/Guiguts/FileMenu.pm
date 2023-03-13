@@ -333,7 +333,7 @@ sub _bin_save {
         print $fh "\$::spellindexbkmrk = '$::spellindexbkmrk';\n\n";
         print $fh "\$::projectid = '$::projectid';\n\n";
         print $fh "\$::booklang = '$::booklang';\n\n";
-        print $fh "\$::bookauthor = '$::bookauthor';\n\n";
+        print $fh "\$::bookauthor = \"" . ::escapeforperlstring($::bookauthor) . "\";\n\n";
         print $fh
           "\$scannoslistpath = '@{[::escape_problems(::os_normal($::scannoslistpath))]}';\n\n";
         foreach ( sort keys %::charsuiteenabled ) {
@@ -984,7 +984,7 @@ EOM
         print $save_handle ("\@quicksearch_history = (\n");
         my @array = @::quicksearch_history;
         for my $index (@array) {
-            $index =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
+            $index = ::escapeforperlstring($index);
             print $save_handle qq/\t"$index",\n/;
         }
         print $save_handle ");\n\n";
@@ -992,7 +992,7 @@ EOM
         print $save_handle ("\@search_history = (\n");
         @array = @::search_history;
         for my $index (@array) {
-            $index =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
+            $index = ::escapeforperlstring($index);
             print $save_handle qq/\t"$index",\n/;
         }
         print $save_handle ");\n\n";
@@ -1000,7 +1000,7 @@ EOM
         print $save_handle ("\@replace_history = (\n");
         @array = @::replace_history;
         for my $index (@array) {
-            $index =~ s/([^A-Za-z0-9 ])/'\x{'.(sprintf "%x", ord $1).'}'/eg;
+            $index = ::escapeforperlstring($index);
             print $save_handle qq/\t"$index",\n/;
         }
         print $save_handle ");\n\n";
