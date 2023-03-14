@@ -196,6 +196,14 @@ brew install --cask xquartz
 After you install XQuartz, you must **log out and back in** before Guiguts can
 use it as the X11 server.
 
+There are a couple of X11 preferences that can be useful for GG users.
+
+* Under the `Input` tab, check the "Follow system keyboard layout" option.
+  This will allow you to type in Greek.
+* Under the `Windows` tab, click the "Click-through Inactive Windows" tab.
+  This will allow clicking in popup windows (such as Spell Query) to pass
+  the command straight through to the open document.
+
 ### Perl & Perl modules
 
 Using Terminal.app, use Homebrew to install Perl and cpanm:
