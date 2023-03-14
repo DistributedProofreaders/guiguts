@@ -456,23 +456,35 @@ sub file_mark_pages {
     my $textwindow = $::textwindow;
     $top->Busy( -recurse => 1 );
     ::hidepagenums();
-    my ( $line, $index, $page, $rnd1, $rnd2, $pagemark );
-    $::searchstartindex = '1.0';
-    $::searchendindex   = '1.0';
-    while ($::searchstartindex) {
-        $::searchstartindex =
-          $textwindow->search( '-nocase', '-regexp', '--', '-*\s?File:\s?(\S+)\.(png|jpg)---.*$',
-            $::searchendindex, 'end' );
-        last unless $::searchstartindex;
-        my ( $row, $col ) = split /\./, $::searchstartindex;
-        $line             = $textwindow->get( "$row.0", "$row.end" );
-        $::searchendindex = $textwindow->index("$::searchstartindex lineend");
+
+    # Regex must capture scan file basename in first capture group
+    # and file extension in second capture group
+    my $pagesepreg = 'File:.+?([^\/\\ ]+)\.(png|jpg)';
+
+    my $lineend = '1.0';
+    while ( my $linestart =
+        $textwindow->search( '-nocase', '-regexp', '--', $pagesepreg, $lineend, 'end' ) ) {
+        $linestart .= " linestart";
+        $lineend = $textwindow->index("$linestart lineend");
 
         # get the page name & mark the position
-        $page                             = $1 if $line =~ /-+File:\s*(.*?)\./;
-        $pagemark                         = 'Pg' . $page;
+        my $line = $textwindow->get( $linestart, $lineend );
+        next unless $line =~ $pagesepreg;    # Can't happen since same regex as earlier
+        my $page     = $1;                   # Extract scan file basename
+        my $ext      = $2;                   # and file extension
+        my $pagemark = 'Pg' . $page;
+
+        # Standardize page separator line format if necessary
+        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)-----/ ) {
+            $textwindow->ntdelete( $linestart, $lineend );
+            my $stdline = ( '-' x 5 ) . "File: $page.$ext";
+            $stdline .= '-' x ( 75 - length($stdline) );
+            $textwindow->ntinsert( $linestart, $stdline );
+        }
+
+        # Create and position page mark
         $::pagenumbers{$pagemark}{offset} = 1;
-        $textwindow->markSet( $pagemark, $::searchstartindex );
+        $textwindow->markSet( $pagemark, $linestart );
         $textwindow->markGravity( $pagemark, 'left' );
     }
     $top->Unbusy( -recurse => 1 );
