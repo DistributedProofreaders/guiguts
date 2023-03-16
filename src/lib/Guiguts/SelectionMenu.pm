@@ -147,22 +147,38 @@ sub centerblockwrapper {
 #
 # Wrap a right block marked with /r...r/
 # Right align the block, retaining relative indentation, i.e. longest line will touch right margin
+# Is able to move block to right or left, but note that if block is already too
+# wide to fit within margins, it will not be moved at all
 # Copes with /r nested inside /#
 sub rightblockwrapper {
-    my ( $rightmargin, $paragraph ) = @_;
-
-    my @lines = split( /\n/, $paragraph );    # Split paragraph into lines
+    my ( $leftmargin, $rightmargin, $paragraph ) = @_;
+    my $markupregex = "^(\/[#Rr]|[#Rr]\/)\$";
+    my @lines       = split( /\n/, $paragraph );    # Split paragraph into lines
 
     # Find number of spaces needed to move longest line to right margin
-    my $minspc = 1000;
+    # and minimum number of spare leading spaces (after left margin) across all lines
+    my $minspc  = 1000;
+    my $minlead = 1000;
     for my $line (@lines) {
         my $notpmline = removetpms($line);
-        my $spc       = $rightmargin - length($notpmline);    # Don't count temp page markers in line length
-        $spc    = 0    if $spc < 0;
+        next if $notpmline =~ $markupregex;             # Skip the rewrap markup
+        my $spc = $rightmargin - length($notpmline);    # Don't count temp page markers in line length
         $minspc = $spc if $spc < $minspc;
+        $notpmline =~ /^( *)/;
+        my $lead = length($1) - $leftmargin;
+        $minlead = $lead if $lead < $minlead;
     }
 
-    # Indent all lines by this amount, and append to a single string to return.
+    # If negative number of spaces needed (i.e. moving left) check if there are
+    # enough minimum leading spaces to move whole block left by correct amount.
+    # If positive number of spaces needed (i.e. moving right) check if that number
+    # is sufficient to move block completely out of left margin.
+    # If not, then don't move block at all - the block is too wide to fit inside the margins
+    if ( ( $minspc <= 0 and $minlead < -$minspc ) or ( $minspc >= 0 and $minspc < -$minlead ) ) {
+        $minspc = 0;
+    }
+
+    # Indent/unindent all lines by this amount, and append to a single string to return.
     my $rewrapped = '';
     my $done      = 0;    # Used to stop indenting when closing r/ is spotted
     for my $line (@lines) {
@@ -170,11 +186,15 @@ sub rightblockwrapper {
         $done = 1 if $notpmline =~ /^[Rr]\/$/;
 
         # if done, or start and end of markup - just preserve - don't indent
-        if ( $done or $notpmline =~ /^(\/[#Rr]|[#Rr]\/)$/ ) {
+        if ( $done or $notpmline =~ $markupregex ) {
             $rewrapped .= $line;
             $rewrapped .= "\n" unless $notpmline =~ /^#\/$/;    # No extra newline for closing blockquote markup
         } else {
-            $rewrapped .= ' ' x $minspc . $line;
+            if ( $minspc >= 0 ) {                               # Shift right
+                $rewrapped .= ' ' x $minspc . $line;
+            } else {                                            # Shift left
+                $rewrapped .= substr( $line, -$minspc );
+            }
             $rewrapped .= "\n" unless $notpmline =~ /^$/;
         }
     }
@@ -419,7 +439,7 @@ sub selectrewrap {
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
                     } elsif ($blockright) {
-                        $rewrapped = rightblockwrapper( $rightmargin, $selection );
+                        $rewrapped = rightblockwrapper( $leftmargin, $rightmargin, $selection );
                     } else {
                         $rewrapped = wrapper(
                             $leftmargin, $firstmargin, $rightmargin,
@@ -433,7 +453,7 @@ sub selectrewrap {
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $::lmargin, $::rmargin, $selection );
                     } elsif ($blockright) {
-                        $rewrapped = rightblockwrapper( $::rmargin, $selection );
+                        $rewrapped = rightblockwrapper( $::lmargin, $::rmargin, $selection );
                     } else {
                         $rewrapped =
                           wrapper( $::lmargin, $::lmargin, $::rmargin, $selection,
