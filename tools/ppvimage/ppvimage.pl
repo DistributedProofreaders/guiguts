@@ -4,7 +4,6 @@ use strict;
 use File::Basename;
 use File::Spec;
 use Getopt::Long;
-use Tk;
 
 # ppvimage.pl
 # author: David Wilson (DP: dcwilson) adapting ppvhtml.pl written by Roger Frank (DP:rfrank)
@@ -16,16 +15,13 @@ use Tk;
 #       need to deal with the input file encoding. Any unicode in alts
 #       or titles etc will simply pass through as-is to the logfile.
 #
-# last edit: 29/July/2020
 
-my $vnum = "1.07";
+my $vnum = "1.08";
 
 my @book      = ();
 my @css       = ();
 my @imagelist = ();
 my $srctext;
-my $makeCSV      = 0;
-my $gg           = 0;
 my $terse        = 0;
 my $outfile      = "";
 my $imgcover     = "";
@@ -42,33 +38,24 @@ use constant MINCOVERWD  => 1600;    # Minimum width of cover image
 use constant MINCOVERHT  => 2560;    # Minimum height of cover image
 
 # allow commandline operation sans GUI (thanks Katt83)
-# perl -w ppvimage.pl [-csv] [-terse] [-gg] [-o logfile.txt] filename.html
-if ( $#ARGV >= 0 ) {    # skip the gui
+# perl -w ppvimage.pl [-terse] [-o logfile.txt] filename.html
+if ( $#ARGV >= 0 ) {
     if ( $ARGV[0] eq '-h' ) {    # print help
-        print "perl -w ppvimage.pl [-csv] [-terse] [-gg] [-o logfile.txt] filename.html\n";
-        print "The optional -csv argument produces an additional output file in CSV format\n";
+        print "perl -w ppvimage.pl [-terse] [-o logfile.txt] filename.html\n";
         print "The optional -terse argument suppresses informational output\n";
-        print
-          "The optional -gg argument prepends GuiGuts-style source line numbers to every line of output\n";
         print "The optional -o argument allows you to specify the name of the output file\n";
     } else {                     # process arguments
         $srctext = $ARGV[$#ARGV];
         pop(@ARGV);
         while ( $#ARGV >= 0 ) {
             $option = shift(@ARGV);
-            if    ( $option eq '-csv' )   { $makeCSV = 1; }
-            elsif ( $option eq '-gg' )    { $gg      = 1; }
-            elsif ( $option eq '-terse' ) { $terse   = 1; }
+            if    ( $option eq '-terse' ) { $terse   = 1; }
             elsif ( $option eq '-o' )     { $outfile = shift(@ARGV); }
         }
         runProgram();
     }
     exit;
 }
-
-# gui interface
-# Main Window
-my $mw = new MainWindow;
 
 my $filename;
 my $outfilename = "ppvimage.log";
@@ -78,257 +65,9 @@ my ( $x, $y ) = ( 0, 0 );
 my $wd;
 my $ht;
 
-my $label1 = $mw->Label(
-    -text       => "ppvimage.pl post processing verification image checker.",
-    -background => "#eeeeee",
-    -font       => [ -weight => 'bold', -size => 11 ]
-);
-my $label3 = $mw->Label(
-    -textvariable => \$outfilename,
-    -relief       => 'sunken',
-    -background   => "#eeeeee",
-    -font         => [ -weight => 'bold', -size => 10 ]
-);
-
-my $button1 = $mw->Button(
-    -text    => "Load",
-    -command => \&loadFile,
-    -font    => [ -weight => 'bold', -size => 10 ],
-    -width   => 10
-);
-my $button2 = $mw->Button(
-    -text    => "Run",
-    -command => \&runProgram,
-    -font    => [ -weight => 'bold', -size => 10 ]
-);
-my $button3 = $mw->Button(
-    -text    => "Quit",
-    -command => \&exitProgram,
-    -font    => [ -weight => 'bold', -size => 10 ],
-    -width   => 10
-);
-
-my $txt = $mw->Scrolled( 'Text', -scrollbars => "oe", -width => 80, -height => 30 );
-
-$txt->insert( 'end', "This program will test the <img> tags in an HTML file.\n" );
-$txt->insert( 'end', "First, click the Load button to load your .htm or .html file.\n" );
-
-$label1->grid( -row => 0, -column => 0, -columnspan => 3, -sticky => "nsew", -ipady => 5 );
-
-$button1->grid( -row => 2, -column => 0, -sticky => "nsew", -ipady => 5 );
-$button3->grid( -row => 2, -column => 2, -sticky => "nse",  -ipady => 5 );
-
-$txt->grid( -row => 3, -column => 0, -columnspan => 3, -sticky => "nsew" );
-
-my $changeoutput = $mw->Button(
-    -text    => "Change output log",
-    -command => \&setoutputfile,
-    -font    => [ -weight => 'bold', -size => 9 ]
-);
-$changeoutput->grid( -row => 4, -column => 0, -sticky => "nsw" );
-my $verbose = $mw->Button(
-    -text    => "Verbose",
-    -command => \&setverboseoutput,
-    -font    => [ -weight => 'bold', -size => 9 ],
-    -width   => 10
-);
-my $notverbose = $mw->Button(
-    -text    => "Terse",
-    -command => \&setterseoutput,
-    -font    => [ -weight => 'bold', -size => 9 ],
-    -width   => 10
-);
-$notverbose->grid( -row => 4, -column => 2, -sticky => "nse" );
-$label3->grid( -row => 4, -column => 1, -sticky => "nsw" );
-
-my $revhist = $mw->Button(
-    -text    => "History",
-    -command => \&rev_hist,
-    -font    => [ -weight => 'bold', -size => 9 ]
-);
-my $about = $mw->Button(
-    -text    => "About",
-    -command => \&about_ppv,
-    -font    => [ -weight => 'bold', -size => 9 ]
-);
-my $addCSV = $mw->Button(
-    -text    => "Include CSV output",
-    -command => \&setCSVoutput,
-    -font    => [ -weight => 'bold', -size => 9 ]
-);
-my $removeCSV = $mw->Button(
-    -text    => "Remove CSV output",
-    -command => \&noCSVoutput,
-    -font    => [ -weight => 'bold', -size => 9 ]
-);
-$revhist->grid( -row => 6, -column => 0, -sticky => "nsw" );
-$about->grid( -row => 6, -column => 2, -sticky => "nse" );
-$addCSV->grid( -row => 6, -column => 1, -sticky => "ns", -ipadx => 5 );
-$mw->gridColumnconfigure( 1, -weight => 2 );
-
-MainLoop;
-
-sub setverboseoutput {
-    $terse = 0;
-    $verbose->gridForget();
-    $notverbose->grid( -row => 4, -column => 2, -sticky => "nse" );
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "Including informational output\n" );
-    $txt->see('end');
-}
-
-sub setterseoutput {
-    $terse = 1;
-    $notverbose->gridForget();
-    $verbose->grid( -row => 4, -column => 2, -sticky => "nse" );
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "Suppressing informational output\n" );
-    $txt->see('end');
-}
-
-sub setoutputfile {
-    $outfile = $mw->getSaveFile(
-        -defaultextension => ".log",
-        -filetypes        => [ [ 'Text Files', [ '.log', '.err' ] ], [ 'All Files', '*', ], ],
-        -initialdir       => Cwd::cwd(),
-        -initialfile      => "ppvimage.log",
-        -title            => "Log file destination",
-    );
-    if ($outfile) {
-        $outfilename = $outfile;
-    } else {
-        $outfile     = "";
-        $outfilename = "ppvimage.log";
-    }
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "Log will be written to:\n    $outfilename\n" );
-    $txt->see('end');
-}
-
-sub setCSVoutput {
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "Both CSV and logfile will be generated\n" );
-    $txt->see('end');
-    $makeCSV = 1;
-    $removeCSV->grid( -row => 6, -column => 1, -sticky => "ns", -ipadx => 5 );
-    $addCSV->gridForget();
-}
-
-sub noCSVoutput {
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "Just the logfile will be generated\n" );
-    $txt->see('end');
-    $makeCSV = 0;
-    $addCSV->grid( -row => 6, -column => 1, -sticky => "ns", -ipadx => 5 );
-    $removeCSV->gridForget();
-}
-
-sub about_ppv {
-    $mw->messageBox(
-        -message =>
-          "ppvimage.pl was put together by David Wilson, based on Roger Frank's ppvhtml.pl\n"
-          . "for use by distributed proofreaders at http://www.pgdp.net.\n"
-          . "questions, comments, suggestions to DP user: dcwilson",
-        -type => 'ok',
-        -icon => 'info'
-    );
-}
-
-sub rev_hist {
-    $txt->insert( 'end',
-            "------------------------------------------------------------------------\n"
-          . "current version: $vnum\n"
-          . "1.07 23/May/2020 (by DP user windymilla)\n"
-          . "  update image size limits\n"
-          . "    inline images: max 256KB, but no pixel limits\n"
-          . "    linked images: max 1024KB, but no pixel limits\n"
-          . "    cover image: min 625x1000 pixels, but no max pixel or KB limits\n"
-          . "1.06 10/Dec/2012\n"
-          . "  add warnings for unused files in /images folder\n"
-          . "  loosen input file syntax requirements\n"
-          . "  find multiple images on single source line\n"
-          . "  add source line numbers to messages\n"
-          . "  add check for lowercase filenames\n"
-          . "  add check for epub cover image\n"
-          . "  add commandline options to facilitate integration with GuiGuts\n"
-          . "  expand gui to expose new options\n"
-          . "1.05 21/Nov/2011\n"
-          . "  add warning if natural and coded width or height differ\n"
-          . "1.04 28/Jul/2011\n"
-          . "  add CSV output option following suggestion by Tom Cosmas\n"
-          . "  adapt to facilitate command-line execution following suggestion by Katt83\n"
-          . "1.03 13/Feb/2009\n"
-          . "  add checking of css background images\n"
-          . "1.02 03/Feb/2009\n"
-          . "  refine messages reported in log file\n"
-          . "1.01 03/Feb/2009\n"
-          . "  add recognition for width/height supplied via inline CSS\n"
-          . "1.00 23/Jan/2009\n"
-          . "  initial release in Perl/Tk\n\n" );
-    $txt->see('end');
-}
-
-sub loadFile {
-    $srctext = $mw->getOpenFile(
-        -defaultextension => ".htm|.html",
-        -filetypes        => [ [ 'Text Files', [ '.htm', '.html' ] ], [ 'All Files', '*', ], ],
-        -initialdir       => Cwd::cwd(),
-        -initialfile      => "",
-        -title            => "Select input HTML",
-    );
-    if ($srctext) {
-        $txt->insert( 'end',
-                "------------------------------------------------------------------------\n"
-              . "You have selected:\n    "
-              . $srctext
-              . "\n" );
-        if ( not $makeCSV ) {
-            $txt->insert( 'end',
-                "Click the button below to also generate a comma separated (CSV) summary.\n" );
-        }
-        $txt->insert( 'end', "\nClick the Run button to analyze the file.\n" );
-        $txt->see('end');
-        if ( $outfile eq "" ) {
-            $outfile     = File::Spec->catfile( dirname($srctext), "ppvimage.log" );
-            $outfilename = $outfile;
-        }
-
-        # now make Run button visible
-        $button2->grid( -row => 2, -column => 1, -sticky => "nsew", -ipady => 5 );
-    } else {
-        &exitProgram;
-    }
-}
-
-sub exitProgram {
-    $txt->insert( 'end', "\nThanks for using ppvimage.\n" );
-    $txt->see('end');
-    $mw->update;
-    sleep 1;
-    exit;
-}
-
 sub runProgram {
     if ( $outfile eq "" ) { $outfile = File::Spec->catfile( dirname($srctext), "ppvimage.log" ); }
     open LOGFILE, "> $outfile" || die "output file error\n";
-    if ( $gg + $terse == 0 ) {
-        print LOGFILE "program " . basename($0) . " version $vnum\n\n";
-        print LOGFILE "processing $srctext\n    to $outfile\n\n";
-        printf LOGFILE ( "%s\n", "-" x 80 );
-    }
-    my $CSVfile = $outfile;
-    $CSVfile =~ s/\.[^\.]*$/.csv/;
-    if ( $CSVfile eq $outfile ) { $CSVfile = $CSVfile . ".csv"; }
-    if ($makeCSV) {
-        open CSVOUT, "> $CSVfile" || die "output CSV file error\n";
-        print CSVOUT (
-            "filename, coded_wd, coded_ht, css_wd, css_ht, natural_wd, natural_ht, size_kb");
-    }
 
     # read book a line at a time into the array @book
     open INFILE, $srctext || die "no source file\n";
@@ -347,26 +86,8 @@ sub runProgram {
     # date stamp in logfile for this run
     ( my $sec, my $min, my $hour, my $mday, my $mon, my $year, my $wday, my $yday, my $isdst ) =
       localtime(time);
-    if ( $gg + $terse == 0 ) {
-        printf LOGFILE ( "\n%s\n", "=" x 80 );
-        printf LOGFILE "run completed: %4d-%02d-%02d %02d:%02d:%02d\n",
-          $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
-    }
 
     close LOGFILE;
-    if ( not($gg) ) {
-        if ($makeCSV) { close CSVOUT; }
-        if ($txt) {
-            $txt->insert( 'end', "Ok, I'm done analyzing your file.\n" );
-            $txt->insert( 'end', "Results were saved in\n   " . $outfile . "\n" );
-            if ($makeCSV) {
-                $txt->insert( 'end',
-                    "Comma Separated Value version saved in\n   " . $CSVfile . "\n" );
-            }
-            $txt->insert( 'end', "Now press Quit to exit the program.\n" );
-            $outfile = "";    # so loading another input file will reset the logfile destination
-        }
-    }
 
     # part of NEWgifsize
     sub gif_blockskip {
@@ -527,59 +248,49 @@ sub runProgram {
         return ( 0, 0 );
     }
 
-    sub logprint {    # print message to logfile, formatted to suit GG or "normal" output
+    sub logprint {    # print message to logfile
                       # $_[0] is the body of the message
                       # S_[1] is the source line number
                       # $_[2] is "KEY" if message should be used in "terse" mode
-                      # $_[3] is non-GG prefix
-                      # $_[4] is non-GG postfix
         if ( not($terse) || ( $_[2] eq "KEY" ) ) {    # generate message
-            if ($gg) {
-                printf LOGFILE "line %-5d", $_[1];
-                print LOGFILE (" $_[0]\n");
-            } else {
-                print LOGFILE ("$_[3]$_[0]$_[4]\n");
-            }
+            printf LOGFILE "line %-5d", $_[1];
+            print LOGFILE (" $_[0]\n");
         }
     }
 ##################################
-    sub imgcheck {    # partially parse <img> tag and report
+    sub imgcheck {                                    # partially parse <img> tag and report
         print LOGFILE ("\n---------- checking <img> images ----------\n");
         my $img        = "";
         my $imgtail    = "";
         my $sourceline = 0;
         my $reportline = 0;
-        foreach $_ (@book) {    # find <img> tags and filenames
+        foreach $_ (@book) {                          # find <img> tags and filenames
             $sourceline++;
             $img     = $img . " " . $_;
             $imgtail = "";
-            if ( $img =~ m/<img/i ) {    # start of <img> tag
+            if ( $img =~ m/<img/i ) {                 # start of <img> tag
                 $reportline = $sourceline;
-                $img =~ s/^.*?<img/<img/i;    # trim preceding crap
+                $img =~ s/^.*?<img/<img/i;            # trim preceding crap
                 $imgtail = $img;
-                while ( $img =~ m/>/ ) {      # complete <img> tag present
-                    $img     =~ s/^(.*?>).*$/$1/;    # now just the <img>
-                    $imgtail =~ s/^.*?>//;           # the rest if any
+                while ( $img =~ m/>/ ) {              # complete <img> tag present
+                    $img     =~ s/^(.*?>).*$/$1/;     # now just the <img>
+                    $imgtail =~ s/^.*?>//;            # the rest if any
                     if ( not( $img =~ m/\/>$/ ) ) {
-                        logprint( "img tag not properly closed",
-                            $reportline, "INFO", "--> $img\n  WARNING: ", "" );
+                        logprint( "img tag not properly closed", $reportline, "INFO" );
                     }
                     $src = $img;
                     $src =~ s/^.*src *= *['"]?([^'" ]*)['"]?.*$/$1/i;
                     $errline = $reportline;
                     print LOGFILE ("\n");
-                    logprint( "Image: $src", $reportline, "KEY", "", "\n  (line $reportline)" );
-                    if ($makeCSV) { print CSVOUT ("\n$src, "); }
-                    if ( not( $src =~ m/^images\// ) ) {           # image not in images folder
-                        logprint( "  image file not in /images folder",
-                            $errline, "KEY", "  WARNING:", "" );
-                    } else {                                       # add image to list of used images
+                    logprint( "Image: $src", $reportline, "KEY" );
+                    if ( not( $src =~ m/^images\// ) ) {    # image not in images folder
+                        logprint( "  image file not in /images folder", $errline, "KEY" );
+                    } else {                                # add image to list of used images
                         if ( $src =~ m/[A-Z]/ ) {
-                            logprint( "  $src name is not lowercase",
-                                $errline, "KEY", "  WARNING:", "" );
+                            logprint( "  $src name is not lowercase", $errline, "KEY" );
                         }
                         my $usedimg = $src;
-                        $usedimg =~ s/images\/(.*)/$1/;                                  # NB case sensitive: "images" must be lowerecase
+                        $usedimg =~ s/images\/(.*)/$1/;                                  # NB case sensitive: "images" must be lowercase
                         push( @imagelist, $usedimg );
                         if ( ( $usedimg =~ m/cover/ ) or ( $usedimg =~ m/title/ ) ) {    # potential epub cover page
                             if ( $imgcover eq "" ) {
@@ -605,12 +316,11 @@ sub runProgram {
                     if    ( $altqt eq '\'' ) { $alt =~ s/'([^']*)'.*$/$1/; }
                     elsif ( $altqt eq '"' )  { $alt =~ s/"([^"]*)".*$/$1/; }
                     else {
-                        logprint( "  WARNING: <img> has no alt attribute", $errline, "KEY", "",
-                            "" );
+                        logprint( "  WARNING: <img> has no alt attribute", $errline, "KEY" );
                         $altqt = "";
                     }
                     if ( length($altqt) > 0 ) {
-                        logprint( "  alt=$altqt$alt$altqt", $errline, "INFO", "", "" );
+                        logprint( "  alt=$altqt$alt$altqt", $errline, "INFO" );
                     }
                     my $ttl = $img;
                     $ttl =~ s/^.*title *= *(['"].*$)/$1/i;
@@ -618,11 +328,10 @@ sub runProgram {
                     if    ( $ttlqt eq '\'' ) { $ttl =~ s/'([^']*)'.*$/$1/; }
                     elsif ( $ttlqt eq '"' )  { $ttl =~ s/"([^"]*)".*$/$1/; }
                     else {    # title attribute is optional so no point making a fuss about missing ones
-                              # logprint ("  <img> has no title attribute",$errline,"INFO","    NOTE:","");
                         $ttlqt = "";
                     }
                     if ( length($ttlqt) > 0 ) {
-                        logprint( "  title=$ttlqt$ttl$ttlqt", $errline, "INFO", "", "" );
+                        logprint( "  title=$ttlqt$ttl$ttlqt", $errline, "INFO" );
                     }
                     my $warn   = "  WARNING";
                     my $wdstyl = "X";
@@ -647,22 +356,20 @@ sub runProgram {
                     $wd = $img;
                     $wd =~ s/^.*width *= *['"]?(\d*)['"]?.*$/$1/i;
                     if ( $wd eq $img ) {
-                        logprint( "$warn: <img> lacks width attribute", $errline, "INFO", "", "" );
+                        logprint( "$warn: <img> lacks width attribute", $errline, "INFO" );
                         $wd = "X";
                     }
                     if ( length($wd) == 0 ) {
-                        logprint( "$warn: <img> has empty width attribute",
-                            $errline, "KEY", "", "" );
+                        logprint( "$warn: <img> has empty width attribute", $errline, "KEY" );
                     }
                     $ht = $img;
                     $ht =~ s/^.*height *= *['"]?(\d*)['"]?.*$/$1/i;
                     if ( $ht eq $img ) {
-                        logprint( "$warn: <img> lacks height attribute", $errline, "INFO", "", "" );
+                        logprint( "$warn: <img> lacks height attribute", $errline, "INFO" );
                         $ht = "X";
                     }
                     if ( length($ht) == 0 ) {
-                        logprint( "$warn: <img> has empty height attribute",
-                            $errline, "KEY", "", "" );
+                        logprint( "$warn: <img> has empty height attribute", $errline, "KEY" );
                     }
                     $imgfile = File::Spec->catfile( dirname($srctext), $src );
                     my $dimsmessage = "";
@@ -670,37 +377,25 @@ sub runProgram {
                         $dimsmessage = "    coded ";
                         if ( $wd ne "X" ) {
                             $dimsmessage = $dimsmessage . "width=\"$wd\" ";
-                            if ($makeCSV) { print CSVOUT ("$wd"); }
                         }
-                        if ($makeCSV) { print CSVOUT (", "); }
                         if ( $ht ne "X" ) {
                             $dimsmessage = $dimsmessage . "height=\"$ht\"";
-                            if ($makeCSV) { print CSVOUT ("$ht"); }
                         }
-                        if ($makeCSV) { print CSVOUT (", "); }
-                        logprint( $dimsmessage, $errline, "INFO", "", "" );
+                        logprint( $dimsmessage, $errline, "INFO" );
                     } else {
-                        if ($makeCSV) { print CSVOUT (", , "); }
                     }
                     if ( ( $wdstyl ne "X" ) or ( $htstyl ne "X" ) ) {
                         $dimsmessage = "   styled ";
                         if ( $wdstyl ne "X" ) {
                             $dimsmessage = $dimsmessage . "width: $wdstyl; ";
-                            if ($makeCSV) { print CSVOUT ("$wdstyl"); }
                         }
-                        if ($makeCSV) { print CSVOUT (", "); }
                         if ( $htstyl ne "X" ) {
                             $dimsmessage = $dimsmessage . "height: $htstyl;";
-                            if ($makeCSV) { print CSVOUT ("$htstyl"); }
                         }
-                        if ($makeCSV) { print CSVOUT (", "); }
-                        logprint( $dimsmessage, $errline, "INFO", "", "" );
-                    } else {
-                        if ($makeCSV) { print CSVOUT (", , "); }
+                        logprint( $dimsmessage, $errline, "INFO", );
                     }
                     open( IMGFILE, "<", $imgfile ) || do {
-                        logprint( "  image file $src not found", $errline, "KEY", "  !!!",
-                            "  !!!" );
+                        logprint( "  image file $src not found", $errline, "KEY" );
                         goto CHECKFORMORE;
                     };
                     &imgdimens;
@@ -728,62 +423,47 @@ sub runProgram {
         if ( $src =~ /\.png$/ ) {
             ( $x, $y ) = pngsize( \*IMGFILE );
             if ( ( $x == 0 ) and ( $y == 0 ) ) {    # unable to determine dimensions
-                logprint( "  *** is this really a png image? ***", $errline, "KEY", "", "" );
+                logprint( "  *** is this really a png image? ***", $errline, "KEY" );
             }
-            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO", "", "" );
-            if ($makeCSV) {
-                print CSVOUT ("$x, $y, ");
-            }
+            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO" );
             if ( ( $wd ne "X" ) and ( $x ne $wd ) ) {
                 $x = abs( $wd - $x );
-                logprint( "   natural/coded widths differ by $x",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded widths differ by $x", $errline, "KEY" );
             }
             if ( ( $ht ne "X" ) and ( $y ne $ht ) ) {
                 $y = abs( $ht - $y );
-                logprint( "   natural/coded heights differ by $y",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded heights differ by $y", $errline, "KEY" );
             }
         } elsif ( $src =~ /\.jpe?g$/ ) {
             ( $x, $y ) = jpegsize( \*IMGFILE );
             if ( ( $x == 0 ) and ( $y == 0 ) ) {    # unable to determine dimensions
-                logprint( "  *** is this really a jpeg image? ***", $errline, "KEY", "", "" );
+                logprint( "  *** is this really a jpeg image? ***", $errline, "KEY" );
             }
-            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO", "", "" );
-            if ($makeCSV) {
-                print CSVOUT ("$x, $y, ");
-            }
+            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO" );
             if ( ( $wd ne "X" ) and ( $x ne $wd ) ) {
                 $x = abs( $wd - $x );
-                logprint( "   natural/coded widths differ by $x",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded widths differ by $x", $errline, "KEY" );
             }
             if ( ( $ht ne "X" ) and ( $y ne $ht ) ) {
                 $y = abs( $ht - $y );
-                logprint( "   natural/coded heights differ by $y",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded heights differ by $y", $errline, "KEY" );
             }
         } elsif ( $src =~ /\.gif$/ ) {
             ( $x, $y ) = NEWgifsize( \*IMGFILE );
             if ( ( $x == 0 ) and ( $y == 0 ) ) {    # unable to determine dimensions
-                logprint( "  *** is this really a gif image? ***", $errline, "KEY", "", "" );
+                logprint( "  *** is this really a gif image? ***", $errline, "KEY" );
             }
-            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO", "", "" );
-            if ($makeCSV) {
-                print CSVOUT ("$x, $y, ");
-            }
+            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO" );
             if ( ( $wd ne "X" ) and ( $x ne $wd ) ) {
                 $x = abs( $wd - $x );
-                logprint( "   natural/coded widths differ by $x",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded widths differ by $x", $errline, "KEY" );
             }
             if ( ( $ht ne "X" ) and ( $y ne $ht ) ) {
                 $y = abs( $ht - $y );
-                logprint( "   natural/coded heights differ by $y",
-                    $errline, "KEY", "      ***", " ***" );
+                logprint( "   natural/coded heights differ by $y", $errline, "KEY" );
             }
         } else {
-            logprint( "  unknown image type: $src", $errline, "KEY", "", "" );
+            logprint( "  unknown image type: $src", $errline, "KEY" );
         }
         close IMGFILE;
         my (
@@ -795,29 +475,14 @@ sub runProgram {
         my $verylarge = "VERY LARGE";
         if ($howbig) { $verylarge = "LARGE"; }
         if ( $size > MAXKBLINKED ) {
-            if ($gg) {
-                printf LOGFILE "line %-5d",                          $errline;
-                printf LOGFILE "   Filesize: %3u KB ($verylarge)\n", $size;
-            } else {
-                printf LOGFILE "  Filesize: %3u KB ($verylarge)\n", $size;
-            }
+            printf LOGFILE "line %-5d",                          $errline;
+            printf LOGFILE "   Filesize: %3u KB ($verylarge)\n", $size;
         } elsif ( ( $howbig == 0 ) and ( $size > MAXKBINLINE ) ) {
-            if ($gg) {
-                printf LOGFILE "line %-5d",                     $errline;
-                printf LOGFILE "   Filesize: %3u KB (LARGE)\n", $size;
-            } else {
-                printf LOGFILE "  Filesize: %3u KB (LARGE)\n", $size;
-            }
+            printf LOGFILE "line %-5d",                     $errline;
+            printf LOGFILE "   Filesize: %3u KB (LARGE)\n", $size;
         } elsif ( not($terse) ) {
-            if ($gg) {
-                printf LOGFILE "line %-5d",             $errline;
-                printf LOGFILE "   Filesize: %3u KB\n", $size;
-            } else {
-                printf LOGFILE "  Filesize: %3u KB\n", $size;
-            }
-        }
-        if ($makeCSV) {
-            printf CSVOUT "%u ", $size;
+            printf LOGFILE "line %-5d",             $errline;
+            printf LOGFILE "   Filesize: %3u KB\n", $size;
         }
     }    # end imgdimens
 
@@ -848,19 +513,14 @@ sub runProgram {
                     $src =~ s/^.*url *\(['"]?([^'" ]*)['"]?\).*$/$1/i;
                     print LOGFILE ("\n");
                     if ( $src eq $bgimg ) {                             # no url provided (should be "none" or "inherit")
-                        logprint( "Background image without url: $src",
-                            $reportline, "KEY", "", "\n  (line $reportline)" );
+                        logprint( "Background image without url: $src", $reportline, "KEY" );
                     } else {
-                        logprint( "Background image: $src",
-                            $reportline, "KEY", "", "\n  (line $reportline)" );
-                        if ($makeCSV) { print CSVOUT ("\n$src,,,,, "); }
-                        if ( not( $src =~ m/^images\// ) ) {               # image not in images folder
-                            logprint( "  image file not in /images folder",
-                                $reportline, "KEY", "  WARNING:", "" );
-                        } else {                                           # add image to list of used images
+                        logprint( "Background image: $src", $reportline, "KEY" );
+                        if ( not( $src =~ m/^images\// ) ) {            # image not in images folder
+                            logprint( "  image file not in /images folder", $reportline, "KEY" );
+                        } else {                                        # add image to list of used images
                             if ( $src =~ m/[A-Z]/ ) {
-                                logprint( "  $src name is not lowercase",
-                                    $errline, "KEY", "  WARNING:", "" );
+                                logprint( "  $src name is not lowercase", $errline, "KEY" );
                             }
                             my $usedimg = $src;
                             $usedimg =~ s/images\/(.*)/$1/;
@@ -868,8 +528,7 @@ sub runProgram {
                         }
                         $imgfile = File::Spec->catfile( dirname($srctext), $src );
                         open( IMGFILE, "<", $imgfile ) || do {
-                            logprint( "  image file $src not found",
-                                $reportline, "KEY", "  !!!", "  !!!" );
+                            logprint( "  image file $src not found", $reportline, "KEY" );
                             goto CHECKFORMOREBGS;
                         };
                         $errline = $reportline;
@@ -915,19 +574,15 @@ sub runProgram {
                     $usedimg     =~ s/^.*?href *= *['"]?images\/([^'" ]*)['"]?.*$/$1/i;    # first image linked
                     $usedimgtail =~ s/^.*?href *= *['"]?images\/[^'" ]*['"]?//;            # remaining input
                     print LOGFILE ("\n");
-                    logprint( "Linked image: images/$usedimg",
-                        $reportline, "KEY", "", "\n  (line $reportline)" );
-                    if ($makeCSV) { print CSVOUT ("\nimages/$usedimg,,,,, "); }
+                    logprint( "Linked image: images/$usedimg", $reportline, "KEY" );
                     push( @imagelist, $usedimg );
                     if ( $usedimg =~ m/[A-Z]/ ) {
-                        logprint( "  $usedimg name is not lowercase",
-                            $reportline, "KEY", "  WARNING:", "" );
+                        logprint( "  $usedimg name is not lowercase", $reportline, "KEY" );
                     }
                     $imgfile = File::Spec->catfile( dirname($srctext), "images" );
                     $imgfile = File::Spec->catfile( $imgfile,          $usedimg );
                     open( IMGFILE, "<", $imgfile ) || do {
-                        logprint( "  image file $usedimg not found",
-                            $reportline, "KEY", "  !!!", "  !!!" );
+                        logprint( "  image file $usedimg not found", $reportline, "KEY" );
                         goto CHECKFORMORELINKED;
                     };
                     $src     = $usedimg;
@@ -1009,17 +664,15 @@ sub runProgram {
             print LOGFILE ( "\n\n" . NOLINEINDENT . "*** WARNING: no epub cover image found\n" );
         } else {
             print LOGFILE ("\n\n");
-            logprint( "NOTE: epub cover will be $imgcover",
-                $imgcoverline, "INFO", "\n", " (line $imgcoverline)" );
+            logprint( "NOTE: epub cover will be $imgcover", $imgcoverline, "INFO" );
 
             # warn if not jpg or smaller than minimum width & height
             if ( not( $imgcover =~ m/\.jpe?g$/ ) ) {
-                logprint( "WARNING: epub cover should be jpg", $imgcoverline, "KEY", "", "" );
+                logprint( "WARNING: epub cover should be jpg", $imgcoverline, "KEY" );
             } else {
                 $coverfile = File::Spec->catfile( dirname($srctext), $imgcover );
                 open( IMGFILE, "<", $coverfile ) || do {
-                    logprint( "  epub cover image not found",
-                        $imgcoverline, "KEY", "  !!!", "  !!!" );
+                    logprint( "  epub cover image not found", $imgcoverline, "KEY" );
                     return 0;
                 };
                 binmode(IMGFILE);
@@ -1027,7 +680,7 @@ sub runProgram {
                 if ( ( $x < MINCOVERWD ) or ( $y < MINCOVERHT ) ) {
                     logprint(
                         "  WARNING: epub cover should be at least " . MINCOVERWD . "x" . MINCOVERHT,
-                        $imgcoverline, "KEY", "", ""
+                        $imgcoverline, "KEY"
                     );
                 }
             }

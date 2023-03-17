@@ -828,10 +828,9 @@ sub errorcheckrun {
         linkcheckrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'ppvimage' ) {
         if ($::verboseerrorchecks) {
-            ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-gg', '-o', $errname, $tmpfname );
+            ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-o', $errname, $tmpfname );
         } else {
-            ::run( 'perl', 'tools/ppvimage/ppvimage.pl',
-                '-gg', '-terse', '-o', $errname, $tmpfname );
+            ::run( 'perl', 'tools/ppvimage/ppvimage.pl', '-terse', '-o', $errname, $tmpfname );
         }
     } elsif ( $errorchecktype eq 'pptxt' ) {
         ::run( "perl", "lib/ppvchecks/pptxt.pl", "-i", $tmpfname, "-o", $errname );
