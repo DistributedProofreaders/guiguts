@@ -80,15 +80,34 @@ sub html_convert_simple_tag {
 
 #
 # Convert ampersands, greater than and less than symbols to HTML code
-# Regexps needed for gt and lt to avoid converting those that are part of HTML tags
-# Note that some gt/lt will not be converted, e.g. 2>1 or a<b (likely causing validation error)
+# Called at start of HTML conversion. The "<" or ">" symbols may be used in
+# DP tags, e.g. </sc>. Normally there should not be full HTML tags, but
+# PPers may have inserted some prior to autogeneration, so have to allow them.
 sub html_convert_ampersands {
     my $textwindow = shift;
     ::working("Converting Ampersands");
     ::named( '&', '&amp;' );
-    $textwindow->FindAndReplaceAll( '-regexp', '-nocase', "(?<![a-zA-Z0-9/\\-\"])>", "&gt;" );
-    $textwindow->FindAndReplaceAll( '-regexp', '-nocase',
-        "(?![\\n0-9])<(?![a-zA-Z0-9/\\-\\n])", '&lt;' );
+
+    my $length;
+    my $endmatch = '1.0';
+    while (
+        my $index = $textwindow->search(
+            '-regexp',
+            '-count' => \$length,
+            '--', "(<|>)", $endmatch, 'end'
+        )
+    ) {
+        my $match = $textwindow->get( $index, "$index lineend" );
+        if ( $match =~ /^(<[^<>]+>)/ ) {    # DP/HTML tag
+            $endmatch = "$index+" . length($1) . "c";    # Skip past whole tag
+        } else {    # "<" or ">" but not DP tag - replace with HTML entity
+            my $entity = $match =~ /^</ ? "&lt;" : "&gt;";
+            $textwindow->ntinsert( $index, $entity );
+            $endmatch = "$index+" . length($entity) . "c";
+            $textwindow->ntdelete($endmatch);    # Delete "<" or ">" which is now after entity
+        }
+    }
+
     return;
 }
 
