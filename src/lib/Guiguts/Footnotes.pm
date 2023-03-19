@@ -1006,27 +1006,6 @@ sub footnotemove {
         $footnotes{$lz} = '';
         $zone++;
     }
-    $zone = 1;
-    while ( $::lglobal{fnarray}->[$zone][4] ) {
-        my $fna = $textwindow->index("fna$zone");
-        my $fnb = $textwindow->index("fnb$zone");
-        if ( $textwindow->get( "$fna -1c", $fna ) eq ' ' ) {
-            $textwindow->delete( "$fna -1c", $fna );
-            $fna = $textwindow->index("fna$zone -1c");
-            $fnb = $textwindow->index("fnb$zone -1c");
-            $textwindow->markSet( "fna$zone", $fna );
-            $textwindow->markSet( "fnb$zone", $fnb );
-        }
-        ( $r, $c ) = split /\./, $fna;
-        while ( $c eq '0' ) {
-            $marker = $textwindow->get( $fna, $fnb );
-            $textwindow->delete( $fna, $fnb );
-            $r--;
-            $textwindow->insert( "$r.end", $marker );
-            ( $r, $c ) = split /\./, ( $textwindow->index("$r.end") );
-        }
-        $zone++;
-    }
     @{ $::lglobal{fnlzs} }   = ();
     @{ $::lglobal{fnarray} } = ();
     $index              = '1.0';
