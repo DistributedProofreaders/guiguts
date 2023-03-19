@@ -146,12 +146,6 @@ sub html_cleanup_markers {
         $::blockend = "$::xler.end";
         $textwindow->ntdelete( "$::blockstart-1c", $::blockend );
     }
-
-    # Don't think this ever happens, and if it did, not enough characters would be deleted
-    while ( $::blockstart =
-        $textwindow->search( '-regexp', '--', '<\/h\d><br' . voidclosure(), '1.0', 'end' ) ) {
-        $textwindow->ntdelete( "$::blockstart+5c", "$::blockstart+9c" );
-    }
     return;
 }
 
