@@ -150,10 +150,11 @@ sub centerblockwrapper {
 # Is able to move block to right or left, but note that if block is already too
 # wide to fit within margins, it will not be moved at all
 # Copes with /r nested inside /#
+# Note that /r markup may have optional right margin argument
 sub rightblockwrapper {
     my ( $leftmargin, $rightmargin, $paragraph ) = @_;
-    my $markupregex = "^(\/[#Rr]|[#Rr]\/)\$";
-    my @lines       = split( /\n/, $paragraph );    # Split paragraph into lines
+    my $markupregex = "^(\/[#Rr](\\[\\d+\\])?|[#Rr]\/)\$";
+    my @lines       = split( /\n/, $paragraph );             # Split paragraph into lines
 
     # Find number of spaces needed to move longest line to right margin
     # and minimum number of spare leading spaces (after left margin) across all lines
@@ -369,6 +370,9 @@ sub selectrewrap {
         $blockcenter = 1 if $notpmselection =~ /^\/[cC]/;
         $blockright  = 1 if $notpmselection =~ /^\/[rR]/;
 
+        # /r[nn] sets the right margin for this block only
+        my $brmargin = ( $notpmselection =~ /^\/[rR]\[(\d+)\]/ ) ? $1 : 0;
+
         $textwindow->markSet( 'rewrapend', $thisblockend );    # Set a mark at the end of the text so it can be found after rewrap
         unless ( $notpmselection =~ /^\s*?(\*\s*){4}\*/ ) {    # skip rewrap if paragraph is a thought break
             if ( $inblock and not( $blockcenter or $blockright ) ) {
@@ -439,21 +443,25 @@ sub selectrewrap {
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
                     } elsif ($blockright) {
-                        $rewrapped = rightblockwrapper( $leftmargin, $rightmargin, $selection );
+                        $rewrapped =
+                          rightblockwrapper( $leftmargin, ( $brmargin ? $brmargin : $rightmargin ),
+                            $selection );
                     } else {
                         $rewrapped = wrapper(
                             $leftmargin, $firstmargin, $rightmargin,
                             $selection,  $::rwhyphenspace
                         );
                     }
-                } elsif ( $::blockwrap == -1 ) {                 # index wrap
+                } elsif ( $::blockwrap == -1 ) {    # index wrap
                     $rewrapped = indexwrapper( $leftmargin, $firstmargin, $rightmargin,
                         $selection, $::rwhyphenspace );
-                } else {                                         #rewrap the paragraph
+                } else {                            #rewrap the paragraph
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $::lmargin, $::rmargin, $selection );
                     } elsif ($blockright) {
-                        $rewrapped = rightblockwrapper( $::lmargin, $::rmargin, $selection );
+                        $rewrapped =
+                          rightblockwrapper( $::lmargin, ( $brmargin ? $brmargin : $::rmargin ),
+                            $selection );
                     } else {
                         $rewrapped =
                           wrapper( $::lmargin, $::lmargin, $::rmargin, $selection,
