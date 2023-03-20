@@ -592,6 +592,7 @@ sub menu_tools_charactertools {
             -accelerator => 'AltGr / Ctrl+m',
             -command     => \&::composepopup
         ],
+        [ 'command',   'Convert DP ~Diacriticals',       -command => \&::convertdiacriticalmarks ],
         [ 'command',   '~Normalize Selected Characters', -command => \&::utfcharnormalize ],
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],

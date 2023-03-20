@@ -10,7 +10,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&commoncharspopup &utfpopup &utfcharentrypopup &utfcharsearchpopup
-      &composepopup  &composeinitialize &composeref &fractionconvert &utfcharnormalize);
+      &composepopup  &composeinitialize &composeref &fractionconvert &utfcharnormalize &convertdiacriticalmarks);
 }
 
 #
@@ -1146,7 +1146,8 @@ sub fractionconvert {
     my @ranges = $textwindow->tagRanges('sel');
     if ( @ranges > 0 ) {
         $finish = pop(@ranges);
-        $start  = pop(@ranges);
+        $textwindow->markSet( 'tempselend', $finish );
+        $start = pop(@ranges);
     }
 
     my $length;
@@ -1156,7 +1157,7 @@ sub fractionconvert {
         $start = $textwindow->search(
             '-regexp',
             '-count' => \$length,
-            '--', '-?\d+' . $anyslash . '\d+(?!,\d)', $start, $finish    # Negative lookahead to avoid converting 1/2 in 1/2,000
+            '--', '-?\d+' . $anyslash . '\d+(?!,\d)', $start, 'tempselend'    # Negative lookahead to avoid converting 1/2 in 1/2,000
         )
     ) {
         my $end        = "$start+${length}c";
@@ -1195,6 +1196,65 @@ sub fractionconvert {
             $start .= $advance;                             # Step over converted fraction
         } else {
             $start .= "+${length}c";                        # Step over skipped fraction
+        }
+    }
+    $textwindow->addGlobEnd;
+}
+
+#
+# Convert common DP diacritical markup into normalized Unicode characters
+# Only attempts to convert if diacritical is applied to an alphanumeric character
+sub convertdiacriticalmarks {
+    my $textwindow = $::textwindow;
+    my %diacabv    = (                # Hash of combining diacriticals above and below, indexed by DP markup character
+        '=' => [ "\x{0304}", "\x{0331}" ],
+        ':' => [ "\x{0308}", "\x{0324}" ],
+        '.' => [ "\x{0307}", "\x{0323}" ],
+        '`' => [ "\x{0300}", "\x{0316}" ],
+        "'" => [ "\x{0301}", "\x{0317}" ],
+        '^' => [ "\x{0302}", "\x{032D}" ],
+        'v' => [ "\x{030C}", "\x{032C}" ],
+        ')' => [ "\x{0306}", "\x{032E}" ],
+        '(' => [ "\x{0311}", "\x{032F}" ],
+        '~' => [ "\x{0303}", "\x{0330}" ],
+        ',' => [ "",         "\x{0327}" ],    # Empty string ensures conversion won't happen below
+        '*' => [ "\x{030A}", "\x{0325}" ],
+    );
+    my $dialreg = quotemeta( join( "", keys %diacabv ) );    # Regex string consists of all the keys (markup characters)
+
+    $textwindow->addGlobStart;
+    my @ranges = $textwindow->tagRanges('sel');
+    push( @ranges, ( '1.0', 'end' ) ) unless @ranges;        # Whole file if no selection
+    while (@ranges) {                                        # For each selected range
+        my $end = pop(@ranges);
+        $textwindow->markSet( 'tempselend', $end );          # Use mark instead of index for end - it moves as conversions are made
+        my $start = pop(@ranges);
+        my $length;
+        while (                                              # For each occurrence of markup
+            $start = $textwindow->search(
+                '-regexp',
+                '-count' => \$length,
+                '--', "\\[([$dialreg]\\p{Alnum}|\\p{Alnum}\[$dialreg])\\]", $start, 'tempselend'
+            )
+        ) {
+            my $endstr = "$start+$length c";
+            my $dpmark = $textwindow->get( $start, $endstr );
+            my $diac   = "";
+            my $lett   = "";
+            if ( $dpmark =~ /\[([$dialreg])(\p{Alnum})\]/ ) {    # Diacritical above alphanumeric
+                $diac = $diacabv{$1}[0];
+                $lett = $2;
+            } elsif ( $dpmark =~ /\[(\p{Alnum})([$dialreg])\]/ ) {    # Diacritical below alphanumeric
+                $diac = $diacabv{$2}[1];
+                $lett = $1;
+            }
+            my $advance = 4;                                          # If no conversion, advance past markup
+            if ($diac) {
+                my $nfctext = NFC( $lett . $diac );                   # Normalize to combine diacritical with letter if possible
+                $textwindow->replacewith( $start, $endstr, $nfctext );
+                $advance = length($nfctext);
+            }
+            $start .= "+$advance c";
         }
     }
     $textwindow->addGlobEnd;
