@@ -377,6 +377,7 @@ sub clearvars {
     $::lglobal{fntotal} = 0;
     undef $::lglobal{prepfile};
     $::bookauthor = '';
+    $::booklang   = 'en';
     return;
 }
 
