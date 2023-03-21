@@ -419,7 +419,6 @@ sub html_convert_body {
             }
 
             # <p class="center"> if selection does not have /h, /d, <br>, </p>, or </div> (or last line closed markup)
-            #   print "int:$intitle:las:$last5[3]:sel:$selection\n";
             if (
                 (
                     length($selection)
@@ -1205,7 +1204,8 @@ sub html_convert_sidenotes {
         $textwindow->ntdelete( $thisblockstart, $thisblockstart . '+' . $length . 'c' );
         $textwindow->ntinsert( $thisblockstart, '<div class="sidenote">' );
         $thisnoteend = $textwindow->search( '--', ']', $thisblockstart, 'end' );
-        while ( $textwindow->compare( "$thisblockstart+1c", "<", $thisnoteend )
+        while ( $thisnoteend
+            and $textwindow->compare( "$thisblockstart+1c", "<", $thisnoteend )
             and $textwindow->get( "$thisblockstart+1c", $thisnoteend ) =~ /\[/ ) {
             $thisblockstart = $thisnoteend;
             $thisnoteend    = $textwindow->search( '--', ']</p>', $thisblockstart, 'end' );
