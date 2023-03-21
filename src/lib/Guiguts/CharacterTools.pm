@@ -1206,19 +1206,22 @@ sub fractionconvert {
 # Only attempts to convert if diacritical is applied to an alphanumeric character
 sub convertdiacriticalmarks {
     my $textwindow = $::textwindow;
-    my %diacabv    = (                # Hash of combining diacriticals above and below, indexed by DP markup character
-        '=' => [ "\x{0304}", "\x{0331}" ],
-        ':' => [ "\x{0308}", "\x{0324}" ],
-        '.' => [ "\x{0307}", "\x{0323}" ],
-        '`' => [ "\x{0300}", "\x{0316}" ],
-        "'" => [ "\x{0301}", "\x{0317}" ],
-        '^' => [ "\x{0302}", "\x{032D}" ],
-        'v' => [ "\x{030C}", "\x{032C}" ],
-        ')' => [ "\x{0306}", "\x{032E}" ],
-        '(' => [ "\x{0311}", "\x{032F}" ],
-        '~' => [ "\x{0303}", "\x{0330}" ],
-        ',' => [ "",         "\x{0327}" ],    # Empty string ensures conversion won't happen below
-        '*' => [ "\x{030A}", "\x{0325}" ],
+
+    # Hash of combining diacriticals above and below, indexed by DP markup character, taken from
+    # https://github.com/DistributedProofreaders/dproofreaders/blob/master/tools/proofers/process_diacritcal_markup.js
+    my %diacabv = (
+        '=' => [ "\x{0304}", "\x{0331}" ],    # macron
+        ':' => [ "\x{0308}", "\x{0324}" ],    # diaeresis
+        '.' => [ "\x{0307}", "\x{0323}" ],    # dot
+        '`' => [ "\x{0300}", "\x{0316}" ],    # grave
+        "'" => [ "\x{0301}", "\x{0317}" ],    # acute
+        '^' => [ "\x{0302}", "\x{032D}" ],    # circumflex
+        ')' => [ "\x{0306}", "\x{032E}" ],    # breve
+        '~' => [ "\x{0303}", "\x{0330}" ],    # tilde
+        ',' => [ "",         "\x{0327}" ],    # cedilla - empty string skips conversion - no "cedilla above"
+        'v' => [ "\x{030C}", "\x{032C}" ],    # caron
+        '*' => [ "\x{030A}", "\x{0325}" ],    # ring
+        '(' => [ "\x{0311}", "\x{032F}" ],    # inverted breve
     );
     my $dialreg = quotemeta( join( "", keys %diacabv ) );    # Regex string consists of all the keys (markup characters)
 
