@@ -298,13 +298,14 @@ sub html_convert_body {
     my @last5            = [ '1', '1', '1', '1', '1', '1' ];
     my $step             = 1;
     $thisblockend = $textwindow->index('end');
-    my $blkcenter = 0;
-    my $blkright  = 0;
-    my $blkrstart = 0;               # Value of $step when a block right starts
-    my @blkrlens  = ();
-    my $closure   = voidclosure();
+    my $blkcenter      = 0;
+    my $blkright       = 0;
+    my $blkrightmargin = 0;
+    my $blkrstart      = 0;               # Value of $step when a block right starts
+    my @blkrlens       = ();
+    my $closure        = voidclosure();
 
-    ::hidelinenumbers();             # To speed updating of text window
+    ::hidelinenumbers();                  # To speed updating of text window
 
     #step through all the lines
     while (1) {
@@ -682,11 +683,18 @@ sub html_convert_body {
 
             # If closing a block right, shift whole block across so longest line touches right margin
             if ( $blkright and $selection =~ /^r\//i ) {
+                my $brmadjust = 0;
+                if ( $blkquot > 0 ) {
+                    $brmadjust = $::blockrmargin - $blkrightmargin
+                      if $blkrightmargin < $::blockrmargin;
+                } else {
+                    $brmadjust = $::rmargin - $blkrightmargin if $blkrightmargin < $::rmargin;
+                }
                 my $blkrmaxlen = max(@blkrlens);
                 for my $stepidx ( 0 .. $#blkrlens ) {
                     next if $blkrlens[$stepidx] == 0;    # Skip paragraph breaks
                     my $steptmp    = $blkrstart + $stepidx;
-                    my $blkrindent = ( $blkrmaxlen - $blkrlens[$stepidx] ) / 2;
+                    my $blkrindent = ( $blkrmaxlen + $brmadjust - $blkrlens[$stepidx] ) / 2;
                     next if $blkrindent == 0;
                     $textwindow->ntinsert( "$steptmp.0",
                         '<span style="margin-right: ' . $blkrindent . 'em;">' );
@@ -722,10 +730,12 @@ sub html_convert_body {
                 ::restorelinenumbers();
                 return;
             }
-            $inblock   = 1;
-            $blkcenter = ( $selection =~ /^\/c/i );
-            $blkright  = ( $selection =~ /^\/r/i );
-            $ital      = $bold = $smcap = 0;
+            $inblock        = 1;
+            $blkcenter      = ( $selection =~ /^\/c/i );
+            $blkright       = ( $selection =~ /^\/r/i );
+            $blkrightmargin = $blkquot > 0 ? $::blockrmargin : $::rmargin;
+            $blkrightmargin = $1 if $selection =~ /^\/r\[(\d+)\]/i;
+            $ital           = $bold = $smcap = 0;
             if ( ( $last5[2] ) && ( !$last5[3] ) ) {
                 insert_paragraph_close( $textwindow, ( $step - 2 ) . '.end' )
                   unless (
