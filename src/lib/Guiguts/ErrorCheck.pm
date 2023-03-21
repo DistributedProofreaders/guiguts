@@ -1627,7 +1627,7 @@ sub booklouperun {
     sub spellqueryloadglobaldict {
         my $dictname = shift;
         my $fh;
-        unless ( open $fh, "<:encoding(utf8)", $dictname ) {
+        unless ( open $fh, "<", $dictname ) {
             ::warnerror("Error opening Spell Query dictionary: $dictname");
             return 0;
         }
