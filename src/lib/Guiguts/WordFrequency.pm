@@ -953,8 +953,8 @@ sub charsortcheck {
         if ( $_ =~ /\t/ ) { $display{'*tab*'} = $chars{$_}; next }
         $display{$_} = $chars{$_};
     }
-    $display{'*newline*'} = $last_line - 2;
-    $display{'*space*'}   = $chars{' '};
+    $display{'*newline*'} = $last_line - 2 if $last_line > 2;
+    $display{'*space*'}   = $chars{' '}    if $chars{' '};
     $display{'*nbsp*'}    = $chars{"\xA0"} if $chars{"\xA0"};
     delete $display{"\xA0"}  if $chars{"\xA0"};
     delete $display{"\x{d}"} if $chars{"\x{d}"};
