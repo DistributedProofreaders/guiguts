@@ -122,8 +122,8 @@ sub html_convert_emdashes {
     # Use negative lookbehind for "<!" and negative lookahead for ">"
     ::named( '(?<!<!)--(?!>)', "\x{2014}" );
 
-    # Convert non-breaking space character to numeric entity, since character looks just like a regular space
-    ::named( "\x{A0}", '&#160;' );
+    # Convert non-breaking space character to named entity, since character looks just like a regular space
+    ::named( "\x{A0}", '&nbsp;' );
     return;
 }
 
@@ -852,17 +852,7 @@ sub html_convert_body {
         if ( $inblock || ( $selection =~ /^\s/ ) ) {
             if ($blkcenter) {
                 $selection =~ s/^\s+//;
-                $selection =~ s/  /&#160; /g;    # attempt to maintain multiple spaces
-                                                 # TODO - remove this commented section if not needed
-                                                 # if ($selection =~ /^$/) { # Blank line - replace with a paragraph break unless first/last line in block
-                                                 # my $stepm = $step - 1;
-                                                 # my $stepp = $step + 1;
-                                                 # unless ( $textwindow->get( "$stepm.0", "$stepm.end" ) =~ /^<p class="center">$/ or
-                                                 # $textwindow->get( "$stepp.0", "$stepp.end" ) =~ /^[Cc]\/$/ ) {
-                                                 # $selection =~ s/^$/<\/p><p class="center">/;
-                                                 # $addbr = 0;
-                                                 # }
-                                                 # }
+                $selection =~ s/  /&nbsp; /g;    # attempt to maintain multiple spaces
                 $textwindow->ntdelete( "$step.0", "$step.end" );
                 $textwindow->ntinsert( "$step.0", $selection );
 
@@ -877,7 +867,7 @@ sub html_convert_body {
                 # adjust length for conversions that have been done since the user did their alignment
                 # For each conversion, count the occurrences of the converted entity on the line
                 # then adjust for the number of characters that the conversion added or removed.
-                my $cnt = () = $selection =~ /&#160;/g;     # instead of non-breaking space
+                my $cnt = () = $selection =~ /&nbsp;/g;     # instead of non-breaking space
                 $len -= $cnt * 5;
                 $cnt = () = $selection =~ /&amp;/g;         # instead of ampersand
                 $len -= $cnt * 4;
@@ -893,7 +883,7 @@ sub html_convert_body {
                 $len -= $cnt * 6;
                 push( @blkrlens, $len );
                 $selection =~ s/^\s+//;
-                $selection =~ s/  /&#160; /g;               # attempt to maintain multiple spaces
+                $selection =~ s/  /&nbsp; /g;               # attempt to maintain multiple spaces
                 $textwindow->ntdelete( "$step.0", "$step.end" );
                 $textwindow->ntinsert( "$step.0", $selection );
 
@@ -903,7 +893,7 @@ sub html_convert_body {
             } elsif ( $selection =~ /^(\s+)/ ) {
                 $indent = ( length($1) / 2 );               # left margin of 1em for every 2 spaces
                 $selection =~ s/^\s+//;
-                $selection =~ s/  /&#160; /g;               # attempt to maintain multiple spaces
+                $selection =~ s/  /&nbsp; /g;               # attempt to maintain multiple spaces
                 $textwindow->ntdelete( "$step.0", "$step.end" );
                 $textwindow->ntinsert( "$step.0", $selection );
 
@@ -2834,15 +2824,15 @@ sub markup {
         ( $lsr, $lsc ) = split /\./, $thisblockstart;
         ( $ler, $lec ) = split /\./, $thisblockend;
         if ( $lsr eq $ler ) {
-            $textwindow->insert( 'insert', '&#160;' );
+            $textwindow->insert( 'insert', '&nbsp;' );
         } else {
             $step = $lsr;
             while ( $step <= $ler ) {
                 $selection = $textwindow->get( "$step.0", "$step.end" );
                 if ( $selection =~ /\s\s/ ) {
-                    $selection =~ s/^\s/&#160;/;
-                    $selection =~ s/  /&#160; /g;
-                    $selection =~ s/&#160; /&#160;&#160;/g;
+                    $selection =~ s/^\s/&nbsp;/;
+                    $selection =~ s/  /&nbsp; /g;
+                    $selection =~ s/&nbsp; /&nbsp;&nbsp;/g;
                     $textwindow->delete( "$step.0", "$step.end" );
                     $textwindow->insert( "$step.0", $selection );
                 }
@@ -3131,7 +3121,7 @@ sub clearmarkupinselection {
               if ( $selection =~ s/<span.*?margin-left: (\d+\.?\d?)em.*?>/' ' x ($1 *2)/e );
             $edited++ if ( $selection =~ s/<\/?span[^>]*?>//g );
             $edited++ if ( $selection =~ s/<\/?[hscalupt].*?>//g );
-            $edited++ if ( $selection =~ s/&#160;/ /g );
+            $edited++ if ( $selection =~ s/&nbsp;/ /g );
             $edited++ if ( $selection =~ s/<\/?blockquote>//g );
             $textwindow->delete( "$step.$lsc", "$step.$stepend" ) if $edited;
             $textwindow->insert( "$step.$lsc", $selection )       if $edited;
@@ -3463,7 +3453,7 @@ sub poetryhtml {
             $ler--;                                              # So there's one less line to process
             next;
         }
-        $selection =~ s/&#160;/ /g;
+        $selection =~ s/&nbsp;/ /g;
         my $indent = 0;
         $indent = length($1) if $selection =~ s/^(\s+)//;
         $textwindow->delete( "$step.0", "$step.$indent" ) if $indent;
