@@ -2272,11 +2272,18 @@ sub quicksearchpopup {
         -height => 15,
     )->pack( -side => 'left', -anchor => 'nw' );
     $::lglobal{statussearchtext} = '' unless defined $::lglobal{statussearchtext};
+
+    # If some text is selected, put the first line only in the quick search entry field
+    my @ranges = $textwindow->tagRanges('sel');
+    $::lglobal{statussearchtext} = $textwindow->get( $ranges[0], $ranges[1] ) if @ranges;
+    $::lglobal{statussearchtext} =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
+
     $::lglobal{quicksearchentry} = $::lglobal{'quicksearchpop'}->Entry(
         -width        => 12,
         -textvariable => \$::lglobal{statussearchtext},
     )->pack( -expand => 1, -fill => 'x', -side => 'top' );
-    $::lglobal{quicksearchentry}->bind( '<Return>',       sub { ::quicksearch(); } );
+    $::lglobal{quicksearchentry}->bind( '<Return>', sub { ::quicksearch(); } );
+    searchbind( $::lglobal{quicksearchpop}, '<Control-Shift-f>', sub { ::quicksearch(); } );    # Same shortcut as popping the dialog
     $::lglobal{quicksearchentry}->bind( '<Shift-Return>', sub { ::quicksearch('reverse'); } );
     $::lglobal{quicksearchentry}
       ->bind( '<Control-Return>', sub { ::quicksearch(); $::textwindow->focus; } );
