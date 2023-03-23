@@ -2277,7 +2277,9 @@ sub quicksearchpopup {
     $::lglobal{statussearchtext} = '' unless defined $::lglobal{statussearchtext};
 
     # If some text is selected, put the first line only in the quick search entry field
+    # then clear the selection so it doesn't get in the way of the search
     my @ranges = $textwindow->tagRanges('sel');
+    $textwindow->tagRemove( 'sel', '1.0', 'end' );
     $::lglobal{statussearchtext} = $textwindow->get( $ranges[0], $ranges[1] ) if @ranges;
     $::lglobal{statussearchtext} =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
 
