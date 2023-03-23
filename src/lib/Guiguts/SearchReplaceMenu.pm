@@ -2263,7 +2263,10 @@ sub quicksearchpopup {
     $::lglobal{quicksearchpop} = $top->Toplevel;
     $::lglobal{quicksearchpop}->title('Quick Search');
 
-    $::lglobal{quicksearchpop}->Button(
+    my $frame0 =
+      $::lglobal{'quicksearchpop'}
+      ->Frame->pack( -expand => 1, -fill => 'x', -side => 'top', -anchor => 'nw' );
+    $frame0->Button(
         -command => sub {
             ::entry_history( $::lglobal{quicksearchentry}, \@::quicksearch_history );
         },
@@ -2278,7 +2281,7 @@ sub quicksearchpopup {
     $::lglobal{statussearchtext} = $textwindow->get( $ranges[0], $ranges[1] ) if @ranges;
     $::lglobal{statussearchtext} =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
 
-    $::lglobal{quicksearchentry} = $::lglobal{'quicksearchpop'}->Entry(
+    $::lglobal{quicksearchentry} = $frame0->Entry(
         -width        => 12,
         -textvariable => \$::lglobal{statussearchtext},
     )->pack( -expand => 1, -fill => 'x', -side => 'top' );
@@ -2293,15 +2296,21 @@ sub quicksearchpopup {
     # Allow user to pop main S/R dialog while focused on Quicksearch dialog
     searchbind( $::lglobal{quicksearchpop}, '<Control-f>', sub { ::searchpopup(); } );
     searchbind( $::lglobal{quicksearchpop}, '<Meta-f>',    sub { ::searchpopup(); } ) if $::OS_MAC;
-    my $frame1 =
-      $::lglobal{'quicksearchpop'}
-      ->Frame->pack( -expand => 1, -fill => 'x', -padx => 0, -pady => 0, -side => 'top' );
+    my $frame1 = $::lglobal{'quicksearchpop'}->Frame->pack( -side => 'top', -anchor => 'nw' );
+    $::lglobal{quickcountbutton} = $frame1->Button(
+        -command => sub {
+            quicksearchcountmatches();
+        },
+        -text => '#',
+    )->pack( -side => 'left' );
+    searchbind( $::lglobal{quicksearchpop},
+        '<Control-b>', sub { $::lglobal{quickcountbutton}->invoke; } );
     $::lglobal{quicksearchbutton} = $frame1->Button(
         -command => sub {
             ::quicksearch( $::lglobal{searchreversetemp} );    # reverse variable set by Shift-Button-1 binding below
         },
         -text => 'Search',
-    )->grid( -row => 1, -column => 0, -padx => 1 );
+    )->pack( -side => 'left' );
 
     # Set and restore a temporary reverse flag to handle Shift-clicking on button
     # Regular button command (via class ButtonRelease-1) will be executed between these two events
@@ -2313,21 +2322,21 @@ sub quicksearchpopup {
     $frame1->Checkbutton(
         -variable => \\$::lglobal{statussearchnocase},
         -text     => 'Nocase',
-    )->grid( -row => 1, -column => 1, -padx => 1 );
+    )->pack( -side => 'left' );
     $frame1->Checkbutton(
         -variable => \\$::lglobal{statussearchword},
         -text     => 'Word',
         -command  => sub {
             $::lglobal{statussearchregex} = 0 if $::lglobal{statussearchword};    # Can't have word and regex
         },
-    )->grid( -row => 1, -column => 2, -padx => 1 );
+    )->pack( -side => 'left' );
     $frame1->Checkbutton(
         -variable => \\$::lglobal{statussearchregex},
         -text     => 'Regex',
         -command  => sub {
             $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Can't have word and regex
         },
-    )->grid( -row => 1, -column => 3, -padx => 1 );
+    )->pack( -side => 'left' );
 
     $::lglobal{quicksearchpop}->resizable( 'yes', 'no' );
     ::initialize_popup_without_deletebinding('quicksearchpop');
@@ -2343,6 +2352,55 @@ sub quicksearchpopup {
     $::lglobal{quicksearchentry}->focus;
     $::lglobal{quicksearchentry}->selectionRange( 0, 'end' );
     $::lglobal{quicksearchentry}->icursor('end');
+}
+
+#
+# Do a count, using the string and settings from the quicksearch dialog,
+# saving and restoring search settings in the main S/R dialog
+sub quicksearchcountmatches {
+    return if not defined $::lglobal{statussearchtext} or $::lglobal{statussearchtext} eq '';
+    my $textwindow = $::textwindow;
+
+    # save selection range to restore later
+    my @ranges = $textwindow->tagRanges('sel');
+
+    # save previous start & end of found text
+    my $savesearchstartindex = $::searchstartindex;
+    $::searchstartindex = '1.0';
+    my $savesearchendindex = $::searchendindex;
+
+    # save settings from main dialog
+    my @savesopt;
+    $savesopt[$_]                = $::sopt[$_] for ( 0 .. 4 );
+    $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Whole word and regex are mutually exclusive
+    $::sopt[0]                   = $::lglobal{statussearchword};
+    $::sopt[1]                   = $::lglobal{statussearchnocase};
+    $::sopt[2]                   = 0;                                     # set to forwards searching
+    $::sopt[3]                   = $::lglobal{statussearchregex};
+
+    # save selectionsearch flag and clear it
+    my $saveselectionsearch = $::lglobal{selectionsearch};
+    $::lglobal{selectionsearch} = 0;
+
+    my $count = 0;
+    ++$count while searchtext( $::lglobal{statussearchtext}, 2 );         # search very silently, counting matches
+    my $dlg = $::top->Dialog(
+        -text    => searchnumtext($count),
+        -bitmap  => "info",
+        -title   => "Count",
+        -buttons => ['Ok']
+    );
+    $dlg->Tk::bind( '<Escape>' => sub { $dlg->Subwidget('B_Ok')->invoke; } );
+    $dlg->Show;
+
+    # restore saved globals
+    $::searchstartindex         = $savesearchstartindex;
+    $::searchendindex           = $savesearchendindex;
+    $::sopt[$_]                 = $savesopt[$_] for ( 0 .. 4 );    # Restore main search settings
+    $::lglobal{selectionsearch} = $saveselectionsearch;
+
+    # restore selection range if there was one before counting
+    $textwindow->tagAdd( 'sel', shift(@ranges), shift(@ranges) ) if @ranges > 0;
 }
 
 1;
