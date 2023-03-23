@@ -444,7 +444,7 @@ sub bangmark {
     $::lglobal{wclistbox}->delete( '0', 'end' );
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
     $::lglobal{wclistbox}->update;
-    my $wholefile = slurpfile();
+    my $wholefile = $::textwindow->get( '1.0', 'end' );
 
     while (
         $wholefile =~ m/([\p{Alnum}\p{Mark}]+\.['"]?\n*\s*['"]?\p{Lower}[\p{Alnum}\p{Mark}]*)/g ) {
@@ -664,7 +664,7 @@ sub commark {
     $::lglobal{wclistbox}->delete( '0', 'end' );
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
     $::lglobal{wclistbox}->update;
-    my $wholefile = slurpfile();
+    my $wholefile = $::textwindow->get( '1.0', 'end' );
 
     if ($::intelligentWF) {
 
@@ -708,7 +708,7 @@ sub itwords {
     return if ( nofileloaded($top) );
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
     $::lglobal{wclistbox}->update;
-    my $wholefile = slurpfile();
+    my $wholefile = $::textwindow->get( '1.0', 'end' );
     $::markupthreshold = 0 unless $::markupthreshold;
 
     my $markuptypes = "i|I|b|B|sc|cite|em|strong|f|g|u";
@@ -920,47 +920,37 @@ sub charsortcheck {
     ::operationadd('Check Character Cnts');
     $top->Busy( -recurse => 1 );
     $::lglobal{wclistbox}->delete( '0', 'end' );
-    my %display = ();
-    my %chars;
-    my $index    = '1.0';
-    my $end      = $textwindow->index('end');
-    my $wordw    = 0;
-    my $filename = $textwindow->FileName;
     return if ( nofileloaded($top) );
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building list....' );
     $::lglobal{wclistbox}->update;
-    ::savefile() unless ( $textwindow->numberChanges == 0 );
-    open my $fh, '<', $filename;
 
-    while ( my $line = <$fh> ) {
-        utf8::decode($line);
-        $line =~ s/^\x{FEFF}?// if ( $. < 2 );    # Drop the BOM!
-        if ( $::lglobal{wf_ignore_case} ) { $line = lc($line) }
-        my @words = split( //, $line );
-        foreach (@words) {
-            $chars{$_}++;
-            $wordw++;
+    my $wholefile = $::textwindow->get( '1.0', 'end' );
+    $wholefile = lc($wholefile) if $::lglobal{wf_ignore_case};
+    my @words = split( //, $wholefile );    # Split into individual characters
+
+    my $wordw = 0;
+    my %chars;
+    foreach (@words) {
+        $chars{$_}++;
+        $wordw++;
+    }
+
+    # Replace some (whitespace) characters with a visible display name in the list
+    my %display = (
+        "\n"   => '*newline*',
+        " "    => '*space*',
+        "\xA0" => '*nbsp*',
+        "\t"   => '*tab*',
+    );
+    for my $dk ( keys %display ) {
+        if ( $chars{$dk} ) {
+            $chars{ $display{$dk} } = $chars{$dk};
+            delete $chars{$dk};
         }
-        $index++;
-        $index .= '.0';
     }
-    close $fh;
-    my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
-    $wordw += ( $last_line - 2 );
-    foreach ( keys %chars ) {
-        next if ( $chars{$_} < 1 );
-        next if ( $_ =~ / / );
-        if ( $_ =~ /\t/ ) { $display{'*tab*'} = $chars{$_}; next }
-        $display{$_} = $chars{$_};
-    }
-    $display{'*newline*'} = $last_line - 2 if $last_line > 2;
-    $display{'*space*'}   = $chars{' '}    if $chars{' '};
-    $display{'*nbsp*'}    = $chars{"\xA0"} if $chars{"\xA0"};
-    delete $display{"\xA0"}  if $chars{"\xA0"};
-    delete $display{"\x{d}"} if $chars{"\x{d}"};
-    delete $display{"\n"}    if $chars{"\n"};
+
     $::lglobal{wfsaveheader} = "$wordw characters in the file.";
-    sortanddisplaywords( \%display );
+    sortanddisplaywords( \%chars );
     @::wfsearchopt = qw/0 x x 0/;
     $top->Unbusy;
 }
@@ -1373,22 +1363,4 @@ sub add_navigation_events {
     );
 }
 
-#
-# Save current file, then read it all back in and return the text
-sub slurpfile {
-    my $textwindow = $::textwindow;
-    my $filename   = $textwindow->FileName;
-    my $wholefile;
-    ::savefile() unless ( $textwindow->numberChanges == 0 );
-    {
-        local $/;                               # slurp in the file
-        open my $fh, '<', $filename;
-        $wholefile = <$fh>;
-        close $fh;
-        utf8::decode($wholefile);
-        $wholefile =~ s/\cM\cJ|\cM|\cJ/\n/g;    # Need to convert line endings to suitable one for this platform
-    }
-    $wholefile =~ s/-----*\s?File:\s?\S+\.(png|jpg)---.*\r?\n?//g;
-    return $wholefile;
-}
 1;
