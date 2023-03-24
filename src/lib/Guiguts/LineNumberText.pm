@@ -359,13 +359,19 @@ sub _lincolupdate {
     # Now insert the column numbers
     if ( $w->{'ctext'}->ismapped ) {
 
-        # Note that on Mac, ROText widget appears to have a width limit of 192.
-        # If the string below is more than that, its first characters don't get displayed
-        my $ruler = substr(
-            "....,....1....,....2....,....3....,....4....,....5....,....6....,....7....,....8....,....9....,...10"
-              . "....,....1....,....2....,....3....,....4....,....5....,....6....,....7....,....8....,....9",
-            $leftcol
-        );
+        # Build ruler in blocks of 10 - "....,....N" where N represents ten columns.
+        # Note that column 100 is shown as 10, but column 110 is shown as 1 (not 11), i.e.
+        # "....,....1....,....2..etc..9....,...10....,....1....,....2..etc..9....,...20....,....1..etc"
+        my $ruler   = "";
+        my $first10 = int( $leftcol / 10 ) + 1;
+        my $last10  = $first10 + 18;              # On Mac, ROText widget has a width limit of 192, hence "18" tens
+        for my $col10 ( $first10 .. $last10 ) {
+            my $disp10 = $col10 % 10 ? $col10 % 10 : $col10;    # Only display single digit unless column 100, 200, etc.
+            $ruler .= sprintf( "%10d", $disp10 );
+        }
+        $ruler =~ s/ /./g;                                      # Finally replace all the spaces with periods
+        $ruler =~ s/\.\.\.\.\./....,/g;                         # and 5th period with a comma
+        $ruler = substr( $ruler, $leftcol % 10 );               # Offset if leftcol not a multiple of 10
         $w->{'ctext'}->delete( '1.0', 'end' );
         $w->{'ctext'}->insert( 'end', $ruler );
 
