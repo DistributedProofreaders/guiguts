@@ -1146,9 +1146,9 @@ sub fractionconvert {
     my @ranges = $textwindow->tagRanges('sel');
     if ( @ranges > 0 ) {
         $finish = pop(@ranges);
-        $textwindow->markSet( 'tempselend', $finish );
-        $start = pop(@ranges);
+        $start  = pop(@ranges);
     }
+    $textwindow->markSet( 'tempselend', $finish );    # Use mark instead of index for end - it moves as conversions are made
 
     my $length;
 
@@ -1174,10 +1174,8 @@ sub fractionconvert {
 
         # For types unicode and mixed, try first to convert straight to unicode fraction
         my $outfraction = '';
-        my $outlen      = $length;    # number of characters used to replace fraction
         if ( $type eq 'unicode' or $type eq 'mixed' ) {
             $outfraction = $unicode_fraction{"$numerator/$denominator"};
-            $outlen      = 1;
         }
 
         # If not converted to a unicode fraction, and type isn't unicode, use subscript/superscript
@@ -1187,7 +1185,6 @@ sub fractionconvert {
             $denominator =~
               tr/0123456789/\x{2080}\x{2081}\x{2082}\x{2083}\x{2084}\x{2085}\x{2086}\x{2087}\x{2088}\x{2089}/;
             $outfraction = "$numerator$fracslash$denominator";
-            $outlen      = length($outfraction);
         }
         if ($outfraction) {
             my $advance = '+' . length($outfraction) . 'c';
