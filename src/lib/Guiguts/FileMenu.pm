@@ -476,7 +476,7 @@ sub file_mark_pages {
         my $pagemark = 'Pg' . $page;
 
         # Standardize page separator line format if necessary
-        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)-----/ ) {
+        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)---/ ) {
             $textwindow->ntdelete( $linestart, $lineend );
             my $stdline = ( '-' x 5 ) . "File: $page.$ext";
             $stdline .= '-' x ( 75 - length($stdline) );
