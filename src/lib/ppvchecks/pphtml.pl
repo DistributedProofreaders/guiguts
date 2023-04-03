@@ -336,6 +336,7 @@ sub runProgram {
         foreach my $idx ( 0 .. $#css ) {
             my $cssdef = $css[$idx];
             $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
+            $cssdef =~ s/:{1,2}first-letter//;
             if ( $cssdef =~ /\b(p|body)\b/ ) {
                 next;
             }
@@ -354,6 +355,7 @@ sub runProgram {
             my $found = 0;
             foreach my $cssdef (@css) {
                 $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
+                $cssdef =~ s/:{1,2}first-letter//;
 
                 #        $cssdef =~ s/^.*?\.(.*)$/$1/;
                 if ( $cssdef =~ /\b(p)\b/ ) {    #/\b(p|body)\b/ ) {
