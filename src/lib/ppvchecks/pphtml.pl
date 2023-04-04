@@ -214,32 +214,19 @@ sub runProgram {
             }
             $intextbody = 1;
 
-            # special case <h?>
-            if (/<(h\d)/) {
-                my $h = $1;
-
-                #        $h =~ s/<(h\d).*$/$1/;
-                $classes_used{$h} += 1;
-                $classes_line{$h} = $count unless exists $classes_line{$h};
+            # special code to also allow storage of some HTML elements in list of classes
+            # so that CSS selectors using the element, rather than a class are not flagged
+            # erroneously as unused
+            for my $ele (qw(a blockquote h1 h2 h3 h4 h5 h6 hr img ins table)) {
+                if (/<($ele)[ >]/) {
+                    my $h = $1;
+                    $classes_used{$h} += 1;
+                    $classes_line{$h} = $count unless exists $classes_line{$h};
+                }
             }
 
-            # special case <table>
-            if (/<table/) {
-                $classes_used{"table"} += 1;
-                $classes_line{"table"} = $count unless exists $classes_line{"table"};
-            }
-            if (/<(block[a-z]*)/) {
-                my $h = $1;
-                $classes_used{$h} += 1;
-                $classes_line{$h} = $count unless exists $classes_line{$h};
-            }
-            if (/<ins/) {
-                $classes_used{"ins"} += 1;
-                $classes_line{"ins"} = $count unless exists $classes_line{"ins"};
-            }
             my $x = 0;
             while (/^.*? class=['"]([^'"]+)['"](.*)$/) {
-                my $kew = $_;
                 my $tmp = $2;
                 my @sp  = split( / /, $1 );
                 foreach my $t (@sp) {
@@ -303,7 +290,9 @@ sub runProgram {
             if ( $incss and /<\/style>/ ) {
                 $incss = 0;
             }
-            if ( $incss and /{/ ) {
+
+            # Either "{" on same line as class name, or on its own on next line
+            if ( $incss and /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
                 push @css,     $_;
                 push @cssline, $count;
             }
@@ -314,7 +303,8 @@ sub runProgram {
         foreach my $idx ( 0 .. $#css ) {
             my $cssdef = $css[$idx];
             my $count  = $cssline[$idx];
-            $cssdef =~ s/^(.*?)\{.*$/$1/;
+            $cssdef =~ s/\@media\s+[^\{]+\{//;    # Remove any @media query
+            $cssdef =~ s/^(.*?)\{.*$/$1/;         # Remove any declaration block
             $cssdef = trim($cssdef);
             my @sp = split( /,/, $cssdef );
             foreach my $t (@sp) {
