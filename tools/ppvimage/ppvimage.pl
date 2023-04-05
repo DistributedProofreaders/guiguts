@@ -666,9 +666,11 @@ sub runProgram {
             print LOGFILE ("\n\n");
             logprint( "NOTE: epub cover will be $imgcover", $imgcoverline, "INFO" );
 
-            # warn if not jpg or smaller than minimum width & height
-            if ( not( $imgcover =~ m/\.jpe?g$/ ) ) {
-                logprint( "WARNING: epub cover should be jpg", $imgcoverline, "KEY" );
+            # warn if not jpg/png or smaller than minimum width & height
+            my $jpgcover = $imgcover =~ m/\.jpe?g$/;
+            my $pngcover = $imgcover =~ m/\.png$/;
+            if ( not( $jpgcover or $pngcover ) ) {
+                logprint( "WARNING: epub cover should be jpg or png", $imgcoverline, "KEY" );
             } else {
                 $coverfile = File::Spec->catfile( dirname($srctext), $imgcover );
                 open( IMGFILE, "<", $coverfile ) || do {
@@ -676,7 +678,7 @@ sub runProgram {
                     return 0;
                 };
                 binmode(IMGFILE);
-                ( $x, $y ) = jpegsize( \*IMGFILE );
+                ( $x, $y ) = $jpgcover ? jpegsize( \*IMGFILE ) : pngsize( \*IMGFILE );
                 if ( ( $x < MINCOVERWD ) or ( $y < MINCOVERHT ) ) {
                     logprint(
                         "  WARNING: epub cover should be at least " . MINCOVERWD . "x" . MINCOVERHT,
