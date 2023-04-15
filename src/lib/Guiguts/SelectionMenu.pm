@@ -96,7 +96,8 @@ sub indexwrapper {
 
         # if start and end of markup - just preserve - don't indent
         if ( $notpmline =~ /^([Ii]\/|\/[Ii])$/ ) {
-            $rewrapped .= $line . "\n";
+            $rewrapped .= $line;
+            $rewrapped .= "\n" if $notpmline =~ /^\/[Ii]$/;    # Open markup needs a newline, close doesn't
             next;
         }
 
