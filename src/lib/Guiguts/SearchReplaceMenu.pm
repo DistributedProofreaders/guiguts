@@ -59,8 +59,10 @@ sub searchtext {
 
     # this is starting a search within a selection
     if ( $range_total > 0 ) {
-        $end                        = pop(@ranges);
-        $start                      = pop(@ranges);
+        $end   = pop(@ranges);
+        $start = pop(@ranges);
+        $textwindow->markSet( 'searchendmark', $end );      # Mark end of selection
+        $end                        = 'searchendmark';      # Use mark instead of line number in case replace adds/deletes lines
         $::lglobal{selectionsearch} = $end;
         $::searchstartindex         = $end if $::sopt[2];
 
