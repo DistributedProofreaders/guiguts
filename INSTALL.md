@@ -135,9 +135,11 @@ from the old `lib` directory to the new one, e.g. copy the `Tk` directory from
 ## MacOS
 
 To use Guiguts you need to be running macOS High Sierra (10.13) or higher.
-Running Guiguts on MacOS requires installing the following pieces of software.
-The list may seem intimidating but it's rather straightforward and only needs
-to be done once. These instructions walk you through it.
+If you're running a version of macOS that is newer than that, but out of
+support by Apple, you may get warnings about some components no longer
+working. Running Guiguts on macOS requires installing the following pieces
+of software. The list may seem intimidating but it's rather straightforward
+and only needs to be done once. These instructions walk you through it.
 
 * Guiguts code
 * [Xcode Command Line Tools](https://developer.apple.com/library/archive/technotes/tn2339/_index.html)
@@ -145,15 +147,16 @@ to be done once. These instructions walk you through it.
 * [XQuartz](https://www.xquartz.org/)
 * Perl & [Perl modules](#perl-modules)
 
-This is necessary because the version of Perl that comes with MacOS does not
+This is necessary because the version of Perl that comes with macOS does not
 have the necessary header files to build the Perl package dependencies that
 Guiguts requires.
 
 ### Extracting Guiguts
 
-Unzip `guiguts-mac-n.n.n.zip` to some location on your computer (double click the
-zip file in Finder or run `unzip guiguts-mac-n.n.n.zip` on the command line). You
-can move the `guiguts` directory it creates to anywhere you want. A common place
+Download and unzip `guiguts-mac-n.n.n.zip` to some location on your
+computer (double click the zip file in Finder or run
+`unzip guiguts-mac-n.n.n.zip` on the command line). You can move the
+`guiguts` directory it creates to anywhere you want. A common place
 for this is your home directory.
 
 ### XCode Command Line Tools
@@ -170,7 +173,7 @@ xcode-select --install
 
 ### Homebrew
 
-[Homebrew](https://brew.sh/) is a package manager for MacOS that provides the
+[Homebrew](https://brew.sh/) is a package manager for macOS that provides the
 version of Perl and relevant Perl modules that Guiguts needs. To install it,
 your user account must have Administrator rights on the computer.
 
@@ -181,7 +184,12 @@ Open Terminal.app and install Homebrew with:
 ```
 
 You will be prompted for your password and walked through the installation.
-You can accept the defaults it presents to you.
+You can accept the defaults it presents to you. The prompt for your password
+will probably show a small key icon, and will not display any characters as
+you type in your password.
+
+If you already have homebrew installed, it's a good idea to update/upgrade
+it before starting this process.
 
 ### XQuartz
 
@@ -193,8 +201,8 @@ via the link _or_ install it with Homebrew using:
 brew install --cask xquartz
 ```
 
-After you install XQuartz, you must **log out and back in** before Guiguts can
-use it as the X11 server.
+After you install XQuartz, you must ***log out and back in*** to your account
+on your computer, or reboot, before Guiguts can use it as the X11 server.
 
 There are a couple of X11 preferences that can be useful for GG users.
 
@@ -215,8 +223,13 @@ brew install cpanm
 ```
 
 Close Terminal.app and reopen it to ensure that the brew-installed perl is on
-your path. Then install all the necessary [Perl modules](#perl-modules). This
-is most easily done by running the helper script:
+your path.
+
+Then install all the necessary [Perl modules](#perl-modules).
+
+In a Terminal window, navigate to your guiguts folder. There should be a
+file named `install_cpan_modules.pl` in the directory. Installing these
+modules is most easily done by running the helper script:
 
 ```
 perl install_cpan_modules.pl
