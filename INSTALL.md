@@ -132,7 +132,7 @@ from the old `lib` directory to the new one, e.g. copy the `Tk` directory from
 `C:\dp\guiguts\guiguts-win-1.0.25\lib` to `C:\dp\guiguts\guiguts-win-1.1.0\lib`
 
 
-## MacOS
+## macOS
 
 To use Guiguts you need to be running macOS High Sierra (10.13) or higher.
 If you're running a version of macOS that is newer than that, but out of
@@ -296,7 +296,7 @@ perl guiguts.pl
 
 Follow the instructions in the
 [Preserving settings and customizations](#preserving-settings-and-customizations) 
-section for MacOS above. Your GGprefs folder will be `$HOME/.GGprefs`.
+section for macOS above. Your GGprefs folder will be `$HOME/.GGprefs`.
 
 ## Using Guiguts from a Git checkout
 
