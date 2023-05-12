@@ -391,6 +391,7 @@ sub clearpopups {
     ::killpopup('footcheckpop');
     ::killpopup('htmlgenpop');
     ::killpopup('pagelabelpop');
+    ::killpopup('errorcheckpop');
 }
 
 #

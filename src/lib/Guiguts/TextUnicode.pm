@@ -857,4 +857,18 @@ sub AutoScan {
     $w->RepeatId( $w->after( 70, [ 'AutoScan', $w ] ) );
 }
 
+#
+# Override TextUndo::undo and redo so we can flag it to any routines that need to know
+sub undo {
+    my ($self) = @_;
+    $self->SUPER::undo();
+    ::errorcheckilloupdateneeded();
+}
+
+sub redo {
+    my ($self) = @_;
+    $self->SUPER::redo();
+    ::errorcheckilloupdateneeded();
+}
+
 1;

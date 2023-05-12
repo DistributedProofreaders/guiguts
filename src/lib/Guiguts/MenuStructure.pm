@@ -480,28 +480,28 @@ sub menu_tools {
         ],
         [
             'command',
-            'Unmatched DP Ta~g Check',
+            'Unmatched DP Ta~g Check...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Unmatched DP Tags' );
             }
         ],
         [
             'command',
-            'Unmatche~d Brackets Check',
+            'Unmatche~d Brackets Check...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Unmatched Brackets' );
             }
         ],
         [
             'command',
-            'Unmatched ~Block Markup Check',
+            'Unmatched ~Block Markup Check...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Unmatched Block Markup' );
             }
         ],
         [
             'command',
-            'Load Checkf~ile...',
+            'Load Checkfile~...',
             -command => sub {
                 ::errorcheckpop_up( $textwindow, $top, 'Load Checkfile' );
             }
@@ -509,6 +509,13 @@ sub menu_tools {
         [ 'separator', '' ],
         [ 'command',   '~Footnote Fixup...', -command => \&::footnotepop ],
         [ 'command',   '~Sidenote Fixup...', -command => \&::sidenotes ],
+        [
+            'command',
+            '~Illustration Fixup...',
+            -command => sub {
+                ::errorcheckpop_up( $textwindow, $top, 'Illustration Fixup' );
+            }
+        ],
         [
             'command',
             'Replace [::] ~with Incremental Counter',
@@ -923,6 +930,12 @@ sub menu_bookmarks {
                 -accelerator => "Ctrl+$_"
             ],
             ( 1 .. 5 ) ),
+        [ 'separator', '' ],
+        [
+            'command', 'Jump To Next System ~Bookmark',
+            -command     => [ \&::gotobookmarksystem ],
+            -accelerator => "Ctrl+Shift+j",
+        ],
     ];
 }
 

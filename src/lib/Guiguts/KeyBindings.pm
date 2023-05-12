@@ -273,6 +273,7 @@ sub keybindings {
     keybind( '<Control-KeyPress-3>',           sub { ::gotobookmark('3'); } );
     keybind( '<Control-KeyPress-4>',           sub { ::gotobookmark('4'); } );
     keybind( '<Control-KeyPress-5>',           sub { ::gotobookmark('5'); } );
+    keybind( '<Control-Shift-j>',              sub { ::gotobookmarksystem(); } );
 
     # Compose - define last since user could set the compose key to one of the above that they never use
     keybind( "<$::composepopbinding>", sub { ::composepopup(); } );
