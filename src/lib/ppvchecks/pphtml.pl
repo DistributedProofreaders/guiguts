@@ -214,17 +214,6 @@ sub runProgram {
             }
             $intextbody = 1;
 
-            # special code to also allow storage of some HTML elements in list of classes
-            # so that CSS selectors using the element, rather than a class are not flagged
-            # erroneously as unused
-            for my $ele (qw(a blockquote h1 h2 h3 h4 h5 h6 hr img ins table)) {
-                if (/<($ele)[ >]/) {
-                    my $h = $1;
-                    $classes_used{$h} += 1;
-                    $classes_line{$h} = $count unless exists $classes_line{$h};
-                }
-            }
-
             my $x = 0;
             while (/^.*? class=['"]([^'"]+)['"](.*)$/) {
                 my $tmp = $2;
@@ -235,8 +224,6 @@ sub runProgram {
                 }
                 $x = $x + 1;
                 $_ = $tmp;
-
-                #        s/class/-----/;
             }
         }
 
@@ -284,12 +271,8 @@ sub runProgram {
         my $count        = 0;
         foreach $_ (@book) {
             $count++;
-            if (/<style/) {
-                $incss = 1;
-            }
-            if ( $incss and /<\/style>/ ) {
-                $incss = 0;
-            }
+            $incss = 1 if /<style/;
+            last       if ( $incss and /<\/style>/ );
 
             # Either "{" on same line as class name, or on its own on next line
             if ( $incss and /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
@@ -317,52 +300,40 @@ sub runProgram {
                 unshift( @splitcssline, $count )    # Continue to align CSS array with line number array
             }
         }
+
+        # Tidy up list of classes defined in CSS
+        foreach (@splitcss) {
+            s/^.*?\.?([^\. ]+)$/$1/;
+            s/:{1,2}first-letter//;
+        }
         @css     = @splitcss;
         @cssline = @splitcssline;
     }
 
+    # Warn about classes unless they are used/defined, or ones we want to ignore, or ebookmaker specials
     sub css_crosscheck {
         print LOGFILE ("----- CSS crosscheck -----\n");
         foreach my $idx ( 0 .. $#css ) {
-            my $cssdef = $css[$idx];
-            $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
-            $cssdef =~ s/:{1,2}first-letter//;
-            if ( $cssdef =~ /\b(p|body)\b/ ) {
-                next;
-            }
-            my $found = 0;
-            foreach my $cssused ( keys %classes_used ) {
-                if ( $cssused eq $cssdef ) {
-                    $found++;
-                }
-            }
-            if ( ( not $found ) and ( $cssdef !~ /^x-ebookmaker/ ) ) {    # Don't report ebookmaker control classes
-                printf LOGFILE ( "%d:0 CSS possibly not used: %s\n", $cssline[$idx], $cssdef );
-            }
+            printf LOGFILE ( "%d:0 CSS possibly not used: %s\n", $cssline[$idx], $css[$idx] )
+              unless classisknown( $css[$idx], keys %classes_used );
         }
-
         foreach my $cssused ( sort keys %classes_used ) {
-            my $found = 0;
-            foreach my $cssdef (@css) {
-                $cssdef =~ s/^.*?\.?([^\. ]+)$/$1/;
-                $cssdef =~ s/:{1,2}first-letter//;
-
-                #        $cssdef =~ s/^.*?\.(.*)$/$1/;
-                if ( $cssdef =~ /\b(p)\b/ ) {    #/\b(p|body)\b/ ) {
-                    next;
-                }
-                if ( $cssused eq $cssdef ) {
-                    $found++;
-                }
-            }
-            if (    ( not $found )
-                and ( $cssused ne "blockquote" )
-                and ( $cssused !~ /^x-ebookmaker/ ) ) {    # Don't report ebookmaker control classes
-                printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
-                    $cssused );
-            }
+            printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
+                $cssused )
+              unless classisknown( $cssused, @css );
         }
+    }
 
+    # Return true if class/element is in given list (i.e. used/defined)
+    # or if it's one we want to ignore, or it's a special ebookmaker class
+    sub classisknown {
+        my $class = shift;
+        my @list  = shift;
+        return (
+            grep      { $_ eq $class } @list                                                       # class is used/defined
+              or grep { $_ eq $class } qw(a blockquote body h1 h2 h3 h4 h5 h6 hr img ins p table)  # ignore these element names
+              or $class =~ /^x-ebookmaker/                                                         # special ebookmaker class
+        );
     }
 }
 
