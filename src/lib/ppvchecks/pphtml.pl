@@ -330,9 +330,10 @@ sub runProgram {
         my $class = shift;
         my @list  = shift;
         return (
-            grep      { $_ eq $class } @list                                                       # class is used/defined
-              or grep { $_ eq $class } qw(a blockquote body h1 h2 h3 h4 h5 h6 hr img ins p table)  # ignore these element names
-              or $class =~ /^x-ebookmaker/                                                         # special ebookmaker class
+            grep      { $_ eq $class } @list                                    # class is used/defined
+              or grep { $_ eq $class }
+              qw(a blockquote body div h1 h2 h3 h4 h5 h6 hr img ins p table)    # ignore these element names
+              or $class =~ /^x-ebookmaker/                                      # special ebookmaker class
         );
     }
 }
