@@ -4,7 +4,6 @@ Beginning check: pphtml
 6:0 The Streets Of Ascalon | Project Gutenberg
 7:0 </title>
 14:0 CSS possibly not used: unusedcss
-24:0 CSS possibly not defined: h1
 23:0 CSS possibly not defined: pagenum
 26:0 Unconverted illustration: <p>[Illustration: "She excused the witness and turned her back to the
 Check is complete: pphtml
