@@ -1584,6 +1584,9 @@ sub html_wrapup {
     ::named( '<blockquote>',  '<div class="blockquot">' ) if $cssblockmarkup;
     ::named( '</blockquote>', '</div>' )                  if $cssblockmarkup;
 
+    # wrap very long lines, e.g. caused by page links in index
+    html_wrap_long_lines();
+
     # Output poetry indent CSS.
     # Find end of CSS, then search back for end of last class definition
     # Insert classes stored earlier in reverse order, preceded by a comment header
@@ -1602,6 +1605,36 @@ sub html_wrapup {
     $textwindow->Unbusy;
     $textwindow->see('1.0');
     return;
+}
+
+#
+# Wrap very long lines in source code - particularly a problem for index lines with many page references
+# If line length > 200 characters, search back from 200th character to find a
+# closing HTML tag with a space after it, then insert a newline and some indenting spaces
+sub html_wrap_long_lines {
+    my $WRAP_LIMIT = 200;
+    my $INS_REG    = "</[a-zA-Z0-9]+>[^ <]* ";    # Space following close tag, maybe with other text first, but not another tag
+    my $textwindow = $::textwindow;
+
+    # Find long lines
+    # OK to use previous index for search start since only adding newlines, never removing them
+    my $index = '1.0';
+    while ( $index =
+        $textwindow->search( '-regexp', '--', "^.{$WRAP_LIMIT,}", "$index lineend", 'end' ) ) {
+
+        # Find the close tag with space after it just prior to wrap limit
+        my $matchlen;
+        if (
+            my $inspoint = $textwindow->search(
+                '-regexp', '-backwards',
+                '-count' => \$matchlen,
+                '--', $INS_REG, "$index +${WRAP_LIMIT}c", $index
+            )
+        ) {
+            $inspoint .= "+" . ( $matchlen - 1 ) . "c";    # Insert newline plus extra indent before the space
+            $textwindow->insert( $inspoint, "\n   " );
+        }
+    }
 }
 
 #
@@ -3249,6 +3282,9 @@ sub autoindex {
     }
     $textwindow->insert( "$ler.end", "\n</ul>\n" );
     $textwindow->insert( "$lsr.0",   "<ul class=\"index\">\n" );
+
+    # Wrap in case any long lines generated - will wrap any other long lines too, but that's OK
+    html_wrap_long_lines();
     $textwindow->addGlobEnd;
 }
 
