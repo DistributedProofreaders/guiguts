@@ -16,8 +16,9 @@ BEGIN {
       &deaccentsort &deaccentdisplay &escapeforperlstring &readlabels &working &initialize &initialize_popup_with_deletebinding
       &initialize_popup_without_deletebinding &titlecase &os_normal &escape_problems &natural_sort_alpha
       &natural_sort_length &natural_sort_freq &drag &cut &paste &entrypaste &textcopy &colcut &colcopy &colpaste &showversion
-      &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark &seeindex &ebookmaker
-      &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
+      &checkforupdates &checkforupdatesmonthly &gotobookmark &setbookmark
+      &clearbookmarksystem &setbookmarksystem  &unsetbookmarksystem &gotobookmarksystem
+      &seeindex &ebookmaker &sidenotes &poetrynumbers &get_page_number &externalpopup &add_entry_history &entry_history
       &xtops &toolbar_toggle &killpopup &expandselection
       &getprojectid &setprojectid &viewprojectcomments &viewprojectdiscussion &viewprojectpage
       &scrolldismiss &updatedrecently &hidelinenumbers &restorelinenumbers &displaylinenumbers &displaycolnumbers
@@ -27,6 +28,8 @@ BEGIN {
       &path_userhtmlheader &processcommandline &copysettings &main_lang &list_lang &setwidgetdefaultoptions);
 
 }
+
+my $BKMKSYSTEM = "bkmksystem";    # String used at start of temporary system bookmarks
 
 #
 # Get name of scan file for given page number
@@ -2439,6 +2442,42 @@ sub gotobookmark {
         $textwindow->see("bkmk$bookmark");
         $textwindow->markSet( 'insert', "bkmk$bookmark" );
         $textwindow->tagAdd( 'bkmk', "bkmk$bookmark", "bkmk$bookmark+1c" );
+    } else {
+        ::soundbell();
+    }
+}
+
+#
+# Set a temporary system bookmark with given suffix
+sub setbookmarksystem {
+    my $suffix = shift;
+    my $index  = shift;
+    $::textwindow->markSet( "$BKMKSYSTEM$suffix", $index );
+}
+
+#
+# Unset the temporary system bookmark with given suffix
+sub unsetbookmarksystem {
+    my $suffix = shift;
+    $::textwindow->markUnset("$BKMKSYSTEM$suffix");
+}
+
+#
+# Go to next temporary system bookmark
+sub gotobookmarksystem {
+    my $textwindow = $::textwindow;
+
+    # Check marks from insert position to end of file, then from top back to insert position
+    my $mark  = 'insert+1c';
+    my $found = 0;
+    while ( $mark ne 'insert' and not $found ) {    # Keep looking until we return to insert position
+        $mark  = $textwindow->markNext($mark);
+        $mark  = '1.0' if not $mark;                # Start from beginning again if we hit end of file
+        $found = $mark =~ /^$BKMKSYSTEM/;
+    }
+    if ($found) {
+        $textwindow->see($mark);
+        $textwindow->markSet( 'insert', $mark );
     } else {
         ::soundbell();
     }
