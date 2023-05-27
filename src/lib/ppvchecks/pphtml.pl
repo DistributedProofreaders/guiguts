@@ -286,11 +286,13 @@ sub runProgram {
         foreach my $idx ( 0 .. $#css ) {
             my $cssdef = $css[$idx];
             my $count  = $cssline[$idx];
-            $cssdef =~ s/\@media\s+[^\{]+\{//;    # Remove any @media query
-            $cssdef =~ s/^(.*?)\{.*$/$1/;         # Remove any declaration block
+            $cssdef =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
+            $cssdef =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
             $cssdef = trim($cssdef);
-            my @sp = split( /,/, $cssdef );
+            my @sp = split( /[,\+ ]/, $cssdef );    # Split selectors like "class1, class2", "p+p", ".myclass p"
             foreach my $t (@sp) {
+                next unless $t;
+                next if $t =~ /^#/;                 # Id selector, not class
                 printf LOGFILE ( "- %-19s", $t );
                 $ccount++;
                 if ( $ccount % 4 == 3 ) {
@@ -328,12 +330,16 @@ sub runProgram {
     # or if it's one we want to ignore, or it's a special ebookmaker class
     sub classisknown {
         my $class = shift;
-        my @list  = shift;
+        my @list  = @_;
         return (
-            grep      { $_ eq $class } @list                                    # class is used/defined
-              or grep { $_ eq $class }
-              qw(a blockquote body div h1 h2 h3 h4 h5 h6 hr img ins p table)    # ignore these element names
-              or $class =~ /^x-ebookmaker/                                      # special ebookmaker class
+            grep      { $_ eq $class } @list    # class is used/defined
+              or grep { $_ eq $class }          # ignore these element names
+              qw(
+              a abbr b blockquote body br caption div em
+              figcaption figure h1 h2 h3 h4 h5 h6 hr i img
+              ins li ol p section span strong table td th tr ul
+              )
+              or $class =~ /^x-ebookmaker/      # special ebookmaker class
         );
     }
 }
