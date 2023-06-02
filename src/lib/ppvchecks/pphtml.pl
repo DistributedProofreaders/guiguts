@@ -295,7 +295,7 @@ sub runProgram {
             $cssdef =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
             $cssdef =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
             $cssdef = trim($cssdef);
-            my @sp = split( /[,\+ ]/, $cssdef );    # Split selectors like "class1, class2", "p+p", ".myclass p"
+            my @sp = split( /[.,+ ]/, $cssdef );    # Split selectors like "h6.center", "class1, class2", "p+p", ".myclass p"
             foreach my $t (@sp) {
                 next unless $t;
                 next if $t =~ /^#/;                 # Id selector, not class
