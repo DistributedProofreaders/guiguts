@@ -1152,7 +1152,6 @@ sub initialize {
     $::lglobal{wf_ignore_case}     = 0;
     $::lglobal{lastmatchindex}     = '1.0';
     $::lglobal{lastsearchterm}     = '';
-    $::lglobal{longordlabel}       = 0;
     $::lglobal{ordmaxlength}       = 1;
     $::lglobal{pageanch}           = 1;                           # HTML convert - add page anchors
     $::lglobal{pagecmt}            = 0;                           # HTML convert - page markers as comments

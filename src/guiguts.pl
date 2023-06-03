@@ -160,6 +160,7 @@ our $jeebiesmode            = 'p';
 our $lastversioncheck       = time();
 our $lastversionrun         = $VERSION;
 our $lmargin                = 0;
+our $longordlabel           = 0;
 our $markupthreshold        = 4;
 our $multisearchsize        = 3;
 our $nobell                 = 0;
