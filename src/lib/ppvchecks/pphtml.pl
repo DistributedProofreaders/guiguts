@@ -24,6 +24,14 @@ my $filename;
 my $frm_detail;
 my $detailLevel;
 
+# Following elements are reported if CSS uses element as selector, but element isn't used in body,
+# but not reported if element is used in body without any related CSS
+my @elements = qw(
+  a abbr b blockquote body br caption div em
+  figcaption figure h1 h2 h3 h4 h5 h6 hr i img
+  ins li ol p section span strong table td th tr ul
+);
+
 usage()
   if (
     !GetOptions(
@@ -207,23 +215,25 @@ sub runProgram {
         print LOGFILE ("----- classes used -----\n");
         my $intextbody = 0;
         my $count      = 0;
-        foreach $_ (@book) {
+        foreach my $line (@book) {
             $count++;
-            if ( not $intextbody and not /<body/ ) {
+            if ( not $intextbody and not $line =~ /<body/ ) {
                 next;
             }
             $intextbody = 1;
 
-            my $x = 0;
-            while (/^.*? class=['"]([^'"]+)['"](.*)$/) {
-                my $tmp = $2;
-                my @sp  = split( / /, $1 );
-                foreach my $t (@sp) {
+            foreach my $element (@elements) {
+                while ( $line =~ /<$element/g ) {
+                    $classes_used{$element} += 1;
+                    $classes_line{$element} = $count unless exists $classes_line{$element};
+                }
+            }
+
+            while ( $line =~ /class *= *['"]([^'"]+)['"]/g ) {
+                foreach my $t ( split( / /, $1 ) ) {
                     $classes_used{$t} += 1;
                     $classes_line{$t} = $count unless exists $classes_line{$t};
                 }
-                $x = $x + 1;
-                $_ = $tmp;
             }
         }
 
@@ -237,17 +247,13 @@ sub runProgram {
         print LOGFILE ("----- styles used -----\n");
         my %hash       = ();
         my $intextbody = 0;
-        foreach $_ (@book) {
-            if ( not $intextbody and not /<body>/ ) {
+        foreach my $line (@book) {
+            if ( not $intextbody and not $line =~ /<body>/ ) {
                 next;
             }
             $intextbody = 1;
-            while (/style=['"]/) {
-                my $tmp = $_;
-                s/^.*? style=['"](.*?)['"].*$/$1/;
-                $hash{$_} += 1;
-                $_ = $tmp;
-                s/style/-----/;
+            while ( $line =~ /style *= *['"]([^'"]+)['"]/g ) {
+                $hash{$1} += 1;
             }
         }
         foreach my $key ( keys %hash ) {
@@ -289,7 +295,7 @@ sub runProgram {
             $cssdef =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
             $cssdef =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
             $cssdef = trim($cssdef);
-            my @sp = split( /[,\+ ]/, $cssdef );    # Split selectors like "class1, class2", "p+p", ".myclass p"
+            my @sp = split( /[.,+ ]/, $cssdef );    # Split selectors like "h6.center", "class1, class2", "p+p", ".myclass p"
             foreach my $t (@sp) {
                 next unless $t;
                 next if $t =~ /^#/;                 # Id selector, not class
@@ -302,6 +308,7 @@ sub runProgram {
                 unshift( @splitcssline, $count )    # Continue to align CSS array with line number array
             }
         }
+        print LOGFILE ("\n");
 
         # Tidy up list of classes defined in CSS
         foreach (@splitcss) {
@@ -322,24 +329,20 @@ sub runProgram {
         foreach my $cssused ( sort keys %classes_used ) {
             printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
                 $cssused )
-              unless classisknown( $cssused, @css );
+              unless classisknown( $cssused, @css )
+              or grep { $_ eq $cssused } @elements    # don't report elements for not having CSS
+
         }
     }
 
-    # Return true if class/element is in given list (i.e. used/defined)
-    # or if it's one we want to ignore, or it's a special ebookmaker class
+    # Return true if class is in given list (i.e. used/defined)
+    # or it's a special ebookmaker class
     sub classisknown {
         my $class = shift;
         my @list  = @_;
         return (
-            grep      { $_ eq $class } @list    # class is used/defined
-              or grep { $_ eq $class }          # ignore these element names
-              qw(
-              a abbr b blockquote body br caption div em
-              figcaption figure h1 h2 h3 h4 h5 h6 hr i img
-              ins li ol p section span strong table td th tr ul
-              )
-              or $class =~ /^x-ebookmaker/      # special ebookmaker class
+            grep { $_ eq $class } @list       # class is used/defined
+              or $class =~ /^x-ebookmaker/    # special ebookmaker class
         );
     }
 }
