@@ -1932,6 +1932,12 @@ sub unmatchedblockrun {
         $textwindow->addGlobStart;
         my $end      = $illo->{end} . '+1l linestart';
         my $illotext = $textwindow->get( $illo->{start}, $end );
+
+        # If illo is mid-paragraph and it has a blank line after it, that should be deleted
+        if (    $illo->{error} == $ILLOERRORMIDPARA
+            and $textwindow->get( $end, "$end lineend" ) eq "" ) {
+            $end .= '+1l';
+        }
         $textwindow->delete( $illo->{start}, $end );
 
         # Use system bookmarks to aid user jumping between old & new locations
