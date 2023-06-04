@@ -490,6 +490,7 @@ sub spelladdgoodwords {
     }
 
     # Remove all newlines and/or carriage returns whatever the current OS
+    ::busy();
     my @raw_data = map { s/[\n\r]+$//g; $_ } <DAT>;
     close(DAT);
     chdir $pwd;
@@ -497,6 +498,7 @@ sub spelladdgoodwords {
     foreach my $word (@raw_data) {
         spellmyaddword($word);
     }
+    ::unbusy();
 }
 
 #
