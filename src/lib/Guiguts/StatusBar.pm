@@ -6,7 +6,7 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&_updatesel &buildstatusbar &togglelongordlabel &seecurrentimage
+    @EXPORT = qw(&_updatesel &buildstatusbar &seecurrentimage
       &setlang &selection &gotoline &gotopage &gotolabel &set_auto_img);
 }
 
@@ -316,7 +316,8 @@ AAAAACH5BAAAAAAALAAAAAAMAAwAAwQfMMg5BaDYXiw178AlcJ6VhYFXoSoosm7KvrR8zfXHRQA7
         '<1>',
         sub {
             $::lglobal{ordinallabel}->configure( -relief => 'sunken' );
-            ::togglelongordlabel();
+            $::longordlabel = 1 - $::longordlabel;
+            ::savesettings();
         }
     );
 
@@ -416,7 +417,7 @@ sub update_ordinal_button {
     my $textwindow = $::textwindow;
     my $ordinal    = ord( $textwindow->get('insert') );
     my $hexi       = uc sprintf( "%04x", $ordinal );
-    if ( $::lglobal{longordlabel} ) {
+    if ($::longordlabel) {
         my $msg   = charnames::viacode($ordinal) || '';
         my $msgln = length(" Dec $ordinal : Hex $hexi : $msg ");
         $::lglobal{ordmaxlength} = $msgln
@@ -432,12 +433,6 @@ sub update_ordinal_button {
             -width => 18
         ) if ( $::lglobal{ordinallabel} );
     }
-}
-
-#
-# Toggle whether character name is shown in ordinal label
-sub togglelongordlabel {
-    $::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
 }
 
 #

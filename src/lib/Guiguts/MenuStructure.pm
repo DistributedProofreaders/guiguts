@@ -1127,13 +1127,10 @@ sub menu_preferences_toolbar {
         [ 'separator', '' ],
         [
             Checkbutton => 'Display Character Names',
-            -variable   => \$::lglobal{longordlabel},
+            -variable   => \$::longordlabel,
             -command    => sub {
-                $::lglobal{longordlabel} = 1 - $::lglobal{longordlabel};
-                ::togglelongordlabel();
+                ::savesettings();
             },
-            -onvalue  => 1,
-            -offvalue => 0
         ],
     ];
 }

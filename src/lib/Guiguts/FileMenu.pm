@@ -944,7 +944,8 @@ EOM
             font_char fontname fontsize fontweight gblfontname gblfontsize gblfontweight gblfontsystemuse
             geometry gesperrt_char globalaspellmode highlightcolor history_size xmlserialization
             htmlimageallowpixels htmlimagewidthtype ignoreversionnumber
-            intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun lmargin markupthreshold
+            intelligentWF ignoreversions italic_char jeebiesmode lastversioncheck lastversionrun
+            lmargin longordlabel markupthreshold
             multisearchsize multiterm nobell nohighlights pagesepauto notoolbar poetrylmargin
             recentfile_size rmargin rmargindiff rwhyphenspace sc_char scannos_highlighted
             searchstickyoptions spellcheckwithenchant spellquerythreshold srstayontop stayontop toolside
