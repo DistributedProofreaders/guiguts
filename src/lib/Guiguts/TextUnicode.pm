@@ -871,4 +871,19 @@ sub redo {
     ::errorcheckilloupdateneeded();
 }
 
+#
+# Overridden from Widget class
+# When focus returns to text window while Shift/Control still held down
+# having been pressed when focus was in a different window
+# (as can happen after Shift/Control click in ErrorCheck dialog)
+# it appears as though a fake keypress is generated, maybe to help Tk
+# (or Windows?) keep track of status of modifier keys.
+# In that case we don't want the bell to ring even if widget is busy
+sub _busy {
+    my ( $w, $f ) = @_;
+    $w->bell if $f                                      # original line
+      and $w->XEvent->K !~ /^(Shift|Control)_[LR]$/;    # extra test added - don't ring bell if key is Shift/Control
+    $w->break;
+}
+
 1;
