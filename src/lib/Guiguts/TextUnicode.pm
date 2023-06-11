@@ -862,13 +862,13 @@ sub AutoScan {
 sub undo {
     my ($self) = @_;
     $self->SUPER::undo();
-    ::errorcheckilloupdateneeded();
+    ::errorcheckillosnupdateneeded();
 }
 
 sub redo {
     my ($self) = @_;
     $self->SUPER::redo();
-    ::errorcheckilloupdateneeded();
+    ::errorcheckillosnupdateneeded();
 }
 
 1;
