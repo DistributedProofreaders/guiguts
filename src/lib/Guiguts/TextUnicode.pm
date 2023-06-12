@@ -19,17 +19,19 @@ sub Load {
         $w->EmptyDocument;
         my $count = 1;
         my $progress;
-        my $line = <$fh>;
+        my $txtfile = $filename =~ /\.te?xt$/;
+        my $line    = <$fh>;
         if ($line) {
             utf8::decode($line);
             $line =~ s/^\x{FEFF}?//;
             $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
+            $line =~ s/[\t \xA0]+$// if $txtfile;
             $w->ntinsert( 'end', $line );
         }
         while (<$fh>) {
             utf8::decode($_);
             $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-            $_ =~ s/[\t \xA0]+$//;
+            $_ =~ s/[\t \xA0]+$// if $txtfile;
             $w->ntinsert( 'end', $_ );
             if ( ( $count++ % 1000 ) == 0 ) {
                 $progress = $w->TextUndoFileProgress(
