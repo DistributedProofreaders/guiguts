@@ -75,12 +75,13 @@ sub SaveUTF {
     my $progress;
     my $fileend = $w->index('end -1c');
     my ($lines) = $fileend =~ /^(\d+)\./;
+    my $txtfile = $filename =~ /\.te?xt$/;
 
     while ( $w->compare( $index, '<', $fileend ) ) {
         my $end  = $w->index("$index lineend +1c");
         my $line = $w->get( $index, $end );
-        $line =~ s/[\t \xA0]+$//;
-        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g;    # Ensure DP-style (CRLF) line endings
+        $line =~ s/[\t \xA0]+$// if $txtfile;
+        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g;     # Ensure DP-style (CRLF) line endings
         utf8::encode($line);
         $w->BackTrace("Cannot write to temp file:$!\n") and return
           unless print $tempfh $line;
