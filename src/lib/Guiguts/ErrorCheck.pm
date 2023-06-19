@@ -1915,9 +1915,9 @@ sub unmatchedblockrun {
         $textwindow->markGravity( 'insertpointmark', 'left' );    # So illo/sidenote gets inserted after mark
 
         # If new position doesn't move the illo/sidenote, then nothing left to do
-        my $comparison = ( $direction eq 'forward' ? '>'   : '<' );
-        my $plus1      = ( $direction eq 'forward' ? '+1l' : '-1l' );
-        unless ( $textwindow->compare( $insertpoint, $comparison, $illosn->{start} . $plus1 ) ) {
+        my $comparepoint =
+          ( $direction eq 'forward' ? "$illosn->{end} +1l" : "$illosn->{start} -1l" );
+        if ( $textwindow->compare( $insertpoint, '==', $comparepoint ) ) {
             ::soundbell();
             return;
         }

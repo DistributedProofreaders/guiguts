@@ -11,10 +11,11 @@ mkdir $DEST
 cp README.md $DEST
 
 # css-validator.jar is the same for all systems
-curl -L -o $DEST/css-validator.jar https://github.com/w3c/css-validator/releases/download/cssval-20211112/css-validator.jar
+VERSION=20220105
+curl -L -o $DEST/css-validator.jar https://github.com/w3c/css-validator/releases/download/cssval-$VERSION/css-validator.jar
 
 # vnu.jar is the same for all systems
-TAG=22.9.29
+TAG=23.4.11
 VDEST=$DEST/validator
 git clone --branch $TAG https://github.com/validator/validator.git $VDEST
 pushd $VDEST
@@ -25,7 +26,7 @@ popd
 rm -rf $VDEST
 
 # epubcheck.jar is the same for all systems
-VERSION=4.2.6
+VERSION=5.0.1
 URL=https://github.com/w3c/epubcheck/releases/download/v$VERSION/epubcheck-$VERSION.zip
 curl -L -o epubcheck.zip $URL
 unzip epubcheck.zip -d .

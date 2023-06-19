@@ -19,17 +19,19 @@ sub Load {
         $w->EmptyDocument;
         my $count = 1;
         my $progress;
-        my $line = <$fh>;
+        my $txtfile = $filename =~ /\.te?xt$/;
+        my $line    = <$fh>;
         if ($line) {
             utf8::decode($line);
             $line =~ s/^\x{FEFF}?//;
             $line =~ s/\cM\cJ|\cM|\cJ/\n/g;
+            $line =~ s/[\t \xA0]+$// if $txtfile;
             $w->ntinsert( 'end', $line );
         }
         while (<$fh>) {
             utf8::decode($_);
             $_ =~ s/\cM\cJ|\cM|\cJ/\n/g;
-            $_ =~ s/[\t \xA0]+$//;
+            $_ =~ s/[\t \xA0]+$// if $txtfile;
             $w->ntinsert( 'end', $_ );
             if ( ( $count++ % 1000 ) == 0 ) {
                 $progress = $w->TextUndoFileProgress(
@@ -75,12 +77,13 @@ sub SaveUTF {
     my $progress;
     my $fileend = $w->index('end -1c');
     my ($lines) = $fileend =~ /^(\d+)\./;
+    my $txtfile = $filename =~ /\.te?xt$/;
 
     while ( $w->compare( $index, '<', $fileend ) ) {
         my $end  = $w->index("$index lineend +1c");
         my $line = $w->get( $index, $end );
-        $line =~ s/[\t \xA0]+$//;
-        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g;    # Ensure DP-style (CRLF) line endings
+        $line =~ s/[\t \xA0]+$// if $txtfile;
+        $line =~ s/\cM\cJ|\cM|\cJ/\cM\cJ/g;     # Ensure DP-style (CRLF) line endings
         utf8::encode($line);
         $w->BackTrace("Cannot write to temp file:$!\n") and return
           unless print $tempfh $line;
@@ -869,6 +872,21 @@ sub redo {
     my ($self) = @_;
     $self->SUPER::redo();
     ::errorcheckillosnupdateneeded();
+}
+
+#
+# Overridden from Widget class
+# When focus returns to text window while Shift/Control still held down
+# having been pressed when focus was in a different window
+# (as can happen after Shift/Control click in ErrorCheck dialog)
+# it appears as though a fake keypress is generated, maybe to help Tk
+# (or Windows?) keep track of status of modifier keys.
+# In that case we don't want the bell to ring even if widget is busy
+sub _busy {
+    my ( $w, $f ) = @_;
+    $w->bell if $f                                      # original line
+      and $w->XEvent->K !~ /^(Shift|Control)_[LR]$/;    # extra test added - don't ring bell if key is Shift/Control
+    $w->break;
 }
 
 1;
