@@ -508,7 +508,7 @@ sub menu_tools {
         ],
         [ 'separator', '' ],
         [ 'command',   '~Footnote Fixup...', -command => \&::footnotepop ],
-        [ 'command',   '~Sidenote Fixup...', -command => \&::sidenotes ],
+        menu_cascade( '~Sidenote Fixup', &menu_tools_sidenotefixup ),
         [
             'command',
             '~Illustration Fixup...',
@@ -516,6 +516,7 @@ sub menu_tools {
                 ::errorcheckpop_up( $textwindow, $top, 'Illustration Fixup' );
             }
         ],
+        [ 'separator', '' ],
         [
             'command',
             'Replace [::] ~with Incremental Counter',
@@ -604,6 +605,21 @@ sub menu_tools_charactertools {
         [ 'separator', '' ],
         [ 'command',   '~Greek Transliteration',     -command => \&::greekpopup ],
         [ 'command',   'Find and ~Convert Greek...', -command => \&::findandextractgreek ],
+    ];
+}
+
+#
+# Create the Tools, Sidenote Fixup submenu
+sub menu_tools_sidenotefixup {
+    [
+        [
+            'command',
+            '~Manual Sidenote Fixup...',
+            -command => sub {
+                ::errorcheckpop_up( $::textwindow, $::top, 'Sidenote Fixup' );
+            }
+        ],
+        [ 'command', '~Automatic Sidenote Fixup...', -command => \&::sidenotes ],
     ];
 }
 

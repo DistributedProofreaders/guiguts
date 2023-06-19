@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&errorcheckpop_up &spellquerycleardict &spellqueryinitialize &spellquerywfwordok
-      errorcheckilloupdateneeded);
+      errorcheckillosnupdateneeded);
 }
 
 my @errorchecklines;
@@ -20,7 +20,8 @@ my $ENDMSG = "Check is complete:";
 # General error check window
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check,
 # Unmatched Tag/Brackets/Double Quotes/Block Checks
-# pphtml, pptxt, ppvimage, Spell Query, EPUBCheck, Illustration Fixup and Load External Checkfile.
+# pphtml, pptxt, ppvimage, Spell Query, EPUBCheck,
+# Illustration Fixup, Sidenote Fixup and Load External Checkfile.
 sub errorcheckpop_up {
     my ( $textwindow, $top, $errorchecktype ) = @_;
     my ( $line, $lincol );
@@ -206,7 +207,7 @@ sub errorcheckpop_up {
             ::killpopup('errorcheckpop');
             ::killpopup('gcviewoptspop') if $errorchecktype eq 'Bookloupe';
             $textwindow->markUnset($_) for values %errors;
-            errorcheckilloclearbookmarks();
+            errorcheckillosnclearbookmarks();
         }
     );
     ::drag( $::lglobal{errorchecklistbox} );
@@ -231,7 +232,7 @@ sub errorcheckpop_up {
 
     # Ctrl + button 1 attempts to view and process the clicked error
     # For Spell Query, it adds the word to the project dictionary
-    # For Illustration Fixup, moves illo forward through file to a suitable spot
+    # For Illustration/Sidenote Fixup, moves illo/sidenote forward through file to a suitable spot
     $::lglobal{errorchecklistbox}->eventAdd( '<<process>>' => '<Control-ButtonRelease-1>' );
     $::lglobal{errorchecklistbox}->bind(
         '<<process>>',
@@ -240,8 +241,9 @@ sub errorcheckpop_up {
             if ( $errorchecktype eq 'Spell Query' ) {
                 errorcheckprocessspell('project');
                 errorcheckremovesimilar($errorchecktype);
-            } elsif ( $errorchecktype eq 'Illustration Fixup' ) {
-                errorcheckprocessillo('forward');
+            } elsif ( $errorchecktype eq 'Illustration Fixup'
+                or $errorchecktype eq 'Sidenote Fixup' ) {
+                errorcheckprocessillosn('forward');
             } else {
                 errorcheckprocess($errorchecktype);
             }
@@ -267,7 +269,7 @@ sub errorcheckpop_up {
 
     # Ctrl + Shift + button 1 attempts to view and alternatively process the clicked error
     # For Spell Query, adds the word to the global dictionary
-    # For Illustration Fixup, moves illo backward through file to a suitable spot
+    # For Illustration/Sidenote Fixup, moves illo/sidenote backward through file to a suitable spot
     $::lglobal{errorchecklistbox}
       ->eventAdd( '<<processalternative>>' => '<Control-Shift-ButtonRelease-1>' );
     $::lglobal{errorchecklistbox}->bind(
@@ -277,8 +279,9 @@ sub errorcheckpop_up {
             if ( $errorchecktype eq 'Spell Query' ) {
                 errorcheckprocessspell('global');
                 errorcheckremovesimilar($errorchecktype);
-            } elsif ( $errorchecktype eq 'Illustration Fixup' ) {
-                errorcheckprocessillo('backward');
+            } elsif ( $errorchecktype eq 'Illustration Fixup'
+                or $errorchecktype eq 'Sidenote Fixup' ) {
+                errorcheckprocessillosn('backward');
             }
             errorcheckview($errorchecktype);
         }
@@ -367,6 +370,7 @@ sub errorcheckpop_up {
     if (    -z $errname
         and $errorchecktype ne "Spell Query"
         and $errorchecktype ne "Illustration Fixup"
+        and $errorchecktype ne "Sidenote Fixup"
         and $errorchecktype ne "Load Checkfile"
         and $errorchecktype ne "Nu HTML Check"
         and $errorchecktype ne "Nu XHTML Check"
@@ -823,7 +827,8 @@ sub errorcheckrun {
         and $errorchecktype ne 'Unmatched Brackets'
         and $errorchecktype ne 'Unmatched Double Quotes'
         and $errorchecktype ne 'Unmatched Block Markup'
-        and $errorchecktype ne 'Illustration Fixup' ) {    # No external tool, so no temp file needed
+        and $errorchecktype ne 'Illustration Fixup'
+        and $errorchecktype ne 'Sidenote Fixup' ) {    # No external tool, so no temp file needed
         savetoerrortmpfile( $tmpfname, $striptext );
     }
 
@@ -857,8 +862,8 @@ sub errorcheckrun {
         jeebiesrun( $tmpfname, $errname );
     } elsif ( $errorchecktype eq 'Spell Query' ) {
         spellqueryrun($errname);
-    } elsif ( $errorchecktype eq 'Illustration Fixup' ) {
-        illocheckrun($errname);
+    } elsif ( $errorchecktype eq 'Illustration Fixup' or $errorchecktype eq 'Sidenote Fixup' ) {
+        illosncheckrun($errname);
     } elsif ( $errorchecktype eq 'Unmatched DP Tags' ) {
         unmatcheddptagsrun($errname);
     } elsif ( $errorchecktype eq 'Unmatched HTML Tags' ) {
@@ -1794,101 +1799,89 @@ sub unmatchedblockrun {
 }
 
 #
-# Block to make Illustration Fixup globals local & persistent
+# Block to make Illustration/Sidenote Fixup globals local & persistent
 {
-
-    #
-    # Move illo markup in text file to appropriate location
-    #
-    # if the next page is a [Blank Page] (or two consecutive page separators or internal page labels),
-    # try to move the illustration up to the last paragraph break on the page preceding it.
-    # If successful, this probably will place the illustration on the page referenced in the List of Illustrations.
-    #
-    # if the preceding page is a [Blank Page] etc., try to move the illustration down
-    # to the first paragraph break on the page following it. (Same LoI comment.)
-    #
-    # if neither of the first two conditions exists, find the closest paragraph break
-    # in either direction and move the illustration to it.
-    #
-    # in all cases, be sure not to move an illustration to a position within another illustration,
-    # past another illustration, past a block marker (except a Block Quote, within which it should be acceptable),
-    # within a footnote, or within a Chapter heading.
-    my $ILLOSTARTREG        = "^\\*?\\[Illustration";
-    my $ILLOENDREG          = "]\$";
-    my $ILLOSTARTGENERIC    = "[";
-    my $ILLOSTARTMARKPREFIX = "illostart";
-    my $ILLOENDMARKPREFIX   = "illoend";
-    my $ILLOERROROK         = 0;
-    my $ILLOERRORUNCLOSED   = 1;
-    my $ILLOERRORMIDPARA    = 2;
-    my $PAGEBREAKREGEX      = "^-----File";
-    my %illoerrortypes      = (
-        $ILLOERROROK       => "",
-        $ILLOERRORUNCLOSED => "(UNCLOSED)",
-        $ILLOERRORMIDPARA  => "(MIDPARAGRAPH)"
+    my $ILLOSNSTARTREG        = "^\\*?\\[";
+    my $ILLOSNENDREG          = "]\$";
+    my $ILLOSNSTARTGENERIC    = "[";
+    my $ILLOSNSTARTMARKPREFIX = "illosnstart";
+    my $ILLOSNENDMARKPREFIX   = "illosnend";
+    my $ILLOSNERROROK         = 0;
+    my $ILLOSNERRORUNCLOSED   = 1;
+    my $ILLOSNERRORMIDPARA    = 2;
+    my $PAGEBREAKREGEX        = "^-----File";
+    my %illosnerrortypes      = (
+        $ILLOSNERROROK       => "",
+        $ILLOSNERRORUNCLOSED => "(UNCLOSED)",
+        $ILLOSNERRORMIDPARA  => "(MIDPARAGRAPH)"
     );
 
     # Global array of hashes storing markup information. Each element stores
-    #    start => name of mark at start of illo markup
-    #    end => name of mark at end of illo markup
+    #    start => name of mark at start of illo/sn markup
+    #    end => name of mark at end of illo/sn markup
     #    error => markup error
-    my @illolist;
+    my @illosnlist;
 
-    # Find and mark all illos and write summary to logfile
-    sub illocheckrun {
+    # Find and mark all illos/sidenotes and write summary to logfile
+    sub illosncheckrun {
         my $errname    = shift;
         my $textwindow = $::textwindow;
 
-        @illolist = ();    # Clear global array of illo markup information
+        @illosnlist = ();    # Clear global array of illo/sidenote markup information
 
-        # Find and mark start of each illo markup
-        my $start   = '1.0';
-        my $illonum = 0;
-        while ( my $illostart =
-            $textwindow->search( '-regexp', '--', $ILLOSTARTREG, $start, 'end' ) ) {
-            push @illolist, { start => "$ILLOSTARTMARKPREFIX$illonum", error => $ILLOERROROK };
-            $textwindow->markSet( $illolist[$illonum]{start}, $illostart );
-            $start = $illostart . '+1c';
-            $illonum++;
+        my $checktype = errorcheckgettype();
+        my $startreg  = illosnstartreg();
+
+        # Find and mark start of each illo/sidenote markup
+        my $start     = '1.0';
+        my $illosnnum = 0;
+        while ( my $illosnstart = $textwindow->search( '-regexp', '--', $startreg, $start, 'end' ) )
+        {
+            push @illosnlist,
+              { start => "$ILLOSNSTARTMARKPREFIX$illosnnum", error => $ILLOSNERROROK };
+            $textwindow->markSet( $illosnlist[$illosnnum]{start}, $illosnstart );
+            $start = $illosnstart . '+1c';
+            $illosnnum++;
         }
 
-        # Find and mark end of each illo markup, and begin to check for validity
+        # Find and mark end of each illo/sidenote markup, and begin to check for validity
         # "Unclosed" if no end markup, or end is not before next start, or end is not before next page break
-        for $illonum ( 0 .. $#illolist ) {
-            my $illo      = $illolist[$illonum];
-            my $nextstart = $illonum < $#illolist ? $illolist[ $illonum + 1 ]{start} : 'end';
-            my $illoend   = $textwindow->search( '-regexp', '--', $ILLOENDREG,
-                $illo->{start} . '+1c', $nextstart );
-            $illoend .= ' lineend' if $illoend;    # End is after closing bracket
+        for $illosnnum ( 0 .. $#illosnlist ) {
+            my $illosn = $illosnlist[$illosnnum];
+            my $nextstart =
+              $illosnnum < $#illosnlist ? $illosnlist[ $illosnnum + 1 ]{start} : 'end';
+            my $illosnend = $textwindow->search( '-regexp', '--', $ILLOSNENDREG,
+                $illosn->{start} . '+1c', $nextstart );
+            $illosnend .= ' lineend' if $illosnend;    # End is after closing bracket
             my $nextpage = $textwindow->search( '-regexp', '--', $PAGEBREAKREGEX,
-                $illo->{start} . '+1c', $nextstart );
+                $illosn->{start} . '+1c', $nextstart );
             $nextpage = 'end' unless $nextpage;
-            $illo->{error} = $ILLOERRORUNCLOSED
-              unless $illoend and $textwindow->compare( $illoend, '<', $nextpage );
-            $illo->{end} = "$ILLOENDMARKPREFIX$illonum";
-            $textwindow->markSet( $illo->{end}, $illoend // $nextstart );
+            $illosn->{error} = $ILLOSNERRORUNCLOSED
+              unless $illosnend and $textwindow->compare( $illosnend, '<', $nextpage );
+            $illosn->{end} = "$ILLOSNENDMARKPREFIX$illosnnum";
+            $textwindow->markSet( $illosn->{end}, $illosnend // $nextstart );
 
-            # If "[Illustration" is preceded by an asterisk it's a mid-paragraph illo
-            $illo->{error} = $ILLOERRORMIDPARA
-              if $textwindow->get( $illo->{start}, "$illo->{start} + 1c" ) eq "*";
+            # If "[Illustration/Sidenote" is preceded by an asterisk it's a mid-paragraph illo/sidenote
+            $illosn->{error} = $ILLOSNERRORMIDPARA
+              if $textwindow->get( $illosn->{start}, "$illosn->{start} + 1c" ) eq "*";
 
-            # If illo is closed OK, check if it is mid-paragraph
-            $illo->{error} = $ILLOERRORMIDPARA
-              if $illo->{error} == $ILLOERROROK
-              and isillomidpara($illo);
+            # If illo/sidenote is closed OK, check if it is mid-paragraph
+            $illosn->{error} = $ILLOSNERRORMIDPARA
+              if $illosn->{error} == $ILLOSNERROROK
+              and isillosnmidpara($illosn);
         }
 
         open my $logfile, ">", $errname
-          or die "Error opening Illustration Fixup output file: $errname";
-        for my $illo (@illolist) {
-            my $startindex = $textwindow->index( $illo->{start} );
-            my $endindex   = $textwindow->index( $illo->{end} );
+          or die "Error opening $checktype output file: $errname";
+        for my $illosn (@illosnlist) {
+            my $startindex = $textwindow->index( $illosn->{start} );
+            my $endindex   = $textwindow->index( $illosn->{end} );
             my $caption    = $textwindow->get( $startindex, "$startindex lineend" );
-            $caption    =~ s/$ILLOSTARTREG:? *//;
-            $caption    =~ s/$ILLOENDREG//;
+            $caption    =~ s/$startreg:? *//;
+            $caption    =~ s/$ILLOSNENDREG//;
             $startindex =~ s/\./:/;
             $endindex   =~ s/\./:/;
-            my $error = "$startindex-$endindex$illoerrortypes{$illo->{error}} $caption";
+            my $error = "$startindex-$endindex$illosnerrortypes{$illosn->{error}} $caption";
             utf8::encode($error);
             print $logfile "$error\n";
         }
@@ -1896,8 +1889,8 @@ sub unmatchedblockrun {
     }
 
     #
-    # Process the active illo by moving it forward or backward to a suitable location
-    sub errorcheckprocessillo {
+    # Process the active illo/sidenote by moving it forward or backward to a suitable location
+    sub errorcheckprocessillosn {
         my $direction  = shift;
         my $textwindow = $::textwindow;
 
@@ -1905,111 +1898,112 @@ sub unmatchedblockrun {
         return if not defined $line or not defined $errors{$line};
 
         my $activeline = $::lglobal{errorchecklistbox}->index('active');
-        my $illonum    = $activeline - 1;                                  # Allow for header line
-        return unless $illonum >= 0 and $illonum <= $#illolist;
-        my $illo = $illolist[$illonum];
+        my $illosnnum  = $activeline - 1;                                  # Allow for header line
+        return unless $illosnnum >= 0 and $illosnnum <= $#illosnlist;
+        my $illosn = $illosnlist[$illosnnum];
 
-        # If illo is unclosed, we can't fix it automatically
-        if ( $illo->{error} == $ILLOERRORUNCLOSED ) {
+        # If illo/sidenote is unclosed, we can't fix it automatically
+        if ( $illosn->{error} == $ILLOSNERRORUNCLOSED ) {
             ::soundbell();
             return;
         }
 
-        # Find suitable place forward or backward to move illo to
-        my $startingpoint = $direction eq 'forward' ? $illo->{end} : $illo->{start};
+        # Find suitable place forward or backward to move illo/sidenote to
+        my $startingpoint = $direction eq 'forward' ? $illosn->{end} : $illosn->{start};
         my $insertpoint   = findparabreak( $startingpoint, $direction );
         $textwindow->markSet( 'insertpointmark', $insertpoint );
-        $textwindow->markGravity( 'insertpointmark', 'left' );    # So illo gets inserted after mark
+        $textwindow->markGravity( 'insertpointmark', 'left' );    # So illo/sidenote gets inserted after mark
 
-        # If new position doesn't move the illo, then nothing left to do
-        my $comparepoint = ( $direction eq 'forward' ? "$illo->{end} +1l" : "$illo->{start} -1l" );
+        # If new position doesn't move the illo/sidenote, then nothing left to do
+        my $comparepoint =
+          ( $direction eq 'forward' ? "$illosn->{end} +1l" : "$illosn->{start} -1l" );
         if ( $textwindow->compare( $insertpoint, '==', $comparepoint ) ) {
             ::soundbell();
             return;
         }
 
         $textwindow->addGlobStart;
-        my $end      = $illo->{end} . '+1l linestart';
-        my $illotext = $textwindow->get( $illo->{start}, $end );
+        my $end        = $illosn->{end} . '+1l linestart';
+        my $illosntext = $textwindow->get( $illosn->{start}, $end );
 
-        # If illo is mid-paragraph and it has a blank line after it, that should be deleted
-        if (    $illo->{error} == $ILLOERRORMIDPARA
+        # If illo/sidenote is mid-paragraph and it has a blank line after it, that should be deleted
+        if (    $illosn->{error} == $ILLOSNERRORMIDPARA
             and $textwindow->get( $end, "$end lineend" ) eq "" ) {
             $end .= '+1l';
         }
-        $textwindow->delete( $illo->{start}, $end );
+        $textwindow->delete( $illosn->{start}, $end );
 
         # Use system bookmarks to aid user jumping between old & new locations
-        # illoold - original position of bookmark currently worked on
-        # illonew - new position of bookmark after latest move
-        if ( not $::lglobal{illocachestartmark}
-            or $::lglobal{illocachestartmark} ne $illo->{start} ) {
-            $::lglobal{illocachestartmark} = $illo->{start};
-            ::setbookmarksystem( 'illoold', $::lglobal{illocachestartmark} );
+        # illosnold - original position of illo/sidenote currently worked on
+        # illosnnew - new position of illo/sidenote after latest move
+        if ( not $::lglobal{illosncachestartmark}
+            or $::lglobal{illosncachestartmark} ne $illosn->{start} ) {
+            $::lglobal{illosncachestartmark} = $illosn->{start};
+            ::setbookmarksystem( 'illosnold', $::lglobal{illosncachestartmark} );
         }
 
-        # If illo has a blank line before it, we also want to delete the blank line
-        my $prevline = "$illo->{start} -1l";
+        # If illo/sidenote has a blank line before it, we also want to delete the blank line
+        my $prevline = "$illosn->{start} -1l";
         $textwindow->delete( "$prevline linestart", )
           unless $textwindow->get( "$prevline linestart", "$prevline lineend" );
 
-        $illotext =~ s/^\*//;    # Remove any leading asterisk
-        $textwindow->insert( 'insertpointmark', "\n$illotext" );
+        $illosntext =~ s/^\*//;    # Remove any leading asterisk
+        $textwindow->insert( 'insertpointmark', "\n$illosntext" );
         $textwindow->addGlobEnd;
 
-        errorcheckilloupdateneeded();
+        errorcheckillosnupdateneeded();
     }
 
     #
     # Given an index and direction, finds closest blank line suitable for
-    # illo to be moved to
+    # illo/sidenote to be moved to
     # Skips over page markers & Blank Page markup
-    # Stops if it reaches illo markup
+    # Stops if it reaches illo/sidenote markup
     sub findparabreak {
-        my $textwindow    = $::textwindow;
-        my $step          = $textwindow->index(shift);
-        my $direction     = shift;
-        my $incr          = 1;
-        my $comparison    = '<';
-        my $endpoint      = 'end';
-        my $startilloreg  = $ILLOSTARTREG;
-        my $endilloreg    = $ILLOENDREG;
-        my $startblockreg = quotemeta('/*');
-        my $endblockreg   = quotemeta('*/');
+        my $textwindow     = $::textwindow;
+        my $step           = $textwindow->index(shift);
+        my $direction      = shift;
+        my $incr           = 1;
+        my $comparison     = '<';
+        my $endpoint       = 'end';
+        my $startillosnreg = illosnstartreg();
+        my $endillosnreg   = $ILLOSNENDREG;
+        my $startblockreg  = quotemeta('/*');
+        my $endblockreg    = quotemeta('*/');
 
         if ( $direction eq 'backward' ) {
-            $incr          = -1;
-            $comparison    = '>';
-            $endpoint      = '1.0';
-            $startilloreg  = $ILLOENDREG;
-            $endilloreg    = $ILLOSTARTREG;
-            $startblockreg = quotemeta('*/');
-            $endblockreg   = quotemeta('/*');
+            $incr           = -1;
+            $comparison     = '>';
+            $endpoint       = '1.0';
+            $startillosnreg = $ILLOSNENDREG;
+            $endillosnreg   = illosnstartreg();
+            $startblockreg  = quotemeta('*/');
+            $endblockreg    = quotemeta('/*');
         }
         $step =~ s/\..+//;
 
-        $step += $incr;    # Skip potential blank line that precedes/follows the illo
+        $step += $incr;    # Skip potential blank line that precedes/follows the illo/sidenote
         while ( $textwindow->compare( "$step.0", $comparison, $endpoint ) ) {
             $step += $incr;
             my $line = $textwindow->get( "$step.0", "$step.0 lineend" );
             next if $line =~ /$PAGEBREAKREGEX/;
             next if $line =~ /^\[Blank Page\]/i;
 
-            # If we hit another illo, stop - we don't want to swap order of illos
-            if ( $line =~ /$startilloreg/ ) {
+            # If we hit another illo/sidenote, stop - we don't want to swap order
+            if ( $line =~ /$startillosnreg/ ) {
 
-                # If moving backward, supposed end of illo could be end of footnote, etc.
-                # so make sure it's really an illo
-                my $isillo = 1;
+                # If moving backward, supposed end of illo/sidenote could be end of footnote, etc.
+                # so make sure it's really an illo/sidenote
+                my $isillosn = 1;
                 if ( $direction eq 'backward' ) {
-                    my $startindex = $textwindow->search( '-backwards', '--', $ILLOSTARTGENERIC,
+                    my $startindex = $textwindow->search( '-backwards', '--', $ILLOSNSTARTGENERIC,
                         "$step.0 lineend", '1.0' );
                     $startindex = '1.0' unless $startindex;
-                    $isillo     = 0
-                      if $textwindow->get( $startindex, "$startindex lineend" ) !~ /$endilloreg/;
+                    $isillosn   = 0
+                      if $textwindow->get( $startindex, "$startindex lineend" ) !~ /$endillosnreg/;
                 }
 
-                if ($isillo) {
+                if ($isillosn) {
                     $step -= $incr;
                     return "$step.0";
                 }
@@ -2038,14 +2032,14 @@ sub unmatchedblockrun {
     }
 
     #
-    # Returns whether illo is mid-paragraph by checking whether it is followed
+    # Returns whether illo/sidenote is mid-paragraph by checking whether it is followed
     # by a non-blank line, apart from page markers, blank page markup or another illo
-    sub isillomidpara {
-        my $illo       = shift;
-        my $dbg        = ( $illo->{start} =~ /illostart0/ );
+    sub isillosnmidpara {
+        my $illosn     = shift;
         my $textwindow = $::textwindow;
+        my $startreg   = illosnstartreg();
         my $midpara    = 0;
-        my $step       = $textwindow->index( $illo->{end} );
+        my $step       = $textwindow->index( $illosn->{end} );
         $step =~ s/\..+//;
         while ( $textwindow->compare( "$step.0", '<', 'end' ) ) {
             $step++;
@@ -2053,21 +2047,21 @@ sub unmatchedblockrun {
             next if $line =~ /$PAGEBREAKREGEX/;     # Skip page marker lines
             next if $line =~ /^\[Blank Page\]/i;    # Skip blank page markup
 
-            # If we hit another illo, step over it to keep checking what happens after it
-            if ( $line =~ /$ILLOSTARTREG/ ) {
+            # If we hit another illo/sidenote, step over it to keep checking what happens after it
+            if ( $line =~ /$startreg/ ) {
                 while ( $textwindow->compare( "$step.0", '<', 'end' )
-                    and $textwindow->get( "$step.0", "$step.0 lineend" ) !~ /$ILLOENDREG/ ) {
+                    and $textwindow->get( "$step.0", "$step.0 lineend" ) !~ /$ILLOSNENDREG/ ) {
                     $step++;
                 }
-                next;    # At end of illo, go to check next line
+                next;    # At end of illo/sidenote, go to check next line
             }
 
-            # If we find a blank line, but next line is an illo, it doesn't count as a paragraph break.
-            # This happens where an illo is at the top of page and has had a blank line inserted before it,
+            # If we find a blank line, but next line is an illo/sidenote, it doesn't count as a paragraph break.
+            # This happens where an illo/sidenote is at the top of page and has had a blank line inserted before it,
             # despite it really being mid-paragraph
             if ( length($line) == 0 ) {
                 my $line2 = $textwindow->get( "$step.0 +1l", "$step.0 +1l lineend" );
-                next if $line2 =~ /$ILLOSTARTREG/;
+                next if $line2 =~ /$startreg/;
                 last;    # Valid blank line
             }
             $midpara = 1;    # if we get here, we found a non-blank line
@@ -2075,37 +2069,43 @@ sub unmatchedblockrun {
         return $midpara;
     }
 
-    # Update the Illustration Fixup window if it is visible
-    sub errorcheckilloupdateneeded {
-        return unless errorcheckgettype() eq 'Illustration Fixup';
+    # Update the Illustration/Sidenote Fixup window if it is visible
+    sub errorcheckillosnupdateneeded {
+        my $checktype = errorcheckgettype();
+        return unless $checktype eq 'Illustration Fixup' or $checktype eq 'Sidenote Fixup';
         my $activeline = $::lglobal{errorchecklistbox}->index('active');
-        errorcheckpop_up( $::textwindow, $::top, 'Illustration Fixup' );
+        errorcheckpop_up( $::textwindow, $::top, $checktype );
         if ( defined $activeline ) {
             $::lglobal{errorchecklistbox}->activate($activeline);
             $::lglobal{errorchecklistbox}->selectionSet($activeline);
             $::lglobal{errorchecklistbox}->see($activeline);
 
-            # Set "illonew" system bookmark at current illo position
+            # Set "illosnnew" system bookmark at current illo/sidenote position
             # Needed particularly after undo/redo
-            my $illonum = $activeline - 1;    # Allow for header line
-            if ( $illonum >= 0 and $illonum <= $#illolist ) {
-                my $illo = $illolist[$illonum];
-                if ( $::lglobal{illocachestartmark} eq $illo->{start} ) {    # Only use if cache is not stale
-                    ::setbookmarksystem( 'illonew', $illo->{start} );
+            my $illosnnum = $activeline - 1;    # Allow for header line
+            if ( $illosnnum >= 0 and $illosnnum <= $#illosnlist ) {
+                my $illosn = $illosnlist[$illosnnum];
+                if ( $::lglobal{illosncachestartmark} eq $illosn->{start} ) {    # Only use if cache is not stale
+                    ::setbookmarksystem( 'illosnnew', $illosn->{start} );
                 } else {
-                    errorcheckilloclearbookmarks();
+                    errorcheckillosnclearbookmarks();
                 }
             }
         }
-        errorcheckview('Illustration Fixup');
+        errorcheckview($checktype);
     }
 
     # Clear the system bookmarks related to illo fixup
-    sub errorcheckilloclearbookmarks {
-        ::unsetbookmarksystem($_) for ( 'illoold', 'illonew' );
-        $::lglobal{illocachestartmark} = "";
+    sub errorcheckillosnclearbookmarks {
+        ::unsetbookmarksystem($_) for ( 'illosnold', 'illosnnew' );
+        $::lglobal{illosncachestartmark} = "";
     }
 
+    sub illosnstartreg {
+        return $ILLOSNSTARTREG . 'Illustration' if errorcheckgettype() eq 'Illustration Fixup';
+        return $ILLOSNSTARTREG . 'Sidenote'     if errorcheckgettype() eq 'Sidenote Fixup';
+        return $ILLOSNSTARTREG . 'ERROR';
+    }
 }    # end of variable-enclosing block
 
 #
