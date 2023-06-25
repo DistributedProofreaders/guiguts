@@ -1,5 +1,7 @@
 Beginning check: Nu XHTML Check
+5:4 error: Element “title” not allowed as child of element “meta” in this context. (Suppressing further errors from this subtree.)
+8:4 error: Element “link” not allowed as child of element “meta” in this context. (Suppressing further errors from this subtree.)
 12:18 error: CSS: “margin-left”: Parse Error.
-22:4 error fatal: required character (found “p”) (expected “b”)
+18:0 error fatal: required character (found “h”) (expected “l”)
 Check is complete: Nu XHTML Check
 Don't forget to do the final validation at https://validator.w3.org
