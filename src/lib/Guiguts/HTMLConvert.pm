@@ -3297,28 +3297,27 @@ sub autolist {
 
     $textwindow->addGlobStart;
 
-    # Multiline means list entries are separated by double newlines
+    # Multiline means list entries are separated by blank lines
     if ( $::lglobal{list_multiline} ) {
-        my $selection = $textwindow->get( "$lsr.0", "$ler.end" );
-
-        # Split at double newline
-        $selection =~ s/\n +/\n/g;
-        $selection =~ s/\n\n+/\x{8A}/g;
-        my @lrows = split( /\x{8A}/, $selection );
-
-        # Recombine with list markup added
-        $selection = "<$::lglobal{liststyle}>";
-        for (@lrows) {
-            $selection .= "\n<li>$_</li>\n";
+        my $step   = $lsr;
+        my $nlines = 0;      # Non-blank lines in this entry
+        while ( $step <= $ler ) {
+            my $selection = $textwindow->get( "$step.0", "$step.end" );
+            my $blankline = $selection =~ /^\s*$/;
+            if ( $nlines == 0 ) {    # Start of entry
+                $textwindow->insert( "$step.0", '<li>' ) unless $blankline;    # Test for blank line in case of double blank line
+            } elsif ($blankline) {    # End of entry
+                $textwindow->insert( "$step.0 -1l lineend", '</li>' );
+                $nlines = 0;          # Reset line count
+            }
+            $nlines++ unless $blankline;
+            $step++;
         }
-        $selection .= "</$::lglobal{liststyle}>\n";
-
-        $textwindow->delete( "$lsr.0", "$ler.end" );
-        $textwindow->insert( "$lsr.0", $selection );
+        $textwindow->insert( "$step.0 -1l lineend", '</li>' ) if $nlines    # Close final entry
+    } else {
 
         # Not multiline - each line is a list entry, except
         # <p>...</p> counts as one entry, but <br> forces a new entry
-    } else {
         my $paragraph = 0;
         my $brflag    = 0;
         my $step      = $lsr;
@@ -3352,9 +3351,9 @@ sub autolist {
             }
             $step++;
         }
-        $textwindow->insert( "$ler.end", "\n</$::lglobal{liststyle}>" );
-        $textwindow->insert( "$lsr.0",   "<$::lglobal{liststyle}>\n" );
     }
+    $textwindow->insert( "$ler.end", "\n</$::lglobal{liststyle}>" );
+    $textwindow->insert( "$lsr.0",   "<$::lglobal{liststyle}>\n" );
     $textwindow->addGlobEnd;
 }
 
