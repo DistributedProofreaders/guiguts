@@ -441,8 +441,8 @@ sub selectrewrap {
                     $inblock      = 0;
                 }
             } else {
-                my $skipit = ( $selection =~ /^(\/#|#\/)$/ );    # Happens when /c or /r directly follows /# or blank line before #/
-                if ( $::blockwrap > 0 ) {                        # block wrap
+                my $skipit = ( $notpmselection =~ /^(\/#|#\/)$/ );    # Happens when /c or /r directly follows /# or blank line before #/
+                if ( $::blockwrap > 0 ) {                             # block wrap
                     if ($blockcenter) {
                         $rewrapped = centerblockwrapper( $leftmargin, $rightmargin, $selection );
                     } elsif ($blockright) {
