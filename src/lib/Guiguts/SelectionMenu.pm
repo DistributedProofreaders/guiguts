@@ -396,17 +396,11 @@ sub selectrewrap {
                         $offset = 100;
                         for my $line ( $sr + 1 .. $er - 1 ) {
                             $textline = $textwindow->get( "$line.0", "$line.end" );
-                            if ($textline) {
-                                $textwindow->search(
-                                    '-regexp',
-                                    '-count' => \$spaces,
-                                    '--', '^\s+', "$line.0", "$line.end"
-                                );
-                                unless ($spaces) { $spaces = 0 }
-                                if     ( $spaces < $offset ) {
-                                    $offset = $spaces;
-                                }
-                                $spaces = 0;
+                            my $notpmtextline = removetpms($textline);
+                            if ( $notpmtextline !~ /^\s*$/ ) {
+                                $notpmtextline =~ /^\s*/;    # Count how many spaces at start of line
+                                $spaces = $+[0] // 0;
+                                $offset = $spaces if $spaces < $offset;
                             }
                         }
                         $indent = $indent - $offset;
@@ -421,13 +415,21 @@ sub selectrewrap {
                             $textwindow->insert( "$line.0", ( ' ' x $indent ) )
                               if ( $indent > 0 );
                             if ( $indent < 0 ) {
-                                if ( $textwindow->get( "$line.0", "$line.@{[abs $indent]}" ) =~
-                                    /\S/ ) {
-                                    while ( $textwindow->get("$line.0") eq ' ' ) {
-                                        $textwindow->delete("$line.0");
+
+                                # Repeatedly delete spaces from start of line in order to unindent it
+                                # Skip over temporary page marks
+                                my $checkcol = 0;
+                                my $icount   = abs($indent);
+                                while ( $icount > 0 ) {
+                                    my $checkchar = $textwindow->get("$line.$checkcol");
+                                    if ( $checkchar eq ' ' ) {
+                                        $textwindow->delete("$line.$checkcol");    # Space - delete it
+                                        $icount--;
+                                    } elsif ( $checkchar eq $TEMPPAGEMARK ) {
+                                        $checkcol++;                               # TPM - skip to next character
+                                    } else {
+                                        last;                                      # Non-space - can't unindent any more, so stop
                                     }
-                                } else {
-                                    $textwindow->delete( "$line.0", "$line.@{[abs $indent]}" );
                                 }
                             }
                         }
