@@ -59,6 +59,11 @@ sub html_convert_superscripts {
         $textwindow->ntinsert( "$step.0", $selection );
     }
 
+    if ( $selection =~ s/\^(<([a-zA-Z]+)>.<\/\g2>)/<sup>$1<\/sup>/g ) {
+        $textwindow->ntdelete( "$step.0", "$step.end" );
+        $textwindow->ntinsert( "$step.0", $selection );
+    }
+
     if ( $selection =~ s/\^(.)/<sup>$1<\/sup>/g ) {
         $textwindow->ntdelete( "$step.0", "$step.end" );
         $textwindow->ntinsert( "$step.0", $selection );
