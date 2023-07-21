@@ -1,5 +1,84 @@
 # Changelog
 
+## Version 1.6.0
+
+- Removed `Convert Windows CP1252 Characters` menu option
+- Removed several buttons from the Txt menu, such as `Convert Italics`, etc.
+  These were duplicates of buttons in the `Txt Conversion Palette`
+- Removed `Find Some Orphaned Markup` button from HTML Markup dialog. This is
+  superceded by `Unmatched HTML Tag Check`
+- Use the "Buttons and labels" font for the text in the toolbar
+- Block wrap margin markup can include spaces, e.g. `/#[12.4, 50]`
+- Useful X11 Preferences documented for Mac users
+- Page separator lines from gImageReader OCR files are now recognised when the
+  file is loaded
+- `/r[nn]` can be used to set a specific right margin for right-alignment
+- New `Convert DP Diacriticals` option converts DP markup, e.g. `[a.]`, to
+  Unicode character(s). Characters are normalized if possible, or if not, the
+  relevant combining character is used. Converts selection or whole file.
+- HTML autogeneration uses `&nbsp;` instead of `&#160;` for non-breaking spaces
+- If some text is selected, popping the QuickSearch dialog puts the selected 
+  text into the search field
+- QuickSearch now has a Count ("#") button
+- New Illustration Fixup assists with moving illos to paragraph breaks. Use
+  Ctrl-click on report to move illo down, Shift-Ctrl-click to move illo up.
+  Shift-Ctrl-f jumps cursor between original and new illo positions.
+- New manual Sidenote Fixup assists with moving sidenotes to paragraph breaks,
+  in the same way as Illustration Fixup
+- "Display Character Names" setting (Preferences->Toolbar menu) for the
+  Dec/Hex ordinal label in the status bar is now stored in `settings.rc`
+- Included latest version of ebookmaker (0.12.33)
+- Included latest versions of VNU Validator (23.4.11), CSS Validator (20220105)
+  and Epubcheck (5.0.1)
+- Mac installation instructions improved
+
+### Bug Fixes
+
+- Spell Query, Word Frequency and Search/Replace did not consider combining
+  characters to be part of a word, so failed to find or search for whole words
+  correctly if they contained combining characters
+- `Check for Updates` had stopped working due to a change in the Github page
+- Several Search Menu options did not return focus to the main window when the
+  menu was used as a tear-off
+- Converting footnote numbers to `Letter` form failed if there were more than
+  676 footnotes
+- Non-ASCII author name, or non-breaking space between initials, was not
+  saved correctly in the `.bin` file
+- Some `<` or `>` symbols in a text file were not converted to HTML entities
+  during autogeneration
+- Paragraphs marked for right-alignment would never be moved left to align,
+  even when there was space to do so
+- Some footnote anchors, e.g. at start of line, would get moved when their
+  footnotes were moved to the landing zones
+- Badly formed sidenotes could generate a `bad index` error
+- Word Frequency Character Count gave an error if file contained no spaces
+- Errors occurred if a Spell Query language dictionary was Latin-1 encoded,
+  rather than Unicode
+- When a new file was loaded after a previous LOTE file, the language was not
+  set back to English by default for the new file
+- When QuickSearch dialog was popped, the current selection was not cleared,
+  meaning the first search could fail
+- The column count (ruler) would give errors if used with lines over 190
+  characters long
+- Some Word Frequency operations silently saved the file, even when autosave
+  options were disabled
+- pphtml reported unused or undefined CSS warnings wrongly if layout was not
+  as expected, or if `first-letter` was used
+- ppvimage reported `.png` covers as errors
+- index rewrapping in text version added a blank line at the end
+- Search/Replace over a selected range stopped part-way through the range if
+  the replacement string inserted a new line
+- Long HTML lines were created from page links in index - now wrapped
+- Attempting to re-run a SpellCheck/Query while loading a goodwords file
+  could cause errors
+- Ctrl/Shift-clicking an error in the Error Check window could cause the bell
+  to ring even if bell was disabled in Preferences
+- Trailing spaces were stripped from lines of HTML during file save/load
+- HTML conversion of single character italic superscripts was invalid
+- Multi-line auto-lists moved all the page markers within the list to the top
+- A page marker on closing blockquote markup led to the markup being indented
+- Page markers at the start of a line could affect the indent of `/*` blocks
+
 ## Version 1.5.3
 
 - `Quick Search` in Search menu (or Shift-Ctrl-f) pops a mini-dialog with
@@ -14,6 +93,7 @@
 - Ebookmaker version 0.12.29 included
 
 ### Bug Fixes
+
 - The column display (ruler) numbers could sometimes display wrongly
 - When an internal page marker ended up in the middle of block markup,
   rewrapping could fail. Page markers could also break the column
