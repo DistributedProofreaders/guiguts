@@ -1,6 +1,6 @@
 
 # DON'T FORGET to update the version number in guiguts.pl too
-VERSION=1.5.3
+VERSION=1.6.0
 
 # zip utility to use
 ZIP=zip -rv9
