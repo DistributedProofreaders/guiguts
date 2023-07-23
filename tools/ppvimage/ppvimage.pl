@@ -248,7 +248,7 @@ sub runProgram {
         return ( 0, 0 );
     }
 
-    # svgsize : gets the width and height (in pixels) of an svc file
+    # svgsize : gets the width and height (in pixels) of an svg file
     sub svgsize {
         my ($SVG) = @_;
         my $buf = '';
