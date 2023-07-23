@@ -27,6 +27,7 @@
   in the same way as Illustration Fixup
 - "Display Character Names" setting (Preferences->Toolbar menu) for the
   Dec/Hex ordinal label in the status bar is now stored in `settings.rc`
+- The ppvimage tool now allows `.svg` image files
 - Included latest version of ebookmaker (0.12.33)
 - Included latest versions of VNU Validator (23.4.11), CSS Validator (20220105)
   and Epubcheck (5.0.1)

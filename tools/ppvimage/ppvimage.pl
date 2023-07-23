@@ -248,6 +248,23 @@ sub runProgram {
         return ( 0, 0 );
     }
 
+    # svgsize : gets the width and height (in pixels) of an svc file
+    sub svgsize {
+        my ($SVG) = @_;
+        my $buf = '';
+
+        if ( defined($SVG)
+            && read( $SVG, $buf, 1024 ) ) {    # Should be enough to find the width/height
+            my $width  = $buf;
+            my $height = $buf;
+            if (   $width =~ s/.*<svg[^>]*width\s*=\s*["']([\d\.]+)px["'].*/$1/
+                && $height =~ s/.*<svg[^>]*height\s*=\s*["']([\d\.]+)px["'].*/$1/ ) {
+                return ( $width, $height );
+            }
+        }
+        return ( 0, 0 );
+    }
+
     sub logprint {    # print message to logfile
                       # $_[0] is the body of the message
                       # S_[1] is the source line number
@@ -452,6 +469,20 @@ sub runProgram {
             ( $x, $y ) = NEWgifsize( \*IMGFILE );
             if ( ( $x == 0 ) and ( $y == 0 ) ) {    # unable to determine dimensions
                 logprint( "  *** is this really a gif image? ***", $errline, "KEY" );
+            }
+            logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO" );
+            if ( ( $wd ne "X" ) and ( $x ne $wd ) ) {
+                $x = abs( $wd - $x );
+                logprint( "   natural/coded widths differ by $x", $errline, "KEY" );
+            }
+            if ( ( $ht ne "X" ) and ( $y ne $ht ) ) {
+                $y = abs( $ht - $y );
+                logprint( "   natural/coded heights differ by $y", $errline, "KEY" );
+            }
+        } elsif ( $src =~ /\.svg$/ ) {
+            ( $x, $y ) = svgsize( \*IMGFILE );
+            if ( ( $x == 0 ) and ( $y == 0 ) ) {    # unable to determine dimensions
+                logprint( "  *** is this really an svg image? ***", $errline, "KEY" );
             }
             logprint( "  natural width=\"$x\" height=\"$y\"", $errline, "INFO" );
             if ( ( $wd ne "X" ) and ( $x ne $wd ) ) {
