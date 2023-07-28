@@ -259,6 +259,7 @@ our (
 ) = ( 1, 1, 0, 0, 0, 1 );
 our ( $bold_char, $italic_char, $gesperrt_char, $font_char, $sc_char ) =
   ( '=', '_', '~', '=', '+' );
+our @fixopts = ( 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1 );
 
 our @extops = (
     {
