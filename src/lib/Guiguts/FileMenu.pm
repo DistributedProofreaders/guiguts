@@ -1164,7 +1164,11 @@ sub file_import_markup {
 
         my $directory = '';
         my $types     = [ [ 'Gzip Files', ['.gz'] ], [ 'All Files', ['*'] ], ];
-        my $name      = $textwindow->getOpenFile( -title => 'Open OCR File', -filetypes => $types );
+        my $name      = $textwindow->getOpenFile(
+            -title      => 'Open OCR File',
+            -filetypes  => $types,
+            -initialdir => getsafelastpath()
+        );
         return unless defined($name) and length($name);
         clearvars($textwindow);
         clearpopups();
