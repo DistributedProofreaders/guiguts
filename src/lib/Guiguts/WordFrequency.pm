@@ -374,7 +374,7 @@ sub wordfrequency {
                 my ($name);
                 $name = $textwindow->getSaveFile(
                     -title       => 'Save Word Frequency List As',
-                    -initialdir  => $::globallastpath,
+                    -initialdir  => ::getsafelastpath(),
                     -initialfile => 'wordfreq.txt'
                 );
 
@@ -391,7 +391,7 @@ sub wordfrequency {
                 my ($name);
                 $name = $textwindow->getSaveFile(
                     -title       => 'Export Word Frequency List As',
-                    -initialdir  => $::globallastpath,
+                    -initialdir  => ::getsafelastpath(),
                     -initialfile => 'wordlist.txt'
                 );
 

@@ -76,7 +76,7 @@ sub file_saveas {
     $initialfile =~ s|.*/([^/]*)$|$1|;
     my $name = $textwindow->getSaveFile(
         -title       => ( $saveacopy ? 'Save a Copy As' : 'Save As' ),
-        -initialdir  => $::globallastpath,
+        -initialdir  => getsafelastpath(),
         -initialfile => $initialfile,
     );
 
@@ -124,7 +124,7 @@ sub file_import_preptext {
     return if ( ::confirmempty() =~ /cancel/i );
     my $directory = $top->chooseDirectory(
         -title      => 'Choose the directory containing the text files to be imported',
-        -initialdir => "$::globallastpath",
+        -initialdir => getsafelastpath(),
     );
     return 0
       unless ( defined $directory and -d $directory and $directory ne '' );
@@ -182,7 +182,7 @@ sub file_export_preptext {
     my $midwordpagebreak = 0;
     my $directory        = $top->chooseDirectory(
         -title      => 'Choose the directory to export the text files to',
-        -initialdir => "$::globallastpath",
+        -initialdir => getsafelastpath(),
     );
     return 0 unless ( defined $directory and $directory ne '' );
     unless ( -e $directory ) {
