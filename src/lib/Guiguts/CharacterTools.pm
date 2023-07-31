@@ -527,7 +527,7 @@ sub utfchar_bind {
         '<ButtonPress-1>',
         sub {
             $widget->configure( -relief => 'sunken' );
-            $::lglobal{hasfocus}->insert( 'insert', $widget->cget('-text') );
+            insertit( $widget->cget('-text') );
         }
     );
     $widget->bind(
@@ -616,7 +616,7 @@ sub utfcharentrypopup {
             -text    => 'Insert',
             -width   => 8,
             -command => sub {
-                $::lglobal{hasfocus}->insert( 'insert', $outentry->get( '1.0', 'end -1c' ) );
+                insertit( $outentry->get( '1.0', 'end -1c' ) );
             },
         )->grid( -row => 1, -column => 1 );
         $inentry->Tk::bind( '<Return>', sub { $insertbtn->invoke(); } );
