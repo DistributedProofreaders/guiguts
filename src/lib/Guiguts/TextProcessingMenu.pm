@@ -221,8 +221,7 @@ sub fixpopup {
         $::lglobal{fixpop}->title('Fixup Options');
         my $pframe = $::lglobal{fixpop}->Frame->pack;
         $pframe->Label( -text => 'Select options for the fixup routine:', )->pack;
-        my $pframe1 = $::lglobal{fixpop}->Frame->pack;
-        ${ $::lglobal{fixopt} }[15] = 1;
+        my $pframe1  = $::lglobal{fixpop}->Frame->pack;
         my @rbuttons = (
             'Skip /* */, /$ $/, /X X/, and /F F/ marked blocks.',
             'Fix up spaces around single hyphens.',
@@ -244,19 +243,19 @@ sub fixpopup {
 
         for (@rbuttons) {
             $pframe1->Checkbutton(
-                -variable => \${ $::lglobal{fixopt} }[$row],
+                -variable => \$::fixopts[$row],
                 -text     => $_,
             )->grid( -row => $row, -column => 1, -sticky => 'nw' );
             ++$row;
         }
         $pframe1->Radiobutton(
-            -variable => \${ $::lglobal{fixopt} }[15],
+            -variable => \$::fixopts[15],
             -value    => 1,
             -text     => 'French style angle quotes «guillemets»',
         )->grid( -row => $row, -column => 1 );
         ++$row;
         $pframe1->Radiobutton(
-            -variable => \${ $::lglobal{fixopt} }[15],
+            -variable => \$::fixopts[15],
             -value    => 0,
             -text     => 'German style angle quotes »guillemets«',
         )->grid( -row => $row, -column => 1 );
@@ -299,9 +298,9 @@ sub fixup {
         $inblock = 0 if $line =~ /[$BLOCKTYPES]\//;
         $inpoem  = 1 if $line =~ /\/[$POEMTYPES]/;
         $inpoem  = 0 if $line =~ /[$POEMTYPES]\//;
-        unless ( $inblock && ${ $::lglobal{fixopt} }[0] ) {
+        unless ( $inblock && $::fixopts[0] ) {
 
-            if ( ${ $::lglobal{fixopt} }[2] ) {    # remove multiple spaces
+            if ( $::fixopts[2] ) {    # remove multiple spaces
                 my $poetrylinenum = '';
 
                 # if poem line number replace with temporary character
@@ -316,55 +315,55 @@ sub fixup {
             }
 
             # Fix up spaces around single hyphens
-            if ( ${ $::lglobal{fixopt} }[1] ) {
+            if ( $::fixopts[1] ) {
                 $edited++ if $line =~ s/(\S) +-(?!-)/$1-/g;    # Don't remove spaces before hyphen if start of line, like poetry
                 $edited++ if $line =~ s/(?<!-)- +/-/g;
             }
 
             # Remove space before single periods (only if not first on line and not decimal point before digits)
-            if ( ${ $::lglobal{fixopt} }[3] ) {
+            if ( $::fixopts[3] ) {
                 $edited++ if $line =~ s/(\S) +\.(?![\d\.])/$1\./g;
             }
 
             # Get rid of space before exclamation points
-            if ( ${ $::lglobal{fixopt} }[4] ) {
+            if ( $::fixopts[4] ) {
                 $edited++ if $line =~ s/ +!/!/g;
             }
 
             # Get rid of space before question marks
-            if ( ${ $::lglobal{fixopt} }[5] ) {
+            if ( $::fixopts[5] ) {
                 $edited++ if $line =~ s/ +\?/\?/g;
             }
 
             # Get rid of space before semicolons
-            if ( ${ $::lglobal{fixopt} }[6] ) {
+            if ( $::fixopts[6] ) {
                 $edited++ if $line =~ s/ +\;/\;/g;
             }
 
             # Get rid of space before colons
-            if ( ${ $::lglobal{fixopt} }[7] ) {
+            if ( $::fixopts[7] ) {
                 $edited++ if $line =~ s/ +:/:/g;
             }
 
             # Get rid of space before commas
-            if ( ${ $::lglobal{fixopt} }[8] ) {
+            if ( $::fixopts[8] ) {
                 $edited++ if $line =~ s/ +,/,/g;
             }
 
             # Remove spaces after beginning and before ending double quote
-            if ( ${ $::lglobal{fixopt} }[9] ) {
+            if ( $::fixopts[9] ) {
                 $edited++ if $line =~ s/^\" +/\"/;
                 $edited++ if $line =~ s/ +\"$/\"/;
             }
 
             # Remove spaces after opening and before closing brackets
-            if ( ${ $::lglobal{fixopt} }[10] ) {
+            if ( $::fixopts[10] ) {
                 $edited++ if $line =~ s/(?<=(\(|\{|\[)) //g;
                 $edited++ if $line =~ s/ (?=(\)|\}|\]))//g;
             }
 
             # Fix thought breaks: asterisks to <tb>
-            if ( ${ $::lglobal{fixopt} }[11] ) {
+            if ( $::fixopts[11] ) {
                 $edited++ if $line =~ s/^\s*(\*\s*){4,}$/<tb>\n/;
             }
 
@@ -372,7 +371,7 @@ sub fixup {
             $edited++ if ( $line =~ s/ +$// );
 
             # Fix llth, lst
-            if ( ${ $::lglobal{fixopt} }[12] ) {
+            if ( $::fixopts[12] ) {
                 $edited++ if $line =~ s/llth/11th/g;
                 $edited++ if $line =~ s/(?<=\d)lst/1st/g;
                 $edited++ if $line =~ s/(?<=\s)lst/1st/g;
@@ -381,18 +380,18 @@ sub fixup {
 
             # format ellipses correctly - add space before unless already one,
             # or sentence-ending punctuation is present, or at start of quoted text
-            if ( ${ $::lglobal{fixopt} }[13] ) {
+            if ( $::fixopts[13] ) {
                 $edited++ if $line =~ s/(?<=[^\.\!\? \"'$LDQ$LSQ])\.{3}(?![\.\!\?])/ \.\.\./g;
             }
 
             # format french guillemets correctly
-            if ( ${ $::lglobal{fixopt} }[14] and ${ $::lglobal{fixopt} }[15] ) {
+            if ( $::fixopts[14] and $::fixopts[15] ) {
                 $edited++ if $line =~ s/«\s+/«/g;
                 $edited++ if $line =~ s/\s+»/»/g;
             }
 
             # format german guillemets correctly
-            if ( ${ $::lglobal{fixopt} }[14] and !${ $::lglobal{fixopt} }[15] ) {
+            if ( $::fixopts[14] and !$::fixopts[15] ) {
                 $edited++ if $line =~ s/\s+«/«/g;
                 $edited++ if $line =~ s/»\s+/»/g;
             }

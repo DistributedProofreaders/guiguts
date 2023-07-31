@@ -992,6 +992,10 @@ EOM
         }
         print $save_handle "\n";
 
+        print $save_handle '@fixopts = (';
+        for (@::fixopts) { print $save_handle "$_," }
+        print $save_handle ");\n\n";
+
         print $save_handle '@mygcview = (';
         for (@::mygcview) { print $save_handle "$_," }
         print $save_handle (");\n\n");
