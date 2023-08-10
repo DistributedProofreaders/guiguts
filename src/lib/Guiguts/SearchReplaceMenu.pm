@@ -2124,6 +2124,7 @@ sub loadscannos {
     @{ $::lglobal{scannosarray} } = ();
     $::lglobal{scannosindex} = 0;
     my $types = [ [ 'Scannos', ['.rc'] ], [ 'All Files', ['*'] ], ];
+    $::scannospath = ::getsafelastpath() unless ( -d $::scannospath );
     $::lglobal{scannosfilename} = $top->getOpenFile(
         -filetypes  => $types,
         -title      => 'Scannos list?',

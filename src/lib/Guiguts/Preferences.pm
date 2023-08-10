@@ -417,10 +417,11 @@ sub setpngspath {
     my $textwindow = $::textwindow;
     my $top        = $::top;
 
-    #print $pagenum.'';
+    my $initialdir = "$::globallastpath" . "pngs";
+    $initialdir = ::getsafelastpath() unless ( -d $initialdir );
     my $path = $textwindow->chooseDirectory(
         -title      => 'Choose the PNGs file directory',
-        -initialdir => "$::globallastpath" . "pngs",
+        -initialdir => $initialdir,
     );
     return unless defined $path and -e $path;
     $path .= '/';
@@ -597,9 +598,11 @@ sub locateExecutable {
 sub locateDirectory {
     my ( $dirname, $dirpathref ) = @_;
     my $textwindow = $::textwindow;
+    my $initialdir = ::dirname( ${$dirpathref} );
+    $initialdir = ::getsafelastpath() unless ( -d $initialdir );
     $::lglobal{pathtemp} = $textwindow->chooseDirectory(
         -title      => "Where is your $dirname folder?",
-        -initialdir => ::dirname( ${$dirpathref} ),
+        -initialdir => $initialdir,
     );
     return unless $::lglobal{pathtemp};    # User cancelled
 

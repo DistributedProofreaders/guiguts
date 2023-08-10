@@ -2228,6 +2228,7 @@ sub htmlautoconvert {
 sub thumbnailbrowse {
     my $name = shift;
     unless ($name) {
+        $::globalimagepath = ::getsafelastpath() unless ( -d $::globalimagepath );
         my $types = [ [ 'Image Files', [ '.gif', '.jpg', '.png' ] ], [ 'All Files', ['*'] ], ];
         $name = $::lglobal{htmlimpop}->getOpenFile(
             -filetypes  => $types,
