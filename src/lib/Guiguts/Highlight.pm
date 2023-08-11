@@ -19,7 +19,8 @@ my $TAGCH = "[a-z0-9]";    # Permissible characters in HTML tag name
 sub scannosfile {
     my $top = $::top;
     $::scannoslistpath = ::os_normal($::scannoslistpath);
-    my $types       = [ [ 'Text file', [ '.txt', ] ], [ 'All Files', ['*'] ], ];
+    my $types = [ [ 'Text file', [ '.txt', ] ], [ 'All Files', ['*'] ], ];
+    $::scannoslistpath = ::getsafelastpath() unless ( -d $::scannoslistpath );
     my $scannosfile = $top->getOpenFile(
         -title      => 'List of words to highlight?',
         -filetypes  => $types,
