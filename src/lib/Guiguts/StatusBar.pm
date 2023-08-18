@@ -450,15 +450,12 @@ sub update_prev_img_button {
             '<1>',
             sub {
                 $::lglobal{previmagebutton}->configure( -relief => 'sunken' );
-                ::displaypagenums();
-                ::pgfocus( -1, 'show' );
+                ::pgfocus(-1);
             }
         );
         _butbind( $::lglobal{previmagebutton} );
         $::lglobal{statushelp}->attach( $::lglobal{previmagebutton},
-            -balloonmsg =>
-              "Move to previous page in text and open image corresponding to previous current page in an external viewer."
-        );
+            -balloonmsg => "Move to previous start of page in text." );
     }
 }
 
@@ -509,15 +506,12 @@ sub update_next_img_button {
             '<1>',
             sub {
                 $::lglobal{nextimagebutton}->configure( -relief => 'sunken' );
-                ::displaypagenums();
-                ::pgfocus( +1, 'show' );
+                ::pgfocus(1);
             }
         );
         _butbind( $::lglobal{nextimagebutton} );
         $::lglobal{statushelp}->attach( $::lglobal{nextimagebutton},
-            -balloonmsg =>
-              "Move to next page in text and open image corresponding to next current page in an external viewer."
-        );
+            -balloonmsg => "Move to next start of page in text." );
     }
 }
 

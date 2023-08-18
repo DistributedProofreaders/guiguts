@@ -17,15 +17,15 @@ sub hidepagenums {
 }
 
 #
-# Show visible poage markers
+# Show visible page markers
 sub displaypagenums {
     ::togglepagenums() unless $::lglobal{seepagenums};
 }
 
-## Toggle visible page markers
+## Toggle visible page markers - optional argument to leave dialog visibility unchanged
 sub togglepagenums {
-    my $showallmarkers = shift;
-    my $textwindow     = $::textwindow;
+    my $nodialog   = shift;
+    my $textwindow = $::textwindow;
     if ( $::lglobal{seepagenums} ) {
         $::lglobal{seepagenums} = 0;
         my @marks = $textwindow->markNames;
@@ -33,13 +33,10 @@ sub togglepagenums {
             if ( $_ =~ m{Pg(\S+)} ) {
                 my $pagenum = " Pg$1 ";
                 $textwindow->ntdelete( $_, "$_ +@{[length $pagenum]}c" );
-            } elsif ($showallmarkers) {
-                my $pagenum = " @_";
-                $textwindow->ntdelete( $_, "$_ +@{[length $pagenum]}c" );
             }
         }
         $textwindow->tagRemove( 'pagenum', '1.0', 'end' );
-        ::killpopup('pagemarkerpop');
+        ::killpopup('pagemarkerpop') unless $nodialog;
     } else {
         $::lglobal{seepagenums} = 1;
         my @marks = $textwindow->markNames;
@@ -48,13 +45,9 @@ sub togglepagenums {
                 my $pagenum = " Pg$1 ";
                 $textwindow->ntinsert( $_, $pagenum );
                 $textwindow->tagAdd( 'pagenum', $_, "$_ +@{[length $pagenum]}c" );
-            } elsif ($showallmarkers) {
-                my $pagenum = " $1";
-                $textwindow->ntinsert( $_, $pagenum );
-                $textwindow->tagAdd( 'pagenum', $_, "$_ +@{[length $pagenum]}c" );
             }
         }
-        ::pnumadjust();
+        ::pnumadjust() unless $nodialog;
     }
 }
 
@@ -368,14 +361,21 @@ sub pgrenum {
 
 #
 # Move focus to previous or next marker (pass negative number for previous)
-# Optional second argument to show the image for this page
+# advancing to just after marker to ensure we're not at the end of the page before
+# Uses Adjust Page Markers dialog if it is visible, otherwise moves from current insert position
 sub pgfocus {
     my $searchmethod = (shift) < 0 ? "markPrevious" : "markNext";
-    my $showimage    = shift;
     my $textwindow   = $::textwindow;
-    ::set_auto_img(0);    # turn off so no interference
+
+    my $save_seepagenums = $::lglobal{seepagenums};
+    ::togglepagenums('nodialog') unless $save_seepagenums;    # Show page nums without dialog unless already shown
+
+    # Temporarily (silently) turn off Auto Img to avoid unwanted images being shown during advance/retreat
+    my $save_auto_show_images = $::auto_show_images;
+    $::auto_show_images = 0;
+
     my $mark;
-    my $num = $::lglobal{pagenumentry}->get;
+    my $num = $::lglobal{pagenumentry}->get if Tk::Exists( $::lglobal{pagenumentry} );
     $num  = $textwindow->index('insert') unless $num;
     $mark = $num;
 
@@ -385,14 +385,24 @@ sub pgfocus {
             last;
         }
     }
-    $::lglobal{pagenumentry}->delete( '0', 'end' );
-    $::lglobal{pagenumentry}->insert( 'end', $mark );
-    if ( $showimage and $mark =~ /Pg(\S+)/ ) {
-        $textwindow->focus;
-        ::openpng( $textwindow, $1 );
+    if ( Tk::Exists( $::lglobal{pagenumentry} ) ) {
+        $::lglobal{pagenumentry}->delete( '0', 'end' );
+        $::lglobal{pagenumentry}->insert( 'end', $mark );
     }
+
+    # If jumped to a new label, need to step past label onto the new page, or we get left at end of old page
+    my $marklen = length(" $mark ") + 1;
+    $mark .= " +${marklen}c" if $mark =~ /(Pg\S+)/;
     $textwindow->markSet( 'insert', $mark );
     ::seeindex( $mark, $::donotcenterpagemarkers );
+
+    # Update window to ensure pagenums are briefly shown before being hidden again, unless they were previously visible
+    unless ($save_seepagenums) {
+        $::textwindow->update;
+        $::textwindow->after(375);
+        ::togglepagenums('nodialog');
+    }
+    ::set_auto_img($save_auto_show_images);    # Restore Auto Img setting
 }
 
 #
