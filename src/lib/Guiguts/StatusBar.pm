@@ -357,7 +357,7 @@ sub update_img_button {
             -width      => 7,
             -background => 'gray',
             -relief     => 'ridge',
-        )->grid( -row => 1, -column => 3, -sticky => 'nw' );
+        )->grid( -row => 1, -column => 2, -sticky => 'nw' );
         $::lglobal{img_num_label}->bind(
             '<1>',
             sub {
@@ -445,7 +445,7 @@ sub update_prev_img_button {
             -width      => 2,
             -relief     => 'ridge',
             -background => 'gray',
-        )->grid( -row => 1, -column => 2 );
+        )->grid( -row => 1, -column => 3 );
         $::lglobal{previmagebutton}->bind(
             '<1>',
             sub {
@@ -469,7 +469,7 @@ sub update_see_img_button {
             -width      => 7,
             -relief     => 'ridge',
             -background => 'gray',
-        )->grid( -row => 1, -column => 5 );
+        )->grid( -row => 1, -column => 4 );
         $::lglobal{pagebutton}->bind( '<1>', \&seecurrentimage );
         $::lglobal{pagebutton}->bind( '<3>', sub { ::setpngspath() } );
         _butbind( $::lglobal{pagebutton} );
@@ -501,7 +501,7 @@ sub update_next_img_button {
             -width      => 2,
             -relief     => 'ridge',
             -background => 'gray',
-        )->grid( -row => 1, -column => 4 );
+        )->grid( -row => 1, -column => 5 );
         $::lglobal{nextimagebutton}->bind(
             '<1>',
             sub {
