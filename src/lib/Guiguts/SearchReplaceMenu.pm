@@ -2219,9 +2219,9 @@ sub quickcount {
 
     # Inform user
     my $dlg = $::top->Dialog(
-        -text    => "Count: $count",
+        -text    => "Count: $count        ",    # Extra space needed to force dialog wide enough for title
         -bitmap  => "info",
-        -title   => "Count",
+        -title   => "Word Count",
         -buttons => ['Ok']
     );
     $dlg->Tk::bind( '<Escape>' => sub { $dlg->Subwidget('B_Ok')->invoke; } );
@@ -2392,7 +2392,7 @@ sub quicksearchcountmatches {
     my $dlg = $::top->Dialog(
         -text    => searchnumtext($count),
         -bitmap  => "info",
-        -title   => "Count",
+        -title   => "QS Count",
         -buttons => ['Ok']
     );
     $dlg->Tk::bind( '<Escape>' => sub { $dlg->Subwidget('B_Ok')->invoke; } );
