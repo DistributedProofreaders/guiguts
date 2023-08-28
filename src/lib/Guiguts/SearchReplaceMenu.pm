@@ -2219,7 +2219,7 @@ sub quickcount {
 
     # Inform user
     my $dlg = $::top->Dialog(
-        -text    => "Count: $count        ",    # Extra space needed to force dialog wide enough for title
+        -text    => "Word Count: $count",
         -bitmap  => "info",
         -title   => "Word Count",
         -buttons => ['Ok']
