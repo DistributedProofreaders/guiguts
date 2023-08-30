@@ -196,19 +196,6 @@ sub spellreplace {
 }
 
 #
-# Replace all instances of bad spelling with correction
-sub spellreplaceall {
-    my $textwindow = $::textwindow;
-    ::hidepagenums();
-    my $lastindex   = '1.0';
-    my $misspelled  = $::lglobal{misspelledentry}->get;
-    my $replacement = $::lglobal{spreplaceentry}->get;
-    my $repmatchindex;
-    $textwindow->FindAndReplaceAll( '-exact', '-nocase', $misspelled, $replacement );
-    spellignoreall();
-}
-
-#
 # Replace the replacement word with one from the guess list
 sub spellmisspelled_replace {
     ::hidepagenums();
@@ -585,7 +572,22 @@ sub spellchecker {
             -padx   => 3,
             -anchor => 'nw'
         );
-        my $dictmyaddbutton = $spf2->Button(
+        my $ignoreallbutton = $spf2->Button(
+            -command => sub {
+                ::busy();
+                spellignoreall();
+                spellchecknext();
+                ::unbusy();
+            },
+            -text  => 'Skip All <Ctrl+i>',
+            -width => 14,
+        )->pack(
+            -side   => 'left',
+            -pady   => 2,
+            -padx   => 3,
+            -anchor => 'nw'
+        );
+        my $dictmyaddbutton = $spf3->Button(
             -command => sub {
                 ::busy();
                 spellmyaddword( $::lglobal{misspelledentry}->get );
@@ -595,36 +597,6 @@ sub spellchecker {
             },
             -text  => 'Add To Project Dic. <Ctrl+p>',
             -width => 22,
-        )->pack(
-            -side   => 'left',
-            -pady   => 2,
-            -padx   => 3,
-            -anchor => 'nw'
-        );
-        my $replaceallbutton = $spf3->Button(
-            -command => sub {
-                ::busy();
-                spellreplaceall();
-                spellchecknext();
-                ::unbusy();
-            },
-            -text  => 'Change All',
-            -width => 14,
-        )->pack(
-            -side   => 'left',
-            -pady   => 2,
-            -padx   => 3,
-            -anchor => 'nw'
-        );
-        my $ignoreallbutton = $spf3->Button(
-            -command => sub {
-                ::busy();
-                spellignoreall();
-                spellchecknext();
-                ::unbusy();
-            },
-            -text  => 'Skip All <Ctrl+i>',
-            -width => 14,
         )->pack(
             -side   => 'left',
             -pady   => 2,
