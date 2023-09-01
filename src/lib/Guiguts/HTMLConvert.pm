@@ -13,7 +13,8 @@ BEGIN {
     @ISA = qw(Exporter);
     @EXPORT =
       qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
-      &fromnamed &fracconv &pageadjust &html_convert_pageanchors);
+      &fromnamed &fracconv &pageadjust &html_convert_pageanchors
+      &latex_quotes_convert);
 }
 
 #
@@ -4192,4 +4193,201 @@ sub addpagelinks {
     $selection =~ s/(,$rquot?) +\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2<\/a>/g;
     return $selection;
 }
+
+#############################
+# LaTeX conversion routines #
+#############################
+
+my $LDQ  = "\x{201c}";
+my $RDQ  = "\x{201d}";
+my $LSQ  = "\x{2018}";
+my $RSQ  = "\x{2019}";
+my $LDL  = "``";
+my $RDL  = "''";
+my $LSL  = "`";
+my $RSL  = "'";
+my $FLAG = "@";
+
+#
+# Convert all LaTeX-style quotes to curly quotes - similar to text_quotes_convert()
+sub latex_quotes_convert {
+    my $textwindow = $::textwindow;
+    my $top        = $::top;
+    $top->Busy( -recurse => 1 );
+    $textwindow->addGlobStart;
+
+    latex_quotes_double();
+    latex_quotes_single();
+
+    $textwindow->addGlobEnd;
+    $top->Unbusy( -recurse => 1 );
+}
+
+#
+# Convert double quotes from LaTeX-style to curly
+# Keep track of whether last quote was open/close, resetting at end of paragraph
+# Flag potential errors with "@", e.g. if quote type was unexpected
+sub latex_quotes_double {
+    my $textwindow = $::textwindow;
+    my $linenum    = 0;
+    my $lineend    = $textwindow->index('end');
+    $lineend =~ s/\..+//;
+
+    my $dqlevel = 0;
+    while ( $linenum < $lineend ) {
+        $linenum++;
+        my $line   = $textwindow->get( "$linenum.0", "$linenum.end" );
+        my $edited = 0;
+
+        # expect dqlevel == 0 on an empty line unless next line starts with open quote
+        if ( $line =~ /^$/ ) {
+            if (    $dqlevel != 0
+                and $linenum + 1 < $lineend
+                and $textwindow->get( "$linenum.0 +1l", "$linenum.0 +1l + 2c" ) ne $LDL ) {
+                $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
+            }
+            $dqlevel = 0;
+            next;
+        }
+
+        # Catch ditto marks first (double space both sides unless end of line)
+        $edited = 1 if $line =~ s/(?<=  )$RDL(?=  )/$RDQ/g;    # look-arounds necessary for multiple matches to work
+        $edited = 1 if $line =~ s/  $RDL$/  $RDQ/;
+
+        # replace LaTeX with curly quotes, one at a time
+        while ( $line =~ /($LDL|$RDL)/g ) {
+            if ( $1 eq $LDL ) {
+                $line .= $FLAG if $dqlevel > 0;    # Not expecting an open quote
+                $line =~ s/$LDL/$LDQ/;
+                $dqlevel = 1;
+            } else {
+                $line .= $FLAG if $dqlevel == 0;    # Not expecting a close quote
+                $line =~ s/$RDL/$RDQ/;
+                $dqlevel = 0;
+            }
+            $edited = 1;
+        }
+
+        next unless $edited;
+
+        # Check for various errors and flag/correct them
+        if ( $line =~ s/$LDQ$/$RDQ/ ) {    # open quote end of line - change to close quote
+            $line .= $FLAG;
+            $dqlevel = 0;
+        }
+        if ( $line =~ s/^$RDQ/$LDQ/ ) {    # close quote start of line - change to open quote
+            $line .= $FLAG;
+            $dqlevel = 1;
+        }
+        if ( $line =~ /\w$LDQ/ ) {         # open quote preceded by word char
+            $line .= $FLAG;
+        }
+        if ( $line =~ /$RDQ\w/ ) {         # close quote followed by word char
+            $line .= $FLAG;
+        }
+        if ( $line =~ /$LDQ / ) {          # floating open quote
+            $line .= $FLAG;
+        }
+        if ( $line =~ / $RDQ(?!(  |$))/ ) {    # floating close quote
+            $line .= $FLAG;
+        }
+
+        $textwindow->replacewith( "$linenum.0", "$linenum.end", $line );
+    }
+}
+
+#
+# Convert single quotes from straight to curly
+# First by converting specific words with apostrophes at the start, then those with apostrophes mid-word
+# Hopefully in LaTeX books, not too many words with apostrophe at the end, so not too many false FLAGs
+sub latex_quotes_single {
+    my $textwindow = $::textwindow;
+    my $linenum    = 0;
+    my $lineend    = $textwindow->index('end');
+    $lineend =~ s/\..+//;
+
+    # Prepare word list and replacements
+    my @words = (
+        "${RSL}em",             "${RSL}Tis",
+        "${RSL}Tisn${RSL}t",    "${RSL}Tweren${RSL}t",
+        "${RSL}Twere",          "${RSL}Twould",
+        "${RSL}Twouldn${RSL}t", "${RSL}Twas",
+        "${RSL}Im",             "${RSL}Twixt",
+        "${RSL}Til",            "${RSL}Scuse",
+        "${RSL}Gainst",         "${RSL}Twon${RSL}t"
+    );
+    my @replc = ();
+    for my $word (@words) {
+        my $repl = $word;
+        $repl =~ s/$RSL/$RSQ/g;
+        push( @replc, $repl );
+    }
+
+    my $sqlevel = 0;
+    while ( $linenum < $lineend ) {
+        $linenum++;
+        my $edited = 0;
+        my $line   = $textwindow->get( "$linenum.0", "$linenum.end" );
+
+        # Replace using word list
+        for my $ii ( 0 .. $#words ) {
+            my $wmix = $words[$ii];
+            my $rmix = $replc[$ii];
+            $edited = 1 if $line =~ s/$wmix\b/$rmix/g;    # replace mixed case version
+            my $wlow = lc $words[$ii];
+            my $rlow = lc $replc[$ii];
+            $edited = 1 if $line =~ s/$wlow\b/$rlow/g;    # replace lower case version
+        }
+
+        # letter-'-letter -> apostrophe
+        $edited = 1 if $line =~ s/(\w)$RSL(\w)/$1$RSQ$2/g;
+
+        # expect sqlevel == 0 on an empty line unless next line starts with open quote
+        if ( $line =~ /^$/ ) {
+            if (    $sqlevel != 0
+                and $linenum + 1 < $lineend
+                and $textwindow->get("$linenum.0 +1l") ne $LSL ) {
+                $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
+            }
+            $sqlevel = 0;
+            next;
+        }
+
+        # replace LaTeX with curly quotes, one at a time
+        while ( $line =~ /($LSL|$RSL)/g ) {
+            if ( $1 eq $LSL ) {
+                $line .= $FLAG if $sqlevel > 0;    # Not expecting an open quote
+                $line =~ s/$LSL/$LSQ/;
+                $sqlevel = 1;
+            } else {
+                $line .= $FLAG if $sqlevel == 0;    # Not expecting a close quote
+                $line =~ s/$RSL/$RSQ/;
+                $sqlevel = 0;
+            }
+            $edited = 1;
+        }
+
+        next unless $edited;
+
+        # Check for various errors and flag/correct them
+        if ( $line =~ s/$LSQ$/$RSQ/ ) {    # open quote end of line - change to close quote
+            $line .= $FLAG;
+            $sqlevel = 0;
+        }
+        if ( $line =~ s/^$RSQ/$LSQ/ ) {    # close quote start of line - change to open quote
+            $line .= $FLAG;
+            $sqlevel = 1;
+        }
+        if ( $line =~ /$LSQ / ) {          # floating open quote
+            $line .= $FLAG;
+        }
+        if ( $line =~ / $RSQ/ ) {          # floating close quote
+            $line .= $FLAG;
+        }
+
+        $textwindow->replacewith( "$linenum.0", "$linenum.end", $line );
+    }
+
+}
+
 1;

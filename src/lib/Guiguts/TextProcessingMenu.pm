@@ -500,7 +500,6 @@ sub text_quotes_convert {
     $top->Busy( -recurse => 1 );
     $textwindow->addGlobStart;
 
-    $::lglobal{quotesflagcount} = 0;
     text_quotes_double();
     text_quotes_single();
 
@@ -530,7 +529,6 @@ sub text_quotes_double {
                 and $linenum + 1 < $lineend
                 and $textwindow->get("$linenum.0 +1l") ne '"' ) {
                 $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
-                $::lglobal{quotesflagcount}++;
             }
             $dqlevel = 0;
             next;
@@ -545,7 +543,6 @@ sub text_quotes_double {
             $edited = 1;
             if ( $dqlevel != 0 ) {                          # flag previous line if open not expected
                 $textwindow->insert( "$linenum.0 - 1l lineend", $FLAG );
-                $::lglobal{quotesflagcount}++;
             }
             $dqlevel = 1;
         }
@@ -575,24 +572,19 @@ sub text_quotes_double {
         # Check for various errors and flag/correct them
         if ( $line =~ s/$LDQ$/$RDQ/ ) {    # open quote end of line - change to close quote
             $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
             $dqlevel = 0;
         }
         if ( $line =~ /\w$LDQ/ ) {         # open quote preceded by word char
             $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
         }
         if ( $line =~ /$RDQ\w/ ) {         # close quote followed by word char
             $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
         }
         if ( $line =~ /$LDQ / ) {          # floating open quote
             $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
         }
         if ( $line =~ / $RDQ(?!(  |$))/ ) {    # floating close quote
             $line .= $FLAG;
-            $::lglobal{quotesflagcount}++;
         }
 
         $textwindow->replacewith( "$linenum.0", "$linenum.end", $line );

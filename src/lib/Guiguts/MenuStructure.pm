@@ -432,6 +432,7 @@ sub menu_search_block {
 sub menu_tools {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
+        menu_cascade( 'LaTeX Tools', &menu_tools_latextools ),
         [
             'command', 'Word Frequenc~y...',
             -accelerator => 'F5',
@@ -585,6 +586,12 @@ sub menu_tools {
             }
         ],
     ];
+}
+
+#
+# Create the Tools, LaTeX Tools submenu
+sub menu_tools_latextools {
+    [ [ 'command', 'Replace LaTeX quotes with curlies', -command => \&::latex_quotes_convert ], ];
 }
 
 #
