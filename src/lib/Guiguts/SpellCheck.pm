@@ -550,7 +550,7 @@ sub spellchecker {
                 ::unbusy();
             },
             -text  => 'Change',
-            -width => 14,
+            -width => 22,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -572,22 +572,7 @@ sub spellchecker {
             -padx   => 3,
             -anchor => 'nw'
         );
-        my $ignoreallbutton = $spf2->Button(
-            -command => sub {
-                ::busy();
-                spellignoreall();
-                spellchecknext();
-                ::unbusy();
-            },
-            -text  => 'Skip All <Ctrl+i>',
-            -width => 14,
-        )->pack(
-            -side   => 'left',
-            -pady   => 2,
-            -padx   => 3,
-            -anchor => 'nw'
-        );
-        my $dictmyaddbutton = $spf3->Button(
+        my $dictmyaddbutton = $spf2->Button(
             -command => sub {
                 ::busy();
                 spellmyaddword( $::lglobal{misspelledentry}->get );
@@ -597,6 +582,33 @@ sub spellchecker {
             },
             -text  => 'Add To Project Dic. <Ctrl+p>',
             -width => 22,
+        )->pack(
+            -side   => 'left',
+            -pady   => 2,
+            -padx   => 3,
+            -anchor => 'nw'
+        );
+        my $dictmybutton = $spf3->Button(
+            -command => sub {
+                spelladdgoodwords();
+            },
+            -text  => 'Add Goodwords To Proj. Dic.',
+            -width => 22,
+        )->pack(
+            -side   => 'left',
+            -pady   => 2,
+            -padx   => 3,
+            -anchor => 'nw'
+        );
+        my $ignoreallbutton = $spf3->Button(
+            -command => sub {
+                ::busy();
+                spellignoreall();
+                spellchecknext();
+                ::unbusy();
+            },
+            -text  => 'Skip All <Ctrl+i>',
+            -width => 14,
         )->pack(
             -side   => 'left',
             -pady   => 2,
@@ -644,18 +656,6 @@ sub spellchecker {
             },
             -text  => 'Resume @ Bkmrk',
             -width => 14,
-        )->pack(
-            -side   => 'left',
-            -pady   => 2,
-            -padx   => 3,
-            -anchor => 'nw'
-        );
-        my $dictmybutton = $spf5->Button(
-            -command => sub {
-                spelladdgoodwords();
-            },
-            -text  => 'Add Goodwords To Proj. Dic.',
-            -width => 24,
         )->pack(
             -side   => 'left',
             -pady   => 2,
