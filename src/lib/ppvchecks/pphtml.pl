@@ -16,10 +16,10 @@ my @cssline      = ();
 my %classes_used = ();
 my %classes_line = ();
 
-my $help      = 0;                  # set true if help requested
-my $srctext   = "book.html";        # default source file
-my $outfile   = "xxx";
-my $validchar = "[-_[:alnum:]]";    # Valid characters for classnames, etc.
+my $help         = 0;                              # set true if help requested
+my $srctext      = "book.html";                    # default source file
+my $outfile      = "xxx";
+my $validpattern = "[[:alpha:]][-_[:alnum:]]*";    # To check valid classnames, etc.
 
 my $filename;
 my $frm_detail;
@@ -215,7 +215,7 @@ sub runProgram {
             }
             $intextbody = 1;
 
-            while ( $line =~ /<($validchar+)/g ) {
+            while ( $line =~ /<($validpattern)/g ) {
                 my $element = $1;
                 $classes_used{$element} += 1;
                 $classes_line{$element} = $count unless exists $classes_line{$element};
@@ -274,12 +274,12 @@ sub runProgram {
 
             # Either "{" on same line as class name, or on its own on next line
             if ( $incss and $line =~ /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
-                $line =~ s/\@media\s+[^\{]+\{//;    # Remove any @media query
-                $line =~ s/^(.*?)\{.*$/$1/;         # Remove any declaration block
-                $line =~ s/:{1,2}$validchar+//g;    # Remove any pseudo-classes/pseudo-elements (e.g. ::first-letter)
-                $line =~ s/#$validchar+//g;         # Remove any ids (e.g. #table1)
+                $line =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
+                $line =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
+                $line =~ s/:{1,2}$validpattern//g;    # Remove any pseudo-classes/pseudo-elements (e.g. ::first-letter)
+                $line =~ s/#$validpattern//g;         # Remove any ids (e.g. #table1)
 
-                while ( $line =~ s/(\.?$validchar+)// ) {    # Extract one element/class name
+                while ( $line =~ s/(\.?$validpattern)// ) {    # Extract one element/class name
                     my $name = $1;
                     printf LOGFILE ( "- %-19s", $name );
                     $ccount++;
