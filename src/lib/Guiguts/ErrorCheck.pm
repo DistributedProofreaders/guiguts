@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&errorcheckpop_up &spellquerycleardict &spellqueryinitialize &spellquerywfwordok
-      errorcheckillosnupdateneeded);
+      &errorcheckillosnupdateneeded &savetoerrortmpfile);
 }
 
 my @errorchecklines;

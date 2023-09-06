@@ -432,7 +432,6 @@ sub menu_search_block {
 sub menu_tools {
     my ( $textwindow, $top ) = ( $::textwindow, $::top );
     [
-        menu_cascade( 'LaTeX Tools', &menu_tools_latextools ),
         [
             'command', 'Word Frequenc~y...',
             -accelerator => 'F5',
@@ -585,13 +584,8 @@ sub menu_tools {
                 $textwindow->addGlobEnd;
             }
         ],
+        menu_cascade( 'LaTeX Tools', &menu_tools_latextools ),
     ];
-}
-
-#
-# Create the Tools, LaTeX Tools submenu
-sub menu_tools_latextools {
-    [ [ 'command', 'Replace LaTeX quotes with curlies', -command => \&::latex_quotes_convert ], ];
 }
 
 #
@@ -645,6 +639,18 @@ sub menu_tools_convertfractions {
             'All to superscript/subscript',
             -command => sub { ::fractionconvert('supsub'); }
         ],
+    ];
+}
+
+#
+# Create the Tools, LaTeX Tools submenu
+sub menu_tools_latextools {
+    [
+        [ 'command', 'Replace LaTeX quotes with curlies', -command => \&::latex_quotes_convert ],
+        [ 'command', 'Create preview of selected LaTeX',  -command => \&::latex_preview_select ],
+        [ 'command', 'View preview in browser',      -command => \&::latex_preview_select_view ],
+        [ 'command', 'Convert file (m2svg)',         -command => \&::latex_svg_convert ],
+        [ 'command', 'View convert file in browser', -command => \&::latex_svg_convert_view ],
     ];
 }
 

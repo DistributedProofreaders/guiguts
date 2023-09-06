@@ -14,7 +14,7 @@ BEGIN {
     @EXPORT =
       qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors
-      &latex_quotes_convert);
+      &latex_quotes_convert &latex_preview_select &latex_preview_select_view &latex_svg_convert &latex_svg_convert_view);
 }
 
 #
@@ -4388,6 +4388,112 @@ sub latex_quotes_single {
         $textwindow->replacewith( "$linenum.0", "$linenum.end", $line );
     }
 
+}
+
+#
+# Create preview of selected LaTeX in mini-HTML file
+sub latex_preview_select {
+    my $textwindow = $::textwindow;
+    my $htmltop    = <<TOP;
+<!DOCTYPE html>
+<html>
+<head>
+<title>LaTeX Preview</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["\$","\$"],["\\(","\\)"]]}
+  });
+</script>
+<script type="text/javascript" src="C:/DP/misc/MathJax/MathJax.js"></script>
+</head>
+<body>
+<p>
+TOP
+    my $htmlbot = <<BOT;
+</p>
+</body>
+</html>
+BOT
+    my @ranges = $textwindow->tagRanges('sel');
+
+    return unless @ranges;
+    my $end   = pop(@ranges);
+    my $start = pop(@ranges);
+
+    my $latex = $textwindow->get( $start, $end );
+    $latex =~ s/^\w*<p>//;
+    $latex =~ s/<\/p>\w*$//;
+
+    my $tmpfname = latex_preview_select_filename();
+    open my $td, '>:encoding(utf8)', $tmpfname or die "Could not open $tmpfname for writing. $!";
+    print $td $htmltop . $latex . $htmlbot;
+    close $td;
+}
+
+#
+# Return full path of selected LaTeX preview file
+sub latex_preview_select_filename {
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    return $d . "latexpreviewselect.html";
+}
+
+#
+# View preview of selected LaTeX in browser
+sub latex_preview_select_view {
+    ::launchurl( latex_preview_select_filename() );
+}
+
+#
+# Convert whole file using m2svg
+sub latex_svg_convert {
+    my $tmpfname = latex_temp_filename();
+    my $errfname = latex_error_filename();
+    my $svgfname = latex_svg_filename();
+
+    # Need to run m2svg in the project dir so the images get saved there
+    my $pwd = ::getcwd();
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    chdir $d;
+
+    ::savetoerrortmpfile($tmpfname);
+
+    my $runner = ::runner::tofile( $errfname, $errfname );    # stdout & stderr
+    $runner->run( "m2svg", $tmpfname, $svgfname );
+    unlink $tmpfname;
+
+    chdir $pwd;                                               # Back to the default current dir
+}
+
+#
+# View converted LaTeX->svg file in browser
+sub latex_svg_convert_view {
+    ::launchurl( latex_svg_filename() );
+}
+
+#
+# Return full path of LaTeX temporary file
+sub latex_temp_filename {
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    return $d . $f . "_tempsvg" . $e;
+}
+
+#
+# Return full path of LaTeX errors file
+sub latex_error_filename {
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    return $d . "errors.err";
+}
+
+#
+# Return full path of LaTeX->svg file
+sub latex_svg_filename {
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    return $d . $f . "_svg" . $e;
 }
 
 1;
