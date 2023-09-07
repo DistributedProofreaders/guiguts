@@ -16,21 +16,14 @@ my @cssline      = ();
 my %classes_used = ();
 my %classes_line = ();
 
-my $help    = 0;              # set true if help requested
-my $srctext = "book.html";    # default source file
-my $outfile = "xxx";
+my $help         = 0;                              # set true if help requested
+my $srctext      = "book.html";                    # default source file
+my $outfile      = "xxx";
+my $validpattern = "[[:alpha:]][-_[:alnum:]]*";    # To check valid classnames, etc.
 
 my $filename;
 my $frm_detail;
 my $detailLevel;
-
-# Following elements are reported if CSS uses element as selector, but element isn't used in body,
-# but not reported if element is used in body without any related CSS
-my @elements = qw(
-  a abbr b blockquote body br caption div em
-  figcaption figure h1 h2 h3 h4 h5 h6 hr i img
-  ins li ol p section span strong table td th tr ul
-);
 
 usage()
   if (
@@ -222,15 +215,15 @@ sub runProgram {
             }
             $intextbody = 1;
 
-            foreach my $element (@elements) {
-                while ( $line =~ /<$element/g ) {
-                    $classes_used{$element} += 1;
-                    $classes_line{$element} = $count unless exists $classes_line{$element};
-                }
+            while ( $line =~ /<($validpattern)/g ) {
+                my $element = $1;
+                $classes_used{$element} += 1;
+                $classes_line{$element} = $count unless exists $classes_line{$element};
             }
 
             while ( $line =~ /class *= *['"]([^'"]+)['"]/g ) {
                 foreach my $t ( split( / /, $1 ) ) {
+                    $t = "." . $t;    # Prepend period to classnames, to match usage in CSS
                     $classes_used{$t} += 1;
                     $classes_line{$t} = $count unless exists $classes_line{$t};
                 }
@@ -271,52 +264,34 @@ sub runProgram {
 
     sub css_block {
         print LOGFILE ("----- CSS block definitions -----\n");
-        my @splitcss     = ();
-        my @splitcssline = ();    # Keep track of line number where CSS was defined
-        my $incss        = 0;
-        my $count        = 0;
-        foreach $_ (@book) {
+        my $incss  = 0;
+        my $count  = 0;
+        my $ccount = 0;
+        foreach my $line (@book) {
             $count++;
-            $incss = 1 if /<style/;
-            last       if ( $incss and /<\/style>/ );
+            $incss = 1 if $line =~ /<style/;
+            last       if ( $incss and $line =~ /<\/style>/ );
 
             # Either "{" on same line as class name, or on its own on next line
-            if ( $incss and /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
-                push @css,     $_;
-                push @cssline, $count;
-            }
-        }
+            if ( $incss and $line =~ /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
+                $line =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
+                $line =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
+                $line =~ s/:{1,2}$validpattern//g;    # Remove any pseudo-classes/pseudo-elements (e.g. ::first-letter)
+                $line =~ s/#$validpattern//g;         # Remove any ids (e.g. #table1)
 
-        # strip definition
-        my $ccount = 0;
-        foreach my $idx ( 0 .. $#css ) {
-            my $cssdef = $css[$idx];
-            my $count  = $cssline[$idx];
-            $cssdef =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
-            $cssdef =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
-            $cssdef = trim($cssdef);
-            my @sp = split( /[.,+ ]/, $cssdef );    # Split selectors like "h6.center", "class1, class2", "p+p", ".myclass p"
-            foreach my $t (@sp) {
-                next unless $t;
-                next if $t =~ /^#/;                 # Id selector, not class
-                printf LOGFILE ( "- %-19s", $t );
-                $ccount++;
-                if ( $ccount % 4 == 3 ) {
-                    print LOGFILE ("\n");
+                while ( $line =~ s/(\.?$validpattern)// ) {    # Extract one element/class name
+                    my $name = $1;
+                    printf LOGFILE ( "- %-19s", $name );
+                    $ccount++;
+                    if ( $ccount % 4 == 3 ) {
+                        print LOGFILE ("\n");
+                    }
+                    push( @css,     $name );
+                    push( @cssline, $count );
                 }
-                unshift( @splitcss,     $t );
-                unshift( @splitcssline, $count )    # Continue to align CSS array with line number array
             }
         }
         print LOGFILE ("\n");
-
-        # Tidy up list of classes defined in CSS
-        foreach (@splitcss) {
-            s/^.*?\.?([^\. ]+)$/$1/;
-            s/:{1,2}first-letter//;
-        }
-        @css     = @splitcss;
-        @cssline = @splitcssline;
     }
 
     # Warn about classes unless they are used/defined, or ones we want to ignore, or ebookmaker specials
@@ -327,11 +302,10 @@ sub runProgram {
               unless classisknown( $css[$idx], keys %classes_used );
         }
         foreach my $cssused ( sort keys %classes_used ) {
+            next if $cssused !~ /^\./;    # don't report elements for not having CSS
             printf LOGFILE ( "%d:0 CSS possibly not defined: %s\n", $classes_line{$cssused},
                 $cssused )
-              unless classisknown( $cssused, @css )
-              or grep { $_ eq $cssused } @elements    # don't report elements for not having CSS
-
+              unless classisknown( $cssused, @css );
         }
     }
 
@@ -341,8 +315,8 @@ sub runProgram {
         my $class = shift;
         my @list  = @_;
         return (
-            grep { $_ eq $class } @list       # class is used/defined
-              or $class =~ /^x-ebookmaker/    # special ebookmaker class
+            grep { $_ eq $class } @list         # class is used/defined
+              or $class =~ /^\.x-ebookmaker/    # special ebookmaker class
         );
     }
 }
