@@ -14,7 +14,8 @@ BEGIN {
     @EXPORT =
       qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors
-      &latex_quotes_convert &latex_preview_select &latex_preview_select_view &latex_svg_convert &latex_svg_convert_view);
+      &latex_quotes_convert &latex_preview_select &latex_preview_select_view &latex_svg_convert &latex_svg_convert_view
+      &latex_undo_autogen);
 }
 
 #
@@ -4494,6 +4495,46 @@ sub latex_error_filename {
 sub latex_svg_filename {
     my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
     return $d . $f . "_svg" . $e;
+}
+
+#
+# Undo some over-eager autogen changes where they occur inside LaTeX markup
+sub latex_undo_autogen {
+    my $textwindow = $::textwindow;
+    my $start      = '1.0';
+    my $endmark    = 'latex_undo_autogen';
+    my %changes    = (
+        '&amp;'  => '&',
+        '&lt;'   => '<',
+        '&gt;'   => '>',
+        '<sub>'  => '_{',
+        '</sub>' => '}',
+        '<sup>'  => '^{',
+        '</sup>' => '}',
+    );
+
+    $textwindow->addGlobStart;
+
+    # Find start of LaTeX markup: \[ or \(
+    while ( $start = $textwindow->search( '-regex', '--', '\\\\[[\\(]', $start, 'end' ) ) {
+
+        # Now find end of markup: \] or \)
+        my $end = $textwindow->search( '-regex', '--', '\\\\[]\\)]', $start, 'end' );
+        last unless $end;                          # Abort if no matching closure
+        $textwindow->markSet( $endmark, $end );    # Mark end since editing will affect line.col
+
+        # Restore the unwanted changes within the markup
+        for my $key ( keys %changes ) {
+            while ( my $changeidx =
+                $textwindow->search( '-exact', '--', $key, $start, $textwindow->index($endmark) ) )
+            {
+                $textwindow->delete( $changeidx, $changeidx . "+" . length($key) . "c" );
+                $textwindow->insert( $changeidx, $changes{$key} );
+            }
+        }
+        $start = $textwindow->index($endmark);     # Begin next search for LaTeX at end of previous section
+    }
+    $textwindow->addGlobEnd;
 }
 
 1;
