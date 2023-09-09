@@ -247,13 +247,20 @@ sub hilitepopup {
         $::lglobal{hilitepop}->title('Character Highlight');
         ::initialize_popup_with_deletebinding('hilitepop');
         my $hilitemode = 'exact';
-        my $f          = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
+        my $f = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 3 );
         $f->Label( -text => 'Highlight Character(s) or Regex', )
           ->pack( -side => 'top', -pady => 2, -padx => 2, -anchor => 'n' );
-        my $entry = $f->Entry( -width => 40, )->pack(
+        $f->Button(
+            -command => sub {
+                ::entry_history( $::lglobal{highlightentry}, \@::highlight_history );
+            },
+            -image  => $::lglobal{hist_img},
+            -width  => 9,
+            -height => 15,
+        )->pack( -side => 'left', -anchor => 'w' );
+        $::lglobal{highlightentry} = $f->Entry( -width => 40, )->pack(
             -expand => 1,
             -fill   => 'x',
-            -padx   => 3,
             -pady   => 3,
             -anchor => 'n'
         );
@@ -285,9 +292,12 @@ sub hilitepopup {
             -width   => 16,
         )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
         $f3->Button(
-            -command => sub { hilite( $entry->get, $hilitemode ) },
-            -text    => 'Apply Highlights',
-            -width   => 16,
+            -command => sub {
+                hilite( $::lglobal{highlightentry}->get, $hilitemode );
+                ::add_entry_history( $::lglobal{highlightentry}->get, \@::highlight_history );
+            },
+            -text  => 'Apply Highlights',
+            -width => 16,
         )->grid( -row => 2, -column => 1, -padx => 2, -pady => 2 );
         $f3->Button(
             -command => \&::hiliteremove,
@@ -295,6 +305,7 @@ sub hilitepopup {
             -width   => 16,
         )->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
     }
+    $::lglobal{highlightentry}->focus;
 }
 
 #

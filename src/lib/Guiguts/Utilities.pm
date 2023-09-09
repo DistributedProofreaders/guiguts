@@ -3218,6 +3218,7 @@ sub add_entry_history {
         push @$history_array_ref, $_;
         last if @$history_array_ref >= $::history_size;    # don't exceed maximum history size
     }
+    ::savesettings();
 }
 
 #

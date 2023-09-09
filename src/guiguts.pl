@@ -236,6 +236,7 @@ our @recentfile;
 our @replace_history;
 our @search_history;
 our @quicksearch_history;
+our @highlight_history;
 our @sopt = ( 0, 0, 0, 0, 0 );                       # default is not whole word search
 our @wfsearchopt;
 our @userchars;                                      # user defined chars for common characters dialog
