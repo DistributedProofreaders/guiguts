@@ -4393,6 +4393,7 @@ sub latex_quotes_single {
 
 #
 # Create preview of selected LaTeX in mini-HTML file
+# Write raw LaTeX out in <p> markup and invoke m2svg to convert it
 sub latex_preview_select {
     my $textwindow = $::textwindow;
     my $htmltop    = <<TOP;
@@ -4401,16 +4402,6 @@ sub latex_preview_select {
 <head>
 <title>LaTeX Preview</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-    tex2jax: {inlineMath: [["\$","\$"],["\\(","\\)"]]}
-  });
-</script>
-<script type="text/javascript" src="C:/DP/misc/MathJax/MathJax.js"></script>
 </head>
 <body>
 <p>
@@ -4430,17 +4421,53 @@ BOT
     $latex =~ s/^\w*<p>//;
     $latex =~ s/<\/p>\w*$//;
 
-    my $tmpfname = latex_preview_select_filename();
+    my $directory = latex_preview_select_dir();
+    unless ( -d $directory ) {
+        mkdir($directory) or die "Could not create directory $directory. $!";
+    }
+    my $tmpfname = latex_preview_temp_filename();
     open my $td, '>:encoding(utf8)', $tmpfname or die "Could not open $tmpfname for writing. $!";
     print $td $htmltop . $latex . $htmlbot;
     close $td;
+
+    # Need to run m2svg in the subdirectory so the images get saved there
+    my $pwd = ::getcwd();
+    chdir $directory;
+
+    my $svgfname = latex_preview_select_filename();
+    my $errfname = latex_preview_error_filename();
+    my $runner   = ::runner::tofile( $errfname, $errfname );    # stdout & stderr
+    $runner->run( "m2svg", $tmpfname, $svgfname );
+    unlink $tmpfname;
+    chdir $pwd;                                                 # Back to the default current dir
+}
+
+#
+# Return full path of selected LaTeX preview directory (needed to store files & images)
+sub latex_preview_select_dir {
+    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
+    return $d . "latexpreviewselect";
+}
+
+#
+# Return full path of selected LaTeX temporary file
+sub latex_preview_temp_filename {
+    my $dir = latex_preview_select_dir();
+    return ::catfile( $dir, "latexpreviewtemp.html" );
 }
 
 #
 # Return full path of selected LaTeX preview file
 sub latex_preview_select_filename {
-    my ( $f, $d, $e ) = ::fileparse( $::lglobal{global_filename}, qr{\.[^\.]*$} );
-    return $d . "latexpreviewselect.html";
+    my $dir = latex_preview_select_dir();
+    return ::catfile( $dir, "latexpreviewselect.html" );
+}
+
+#
+# Return full path of selected LaTeX error file
+sub latex_preview_error_filename {
+    my $dir = latex_preview_select_dir();
+    return ::catfile( $dir, "errors.err" );
 }
 
 #
