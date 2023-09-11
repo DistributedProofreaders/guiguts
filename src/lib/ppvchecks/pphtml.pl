@@ -274,7 +274,7 @@ sub runProgram {
 
             # Either "{" on same line as class name, or on its own on next line
             if ( $incss and $line =~ /{/ or $count < $#book and $book[$count] =~ /^\s*{\s*$/ ) {
-                $line =~ s/\@media\s+[^\{]+\{//;      # Remove any @media query
+                $line =~ s/\@media\s+[^\{]+\{?//;     # Remove any @media query (including if brace is on next line)
                 $line =~ s/^(.*?)\{.*$/$1/;           # Remove any declaration block
                 $line =~ s/:{1,2}$validpattern//g;    # Remove any pseudo-classes/pseudo-elements (e.g. ::first-letter)
                 $line =~ s/#$validpattern//g;         # Remove any ids (e.g. #table1)
