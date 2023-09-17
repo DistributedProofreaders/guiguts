@@ -1024,6 +1024,14 @@ EOM
         }
         print $save_handle ");\n\n";
 
+        print $save_handle ("\@highlight_history = (\n");
+        @array = @::highlight_history;
+        for my $index (@array) {
+            $index = ::escapeforperlstring($index);
+            print $save_handle qq/\t"$index",\n/;
+        }
+        print $save_handle ");\n\n";
+
         print $save_handle ("\@multidicts = (\n");
         for my $index (@::multidicts) {
             print $save_handle qq/\t"$index",\n/;
