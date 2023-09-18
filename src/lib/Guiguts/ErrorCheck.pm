@@ -120,7 +120,7 @@ sub errorcheckpop_up {
                 spellquerycleardict();                                     # Clear cache, so project dictionary will be reloaded below
                 errorcheckpop_up( $textwindow, $top, $errorchecktype );    # Rerun Spell Query
             },
-            -text  => 'Add good_words.txt',
+            -text  => 'Add good/bad words',
             -width => 16
         )->grid( -row => 1, -column => $gcol - 1 );
         my $btnskip = $ptopframeb->Button(
@@ -564,7 +564,11 @@ sub errorcheckpop_up {
         } elsif ( $errorchecktype eq "Spell Query" ) {    # Spell query also has a frequency count to append
             my $freq = spellqueryfrequency($line);
             next if $freq > $::spellquerythreshold;       # If it's spelled the same way several times, it's probably not an error
-            $line .= " ($freq)";
+            if ( $line =~ s/\*\*\*$// ) {                 # Spelling flagged as bad word
+                $line .= " *$freq*";
+            } else {
+                $line .= " ($freq)";                      # Ordinary misspelling
+            }
 
         } elsif ( $errorchecktype eq "EPUBCheck" ) {
 
@@ -1480,6 +1484,11 @@ sub booklouperun {
     my %sqglobaldict  = ();
     my %sqbadwordfreq = ();
 
+    # Codes returned by spellquerywordok()
+    my $SQWORDOKYES = 0;    # Word in dictionary, or meets other criteria for being OK
+    my $SQWORDOKNO  = 1;    # Typically a spelling error
+    my $SQWORDOKBAD = 2;    # Actual "bad word" - maybe an OK word, but bad in this project - needs marking specially
+
     #
     # Run Spell Query on whole file
     sub spellqueryrun {
@@ -1511,21 +1520,27 @@ sub booklouperun {
                 $nextcol = $col + length($wd) + 1;    # Step forward word length plus single space
 
                 next unless $wd;                      # Empty word if two consecutive separators, e.g. period & space
-                next if spellquerywordok($wd);
+                my $wordok = spellquerywordok($wd);
+                next if $wordok == $SQWORDOKYES;
 
                 # If word has leading straight apostrophe, it might be open single quote; trim it and check again
                 if ( $wd =~ s/^'// ) {
                     ++$col;                           # Allow for having removed apostrophe from start of word
-                    next if spellquerywordok($wd);
+                    $wordok = spellquerywordok($wd);
+                    next if $wordok == $SQWORDOKYES;
                 }
 
                 # if trailing straight/curly apostrophe, it might be close single quote; trim it and check again
-                next if $wd =~ s/['$APOS]$//g and spellquerywordok($wd);
-                next if $wd =~ /^['$APOS]*$/;                              # OK if nothing left in string but zero or more quotes
+                if ( $wd =~ s/['$APOS]$//g ) {
+                    $wordok = spellquerywordok($wd);
+                    next if $wordok == $SQWORDOKYES;
+                }
+                next if $wd =~ /^['$APOS]*$/;    # OK if nothing left in string but zero or more quotes
 
                 # Format message - increment word frequency; final total gets appended later when populating dialog
                 $sqbadwordfreq{$wd}++;
-                my $error = sprintf( "%d:%-2d - %s", $step, $col, $wd );
+                my $badwd = $wordok == $SQWORDOKBAD ? "***" : "";                    # Flag bad word to higher routine with asterisks
+                my $error = sprintf( "%d:%-2d - %s%s", $step, $col, $wd, $badwd );
                 utf8::encode($error);
                 print $logfile "$error\n";
             }
@@ -1541,9 +1556,9 @@ sub booklouperun {
         my $wfword = shift;
 
         for my $wd ( split( /\W/, $wfword ) ) {
-            return 0 unless spellquerywordok($wd);    # part not found
+            return 0 unless spellquerywordok($wd) == $SQWORDOKYES;    # part not found
         }
-        return 1;                                     # all parts ok
+        return 1;                                                     # all parts ok
     }
 
     #
@@ -1551,35 +1566,39 @@ sub booklouperun {
     sub spellquerywordok {
         my $wd = shift;
 
-        # First check if word is in dictionary
-        return 1 if spellqueryindictapos($wd);
+        # Return status code if whole thing is a bad word or in the dictionary
+        my $wordok = spellqueryindictapos($wd);
+        return $wordok
+          if $wordok == $SQWORDOKBAD
+          or $wordok == $SQWORDOKYES;
 
         # Some languages use l', quest', etc., before word - accept if the "prefix" and the main word are both good
         # Prefix can be with or without apostrophe ("with" is safer to avoid prefix being accepted if standalone word)
-        return 1
+        return $SQWORDOKYES
           if $wd =~ /^(\w+)['$APOS](\w+)/
-          and ( spellqueryindictapos($1) or spellqueryindictapos( $1 . "'" ) )
-          and spellqueryindictapos($2);
+          and (spellqueryindictapos($1) == $SQWORDOKYES
+            or spellqueryindictapos( $1 . "'" ) == $SQWORDOKYES )
+          and spellqueryindictapos($2) == $SQWORDOKYES;
 
         # Now check numbers
-        return 1 if $wd =~ /^\d+$/;                  # word is all digits
-        return 1 if $wd =~ /^(\d*[02-9])?1st$/i;     # ...1st, ...21st, ...31st, etc
-        return 1 if $wd =~ /^(\d*[02-9])?2n?d$/i;    # ...2nd, ...22nd, ...32nd, etc (also 2d, 22d, etc)
-        return 1 if $wd =~ /^(\d*[02-9])?3r?d$/i;    # ...3rd, ...23rd, ...33rd, etc (also 3d, 33d, etc)
-        return 1 if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
-        return 1 if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
+        return $SQWORDOKYES if $wd =~ /^\d+$/;                  # word is all digits
+        return $SQWORDOKYES if $wd =~ /^(\d*[02-9])?1st$/i;     # ...1st, ...21st, ...31st, etc
+        return $SQWORDOKYES if $wd =~ /^(\d*[02-9])?2n?d$/i;    # ...2nd, ...22nd, ...32nd, etc (also 2d, 22d, etc)
+        return $SQWORDOKYES if $wd =~ /^(\d*[02-9])?3r?d$/i;    # ...3rd, ...23rd, ...33rd, etc (also 3d, 33d, etc)
+        return $SQWORDOKYES if $wd =~ /^\d*[04-9]th$/i;         # ...0th, ...4th, ...5th, etc
+        return $SQWORDOKYES if $wd =~ /^\d*1[123]th$/i;         # ...11th, ...12th, ...13th
 
         # Allow decades/years
-        return 1 if $wd =~ /^['$APOS]?\d\ds$/;       # e.g. '20s or 20s (abbreviation for 1820s)
-        return 1 if $wd =~ /^['$APOS]\d\d$/;         # e.g. '62 (abbreviation for 1862)
-        return 1 if $wd =~ /^1\d{3}s$/;              # e.g. 1820s
+        return $SQWORDOKYES if $wd =~ /^['$APOS]?\d\ds$/;       # e.g. '20s or 20s (abbreviation for 1820s)
+        return $SQWORDOKYES if $wd =~ /^['$APOS]\d\d$/;         # e.g. '62 (abbreviation for 1862)
+        return $SQWORDOKYES if $wd =~ /^1\d{3}s$/;              # e.g. 1820s
 
         # Allow abbreviations for shillings and pence (not pounds because 20l is common scanno for the number 201)
-        return 1 if $wd =~ /^\d{1,2}[sd]$/;          # e.g. 15s or 6d (up to 2 digits of old English shillings and pence)
+        return $SQWORDOKYES if $wd =~ /^\d{1,2}[sd]$/;          # e.g. 15s or 6d (up to 2 digits of old English shillings and pence)
 
-        return 1 if $wd =~ /^sc$/i;                  # <sc> DP markup
+        return $SQWORDOKYES if $wd =~ /^sc$/i;                  # <sc> DP markup
 
-        return 0;
+        return $SQWORDOKNO;
     }
 
     #
@@ -1587,31 +1606,44 @@ sub booklouperun {
     sub spellqueryindictapos {
         my $wd = shift;
 
-        # First check if word is in dictionary
-        return 1 if spellqueryindict($wd);
+        my $wordok = spellqueryindict($wd);
 
-        # Now try swapping straight/curly apostrophes and recheck
+        # Return status code if it's a bad word, in the dictionary or doesn't contain apostrophes
+        return $wordok
+          if $wordok == $SQWORDOKBAD
+          or $wordok == $SQWORDOKYES
+          or $wd !~ /['$APOS]/;
+
+        # Contains apostrophes - try swapping straight/curly and recheck
         if ( $wd =~ /$APOS/ ) {
             $wd =~ s/$APOS/'/g;
-            return 1 if spellqueryindict($wd);
         } elsif ( $wd =~ /'/ ) {
             $wd =~ s/'/$APOS/g;
-            return 1 if spellqueryindict($wd);
         }
-        return 0;
+        return spellqueryindict($wd);
     }
 
     #
-    # Return true if word is in dictionary: same case, lower case, or title case (e.g. LONDON matches London)
+    # Return whether word is in the bad_words list, dictionary, or neither (wrong spelling)
+    # Check same case, lower case, or title case (e.g. LONDON matches London)
     # Can't just do case-insensitive check because we don't want "london" to be OK.
     sub spellqueryindict {
-        my $wd = shift;
-        return 1 if $sqglobaldict{$wd};
-        return 1 if $sqglobaldict{ lc $wd };
-        return 1
-          if length($wd) > 1 and $sqglobaldict{ substr( $wd, 0, 1 ) . lc substr( $wd, 1 ) };
+        my $wd   = shift;
+        my $lcwd = lc $wd;
+        my $tcwd = length($wd) > 1 ? substr( $wd, 0, 1 ) . substr( $lcwd, 1 ) : '';
+        $tcwd = '' if $tcwd eq $lcwd;    # No point in checking same word twice
 
-        return 0;
+        # First ensure bad words are always reported
+        return $SQWORDOKBAD if exists( $::projectbadwords{$wd} );
+        return $SQWORDOKBAD if exists( $::projectbadwords{$lcwd} );
+        return $SQWORDOKBAD if $tcwd and exists( $::projectbadwords{$tcwd} );
+
+        # Now check dictionary for good words
+        return $SQWORDOKYES if $sqglobaldict{$wd};
+        return $SQWORDOKYES if $sqglobaldict{$lcwd};
+        return $SQWORDOKYES if $tcwd and $sqglobaldict{$tcwd};
+
+        return $SQWORDOKNO;
     }
 
     #
@@ -1642,7 +1674,8 @@ sub booklouperun {
         }
 
         # Now add project dictionary words
-        delete $::projectdict{$_} for keys %::projectdict;    # Old spellcheck code doesn't clear hash in spellloadprojectdict()
+        delete $::projectdict{$_}     for keys %::projectdict;       # Old spellcheck code doesn't clear hash in spellloadprojectdict()
+        delete $::projectbadwords{$_} for keys %::projectbadwords;
         ::spellloadprojectdict();
         $sqglobaldict{$_} = 1 for keys %::projectdict;
 
@@ -1695,7 +1728,7 @@ sub booklouperun {
     # Return how many times bad word referred to in error message was found during the check
     sub spellqueryfrequency {
         my $line = shift;
-        return $sqbadwordfreq{$1} if $line =~ /^\d+:\d+ +- (.+)/;
+        return $sqbadwordfreq{$1} if $line =~ /^\d+:\d+ +- ([^*]+)/;    # Ignore asterisks marking bad words
         return 0;
     }
 

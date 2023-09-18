@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&aspellstart &aspellstop &spellchecker &spellloadprojectdict &getmisspelledwords
-      &spelloptions &get_spellchecker_version &spellmyaddword &spelladdgoodwords);
+      &spelloptions &get_spellchecker_version &spellmyaddword &spelladdgoodwords &spellsaveprojdict);
 }
 
 #
@@ -49,14 +49,22 @@ sub spellloadprojectdict {
     if (    ( defined $::lglobal{projectdictname} )
         and ( -e $::lglobal{projectdictname} ) ) {
         open( my $fh, "<:encoding(utf8)", $::lglobal{projectdictname} );
+        my $hashref = \%::projectdict;
         while ( my $line = <$fh> ) {
-            utf8::decode($line);
-            if ( $line eq "%projectdict = (\n" ) { next; }
-            if ( $line eq ");" )                 { next; }
-            $line =~ s/' => '',\n$//g;    # remove ending
-            $line =~ s/^'//g;             # remove start
-            $line =~ s/\\'/'/g;           # remove \'
-            $::projectdict{$line} = '';
+            $line =~ s/[\n\r]+//;
+            if ( $line eq "%projectdict = (" ) {    # following words are good
+                $hashref = \%::projectdict;
+                next;
+            }
+            if ( $line eq "%projectbadwords = (" ) {    # following words are bad
+                $hashref = \%::projectbadwords;
+                next;
+            }
+            $line =~ s/' => '',$//g;                    # remove ending
+            $line =~ s/^'//g;                           # remove start
+            $line =~ s/\\'/'/g;                         # unescape single quote
+            next if $line eq ");" or $line eq "";
+            $hashref->{$line} = '';
         }
     }
 }
@@ -219,14 +227,24 @@ sub spelladdword {
 
 #
 # Add a word to the project dictionary
+# Optional second argument if it's a bad word
 sub spellmyaddword {
     my $textwindow = $::textwindow;
     my $term       = shift;
+    my $bad        = shift;
     unless ($term) {
         ::soundbell();
         return;
     }
-    getprojectdic();
+    return if $term =~ /^\s*$/;
+    ( $bad ? $::projectbadwords{$term} : $::projectdict{$term} ) = '';
+    spellsaveprojdict();
+}
+
+#
+# Save project dictionary
+sub spellsaveprojdict {
+    getprojectdic();    # Get dict name into global
     if ( not defined $::lglobal{projectdictname} ) {
         my $dialog = $::top->Dialog(
             -text    => "File must be saved before words can be added to project dictionary.",
@@ -237,16 +255,21 @@ sub spellmyaddword {
         $dialog->Show;
         return;
     }
-    $::projectdict{$term} = '';
-    open( my $dic, '>:bytes', "$::lglobal{projectdictname}" );
     my $section = "\%projectdict = (\n";
-
-    for my $term ( sort { $a cmp $b } keys %::projectdict ) {
+    for my $term ( sort keys %::projectdict ) {
         $term =~ s/'/\\'/g;
         $section .= "'$term' => '',\n";
     }
-    $section .= ");";
-    utf8::encode($section);
+    $section .= ");\n\n";
+
+    $section .= "\%projectbadwords = (\n";
+    for my $term ( sort keys %::projectbadwords ) {
+        $term =~ s/'/\\'/g;
+        $section .= "'$term' => '',\n";
+    }
+    $section .= ");\n\n";
+
+    open( my $dic, '>:encoding(utf8)', "$::lglobal{projectdictname}" );
     print $dic $section;
     close $dic;
 }
@@ -453,7 +476,7 @@ sub spelladdtexttags {
 }
 
 #
-# Add spellings from good_words.txt to the project dictionary
+# Add spellings from good_words.txt & bad_words.txt to the project dictionary
 sub spelladdgoodwords {
     my $textwindow = $::textwindow;
     my $top        = $::top;
@@ -471,21 +494,32 @@ sub spelladdgoodwords {
     my $pwd = ::getcwd();
     chdir $::globallastpath;
 
-    unless ( open( DAT, "good_words.txt" ) ) {
-        ::warnerror("Could not open good_words.txt");
-        return;
-    }
+    my $fh;
 
-    # Remove all newlines and/or carriage returns whatever the current OS
-    ::busy();
-    my @raw_data = map { s/[\n\r]+$//g; $_ } <DAT>;
-    close(DAT);
-    chdir $pwd;
-    my $word = q{};
-    foreach my $word (@raw_data) {
-        spellmyaddword($word);
+    # Load good words first
+    if ( open( $fh, "<:encoding(utf8)", "good_words.txt" ) ) {
+        ::busy();
+        while ( my $line = <$fh> ) {
+            $line =~ s/\s+$//;
+            next if $line eq '';
+            spellmyaddword($line);
+        }
+        close($fh);
+
+        # The bad_words.txt file often doesn't exist, so don't error if that's the case
+        if ( open( $fh, "<:encoding(utf8)", "bad_words.txt" ) ) {
+            while ( my $line = <$fh> ) {
+                $line =~ s/\s+$//;
+                next if $line eq '';
+                spellmyaddword( $line, "bad" );
+            }
+            close($fh);
+        }
+        ::unbusy();
+    } else {
+        ::warnerror("Could not open good_words.txt");
     }
-    ::unbusy();
+    chdir $pwd;
 }
 
 #
@@ -711,7 +745,7 @@ sub endaspell {
 }
 
 #
-# Load project dictionary
+# Get project dictionary name into global variable (base filename + ".dic")
 sub getprojectdic {
     return unless $::lglobal{global_filename};
     my $fname = $::lglobal{global_filename};

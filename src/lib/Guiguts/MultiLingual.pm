@@ -680,60 +680,42 @@ sub includeprojectdict {
 #
 # Add all spelt foreign words to project dictionary
 sub addspeltforeignproject {
-    ::spellloadprojectdict();
-    my $i = 0;
-    for my $key ( sort ( keys %distinctwords ) ) {
-        if (   ( $seenwordslang{$key} )
-            && ( $seenwordslang{$key} ne $::multidicts[0] )
-            && ( $seenwordslang{$key} ne 'user' ) ) {
-            $::projectdict{$key} = $seenwordslang{$key};
-            $i++;
-        }
-    }
-
-    my $section = "\%projectdict = (\n";
-    for my $key ( sort keys %::projectdict ) {
-        $key =~ s/'/\\'/g;
-        $section .= "'$key' => '',\n";
-    }
-    $section .= ");";
-    utf8::encode($section);
-    open my $save, '>:bytes', $::lglobal{projectdictname};
-    print $save $section;
-    close $save;
-    my $line = "$i words added to project dictionary";
-    $multiwclistbox->delete( '0', 'end' );
-    $multiwclistbox->insert( 'end', $line );
-    $multiwclistbox->update;
-    updategloballists();
-    getwordcounts();
+    addcriterionproject('speltforeign');
 }
 
 #
 # Add words occuring >= minfreq times to project dictionary
 sub addminfreqproject {
+    addcriterionproject('minfreq');
+}
+
+#
+# Add all words that meet criterion to project dictionary
+# Input argument should be 'speltforeign' or 'minfreq'
+sub addcriterionproject {
+    my $criterion = shift;
+
     ::spellloadprojectdict();
     my $i = 0;
     for my $key ( keys %distinctwords ) {
-        unless ( $seenwordslang{$key} ) {
-            if ( $distinctwords{$key} >= $minfreq ) {
-                $::projectdict{$key} = 'freq';
-                $seenwordslang{$key} = 'freq';
+        if ( $criterion eq 'speltforeign' ) {
+            if (   ( $seenwordslang{$key} )
+                && ( $seenwordslang{$key} ne $::multidicts[0] )
+                && ( $seenwordslang{$key} ne 'user' ) ) {
+                $::projectdict{$key} = $seenwordslang{$key};
                 $i++;
+            }
+        } elsif ( $criterion eq 'minfreq' ) {
+            unless ( $seenwordslang{$key} ) {
+                if ( $distinctwords{$key} >= $minfreq ) {
+                    $::projectdict{$key} = 'freq';
+                    $seenwordslang{$key} = 'freq';
+                    $i++;
+                }
             }
         }
     }
-
-    my $section = "\%projectdict = (\n";
-    for my $key ( sort keys %::projectdict ) {
-        $key =~ s/'/\\'/g;
-        $section .= "'$key' => '',\n";
-    }
-    $section .= ");";
-    utf8::encode($section);
-    open my $save, '>:bytes', $::lglobal{projectdictname};
-    print $save $section;
-    close $save;
+    ::spellsaveprojdict();
     my $line = "$i words added to project dictionary";
     $multiwclistbox->delete( '0', 'end' );
     $multiwclistbox->insert( 'end', $line );

@@ -220,6 +220,7 @@ our $ebookmakercommand  = '';
 our %charsuiteenabled   = ( 'Basic Latin' => 1 );    # All projects allow Basic Latin character suite
 our %pagenumbers;
 our %projectdict;
+our %projectbadwords;
 our %reghints = ();
 our %scannoslist;
 our %geometryhash;                                   #Geometry of some windows in one hash.
