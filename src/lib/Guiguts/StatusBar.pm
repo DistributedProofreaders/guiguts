@@ -6,18 +6,20 @@ BEGIN {
     use Exporter();
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
-    @EXPORT = qw(&_updatesel &buildstatusbar &seecurrentimage
+    @EXPORT = qw(&_updatesel &buildstatusbar &seecurrentimage &update_indicators
       &setlang &selection &gotoline &gotopage &gotolabel &set_auto_img);
 }
 
 #
 # Routine to update the status bar when something has changed.
+# Optional argument to force page number update even if cursor location hasn't changed
 {    # Start of block to localise persistent variables
     my $prev_line   = -1;
     my $prev_column = -1;
     my $pnum        = 0;
 
     sub update_indicators {
+        my $force      = shift;
         my $textwindow = $::textwindow;
         my $top        = $::top;
         my ( $last_line, $last_col ) = split( /\./, $textwindow->index('end') );
@@ -27,6 +29,7 @@ BEGIN {
           if ( $::lglobal{current_line_label} );
         my $mode             = $textwindow->OverstrikeMode;
         my $overstrke_insert = ' I ';
+
         if ($mode) {
             $overstrke_insert = ' O ';
         }
@@ -58,7 +61,7 @@ BEGIN {
 
         # get_page_number() can take a significant time to execute, so check if line/column
         # have changed since previous call - if not, page number is also unchanged.
-        $pnum        = ::get_page_number() if $line != $prev_line or $column != $prev_column;
+        $pnum = ::get_page_number() if $force or $line != $prev_line or $column != $prev_column;
         $prev_line   = $line;
         $prev_column = $column;
 

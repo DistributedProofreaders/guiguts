@@ -15,7 +15,7 @@ BEGIN {
       qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors
       &latex_quotes_convert &latex_preview_select &latex_preview_select_view &latex_svg_convert &latex_svg_convert_view
-      &latex_undo_autogen);
+      &latex_undo_autogen &latex_pagesep_convert);
 }
 
 #
@@ -4562,6 +4562,48 @@ sub latex_undo_autogen {
         $start = $textwindow->index($endmark);     # Begin next search for LaTeX at end of previous section
     }
     $textwindow->addGlobEnd;
+}
+
+#
+# Convert common LaTeX page separator markup "\PageSep{nnn}" to the default GG type
+sub latex_pagesep_convert {
+    my $textwindow = $::textwindow;
+
+    $textwindow->addGlobStart;
+    my $start  = '1.0';
+    my $pngnum = 1;
+    while ( $start =
+        $textwindow->search( '-regex', '--', '^\\\\PageSep\\{[^}]+\\}', $start, 'end' ) ) {
+        my $end    = "$start lineend";
+        my $line   = $textwindow->get( $start, $end );
+        my $pngstr = $pngnum;
+        $pngstr = sprintf( "%04d", $pngstr ) if $pngnum =~ /^\d+$/;
+        $line =~ s/^\\PageSep\{([^}]+)\}$/-----File: $pngstr.png-----Label: $1/;
+        my $label = $1;
+        $textwindow->delete( $start, $end );
+        $textwindow->insert( $start, $line );
+
+        %::pagenumbers = () if $pngnum == 1;    # If any pageseps found, clear existing pagenumbers before recreating them
+
+        # Have a good guess at appropriate page label settings
+        $::pagenumbers{"Pg$pngstr"}{style} = $label =~ /^\d+$/ ? 'Arabic' : 'Roman';
+        $::pagenumbers{"Pg$pngstr"}{label} = "Pg $label";
+
+        # Restart page numbering at beginning of file, or when page label is '1' or 'i'
+        if ( $pngnum == 1 or $label eq '1' or $label eq 'i' ) {
+            $::pagenumbers{"Pg$pngstr"}{action} = 'Start @';
+            $::pagenumbers{"Pg$pngstr"}{base}   = '1';
+        } else {
+            $::pagenumbers{"Pg$pngstr"}{action} = '+1';
+            $::pagenumbers{"Pg$pngstr"}{base}   = '';
+        }
+        $start = $textwindow->index($end);    # Begin next search for LaTeX at end of previous section
+        $pngnum++;
+    }
+
+    $textwindow->addGlobEnd;
+    ::file_mark_pages();             # Note and standardize page separators
+    ::update_indicators("force");    # Force status bar update to reflect new page labels
 }
 
 1;
