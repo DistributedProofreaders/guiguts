@@ -71,6 +71,8 @@ sub menu_file {
 
         menu_cascade( 'Co~ntent Providing', &menu_file_content_providing ),
 
+        menu_cascade( '~LaTeX Tools', &menu_file_latextools ),
+
         [ 'separator', '' ],
         [ 'command',   '~Quit', -command => \&::_exit ],
     ];
@@ -151,6 +153,20 @@ sub menu_file_content_providing {
         [
             'command', 'CP Character S~ubstitutions', -command => sub { ::cpcharactersubs(); },
         ],
+    ];
+}
+
+#
+# Create the File, LaTeX Tools submenu
+sub menu_file_latextools {
+    [
+        [ 'command', 'Convert LaTeX ~page separators',     -command => \&::latex_pagesep_convert ],
+        [ 'command', 'Replace LaTeX ~quotes with curlies', -command => \&::latex_quotes_convert ],
+        [ 'command', 'Create preview of ~selected LaTeX',  -command => \&::latex_preview_select ],
+        [ 'command', '~View preview in browser',        -command => \&::latex_preview_select_view ],
+        [ 'command', '~Convert file (m2svg)',           -command => \&::latex_svg_convert ],
+        [ 'command', 'View converted file in ~browser', -command => \&::latex_svg_convert_view ],
+        [ 'command', 'Undo some HTML ~autogen changes', -command => \&::latex_undo_autogen ],
     ];
 }
 
@@ -584,7 +600,6 @@ sub menu_tools {
                 $textwindow->addGlobEnd;
             }
         ],
-        menu_cascade( 'LaTeX Tools', &menu_tools_latextools ),
     ];
 }
 
@@ -639,19 +654,6 @@ sub menu_tools_convertfractions {
             'All to superscript/subscript',
             -command => sub { ::fractionconvert('supsub'); }
         ],
-    ];
-}
-
-#
-# Create the Tools, LaTeX Tools submenu
-sub menu_tools_latextools {
-    [
-        [ 'command', 'Replace LaTeX quotes with curlies', -command => \&::latex_quotes_convert ],
-        [ 'command', 'Create preview of selected LaTeX',  -command => \&::latex_preview_select ],
-        [ 'command', 'View preview in browser',        -command => \&::latex_preview_select_view ],
-        [ 'command', 'Convert file (m2svg)',           -command => \&::latex_svg_convert ],
-        [ 'command', 'View convert file in browser',   -command => \&::latex_svg_convert_view ],
-        [ 'command', 'Undo some HTML autogen changes', -command => \&::latex_undo_autogen ],
     ];
 }
 
