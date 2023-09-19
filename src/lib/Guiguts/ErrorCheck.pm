@@ -71,6 +71,13 @@ sub errorcheckpop_up {
         -width => 16
     )->grid( -padx => 10, -row => 0, -column => $gcol++ );
 
+    # Spell Query bad word count sits under the Run Checks button
+    if ( $errorchecktype eq 'Spell Query' ) {
+        $gcol--;
+        $::lglobal{sqbadwordcountlbl} =
+          $ptopframeb->Label()->grid( -padx => 0, -row => 1, -column => $gcol++ );
+    }
+
     $ptopframeb->Button(
         -command => sub {
             errorcheckcopy();
@@ -649,6 +656,12 @@ sub errorcheckpop_up {
     } else {
         errsortrefresh($errorchecktype);
         eccountupdate($countqueries);
+        if ( $errorchecktype eq "Spell Query" ) {
+            my $numbadwords    = sqgetnumbadwords();
+            my $numbadwordslbl = $numbadwords > 0 ? "*$numbadwords* bad word" : "";
+            $numbadwordslbl .= "s" if $numbadwords > 1;
+            $::lglobal{sqbadwordcountlbl}->configure( -text => $numbadwordslbl );
+        }
     }
 
     $::lglobal{errorchecklistbox}->update;
@@ -1481,8 +1494,9 @@ sub booklouperun {
 #
 # Block to make Spell Query dictionary hash local & persistent
 {
-    my %sqglobaldict  = ();
-    my %sqbadwordfreq = ();
+    my %sqglobaldict      = ();
+    my %sqbadspellingfreq = ();
+    my %sqbadwordcount    = ();
 
     # Codes returned by spellquerywordok()
     my $SQWORDOKYES = 0;    # Word in dictionary, or meets other criteria for being OK
@@ -1538,8 +1552,9 @@ sub booklouperun {
                 next if $wd =~ /^['$APOS]*$/;    # OK if nothing left in string but zero or more quotes
 
                 # Format message - increment word frequency; final total gets appended later when populating dialog
-                $sqbadwordfreq{$wd}++;
-                my $badwd = $wordok == $SQWORDOKBAD ? "***" : "";                    # Flag bad word to higher routine with asterisks
+                $sqbadspellingfreq{$wd}++;
+                my $badwd = $wordok == $SQWORDOKBAD ? "***" : "";    # Flag bad word to higher routine with asterisks
+                $sqbadwordcount{$wd}++ if $badwd;
                 my $error = sprintf( "%d:%-2d - %s%s", $step, $col, $wd, $badwd );
                 utf8::encode($error);
                 print $logfile "$error\n";
@@ -1728,7 +1743,7 @@ sub booklouperun {
     # Return how many times bad word referred to in error message was found during the check
     sub spellqueryfrequency {
         my $line = shift;
-        return $sqbadwordfreq{$1} if $line =~ /^\d+:\d+ +- ([^*]+)/;    # Ignore asterisks marking bad words
+        return $sqbadspellingfreq{$1} if $line =~ /^\d+:\d+ +- ([^*]+)/;    # Ignore asterisks marking bad words
         return 0;
     }
 
@@ -1741,9 +1756,19 @@ sub booklouperun {
     #
     # Clear the spell query frequency counts
     sub spellqueryclearcounts {
-        delete $sqbadwordfreq{$_} for keys %sqbadwordfreq;
+        delete $sqbadspellingfreq{$_} for keys %sqbadspellingfreq;
+        delete $sqbadwordcount{$_}    for keys %sqbadwordcount;
     }
 
+    #
+    # Get number of bad words used in file
+    sub sqgetnumbadwords {
+        my $numbadwords = 0;
+        for my $key ( keys %sqbadwordcount ) {
+            $numbadwords += $sqbadwordcount{$key};
+        }
+        return $numbadwords;
+    }
 }    # end of variable-enclosing block
 
 #
