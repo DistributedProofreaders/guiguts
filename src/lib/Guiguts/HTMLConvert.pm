@@ -310,6 +310,7 @@ sub html_convert_body {
     my $blkrightmargin = 0;
     my $blkrstart      = 0;               # Value of $step when a block right starts
     my @blkrlens       = ();
+    my $blklatex       = 0;
     my $closure        = voidclosure();
 
     ::hidelinenumbers();                  # To speed updating of text window
@@ -783,6 +784,10 @@ sub html_convert_body {
             next;
         }
 
+        # Check for open/close of LaTeX block
+        $blklatex = 1 if $selection =~ /^\\\[/;
+        $blklatex = 0 if $selection =~ /^\\\]/;
+
         # Start of index (/I) including possible [n.n,n] rewrap margin settings
         if ( $selection =~ /^\/[Ii]$/ or $selection =~ /^\/[Ii]\[[\d\.,]+]/ ) {
             $indexline = 1;
@@ -897,7 +902,7 @@ sub html_convert_body {
                 # italic/bold/smcap markup cannot span lines, so may need to close & re-open per line
                 ( $ital, $bold, $smcap ) = domarkupperline( sub { $textwindow->ntinsert(@_) },
                     $textwindow, $step, $selection, $ital, $bold, $smcap );
-            } elsif ( $selection =~ /^(\s+)/ ) {
+            } elsif ( $selection =~ /^(\s+)/ and not $blklatex ) {
                 $indent = ( length($1) / 2 );               # left margin of 1em for every 2 spaces
                 $selection =~ s/^\s+//;
                 $selection =~ s/  /&nbsp; /g;               # attempt to maintain multiple spaces
@@ -4492,6 +4497,7 @@ sub latex_svg_convert {
 
     my $runner = ::runner::tofile( $errfname, $errfname );    # stdout & stderr
     $runner->run( "m2svg", $tmpfname, $svgfname );
+    warnifconversionerror($errfname);
     unlink $tmpfname;
 
     chdir $pwd;                                               # Back to the default current dir
@@ -4604,6 +4610,29 @@ sub latex_pagesep_convert {
     $textwindow->addGlobEnd;
     ::file_mark_pages();             # Note and standardize page separators
     ::update_indicators("force");    # Force status bar update to reflect new page labels
+}
+
+#
+# Warn user if conversion reported errors in the given error file
+sub warnifconversionerror {
+    my $errfname = shift;
+    if ( -f $errfname ) {
+        open my $fh, $errfname or die "Could not open $errfname: $!";
+        while ( my $line = <$fh> ) {
+            if ( $line !~ /^\.+Finished$/ ) {    # If anything other than "Finished" line, there has been an error
+                my $basename = ::basename($errfname);
+                my $dialog   = $::top->Dialog(
+                    -text    => "Errors during conversion - check details in $basename",
+                    -bitmap  => 'warning',
+                    -title   => "Check $basename",
+                    -buttons => [qw/OK/],
+                );
+                $dialog->Show;
+                last;
+            }
+        }
+        close $fh;
+    }
 }
 
 1;
