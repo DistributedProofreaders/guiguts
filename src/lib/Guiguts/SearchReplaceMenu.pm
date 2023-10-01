@@ -7,7 +7,7 @@ BEGIN {
     our ( @ISA, @EXPORT );
     @ISA    = qw(Exporter);
     @EXPORT = qw(&update_sr_histories &searchtext &reg_check &getnextscanno &updatesearchlabels
-      &isvalid &swapterms &findascanno &reghint &replace &replaceall
+      &checkregexforerrors &badreg &swapterms &findascanno &reghint &replace &replaceall
       &searchfromstartifnew &searchoptset &searchpopup &stealthscanno &find_proofer_comment
       &find_asterisks &find_transliterations &nextblock &orphanedbrackets &orphanedmarkup &searchsize
       &loadscannos &replace_incr_counter &countmatches &setsearchpopgeometry &quickcount
@@ -100,8 +100,9 @@ sub searchtext {
     $searchterm = $::lglobal{searchentry}->get if $searchterm eq '';
     return ('') unless length($searchterm);
     if ( $::sopt[3] ) {
-        unless ( ::isvalid($searchterm) ) {
-            badreg();
+        my $regexerror = ::checkregexforerrors($searchterm);
+        if ($regexerror) {
+            ::badreg($regexerror);
             return;
         }
     }
@@ -322,7 +323,8 @@ sub countmatches {
 
     my $count = 0;
     ++$count while searchtext( $searchterm, 2 );    # search very silently, counting matches
-    $::lglobal{searchnumlabel}->configure( -text => searchnumtext($count) );
+    $::lglobal{searchnumlabel}->configure( -text => searchnumtext($count) )
+      if defined $::lglobal{quicksearchpop};
 
     # restore saved globals
     $::searchstartindex         = $savesearchstartindex;
@@ -348,17 +350,6 @@ BEGIN {    # restrict scope of $countlastterm
             $::lglobal{searchnumlabel}->configure( -text => "" ) if defined $::lglobal{searchpop};
         }
     }
-}
-
-#
-# Set search entry box to red/black text if invalid/valid search term
-# Also used as a validation routine, but always returns OK because we still want
-# the text to be shown, even if it's a bad regex - user may not have finished typing
-sub reg_check {
-    my $term  = shift;
-    my $color = ( $::sopt[3] and not ::isvalid($term) ) ? 'red' : 'black';
-    $::lglobal{searchentry}->configure( -foreground => $color );
-    return 1;
 }
 
 #
@@ -472,9 +463,10 @@ sub regload {
 #
 # Add a new scanno
 sub regadd {
-    my $st = $::lglobal{regsearch}->get( '1.0', '1.end' );
-    unless ( isvalid($st) ) {
-        badreg();
+    my $st         = $::lglobal{regsearch}->get( '1.0', '1.end' );
+    my $regexerror = ::checkregexforerrors($st);
+    if ($regexerror) {
+        ::badreg($regexerror);
         return;
     }
     my $rt = $::lglobal{regreplace}->get( '1.0', '1.end' );
@@ -587,6 +579,7 @@ sub swapterms {
 
 #
 # Check if a regex is valid by attempting to eval it
+# Return error message on failure, empty string on success.
 #
 # Two possible errors:
 #   1. eval block fails to compile and $@ contains the compile error
@@ -598,42 +591,66 @@ sub swapterms {
 # case 2 would not trigger. Therefore it is necessary to remember the bad regex and check
 # against that as well.
 #
-# Block to ensure persistence of $lastbad
+# Block to ensure persistence of $lastbad & $lasterror
 {
-    my $lastbad = '^*';    # initialise to a regex that would generate a warning
+    my $lastbad   = '^*';    # initialise to a regex that would generate a warning
+    my $lasterror = '';
 
-    sub isvalid {
+    sub checkregexforerrors {
         my $regex = shift;
 
-        # assume a new regex is a good one
-        my $valid = $regex ne $lastbad;
+        return $lasterror if $regex eq $lastbad;
+
+        $lasterror = '';    # Assume OK at this point
 
         # local warning handler to trap regex warnings
         local $SIG{__WARN__} = sub {
-            $lastbad = $regex;
-            $valid   = 0;
+            $lastbad   = $regex;
+            $lasterror = shift;
         };
 
-        # try compiling it - note warning handler may set $valid to 0 at this point
+        # try compiling it - note warning handler may set $lasterror at this point
         eval { qr/$regex/ };
+        $lasterror = $@ if $@;    # if compile failed
 
-        $valid = 0 if $@;    # if compile failed
-        return $valid;
+        return $lasterror;
+    }
+
+    #
+    # Set entry box to red/black text if invalid/valid regex
+    # Also used as a validation routine, but always returns OK because we still want
+    # the text to be shown, even if it's a bad regex - user may not have finished typing
+    sub reg_check {
+        my $widget  = shift;
+        my $term    = shift;
+        my $isregex = shift;                                                             # Optional regex flag - true to treat string as regex (default)
+        my $color   = ( $isregex and ::checkregexforerrors($term) ) ? 'red' : 'black';
+        $widget->configure( -foreground => $color );
+        return 1;
+    }
+
+    #
+    # Warn user that regex search term is invalid
+    # Given an error message from compiling the regex, simplify it, then report it to user
+    sub badreg {
+
+        # Make the error more user-friendly by removing "marked by <-- HERE in m/"
+        # and trimming where it reports the Perl filename and line number (after "/ at ")
+        my $details = shift;
+        $details =~ s/marked by <-- HERE in m\//\n/;
+        my $trimpoint = rindex( $details, '/ at ' );
+        $details = substr( $details, 0, $trimpoint ) if $trimpoint > 0;
+
+        my $warning = $::top->Dialog(
+            -text    => $details,
+            -title   => 'Invalid Regex',
+            -bitmap  => 'warning',
+            -buttons => ['Ok'],
+        );
+        $warning->Icon( -image => $::icon );
+        $warning->Show;
     }
 }    # End of enclosing block
-
-#
-# Warn user if regex search term is invalid
-sub badreg {
-    my $warning = $::top->Dialog(
-        -text    => "Invalid Regex search term.\nDo you have mismatched\nbrackets or parentheses?",
-        -title   => 'Invalid Regex',
-        -bitmap  => 'warning',
-        -buttons => ['Ok'],
-    );
-    $warning->Icon( -image => $::icon );
-    $warning->Show;
-}
 
 #
 # Clear the mark that showed where match from previous search was
@@ -979,7 +996,8 @@ sub searchoptset {
     }
 
     # Changing options may affect if search string is valid, so re-check it
-    reg_check( $::lglobal{searchentry}->get ) if $::lglobal{searchpop};
+    reg_check( $::lglobal{searchentry}, $::lglobal{searchentry}->get, $::sopt[3] )
+      if $::lglobal{searchpop};
 }
 
 #
@@ -1073,7 +1091,7 @@ sub searchpopup {
         $::lglobal{searchentry} = $sf11->Entry(
             -foreground => 'black',
             -validate   => 'all',
-            -vcmd       => sub { reg_check(shift); }
+            -vcmd       => sub { reg_check( $::lglobal{searchentry}, shift, $::sopt[3] ); }
         )->pack(
             -side   => 'left',
             -anchor => 'w',
@@ -2234,7 +2252,7 @@ sub quickcount {
 sub quicksearch {
     my $reverse = shift;
 
-    return if not defined $::lglobal{statussearchtext} or $::lglobal{statussearchtext} eq '';
+    return if $::lglobal{quicksearchentry}->get eq '';
 
     # Save main search settings and set up using quicksearch values
     my @saveopt;
@@ -2246,10 +2264,10 @@ sub quicksearch {
     $::sopt[3]                   = $::lglobal{statussearchregex};
     $::sopt[4]                   = 0;
 
+    ::add_entry_history( $::lglobal{quicksearchentry}->get, \@::quicksearch_history );    # Add to history menu
     $::lglobal{quicksearch} = 1;
-    ::searchtext( $::lglobal{statussearchtext} );
+    ::searchtext( $::lglobal{quicksearchentry}->get );
     $::lglobal{quicksearch} = 0;
-    ::add_entry_history( $::lglobal{statussearchtext}, \@::quicksearch_history );    # Add to history menu
 
     # Restore main search settings
     $::sopt[$_] = $saveopt[$_] for ( 0 .. 4 );
@@ -2277,18 +2295,11 @@ sub quicksearchpopup {
         -width  => 9,
         -height => 15,
     )->pack( -side => 'left', -anchor => 'nw' );
-    $::lglobal{statussearchtext} = '' unless defined $::lglobal{statussearchtext};
-
-    # If some text is selected, put the first line only in the quick search entry field
-    # then clear the selection so it doesn't get in the way of the search
-    my @ranges = $textwindow->tagRanges('sel');
-    $textwindow->tagRemove( 'sel', '1.0', 'end' );
-    $::lglobal{statussearchtext} = $textwindow->get( $ranges[0], $ranges[1] ) if @ranges;
-    $::lglobal{statussearchtext} =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
 
     $::lglobal{quicksearchentry} = $frame0->Entry(
-        -width        => 12,
-        -textvariable => \$::lglobal{statussearchtext},
+        -width    => 12,
+        -validate => 'all',
+        -vcmd     => sub { quicksearch_reg_check(shift); }
     )->pack( -expand => 1, -fill => 'x', -side => 'top' );
     $::lglobal{quicksearchentry}->bind( '<Return>', sub { ::quicksearch(); } );
     searchbind( $::lglobal{quicksearchpop}, '<Control-Shift-f>', sub { ::quicksearch(); } );    # Same shortcut as popping the dialog
@@ -2297,6 +2308,17 @@ sub quicksearchpopup {
       ->bind( '<Control-Return>', sub { ::quicksearch(); $::textwindow->focus; } );
     $::lglobal{quicksearchentry}
       ->bind( '<Control-Shift-Return>', sub { ::quicksearch('reverse'); $::textwindow->focus; } );
+
+    # If some text is selected, put the first line only in the quick search entry field
+    # then clear the selection so it doesn't get in the way of the search
+    my @ranges = $textwindow->tagRanges('sel');
+    $textwindow->tagRemove( 'sel', '1.0', 'end' );
+    if (@ranges) {
+        my $searchterm = $textwindow->get( $ranges[0], $ranges[1] );
+        $searchterm =~ s/[\n\r].*//s;    # Trailing 's' makes '.' match newlines
+        $::lglobal{quicksearchentry}->delete( 0, 'end' );
+        $::lglobal{quicksearchentry}->insert( 'end', $searchterm );
+    }
 
     # Allow user to pop main S/R dialog while focused on Quicksearch dialog
     searchbind( $::lglobal{quicksearchpop}, '<Control-f>', sub { ::searchpopup(); } );
@@ -2333,6 +2355,7 @@ sub quicksearchpopup {
         -text     => 'Word',
         -command  => sub {
             $::lglobal{statussearchregex} = 0 if $::lglobal{statussearchword};    # Can't have word and regex
+            quicksearch_reg_check( $::lglobal{quicksearchentry}->get );
         },
     )->pack( -side => 'left' );
     $frame1->Checkbutton(
@@ -2340,6 +2363,7 @@ sub quicksearchpopup {
         -text     => 'Regex',
         -command  => sub {
             $::lglobal{statussearchword} = 0 if $::lglobal{statussearchregex};    # Can't have word and regex
+            quicksearch_reg_check( $::lglobal{quicksearchentry}->get );
         },
     )->pack( -side => 'left' );
 
@@ -2360,10 +2384,17 @@ sub quicksearchpopup {
 }
 
 #
+# Check quick search regex - used for validation and when switching between regex/exact matches
+# Takes search string as argument
+sub quicksearch_reg_check {
+    reg_check( $::lglobal{quicksearchentry}, shift, $::lglobal{statussearchregex} );
+}
+
+#
 # Do a count, using the string and settings from the quicksearch dialog,
 # saving and restoring search settings in the main S/R dialog
 sub quicksearchcountmatches {
-    return if not defined $::lglobal{statussearchtext} or $::lglobal{statussearchtext} eq '';
+    return if $::lglobal{quicksearchentry}->get eq '';
     my $textwindow = $::textwindow;
 
     # save selection range to restore later
@@ -2387,8 +2418,9 @@ sub quicksearchcountmatches {
     my $saveselectionsearch = $::lglobal{selectionsearch};
     $::lglobal{selectionsearch} = 0;
 
-    my $count = 0;
-    ++$count while searchtext( $::lglobal{statussearchtext}, 2 );         # search very silently, counting matches
+    my $count      = 0;
+    my $searchterm = $::lglobal{quicksearchentry}->get;
+    ++$count while searchtext( $searchterm, 2 );                          # search very silently, counting matches
     my $dlg = $::top->Dialog(
         -text    => searchnumtext($count),
         -bitmap  => "info",

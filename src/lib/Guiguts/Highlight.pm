@@ -178,7 +178,16 @@ sub hilite {
     my $mark       = shift;
     my $matchtype  = shift;
 
-    $mark = quotemeta($mark) if $matchtype eq 'exact';
+    if ( $matchtype eq 'exact' ) {
+        $mark = quotemeta($mark);
+    } else {
+        my $regexerror = ::checkregexforerrors($mark);
+        if ($regexerror) {
+            ::badreg($regexerror);
+            return;
+        }
+    }
+
     my @ranges      = $textwindow->tagRanges('sel');
     my $range_total = @ranges;
     my ( $index, $lastindex );
@@ -246,7 +255,7 @@ sub hilitepopup {
         $::lglobal{hilitepop} = $top->Toplevel;
         $::lglobal{hilitepop}->title('Character Highlight');
         ::initialize_popup_with_deletebinding('hilitepop');
-        my $hilitemode = 'exact';
+        $::lglobal{hilitemode} = 'exact';
         my $f = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n', -padx => 3 );
         $f->Label( -text => 'Highlight Character(s) or Regex', )
           ->pack( -side => 'top', -pady => 2, -padx => 2, -anchor => 'n' );
@@ -258,7 +267,11 @@ sub hilitepopup {
             -width  => 9,
             -height => 15,
         )->pack( -side => 'left', -anchor => 'w' );
-        $::lglobal{highlightentry} = $f->Entry( -width => 40, )->pack(
+        $::lglobal{highlightentry} = $f->Entry(
+            -width    => 40,
+            -validate => 'all',
+            -vcmd     => sub { highlight_reg_check(shift); },
+        )->pack(
             -expand => 1,
             -fill   => 'x',
             -pady   => 3,
@@ -266,14 +279,16 @@ sub hilitepopup {
         );
         my $f2 = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f2->Radiobutton(
-            -variable => \$hilitemode,
+            -variable => \$::lglobal{hilitemode},
             -value    => 'exact',
             -text     => 'Exact',
+            -command  => sub { highlight_reg_check( $::lglobal{highlightentry}->get ); },    # To unset warning color if bad regex
         )->grid( -row => 0, -column => 1 );
         $f2->Radiobutton(
-            -variable => \$hilitemode,
+            -variable => \$::lglobal{hilitemode},
             -value    => 'regex',
             -text     => 'Regex',
+            -command  => sub { highlight_reg_check( $::lglobal{highlightentry}->get ); },    # Maybe set warning color if bad regex
         )->grid( -row => 0, -column => 2 );
         my $f3 = $::lglobal{hilitepop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Button(
@@ -293,8 +308,8 @@ sub hilitepopup {
         )->grid( -row => 1, -column => 2, -padx => 2, -pady => 2 );
         $f3->Button(
             -command => sub {
-                hilite( $::lglobal{highlightentry}->get, $hilitemode );
                 ::add_entry_history( $::lglobal{highlightentry}->get, \@::highlight_history );
+                hilite( $::lglobal{highlightentry}->get, $::lglobal{hilitemode} );
             },
             -text  => 'Apply Highlights',
             -width => 16,
@@ -306,6 +321,13 @@ sub hilitepopup {
         )->grid( -row => 2, -column => 2, -padx => 2, -pady => 2 );
     }
     $::lglobal{highlightentry}->focus;
+}
+
+#
+# Check highlight regex, either for validation, or when switching between exact & regex modes
+# Accepts regex string as argument
+sub highlight_reg_check {
+    return ::reg_check( $::lglobal{highlightentry}, shift, $::lglobal{hilitemode} eq 'regex' );
 }
 
 #

@@ -183,7 +183,8 @@ sub wordfrequency {
                 'RegExp-->',
                 [
                     sub {
-                        anythingwfcheck( 'words matching regular expression', $::regexpentry );
+                        anythingwfcheck( 'words matching regular expression',
+                            $::lglobal{regexpentry}->get() );
                     }
                 ]
             ],
@@ -207,13 +208,19 @@ sub wordfrequency {
                 );
                 $button->bind( '<3>' => $_->[2] ) if $_->[2];
             } else {
-                $::lglobal{regexpentry} =
-                  $wordfreqseframe1->Entry( -textvariable => \$::regexpentry, )->grid(
+                $::lglobal{regexpentry} = $wordfreqseframe1->Entry(
+                    -validate => 'all',
+                    -vcmd     => sub { ::reg_check( $::lglobal{regexpentry}, shift, 1 ); }
+                )->grid(
                     -row        => $row,
                     -column     => $col,
                     -columnspan => 3,
                     -sticky     => "nsew"
-                  );
+                );
+                if ( $::lglobal{regexpentrystring} ) {
+                    $::lglobal{regexpentry}->delete( 0, 'end' );
+                    $::lglobal{regexpentry}->insert( 'end', $::lglobal{regexpentrystring} );
+                }
             }
         }
         my $wcframe = $::lglobal{wfpop}->Frame->pack( -fill => 'both', -expand => 'both', );
@@ -240,6 +247,7 @@ sub wordfrequency {
         ::drag( $::lglobal{wclistbox} );
         $::lglobal{wfpop}->protocol(
             'WM_DELETE_WINDOW' => sub {
+                $::lglobal{regexpentrystring} = $::lglobal{regexpentry}->get;    # Save string for next time popped
                 ::killpopup('wfpop');
                 undef $::lglobal{wclistbox};
                 $::lglobal{markuppopok}->invoke if $::lglobal{markuppop};
@@ -583,9 +591,9 @@ sub anythingwfcheck {
     my $top = $::top;
     ::operationadd( 'Check ' . $checktype );
     $::lglobal{wclistbox}->delete( '0', 'end' );
-    if ( not ::isvalid($checkregexp) ) {
-        $::lglobal{wclistbox}->insert( 'end', "Invalid regular expression: $checkregexp" );
-        $::lglobal{wclistbox}->update;
+    my $regexerror = ::checkregexforerrors($checkregexp);
+    if ($regexerror) {
+        ::badreg($regexerror);
         return;
     }
     $::lglobal{wclistbox}->insert( 'end', 'Please wait, building word list....' );
