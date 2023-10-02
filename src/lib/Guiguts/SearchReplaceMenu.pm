@@ -324,7 +324,7 @@ sub countmatches {
     my $count = 0;
     ++$count while searchtext( $searchterm, 2 );    # search very silently, counting matches
     $::lglobal{searchnumlabel}->configure( -text => searchnumtext($count) )
-      if defined $::lglobal{quicksearchpop};
+      if defined $::lglobal{searchpop};
 
     # restore saved globals
     $::searchstartindex         = $savesearchstartindex;
