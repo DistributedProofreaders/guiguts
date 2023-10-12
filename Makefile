@@ -6,7 +6,7 @@ VERSION=1.6.0
 ZIP=zip -rv9
 
 # files to include from the root
-INCLUDES=CHANGELOG.md INSTALL.md UPGRADE.md LICENSE.txt README.md THANKS.md
+INCLUDES=CHANGELOG.md INSTALL.md UPGRADE.md LICENSE.txt README.md THANKS.md TROUBLESHOOTING.md
 
 TARGETS= generic win mac
 
