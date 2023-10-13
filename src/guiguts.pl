@@ -173,7 +173,6 @@ our $defaultpngspath        = ::os_normal('pngs/');
 our $pngspath               = q{};
 our $projectid              = q{};
 our $recentfile_size        = 9;
-our $regexpentry            = q();
 our $rmargin                = 72;
 our $rmargindiff            = 1;
 our $rwhyphenspace          = 1;
