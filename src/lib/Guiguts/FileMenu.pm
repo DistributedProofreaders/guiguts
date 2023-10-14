@@ -1400,6 +1400,7 @@ sub cpcharactersubs {
     $textwindow->addGlobStart;
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{0009}", " " );     # tab --> space
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2014}", "--" );    # emdash --> double hyphen
+    $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{00ac}", "-" );     # not sign --> hyphen
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2018}", "'" );     # left single quote --> straight
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{2019}", "'" );     # right single quote --> straight
     $textwindow->FindAndReplaceAll( '-exact', '-nocase', "\x{201c}", "\"" );    # left double quote --> straight
