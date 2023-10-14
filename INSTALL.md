@@ -55,7 +55,8 @@ to any previous versions._
    can take several minutes to complete.
    If instead, Windows says it does not know how to run that file, or it opens
    the file in a text editor like Notepad, you will need to re-associate `.pl` 
-   files with the Perl program/app. Follow the steps in the footnote below[^1],
+   files with the Perl program/app. Follow the steps in the
+   [note below](#problems-running-install_cpan_modules),
    then return to re-try this step.
 7. Double click the `run_guiguts.bat` file in the same folder, and Guiguts
    should start up and be ready for use. Open the `Preferences` menu, then
@@ -78,7 +79,9 @@ to any previous versions._
 9. Install [Java](#java) to be able to check your HTML and CSS from within
    Guiguts.
 
-[^1]: _Only needed if double-clicking `install_cpan_modules.pl` was
+#### Problems running install_cpan_modules
+
+_Only use the following if double-clicking `install_cpan_modules.pl` was
 unsuccessful,_ (may vary slightly for different versions of Windows):
    1. Right-click `install_cpan_modules.pl` in File Explorer, and choose
       `Open with`.
