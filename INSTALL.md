@@ -196,13 +196,13 @@ it before starting this process.
 
 ### XQuartz
 
-[XQuartz](https://www.xquartz.org/) is an X11 windows manager. If you don't
-have it installed already, you can either download and install it manually
-via the link _or_ install it with Homebrew using:
-
-```
-brew install --cask xquartz
-```
+XQuartz is an X11 windows manager. If you don't have it installed already, you
+can either:
+* Download and install it manually from [xquartz.org](https://www.xquartz.org/)
+* Install it with Homebrew using
+  ```
+  brew install --cask xquartz
+  ```
 
 After you install XQuartz, you must ***log out and back in*** to your account
 on your computer, or reboot, before Guiguts can use it as the X11 server.

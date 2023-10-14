@@ -27,6 +27,8 @@ If you are upgrading from an earlier version of Guiguts, see
 
 To install Guiguts see [INSTALL.md](INSTALL.md).
 
+For troubleshooting tips, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+
 ## Development
 
 ### Code style
