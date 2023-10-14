@@ -226,18 +226,16 @@ sub spelladdword {
 }
 
 #
-# Add a word to the project dictionary
-# Optional second argument if it's a bad word
+# Add a single word to the project dictionary and save it - slow if used for bulk additions
 sub spellmyaddword {
     my $textwindow = $::textwindow;
     my $term       = shift;
-    my $bad        = shift;
     unless ($term) {
         ::soundbell();
         return;
     }
     return if $term =~ /^\s*$/;
-    ( $bad ? $::projectbadwords{$term} : $::projectdict{$term} ) = '';
+    $::projectdict{$term} = '';
     spellsaveprojdict();
 }
 
@@ -502,7 +500,7 @@ sub spelladdgoodwords {
         while ( my $line = <$fh> ) {
             $line =~ s/\s+$//;
             next if $line eq '';
-            spellmyaddword($line);
+            $::projectdict{$line} = '';
         }
         close($fh);
 
@@ -511,10 +509,11 @@ sub spelladdgoodwords {
             while ( my $line = <$fh> ) {
                 $line =~ s/\s+$//;
                 next if $line eq '';
-                spellmyaddword( $line, "bad" );
+                $::projectbadwords{$line} = '';
             }
             close($fh);
         }
+        spellsaveprojdict();
         ::unbusy();
     } else {
         ::warnerror("Could not open good_words.txt");
