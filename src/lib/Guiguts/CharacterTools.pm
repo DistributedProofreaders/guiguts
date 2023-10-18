@@ -1157,7 +1157,7 @@ sub fractionconvert {
         $start = $textwindow->search(
             '-regexp',
             '-count' => \$length,
-            '--', '-?\d+' . $anyslash . '\d+(?!,\d)', $start, 'tempselend'    # Negative lookahead to avoid converting 1/2 in 1/2,000
+            '--', '-?\d+' . $anyslash . '\d+(?!\d*,\d)', $start, 'tempselend'    # Negative lookahead to avoid converting 1/2 in 1/2,000
         )
     ) {
         my $end        = "$start+${length}c";
