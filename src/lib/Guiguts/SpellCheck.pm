@@ -494,10 +494,11 @@ sub spelladdgoodwords {
 
     my $fh;
 
-    # Load good words first
-    if ( open( $fh, "<:encoding(utf8)", "good_words.txt" ) ) {
+    # Load good words first - these files may not be utf8-encoded, so don't assume they are
+    if ( open( $fh, "<", "good_words.txt" ) ) {
         ::busy();
         while ( my $line = <$fh> ) {
+            utf8::decode($line);
             $line =~ s/\s+$//;
             next if $line eq '';
             $::projectdict{$line} = '';
@@ -505,8 +506,9 @@ sub spelladdgoodwords {
         close($fh);
 
         # The bad_words.txt file often doesn't exist, so don't error if that's the case
-        if ( open( $fh, "<:encoding(utf8)", "bad_words.txt" ) ) {
+        if ( open( $fh, "<", "bad_words.txt" ) ) {
             while ( my $line = <$fh> ) {
+                utf8::decode($line);
                 $line =~ s/\s+$//;
                 next if $line eq '';
                 $::projectbadwords{$line} = '';
