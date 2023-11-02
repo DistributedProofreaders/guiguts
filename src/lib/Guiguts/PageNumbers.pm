@@ -113,12 +113,12 @@ sub pnumadjust {
         )->grid( -row => 3, -column => 2 );
         my $frame3     = $::lglobal{pagemarkerpop}->Frame->pack( -pady => 4 );
         my $prevbutton = $frame3->Button(
-            -command => sub { pgfocus(-1); },
+            -command => sub { pgfocus( -1, $::lglobal{pagenumentry}->get ); },
             -text    => 'Previous Marker',
             -width   => 14
         )->grid( -row => 1, -column => 1 );
         my $nextbutton = $frame3->Button(
-            -command => sub { pgfocus(+1); },
+            -command => sub { pgfocus( +1, $::lglobal{pagenumentry}->get ); },
             -text    => 'Next Marker',
             -width   => 14
         )->grid( -row => 1, -column => 2 );
@@ -360,44 +360,53 @@ sub pgrenum {
 }
 
 #
-# Move focus to previous or next marker (pass negative number for previous)
+# Move focus to previous or next page marker (pass negative number for previous)
 # advancing to just after marker to ensure we're not at the end of the page before
-# Uses Adjust Page Markers dialog if it is visible, otherwise moves from current insert position
+# Optional second argument gives current marker, otherwise calculated from current insert position
 sub pgfocus {
-    my $searchmethod = (shift) < 0 ? "markPrevious" : "markNext";
     my $textwindow   = $::textwindow;
+    my $direction    = shift;
+    my $searchmethod = $direction < 0 ? "markPrevious" : "markNext";
+    my $startmark    = shift;
+    my $fromcurrent  = not defined($startmark);
+    $startmark = 'Pg' . ::get_page_number() if $fromcurrent;    # Start mark is the page marker for the current page
+
+    return unless $startmark =~ /Pg\S+/;                        # No valid page marker given - can happen if file has no page markers
 
     my $save_seepagenums = $::lglobal{seepagenums};
-    ::togglepagenums('nodialog') unless $save_seepagenums;    # Show page nums without dialog unless already shown
 
     # Temporarily (silently) turn off Auto Img to avoid unwanted images being shown during advance/retreat
     my $save_auto_show_images = $::auto_show_images;
     $::auto_show_images = 0;
 
-    my $mark;
-    my $num = $::lglobal{pagenumentry}->get if Tk::Exists( $::lglobal{pagenumentry} );
-    $num  = $textwindow->index('insert') unless $num;
-    $mark = $num;
-
+    my $mark = $startmark;
+    my $num  = $mark;
     while ( $num = $textwindow->$searchmethod($num) ) {
-        if ( $num =~ /Pg\S+/ ) {
+        next if $num !~ /Pg\S+/;    # Only care about page marks
+
+        # When starting from current insert position, don't want to pick a mark that
+        # has the same index as the starting mark (only happens when two page marks are coincident)
+        unless ( $fromcurrent and $textwindow->compare( $startmark, '==', $num ) ) {
             $mark = $num;
             last;
         }
     }
+
+    # If dialog is popped, update it
     if ( Tk::Exists( $::lglobal{pagenumentry} ) ) {
         $::lglobal{pagenumentry}->delete( '0', 'end' );
         $::lglobal{pagenumentry}->insert( 'end', $mark );
     }
 
-    # If jumped to a new label, need to step past label onto the new page, or we get left at end of old page
-    my $marklen = length(" $mark ") + 1;
-    $mark .= " +${marklen}c" if $mark =~ /(Pg\S+)/;
-    $textwindow->markSet( 'insert', $mark );
-    ::seeindex( $mark, $::donotcenterpagemarkers );
+    # Need to skip past label onto new page, or we get left at end of old page
+    # If labels are not shown, then just one character is sufficient
+    my $markskip = $mark . "+" . ( $save_seepagenums ? length(" $mark ") + 1 : 1 ) . "c";
+    ::seeindex( $markskip, $::donotcenterpagemarkers );
+    $textwindow->markSet( 'insert', $markskip );
 
-    # Update window to ensure pagenums are briefly shown before being hidden again, unless they were previously visible
+    # Show pagenums briefly before hiding them again, unless they were already visible
     unless ($save_seepagenums) {
+        ::togglepagenums('nodialog');
         $::textwindow->update;
         $::textwindow->after(375);
         ::togglepagenums('nodialog');
