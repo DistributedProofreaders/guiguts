@@ -1283,7 +1283,7 @@ sub file_import_markup {
 sub interpretbinfile {
     my $textwindow = $::textwindow;
     my $markindex;
-    foreach my $mark ( sort keys %::pagenumbers ) {
+    foreach my $mark ( reverse sort keys %::pagenumbers ) {
         $markindex = $::pagenumbers{$mark}{offset};
         unless ($markindex) {
             delete $::pagenumbers{$mark};
