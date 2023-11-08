@@ -1245,20 +1245,19 @@ sub html_convert_sidenotes {
 sub html_convert_pageanchors {
     my $textwindow = $::textwindow;
     ::working("Inserting Page Number Markup");
-    $|++;
     my @pagerefs;    # keep track of first/last page markers at the same position
-    my $tempcounter;
-    my $mark = '1.0';
-    while ( $textwindow->markPrevious($mark) ) {
-        $mark = $textwindow->markPrevious($mark);
-    }
 
     my $closure = voidclosure();
 
-    # Work through all the text markers
-    while ( $mark = $textwindow->markNext($mark) ) {
-        next unless $mark =~ m{Pg(\S+)};              # Only look at page markers
-        my $markindex = $textwindow->index($mark);    # Get page marker's index
+    # Get a correctly sorted list of page markers - if two markers are at the
+    # same location, the order returned by markNext is not defined, but we need
+    # them ordered by png.
+    my @pagemarklist = sort grep ( /^Pg\S+$/, $textwindow->markNames );
+
+    for my $idx ( 0 .. $#pagemarklist ) {
+        my $mark      = $pagemarklist[$idx];
+        my $markindex = $textwindow->index($mark);                                # Get page marker's index
+        my $marknext  = $idx < $#pagemarklist ? $pagemarklist[ $idx + 1 ] : "";
 
         # This is the custom page label
         my $num = $::pagenumbers{$mark}{label};
@@ -1276,12 +1275,6 @@ sub html_convert_pageanchors {
             push @pagerefs, $mark;    # do not drop leading zeroes
         } else {
             push @pagerefs, $num;
-        }
-
-        # Find next page marker & its index
-        my $marknext = $mark;
-        while ( $marknext = $textwindow->markNext($marknext) ) {
-            last if $marknext =~ m{Pg(\S+)};
         }
 
         # If no more marks (reached end of file) or there are word characters between the
