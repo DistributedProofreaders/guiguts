@@ -4,6 +4,11 @@ use warnings;
 
 my $EMPX = 16.0;                     # 1em in px assumed to be 16
 my ( $LANDX, $LANDY ) = ( 4, 3 );    # Common aspect ratio of landscape screen
+my $IDXXREFPREFIX = 'Indexxref_';    # ID Prefix used for index cross-references
+my $LDQ           = "\x{201c}";
+my $RDQ           = "\x{201d}";
+my $LSQ           = "\x{2018}";
+my $RSQ           = "\x{2019}";
 
 BEGIN {
     use Exporter();
@@ -15,7 +20,7 @@ BEGIN {
       qw(&htmlautoconvert &htmlgenpopup &htmlmarkpopup &makeanchor &autoindex &entity &named &tonamed
       &fromnamed &fracconv &pageadjust &html_convert_pageanchors
       &latex_quotes_convert &latex_preview_select &latex_preview_select_view &latex_svg_convert &latex_svg_convert_view
-      &latex_undo_autogen &latex_pagesep_convert);
+      &latex_undo_autogen &latex_pagesep_convert &indexxref);
 }
 
 #
@@ -2734,10 +2739,15 @@ sub htmlmarkpopup {
 
         my $f3 = $::lglobal{markpop}->Frame->pack( -side => 'top', -anchor => 'n' );
         $f3->Button(
+            -command => sub { ::indexxref() },
+            -text    => 'Add Index Cross-references',
+            -width   => 24
+        )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+        $f3->Button(
             -command => sub { clearmarkupinselection() },
             -text    => 'Remove Markup from Selection',
             -width   => 24
-        )->grid( -row => 1, -column => 1, -padx => 1, -pady => 2 );
+        )->grid( -row => 1, -column => 2, -padx => 1, -pady => 2 );
 
         ::initialize_popup_with_deletebinding('markpop');
     }
@@ -3001,11 +3011,12 @@ sub markup {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
-            )->pack(
-                -side   => 'left',
+            )->grid(
+                -row    => 0,
+                -column => 0,
                 -pady   => 2,
                 -padx   => 2,
-                -anchor => 'n'
+                -sticky => 'w'
             );
             $tframe->Checkbutton(
                 -variable => \$::lglobal{fnlinks},
@@ -3014,11 +3025,12 @@ sub markup {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
-            )->pack(
-                -side   => 'left',
+            )->grid(
+                -row    => 0,
+                -column => 1,
                 -pady   => 2,
                 -padx   => 2,
-                -anchor => 'n'
+                -sticky => 'w'
             );
             $tframe->Checkbutton(
                 -variable => \$::lglobal{pglinks},
@@ -3027,11 +3039,26 @@ sub markup {
                     $linklistbox->delete( '0', 'end' );
                     linkpopulate( $linklistbox, \@intanchors );
                 },
-            )->pack(
-                -side   => 'left',
+            )->grid(
+                -row    => 1,
+                -column => 0,
                 -pady   => 2,
                 -padx   => 2,
-                -anchor => 'n'
+                -sticky => 'w'
+            );
+            $tframe->Checkbutton(
+                -variable => \$::lglobal{idxlinks},
+                -text     => 'Hide Index Links',
+                -command  => sub {
+                    $linklistbox->delete( '0', 'end' );
+                    linkpopulate( $linklistbox, \@intanchors );
+                },
+            )->grid(
+                -row    => 1,
+                -column => 1,
+                -pady   => 2,
+                -padx   => 2,
+                -sticky => 'w'
             );
             my $pframe = $::lglobal{linkpop}->Frame->pack( -fill => 'both', -expand => 'both' );
             $linklistbox = $pframe->Scrolled(
@@ -3072,6 +3099,7 @@ sub markup {
                     && $::lglobal{fnlinks} );
                 next
                   if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+                next if ( ( $_ =~ /#$IDXXREFPREFIX/ ) && $::lglobal{idxlinks} );
                 next unless ( lc($_) eq '#' . $tempvar );
                 $linklistbox->insert( 'end', $_ );
                 $flag++;
@@ -3094,6 +3122,7 @@ sub markup {
 
                 next
                   if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+                next if ( ( $_ =~ /#$IDXXREFPREFIX/ ) && $::lglobal{idxlinks} );
                 next
                   unless ( $entrarray[0]
                     and lc($_) =~ /\Q$entrarray[0]\E|\Q$entrarray[1]\E|\Q$entrarray[2]\E/ );
@@ -3595,6 +3624,7 @@ sub linkpopulate {
               if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
                 && $::lglobal{fnlinks} );
             next if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+            next if ( ( $_ =~ /#$IDXXREFPREFIX/ )         && $::lglobal{idxlinks} );
             $linklistbox->insert( 'end', $_ );
         }
     } else {
@@ -3603,6 +3633,7 @@ sub linkpopulate {
               if ( ( ( $_ =~ /#$::htmllabels{fnlabel}/ ) || ( $_ =~ /#$::htmllabels{fnanchor}/ ) )
                 && $::lglobal{fnlinks} );
             next if ( ( $_ =~ /#$::htmllabels{pglabel}/ ) && $::lglobal{pglinks} );
+            next if ( ( $_ =~ /#$IDXXREFPREFIX/ )         && $::lglobal{idxlinks} );
             $linklistbox->insert( 'end', $_ );
         }
     }
@@ -4200,14 +4231,122 @@ sub addpagelinks {
     return $selection;
 }
 
+#
+# Find "See xyz" cross-references in index, and link to relevant index entries if possible
+sub indexxref {
+    my $textwindow = $::textwindow;
+    my @ranges     = $textwindow->tagRanges('sel');
+    $textwindow->tagRemove( 'sel', '1.0', 'end' );
+    my $range_total = @ranges;
+    if ( $range_total == 0 ) {
+        $::top->messageBox(
+            -icon    => 'error',
+            -message => "Select whole index before running cross-reference tool.",
+            -title   => 'No text selected',
+            -type    => 'Ok',
+        );
+        return;
+    }
+
+    my $indexend = pop(@ranges);
+    $textwindow->markSet( 'indexendmark', $indexend );    # Since row/col of indexend will change during insertions
+    my $indexstart = pop(@ranges);
+
+    my $SEESTR     = '(also )*see';                       # Change this if needed for different languages
+    my $SEESTRLEN  = length($SEESTR);                     # Approx length just used for advancing search position
+    my $seepos     = $indexstart;
+    my $seesawnum  = 1;
+    my $IDXERRMARK = 'indexerr';
+    my $idxerrnum  = 1;
+    my %idxerrmsg  = ();
+
+    # Loop to end of index
+    while ( $textwindow->compare( $seepos, "<", $indexend ) ) {
+
+        # Find "See" - exit loop if not found
+        my $seelen;
+        $seepos =
+          $textwindow->search( '-regexp', '-nocase', '-count', \$seelen, '--', "\\b$SEESTR\\b",
+            "$seepos+${SEESTRLEN}c", 'indexendmark' );
+        last unless $seepos;
+
+        # Grab the string describing what to "See", trimming HTML tags and non-word characters
+        my $see = $textwindow->get( "$seepos+${seelen}c", "$seepos lineend" );
+        $see =~ s/ *<[^>]+> *//g;
+        $see =~ s/^\W*//;
+        $see =~ s/\W*$//;
+
+        # Find the text we want to enclose in <a>...</a>, and set marks in case we insert text before this point
+        my $len;
+        my $seeexactpos =
+          $textwindow->search( '-regexp', '-nocase', '-count', \$len, '--', "\\b$see\\b",
+            "$seepos+${seelen}c", "$seepos lineend" );
+
+        # Mark location of error and store message - shouldn't happen with well-formed index
+        unless ( $seeexactpos and $len > 0 ) {
+            my $idxerr = $IDXERRMARK . $idxerrnum++;
+            $textwindow->markSet( $idxerr, $seepos );
+            $idxerrmsg{$idxerr} = "Couldn't interpret 'See $see'";
+            next;
+        }
+        $seepos = $seeexactpos;
+        $textwindow->markSet( 'indexseestart', $seepos );
+        $textwindow->markSet( 'indexseeend',   "$seepos +${len}c" );
+
+        # Find the target of the See with/without leading "The "
+        my $sawpos;
+        my $seethe = $see;
+        $seethe =~ s/^The *//i;
+        for my $seestr ( $see, $seethe ) {
+            last
+              if $sawpos =
+              $textwindow->search( '-regexp', '-nocase', '--',
+                "<li class=[^>]+>(<[^>]+>|[\"'$LDQ$RDQ$LSQ$RSQ ])*\\b$seestr\\b",
+                $indexstart, 'indexendmark' );
+        }
+
+        my $chkid;
+        if ($sawpos) {
+            $chkid = $textwindow->get( $sawpos, "$sawpos lineend" );
+            $chkid = undef unless $chkid =~ s/<li class=.+id=["']([^"']+)["'].*/$1/;
+        } else {    # Target not found - Mark location of error and store message
+            my $idxerr = $IDXERRMARK . $idxerrnum++;
+            $textwindow->markSet( $idxerr, 'indexseestart' );
+            $idxerrmsg{$idxerr} = "'$see' target not found";
+            next;
+        }
+
+        # Find and mark closing ">" for target's list start tag
+        $sawpos =
+          $textwindow->search( '-regexp', '-nocase', '--', ">", $sawpos, "$sawpos lineend" );
+        $textwindow->markSet( 'indexsawpoint', $sawpos );
+
+        my $id = $chkid // "${IDXXREFPREFIX}$seesawnum";    # Using existing id if there is one
+        $textwindow->insert( 'indexseestart', "<a href=\"#$id\">" );
+        $textwindow->insert( 'indexseeend',   "</a>" );
+        unless ($chkid) {                                   # No need to add id if an existing one
+            $textwindow->insert( 'indexsawpoint', " id=\"$id\"" );
+            $seesawnum++;
+        }
+    }
+
+    # inform user of any errors, now there is no more insertion to do
+    if (%idxerrmsg) {
+        my @errorlist = ();
+        for my $errmark ( keys %idxerrmsg ) {
+            my $idx = $textwindow->index($errmark);
+            $idx =~ s/\./:/;
+            push( @errorlist, "$idx - " . $idxerrmsg{$errmark} . "\n" );
+            $textwindow->markUnset($errmark);
+        }
+        ::errorcheckpop_up( $textwindow, $::top, 'Error List', \@errorlist );
+    }
+}
+
 #############################
 # LaTeX conversion routines #
 #############################
 
-my $LDQ  = "\x{201c}";
-my $RDQ  = "\x{201d}";
-my $LSQ  = "\x{2018}";
-my $RSQ  = "\x{2019}";
 my $LDL  = "``";
 my $RDL  = "''";
 my $LSL  = "`";
@@ -4634,5 +4773,4 @@ sub warnifconversionerror {
         close $fh;
     }
 }
-
 1;

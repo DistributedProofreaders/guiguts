@@ -21,10 +21,12 @@ my $ENDMSG = "Check is complete:";
 # Handles Bookloupe, Jeebies, HTML & CSS Validate, Tidy, Link Check,
 # Unmatched Tag/Brackets/Double Quotes/Block Checks
 # pphtml, pptxt, ppvimage, Spell Query, EPUBCheck,
-# Illustration Fixup, Sidenote Fixup and Load External Checkfile.
+# Illustration Fixup, Sidenote Fixup, Error List and Load External Checkfile.
 sub errorcheckpop_up {
-    my ( $textwindow, $top, $errorchecktype ) = @_;
+    my ( $textwindow, $top, $errorchecktype, $errorlist_ref ) = @_;
     my ( $line, $lincol );
+
+    return if $errorchecktype eq 'Error List' and not( $errorlist_ref and @$errorlist_ref );
 
     errorchecksettype($errorchecktype);
     ::hidepagenums();
@@ -60,16 +62,18 @@ sub errorcheckpop_up {
         )->grid( -padx => 0, -row => 1, -column => $gcol++ );
     }
 
-    # All types have a button to re-run the check
-    my $buttonlabel = 'Run Checks';
-    $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
-    my $opsbutton = $ptopframeb->Button(
-        -command => sub {
-            errorcheckpop_up( $textwindow, $top, $errorchecktype );
-        },
-        -text  => $buttonlabel,
-        -width => 16
-    )->grid( -padx => 10, -row => 0, -column => $gcol++ );
+    # All types except Error List have a button to re-run the check
+    if ( $errorchecktype ne 'Error List' ) {
+        my $buttonlabel = 'Run Checks';
+        $buttonlabel = 'Load Checkfile' if $errorchecktype eq 'Load Checkfile';
+        my $opsbutton = $ptopframeb->Button(
+            -command => sub {
+                errorcheckpop_up( $textwindow, $top, $errorchecktype );
+            },
+            -text  => $buttonlabel,
+            -width => 16
+        )->grid( -padx => 10, -row => 0, -column => $gcol++ );
+    }
 
     # Spell Query bad word count sits under the Run Checks button
     if ( $errorchecktype eq 'Spell Query' ) {
@@ -366,7 +370,7 @@ sub errorcheckpop_up {
         $tmpfname =~ s/tmp$/xhtml/ if $errorchecktype eq 'Nu XHTML Check';
         $errname = $d . 'errors.err';
 
-        if ( errorcheckrun( $errorchecktype, $tmpfname, $errname ) ) {    # exit if error check failed to run
+        if ( errorcheckrun( $errorchecktype, $tmpfname, $errname, $errorlist_ref ) ) {    # exit if error check failed to run
             ::killpopup('errorcheckpop');
             ::working();
             return;
@@ -378,6 +382,7 @@ sub errorcheckpop_up {
         and $errorchecktype ne "Spell Query"
         and $errorchecktype ne "Illustration Fixup"
         and $errorchecktype ne "Sidenote Fixup"
+        and $errorchecktype ne "Error List"
         and $errorchecktype ne "Load Checkfile"
         and $errorchecktype ne "Nu HTML Check"
         and $errorchecktype ne "Nu XHTML Check"
@@ -778,7 +783,7 @@ sub ignorequery {
 # temporary file, and any errors will be written to an error file
 # to be processed later
 sub errorcheckrun {
-    my ( $errorchecktype, $tmpfname, $errname ) = @_;
+    my ( $errorchecktype, $tmpfname, $errname, $errorlist_ref ) = @_;
     my $textwindow = $::textwindow;
     my $top        = $::top;
     ::operationadd("$errorchecktype");
@@ -844,6 +849,7 @@ sub errorcheckrun {
         and $errorchecktype ne 'Unmatched Brackets'
         and $errorchecktype ne 'Unmatched Double Quotes'
         and $errorchecktype ne 'Unmatched Block Markup'
+        and $errorchecktype ne 'Error List'
         and $errorchecktype ne 'Illustration Fixup'
         and $errorchecktype ne 'Sidenote Fixup' ) {    # No external tool, so no temp file needed
         savetoerrortmpfile( $tmpfname, $striptext );
@@ -891,6 +897,8 @@ sub errorcheckrun {
         unmatcheddoublequotesrun($errname);
     } elsif ( $errorchecktype eq 'Unmatched Block Markup' ) {
         unmatchedblockrun($errname);
+    } elsif ( $errorchecktype eq 'Error List' ) {
+        errorlistrun( $errname, $errorlist_ref );
     }
     $top->Unbusy;
     unlink $tmpfname unless $errorchecktype eq 'EPUBCheck';    # Don't delete the epub file
@@ -1770,6 +1778,21 @@ sub booklouperun {
         return $numbadwords;
     }
 }    # end of variable-enclosing block
+
+#
+# No actual error checking - routine is given a list of errors, and just outputs
+# them to the error file so main code can load and process it
+sub errorlistrun {
+    my $errname       = shift;    # output filename
+    my $errorlist_ref = shift;    # reference to list of errors
+
+    open my $logfile, ">", $errname or die "Error opening Error List output file: $errname";
+    for my $line (@$errorlist_ref) {
+        utf8::encode($line);
+        print $logfile "$line\n";
+    }
+    close $logfile;
+}
 
 #
 # Check that all relevant opening items have a matching close item
