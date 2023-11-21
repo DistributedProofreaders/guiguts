@@ -26,7 +26,7 @@ popd
 rm -rf $VDEST
 
 # epubcheck.jar is the same for all systems
-VERSION=5.0.1
+VERSION=5.1.0
 URL=https://github.com/w3c/epubcheck/releases/download/v$VERSION/epubcheck-$VERSION.zip
 curl -L -o epubcheck.zip $URL
 unzip epubcheck.zip -d .
