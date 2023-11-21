@@ -278,16 +278,18 @@ sub ReplaceSelectionsWith {
             push( @lengths, $fmlen );
         }
 
-        # Set gravity of page marker after string to "right" to keep it after string
-        # It doesn't matter if it's not immediately after - no harmful effect since restored later
-        my $end_mark = "";    # Assume there isn't one
+        # Find page markers immediately after string so we can set their gravity
+        # to "right" to keep them after string
+        my @endmarks = ();
         $mark = $last;
         while ( $mark = $w->markNext($mark) ) {
             if ( $mark =~ m{Pg(\S+)} ) {    # Only look at page markers
-                $end_mark = $mark;
-                $w->markGravity( $end_mark, 'right' );
-                last;
+                last if $w->compare( $mark, ">", $last );
+                push( @endmarks, $mark );
             }
+        }
+        for $mark (@endmarks) {
+            $w->markGravity( $mark, 'right' );
         }
 
         if ( !@lengths ) {    # No page markers, so simply insert new and delete old text
@@ -312,28 +314,28 @@ sub ReplaceSelectionsWith {
                 last if $w->compare( $mark, '<', $first );    # Stop if before start of old string
                 next if ( $mark eq $prev );                   # Skip if we find same position again
 
-                $w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );    # Keep page marker to right of replaced string
-                $w->delete( $mark, $prev );
-                $w->insert(
-                    $mark,
-                    substr(
-                        $new_text, $lengths[ $idx + 1 ], $lengths[$idx] - $lengths[ $idx + 1 ]
-                    )
-                );
-                $w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );     # Restore page marker behaviour
+                my $insstr =
+                  substr( $new_text, $lengths[ $idx + 1 ], $lengths[$idx] - $lengths[ $idx + 1 ] );
+                my $inslen = length($insstr);
+                $w->markSet( 'mark_del_end', $prev );
+                $w->insert( $mark, $insstr );
+                $w->delete( "$mark + $inslen c", 'mark_del_end' );
                 $prev = $mark;
                 ++$idx;
             }
 
             # delete final (first) chunk and insert remainder
-            $w->markGravity( $prev, 'right' ) if ( $prev =~ m{Pg(\S+)} );    # Keep page marker to right of replaced string
-            $w->delete( $first, $prev );
-            $w->insert( $first, substr( $new_text, 0, $lengths[$idx] ) );
-            $w->markGravity( $prev, 'left' ) if ( $prev =~ m{Pg(\S+)} );     # Restore page marker behaviour
+            my $insstr = substr( $new_text, 0, $lengths[$idx] );
+            my $inslen = length($insstr);
+            $w->markSet( 'mark_del_end', $prev );
+            $w->insert( $first, $insstr );
+            $w->delete( "$first + $inslen c", 'mark_del_end' );
         }
 
-        # restore gravity for page mark after replaced text
-        $w->markGravity( $end_mark, 'left' ) if $end_mark;
+        # restore gravity for page marks after replaced text
+        for $mark (@endmarks) {
+            $w->markGravity( $mark, 'left' );
+        }
     }
 
     # set the insert cursor to the end of the last insertion mark
@@ -343,6 +345,7 @@ sub ReplaceSelectionsWith {
     for ( my $i = 0 ; $i < $range_total ; $i++ ) {
         $w->markUnset( 'mark_sel_' . $i );
     }
+    $w->markUnset('mark_del_end');
 
     $w->addGlobEnd;
 }
