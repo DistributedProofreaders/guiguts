@@ -3289,8 +3289,11 @@ sub autoindex {
     my $first  = 1;
     my $indent = 0;
 
+    my $endstep = $textwindow->index('end');
+    $endstep =~ s/\..*//;
     while ( $textwindow->get( "$step.0", "$step.end" ) eq '' ) {
         $step++;
+        return if $step >= $endstep;
     }
     while ( $step <= $ler ) {
         my $selection = $textwindow->get( "$step.0", "$step.end" );
