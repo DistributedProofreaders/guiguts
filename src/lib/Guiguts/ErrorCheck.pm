@@ -575,11 +575,11 @@ sub errorcheckpop_up {
 
         } elsif ( $errorchecktype eq "Spell Query" ) {    # Spell query also has a frequency count to append
             my $freq = spellqueryfrequency($line);
-            next if $freq > $::spellquerythreshold;       # If it's spelled the same way several times, it's probably not an error
             if ( $line =~ s/\*\*\*$// ) {                 # Spelling flagged as bad word
                 $line .= " *$freq*";
             } else {
-                $line .= " ($freq)";                      # Ordinary misspelling
+                next if $freq > $::spellquerythreshold;    # If it's spelled the same way several times, it's probably not an error
+                $line .= " ($freq)";                       # Ordinary misspelling
             }
 
         } elsif ( $errorchecktype eq "EPUBCheck" ) {
