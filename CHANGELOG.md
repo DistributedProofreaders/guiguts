@@ -35,6 +35,8 @@
 - Non-existent directories used to give errors on Mac systems
 - Some methods of inserting Unicode characters did not replace existing
   selected text in the way other insertions do
+- HTML AutoIndex could sometimes loop forever if it didn't find suitable
+  lines to convert to an index
 
 
 ## Version 1.6.0
