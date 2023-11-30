@@ -1,5 +1,44 @@
 # Changelog
 
+
+## Version 1.6.1
+
+- New 'Add Index Cross-references' feature links "See"/"Also see" references
+  to the relevant location in the index. References that cannot be linked
+  automatically are listed for manual linking
+- Several tools added to support LaTeX/HTML/SVG workflow
+- CP Character Substitutions now include `¬` -> `-`
+- Bad words are loaded when good words file is loaded
+- Bad words are marked in the Spell Query results, and the number of bad
+  words is reported
+- Highlight Character/Regex now has a history pulldown
+- Large good/bad words files are added to project dictionary much faster
+- PPhtml reports unused/undefined classes more accurately
+- Prev/Next Img buttons no longer pop the Page Marker Adjust dialog, and
+  respect the Auto Img setting
+- 'Change All' has been removed from Spell Check due to undesirable
+  behavior
+- Basic Fixup options are now persistent across different runs of Guiguts
+- The Word Count and QuickSearch Count dialogs have clearer titles
+- Included latest version of ebookmaker (0.12.36)
+- Included latest version of Epubcheck (5.1.0)
+- New TROUBLESHOOTING.md guide included with release
+
+### Bug Fixes
+
+- Coincident page markers (due to blank pages) were sometimes reversed
+  during file load/save or search/replace
+- Fractions including commas (e.g. 1/10,000) did not convert correctly
+- Some places where user could type a regex were not validated like the
+  Search/Replace dialog. The error message is also more useful
+- Pphtml didn't always cope with @media correctly
+- Non-existent directories used to give errors on Mac systems
+- Some methods of inserting Unicode characters did not replace existing
+  selected text in the way other insertions do
+- HTML AutoIndex could sometimes loop forever if it didn't find suitable
+  lines to convert to an index
+
+
 ## Version 1.6.0
 
 - Removed `Convert Windows CP1252 Characters` menu option
