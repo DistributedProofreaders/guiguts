@@ -3,9 +3,9 @@
 
 ## Version 1.6.1
 
-- New 'Add Index Cross-references' feature links "See"/"Also see" references
-  to the relevant location in the index. References that cannot be linked
-  automatically are listed for manual linking
+- New 'Add Index Cross-references' feature links "See"/"Also see"/"See also"
+  references to the relevant location in the index. References that cannot be
+  linked automatically are listed for manual linking
 - Several tools added to support LaTeX/HTML/SVG workflow
 - CP Character Substitutions now include `¬` -> `-`
 - Bad words are loaded when good words file is loaded
