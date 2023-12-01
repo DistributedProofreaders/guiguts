@@ -37,6 +37,8 @@
   selected text in the way other insertions do
 - HTML AutoIndex could sometimes loop forever if it didn't find suitable
   lines to convert to an index
+- HTML index generation did not recognise page numbers that were marked
+  up as bold or italic
 
 
 ## Version 1.6.0
