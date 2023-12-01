@@ -4216,14 +4216,14 @@ sub fracconv {
 # The rules are as follows:
 # 1. Number must be preceded by a comma (optionally close quote) then one or more spaces
 # 2. Number must be no more than 3 digits (word boundary \b used to avoid partial matches with 4 digit numbers)
-# 3. Page range may be specified by hyphen or ndash between two numbers
+# 3. Page range may be specified by hyphen/ndash and second number following the first
+# 4. Number or range may be marked up italic or bold, e.g. <b>123</b> or <i>123-124</i>
 sub addpagelinks {
     my $selection = shift;
     my $ndash     = "\x{2013}";
     my $rquot     = q(["'\x{201d}\x{2019}]);
     $selection =~
-      s/(,$rquot?) +(\d{1,3})([-$ndash])\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2$3$4<\/a>/g;
-    $selection =~ s/(,$rquot?) +\b(\d{1,3})\b/$1 <a href="#$::htmllabels{pglabel}$2">$2<\/a>/g;
+      s/(,$rquot?) +((<[ib]>)?\b(\d{1,3})([-$ndash]\d{1,3})?\b(<\/[ib]>)?)/$1 <a href="#$::htmllabels{pglabel}$4">$2<\/a>/g;
     return $selection;
 }
 
