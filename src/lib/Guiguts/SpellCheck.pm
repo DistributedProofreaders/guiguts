@@ -476,51 +476,54 @@ sub spelladdtexttags {
 #
 # Add spellings from good_words.txt & bad_words.txt to the project dictionary
 sub spelladdgoodwords {
-    my $textwindow = $::textwindow;
-    my $top        = $::top;
-    my $ans        = $top->messageBox(
+    my $top = $::top;
+    my $ans = $top->messageBox(
         -icon    => 'warning',
         -type    => 'YesNo',
         -default => 'yes',
         -title   => 'Warning',
         -message =>
-          'Warning: Before adding good_words.txt to project dictionary, first check it does not contain misspellings, multiple spellings, etc. Continue?'
+          'Before adding good/bad words to project dictionary, first check they only contain words that you wish to add. Continue?'
     );
-    if ( $ans =~ /no/i ) {
-        return;
-    }
+    return if $ans =~ /no/i;
+
+    ::busy();
     my $pwd = ::getcwd();
     chdir $::globallastpath;
+    my $gwladded = spelladdwords( "good_words.txt", \%::projectdict );
+    my $bwladded = spelladdwords( "bad_words.txt",  \%::projectbadwords );
+    chdir $pwd;
+    ::unbusy();
+
+    if ( $gwladded or $bwladded ) {
+        spellsaveprojdict();
+    } else {
+        $top->messageBox(
+            -icon    => 'warning',
+            -title   => 'Word lists not found',
+            -message => 'Neither good_words.txt nor bad_words.txt were found'
+        );
+    }
+}
+
+#
+# Add words from given file to given dict - return whether file opened OK
+sub spelladdwords {
+    my $filename = shift;
+    my $dictref  = shift;
 
     my $fh;
-
-    # Load good words first - these files may not be utf8-encoded, so don't assume they are
-    if ( open( $fh, "<", "good_words.txt" ) ) {
-        ::busy();
+    if ( open( $fh, "<", $filename ) ) {
         while ( my $line = <$fh> ) {
             utf8::decode($line);
             $line =~ s/\s+$//;
             next if $line eq '';
-            $::projectdict{$line} = '';
+            $dictref->{$line} = '';
         }
         close($fh);
-
-        # The bad_words.txt file often doesn't exist, so don't error if that's the case
-        if ( open( $fh, "<", "bad_words.txt" ) ) {
-            while ( my $line = <$fh> ) {
-                utf8::decode($line);
-                $line =~ s/\s+$//;
-                next if $line eq '';
-                $::projectbadwords{$line} = '';
-            }
-            close($fh);
-        }
-        spellsaveprojdict();
-        ::unbusy();
-    } else {
-        ::warnerror("Could not open good_words.txt");
+        return 1;
     }
-    chdir $pwd;
+    return 0;    # Failed to find file
 }
 
 #
