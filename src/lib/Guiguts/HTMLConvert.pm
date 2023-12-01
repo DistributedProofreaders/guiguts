@@ -4248,7 +4248,7 @@ sub indexxref {
     $textwindow->markSet( 'indexendmark', $indexend );    # Since row/col of indexend will change during insertions
     my $indexstart = pop(@ranges);
 
-    my $SEESTR     = '(also )*see';                       # Change this if needed for different languages
+    my $SEESTR     = '(also )?see( also)?';               # Change this if needed for different languages
     my $SEESTRLEN  = length($SEESTR);                     # Approx length just used for advancing search position
     my $seepos     = $indexstart;
     my $seesawnum  = 1;
