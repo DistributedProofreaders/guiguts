@@ -504,6 +504,16 @@ sub selectrewrap {
                         ( $leftmargin, $firstmargin, $rightmargin ) = setblockmargins($::blockwrap);
                     } else {
                         ::warnerror("Close blockquote (#/) found with no matching open markup");
+
+                        # Last line in block is the closing markup, and output up to
+                        # two more context lines before that
+                        my @splitsel = split( /\n/, $notpmselection );
+                        my $ncontext = scalar @splitsel;
+                        $ncontext = 3 if $ncontext > 3;
+                        ::infoerror("Context:");
+                        for my $ln ( 1 .. $ncontext ) {
+                            ::infoerror("    $splitsel[$ln-$ncontext-1]");
+                        }
                     }
                 }
             } else {
