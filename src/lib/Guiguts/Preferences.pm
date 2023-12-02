@@ -26,7 +26,7 @@ BEGIN {
 sub setdefaultpath {
     my ( $oldpath, $defaultpath, $forcedefault ) = @_;
     my $newpath = '';
-    if ( -e $defaultpath or $forcedefault )    # If default path exists, consider it for new path
+    if ( -e $defaultpath or $forcedefault )    # If default path exists (or forced), consider it for new path
     {
         $newpath = $defaultpath;
     } else {                                   # Otherwise check for no-extension version or elsewhere on path
@@ -43,7 +43,7 @@ sub setdefaultpath {
     }
     $newpath = $oldpath unless $newpath;    # Use oldpath if new path not found
 
-    if ( $newpath && -e $newpath ) {
+    if ( $newpath and ( -e $newpath or $forcedefault ) ) {
         my $index = index( $newpath, 'tools' );
         $index = index( $newpath, 'scannos' ) if $index < 0;
         if ( $index >= 0 ) {                # New path is in tools or scannos under the release
@@ -67,11 +67,12 @@ sub setdefaultpath {
             # Either new and old have matching tails, or no suitable old - return relative path tail
             return $newtail;
         } else {    # Not under tools subfolder - use old if it exists, otherwise use new default
-            return $oldpath if $oldpath && -e $oldpath;
+            print "PATHS1\n$oldpath\n$newpath\n\n" if $forcedefault;
+            return $oldpath                        if $oldpath && -e $oldpath;
             return $newpath;
         }
     } else {
-        print "PATHS\n$oldpath\n$defaultpath\n\n";
+        print "PATHS2\n$oldpath\n$defaultpath\n\n" if $forcedefault;
         return ( $oldpath ? $oldpath : $defaultpath );    # If all else fails return old path, or if empty, the default path
     }
 }
