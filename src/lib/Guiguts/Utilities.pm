@@ -1273,8 +1273,9 @@ sub initialize {
 
     # Override to more likely default locations for Mac
     if ($::OS_MAC) {
-        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
-            ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
+
+        # Force consideration of default Mac Preview command even though it doesn't "exist" as file path
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, 'open -g -a Preview', 1 );
 
         # M1 and Intel-based Macs have some tools installed in different locations
         $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );

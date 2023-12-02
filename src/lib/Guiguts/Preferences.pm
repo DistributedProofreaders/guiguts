@@ -24,12 +24,12 @@ BEGIN {
 # we just keep the tail end (relative) path which will work wherever this release
 # is installed.
 sub setdefaultpath {
-    my ( $oldpath, $defaultpath ) = @_;
+    my ( $oldpath, $defaultpath, $forcedefault ) = @_;
     my $newpath = '';
-    if ( -e $defaultpath )    # If default path exists, consider it for new path
+    if ( -e $defaultpath or $forcedefault )    # If default path exists, consider it for new path
     {
         $newpath = $defaultpath;
-    } else {                  # Otherwise check for no-extension version or elsewhere on path
+    } else {                                   # Otherwise check for no-extension version or elsewhere on path
         my ( $basename, $filepath, $suffix ) =
           fileparse( $defaultpath, ( ".exe", ".com", ".bat" ) );
         my $filename = "$basename$suffix";
@@ -71,6 +71,7 @@ sub setdefaultpath {
             return $newpath;
         }
     } else {
+        print "PATHS\n$oldpath\n$defaultpath\n\n";
         return ( $oldpath ? $oldpath : $defaultpath );    # If all else fails return old path, or if empty, the default path
     }
 }
