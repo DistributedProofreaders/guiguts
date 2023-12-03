@@ -1255,8 +1255,7 @@ sub initialize {
 
     # If XnView or Aspell are installed under "Program Files (x86)",
     # set that as the default, otherwise use "Program Files"
-    # Suitable for Windows installation locations
-    if ($::OS_WIN) {
+    unless ($::OS_MAC) {    # Don't do this for Macs, since code below can't override the value
         my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
         if ( -e $trypath ) {
             $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
@@ -1275,11 +1274,7 @@ sub initialize {
 
     # Override to more likely default locations for Mac
     if ($::OS_MAC) {
-
-        # Force consideration of default Mac Preview command even though it doesn't "exist" as file path
-        print "PRE: $::globalviewerpath";
         $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, 'open -g -a Preview', 1 );
-        print "POST: $::globalviewerpath";
 
         # M1 and Intel-based Macs have some tools installed in different locations
         my $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );

@@ -23,6 +23,8 @@ BEGIN {
 # the default path for the tool, e.g. "...tools\jeebies\jeebies.exe". In this case,
 # we just keep the tail end (relative) path which will work wherever this release
 # is installed.
+# The forcedefault argument makes it OK for the "path" to be an "open" command
+# on a Mac, rather than the path to a tool
 sub setdefaultpath {
     my ( $oldpath, $defaultpath, $forcedefault ) = @_;
     my $newpath = '';
@@ -67,12 +69,10 @@ sub setdefaultpath {
             # Either new and old have matching tails, or no suitable old - return relative path tail
             return $newtail;
         } else {    # Not under tools subfolder - use old if it exists, otherwise use new default
-            print "PATHS1\n$oldpath\n$newpath\n\n" if $forcedefault;
-            return $oldpath                        if $oldpath && -e $oldpath;
+            return $oldpath if $oldpath && -e $oldpath;
             return $newpath;
         }
     } else {
-        print "PATHS2\n$oldpath\n$defaultpath\n\n" if $forcedefault;
         return ( $oldpath ? $oldpath : $defaultpath );    # If all else fails return old path, or if empty, the default path
     }
 }
