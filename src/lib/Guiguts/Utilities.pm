@@ -1255,29 +1255,29 @@ sub initialize {
 
     # If XnView or Aspell are installed under "Program Files (x86)",
     # set that as the default, otherwise use "Program Files"
-    # Suitable for Windows installation locations
-    my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
-    if ( -e $trypath ) {
-        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
-    } else {
-        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
-            ::catfile( '\Program Files', 'XnView', 'xnview.exe' ) );
-    }
-    $trypath = ::catfile( '\Program Files (x86)', 'Aspell', 'bin', 'aspell.exe' );
-    if ( -e $trypath ) {
-        $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
-    } else {
-        $::globalspellpath = ::setdefaultpath( $::globalspellpath,
-            ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+    unless ($::OS_MAC) {    # Don't do this for Macs, since code below can't override the value
+        my $trypath = ::catfile( '\Program Files (x86)', 'XnView', 'xnview.exe' );
+        if ( -e $trypath ) {
+            $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, $trypath );
+        } else {
+            $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
+                ::catfile( '\Program Files', 'XnView', 'xnview.exe' ) );
+        }
+        $trypath = ::catfile( '\Program Files (x86)', 'Aspell', 'bin', 'aspell.exe' );
+        if ( -e $trypath ) {
+            $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
+        } else {
+            $::globalspellpath = ::setdefaultpath( $::globalspellpath,
+                ::catfile( '\Program Files', 'Aspell', 'bin', 'aspell.exe' ) );
+        }
     }
 
     # Override to more likely default locations for Mac
     if ($::OS_MAC) {
-        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath,
-            ::catfile( '/Applications', 'XnViewMP.app', 'Contents', 'MacOS', 'XnViewMP' ) );
+        $::globalviewerpath = ::setdefaultpath( $::globalviewerpath, 'open -g -a Preview', 1 );
 
         # M1 and Intel-based Macs have some tools installed in different locations
-        $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );
+        my $trypath = ::catfile( '/opt', 'homebrew', 'bin', 'aspell' );
         if ( -e $trypath ) {
             $::globalspellpath = ::setdefaultpath( $::globalspellpath, $trypath );
         } else {

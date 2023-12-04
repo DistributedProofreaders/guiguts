@@ -23,13 +23,15 @@ BEGIN {
 # the default path for the tool, e.g. "...tools\jeebies\jeebies.exe". In this case,
 # we just keep the tail end (relative) path which will work wherever this release
 # is installed.
+# The forcedefault argument makes it OK for the "path" to be an "open" command
+# on a Mac, rather than the path to a tool
 sub setdefaultpath {
-    my ( $oldpath, $defaultpath ) = @_;
+    my ( $oldpath, $defaultpath, $forcedefault ) = @_;
     my $newpath = '';
-    if ( -e $defaultpath )    # If default path exists, consider it for new path
+    if ( -e $defaultpath or $forcedefault )    # If default path exists (or forced), consider it for new path
     {
         $newpath = $defaultpath;
-    } else {                  # Otherwise check for no-extension version or elsewhere on path
+    } else {                                   # Otherwise check for no-extension version or elsewhere on path
         my ( $basename, $filepath, $suffix ) =
           fileparse( $defaultpath, ( ".exe", ".com", ".bat" ) );
         my $filename = "$basename$suffix";
@@ -43,7 +45,7 @@ sub setdefaultpath {
     }
     $newpath = $oldpath unless $newpath;    # Use oldpath if new path not found
 
-    if ( $newpath && -e $newpath ) {
+    if ( $newpath and ( -e $newpath or $forcedefault ) ) {
         my $index = index( $newpath, 'tools' );
         $index = index( $newpath, 'scannos' ) if $index < 0;
         if ( $index >= 0 ) {                # New path is in tools or scannos under the release
