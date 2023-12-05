@@ -20,6 +20,8 @@
   behavior
 - Basic Fixup options are now persistent across different runs of Guiguts
 - The Word Count and QuickSearch Count dialogs have clearer titles
+- "Unmatched `#/`" message when rewrapping now includes two lines of
+  context to help user track down which blockquote is failing
 - Included latest version of ebookmaker (0.12.36)
 - Included latest version of Epubcheck (5.1.0)
 - New TROUBLESHOOTING.md guide included with release

@@ -322,6 +322,10 @@ BEGIN { *CORE::GLOBAL::die = \&::dieerror }
 # Redirect warn by overriding signal handler
 local $SIG{__WARN__} = \&::warnerror;
 
+# Ensure stdout & stderr accept utf8 characters
+binmode( STDOUT, ":utf8" );
+binmode( STDERR, ":utf8" );
+
 # An alternative for catching Tk background errors,
 # but they are caught by the warn override above
 # sub Tk::Error {
