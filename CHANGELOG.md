@@ -22,8 +22,10 @@
 - The Word Count and QuickSearch Count dialogs have clearer titles
 - "Unmatched `#/`" message when rewrapping now includes two lines of
   context to help user track down which blockquote is failing
-- Included latest version of ebookmaker (0.12.36)
+- Default image viewer on Macs is now `Preview` instead of `XnViewMP`
+- Included latest version of ebookmaker (0.12.38)
 - Included latest version of Epubcheck (5.1.0)
+- Included latest version of CSS Validator (20231124)
 - New TROUBLESHOOTING.md guide included with release
 
 ### Bug Fixes
