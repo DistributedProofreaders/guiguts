@@ -11,7 +11,7 @@ mkdir $DEST
 cp README.md $DEST
 
 # css-validator.jar is the same for all systems
-VERSION=20220105
+VERSION=20231124
 curl -L -o $DEST/css-validator.jar https://github.com/w3c/css-validator/releases/download/cssval-$VERSION/css-validator.jar
 
 # vnu.jar is the same for all systems
