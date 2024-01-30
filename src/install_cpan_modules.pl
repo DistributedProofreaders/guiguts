@@ -51,6 +51,12 @@ if ( $^O eq 'darwin' ) {
     # fall-through to using cpanm directly
 }
 
+# Check that cpanm is installed
+if ( system("$cpanm --version") != 0 ) {
+    die("Unable to run cpanm, is it installed?\n");
+}
+
+# Now install the modules
 foreach my $module (@modules) {
     system("$cpanm --notest $module") == 0
       or die("Failed trying to install $module\n");

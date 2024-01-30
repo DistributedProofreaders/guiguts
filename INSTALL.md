@@ -287,7 +287,68 @@ local version of ebookmaker to create Kindle files in addition to epub files.
 
 Install [Java](#java) to be able to check your HTML and CSS from within
 Guiguts.
-   
+
+## Linux (Ubuntu)
+
+To install on Ubuntu (or really any Debian-based instance) you'll need `root`
+access to install some system packages but the other steps can be done as a
+non-`root` user.
+
+_Note: the following commands and scripts use `cpanm` not `cpan` to install
+perl modules._
+
+### System packages
+
+Install some base system packages required to install/build the perl modules:
+```bash
+sudo apt update
+sudo apt install perl-base cpanminus libx11-dev zlib1g-dev gcc
+```
+
+### Perl modules
+
+_Note: you can skip the `local::lib` bits and just install all of the
+perl modules as `root` with `sudo perl install_cpan_modules.pl` but that's
+not recommended._
+
+Install the `local::lib` perl module as `root`. This enables installing the
+other modules as a non-`root` user:
+```bash
+sudo cpanm local::lib
+```
+
+Initialize the `local::lib` module and install the Guiguts modules. Initializing
+`local::lib` creates a `perl5` directory in your home directory where the perl
+modules will be installed.
+```bash
+eval $(perl -I$HOME/perl5/lib -Mlocal::lib)
+perl install_cpan_modules.pl
+```
+
+You'll need to run _both_ of the lines above if you want to re-install
+or update any of the modules.
+
+### Starting Guiguts
+
+To start Guiguts we need to use `local::lib` to tell perl where to find the
+installed modules, then start Guiguts. To make this easier, create a new
+file in your home directory called `guiguts.sh` with the following contents --
+you'll need to change `/path/to/guiguts` to where the Guiguts code is on your
+computer:
+
+```bash
+#!/bin/bash
+eval $(perl -I$HOME/perl5/lib -Mlocal::lib)
+perl /path/to/guiguts/guiguts.pl &
+```
+
+Save the file and make it executable with `chmod +x guiguts.sh`.
+
+Now you can start Guiguts with:
+```
+~/guiguts.sh
+```
+
 ## Other
 
 For other platforms, you will need to install Perl, the necessary
@@ -326,7 +387,9 @@ other git activities.
 
 ## Perl Modules
 
-Guiguts requires several Perl modules to be installed via CPAN:
+Guiguts requires several Perl modules to be installed via CPAN. Both the
+instructions below and the helper script use `cpanm`, not `cpan`, to do the
+install.
 
 The required Perl modules can be installed with the included helper script:
 ```
@@ -340,15 +403,6 @@ required, and then install each one, for example:
 cpanm --notest --install File::HomeDir
 cpanm --notest --install Tk
 etc...
-```
-
-On some systems (reported by Ubuntu user) it may be necessary to install
-`perl-tk` and `zlib1g-dev` using the following commands before installing the
-Perl modules above, 
-```
-sudo apt-get update
-sudo apt-get install perl-tk 
-sudo apt-get install zlib1g-dev
 ```
 
 ## Java
