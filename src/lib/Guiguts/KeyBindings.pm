@@ -239,22 +239,26 @@ sub keybindings {
 
     # Extra bindings for Mac
     if ($::OS_MAC) {
-        keybind( '<Meta-q>',          sub { ::_exit(); } );
-        keybind( '<Meta-s>',          sub { ::savefile(); } );
-        keybind( '<Meta-a>',          sub { $textwindow->selectAll; } );
-        keybind( '<Meta-c>',          sub { ::textcopy(); } );
-        keybind( '<Meta-x>',          sub { ::cut(); } );
-        keybind( '<Meta-v>',          sub { ::paste(); } );
-        keybind( '<Meta-f>',          sub { ::searchpopup(); } );
-        keybind( '<Meta-Shift-f>',    sub { ::quicksearchpopup(); } );
-        keybind( '<Meta-g>',          undef, '<<FindNext>>' );
-        keybind( '<Meta-Shift-g>',    undef, '<<FindNextReverse>>' );
-        keybind( '<Meta-z>',          undef, '<<Undo>>' );
-        keybind( '<Meta-y>',          undef, '<<Redo>>' );
-        keybind( '<Meta-Up>',         [ 'SetCursor', '1.0' ] );
-        keybind( '<Meta-Shift-Up>',   [ 'KeySelect', '1.0' ] );
-        keybind( '<Meta-Down>',       [ 'SetCursor', 'end-1c' ] );
-        keybind( '<Meta-Shift-Down>', [ 'KeySelect', '1.0' ] );
+        keybind( '<Meta-q>',           sub { ::_exit(); } );
+        keybind( '<Meta-s>',           sub { ::savefile(); } );
+        keybind( '<Meta-a>',           sub { $textwindow->selectAll; } );
+        keybind( '<Meta-c>',           sub { ::textcopy(); } );
+        keybind( '<Meta-x>',           sub { ::cut(); } );
+        keybind( '<Meta-v>',           sub { ::paste(); } );
+        keybind( '<Meta-f>',           sub { ::searchpopup(); } );
+        keybind( '<Meta-Shift-f>',     sub { ::quicksearchpopup(); } );
+        keybind( '<Meta-g>',           undef, '<<FindNext>>' );
+        keybind( '<Meta-Shift-g>',     undef, '<<FindNextReverse>>' );
+        keybind( '<Meta-z>',           undef, '<<Undo>>' );
+        keybind( '<Meta-y>',           undef, '<<Redo>>' );
+        keybind( '<Meta-Up>',          [ 'SetCursor', '1.0' ] );
+        keybind( '<Meta-Shift-Up>',    [ 'KeySelect', '1.0' ] );
+        keybind( '<Meta-Down>',        [ 'SetCursor', 'end-1c' ] );
+        keybind( '<Meta-Shift-Down>',  [ 'KeySelect', 'end-1c' ] );
+        keybind( '<Meta-Left>',        [ 'SetCursor', 'insert linestart' ] );
+        keybind( '<Meta-Shift-Left>',  [ 'KeySelect', 'insert linestart' ] );
+        keybind( '<Meta-Right>',       [ 'SetCursor', 'insert lineend' ] );
+        keybind( '<Meta-Shift-Right>', [ 'KeySelect', 'insert lineend' ] );
     }
 
     # Bookmarks - multiple key-combinations to allow for keyboard differences
