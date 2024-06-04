@@ -11,7 +11,7 @@ BEGIN {
       &clearvars &savefile &_exit &file_mark_pages &file_guess_page_marks
       &oppopupdate &opspop_up &confirmempty &openfile &readsettings &savesettings &file_export_pagemarkup
       &file_import_markup &file_import_ocr &operationadd &isedited &setedited &charsuitespopup &charsuitecheck &charsuitefind &charsuiteenable
-      &cpcharactersubs &getsafelastpath);
+      &cpcharactersubs &getsafelastpath &add_page_marker_flags &remove_page_marker_flags);
 }
 
 #
@@ -477,7 +477,7 @@ sub file_mark_pages {
         my $pagemark = 'Pg' . $page;
 
         # Standardize page separator line format if necessary
-        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)---/ ) {
+        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)---/ or $line =~ /\[Pg\S+?\]/ ) {
             $textwindow->ntdelete( $linestart, $lineend );
             my $stdline = ( '-' x 5 ) . "File: $page.$ext";
             $stdline .= '-' x ( 75 - length($stdline) );
@@ -634,6 +634,50 @@ sub file_guess_page_marks {
         ::initialize_popup_with_deletebinding('guesspgmarkerpop');
     }
     return;
+}
+
+#
+# Add page marker flags to facilitate editing in another editor
+sub add_page_marker_flags {
+
+    # Done in reverse order so two adjacent boundaries preserve their order.
+    my $mark = 'end';
+    while ( $mark = $::textwindow->markPrevious($mark) ) {
+        if ( $mark =~ /Pg\S+/ ) {
+            $::textwindow->insert( $mark, "[$mark]", 'pageflag' );
+        }
+    }
+}
+
+#
+# Remove page marker flags
+sub remove_page_marker_flags {
+    my $len;
+    while ( my $found =
+        $::textwindow->search( '-regexp', '-count', \$len, '--', '\[Pg\S+?\]', "1.0", "end" ) ) {
+        $::textwindow->delete( $found, "$found+${len}c" );
+    }
+}
+
+#
+# Use page marker flags in file to locate page boundaries and set marks
+sub update_page_markers_from_flags {
+    my $textwindow = $::textwindow;
+
+    my $len;
+    my $search_start = '1.0';
+    while (
+        my $found = $textwindow->search(
+            '-regexp', '-count', \$len, '--', '\[(Pg\S+?)\]', $search_start, 'end'
+        )
+    ) {
+        $textwindow->tagAdd( 'pageflag', "$found", "$found+${len}c" );
+        my $pagemark = $textwindow->get( "$found+1c", "$found+${len}c-1c" );
+        $::pagenumbers{$pagemark}{offset} = 1;
+        $textwindow->markSet( $pagemark, $found );
+        $textwindow->markGravity( $pagemark, 'left' );
+        $search_start = $textwindow->index("$found+4c");
+    }
 }
 
 #
@@ -810,6 +854,9 @@ sub openfile {
     ::highlight_scannos();
     ::highlight_quotbrac();
     file_mark_pages() if $::auto_page_marks;
+
+    # If file contains "[Pg001]" flags, update page marker locations from flags
+    update_page_markers_from_flags();
     ::readlabels();
 
     ::operationadd("Open $::lglobal{global_filename}");

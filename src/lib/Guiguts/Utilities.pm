@@ -1320,7 +1320,11 @@ sub initialize {
         -foreground => 'black',
         -background => 'grey'
     );    # From TextEdit.pm
-
+    $textwindow->tagConfigure(
+        'pageflag',
+        -foreground => 'black',
+        -background => 'gold',
+    );
     $textwindow->tagConfigure(
         'pagenum',
         -background  => 'yellow',
