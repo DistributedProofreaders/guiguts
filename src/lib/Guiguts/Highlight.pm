@@ -618,11 +618,12 @@ sub hilitematchfind {
     my $match      = shift;
     my $reverse    = shift;
     my $nest       = shift;
+    my $anchor     = shift;           # True for strings to only match if at start of line
     my $textwindow = $::textwindow;
 
     # Regex searches for either the tag or its match, since if nested you may find the tag
     # several times before finding the matches.
-    my $regexp = "(\Q$match\E|\Q$selection\E)";
+    my $regexp = ( $anchor ? "^" : "" ) . "(\Q$match\E|\Q$selection\E)";
 
     # If an HTML tag, don't want "<b" to match "</blockquote...", for example,
     # so use negative lookahead to ensure there's not an alphanumeric character
