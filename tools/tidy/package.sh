@@ -11,8 +11,8 @@ mkdir $DEST
 cp README.md $DEST
 
 if [[ $OS == "win" ]]; then
-    VERSION=5.6.0
-    FLAVOR=tidy-$VERSION-vc14-32b
+    VERSION=5.8.0
+    FLAVOR=tidy-$VERSION-win64
     URL=https://github.com/htacg/tidy-html5/releases/download/$VERSION/$FLAVOR.zip
     curl -L -o tidy.zip $URL
     unzip tidy.zip $FLAVOR/bin/tidy.exe -d .
