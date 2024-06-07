@@ -97,10 +97,12 @@ sub menu_file_project {
         [ 'command',   'Set Pro~ject ID...',       -command => \&::setprojectid ],
         [ 'command',   'Set I~mage Directory...',  -command => \&::setpngspath ],
         [ 'separator', '' ],
-        [ 'command',   'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
-        [ 'command',   '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
-        [ 'command',   '~Set Page Markers',               -command => \&::file_mark_pages ],
-        [ 'command',   'Configure Page La~bels...',       -command => \&::pageadjust ],
+        [ 'command', 'Display/~Adjust Page Markers...', -command => \&::togglepagenums ],
+        [ 'command', '~Guess Page Markers...',          -command => \&::file_guess_page_marks ],
+        [ 'command', '~Set Page Markers',               -command => \&::file_mark_pages ],
+        [ 'command', '~Add Page Marker Flags',          -command => \&::add_page_marker_flags ],
+        [ 'command', '~Remove Page Marker Flags',       -command => \&::remove_page_marker_flags ],
+        [ 'command', 'Configure Page La~bels...',       -command => \&::pageadjust ],
     ];
 }
 
