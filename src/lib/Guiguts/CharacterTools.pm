@@ -1188,11 +1188,12 @@ sub fractionconvert {
             $outfraction = "$numerator$fracslash$denominator";
         }
 
-        # Add hyphen back if it's actually a minus sign for a negative fraction (not a hyphen in 1-3/4)
-        if ( substr( $infraction, 0, 1 ) eq '-' and $chbefore !~ /[0-9]/ ) {
-            $outfraction = '-' . $outfraction;
-        }
         if ($outfraction) {
+
+            # Add hyphen back if it's actually a minus sign for a negative fraction (not a hyphen in 1-3/4)
+            if ( substr( $infraction, 0, 1 ) eq '-' and $chbefore !~ /[0-9]/ ) {
+                $outfraction = '-' . $outfraction;
+            }
             my $advance = '+' . length($outfraction) . 'c';
             $textwindow->insert( $start, $outfraction );    # insert first to avoid page marker slippage
             $textwindow->delete( $start . $advance, $end . $advance );
