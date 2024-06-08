@@ -1822,7 +1822,8 @@ sub unmatcheditemsrun {
             if ($matchstr) {                            # Should always be true, since we're only passing valid items to matching subroutine
                 my $nest = ( defined $nestreg and $item =~ $nestreg );
                 my $matchidx =
-                  ::hilitematchfind( $index, $endidx, $item, $matchstr, $reverse, $nest );
+                  ::hilitematchfind( $index, $endidx, $item, $matchstr, $reverse, $nest,
+                    substr( $regexp, 0, 1 ) eq '^' );
                 unless ($matchidx) {                    # Failed to find a match
                     my ( $row, $col ) = split( /\./, $index );
                     my $error = sprintf( "%d:%d - %s not matched", $row, $col, $item );
