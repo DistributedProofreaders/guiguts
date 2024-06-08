@@ -1,6 +1,22 @@
 # Changelog
 
 
+## Version 1.6.2
+
+- New feature to add Page marker flags, e.g. [Pg123], in parallel with
+  work in Guiguts 2. This makes it possible to switch between GG1 and GG2,
+  or to use non-Guiguts editors, without losing page break locations.
+- Added default Mac bindings for beginning & end of line
+- Added installation instructions for Ubuntu
+- Included latest version of ebookmaker (0.12.43)
+- Included latest version of Tidy (5.8.0)
+
+### Bug Fixes
+
+- Block markup check accepted markup which was not at the start of the line
+- Negative fractions, e.g. `-1/4`, lost their minus sign when converted
+
+
 ## Version 1.6.1
 
 - New 'Add Index Cross-references' feature links "See"/"Also see"/"See also"
