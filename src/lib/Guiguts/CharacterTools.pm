@@ -1165,7 +1165,8 @@ sub fractionconvert {
         $infraction =~ /^-?(\d+)$anyslash(\d+)/;
 
         # If character before fraction was a letter, don't convert, e.g. "B1/2"
-        if ( $textwindow->get( $start . '-1c', $start ) =~ /[[:alpha:]]/ ) {
+        my $chbefore = $textwindow->get( $start . '-1c', $start );
+        if ( $chbefore =~ /[[:alpha:]]/ ) {
             $start = $end;
             next;
         }
@@ -1186,7 +1187,13 @@ sub fractionconvert {
               tr/0123456789/\x{2080}\x{2081}\x{2082}\x{2083}\x{2084}\x{2085}\x{2086}\x{2087}\x{2088}\x{2089}/;
             $outfraction = "$numerator$fracslash$denominator";
         }
+
         if ($outfraction) {
+
+            # Add hyphen back if it's actually a minus sign for a negative fraction (not a hyphen in 1-3/4)
+            if ( substr( $infraction, 0, 1 ) eq '-' and $chbefore !~ /[0-9]/ ) {
+                $outfraction = '-' . $outfraction;
+            }
             my $advance = '+' . length($outfraction) . 'c';
             $textwindow->insert( $start, $outfraction );    # insert first to avoid page marker slippage
             $textwindow->delete( $start . $advance, $end . $advance );
