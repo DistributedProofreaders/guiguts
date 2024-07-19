@@ -23,6 +23,11 @@ recommended Perl interpreter as that is what the developers have tested, it
 supports the latest version of Perl, and includes all necessary Perl modules.
 It can coexist along side other interpreters.
 
+### IMPORTANT NOTE
+
+**A recent incompatibility between Perl and Perl/Tk has arisen, so you
+should install Perl version 5.32.1, not any later version.**
+
 _If you have an existing Perl distribution installed (including if you are
 hoping to use the Perl distributed with a previous Guiguts release),
 read [Other Perl distributions](#other-perl-distributions) before following
@@ -41,7 +46,9 @@ _Note that you must do step 6, even if you have done it previously, as
 the version of Guiguts you are installing may require additional Perl modules
 to any previous versions._
 
-1. Download [Strawberry Perl](http://strawberryperl.com/).
+1. Download [Strawberry Perl](http://strawberryperl.com/). Since a recent
+   incompatibility between Perl and Perl/Tk has arisen, you should install
+   version 5.32.1, not any later version.
 2. Double click the downloaded file to install Strawberry Perl. It is
    recommended that you install in the default folder `c:\Strawberry`.
 3. Download the latest `guiguts-win-n.n.n.zip` from the
