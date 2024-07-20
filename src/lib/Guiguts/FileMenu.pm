@@ -14,6 +14,8 @@ BEGIN {
       &cpcharactersubs &getsafelastpath &add_page_marker_flags &remove_page_marker_flags);
 }
 
+my $marker_flag_regex = '\[Img(.+?)\|(.+?)\|(.+?)\]';
+
 #
 # Wrapper routine to find a text/HTML file and open it
 sub file_open {
@@ -477,7 +479,7 @@ sub file_mark_pages {
         my $pagemark = 'Pg' . $page;
 
         # Standardize page separator line format if necessary
-        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)---/ or $line =~ /\[Pg\S+?\]/ ) {
+        unless ( $line =~ /^-----File: (\S+)\.(png|jpg)---/ or $line =~ /$marker_flag_regex/ ) {
             $textwindow->ntdelete( $linestart, $lineend );
             my $stdline = ( '-' x 5 ) . "File: $page.$ext";
             $stdline .= '-' x ( 75 - length($stdline) );
@@ -640,11 +642,38 @@ sub file_guess_page_marks {
 # Add page marker flags to facilitate editing in another editor
 sub add_page_marker_flags {
 
-    # Done in reverse order so two adjacent boundaries preserve their order.
-    my $mark = 'end';
+    # Get name of first page mark because it needs special treatment if
+    # labels haven't been set up yet.
+    my $mark      = '1.0';
+    my $firstmark = '';
+    while ( $mark = $::textwindow->markNext($mark) ) {
+        if ( $mark =~ /Pg\S+/ ) {
+            $firstmark = $mark;
+            last;
+        }
+    }
+
+    # Work in reverse order so two adjacent boundaries preserve their order.
+    $mark = 'end';
     while ( $mark = $::textwindow->markPrevious($mark) ) {
         if ( $mark =~ /Pg\S+/ ) {
-            $::textwindow->insert( $mark, "[$mark]", 'pageflag' );
+            my $img = $mark;
+            $img =~ s/Pg//;
+            my $style = $::pagenumbers{$mark}{style};
+            if ( not defined($style) or length($style) == 0 ) {
+                $style = $mark eq $firstmark ? 'Arabic' : '"';
+            }
+            my $number = '+1';
+            my $action = $::pagenumbers{$mark}{action};
+            if ( not defined($action) or length($action) == 0 ) {
+                $number = '1' if $mark eq $firstmark;
+            } elsif ( $action eq 'Start @' ) {
+                $number = $::pagenumbers{$mark}{base};
+            } else {
+                $number = $::pagenumbers{$mark}{action};
+            }
+
+            $::textwindow->insert( $mark, "[Img$img|$style|$number]", 'pageflag' );
         }
     }
 }
@@ -654,7 +683,8 @@ sub add_page_marker_flags {
 sub remove_page_marker_flags {
     my $len;
     while ( my $found =
-        $::textwindow->search( '-regexp', '-count', \$len, '--', '\[Pg\S+?\]', "1.0", "end" ) ) {
+        $::textwindow->search( '-regexp', '-count', \$len, '--', $marker_flag_regex, "1.0", "end" )
+    ) {
         $::textwindow->delete( $found, "$found+${len}c" );
     }
 }
@@ -664,19 +694,60 @@ sub remove_page_marker_flags {
 sub update_page_markers_from_flags {
     my $textwindow = $::textwindow;
 
+    # Nothing to do if no flags
+    return if not $textwindow->search( '-regexp', '--', $marker_flag_regex, '1.0', 'end' );
+
+    # Clear all page marks
+    for ( $textwindow->markNames() ) {
+        $textwindow->markUnset($_) if $_ =~ m{Pg(\S+)};
+    }
+    %::pagenumbers = ();
+
     my $len;
     my $search_start = '1.0';
+    my $cur_page     = 1;
+    my $cur_style    = 'Arabic';
     while (
         my $found = $textwindow->search(
-            '-regexp', '-count', \$len, '--', '\[(Pg\S+?)\]', $search_start, 'end'
+            '-regexp', '-count', \$len, '--', $marker_flag_regex, $search_start, 'end'
         )
     ) {
         $textwindow->tagAdd( 'pageflag', "$found", "$found+${len}c" );
-        my $pagemark = $textwindow->get( "$found+1c", "$found+${len}c-1c" );
+        my $pageflag = $textwindow->get( $found, "$found+${len}c" );
+        $pageflag =~ $marker_flag_regex;
+
+        # Will always match since same regex as above
+        my $img      = $1;
+        my $style    = $2;
+        my $number   = $3;
+        my $pagemark = "Pg$img";
+        $::pagenumbers{$pagemark}         = {};
         $::pagenumbers{$pagemark}{offset} = 1;
+        $::pagenumbers{$pagemark}{style}  = $style;
+        $cur_style                        = $style if $style ne '"';
+
+        if ( $number eq "No Count" ) {
+            $::pagenumbers{$pagemark}{action} = "No Count";
+            $::pagenumbers{$pagemark}{label}  = "";
+        } else {
+            if ( $number eq "+1" ) {
+                $::pagenumbers{$pagemark}{action} = "+1";
+                $cur_page++;
+            } else {
+                $::pagenumbers{$pagemark}{action} = "Start @";
+                $::pagenumbers{$pagemark}{base}   = $number;
+                $cur_page                         = $number;
+            }
+            if ( $cur_style eq 'Roman' ) {
+                $::pagenumbers{$pagemark}{label} = "Pg " . lc( ::roman($cur_page) or '' );
+            } else {
+                $::pagenumbers{$pagemark}{label} = "Pg $cur_page";
+            }
+        }
+
         $textwindow->markSet( $pagemark, $found );
         $textwindow->markGravity( $pagemark, 'left' );
-        $search_start = $textwindow->index("$found+4c");
+        $search_start = $textwindow->index("$found+7c");
     }
 }
 
