@@ -6,8 +6,8 @@
 - Page marker flags feature added to 1.6.2 now includes page label information
   so files can be switched between GG1 and GG2 more seamlessly. Only works with
   Guiguts v2.0.0-alpha.3 or above.
-- Warning added to INSTALL.md that Perl versions above 5.32.1 will not work,
-  due to an incompatibility with Perk/Tk.
+- Warning added to INSTALL.md that Windows Strawberry Perl versions above
+  5.32.1 will not work, due to an incompatibility with Perk/Tk.
 
 
 ## Version 1.6.2
