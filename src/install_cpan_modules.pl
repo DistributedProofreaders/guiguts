@@ -38,6 +38,10 @@ $cpanm = "cpanm";
 # pointing to which might be the one that came with macOS.
 if ( $^O eq 'darwin' ) {
 
+    # https://xkcd.com/927/
+    $ENV{"CFLAGS"}   = "-std=c89";
+    $ENV{"CPPFLAGS"} = "-std=c89";
+
     # Intel
     if ( -e "/usr/local/bin/cpanm" ) {
         $cpanm = "perl /usr/local/bin/cpanm";
