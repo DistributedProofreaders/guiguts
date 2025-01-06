@@ -117,8 +117,8 @@ sub runProgram {
             if ( $line =~ /&amp;amp/ ) {
                 printf LOGFILE ( "%d:0 Ampersand: %s\n", $count, $line );
             }
-            if ( $line =~ /<p>\./ ) {
-                printf LOGFILE ( "%d:0 Possible PPG command: %s\n", $count, $line );
+            if ( $line =~ /<p>\.[a-z]{2}/ ) {
+                printf LOGFILE ( "%d:0 Possible PPGEN command: %s\n", $count, $line );
             }
             if ( $line =~ /\`/ ) {
                 printf LOGFILE ( "%d:0 Tick-mark check: %s\n", $count, $line );
