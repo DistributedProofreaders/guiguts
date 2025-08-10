@@ -1,4 +1,9 @@
-# Guiguts
+# Guiguts Version 1
+
+> [!WARNING]
+> Guiguts version 1 is **no longer being actively maintained**.
+> Users are recommended to use
+> [Guiguts version 2](https://github.com/DistributedProofreaders/guiguts-py) instead.
 
 Guiguts is a Perl/Tk text editor designed for editing and formatting public
 domain material for inclusion at [Project Gutenberg](http://www.gutenberg.org).
